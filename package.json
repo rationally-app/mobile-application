@@ -6,7 +6,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@govtechsg/open-attestation": "^1.1.41",
@@ -25,8 +26,16 @@
     "@storybook/react-native": "^5.2.5",
     "@types/react": "^16.8.23",
     "@types/react-native": "^0.57.65",
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
     "babel-loader": "^8.0.6",
     "babel-preset-expo": "^7.1.0",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
     "typescript": "^3.6.3"
   },
   "private": true
