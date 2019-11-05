@@ -1,0 +1,61 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: "circleci/node:latest"
+    steps:
+      - checkout
+      - run:
+          name: install
+          command: npm install
+      - run:
+          name: lint
+          command: npm run lint
+  deploy_branch:
+    docker:
+      - image: "openattestation/expo-build:latest"
+    steps:
+      - checkout
+      - run:
+          name: install
+          command: npm install
+      - run:
+          name: expo_login
+          command: expo login -u $EXPO_USERNAME --non-interactive
+      - run:
+          name: expo_publish_channel
+          command: expo publish --non-interactive --release-channel $(echo $CI_PULL_REQUEST | cut -c 43-)
+      - run:
+          name: github_comment_published_link
+          command: ./scripts/commenter.sh
+  deploy_master:
+    docker:
+      - image: "openattestation/expo-build:latest"
+    steps:
+      - checkout
+      - run:
+          name: install
+          command: npm install
+      - run:
+          name: expo_login
+          command: expo login -u $EXPO_USERNAME --non-interactive
+      - run:
+          name: expo_publish_channel
+          command: expo publish --non-interactive --release-channel default
+workflows:
+  version: 2
+  test_and_publish:
+    jobs:
+      - build
+      - deploy_branch:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: master
+      - deploy_master:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
