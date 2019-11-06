@@ -1,15 +1,7 @@
 import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import Storybook from "./storybook";
 import { IS_STORYBOOK_VIEW } from "./src/config";
-import { StyleSheet, Text, View } from "react-native";
-
-const App = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -19,5 +11,11 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
+
+const App = (): React.ReactNode => (
+  <View style={styles.container}>
+    <Text>Open up App.tsx to start working on your app!</Text>
+  </View>
+);
 
 export default IS_STORYBOOK_VIEW ? Storybook : App;
