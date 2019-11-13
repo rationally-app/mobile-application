@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "react-native",
     "lib": ["dom", "esnext"],
@@ -8,5 +9,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "noImplicitAny": true
-  }
+  },
+  "includes": ["src"]
 }
+

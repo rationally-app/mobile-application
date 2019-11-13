@@ -30,6 +30,9 @@ module.exports = {
       { extensions: [".js", ".jsx", ".ts", ".tsx"] }
     ],
     "import/prefer-default-export": 0,
-    "@typescript-eslint/no-unused-vars": [2, { args: "none" }]
+    "@typescript-eslint/no-unused-vars": [2, { args: "none" }],
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-non-null-assertion": 0,
+    "jest/lowercase-name": 0
   }
 };
