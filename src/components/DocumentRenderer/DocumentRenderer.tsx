@@ -3,8 +3,8 @@ import React, { FunctionComponent, useState } from "react";
 import { Document } from "@govtechsg/open-attestation";
 import ReactNative, { View } from "react-native";
 import { WebViewMessageEvent } from "react-native-webview";
-import TemplateTabs, { Tab } from "./TemplateTabs";
-import WebViewFrame from "./WebViewFrame";
+import { Tab, TemplateTabs } from "./TemplateTabs";
+import { WebViewFrame } from "./WebViewFrame";
 
 const wrapperStyle: ReactNative.ViewStyle = {
   flex: 1,
@@ -12,13 +12,13 @@ const wrapperStyle: ReactNative.ViewStyle = {
   justifyContent: "center"
 };
 
-interface DocumentRendererProps {
+interface DocumentRenderer {
   document: Document;
 }
 
-const DocumentRenderer: FunctionComponent<DocumentRendererProps> = ({
+export const DocumentRenderer: FunctionComponent<DocumentRenderer> = ({
   document
-}: DocumentRendererProps) => {
+}) => {
   const [template, setTemplate] = useState<Tab[]>([]);
   const [goToTemplate, setGoToTemplate] = useState();
 
@@ -37,5 +37,3 @@ const DocumentRenderer: FunctionComponent<DocumentRendererProps> = ({
     </View>
   );
 };
-
-export default DocumentRenderer;

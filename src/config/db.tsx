@@ -1,4 +1,4 @@
-export const dbName = "identitywallet";
+export const dbName = "idwallet";
 export const dbPassword = "supersecretpassword";
 
 export const db = {
@@ -24,6 +24,9 @@ export const documentSchema = {
     verified: {
       type: "number",
       index: true
+    },
+    isVerified: {
+      type: "boolean"
     },
     document: {
       type: "object"

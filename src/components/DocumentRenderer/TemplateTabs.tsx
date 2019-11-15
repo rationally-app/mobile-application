@@ -7,15 +7,15 @@ export interface Tab {
   label: string;
 }
 
-export interface TemplateTabsProps {
+export interface TemplateTabs {
   tabs: Tab[];
   tabSelect: Function;
 }
 
-const TemplateTabs: FunctionComponent<TemplateTabsProps> = ({
+export const TemplateTabs: FunctionComponent<TemplateTabs> = ({
   tabs,
   tabSelect
-}: TemplateTabsProps) => {
+}) => {
   // Do not show when there is only one tab
   if (!tabs || tabs.length <= 1) return null;
   const renderedTabs = tabs.map(tab => (
@@ -28,5 +28,3 @@ const TemplateTabs: FunctionComponent<TemplateTabsProps> = ({
   ));
   return <View>{renderedTabs}</View>;
 };
-
-export default TemplateTabs;

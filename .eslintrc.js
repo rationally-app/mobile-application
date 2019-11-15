@@ -29,10 +29,18 @@ module.exports = {
       1,
       { extensions: [".js", ".jsx", ".ts", ".tsx"] }
     ],
+    "react/prop-types": 0,
     "import/prefer-default-export": 0,
     "@typescript-eslint/no-unused-vars": [2, { args: "none" }],
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/no-non-null-assertion": 0,
+    "@typescript-eslint/explicit-function-return-type": [
+      "warn",
+      {
+        allowExpressions: true,
+        allowTypedFunctionExpressions: true
+      }
+    ],
     "jest/lowercase-name": 0
   }
 };

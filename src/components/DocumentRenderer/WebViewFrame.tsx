@@ -1,5 +1,5 @@
 // Given a OA document and url, render it with webview
-import React, { FunctionComponent, useRef, useEffect } from "react";
+import React, { FunctionComponent, useRef, useEffect, RefObject } from "react";
 import { getData, Document } from "@govtechsg/open-attestation";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 import { get } from "lodash";
@@ -10,22 +10,22 @@ export interface WebViewFrameRef {
   };
 }
 
-export interface WebViewFrameProps {
+export interface WebViewFrame {
   document: Document;
   onTemplateMessageHandler: (event: WebViewMessageEvent) => void;
   setGoToTemplate: Function;
 }
 
-const WebViewFrame: FunctionComponent<WebViewFrameProps> = ({
+export const WebViewFrame: FunctionComponent<WebViewFrame> = ({
   document,
   onTemplateMessageHandler,
   setGoToTemplate
-}: WebViewFrameProps) => {
-  const webViewRef = useRef();
+}) => {
+  const webViewRef: RefObject<WebView> = useRef<WebView>(null);
   const data = getData(document);
 
   useEffect(() => {
-    const { current } = webViewRef as WebViewFrameRef;
+    const { current } = webViewRef;
     if (current && current.injectJavaScript)
       setGoToTemplate(
         (): Function => (tabId: string): void =>
@@ -55,5 +55,3 @@ const WebViewFrame: FunctionComponent<WebViewFrameProps> = ({
     />
   );
 };
-
-export default WebViewFrame;

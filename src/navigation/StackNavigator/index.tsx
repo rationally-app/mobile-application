@@ -1,10 +1,14 @@
 import { createStackNavigator } from "react-navigation-stack";
-import MainScreen from "./MainScreen";
+import DocumentListScreen from "./DocumentListScreen";
+import IndividualDocumentScreen from "./IndividualDocumentScreen";
 
 const StackNavigator = createStackNavigator(
   {
-    MainScreen: {
-      screen: MainScreen
+    DocumentListScreen: {
+      screen: DocumentListScreen
+    },
+    IndividualDocumentScreen: {
+      screen: IndividualDocumentScreen
     }
   },
   {
