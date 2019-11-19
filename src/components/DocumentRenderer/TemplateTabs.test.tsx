@@ -1,6 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { TemplateTabs, Tab } from "./TemplateTabs";
+import { DARK } from "../../common/colors";
 
 const sampleTabs: Tab[] = [
   {
@@ -28,7 +29,7 @@ describe("TemplateTabs", () => {
   });
 
   it("should style the active and inactive tab", () => {
-    expect.assertions(6);
+    expect.assertions(2);
     const { queryAllByTestId } = render(
       <TemplateTabs
         tabs={sampleTabs}
@@ -36,24 +37,17 @@ describe("TemplateTabs", () => {
         activeTabId="template-2"
       />
     );
-    expect(queryAllByTestId("template-tab")[0]).not.toHaveProperty(
-      "_fiber.pendingProps.style.borderStyle"
-    );
-    expect(queryAllByTestId("template-tab")[0]).not.toHaveProperty(
-      "_fiber.pendingProps.style.borderBottomWidth"
-    );
-    expect(queryAllByTestId("template-tab")[0]).not.toHaveProperty(
-      "_fiber.pendingProps.style.borderBottomColor"
-    );
-    expect(queryAllByTestId("template-tab")[1]).toHaveProperty(
-      "_fiber.pendingProps.style.borderStyle"
-    );
-    expect(queryAllByTestId("template-tab")[1]).toHaveProperty(
-      "_fiber.pendingProps.style.borderBottomWidth"
-    );
-    expect(queryAllByTestId("template-tab")[1]).toHaveProperty(
-      "_fiber.pendingProps.style.borderBottomColor"
-    );
+    const [firstTab, secondTab] = queryAllByTestId("template-tab");
+
+    expect(firstTab).toHaveStyle({
+      borderBottomWidth: 2,
+      borderBottomColor: "transparent"
+    });
+
+    expect(secondTab).toHaveStyle({
+      borderBottomWidth: 2,
+      borderBottomColor: DARK
+    });
   });
 
   it("should fire tabSelect with tabId when tabs are clicked", () => {

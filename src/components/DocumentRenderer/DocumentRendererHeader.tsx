@@ -15,7 +15,11 @@ export const HeaderBackButton: FunctionComponent<HeaderBackButton> = ({
     <TouchableOpacity
       testID="header-back-button"
       onPress={onPress}
-      style={{ padding: 10, margin: 5 }}
+      style={{
+        paddingLeft: 24,
+        paddingRight: 24,
+        justifyContent: "center"
+      }}
     >
       <Ionicons name="md-arrow-round-back" size={20} color={DARK} />
     </TouchableOpacity>
@@ -37,7 +41,7 @@ export const DocumentRendererHeader: FunctionComponent<DocumentRendererHeader> =
       testID="document-renderer-header"
       style={{
         flexDirection: "row",
-        alignItems: "center",
+        height: 56,
         borderBottomWidth: 2,
         borderStyle: "solid",
         borderColor: VERY_LIGHT,

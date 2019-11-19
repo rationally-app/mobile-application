@@ -19,14 +19,16 @@ export interface TemplateTabs {
 }
 
 const inactiveTabStyle: ViewStyle = {
-  padding: 10
+  paddingLeft: 12,
+  paddingRight: 12,
+  justifyContent: "center",
+  borderBottomWidth: 2,
+  borderBottomColor: "transparent"
 };
 
 const activeTabStyle: ViewStyle = {
   ...inactiveTabStyle,
-  borderBottomColor: DARK,
-  borderBottomWidth: 2,
-  borderStyle: "solid"
+  borderBottomColor: DARK
 };
 
 export const TemplateTabs: FunctionComponent<TemplateTabs> = ({
