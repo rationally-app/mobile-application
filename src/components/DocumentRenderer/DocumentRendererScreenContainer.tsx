@@ -9,10 +9,11 @@ export interface DocumentRendererScreenContainer extends NavigationProps {
 }
 
 export const DocumentRendererScreenContainer: FunctionComponent<DocumentRendererScreenContainer> = ({
-  document
+  document,
+  navigation
 }) => {
   const output = document ? (
-    <DocumentRenderer document={document.document} />
+    <DocumentRenderer document={document.document} goBack={navigation.goBack} />
   ) : (
     <LoadingView />
   );

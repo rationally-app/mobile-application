@@ -2,37 +2,46 @@
 import React, { FunctionComponent, useState } from "react";
 import { Document } from "@govtechsg/open-attestation";
 import ReactNative, { View } from "react-native";
-import { WebViewMessageEvent } from "react-native-webview";
-import { Tab, TemplateTabs } from "./TemplateTabs";
+import { Tab } from "./TemplateTabs";
 import { WebViewFrame } from "./WebViewFrame";
+import { DocumentRendererHeader } from "./DocumentRendererHeader";
 
 const wrapperStyle: ReactNative.ViewStyle = {
   flex: 1,
-  paddingTop: 24,
   justifyContent: "center"
 };
 
 interface DocumentRenderer {
   document: Document;
+  goBack?: () => void;
 }
 
 export const DocumentRenderer: FunctionComponent<DocumentRenderer> = ({
-  document
+  document,
+  goBack
 }) => {
-  const [template, setTemplate] = useState<Tab[]>([]);
-  const [goToTemplate, setGoToTemplate] = useState();
+  const [tabs, setTabs] = useState<Tab[]>([]);
+  const [goToTab, setGoToTab] = useState<(tabId: string) => void>(() => {});
+  const [activeTabId, setActiveTabId] = useState<string>("");
 
-  const onTemplateMessageHandler = (event: WebViewMessageEvent): void => {
-    setTemplate(JSON.parse(event.nativeEvent.data));
+  const tabSelect = (id: string): void => {
+    setActiveTabId(id);
+    goToTab(id);
   };
 
   return (
     <View style={wrapperStyle}>
-      <TemplateTabs tabs={template} tabSelect={goToTemplate} />
+      <DocumentRendererHeader
+        goBack={goBack}
+        tabs={tabs}
+        tabSelect={tabSelect}
+        activeTabId={activeTabId}
+      />
       <WebViewFrame
-        setGoToTemplate={setGoToTemplate}
         document={document}
-        onTemplateMessageHandler={onTemplateMessageHandler}
+        setGoToTab={setGoToTab}
+        setActiveTabId={setActiveTabId}
+        setTabs={setTabs}
       />
     </View>
   );

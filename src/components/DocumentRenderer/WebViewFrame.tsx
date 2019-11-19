@@ -4,6 +4,11 @@ import { getData, Document } from "@govtechsg/open-attestation";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 import { get } from "lodash";
 
+export interface Tab {
+  id: string;
+  label: string;
+}
+
 export interface WebViewFrameRef {
   current?: {
     injectJavaScript?: Function;
@@ -12,14 +17,16 @@ export interface WebViewFrameRef {
 
 export interface WebViewFrame {
   document: Document;
-  onTemplateMessageHandler: (event: WebViewMessageEvent) => void;
-  setGoToTemplate: Function;
+  setGoToTab: (goToTab: (tabId: string) => void) => void;
+  setTabs: (tabs: Tab[]) => void;
+  setActiveTabId: (tabId: string) => void;
 }
 
 export const WebViewFrame: FunctionComponent<WebViewFrame> = ({
   document,
-  onTemplateMessageHandler,
-  setGoToTemplate
+  setGoToTab,
+  setTabs,
+  setActiveTabId
 }) => {
   const webViewRef: RefObject<WebView> = useRef<WebView>(null);
   const data = getData(document);
@@ -27,13 +34,18 @@ export const WebViewFrame: FunctionComponent<WebViewFrame> = ({
   useEffect(() => {
     const { current } = webViewRef;
     if (current && current.injectJavaScript)
-      setGoToTemplate(
-        (): Function => (tabId: string): void =>
-          current.injectJavaScript(
-            `window.openAttestation({type: "SELECT_TEMPLATE", payload: "${tabId}"})`
-          )
+      setGoToTab(() => (tabId: string): void =>
+        current.injectJavaScript(
+          `window.openAttestation({type: "SELECT_TEMPLATE", payload: "${tabId}"})`
+        )
       );
   }, [true]);
+
+  const onTemplateMessageHandler = (event: WebViewMessageEvent): void => {
+    const tabs = JSON.parse(event.nativeEvent.data) as Tab[];
+    setTabs(tabs);
+    setActiveTabId(tabs[0].id);
+  };
 
   return (
     <WebView

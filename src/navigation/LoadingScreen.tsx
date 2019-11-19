@@ -1,12 +1,14 @@
 import React, { useEffect, FunctionComponent } from "react";
 import { NavigationProps, DocumentObject } from "../types";
 import { useDbContext } from "../context/db";
-import sampleData from "../sample.json";
 import * as RxDB from "rxdb";
 import { get } from "lodash";
 import { Document } from "@govtechsg/open-attestation";
 import { DB_CONFIG } from "../config";
 import { LoadingView } from "../components/Loading";
+import demoCaas from "../../fixtures/demo-caas.json";
+import demoOc from "../../fixtures/demo-oc.json";
+import demoTt from "../../fixtures/demo-ebl.json";
 
 RxDB.plugin(require("pouchdb-adapter-asyncstorage").default);
 
@@ -16,7 +18,10 @@ const createDatabase = async (): Promise<RxDB.RxDatabase> => {
   return db;
 };
 
-const seedDb = async (db: RxDB.RxDatabase, doc: Document): Promise<void> => {
+const seedDocument = async (
+  db: RxDB.RxDatabase,
+  doc: Document
+): Promise<void> => {
   const id = get(doc, "signature.targetHash");
   const defaultDocument = await db.documents.findOne({ id }).exec();
   if (!defaultDocument) {
@@ -40,7 +45,9 @@ const init = async ({
 }): Promise<void> => {
   const db = await createDatabase();
   setDb!(db);
-  await seedDb(db, sampleData);
+  await seedDocument(db, demoCaas);
+  await seedDocument(db, demoOc);
+  await seedDocument(db, demoTt);
   done();
 };
 
