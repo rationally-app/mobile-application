@@ -48,7 +48,11 @@ export const TemplateTabs: FunctionComponent<TemplateTabs> = ({
     </TouchableOpacity>
   ));
   return (
-    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+    <ScrollView
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+      style={{ height: "100%" }}
+    >
       <View style={{ flexDirection: "row" }}>{renderedTabs}</View>
     </ScrollView>
   );

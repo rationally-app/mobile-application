@@ -1,10 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { Tab } from "./TemplateTabs";
-import {
-  DocumentRendererHeader,
-  HeaderBackButton
-} from "./DocumentRendererHeader";
+import { DocumentRendererHeader } from "./DocumentRendererHeader";
 
 const sampleTabs: Tab[] = [
   {
@@ -16,23 +13,6 @@ const sampleTabs: Tab[] = [
     label: "Template 2"
   }
 ];
-
-describe("HeaderBackButton", () => {
-  it("should render", () => {
-    // This test will fail if setup.jest.js does not mock the icon
-    expect.assertions(1);
-    const { queryByTestId } = render(<HeaderBackButton onPress={() => {}} />);
-    expect(queryByTestId("header-back-button")).not.toBeNull();
-  });
-
-  it("should fire onPress when pressed", () => {
-    expect.assertions(1);
-    const onPress = jest.fn();
-    const { getByTestId } = render(<HeaderBackButton onPress={onPress} />);
-    fireEvent.press(getByTestId("header-back-button"));
-    expect(onPress).toHaveBeenCalledWith();
-  });
-});
 
 describe("DocumentRendererHeader", () => {
   it("should render both the tabs and back button", () => {

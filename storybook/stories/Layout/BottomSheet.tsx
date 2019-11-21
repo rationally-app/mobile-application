@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, FunctionComponent } from "react";
 import { storiesOf } from "@storybook/react-native";
 
-import { BottomSheet } from "../../../src/components/BottomSheet/BottomSheet";
+import { BottomSheet } from "../../../src/components/Layout/BottomSheet";
 import { View, Text, LayoutChangeEvent } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -85,4 +85,4 @@ const Example: FunctionComponent = () => {
   );
 };
 
-storiesOf("BottomSheet", module).add("BottomSheet", () => <Example />);
+storiesOf("Layout", module).add("BottomSheet", () => <Example />);
