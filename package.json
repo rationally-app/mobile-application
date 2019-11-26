@@ -26,7 +26,8 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.16",
     "rxdb": "^8.7.3",
     "rxjs": "^6.5.3",
-    "react-native-reanimated": "~1.2.0"
+    "react-native-reanimated": "~1.2.0",
+    "react-native-svg": "9.9.5"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
@@ -56,6 +57,7 @@
     "jest-expo": "^35.0.0",
     "prettier": "^1.19.1",
     "react-dom": "^16.8.3",
+    "react-native-svg-transformer": "^0.14.1",
     "react-test-renderer": "16.8.3",
     "typescript": "^3.7.2"
   },

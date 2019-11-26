@@ -39,7 +39,7 @@ export interface Header {
 export const Header: FunctionComponent<Header> = ({ goBack, children }) => {
   return (
     <View
-      testID="document-renderer-header"
+      testID="header-bar"
       style={{
         flexDirection: "row",
         height: 56,

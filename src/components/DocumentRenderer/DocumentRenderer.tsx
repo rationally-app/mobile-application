@@ -5,10 +5,10 @@ import ReactNative, { View } from "react-native";
 import { Tab } from "./TemplateTabs";
 import { WebViewFrame } from "./WebViewFrame";
 import { DocumentRendererHeader } from "./DocumentRendererHeader";
+import { DocumentDetailsSheet } from "./DocumentDetailsSheet";
 
 const wrapperStyle: ReactNative.ViewStyle = {
-  flex: 1,
-  justifyContent: "center"
+  flex: 1
 };
 
 interface DocumentRenderer {
@@ -43,6 +43,7 @@ export const DocumentRenderer: FunctionComponent<DocumentRenderer> = ({
         setActiveTabId={setActiveTabId}
         setTabs={setTabs}
       />
+      <DocumentDetailsSheet document={document} />
     </View>
   );
 };
