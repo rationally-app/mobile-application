@@ -3,6 +3,7 @@ import { DocumentObject, NavigationProps } from "../../types";
 import { getData } from "@govtechsg/open-attestation";
 import { ScreenView } from "../ScreenView";
 import { DocumentList } from "./DocumentList";
+import { TouchableOpacity, Text } from "react-native";
 
 export interface DocumentListScreenContainer extends NavigationProps {
   documents: DocumentObject[];
@@ -26,6 +27,9 @@ export const DocumentListScreenContainer: FunctionComponent<DocumentListScreenCo
   return (
     <ScreenView>
       <DocumentList documents={documentItems} navigateToDoc={navigateToDoc} />
+      <TouchableOpacity onPress={() => navigation.navigate("QrScannerScreen")}>
+        <Text>Camera</Text>
+      </TouchableOpacity>
     </ScreenView>
   );
 };

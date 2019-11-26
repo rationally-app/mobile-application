@@ -1,6 +1,8 @@
 import { createStackNavigator } from "react-navigation-stack";
 import DocumentListScreen from "./DocumentListScreen";
 import IndividualDocumentScreen from "./IndividualDocumentScreen";
+import ScannedDocumentScreen from "./ScannedDocumentScreen";
+import QrScannerScreen from "./QrScannerScreen";
 
 const StackNavigator = createStackNavigator(
   {
@@ -9,6 +11,12 @@ const StackNavigator = createStackNavigator(
     },
     IndividualDocumentScreen: {
       screen: IndividualDocumentScreen
+    },
+    ScannedDocumentScreen: {
+      screen: ScannedDocumentScreen
+    },
+    QrScannerScreen: {
+      screen: QrScannerScreen
     }
   },
   {
