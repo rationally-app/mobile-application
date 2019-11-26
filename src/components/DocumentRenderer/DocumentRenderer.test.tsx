@@ -8,14 +8,13 @@ import { mockTabs, contentOfTab } from "./__mocks__/WebViewFrame";
 jest.mock("./WebViewFrame");
 
 describe("DocumentRenderer", () => {
-  it("should render header, certificate element and document details", () => {
-    expect.assertions(3);
+  it("should render header and certificate element", () => {
+    expect.assertions(2);
     const { queryByTestId } = render(
       <DocumentRenderer document={sampleDoc} goBack={() => {}} />
     );
     expect(queryByTestId("mock-web-view-frame")).not.toBeNull();
     expect(queryByTestId("header-bar")).not.toBeNull();
-    expect(queryByTestId("document-details")).not.toBeNull();
   });
 
   it("should render tabs correctly", () => {
