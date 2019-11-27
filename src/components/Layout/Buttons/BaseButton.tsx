@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { View, ViewStyle } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, View, ViewStyle } from "react-native";
 
 export interface BaseButton {
   onPress?: () => void;
@@ -13,7 +12,7 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
   backgroundColor
 }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} testID="base-button-2">
       <View
         style={{
           backgroundColor,

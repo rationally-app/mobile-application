@@ -1,20 +1,27 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import { DocumentObject, NavigationProps } from "../../types";
 import { getData } from "@govtechsg/open-attestation";
 import { ScreenView } from "../ScreenView";
+import { useDbContext } from "../../context/db";
 import { DocumentList } from "./DocumentList";
-import { TouchableOpacity, Text } from "react-native";
+import { BottomNav } from "../Layout/BottomNav";
 
-export interface DocumentListScreenContainer extends NavigationProps {
-  documents: DocumentObject[];
-}
-
-export const DocumentListScreenContainer: FunctionComponent<DocumentListScreenContainer> = ({
-  documents,
+export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  const { db } = useDbContext();
+  const [documents, setDocuments] = useState<DocumentObject[]>([]);
+
+  useEffect(() => {
+    db!.documents
+      .find()
+      .sort({ created: 1 })
+      .$.subscribe(setDocuments);
+  }, [true]);
+
   const navigateToDoc = (id: string): boolean =>
-    navigation.navigate("IndividualDocumentScreen", { id });
+    navigation.navigate("LocalDocumentScreen", { id });
+
   const documentItems = documents.map((doc: DocumentObject) => {
     const docClear = getData(doc.document);
     return {
@@ -27,9 +34,7 @@ export const DocumentListScreenContainer: FunctionComponent<DocumentListScreenCo
   return (
     <ScreenView>
       <DocumentList documents={documentItems} navigateToDoc={navigateToDoc} />
-      <TouchableOpacity onPress={() => navigation.navigate("QrScannerScreen")}>
-        <Text>Camera</Text>
-      </TouchableOpacity>
+      <BottomNav navigation={navigation} />
     </ScreenView>
   );
 };

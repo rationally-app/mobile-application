@@ -4,15 +4,11 @@ import { DocumentRenderer } from "./DocumentRenderer";
 import { ScreenView } from "../ScreenView";
 import { Document } from "@govtechsg/open-attestation";
 
-export interface ScannedDocumentScreenContainer extends NavigationProps {
-  document: Document;
-  storeDocument: boolean;
-}
-
-export const ScannedDocumentScreenContainer: FunctionComponent<ScannedDocumentScreenContainer> = ({
-  document,
+export const ScannedDocumentRendererContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  const document: Document = navigation.getParam("document");
+
   return (
     <ScreenView>
       <DocumentRenderer document={document} goBack={navigation.goBack} />

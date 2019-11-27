@@ -4,7 +4,9 @@ import "isomorphic-fetch";
 
 jest.mock("@expo/vector-icons", () => ({
   Feather: "Feather Icons",
-  Ionicons: "Ionicons Icons"
+  Ionicons: "Ionicons Icons",
+  AntDesign: "AntDesign Icons",
+  FontAwesome: "FontAwesome Icons"
 }));
 
 jest.mock("react-native-reanimated", () => {

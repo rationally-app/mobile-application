@@ -1,12 +1,11 @@
 import React, { FunctionComponent, useState } from "react";
 import { View } from "react-native";
 import { NavigationProps } from "../../types";
-import { Header } from "../Layout/Header";
 import { ScreenView } from "../ScreenView";
 import { QrCamera } from "./QrCamera";
-import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { processQr } from "../../services/QrProcessor";
 import { Document } from "@govtechsg/open-attestation";
+import { BottomNav } from "../Layout/BottomNav";
 
 export interface QrScannerScreenContainer {
   navigation: NavigationProps["navigation"];
@@ -44,16 +43,8 @@ export const QrScannerScreenContainer: FunctionComponent<QrScannerScreenContaine
           justifyContent: "space-between"
         }}
       >
-        <Header goBack={navigation.goBack} />
         <QrCamera onQrData={onQrData} disabled={scanningDisabled} />
-        <View
-          style={{
-            alignItems: "center",
-            margin: 24
-          }}
-        >
-          <DarkButton text="Cancel" onPress={navigation.goBack} />
-        </View>
+        <BottomNav navigation={navigation} />
       </View>
     </ScreenView>
   );
