@@ -27,6 +27,7 @@ export const WebViewFrame: FunctionComponent<WebViewFrameInterface> = ({
     setGoToTab(() => (id: string) => setActiveTab(id));
     setTabs(mockTabs);
     setActiveTabId(mockTabs[0].id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <Text testID="mock-web-view-frame">{contentOfTab(activeTab)}</Text>;

@@ -15,8 +15,11 @@ export const LocalDocumentRendererContainer: FunctionComponent<NavigationProps> 
   const [document, setDocument] = useState<DocumentObject>();
 
   useEffect(() => {
-    db!.documents.findOne({ id: { $eq: id } }).$.subscribe(setDocument);
-  }, [true]);
+    const subscription = db!.documents
+      .findOne({ id: { $eq: id } })
+      .$.subscribe(setDocument);
+    return () => subscription.unsubscribe();
+  }, [db, id]);
 
   const output = document ? (
     <View style={{ flex: 1 }}>

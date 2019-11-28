@@ -39,7 +39,8 @@ export const WebViewFrame: FunctionComponent<WebViewFrame> = ({
           `window.openAttestation({type: "SELECT_TEMPLATE", payload: "${tabId}"})`
         )
       );
-  }, [true]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onTemplateMessageHandler = (event: WebViewMessageEvent): void => {
     const tabs = JSON.parse(event.nativeEvent.data) as Tab[];

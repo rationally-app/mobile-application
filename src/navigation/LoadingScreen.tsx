@@ -62,6 +62,7 @@ const LoadingScreen: FunctionComponent<NavigationProps> = ({
       setDb,
       done: () => navigation.navigate("StackNavigator")
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <LoadingView />;

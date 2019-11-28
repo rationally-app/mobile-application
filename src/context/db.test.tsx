@@ -8,7 +8,7 @@ const TestComponent = (): ReactElement => {
   const mockDb = "MOCK_DB" as any;
   useEffect(() => {
     setDb!(mockDb);
-  }, []);
+  }, [mockDb, setDb]);
   return <Text testID="printed-db">{db}</Text>;
 };
 

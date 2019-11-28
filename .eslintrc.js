@@ -12,7 +12,7 @@ module.exports = {
     "prettier/@typescript-eslint",
     "prettier/react"
   ],
-  plugins: ["react", "@typescript-eslint"],
+  plugins: ["react", "@typescript-eslint", "react-hooks"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly"
@@ -41,6 +41,8 @@ module.exports = {
         allowTypedFunctionExpressions: true
       }
     ],
-    "jest/lowercase-name": 0
+    "jest/lowercase-name": 0,
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error"
   }
 };
