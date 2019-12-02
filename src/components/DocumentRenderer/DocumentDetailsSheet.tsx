@@ -1,9 +1,12 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState, useRef } from "react";
 import { LayoutChangeEvent, View, Text } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { BottomSheet } from "../Layout/BottomSheet";
-import { Document } from "@govtechsg/open-attestation";
+import { Document, SignedDocument, getData } from "@govtechsg/open-attestation";
 import QRIcon from "../../../assets/icons/qr.svg";
+import { ValidityBanner } from "./ValidityBanner";
+import { useDocumentVerifier } from "../../common/hooks/useDocumentVerifier";
+import { VERY_LIGHT } from "../../common/colors";
 
 interface DocumentDetailsSheet {
   document: Document;
@@ -13,16 +16,28 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
   document
 }) => {
   const [headerHeight, setHeaderHeight] = useState(0);
+  const hasHeaderHeightBeenSet = useRef(false);
   const onHeaderLayout = (event: LayoutChangeEvent): void => {
-    const { height } = event.nativeEvent.layout;
-    setHeaderHeight(height + 56);
+    if (!hasHeaderHeightBeenSet.current) {
+      const { height } = event.nativeEvent.layout;
+      setHeaderHeight(height + 56);
+      hasHeaderHeightBeenSet.current = true;
+    }
   };
 
-  const { name } = document.data.issuers[0];
-  const issuerName = name.split(":")[2];
+  const { issuers } = getData(document);
+  const issuerName = issuers[0].name;
+
+  const {
+    tamperedCheck,
+    issuedCheck,
+    revokedCheck,
+    issuerCheck,
+    overallValidity
+  } = useDocumentVerifier(document as SignedDocument);
 
   return (
-    <BottomSheet snapPoints={[headerHeight, "80%"]}>
+    <BottomSheet snapPoints={[headerHeight, "83%"]}>
       {openSheet => (
         <View testID="document-details">
           <View
@@ -31,6 +46,15 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
               paddingBottom: 32
             }}
           >
+            <View style={{ marginHorizontal: -24, marginBottom: 20 }}>
+              <ValidityBanner
+                tamperedCheck={tamperedCheck}
+                issuedCheck={issuedCheck}
+                revokedCheck={revokedCheck}
+                issuerCheck={issuerCheck}
+                overallValidity={overallValidity}
+              />
+            </View>
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 12, marginBottom: 8 }}>Issued by</Text>
@@ -48,7 +72,7 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
               <RectButton
                 onPress={openSheet}
                 style={{
-                  backgroundColor: "#F2F2F2",
+                  backgroundColor: VERY_LIGHT,
                   height: 48,
                   width: 48,
                   borderRadius: 8,
@@ -66,7 +90,7 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
             style={{
               width: "100%",
               aspectRatio: 1,
-              backgroundColor: "#f2f2f2",
+              backgroundColor: VERY_LIGHT,
               marginBottom: 24
             }}
           />
