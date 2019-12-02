@@ -55,7 +55,7 @@ export const ValidityBanner: FunctionComponent<ValidityBanner> = ({
   const [isExpanded, setIsExpanded] = useState(initialIsExpanded);
 
   return (
-    <View>
+    <View testID="validity-banner">
       <ValidityBannerHeader
         checkStatus={overallValidity}
         isExpanded={isExpanded}

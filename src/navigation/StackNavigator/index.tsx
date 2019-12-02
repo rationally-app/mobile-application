@@ -3,6 +3,7 @@ import DocumentListScreen from "./DocumentListScreen";
 import LocalDocumentScreen from "./LocalDocumentScreen";
 import ScannedDocumentScreen from "./ScannedDocumentScreen";
 import QrScannerScreen from "./QrScannerScreen";
+import SettingsScreen from "./SettingsScreen";
 
 const StackNavigator = createStackNavigator(
   {
@@ -17,6 +18,9 @@ const StackNavigator = createStackNavigator(
     },
     QrScannerScreen: {
       screen: QrScannerScreen
+    },
+    SettingsScreen: {
+      screen: SettingsScreen
     }
   },
   {

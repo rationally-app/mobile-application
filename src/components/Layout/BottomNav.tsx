@@ -31,6 +31,7 @@ export const BottomNav: FunctionComponent<NavigationProps> = ({
 }) => {
   return (
     <View
+      testID="bottom-nav"
       style={{
         width: "100%",
         flexDirection: "row",
@@ -48,7 +49,7 @@ export const BottomNav: FunctionComponent<NavigationProps> = ({
       <NavTab onPress={replaceRouteFn(navigation, "QrScannerScreen")}>
         <FontAwesome name="qrcode" size={24} style={{ color: DARK }} />
       </NavTab>
-      <NavTab onPress={replaceRouteFn(navigation, "SETTING")}>
+      <NavTab onPress={replaceRouteFn(navigation, "SettingsScreen")}>
         <AntDesign name="setting" size={24} style={{ color: DARK }} />
       </NavTab>
     </View>

@@ -51,13 +51,7 @@ export const Header: FunctionComponent<Header> = ({ goBack, children }) => {
         alignItems: "center"
       }}
     >
-      {goBack ? (
-        <HeaderBackButton
-          onPress={() => {
-            if (goBack) goBack();
-          }}
-        />
-      ) : null}
+      {goBack ? <HeaderBackButton onPress={goBack} /> : null}
       {children}
     </View>
   );

@@ -17,9 +17,12 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
         style={{
           backgroundColor,
           alignSelf: "flex-start",
+          alignItems: "center",
+          justifyContent: "center",
           paddingVertical: 5,
           paddingHorizontal: 10,
-          borderRadius: 5
+          borderRadius: 5,
+          minWidth: 80
         }}
       >
         {children}

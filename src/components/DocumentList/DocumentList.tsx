@@ -28,7 +28,10 @@ export const DocumentList: FunctionComponent<DocumentList> = ({
     />
   ));
   return (
-    <ScrollView style={{ width: "100%", padding: 10, height: "100%" }}>
+    <ScrollView
+      testID="document-list"
+      style={{ width: "100%", padding: 10, height: "100%" }}
+    >
       {renderedDocumentListItem}
     </ScrollView>
   );

@@ -1,10 +1,9 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { DocumentObject, NavigationProps } from "../../types";
 import { getData } from "@govtechsg/open-attestation";
-import { ScreenView } from "../ScreenView";
 import { useDbContext } from "../../context/db";
-import { DocumentList } from "./DocumentList";
-import { BottomNav } from "../Layout/BottomNav";
+import { replaceRouteFn } from "../../common/navigation";
+import { DocumentListLayout } from "./DocumentListLayout";
 
 export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = ({
   navigation
@@ -22,6 +21,7 @@ export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = (
 
   const navigateToDoc = (id: string): boolean =>
     navigation.navigate("LocalDocumentScreen", { id });
+  const navigateToScanner = replaceRouteFn(navigation, "QrScannerScreen");
 
   const documentItems = documents.map((doc: DocumentObject) => {
     const docClear = getData(doc.document);
@@ -33,9 +33,11 @@ export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = (
     };
   });
   return (
-    <ScreenView>
-      <DocumentList documents={documentItems} navigateToDoc={navigateToDoc} />
-      <BottomNav navigation={navigation} />
-    </ScreenView>
+    <DocumentListLayout
+      documentItems={documentItems}
+      navigation={navigation}
+      navigateToDoc={navigateToDoc}
+      navigateToScanner={navigateToScanner}
+    />
   );
 };

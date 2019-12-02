@@ -3,15 +3,17 @@ import { SignedDocument } from "@govtechsg/open-attestation";
 import { CheckStatus } from "../../constants/verifier";
 import { checkValidity } from "../../services/DocumentVerifier";
 
-export const useDocumentVerifier = (
-  document: SignedDocument
-): {
+export interface VerificationStatuses {
   tamperedCheck: CheckStatus;
   issuedCheck: CheckStatus;
   revokedCheck: CheckStatus;
   issuerCheck: CheckStatus;
   overallValidity: CheckStatus;
-} => {
+}
+
+export const useDocumentVerifier = (
+  document: SignedDocument
+): VerificationStatuses => {
   const [tamperedCheck, setTamperedCheck] = useState(CheckStatus.CHECKING);
   const [issuedCheck, setIssuedCheck] = useState(CheckStatus.CHECKING);
   const [revokedCheck, setRevokedCheck] = useState(CheckStatus.CHECKING);

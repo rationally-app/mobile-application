@@ -4,3 +4,4 @@ import "./Loading";
 import "./Layout";
 import "./QrScanner";
 import "./ValidityBanner";
+import "./Settings";

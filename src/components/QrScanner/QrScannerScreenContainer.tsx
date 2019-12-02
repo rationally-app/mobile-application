@@ -18,7 +18,7 @@ export const QrScannerScreenContainer: FunctionComponent<QrScannerScreenContaine
   const onDocumentStore = (document: Document): void => {
     navigation.navigate("ScannedDocumentScreen", {
       document,
-      storeDocument: true
+      savable: true
     });
   };
   const onDocumentView = (document: Document): void => {

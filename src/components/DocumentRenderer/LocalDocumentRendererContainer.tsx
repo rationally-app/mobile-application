@@ -25,7 +25,7 @@ export const LocalDocumentRendererContainer: FunctionComponent<NavigationProps> 
     <View style={{ flex: 1 }}>
       <DocumentRenderer
         document={document.document}
-        goBack={navigation.goBack}
+        goBack={() => navigation.goBack()}
       />
       <DocumentDetailsSheet document={document.document} />
     </View>

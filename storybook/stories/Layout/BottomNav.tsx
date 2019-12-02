@@ -2,15 +2,12 @@ import React from "react";
 import { storiesOf } from "@storybook/react-native";
 import { CenterVerticalDecorator } from "../decorators";
 import { BottomNav } from "../../../src/components/Layout/BottomNav";
-
-const mockNavigation: any = {
-  dispatch: (action: any) => alert(JSON.stringify(action))
-};
+import { navigation } from "../mocks/navigation";
 
 storiesOf("Layout", module)
   .addDecorator(CenterVerticalDecorator)
   .add("BottomNav", () => (
     <>
-      <BottomNav navigation={mockNavigation} />
+      <BottomNav navigation={navigation} />
     </>
   ));
