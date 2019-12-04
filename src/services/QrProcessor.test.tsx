@@ -73,7 +73,6 @@ describe("decodeAction", () => {
 describe("processQr", () => {
   const mockDocument = "MOCK_JSON_RESPONSE" as any;
 
-  // eslint-disable-next-line jest/no-hooks
   beforeAll(() => {
     const globalAny: any = global;
     jest

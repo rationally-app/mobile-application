@@ -38,7 +38,11 @@ export const QrCamera: FunctionComponent<QrCamera> = ({
           <LoadingView />
         </View>
       ) : (
-        <Camera style={{ flex: 1 }} onBarCodeScanned={onBarCodeScanned} />
+        <Camera
+          style={{ flex: 1 }}
+          onBarCodeScanned={onBarCodeScanned}
+          testID="qr-camera"
+        />
       )}
     </View>
   ) : null;

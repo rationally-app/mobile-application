@@ -3,7 +3,7 @@ import { DocumentObject, NavigationProps } from "../../types";
 import { getData } from "@govtechsg/open-attestation";
 import { useDbContext } from "../../context/db";
 import { replaceRouteFn } from "../../common/navigation";
-import { DocumentListLayout } from "./DocumentListLayout";
+import { DocumentListScreen } from "./DocumentListScreen";
 
 export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = ({
   navigation
@@ -33,7 +33,7 @@ export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = (
     };
   });
   return (
-    <DocumentListLayout
+    <DocumentListScreen
       documentItems={documentItems}
       navigation={navigation}
       navigateToDoc={navigateToDoc}

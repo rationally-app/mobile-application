@@ -3,22 +3,14 @@ import { ScreenView } from "../ScreenView";
 import { Header } from "../Layout/Header";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { ScrollView, View, Text } from "react-native";
-import { DARK, LIGHT } from "../../common/colors";
-import { BUILD_NO } from "../../config/index";
+import { DARK } from "../../common/colors";
 import { BottomNav } from "../Layout/BottomNav";
 import { NavigationProps } from "../../types";
+import { BuildView } from "./BuildView";
 
 export interface Settings extends NavigationProps {
   onResetDocumentData: () => void;
 }
-
-export const BuildView: FunctionComponent<{}> = () => {
-  return (
-    <View style={{ flexDirection: "row-reverse" }}>
-      <Text style={{ color: LIGHT }}>{BUILD_NO}</Text>
-    </View>
-  );
-};
 
 export const SettingsView: FunctionComponent<{
   onResetDocumentData: () => void;

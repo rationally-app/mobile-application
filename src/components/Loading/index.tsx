@@ -5,6 +5,7 @@ import { DARK } from "../../common/colors";
 export const LoadingView: FunctionComponent = () => {
   return (
     <View
+      testID="loading-view"
       style={{
         width: "100%",
         height: "100%",

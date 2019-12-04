@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react-native";
-import { DocumentListLayout } from "../../../src/components/DocumentList/DocumentListLayout";
+import { DocumentListScreen } from "../../../src/components/DocumentList/DocumentListScreen";
 import { documents } from "./data";
 import { navigation } from "../mocks/navigation";
 
@@ -11,8 +11,8 @@ const navigateToDoc = (id: string): boolean => {
 
 const navigateToScanner = (): void => alert("Going to scanner");
 
-storiesOf("DocumentList", module).add("DocumentListLayout (Empty)", () => (
-  <DocumentListLayout
+storiesOf("DocumentList", module).add("DocumentListScreen (Empty)", () => (
+  <DocumentListScreen
     documentItems={[]}
     navigateToDoc={navigateToDoc}
     navigateToScanner={navigateToScanner}
@@ -20,8 +20,8 @@ storiesOf("DocumentList", module).add("DocumentListLayout (Empty)", () => (
   />
 ));
 
-storiesOf("DocumentList", module).add("DocumentListLayout (Populated)", () => (
-  <DocumentListLayout
+storiesOf("DocumentList", module).add("DocumentListScreen (Populated)", () => (
+  <DocumentListScreen
     documentItems={documents}
     navigateToDoc={navigateToDoc}
     navigateToScanner={navigateToScanner}

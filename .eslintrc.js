@@ -41,6 +41,7 @@ module.exports = {
         allowTypedFunctionExpressions: true
       }
     ],
+    "jest/no-hooks": 0,
     "jest/lowercase-name": 0,
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "error"

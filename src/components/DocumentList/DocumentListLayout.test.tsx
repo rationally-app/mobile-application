@@ -1,16 +1,16 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
-import { DocumentListLayout } from "./DocumentListLayout";
+import { DocumentListScreen } from "./DocumentListScreen";
 
 jest.mock("../../common/navigation");
 
 const navigation: any = {};
 
-describe("DocumentListLayout", () => {
+describe("DocumentListScreen", () => {
   it("should render only EmptyDocumentList and tabs if there is no documents", () => {
     expect.assertions(3);
     const { queryByTestId } = render(
-      <DocumentListLayout
+      <DocumentListScreen
         documentItems={[]}
         navigateToDoc={() => true}
         navigateToScanner={() => {}}
@@ -25,7 +25,7 @@ describe("DocumentListLayout", () => {
   it("should render only DocumentList and tabs if there is no documents", () => {
     expect.assertions(3);
     const { queryByTestId } = render(
-      <DocumentListLayout
+      <DocumentListScreen
         documentItems={[{ id: "foo", title: "bar" }]}
         navigateToDoc={() => true}
         navigateToScanner={() => {}}
