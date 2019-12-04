@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
@@ -13,7 +13,8 @@ jobs:
           command: npm run lint
       - run:
           name: test
-          command: npm run test
+          command: npm run test -- --coverage
+      - sonarcloud/scan
   deploy_branch:
     docker:
       - image: "openattestation/expo-build:latest"
@@ -51,11 +52,14 @@ jobs:
       - run:
           name: expo_publish_channel
           command: expo publish --non-interactive --release-channel storybook-default
+orbs:
+  sonarcloud: sonarsource/sonarcloud@1.0.1
 workflows:
   version: 2
   test_and_publish:
     jobs:
-      - build
+      - build:
+          context: SonarCloud
       - deploy_branch:
           requires:
             - build
