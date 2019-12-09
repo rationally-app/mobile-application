@@ -63,6 +63,11 @@ export const WebViewFrame: FunctionComponent<WebViewFrame> = ({
           // Retrieve the templates
           const templates = window.openAttestation({type: "GET_TEMPLATES", payload: documentToRender});
           window.ReactNativeWebView.postMessage(JSON.stringify(templates));
+
+          // Add spacing container to the bottom of the document so that it isn't blocked by the bottom sheet
+          const spacingContainer = document.createElement('div');
+          spacingContainer.style.height = '30vh';
+          document.body.appendChild(spacingContainer);
         `}
       onMessage={onTemplateMessageHandler}
     />
