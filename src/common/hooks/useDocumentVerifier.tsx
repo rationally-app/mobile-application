@@ -22,28 +22,31 @@ export const useDocumentVerifier = (
 
   useEffect(() => {
     const [
-      verifyHashIssuedRevoked,
+      verifyHash,
+      verifyIssued,
+      verifyRevoked,
       verifyIdentity,
       overallValidityCheck
     ] = checkValidity(document);
 
-    verifyHashIssuedRevoked.then(v => {
+    verifyHash.then(v =>
       setTamperedCheck(
-        v.hash.checksumMatch ? CheckStatus.VALID : CheckStatus.INVALID
-      );
-      setIssuedCheck(
-        v.issued.issuedOnAll ? CheckStatus.VALID : CheckStatus.INVALID
-      );
-      setRevokedCheck(
-        v.revoked.revokedOnAny ? CheckStatus.INVALID : CheckStatus.VALID
-      );
-    });
+        v.checksumMatch ? CheckStatus.VALID : CheckStatus.INVALID
+      )
+    );
+    verifyIssued.then(v =>
+      setIssuedCheck(v.issuedOnAll ? CheckStatus.VALID : CheckStatus.INVALID)
+    );
 
-    verifyIdentity.then(v => {
+    verifyRevoked.then(v =>
+      setRevokedCheck(v.revokedOnAny ? CheckStatus.INVALID : CheckStatus.VALID)
+    );
+
+    verifyIdentity.then(v =>
       setIssuerCheck(
         v.identifiedOnAll ? CheckStatus.VALID : CheckStatus.INVALID
-      );
-    });
+      )
+    );
 
     overallValidityCheck.then(v => {
       setOverallValidity(v ? CheckStatus.VALID : CheckStatus.INVALID);

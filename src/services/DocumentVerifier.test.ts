@@ -2,9 +2,9 @@ import sampleDoc from "../../fixtures/demo-caas.json";
 import { SignedDocument } from "@govtechsg/open-attestation";
 import { checkValidity } from "./DocumentVerifier";
 
-import verify from "@govtechsg/oa-verify";
+import { verifyWithIndividualChecks } from "@govtechsg/oa-verify";
 jest.mock("@govtechsg/oa-verify");
-const mockVerify = verify as jest.Mock;
+const mockVerifyWithIndividualChecks = verifyWithIndividualChecks as jest.Mock;
 
 import { checkValidIdentity } from "./IdentityVerifier";
 jest.mock("./IdentityVerifier");
@@ -12,19 +12,17 @@ const mockCheckValidIdentity = checkValidIdentity as jest.Mock;
 
 jest.useFakeTimers();
 
-const truthyVerifyResult = {
-  hash: { checksumMatch: true },
-  issued: { issuedOnAll: true },
-  revoked: { revokedOnAny: false },
-  valid: true
-};
+const truthyVerifyResult = [
+  { checksumMatch: true },
+  { issuedOnAll: true },
+  { revokedOnAny: false }
+];
 
-const falsyVerifyResult = {
-  hash: { checksumMatch: true },
-  issued: { issuedOnAll: true },
-  revoked: { revokedOnAny: true },
-  valid: false
-};
+const falsyVerifyResult = [
+  { checksumMatch: false },
+  { issuedOnAll: false },
+  { revokedOnAny: true }
+];
 
 const truthyIdentityResult = {
   identifiedOnAll: true
@@ -39,16 +37,26 @@ describe("ValidityChecker", () => {
     describe("when verify and checkValidIdentity return truthy results", () => {
       it("should return promises that resolve to the truthy result", async () => {
         expect.assertions(3);
-        mockVerify.mockResolvedValue(truthyVerifyResult);
+        mockVerifyWithIndividualChecks.mockReturnValue(
+          truthyVerifyResult.map(Promise.resolve)
+        );
         mockCheckValidIdentity.mockResolvedValue(truthyIdentityResult);
 
         const [
-          verifyHashIssuedRevoked,
+          verifyHash,
+          verifyIssued,
+          verifyRevoked,
           verifyIdentity,
           overallValidityCheck
         ] = checkValidity(sampleDoc as SignedDocument);
 
-        expect(await verifyHashIssuedRevoked).toBe(truthyVerifyResult);
+        const result = await Promise.all([
+          verifyHash,
+          verifyIssued,
+          verifyRevoked
+        ]);
+
+        expect(result).toStrictEqual(truthyVerifyResult);
         expect(await verifyIdentity).toBe(truthyIdentityResult);
         expect(await overallValidityCheck).toBe(true);
       });
@@ -57,16 +65,26 @@ describe("ValidityChecker", () => {
     describe("when verify and checkValidIdentity return falsy results", () => {
       it("should return promises that resolve to the falsy result", async () => {
         expect.assertions(3);
-        mockVerify.mockResolvedValue(falsyVerifyResult);
+        mockVerifyWithIndividualChecks.mockReturnValue(
+          falsyVerifyResult.map(Promise.resolve)
+        );
         mockCheckValidIdentity.mockResolvedValue(falsyIdentityResult);
 
         const [
-          verifyHashIssuedRevoked,
+          verifyHash,
+          verifyIssued,
+          verifyRevoked,
           verifyIdentity,
           overallValidityCheck
         ] = checkValidity(sampleDoc as SignedDocument);
 
-        expect(await verifyHashIssuedRevoked).toBe(falsyVerifyResult);
+        const result = await Promise.all([
+          verifyHash,
+          verifyIssued,
+          verifyRevoked
+        ]);
+
+        expect(result).toStrictEqual(falsyVerifyResult);
         expect(await verifyIdentity).toBe(falsyIdentityResult);
         expect(await overallValidityCheck).toBe(false);
       });
@@ -75,23 +93,35 @@ describe("ValidityChecker", () => {
     describe("when verify returns truthy result and checkValidIdentity returns falsy result", () => {
       it("should return promises that resolve to the falsy result", async () => {
         expect.assertions(3);
-        mockVerify.mockResolvedValue(truthyVerifyResult);
+        mockVerifyWithIndividualChecks.mockReturnValue(
+          truthyVerifyResult.map(Promise.resolve)
+        );
         mockCheckValidIdentity.mockResolvedValue(falsyIdentityResult);
 
         const [
-          verifyHashIssuedRevoked,
+          verifyHash,
+          verifyIssued,
+          verifyRevoked,
           verifyIdentity,
           overallValidityCheck
         ] = checkValidity(sampleDoc as SignedDocument);
 
-        expect(await verifyHashIssuedRevoked).toBe(truthyVerifyResult);
+        const result = await Promise.all([
+          verifyHash,
+          verifyIssued,
+          verifyRevoked
+        ]);
+
+        expect(result).toStrictEqual(truthyVerifyResult);
         expect(await verifyIdentity).toBe(falsyIdentityResult);
         expect(await overallValidityCheck).toBe(false);
       });
 
       it("should wait till certain about the result before returning the overall validity", async () => {
         expect.assertions(3);
-        mockVerify.mockResolvedValue(truthyVerifyResult);
+        mockVerifyWithIndividualChecks.mockReturnValue(
+          truthyVerifyResult.map(Promise.resolve)
+        );
         mockCheckValidIdentity.mockImplementation(
           () =>
             new Promise(res => setTimeout(() => res(falsyIdentityResult), 1000))
@@ -99,13 +129,15 @@ describe("ValidityChecker", () => {
 
         let hasResolvedOverallValidity = false;
         const [
-          verifyHashIssuedRevoked,
+          verifyHash,
+          verifyIssued,
+          verifyRevoked,
           verifyIdentity,
           overallValidityCheck
         ] = checkValidity(sampleDoc as SignedDocument);
         overallValidityCheck.then(() => (hasResolvedOverallValidity = true));
 
-        await verifyHashIssuedRevoked;
+        await Promise.all([verifyHash, verifyIssued, verifyRevoked]);
         expect(hasResolvedOverallValidity).toBe(false); // Can't be certain about the overall validity yet
 
         jest.advanceTimersByTime(1000);
@@ -117,18 +149,26 @@ describe("ValidityChecker", () => {
 
       it("should return overall validity early once the first invalid check is returned", async () => {
         expect.assertions(3);
-        mockVerify.mockImplementation(
-          () =>
-            new Promise(res => setTimeout(() => res(truthyVerifyResult), 1000))
+        mockVerifyWithIndividualChecks.mockReturnValue(
+          truthyVerifyResult.map(
+            result => new Promise(res => setTimeout(() => res(result), 1000))
+          )
         );
         mockCheckValidIdentity.mockResolvedValue(falsyIdentityResult);
 
         let hasResolvedVerify = false;
         const [
-          verifyHashIssuedRevoked,
+          verifyHash,
+          verifyIssued,
+          verifyRevoked,
           verifyIdentity,
           overallValidityCheck
         ] = checkValidity(sampleDoc as SignedDocument);
+        const verifyHashIssuedRevoked = Promise.all([
+          verifyHash,
+          verifyIssued,
+          verifyRevoked
+        ]);
         verifyHashIssuedRevoked.then(() => (hasResolvedVerify = true));
 
         await verifyIdentity; // Since identity result is falsy, document is overall invalid
@@ -145,16 +185,26 @@ describe("ValidityChecker", () => {
     describe("when verify returns falsy result and checkValidIdentity returns truthy result", () => {
       it("should return promises that resolve to the falsy result", async () => {
         expect.assertions(3);
-        mockVerify.mockResolvedValue(falsyVerifyResult);
+        mockVerifyWithIndividualChecks.mockReturnValue(
+          falsyVerifyResult.map(Promise.resolve)
+        );
         mockCheckValidIdentity.mockResolvedValue(truthyIdentityResult);
 
         const [
-          verifyHashIssuedRevoked,
+          verifyHash,
+          verifyIssued,
+          verifyRevoked,
           verifyIdentity,
           overallValidityCheck
         ] = checkValidity(sampleDoc as SignedDocument);
 
-        expect(await verifyHashIssuedRevoked).toBe(falsyVerifyResult);
+        const result = await Promise.all([
+          verifyHash,
+          verifyIssued,
+          verifyRevoked
+        ]);
+
+        expect(result).toStrictEqual(falsyVerifyResult);
         expect(await verifyIdentity).toBe(truthyIdentityResult);
         expect(await overallValidityCheck).toBe(false);
       });

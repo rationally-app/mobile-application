@@ -1,20 +1,19 @@
 import React, { useState, useEffect, FunctionComponent, useRef } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { CenterDecorator } from "../decorators";
-import {
-  ValidityBanner,
-  CheckStatus
-} from "../../../src/components/DocumentRenderer/ValidityBanner";
+import { ValidityBanner } from "../../../src/components/DocumentRenderer/ValidityBanner";
 import { View, Button, Text } from "react-native";
 import { SignedDocument } from "@govtechsg/open-attestation";
-import { checkValidity } from "../../../src/services/DocumentVerifier";
 import sampleDoc from "../../../fixtures/demo-oc.json";
+import { CheckStatus } from "../../../src/constants/verifier";
+import { useDocumentVerifier } from "../../../src/common/hooks/useDocumentVerifier";
 
 const ValidChecksStory: FunctionComponent = () => {
-  const [tamperedCheck, setTamperedCheck] = useState<CheckStatus>("checking");
-  const [issuedCheck, setIssuedCheck] = useState<CheckStatus>("checking");
-  const [revokedCheck, setRevokedCheck] = useState<CheckStatus>("checking");
-  const [issuerCheck, setIssuerCheck] = useState<CheckStatus>("checking");
+  const [tamperedCheck, setTamperedCheck] = useState(CheckStatus.CHECKING);
+  const [issuedCheck, setIssuedCheck] = useState(CheckStatus.CHECKING);
+  const [revokedCheck, setRevokedCheck] = useState(CheckStatus.CHECKING);
+  const [issuerCheck, setIssuerCheck] = useState(CheckStatus.CHECKING);
+  const [overallValidity, setOverallValidity] = useState(CheckStatus.CHECKING);
 
   const [progress, setProgress] = useState<"stopped" | "started">("stopped");
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -22,31 +21,37 @@ const ValidChecksStory: FunctionComponent = () => {
   const start = (): void => {
     timers.current.push(
       setTimeout(() => {
-        setTamperedCheck("valid");
+        setTamperedCheck(CheckStatus.VALID);
       }, 1000)
     );
     timers.current.push(
       setTimeout(() => {
-        setIssuedCheck("valid");
+        setIssuedCheck(CheckStatus.VALID);
       }, 2300)
     );
     timers.current.push(
       setTimeout(() => {
-        setRevokedCheck("valid");
+        setRevokedCheck(CheckStatus.VALID);
       }, 1500)
     );
     timers.current.push(
       setTimeout(() => {
-        setIssuerCheck("valid");
+        setIssuerCheck(CheckStatus.VALID);
+      }, 2600)
+    );
+    timers.current.push(
+      setTimeout(() => {
+        setOverallValidity(CheckStatus.VALID);
       }, 2600)
     );
   };
 
   const reset = (): void => {
-    setTamperedCheck("checking");
-    setIssuedCheck("checking");
-    setRevokedCheck("checking");
-    setIssuerCheck("checking");
+    setTamperedCheck(CheckStatus.CHECKING);
+    setIssuedCheck(CheckStatus.CHECKING);
+    setRevokedCheck(CheckStatus.CHECKING);
+    setIssuerCheck(CheckStatus.CHECKING);
+    setOverallValidity(CheckStatus.CHECKING);
   };
 
   useEffect(() => {
@@ -70,6 +75,7 @@ const ValidChecksStory: FunctionComponent = () => {
         issuedCheck={issuedCheck}
         revokedCheck={revokedCheck}
         issuerCheck={issuerCheck}
+        overallValidity={overallValidity}
       />
       <View
         style={{
@@ -89,10 +95,11 @@ const ValidChecksStory: FunctionComponent = () => {
 };
 
 const InvalidChecksStory: FunctionComponent = () => {
-  const [tamperedCheck, setTamperedCheck] = useState<CheckStatus>("checking");
-  const [issuedCheck, setIssuedCheck] = useState<CheckStatus>("checking");
-  const [revokedCheck, setRevokedCheck] = useState<CheckStatus>("checking");
-  const [issuerCheck, setIssuerCheck] = useState<CheckStatus>("checking");
+  const [tamperedCheck, setTamperedCheck] = useState(CheckStatus.CHECKING);
+  const [issuedCheck, setIssuedCheck] = useState(CheckStatus.CHECKING);
+  const [revokedCheck, setRevokedCheck] = useState(CheckStatus.CHECKING);
+  const [issuerCheck, setIssuerCheck] = useState(CheckStatus.CHECKING);
+  const [overallValidity, setOverallValidity] = useState(CheckStatus.CHECKING);
 
   const [progress, setProgress] = useState<"stopped" | "started">("stopped");
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -100,31 +107,37 @@ const InvalidChecksStory: FunctionComponent = () => {
   const start = (): void => {
     timers.current.push(
       setTimeout(() => {
-        setTamperedCheck("valid");
+        setTamperedCheck(CheckStatus.VALID);
       }, 1000)
     );
     timers.current.push(
       setTimeout(() => {
-        setIssuedCheck("invalid");
+        setIssuedCheck(CheckStatus.INVALID);
       }, 2600)
     );
     timers.current.push(
       setTimeout(() => {
-        setRevokedCheck("invalid");
+        setRevokedCheck(CheckStatus.INVALID);
       }, 2300)
     );
     timers.current.push(
       setTimeout(() => {
-        setIssuerCheck("valid");
+        setIssuerCheck(CheckStatus.VALID);
       }, 1500)
+    );
+    timers.current.push(
+      setTimeout(() => {
+        setOverallValidity(CheckStatus.INVALID);
+      }, 2600)
     );
   };
 
   const reset = (): void => {
-    setTamperedCheck("checking");
-    setIssuedCheck("checking");
-    setRevokedCheck("checking");
-    setIssuerCheck("checking");
+    setTamperedCheck(CheckStatus.CHECKING);
+    setIssuedCheck(CheckStatus.CHECKING);
+    setRevokedCheck(CheckStatus.CHECKING);
+    setIssuerCheck(CheckStatus.CHECKING);
+    setOverallValidity(CheckStatus.CHECKING);
   };
 
   useEffect(() => {
@@ -148,6 +161,7 @@ const InvalidChecksStory: FunctionComponent = () => {
         issuedCheck={issuedCheck}
         revokedCheck={revokedCheck}
         issuerCheck={issuerCheck}
+        overallValidity={overallValidity}
       />
       <View
         style={{
@@ -167,33 +181,13 @@ const InvalidChecksStory: FunctionComponent = () => {
 };
 
 const ActualChecksStory: FunctionComponent = () => {
-  const [tamperedCheck, setTamperedCheck] = useState<CheckStatus>("checking");
-  const [issuedCheck, setIssuedCheck] = useState<CheckStatus>("checking");
-  const [revokedCheck, setRevokedCheck] = useState<CheckStatus>("checking");
-  const [issuerCheck, setIssuerCheck] = useState<CheckStatus>("checking");
-
-  const start = (): void => {
-    const [verifyHashIssuedRevoked, verifyIdentity] = checkValidity(
-      sampleDoc as SignedDocument
-    );
-
-    verifyHashIssuedRevoked.then(v => {
-      setTamperedCheck(v.hash.checksumMatch ? "valid" : "invalid");
-      setIssuedCheck(v.issued.issuedOnAll ? "valid" : "invalid");
-      setRevokedCheck(v.revoked.revokedOnAny ? "invalid" : "valid");
-    });
-
-    verifyIdentity.then(v => {
-      setIssuerCheck(v.identifiedOnAll ? "valid" : "invalid");
-    });
-  };
-
-  const reset = (): void => {
-    setTamperedCheck("checking");
-    setIssuedCheck("checking");
-    setRevokedCheck("checking");
-    setIssuerCheck("checking");
-  };
+  const {
+    tamperedCheck,
+    issuedCheck,
+    revokedCheck,
+    issuerCheck,
+    overallValidity
+  } = useDocumentVerifier(sampleDoc as SignedDocument);
 
   return (
     <View style={{ width: "100%" }}>
@@ -202,19 +196,8 @@ const ActualChecksStory: FunctionComponent = () => {
         issuedCheck={issuedCheck}
         revokedCheck={revokedCheck}
         issuerCheck={issuerCheck}
+        overallValidity={overallValidity}
       />
-      <View
-        style={{
-          flexDirection: "row",
-          marginTop: 8,
-          justifyContent: "space-between",
-          alignSelf: "center",
-          width: "40%"
-        }}
-      >
-        <Button title="Start" onPress={start} />
-        <Button title="Reset" onPress={reset} />
-      </View>
     </View>
   );
 };
@@ -229,28 +212,32 @@ storiesOf("ValidityBanner", module)
       }}
     >
       <ValidityBanner
-        tamperedCheck="checking"
-        issuedCheck="checking"
-        revokedCheck="checking"
-        issuerCheck="checking"
+        tamperedCheck={CheckStatus.CHECKING}
+        issuedCheck={CheckStatus.CHECKING}
+        revokedCheck={CheckStatus.CHECKING}
+        issuerCheck={CheckStatus.CHECKING}
+        overallValidity={CheckStatus.CHECKING}
       />
       <ValidityBanner
-        tamperedCheck="checking"
-        issuedCheck="checking"
-        revokedCheck="checking"
-        issuerCheck="valid"
+        tamperedCheck={CheckStatus.CHECKING}
+        issuedCheck={CheckStatus.CHECKING}
+        revokedCheck={CheckStatus.CHECKING}
+        issuerCheck={CheckStatus.VALID}
+        overallValidity={CheckStatus.CHECKING}
       />
       <ValidityBanner
-        tamperedCheck="invalid"
-        issuedCheck="checking"
-        revokedCheck="checking"
-        issuerCheck="valid"
+        tamperedCheck={CheckStatus.INVALID}
+        issuedCheck={CheckStatus.CHECKING}
+        revokedCheck={CheckStatus.CHECKING}
+        issuerCheck={CheckStatus.VALID}
+        overallValidity={CheckStatus.INVALID}
       />
       <ValidityBanner
-        tamperedCheck="valid"
-        issuedCheck="valid"
-        revokedCheck="valid"
-        issuerCheck="valid"
+        tamperedCheck={CheckStatus.VALID}
+        issuedCheck={CheckStatus.VALID}
+        revokedCheck={CheckStatus.VALID}
+        issuerCheck={CheckStatus.VALID}
+        overallValidity={CheckStatus.VALID}
       />
     </View>
   ));

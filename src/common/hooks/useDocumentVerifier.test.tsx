@@ -14,19 +14,14 @@ describe("useDocumentVerifier", () => {
   it("should return the correct check status as the checks resolve at different times", async () => {
     expect.assertions(3);
     mockCheckValidity.mockReturnValue([
-      // verifyHashIssuedRevoked
-      new Promise(res =>
-        setTimeout(
-          () =>
-            res({
-              hash: { checksumMatch: true },
-              issued: { issuedOnAll: true },
-              revoked: { revokedOnAny: false },
-              valid: true
-            }),
-          500
-        )
-      ),
+      // verifyHash
+      new Promise(res => setTimeout(() => res({ checksumMatch: true }), 500)),
+
+      // verifyIssued
+      new Promise(res => setTimeout(() => res({ issuedOnAll: true }), 500)),
+
+      // verifyRevoked
+      new Promise(res => setTimeout(() => res({ revokedOnAny: false }), 1000)),
 
       // verifyIdentity
       new Promise(res =>
@@ -55,7 +50,7 @@ describe("useDocumentVerifier", () => {
     expect(result.current).toStrictEqual({
       tamperedCheck: CheckStatus.VALID,
       issuedCheck: CheckStatus.VALID,
-      revokedCheck: CheckStatus.VALID,
+      revokedCheck: CheckStatus.CHECKING,
       issuerCheck: CheckStatus.CHECKING,
       overallValidity: CheckStatus.CHECKING
     });
