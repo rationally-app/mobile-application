@@ -12,7 +12,7 @@ export const LocalDocumentRendererContainer: FunctionComponent<NavigationProps> 
 }) => {
   const id = navigation.getParam("id");
   const { db } = useDbContext();
-  const [document, setDocument] = useState<DocumentObject>();
+  const [document, setDocument] = useState<DocumentObject | null>(null);
 
   useEffect(() => {
     const subscription = db!.documents

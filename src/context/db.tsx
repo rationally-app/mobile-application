@@ -4,11 +4,11 @@ import React, {
   useState,
   FunctionComponent
 } from "react";
-import { RxDatabase } from "rxdb";
+import { Database } from "../types";
 
 interface DbContext {
-  db?: RxDatabase;
-  setDb?: (db: RxDatabase) => void;
+  db?: Database;
+  setDb?: (db: Database) => void;
 }
 
 export const DbContext = createContext<DbContext>({

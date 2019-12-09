@@ -1,7 +1,10 @@
+import { RxJsonSchema, RxCollectionCreator, RxDatabaseCreator } from "rxdb";
+import { DocumentProperties } from "../types";
+
 export const dbName = "idwallet";
 export const dbPassword = "supersecretpassword";
 
-export const db = {
+export const db: RxDatabaseCreator = {
   name: dbName,
   adapter: "asyncstorage",
   password: dbPassword,
@@ -9,7 +12,7 @@ export const db = {
   pouchSettings: { skip_setup: true } // eslint-disable-line @typescript-eslint/camelcase
 };
 
-export const documentSchema = {
+export const documentSchema: RxJsonSchema<DocumentProperties> = {
   version: 0,
   type: "object",
   properties: {
@@ -34,9 +37,7 @@ export const documentSchema = {
   }
 };
 
-export const documentTableName = "documents";
-
-export const documentsCollection = {
-  name: documentTableName,
+export const documentsCollection: RxCollectionCreator = {
+  name: "documents",
   schema: documentSchema
 };

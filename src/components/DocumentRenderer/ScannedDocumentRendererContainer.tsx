@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { NavigationProps, DocumentObject } from "../../types";
+import { NavigationProps, DocumentProperties } from "../../types";
 import { DocumentRenderer } from "./DocumentRenderer";
 import { ScreenView } from "../ScreenView";
 import { SignedDocument, getData } from "@govtechsg/open-attestation";
@@ -27,7 +27,7 @@ export const ScannedDocumentRendererContainer: FunctionComponent<NavigationProps
   });
   const onSave = async (): Promise<void> => {
     try {
-      const documentToInsert: DocumentObject = {
+      const documentToInsert: DocumentProperties = {
         id,
         created: Date.now(),
         document,

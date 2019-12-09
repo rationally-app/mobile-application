@@ -1,5 +1,5 @@
 import React, { useEffect, FunctionComponent } from "react";
-import { NavigationProps } from "../types";
+import { NavigationProps, DatabaseCollections, Database } from "../types";
 import { useDbContext } from "../context/db";
 import * as RxDB from "rxdb";
 import { DB_CONFIG } from "../config";
@@ -7,8 +7,8 @@ import { LoadingView } from "../components/Loading";
 
 RxDB.plugin(require("pouchdb-adapter-asyncstorage").default);
 
-const createDatabase = async (): Promise<RxDB.RxDatabase> => {
-  const db = await RxDB.create(DB_CONFIG.db);
+const createDatabase = async (): Promise<Database> => {
+  const db = await RxDB.create<DatabaseCollections>(DB_CONFIG.db);
   await db.collection(DB_CONFIG.documentsCollection);
   return db;
 };
