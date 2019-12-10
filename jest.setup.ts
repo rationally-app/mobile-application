@@ -8,8 +8,3 @@ jest.mock("@expo/vector-icons", () => ({
   AntDesign: "AntDesign Icons",
   FontAwesome: "FontAwesome Icons"
 }));
-
-jest.mock("react-native-reanimated", () => {
-  // eslint-disable-next-line jest/no-mocks-import
-  return require("./__mocks__/ReactNativeReanimated");
-});
