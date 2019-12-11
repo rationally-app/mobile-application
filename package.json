@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@govtechsg/dnsprove": "^2.0.5",
+    "@govtechsg/oa-encryption": "^1.2.0",
     "@govtechsg/oa-verify": "^2.1.0",
     "@govtechsg/open-attestation": "^1.1.41",
     "expo": "^35.0.0",

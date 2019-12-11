@@ -1,4 +1,6 @@
-import { decodeAction, processQr } from "./QrProcessor";
+import { decodeAction, processQr } from "./index";
+import demoEncrypted from "../../../fixtures/demo-encrypted-oc.json";
+import demoOc from "../../../fixtures/demo-oc.json";
 
 const dataPrefix = "https://openattestation.com/action?document=";
 
@@ -71,20 +73,18 @@ describe("decodeAction", () => {
 });
 
 describe("processQr", () => {
-  const mockDocument = "MOCK_JSON_RESPONSE" as any;
+  const mockJsonResponse = jest.fn();
 
   beforeAll(() => {
     const globalAny: any = global;
-    jest
-      .spyOn(globalAny, "fetch")
-      .mockImplementation()
-      .mockImplementation(async () => ({
-        json: async () => mockDocument
-      }));
+    jest.spyOn(globalAny, "fetch").mockImplementation(async () => ({
+      json: mockJsonResponse
+    }));
   });
 
   it("should fetch and call `onDocumentView` for `document` type action", async () => {
     expect.assertions(2);
+    mockJsonResponse.mockResolvedValue("MOCK_JSON_DOCUMENT");
     const onDocumentStore = jest.fn();
     const onDocumentView = jest.fn();
     await processQr(
@@ -92,12 +92,13 @@ describe("processQr", () => {
         encodeURI(JSON.stringify({ uri: "https://api.myjson.com/bins/kv1de" })),
       { onDocumentStore, onDocumentView }
     );
-    expect(onDocumentView).toHaveBeenCalledWith(mockDocument);
+    expect(onDocumentView).toHaveBeenCalledWith("MOCK_JSON_DOCUMENT");
     expect(onDocumentStore).not.toHaveBeenCalled();
   });
 
   it("should fetch and call `onDocumentStore` for `document` type action with STORE", async () => {
     expect.assertions(2);
+    mockJsonResponse.mockResolvedValue("MOCK_JSON_DOCUMENT");
     const onDocumentStore = jest.fn();
     const onDocumentView = jest.fn();
     await processQr(
@@ -110,7 +111,7 @@ describe("processQr", () => {
         ),
       { onDocumentStore, onDocumentView }
     );
-    expect(onDocumentStore).toHaveBeenCalledWith(mockDocument);
+    expect(onDocumentStore).toHaveBeenCalledWith("MOCK_JSON_DOCUMENT");
     expect(onDocumentView).not.toHaveBeenCalled();
   });
 
@@ -200,5 +201,44 @@ describe("processQr", () => {
         { onDocumentStore, onDocumentView }
       )
     ).rejects.toThrow("Error from onDocumentStore");
+  });
+
+  it("should process encrypted document", async () => {
+    expect.assertions(1);
+    mockJsonResponse.mockResolvedValue(demoEncrypted);
+    const onDocumentStore = jest.fn();
+    const onDocumentView = jest.fn();
+    await processQr(
+      dataPrefix +
+        encodeURI(
+          JSON.stringify({
+            uri: "https://example.com/some-id",
+            key:
+              "7e22da661c5d574ed611bf507db9350c5d50028df21fd7038fa0bb3b02e4e9b4"
+          })
+        ),
+      { onDocumentStore, onDocumentView }
+    );
+    expect(onDocumentView).toHaveBeenCalledWith(demoOc);
+  });
+
+  it("should throw on failed decryption", async () => {
+    expect.assertions(1);
+    mockJsonResponse.mockResolvedValue(demoEncrypted);
+    const onDocumentStore = jest.fn();
+    const onDocumentView = jest.fn();
+    await expect(
+      processQr(
+        dataPrefix +
+          encodeURI(
+            JSON.stringify({
+              uri: "https://example.com/some-id",
+              key:
+                "7e22da661c5d574ed611bf507db9350c5d50028df21fd7038fa0bb3b02e4e9b5"
+            })
+          ),
+        { onDocumentStore, onDocumentView }
+      )
+    ).rejects.toThrow("Error decrypting message");
   });
 });

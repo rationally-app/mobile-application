@@ -1,7 +1,10 @@
 import { Document } from "@govtechsg/open-attestation";
-import { validateAction } from "./actionValidator/validator";
-import { DocumentPermittedAction } from "./actionValidator/documentActionValidator";
-
+import { validateAction } from "../actionValidator/validator";
+import { DocumentPermittedAction } from "../actionValidator/documentActionValidator";
+import {
+  fetchCleartextDocument,
+  fetchEncryptedDocument
+} from "./fetchDocument";
 // The universal transfer method uses the query string's field as the action type
 // and the uriencoded value as the payload
 const universalTransferDataRegex = /https:\/\/openattestation.com\/action\?(.*)=(.*)/;
@@ -51,9 +54,14 @@ export const processQr = async (
 
   switch (action.type) {
     case ActionType.DOCUMENT:
-      const fetchedDocument = (await fetch(action.payload.uri).then(res =>
-        res.json()
-      )) as Document;
+      const { uri, key } = action.payload;
+      const fetchedDocument = key
+        ? await fetchEncryptedDocument({
+            uri,
+            key
+          })
+        : await fetchCleartextDocument({ uri });
+
       // TODO Validate if fetchedDocument is a valid document, need to add the method to open-attestation
       if (
         action.payload.permittedActions &&
