@@ -3,7 +3,7 @@ import { render, fireEvent } from "@testing-library/react-native";
 import { DocumentListItem } from "./DocumentListItem";
 
 describe("DocumentListItem", () => {
-  it("should show the title and VerifiedLabel", () => {
+  it("should show the title when is valid", () => {
     expect.assertions(2);
     const { queryByText, queryByTestId } = render(
       <DocumentListItem
@@ -14,13 +14,27 @@ describe("DocumentListItem", () => {
       />
     );
     expect(queryByText("My Degree")).not.toBeNull();
+    expect(queryByTestId("verified-label")).toBeNull();
+  });
+
+  it("should show the title and verified label when is invalid", () => {
+    expect.assertions(2);
+    const { queryByText, queryByTestId } = render(
+      <DocumentListItem
+        title="My Degree"
+        isVerified={false}
+        lastVerification={1}
+        onPress={(): void => {}}
+      />
+    );
+    expect(queryByText("My Degree")).not.toBeNull();
     expect(queryByTestId("verified-label")).not.toBeNull();
   });
 
   it("should fire onPress props when pressed", () => {
-    expect.assertions(2);
+    expect.assertions(1);
     const onPress = jest.fn();
-    const { getByText, getByTestId } = render(
+    const { getByText } = render(
       <DocumentListItem
         title="My Degree"
         isVerified={true}
@@ -29,8 +43,6 @@ describe("DocumentListItem", () => {
       />
     );
     fireEvent.press(getByText("My Degree"));
-    fireEvent.press(getByTestId("verified-label"));
-    expect(onPress).toHaveBeenCalledWith();
-    expect(onPress.mock.calls).toHaveLength(2);
+    expect(onPress).toHaveBeenCalledTimes(1);
   });
 });

@@ -32,10 +32,12 @@ export const DocumentListItem: FunctionComponent<DocumentListItem> = ({
       }}
     >
       <Text style={{ color: DARK, fontWeight: "bold" }}>{truncate(title)}</Text>
-      <VerifiedLabel
-        isVerified={isVerified}
-        lastVerification={lastVerification}
-      />
+      {!isVerified && (
+        <VerifiedLabel
+          isVerified={isVerified}
+          lastVerification={lastVerification}
+        />
+      )}
     </View>
   </TouchableOpacity>
 );

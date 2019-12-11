@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useRef } from "react";
+import React, { FunctionComponent, useState, useRef, useEffect } from "react";
 import { LayoutChangeEvent, View, Text } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { BottomSheet } from "../Layout/BottomSheet";
@@ -7,13 +7,16 @@ import QRIcon from "../../../assets/icons/qr.svg";
 import { ValidityBanner } from "./ValidityBanner";
 import { useDocumentVerifier } from "../../common/hooks/useDocumentVerifier";
 import { VERY_LIGHT } from "../../common/colors";
+import { CheckStatus } from "../../constants/verifier";
 
-interface DocumentDetailsSheet {
+export interface DocumentDetailsSheet {
   document: Document;
+  onVerification: (checkStatus: CheckStatus) => void;
 }
 
 export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
-  document
+  document,
+  onVerification
 }) => {
   const [headerHeight, setHeaderHeight] = useState(0);
   const hasHeaderHeightBeenSet = useRef(false);
@@ -35,6 +38,12 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
     issuerCheck,
     overallValidity
   } = useDocumentVerifier(document as SignedDocument);
+
+  useEffect(() => {
+    if (overallValidity !== CheckStatus.CHECKING) {
+      onVerification(overallValidity);
+    }
+  }, [onVerification, overallValidity]);
 
   return (
     <BottomSheet snapPoints={[headerHeight, "83%"]}>

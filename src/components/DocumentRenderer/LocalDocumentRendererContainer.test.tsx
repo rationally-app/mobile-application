@@ -8,9 +8,20 @@ import {
 } from "../../test/helpers/db";
 import { mockNavigation, resetNavigation } from "../../test/helpers/navigation";
 import sampleDocument from "../../../fixtures/demo-caas.json";
+import { CheckStatus } from "../../constants/verifier";
+import { DocumentDetailsSheet } from "./DocumentDetailsSheet";
 
 jest.mock("../DocumentRenderer/WebViewFrame");
 jest.mock("../../common/navigation");
+
+let sheetProps: DocumentDetailsSheet;
+jest.mock("./DocumentDetailsSheet", () => ({
+  DocumentDetailsSheet: (props: DocumentDetailsSheet) => {
+    sheetProps = { ...props };
+    return null;
+  }
+}));
+
 jest.useFakeTimers();
 
 describe("LocalDocumentRendererContainer", () => {
@@ -59,6 +70,56 @@ describe("LocalDocumentRendererContainer", () => {
     fireEvent.press(getByTestId("header-back-button"));
     await wait(() => {
       expect(mockNavigation.goBack).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("should update the document when document is determined to be valid", async () => {
+    expect.assertions(2);
+    const atomicUpdate = jest.fn();
+    const document = {
+      document: sampleDocument,
+      isVerified: false,
+      verified: 1,
+      atomicUpdate
+    };
+    render(
+      <MockDbProvider>
+        <LocalDocumentRendererContainer navigation={mockNavigation} />
+      </MockDbProvider>
+    );
+    whenDbSubscriptionReturns(document);
+    await wait(() => {
+      sheetProps.onVerification(CheckStatus.VALID);
+      expect(atomicUpdate).toHaveBeenCalledTimes(1);
+
+      // Call the update on the old document
+      atomicUpdate.mock.calls[0][0](document);
+      expect(document).toHaveProperty("isVerified", true);
+    });
+  });
+
+  it("should update the document when document is determined to be invalid", async () => {
+    expect.assertions(2);
+    const atomicUpdate = jest.fn();
+    const document = {
+      document: sampleDocument,
+      isVerified: false,
+      verified: 1,
+      atomicUpdate
+    };
+    render(
+      <MockDbProvider>
+        <LocalDocumentRendererContainer navigation={mockNavigation} />
+      </MockDbProvider>
+    );
+    whenDbSubscriptionReturns(document);
+    await wait(() => {
+      sheetProps.onVerification(CheckStatus.INVALID);
+      expect(atomicUpdate).toHaveBeenCalledTimes(1);
+
+      // Call the update on the old document
+      atomicUpdate.mock.calls[0][0](document);
+      expect(document).toHaveProperty("isVerified", false);
     });
   });
 });
