@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import { View } from "react-native";
 import { NavigationProps } from "../../types";
 import { ScreenView } from "../ScreenView";
@@ -25,14 +25,30 @@ export const QrScannerScreenContainer: FunctionComponent<QrScannerScreenContaine
     navigation.navigate("ScannedDocumentScreen", { document });
   };
   const onQrData = async (data: string): Promise<void> => {
+    if (scanningDisabled) {
+      return;
+    }
     setScanningDisabled(true);
     try {
       await processQr(data, { onDocumentStore, onDocumentView });
     } catch (e) {
+      setScanningDisabled(false);
       alert(e);
     }
-    setScanningDisabled(false);
   };
+
+  useEffect(() => {
+    const willBlurSubscription = navigation.addListener("willBlur", () => {
+      setScanningDisabled(true);
+    });
+    const willFocusSubscription = navigation.addListener("willFocus", () => {
+      setScanningDisabled(false);
+    });
+    return () => {
+      willBlurSubscription.remove();
+      willFocusSubscription.remove();
+    };
+  }, [navigation]);
 
   return (
     <ScreenView>

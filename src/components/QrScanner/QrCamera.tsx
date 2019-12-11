@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
-import { View } from "react-native";
+import React, { FunctionComponent, useState, useEffect, useRef } from "react";
+import { View, Platform } from "react-native";
 import { LoadingView } from "../Loading";
 import * as Permissions from "expo-permissions";
 import { Camera } from "expo-camera";
@@ -16,7 +16,7 @@ export interface QrCamera {
 
 export const QrCamera: FunctionComponent<QrCamera> = ({
   onQrData,
-  disabled
+  disabled = false
 }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const askForCameraPermission = async (): Promise<void> => {
@@ -31,6 +31,16 @@ export const QrCamera: FunctionComponent<QrCamera> = ({
   useEffect(() => {
     askForCameraPermission();
   }, []);
+
+  const cameraRef = useRef<Camera>(null);
+  const [ratio, setRatio] = useState();
+  const onCameraReady = async (): Promise<void> => {
+    if (Platform.OS === "android" && cameraRef.current) {
+      const ratios = await cameraRef.current.getSupportedRatiosAsync();
+      setRatio(ratios[ratios.length - 1]);
+    }
+  };
+
   return hasCameraPermission ? (
     <View style={{ flex: 1 }}>
       {disabled ? (
@@ -39,8 +49,11 @@ export const QrCamera: FunctionComponent<QrCamera> = ({
         </View>
       ) : (
         <Camera
+          ref={cameraRef}
           style={{ flex: 1 }}
           onBarCodeScanned={onBarCodeScanned}
+          onCameraReady={onCameraReady}
+          ratio={ratio}
           testID="qr-camera"
         />
       )}
