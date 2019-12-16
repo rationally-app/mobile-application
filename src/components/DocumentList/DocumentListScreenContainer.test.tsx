@@ -45,14 +45,25 @@ describe("DocumentListScreenContainer", () => {
     expect(queryAllByTestId("document-list-item")).toHaveLength(2);
   });
 
-  it("should show EmptyDocumentList before documents is populated", () => {
+  it("should show EmptyDocumentList if no documents are in db", () => {
     expect.assertions(1);
-    const { findByTestId } = render(
+    const { queryByTestId } = render(
       <MockDbProvider>
         <DocumentListScreenContainer navigation={mockNavigation} />
       </MockDbProvider>
     );
-    expect(findByTestId("empty-document-list")).not.toBeNull();
+    whenDbSubscriptionReturns([]);
+    expect(queryByTestId("empty-document-list")).not.toBeNull();
+  });
+
+  it("should show LoadingView if db query hasn't finished", () => {
+    expect.assertions(1);
+    const { queryByTestId } = render(
+      <MockDbProvider>
+        <DocumentListScreenContainer navigation={mockNavigation} />
+      </MockDbProvider>
+    );
+    expect(queryByTestId("loading-view")).not.toBeNull();
   });
 
   it("should navigate to LocalDocumentScreen when DocumentListItem is pressed", () => {
@@ -79,35 +90,8 @@ describe("DocumentListScreenContainer", () => {
         <DocumentListScreenContainer navigation={mockNavigation} />
       </MockDbProvider>
     );
+    whenDbSubscriptionReturns([]);
     fireEvent.press(getByText("Add"));
-    expect(mockNavigation.dispatch).toHaveBeenCalledWith({
-      routeName: "QrScannerScreen",
-      type: "Navigation/REPLACE"
-    });
-  });
-
-  it("should navigate to SettingScreen when settings in nav bar is pressed", () => {
-    expect.assertions(1);
-    const { getAllByTestId } = render(
-      <MockDbProvider>
-        <DocumentListScreenContainer navigation={mockNavigation} />
-      </MockDbProvider>
-    );
-    fireEvent.press(getAllByTestId("nav-tab")[2]);
-    expect(mockNavigation.dispatch).toHaveBeenCalledWith({
-      routeName: "SettingsScreen",
-      type: "Navigation/REPLACE"
-    });
-  });
-
-  it("should navigate to QrScannerScreen when settings in nav bar is pressed", () => {
-    expect.assertions(1);
-    const { getAllByTestId } = render(
-      <MockDbProvider>
-        <DocumentListScreenContainer navigation={mockNavigation} />
-      </MockDbProvider>
-    );
-    fireEvent.press(getAllByTestId("nav-tab")[1]);
     expect(mockNavigation.dispatch).toHaveBeenCalledWith({
       routeName: "QrScannerScreen",
       type: "Navigation/REPLACE"

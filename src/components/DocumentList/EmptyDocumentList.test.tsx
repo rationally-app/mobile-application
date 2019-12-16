@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { EmptyDocumentList } from "./EmptyDocumentList";
 
-describe("DefaultDocuentView", () => {
+describe("EmptyDocumentList", () => {
   it("should show the right message", () => {
     expect.assertions(2);
     const { getByText } = render(<EmptyDocumentList onAdd={() => {}} />);

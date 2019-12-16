@@ -9,7 +9,9 @@ export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = (
   navigation
 }) => {
   const { db } = useDbContext();
-  const [documents, setDocuments] = useState<DocumentObject[]>([]);
+
+  // undefined when the db hasn't fulfilled the initial find query
+  const [documents, setDocuments] = useState<DocumentObject[]>();
   useEffect(() => {
     const subscription = db!.documents.find().$.subscribe(setDocuments);
     return () => subscription.unsubscribe();
@@ -19,7 +21,7 @@ export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = (
     navigation.navigate("LocalDocumentScreen", { id });
   const navigateToScanner = replaceRouteFn(navigation, "QrScannerScreen");
 
-  const documentItems = documents.map((doc: DocumentObject) => {
+  const documentItems = documents?.map((doc: DocumentObject) => {
     const docClear = getData(doc.document);
     return {
       id: doc.id,
