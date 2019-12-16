@@ -1,12 +1,11 @@
 import React, { FunctionComponent, useState, useRef, useEffect } from "react";
-import { LayoutChangeEvent, View, Text } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
+import { LayoutChangeEvent, View, Text, TouchableOpacity } from "react-native";
 import { BottomSheet } from "../Layout/BottomSheet";
 import { Document, SignedDocument, getData } from "@govtechsg/open-attestation";
 import QRIcon from "../../../assets/icons/qr.svg";
 import { ValidityBanner } from "./ValidityBanner";
 import { useDocumentVerifier } from "../../common/hooks/useDocumentVerifier";
-import { VERY_LIGHT } from "../../common/colors";
+import { DARK } from "../../common/colors";
 import { CheckStatus } from "../../constants/verifier";
 import { QrCode } from "./QrCode";
 import { useQrGenerator } from "../../common/hooks/useQrGenerator";
@@ -84,21 +83,48 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
                   {issuerName}
                 </Text>
               </View>
-              <RectButton
+              <TouchableOpacity
                 onPress={openSheet}
                 style={{
-                  backgroundColor: VERY_LIGHT,
-                  height: 48,
-                  width: 48,
+                  backgroundColor: "white",
+                  minWidth: 48,
+                  paddingVertical: 8,
+                  paddingHorizontal: 8,
                   borderRadius: 8,
                   justifyContent: "center",
-                  alignItems: "center"
+                  alignItems: "center",
+                  borderColor: "#E8E8E8",
+                  borderWidth: 1,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 0
+                  },
+                  shadowOpacity: 0.2,
+                  shadowRadius: 3,
+                  elevation: 3,
+                  overflow: "visible"
                 }}
               >
-                <View accessible>
+                <View
+                  accessible
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
                   <QRIcon width={24} height={24} />
+                  <Text
+                    style={{
+                      marginTop: 4,
+                      fontSize: 8,
+                      fontWeight: "bold",
+                      textTransform: "uppercase",
+                      letterSpacing: 0.5,
+                      color: DARK
+                    }}
+                  >
+                    Share
+                  </Text>
                 </View>
-              </RectButton>
+              </TouchableOpacity>
             </View>
           </View>
           <QrCode qrCode={qrCode} qrCodeLoading={qrCodeLoading} />
