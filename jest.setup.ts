@@ -8,3 +8,8 @@ jest.mock("@expo/vector-icons", () => ({
   AntDesign: "AntDesign Icons",
   FontAwesome: "FontAwesome Icons"
 }));
+
+jest.mock("expo-constants", () => ({ manifest: { revisionId: "BUILD NO" } }));
+
+const globalAny: any = global;
+globalAny.alert = jest.fn(); // eslint-disable-line jest/prefer-spy-on

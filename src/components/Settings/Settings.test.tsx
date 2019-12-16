@@ -3,7 +3,6 @@ import { render, fireEvent } from "@testing-library/react-native";
 import { Settings } from "./Settings";
 import { mockNavigation, resetNavigation } from "../../test/helpers/navigation";
 
-jest.mock("expo-constants", () => ({ manifest: { revisionId: "BUILD NO" } }));
 jest.mock("../../common/navigation");
 
 describe("Settings", () => {

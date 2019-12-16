@@ -14,18 +14,27 @@ const { call } = Animated;
 const FLICK_THRESHOLD = 0.04;
 const OPEN_THRESHOLD = 0.7;
 const CLOSE_THRESHOLD = 0.3;
+const NOOP = (): void => {};
 
 type BottomSheetChildrenFn = (openSheet: () => null | void) => ReactNode;
 
 interface BottomSheet {
   children: ReactNode | BottomSheetChildrenFn;
   snapPoints?: (number | string)[];
+  onOpenEnd?: () => void;
+  onCloseEnd?: () => void;
+  onOpenStart?: () => void;
+  onCloseStart?: () => void;
 }
 
 type SheetStatus = "opening" | "closing" | null;
 
 export const BottomSheet: FunctionComponent<BottomSheet> = ({
   children,
+  onOpenEnd = NOOP,
+  onCloseEnd = NOOP,
+  onOpenStart = NOOP,
+  onCloseStart = NOOP,
   snapPoints = ["20%", "100%"]
 }) => {
   const bottomSheetRef: RefObject<BottomSheetBehavior> = useRef(null);
@@ -34,7 +43,8 @@ export const BottomSheet: FunctionComponent<BottomSheet> = ({
   // this allows snapPoints to be dynamic
   useEffect(() => {
     bottomSheetRef.current && bottomSheetRef.current.snapTo(0);
-  }, [snapPoints]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...snapPoints]);
 
   const sheetStatus = useRef<SheetStatus>(null);
   const isTransitioning = useRef(false);
@@ -112,17 +122,21 @@ export const BottomSheet: FunctionComponent<BottomSheet> = ({
         callbackNode={sheetHiddenPercentage}
         onOpenStart={() => {
           sheetStatus.current = "opening";
+          onOpenStart();
         }}
         onOpenEnd={() => {
           sheetStatus.current = null;
           isTransitioning.current = false;
+          onOpenEnd();
         }}
         onCloseStart={() => {
           sheetStatus.current = "closing";
+          onCloseStart();
         }}
         onCloseEnd={() => {
           sheetStatus.current = null;
           isTransitioning.current = false;
+          onCloseEnd();
         }}
       />
     </>

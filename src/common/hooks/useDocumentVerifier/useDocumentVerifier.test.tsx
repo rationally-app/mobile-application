@@ -1,11 +1,11 @@
-import sampleDoc from "../../../fixtures/demo-oc.json";
-import { useDocumentVerifier } from "./useDocumentVerifier";
+import sampleDoc from "../../../../fixtures/demo-oc.json";
+import { useDocumentVerifier } from "./index";
 import { SignedDocument } from "@govtechsg/open-attestation";
 import { renderHook } from "@testing-library/react-hooks";
-import { CheckStatus } from "../../constants/verifier";
+import { CheckStatus } from "../../../constants/verifier";
 
-import { checkValidity } from "../../services/DocumentVerifier";
-jest.mock("../../services/DocumentVerifier");
+import { checkValidity } from "../../../services/DocumentVerifier";
+jest.mock("../../../services/DocumentVerifier");
 const mockCheckValidity = checkValidity as jest.Mock;
 
 jest.useFakeTimers();
