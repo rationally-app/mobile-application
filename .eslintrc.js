@@ -45,5 +45,13 @@ module.exports = {
     "jest/lowercase-name": 0,
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "error"
-  }
+  },
+  overrides: [
+    {
+      files: ["**/*.test.tsx", "storybook/**/*.tsx"],
+      rules: {
+        "@typescript-eslint/no-empty-function": "off"
+      }
+    }
+  ]
 };

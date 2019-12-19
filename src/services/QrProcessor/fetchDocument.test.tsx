@@ -34,7 +34,7 @@ describe("fetchDocument", () => {
       mockJsonResponse.mockResolvedValue(demoEncrypted);
       const results = await fetchEncryptedDocument({
         uri: "https://example.com/id",
-        key: "7e22da661c5d574ed611bf507db9350c5d50028df21fd7038fa0bb3b02e4e9b4"
+        key: "a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b"
       });
       expect(fetch).toHaveBeenCalledWith("https://example.com/id");
       expect(results).toStrictEqual(demoOc);
@@ -48,7 +48,7 @@ describe("fetchDocument", () => {
         fetchEncryptedDocument({
           uri: "https://example.com/id",
           key:
-            "7e22da661c5d574ed611bf507db9350c5d50028df21fd7038fa0bb3b02e4e9b5"
+            "a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811a"
         })
       ).rejects.toThrow("Error decrypting message");
     });

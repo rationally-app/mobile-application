@@ -20,12 +20,12 @@ export const DocumentRenderer: FunctionComponent<DocumentRenderer> = ({
   goBack
 }) => {
   const [tabs, setTabs] = useState<Tab[]>([]);
-  const [goToTab, setGoToTab] = useState<(tabId: string) => void>(() => {});
+  const [goToTab, setGoToTab] = useState<(tabId: string) => void>();
   const [activeTabId, setActiveTabId] = useState<string>("");
 
   const tabSelect = (id: string): void => {
     setActiveTabId(id);
-    goToTab(id);
+    goToTab?.(id);
   };
 
   return (

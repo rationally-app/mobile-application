@@ -41,13 +41,13 @@ describe("decodeAction", () => {
     it("should return action for encrypted document", () => {
       expect.assertions(1);
       const input =
-        "https://openattestation.com/action?document=%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22,%22key%22:%22aa57eb519fd3c63c42c2f2697e8957198b56fc945c4db18b480c07d2e6485a93%22%7D";
+        "https://openattestation.com/action?document=%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22,%22key%22:%22a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b%22%7D";
       const action = {
         type: "DOCUMENT",
         payload: {
           uri: "https://hosted-document.com/doc/foo-bar",
           key:
-            "aa57eb519fd3c63c42c2f2697e8957198b56fc945c4db18b480c07d2e6485a93"
+            "a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b"
         }
       };
       expect(decodeAction(input)).toStrictEqual(action);
@@ -56,13 +56,13 @@ describe("decodeAction", () => {
     it("should return action for encrypted document with permitted action and redirect", () => {
       expect.assertions(1);
       const input =
-        "https://openattestation.com/action?document=%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22,%22key%22:%22aa57eb519fd3c63c42c2f2697e8957198b56fc945c4db18b480c07d2e6485a93%22,%22permittedActions%22:%5B%22VIEW%22%5D,%22redirect%22:%22https://tradetrust.io/%22%7D";
+        "https://openattestation.com/action?document=%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22,%22key%22:%22a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b%22,%22permittedActions%22:%5B%22VIEW%22%5D,%22redirect%22:%22https://tradetrust.io/%22%7D";
       const action = {
         type: "DOCUMENT",
         payload: {
           uri: "https://hosted-document.com/doc/foo-bar",
           key:
-            "aa57eb519fd3c63c42c2f2697e8957198b56fc945c4db18b480c07d2e6485a93",
+            "a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b",
           permittedActions: ["VIEW"],
           redirect: "https://tradetrust.io/"
         }
@@ -214,7 +214,7 @@ describe("processQr", () => {
           JSON.stringify({
             uri: "https://example.com/some-id",
             key:
-              "7e22da661c5d574ed611bf507db9350c5d50028df21fd7038fa0bb3b02e4e9b4"
+              "a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b"
           })
         ),
       { onDocumentStore, onDocumentView }

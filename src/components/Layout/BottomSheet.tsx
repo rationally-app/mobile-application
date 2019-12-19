@@ -14,7 +14,6 @@ const { call } = Animated;
 const FLICK_THRESHOLD = 0.04;
 const OPEN_THRESHOLD = 0.7;
 const CLOSE_THRESHOLD = 0.3;
-const NOOP = (): void => {};
 
 type BottomSheetChildrenFn = (openSheet: () => null | void) => ReactNode;
 
@@ -31,10 +30,10 @@ type SheetStatus = "opening" | "closing" | null;
 
 export const BottomSheet: FunctionComponent<BottomSheet> = ({
   children,
-  onOpenEnd = NOOP,
-  onCloseEnd = NOOP,
-  onOpenStart = NOOP,
-  onCloseStart = NOOP,
+  onOpenEnd,
+  onCloseEnd,
+  onOpenStart,
+  onCloseStart,
   snapPoints = ["20%", "100%"]
 }) => {
   const bottomSheetRef: RefObject<BottomSheetBehavior> = useRef(null);
@@ -122,21 +121,21 @@ export const BottomSheet: FunctionComponent<BottomSheet> = ({
         callbackNode={sheetHiddenPercentage}
         onOpenStart={() => {
           sheetStatus.current = "opening";
-          onOpenStart();
+          onOpenStart?.();
         }}
         onOpenEnd={() => {
           sheetStatus.current = null;
           isTransitioning.current = false;
-          onOpenEnd();
+          onOpenEnd?.();
         }}
         onCloseStart={() => {
           sheetStatus.current = "closing";
-          onCloseStart();
+          onCloseStart?.();
         }}
         onCloseEnd={() => {
           sheetStatus.current = null;
           isTransitioning.current = false;
-          onCloseEnd();
+          onCloseEnd?.();
         }}
       />
     </>
