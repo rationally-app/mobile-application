@@ -4,6 +4,7 @@ import LocalDocumentScreen from "./LocalDocumentScreen";
 import ScannedDocumentScreen from "./ScannedDocumentScreen";
 import QrScannerScreen from "./QrScannerScreen";
 import SettingsScreen from "./SettingsScreen";
+import ValidityCheckScreen from "./ValidityCheckScreen";
 
 const StackNavigator = createStackNavigator(
   {
@@ -12,6 +13,9 @@ const StackNavigator = createStackNavigator(
     },
     LocalDocumentScreen: {
       screen: LocalDocumentScreen
+    },
+    ValidityCheckScreen: {
+      screen: ValidityCheckScreen
     },
     ScannedDocumentScreen: {
       screen: ScannedDocumentScreen

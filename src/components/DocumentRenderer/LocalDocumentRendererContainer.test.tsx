@@ -8,8 +8,8 @@ import {
 } from "../../test/helpers/db";
 import { mockNavigation, resetNavigation } from "../../test/helpers/navigation";
 import sampleDocument from "../../../fixtures/demo-caas.json";
-import { CheckStatus } from "../../constants/verifier";
 import { DocumentDetailsSheet } from "./DocumentDetailsSheet";
+import { CheckStatus } from "../Validity";
 
 jest.mock("../DocumentRenderer/WebViewFrame");
 jest.mock("../../common/navigation");

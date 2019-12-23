@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { storiesOf } from "@storybook/react-native";
 import { ScannedDocumentActionSheet } from "../../../src/components/DocumentRenderer/ScannedDocumentActionSheet";
-import { CheckStatus } from "../../../src/constants/verifier";
+import { CheckStatus } from "../../../src/components/Validity";
 
 const onSave = (): void => alert("Saved");
 const onCancel = (): void => alert("Cancelled");

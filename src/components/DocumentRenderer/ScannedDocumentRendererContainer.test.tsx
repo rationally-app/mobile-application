@@ -8,24 +8,18 @@ import {
 } from "../../test/helpers/navigation";
 import { MockDbProvider, resetDb, mockInsert } from "../../test/helpers/db";
 import sampleDocument from "../../../fixtures/demo-caas.json";
-import { CheckStatus } from "../../constants/verifier";
-import { useDocumentVerifier } from "../../common/hooks/useDocumentVerifier";
+import { CheckStatus } from "../Validity";
 
 jest.mock("../DocumentRenderer/WebViewFrame");
 jest.mock("../../common/navigation");
-jest.mock("../../common/hooks/useDocumentVerifier");
 jest.useFakeTimers();
 
-const mockUseDocumentVerifier = useDocumentVerifier as jest.Mock;
-
-const whenDocumentIsVerified = (): void => {
-  mockUseDocumentVerifier.mockReturnValue({
-    tamperedCheck: CheckStatus.VALID,
-    issuedCheck: CheckStatus.VALID,
-    revokedCheck: CheckStatus.VALID,
-    issuerCheck: CheckStatus.VALID,
-    overallValidity: CheckStatus.VALID
-  });
+const verificationStatuses = {
+  tamperedCheck: CheckStatus.VALID,
+  issuedCheck: CheckStatus.VALID,
+  revokedCheck: CheckStatus.VALID,
+  issuerCheck: CheckStatus.VALID,
+  overallValidity: CheckStatus.VALID
 };
 
 describe("ScannedDocumentRendererContainer", () => {
@@ -38,6 +32,7 @@ describe("ScannedDocumentRendererContainer", () => {
     expect.assertions(1);
     setParam("document", sampleDocument);
     setParam("savable", false);
+    setParam("verificationStatuses", verificationStatuses);
     const { queryByTestId } = render(
       <ScannedDocumentRendererContainer navigation={mockNavigation} />
     );
@@ -48,6 +43,7 @@ describe("ScannedDocumentRendererContainer", () => {
     expect.assertions(2);
     setParam("document", sampleDocument);
     setParam("savable", true);
+    setParam("verificationStatuses", verificationStatuses);
     const { queryByText } = render(
       <ScannedDocumentRendererContainer navigation={mockNavigation} />
     );
@@ -59,6 +55,7 @@ describe("ScannedDocumentRendererContainer", () => {
     expect.assertions(2);
     setParam("document", sampleDocument);
     setParam("savable", false);
+    setParam("verificationStatuses", verificationStatuses);
     const { queryByText } = render(
       <ScannedDocumentRendererContainer navigation={mockNavigation} />
     );
@@ -70,7 +67,7 @@ describe("ScannedDocumentRendererContainer", () => {
     expect.assertions(6);
     setParam("document", sampleDocument);
     setParam("savable", true);
-    whenDocumentIsVerified();
+    setParam("verificationStatuses", verificationStatuses);
     const { getByText } = render(
       <MockDbProvider>
         <ScannedDocumentRendererContainer navigation={mockNavigation} />

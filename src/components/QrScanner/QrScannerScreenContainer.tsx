@@ -16,13 +16,13 @@ export const QrScannerScreenContainer: FunctionComponent<QrScannerScreenContaine
 }) => {
   const [scanningDisabled, setScanningDisabled] = useState(false);
   const onDocumentStore = (document: Document): void => {
-    navigation.navigate("ScannedDocumentScreen", {
+    navigation.navigate("ValidityCheckScreen", {
       document,
       savable: true
     });
   };
   const onDocumentView = (document: Document): void => {
-    navigation.navigate("ScannedDocumentScreen", { document });
+    navigation.navigate("ValidityCheckScreen", { document });
   };
   const onQrData = async (data: string): Promise<void> => {
     if (scanningDisabled) {

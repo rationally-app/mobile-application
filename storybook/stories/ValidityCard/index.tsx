@@ -1,11 +1,11 @@
 import React, { useState, useEffect, FunctionComponent, useRef } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { CenterDecorator } from "../decorators";
-import { View, Button, Text } from "react-native";
+import { View, Button, Text, ScrollView, SafeAreaView } from "react-native";
 import { SignedDocument } from "@govtechsg/open-attestation";
 import sampleDoc from "../../../fixtures/demo-oc.json";
 import { useDocumentVerifier } from "../../../src/common/hooks/useDocumentVerifier";
-import { CheckStatus, ValidityBanner } from "../../../src/components/Validity";
+import { CheckStatus, ValidityCard } from "../../../src/components/Validity";
 
 const ValidChecksStory: FunctionComponent = () => {
   const [tamperedCheck, setTamperedCheck] = useState(CheckStatus.CHECKING);
@@ -68,8 +68,8 @@ const ValidChecksStory: FunctionComponent = () => {
   }, [progress]);
 
   return (
-    <View style={{ width: "100%" }}>
-      <ValidityBanner
+    <View style={{ width: "100%", alignItems: "center" }}>
+      <ValidityCard
         tamperedCheck={tamperedCheck}
         issuedCheck={issuedCheck}
         revokedCheck={revokedCheck}
@@ -154,8 +154,8 @@ const InvalidChecksStory: FunctionComponent = () => {
   }, [progress]);
 
   return (
-    <View style={{ width: "100%" }}>
-      <ValidityBanner
+    <View style={{ width: "100%", alignItems: "center" }}>
+      <ValidityCard
         tamperedCheck={tamperedCheck}
         issuedCheck={issuedCheck}
         revokedCheck={revokedCheck}
@@ -189,8 +189,8 @@ const ActualChecksStory: FunctionComponent = () => {
   } = useDocumentVerifier(sampleDoc as SignedDocument);
 
   return (
-    <View style={{ width: "100%" }}>
-      <ValidityBanner
+    <View style={{ width: "100%", alignItems: "center" }}>
+      <ValidityCard
         tamperedCheck={tamperedCheck}
         issuedCheck={issuedCheck}
         revokedCheck={revokedCheck}
@@ -201,45 +201,45 @@ const ActualChecksStory: FunctionComponent = () => {
   );
 };
 
-storiesOf("ValidityBanner", module)
+storiesOf("ValidityCard", module).add("Variants", () => (
+  <SafeAreaView>
+    <ScrollView>
+      <View style={{ alignItems: "center", paddingVertical: 64 }}>
+        <ValidityCard
+          tamperedCheck={CheckStatus.CHECKING}
+          issuedCheck={CheckStatus.CHECKING}
+          revokedCheck={CheckStatus.CHECKING}
+          issuerCheck={CheckStatus.CHECKING}
+          overallValidity={CheckStatus.CHECKING}
+        />
+        <ValidityCard
+          tamperedCheck={CheckStatus.CHECKING}
+          issuedCheck={CheckStatus.CHECKING}
+          revokedCheck={CheckStatus.CHECKING}
+          issuerCheck={CheckStatus.VALID}
+          overallValidity={CheckStatus.CHECKING}
+        />
+        <ValidityCard
+          tamperedCheck={CheckStatus.INVALID}
+          issuedCheck={CheckStatus.CHECKING}
+          revokedCheck={CheckStatus.CHECKING}
+          issuerCheck={CheckStatus.VALID}
+          overallValidity={CheckStatus.INVALID}
+        />
+        <ValidityCard
+          tamperedCheck={CheckStatus.VALID}
+          issuedCheck={CheckStatus.VALID}
+          revokedCheck={CheckStatus.VALID}
+          issuerCheck={CheckStatus.VALID}
+          overallValidity={CheckStatus.VALID}
+        />
+      </View>
+    </ScrollView>
+  </SafeAreaView>
+));
+
+storiesOf("ValidityCard", module)
   .addDecorator(CenterDecorator)
-  .add("Variants", () => (
-    <View
-      style={{
-        width: "100%",
-        justifyContent: "space-between"
-      }}
-    >
-      <ValidityBanner
-        tamperedCheck={CheckStatus.CHECKING}
-        issuedCheck={CheckStatus.CHECKING}
-        revokedCheck={CheckStatus.CHECKING}
-        issuerCheck={CheckStatus.CHECKING}
-        overallValidity={CheckStatus.CHECKING}
-      />
-      <ValidityBanner
-        tamperedCheck={CheckStatus.CHECKING}
-        issuedCheck={CheckStatus.CHECKING}
-        revokedCheck={CheckStatus.CHECKING}
-        issuerCheck={CheckStatus.VALID}
-        overallValidity={CheckStatus.CHECKING}
-      />
-      <ValidityBanner
-        tamperedCheck={CheckStatus.INVALID}
-        issuedCheck={CheckStatus.CHECKING}
-        revokedCheck={CheckStatus.CHECKING}
-        issuerCheck={CheckStatus.VALID}
-        overallValidity={CheckStatus.INVALID}
-      />
-      <ValidityBanner
-        tamperedCheck={CheckStatus.VALID}
-        issuedCheck={CheckStatus.VALID}
-        revokedCheck={CheckStatus.VALID}
-        issuerCheck={CheckStatus.VALID}
-        overallValidity={CheckStatus.VALID}
-      />
-    </View>
-  ))
   .add("Valid flow", () => <ValidChecksStory />)
   .add("Invalid flow", () => <InvalidChecksStory />)
   .add("Actual flow", () => <ActualChecksStory />);

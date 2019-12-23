@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { ScannedDocumentActionSheet } from "./index";
-import { CheckStatus } from "../../../constants/verifier";
+import { CheckStatus } from "../../Validity";
 
 jest.mock("../../../common/hooks/useDocumentVerifier");
 jest.useFakeTimers();

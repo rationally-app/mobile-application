@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SignedDocument } from "@govtechsg/open-attestation";
-import { CheckStatus } from "../../../constants/verifier";
+import { CheckStatus } from "../../../components/Validity";
 import { checkValidity } from "../../../services/DocumentVerifier";
 
 export interface VerificationStatuses {
@@ -21,6 +21,7 @@ export const useDocumentVerifier = (
   const [overallValidity, setOverallValidity] = useState(CheckStatus.CHECKING);
 
   useEffect(() => {
+    let cancelled = false;
     const [
       verifyHash,
       verifyIssued,
@@ -29,28 +30,44 @@ export const useDocumentVerifier = (
       overallValidityCheck
     ] = checkValidity(document);
 
-    verifyHash.then(v =>
-      setTamperedCheck(
-        v.checksumMatch ? CheckStatus.VALID : CheckStatus.INVALID
-      )
+    verifyHash.then(
+      v =>
+        !cancelled &&
+        setTamperedCheck(
+          v.checksumMatch ? CheckStatus.VALID : CheckStatus.INVALID
+        )
     );
-    verifyIssued.then(v =>
-      setIssuedCheck(v.issuedOnAll ? CheckStatus.VALID : CheckStatus.INVALID)
-    );
-
-    verifyRevoked.then(v =>
-      setRevokedCheck(v.revokedOnAny ? CheckStatus.INVALID : CheckStatus.VALID)
-    );
-
-    verifyIdentity.then(v =>
-      setIssuerCheck(
-        v.identifiedOnAll ? CheckStatus.VALID : CheckStatus.INVALID
-      )
+    verifyIssued.then(
+      v =>
+        !cancelled &&
+        setIssuedCheck(v.issuedOnAll ? CheckStatus.VALID : CheckStatus.INVALID)
     );
 
-    overallValidityCheck.then(v => {
-      setOverallValidity(v ? CheckStatus.VALID : CheckStatus.INVALID);
-    });
+    verifyRevoked.then(
+      v =>
+        !cancelled &&
+        setRevokedCheck(
+          v.revokedOnAny ? CheckStatus.INVALID : CheckStatus.VALID
+        )
+    );
+
+    verifyIdentity.then(
+      v =>
+        !cancelled &&
+        setIssuerCheck(
+          v.identifiedOnAll ? CheckStatus.VALID : CheckStatus.INVALID
+        )
+    );
+
+    overallValidityCheck.then(
+      v =>
+        !cancelled &&
+        setOverallValidity(v ? CheckStatus.VALID : CheckStatus.INVALID)
+    );
+
+    return () => {
+      cancelled = true;
+    };
   }, [document]);
 
   return {

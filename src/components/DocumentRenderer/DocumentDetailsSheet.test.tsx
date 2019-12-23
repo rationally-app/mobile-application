@@ -2,7 +2,7 @@ import React from "react";
 import { render, wait } from "@testing-library/react-native";
 import sampleDoc from "../../../fixtures/demo-oc.json";
 import { DocumentDetailsSheet } from "./DocumentDetailsSheet";
-import { CheckStatus } from "../../constants/verifier";
+import { CheckStatus } from "../Validity";
 
 import { useDocumentVerifier } from "../../common/hooks/useDocumentVerifier";
 jest.mock("../../common/hooks/useDocumentVerifier");

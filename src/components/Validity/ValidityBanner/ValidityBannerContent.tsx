@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useRef, useEffect, useState } from "react";
 import { View, Animated, LayoutChangeEvent, Easing } from "react-native";
-import { CheckStatus } from "../../../constants/verifier";
-import { GREEN_10, RED_10, YELLOW_10 } from "../../../common/colors";
+import { getStatusProps } from "../utils";
+import { CheckStatus } from "../constants";
 
 interface ValidityBannerContent {
   checkStatus?: CheckStatus;
@@ -13,19 +13,7 @@ export const ValidityBannerContent: FunctionComponent<ValidityBannerContent> = (
   isExpanded = false,
   children
 }) => {
-  let backgroundColor;
-  switch (checkStatus) {
-    case CheckStatus.VALID:
-      backgroundColor = GREEN_10;
-      break;
-    case CheckStatus.INVALID:
-      backgroundColor = RED_10;
-      break;
-    case CheckStatus.CHECKING:
-    default:
-      backgroundColor = YELLOW_10;
-      break;
-  }
+  const { backgroundColor } = getStatusProps(checkStatus);
 
   const heightAnimation = useRef(new Animated.Value(0));
   const [maxHeight, setMaxHeight] = useState(0);

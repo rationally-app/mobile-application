@@ -1,7 +1,8 @@
-import "./DocumentRenderer";
 import "./DocumentList";
-import "./Loading";
+import "./DocumentRenderer";
 import "./Layout";
+import "./Loading";
 import "./QrScanner";
-import "./ValidityBanner";
 import "./Settings";
+import "./ValidityBanner";
+import "./ValidityCard";

@@ -1,8 +1,9 @@
 import React, { FunctionComponent, useRef, useEffect } from "react";
 import { Animated, Easing } from "react-native";
 import { Feather, AntDesign } from "@expo/vector-icons";
-import { CheckStatus } from "../../../constants/verifier";
-import { GREEN_30, RED_30, LIGHT_ALT } from "../../../common/colors";
+import { LIGHT_ALT } from "../../common/colors";
+import { getStatusProps } from "./utils";
+import { CheckStatus } from "./constants";
 
 interface ValidityIcon {
   checkStatus: CheckStatus;
@@ -35,31 +36,25 @@ export const ValidityIcon: FunctionComponent<ValidityIcon> = ({
     }
   }, [checkStatus]);
 
-  let status;
-  switch (checkStatus) {
-    case CheckStatus.VALID:
-      status = {
-        iconCategory: Feather,
-        iconName: "check-circle",
-        iconColor: GREEN_30
-      };
-      break;
-    case CheckStatus.INVALID:
-      status = {
-        iconCategory: Feather,
-        iconName: "x-circle",
-        iconColor: RED_30
-      };
-      break;
-    case CheckStatus.CHECKING:
-    default:
-      status = {
-        iconCategory: AntDesign,
-        iconName: "loading2",
-        iconColor: LIGHT_ALT
-      };
-      break;
-  }
+  const {
+    iconCategory: IconCategory,
+    iconName,
+    color: iconColor
+  } = getStatusProps(checkStatus, {
+    [CheckStatus.VALID]: {
+      iconCategory: Feather,
+      iconName: "check-circle"
+    },
+    [CheckStatus.INVALID]: {
+      iconCategory: Feather,
+      iconName: "x-circle"
+    },
+    [CheckStatus.CHECKING]: {
+      iconCategory: AntDesign,
+      iconName: "loading2",
+      color: LIGHT_ALT
+    }
+  });
 
   return (
     <Animated.View
@@ -76,11 +71,7 @@ export const ValidityIcon: FunctionComponent<ValidityIcon> = ({
         ]
       }}
     >
-      <status.iconCategory
-        name={status.iconName}
-        size={size}
-        color={status.iconColor}
-      />
+      <IconCategory name={iconName} size={size} color={iconColor} />
     </Animated.View>
   );
 };

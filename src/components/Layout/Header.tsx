@@ -1,7 +1,27 @@
 import React, { FunctionComponent, ReactNode } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { VERY_LIGHT, DARK } from "../../common/colors";
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    height: 56,
+    width: "100%",
+    marginBottom: 5,
+    alignItems: "center"
+  },
+  borderBottom: {
+    borderBottomWidth: 2,
+    borderStyle: "solid",
+    borderColor: VERY_LIGHT
+  },
+  headerBackButton: {
+    paddingLeft: 24,
+    paddingRight: 24,
+    justifyContent: "center"
+  }
+});
 
 export interface HeaderBackButton {
   onPress: () => void;
@@ -20,11 +40,7 @@ export const HeaderBackButton: FunctionComponent<HeaderBackButton> = ({
     <TouchableOpacity
       testID="header-back-button"
       onPress={onPress}
-      style={{
-        paddingLeft: 24,
-        paddingRight: 24,
-        justifyContent: "center"
-      }}
+      style={styles.headerBackButton}
     >
       <Ionicons name="md-arrow-round-back" size={24} color={DARK} />
     </TouchableOpacity>
@@ -33,26 +49,20 @@ export const HeaderBackButton: FunctionComponent<HeaderBackButton> = ({
 
 export interface Header {
   goBack?: () => void;
+  hasBorder?: boolean;
   children?: ReactNode;
 }
 
-export const Header: FunctionComponent<Header> = ({ goBack, children }) => {
-  return (
-    <View
-      testID="header-bar"
-      style={{
-        flexDirection: "row",
-        height: 56,
-        width: "100%",
-        borderBottomWidth: 2,
-        borderStyle: "solid",
-        borderColor: VERY_LIGHT,
-        marginBottom: 5,
-        alignItems: "center"
-      }}
-    >
-      {goBack ? <HeaderBackButton onPress={goBack} /> : null}
-      {children}
-    </View>
-  );
-};
+export const Header: FunctionComponent<Header> = ({
+  goBack,
+  hasBorder = true,
+  children
+}) => (
+  <View
+    testID="header-bar"
+    style={[styles.header, hasBorder && styles.borderBottom]}
+  >
+    {goBack ? <HeaderBackButton onPress={goBack} /> : null}
+    {children}
+  </View>
+);

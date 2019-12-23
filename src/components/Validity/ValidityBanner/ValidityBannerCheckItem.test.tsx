@@ -1,13 +1,12 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
-import { Text } from "react-native";
-import { ValidityCheckItem } from "./ValidityCheckItem";
-import { CheckStatus } from "../../../constants/verifier";
+import { ValidityCheckItem } from "./ValidityBannerCheckItem";
+import { CheckStatus } from "../constants";
 
 const messages = {
-  [CheckStatus.CHECKING]: <Text>Checking</Text>,
-  [CheckStatus.INVALID]: <Text>Invalid</Text>,
-  [CheckStatus.VALID]: <Text>Valid</Text>
+  [CheckStatus.CHECKING]: { message: "Checking" },
+  [CheckStatus.INVALID]: { message: "Invalid" },
+  [CheckStatus.VALID]: { message: "Valid" }
 };
 
 describe("ValidityCheckItem", () => {

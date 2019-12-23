@@ -3,10 +3,10 @@ import { LayoutChangeEvent, View, Text, TouchableOpacity } from "react-native";
 import { BottomSheet } from "../Layout/BottomSheet";
 import { Document, SignedDocument, getData } from "@govtechsg/open-attestation";
 import QRIcon from "../../../assets/icons/qr.svg";
-import { ValidityBanner } from "./ValidityBanner";
+import { ValidityBanner } from "../Validity/ValidityBanner";
 import { useDocumentVerifier } from "../../common/hooks/useDocumentVerifier";
 import { DARK } from "../../common/colors";
-import { CheckStatus } from "../../constants/verifier";
+import { CheckStatus } from "../Validity";
 import { QrCode } from "./QrCode";
 import { useQrGenerator } from "../../common/hooks/useQrGenerator";
 

@@ -1,7 +1,11 @@
 import React from "react";
 import { render, wait, fireEvent } from "@testing-library/react-native";
 import { ValidityBannerHeader } from "./ValidityBannerHeader";
-import { CheckStatus } from "../../../constants/verifier";
+import { CheckStatus } from "../constants";
+
+jest.mock("../ValidityIcon", () => ({
+  ValidityIcon: () => null
+}));
 
 jest.useFakeTimers();
 
@@ -25,7 +29,11 @@ describe("ValidityBannerHeader", () => {
     it("should show up arrow", async () => {
       expect.assertions(1);
       const { queryByTestId } = render(
-        <ValidityBannerHeader isExpanded={true} onPress={jest.fn()} />
+        <ValidityBannerHeader
+          checkStatus={CheckStatus.CHECKING}
+          isExpanded={true}
+          onPress={jest.fn()}
+        />
       );
       await wait(() => {
         expect(queryByTestId("validity-header-icon")).toHaveProp(
@@ -40,13 +48,44 @@ describe("ValidityBannerHeader", () => {
     it("should show down arrow", async () => {
       expect.assertions(1);
       const { queryByTestId } = render(
-        <ValidityBannerHeader isExpanded={false} onPress={jest.fn()} />
+        <ValidityBannerHeader
+          checkStatus={CheckStatus.CHECKING}
+          isExpanded={false}
+          onPress={jest.fn()}
+        />
       );
       await wait(() => {
         expect(queryByTestId("validity-header-icon")).toHaveProp(
           "name",
           "chevron-down"
         );
+      });
+    });
+  });
+
+  describe("when progress is 1", () => {
+    it("should wait some time before hiding the progress bar", async () => {
+      expect.assertions(2);
+      const { queryByTestId } = render(
+        <ValidityBannerHeader
+          checkStatus={CheckStatus.VALID}
+          isExpanded={false}
+          onPress={jest.fn()}
+          progress={1}
+        />
+      );
+      await wait(() => {
+        expect(queryByTestId("validity-header-progress")).toHaveStyle({
+          width: "100%",
+          height: 1
+        });
+
+        jest.runAllTimers();
+
+        expect(queryByTestId("validity-header-progress")).toHaveStyle({
+          width: "100%",
+          height: 0
+        });
       });
     });
   });

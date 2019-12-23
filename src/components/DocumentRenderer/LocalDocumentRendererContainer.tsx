@@ -10,12 +10,12 @@ import { DocumentRenderer } from "./DocumentRenderer";
 import { DocumentDetailsSheet } from "./DocumentDetailsSheet";
 import { LoadingView } from "../Loading";
 import { ScreenView } from "../ScreenView";
-import { CheckStatus } from "../../constants/verifier";
+import { CheckStatus } from "../Validity";
 
 export const LocalDocumentRendererContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
-  const id = navigation.getParam("id");
+  const id: string = navigation.getParam("id");
   const { db } = useDbContext();
   const [document, setDocument] = useState<DocumentObject | null>(null);
 

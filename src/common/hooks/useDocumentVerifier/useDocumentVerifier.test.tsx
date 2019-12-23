@@ -2,7 +2,7 @@ import sampleDoc from "../../../../fixtures/demo-oc.json";
 import { useDocumentVerifier } from "./index";
 import { SignedDocument } from "@govtechsg/open-attestation";
 import { renderHook } from "@testing-library/react-hooks";
-import { CheckStatus } from "../../../constants/verifier";
+import { CheckStatus } from "../../../components/Validity/";
 
 import { checkValidity } from "../../../services/DocumentVerifier";
 jest.mock("../../../services/DocumentVerifier");

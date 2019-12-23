@@ -4,7 +4,7 @@ import { DARK } from "../../../common/colors";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { Button } from "../../Layout/Buttons/Button";
 import { VerificationStatuses } from "../../../common/hooks/useDocumentVerifier";
-import { ValidityBanner } from "../ValidityBanner";
+import { ValidityBanner } from "../../Validity";
 
 export interface SavableActionSheet {
   onSave?: () => void;

@@ -1,7 +1,7 @@
 import React from "react";
 import { render, wait } from "@testing-library/react-native";
-import { ValidityBanner } from "./index";
-import { CheckStatus } from "../../../constants/verifier";
+import { ValidityBanner } from "./ValidityBanner";
+import { CheckStatus } from "../constants";
 
 jest.useFakeTimers();
 
@@ -9,7 +9,7 @@ describe("ValidityBanner", () => {
   describe("when everything is valid", () => {
     it("should provide ValidityBannerHeader the correct progress prop", async () => {
       expect.assertions(1);
-      const { getByTestId } = render(
+      const { queryByTestId } = render(
         <ValidityBanner
           tamperedCheck={CheckStatus.VALID}
           issuedCheck={CheckStatus.VALID}
@@ -20,7 +20,7 @@ describe("ValidityBanner", () => {
         />
       );
       await wait(() => {
-        expect(getByTestId("validity-header-progress")).toHaveStyle({
+        expect(queryByTestId("validity-header-progress")).toHaveStyle({
           width: "100%"
         });
       });
@@ -30,7 +30,7 @@ describe("ValidityBanner", () => {
   describe("when some checks are invalid", () => {
     it("should provide ValidityBannerHeader the correct progress prop", async () => {
       expect.assertions(1);
-      const { getByTestId } = render(
+      const { queryByTestId } = render(
         <ValidityBanner
           tamperedCheck={CheckStatus.VALID}
           issuedCheck={CheckStatus.VALID}
@@ -41,7 +41,7 @@ describe("ValidityBanner", () => {
         />
       );
       await wait(() =>
-        expect(getByTestId("validity-header-progress")).toHaveStyle({
+        expect(queryByTestId("validity-header-progress")).toHaveStyle({
           width: "75%"
         })
       );
@@ -51,7 +51,7 @@ describe("ValidityBanner", () => {
   describe("when some checks are still in progress and no invalid checks", () => {
     it("should provide ValidityBannerHeader the correct progress prop", async () => {
       expect.assertions(1);
-      const { getByTestId } = render(
+      const { queryByTestId } = render(
         <ValidityBanner
           tamperedCheck={CheckStatus.VALID}
           issuedCheck={CheckStatus.CHECKING}
@@ -63,7 +63,7 @@ describe("ValidityBanner", () => {
       );
 
       await wait(() =>
-        expect(getByTestId("validity-header-progress")).toHaveStyle({
+        expect(queryByTestId("validity-header-progress")).toHaveStyle({
           width: "50%"
         })
       );
