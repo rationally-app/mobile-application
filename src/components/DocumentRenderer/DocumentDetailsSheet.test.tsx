@@ -1,6 +1,6 @@
 import React from "react";
 import { render, wait } from "@testing-library/react-native";
-import sampleDoc from "../../../fixtures/demo-oc.json";
+import sampleDoc from "../../../fixtures/demo-caas.json";
 import { DocumentDetailsSheet } from "./DocumentDetailsSheet";
 import { CheckStatus } from "../Validity";
 
@@ -18,7 +18,7 @@ describe("DocumentDetailsSheet", () => {
       <DocumentDetailsSheet document={sampleDoc} onVerification={() => null} />
     );
     await wait(() => {
-      expect(queryByText("Govtech")).not.toBeNull();
+      expect(queryByText("caas.openattestation.com")).not.toBeNull();
     });
   });
 

@@ -31,7 +31,8 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
   };
 
   const { issuers } = getData(document);
-  const issuerName = issuers[0].name;
+  const issuedBy =
+    issuers[0]?.identityProof?.location || "Issuer's identity not found";
 
   const {
     tamperedCheck,
@@ -80,7 +81,7 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
                     letterSpacing: 0.5
                   }}
                 >
-                  {issuerName}
+                  {issuedBy}
                 </Text>
               </View>
               <TouchableOpacity

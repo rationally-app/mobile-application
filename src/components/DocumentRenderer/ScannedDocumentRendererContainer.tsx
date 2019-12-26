@@ -19,11 +19,10 @@ export const ScannedDocumentRendererContainer: FunctionComponent<NavigationProps
     "verificationStatuses"
   );
 
-  const documentData = getData(document);
+  const { issuers } = getData(document);
   const id = document.signature.targetHash;
   const issuedBy =
-    documentData.issuers[0]?.identityProof?.location ||
-    "Issuer's identity not found";
+    issuers[0]?.identityProof?.location || "Issuer's identity not found";
   const navigateToDocument = resetRouteFn(navigation, "LocalDocumentScreen", {
     id
   });
