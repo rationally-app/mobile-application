@@ -13,7 +13,10 @@ export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = (
   // undefined when the db hasn't fulfilled the initial find query
   const [documents, setDocuments] = useState<DocumentObject[]>();
   useEffect(() => {
-    const subscription = db!.documents.find().$.subscribe(setDocuments);
+    const subscription = db!.documents
+      .find()
+      .sort("created")
+      .$.subscribe(setDocuments);
     return () => subscription.unsubscribe();
   }, [db]);
 

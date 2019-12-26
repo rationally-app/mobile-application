@@ -6,7 +6,7 @@ export const dbPassword = "supersecretpassword";
 
 export const db: RxDatabaseCreator = {
   name: dbName,
-  adapter: "asyncstorage",
+  adapter: "react-native-sqlite",
   password: dbPassword,
   multiInstance: false,
   pouchSettings: { skip_setup: true } // eslint-disable-line @typescript-eslint/camelcase

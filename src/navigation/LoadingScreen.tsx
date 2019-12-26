@@ -4,8 +4,10 @@ import { useDbContext } from "../context/db";
 import * as RxDB from "rxdb";
 import { DB_CONFIG } from "../config";
 import { LoadingView } from "../components/Loading";
+import * as SQLite from "expo-sqlite";
+import SQLiteAdapterFactory from "pouchdb-adapter-react-native-sqlite";
 
-RxDB.plugin(require("pouchdb-adapter-asyncstorage").default);
+RxDB.plugin(SQLiteAdapterFactory(SQLite));
 
 const createDatabase = async (): Promise<Database> => {
   const db = await RxDB.create<DatabaseCollections>(DB_CONFIG.db);
