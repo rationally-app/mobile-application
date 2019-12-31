@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { View, ViewStyle } from "react-native";
+import { View, ViewStyle, SafeAreaView } from "react-native";
 
 const styles = {
   flex: 1,
@@ -12,4 +12,8 @@ export const CenterDecorator = (storyFn: Function): ReactElement => (
 
 export const CenterVerticalDecorator = (storyFn: Function): ReactElement => (
   <View style={styles}>{storyFn()}</View>
+);
+
+export const SafeAreaDecorator = (storyFn: Function): ReactElement => (
+  <SafeAreaView style={{ flex: 1 }}>{storyFn()}</SafeAreaView>
 );

@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { TouchableOpacity, View, ViewStyle } from "react-native";
+import { size, borderRadius } from "../../../common/styles";
 
 export interface BaseButton {
   onPress?: () => void;
@@ -12,17 +13,18 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
   backgroundColor
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} testID="base-button-2">
+    <TouchableOpacity onPress={onPress}>
       <View
         style={{
           backgroundColor,
           alignSelf: "flex-start",
           alignItems: "center",
           justifyContent: "center",
-          paddingVertical: 5,
-          paddingHorizontal: 10,
-          borderRadius: 5,
-          minWidth: 80
+          paddingVertical: size(1.5),
+          paddingHorizontal: size(3),
+          borderRadius: borderRadius(3),
+          height: size(5),
+          minWidth: size(10)
         }}
       >
         {children}

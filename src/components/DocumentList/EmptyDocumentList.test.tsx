@@ -4,10 +4,11 @@ import { EmptyDocumentList } from "./EmptyDocumentList";
 
 describe("EmptyDocumentList", () => {
   it("should show the right message", () => {
-    expect.assertions(2);
+    expect.assertions(1);
     const { getByText } = render(<EmptyDocumentList onAdd={() => {}} />);
-    expect(getByText("Add a new document")).not.toBeNull();
-    expect(getByText("to your wallet")).not.toBeNull();
+    expect(
+      getByText("Start by adding a licence to your wallet")
+    ).not.toBeNull();
   });
 
   it("should show the scanner button", () => {

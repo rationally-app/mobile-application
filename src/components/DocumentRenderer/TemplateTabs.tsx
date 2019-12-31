@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   ViewStyle
 } from "react-native";
-import { DARK } from "../../common/colors";
+import { color, size, fontSize } from "../../common/styles";
+
 export interface Tab {
   id: string;
   label: string;
@@ -19,8 +20,8 @@ export interface TemplateTabs {
 }
 
 const inactiveTabStyle: ViewStyle = {
-  paddingLeft: 12,
-  paddingRight: 12,
+  paddingHorizontal: size(1),
+  marginHorizontal: size(0.5),
   justifyContent: "center",
   borderBottomWidth: 2,
   borderBottomColor: "transparent"
@@ -28,7 +29,7 @@ const inactiveTabStyle: ViewStyle = {
 
 const activeTabStyle: ViewStyle = {
   ...inactiveTabStyle,
-  borderBottomColor: DARK
+  borderBottomColor: color("orange", 40)
 };
 
 export const TemplateTabs: FunctionComponent<TemplateTabs> = ({
@@ -44,7 +45,9 @@ export const TemplateTabs: FunctionComponent<TemplateTabs> = ({
       key={tab.id}
       style={tab.id === activeTabId ? activeTabStyle : inactiveTabStyle}
     >
-      <Text style={{ color: DARK }}>{tab.label}</Text>
+      <Text style={{ color: color("grey", 40), fontSize: fontSize(0) }}>
+        {tab.label}
+      </Text>
     </TouchableOpacity>
   ));
   return (

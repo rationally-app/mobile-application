@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from "react";
 import { NavigationProps } from "../../types";
-import { ScreenView } from "../ScreenView";
 import { DocumentList, DocumentItem } from "./DocumentList";
 import { BottomNav } from "../Layout/BottomNav";
 import { EmptyDocumentList } from "./EmptyDocumentList";
 import { LoadingView } from "../Loading";
+import { SafeAreaView } from "react-native";
 
 interface DocumentListScreen extends NavigationProps {
   documentItems?: DocumentItem[];
@@ -19,18 +19,20 @@ export const DocumentListScreen: FunctionComponent<DocumentListScreen> = ({
   navigateToScanner
 }) => {
   return (
-    <ScreenView>
-      {documentItems ? (
-        <ResolvedDocumentList
-          documentItems={documentItems}
-          navigateToDoc={navigateToDoc}
-          navigateToScanner={navigateToScanner}
-        />
-      ) : (
-        <LoadingView /> // Prevents the flash of the empty state when documentItems hasn't initialized
-      )}
+    <>
+      <SafeAreaView style={{ flex: 1 }}>
+        {documentItems ? (
+          <ResolvedDocumentList
+            documentItems={documentItems}
+            navigateToDoc={navigateToDoc}
+            navigateToScanner={navigateToScanner}
+          />
+        ) : (
+          <LoadingView /> // Prevents the flash of the empty state when documentItems hasn't initialized
+        )}
+      </SafeAreaView>
       <BottomNav navigation={navigation} />
-    </ScreenView>
+    </>
   );
 };
 

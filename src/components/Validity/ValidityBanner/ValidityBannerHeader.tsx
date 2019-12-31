@@ -1,10 +1,48 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import { View, Text, TouchableHighlight } from "react-native";
+import { View, Text, TouchableHighlight, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { ValidityIcon } from "../ValidityIcon";
-import { DARK } from "../../../common/colors";
 import { getStatusProps } from "../utils";
 import { CheckStatus } from "../constants";
+import {
+  color as colorPalette,
+  size,
+  fontSize,
+  letterSpacing
+} from "../../../common/styles";
+
+const styles = StyleSheet.create({
+  validityBannerHeader: {
+    position: "relative"
+  },
+  progressBar: {
+    position: "absolute",
+    top: -1
+  },
+  validityBannerHeaderButton: {
+    height: size(5),
+    paddingVertical: size(1),
+    paddingHorizontal: size(3)
+  },
+  validityStatusWrapper: {
+    width: "100%",
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+  validityStatus: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  validityStatusText: {
+    fontSize: fontSize(-1),
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    letterSpacing: letterSpacing(2),
+    marginLeft: size(1)
+  }
+});
 
 interface ValidityBannerHeader {
   checkStatus: CheckStatus;
@@ -50,74 +88,46 @@ export const ValidityBannerHeader: FunctionComponent<ValidityBannerHeader> = ({
   }, [progress]);
 
   return (
-    <View style={{ position: "relative" }}>
+    <View style={styles.validityBannerHeader}>
       <View
-        style={{
-          backgroundColor: color,
-          height: showProgressBar ? 1 : 0,
-          width: `${progress * 100}%`,
-          position: "absolute",
-          top: -1
-        }}
+        style={[
+          styles.progressBar,
+          {
+            width: `${progress * 100}%`,
+            backgroundColor: color,
+            height: showProgressBar ? 1 : 0
+          }
+        ]}
         testID="validity-header-progress"
       />
 
       <TouchableHighlight
-        style={{
-          height: 44,
-          flexDirection: "row",
-          paddingTop: 8,
-          paddingBottom: 8,
-          paddingLeft: 24,
-          paddingRight: 24,
-          backgroundColor
-        }}
+        style={[
+          styles.validityBannerHeaderButton,
+          {
+            backgroundColor
+          }
+        ]}
         underlayColor={backgroundColor}
         onPress={onPress}
         testID="validity-header-button"
       >
-        <View
-          style={{
-            width: "100%",
-            flexDirection: "row",
-            alignItems: "stretch",
-            justifyContent: "space-between"
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <ValidityIcon checkStatus={checkStatus} size={20} />
+        <View style={styles.validityStatusWrapper}>
+          <View style={styles.validityStatus}>
+            <ValidityIcon checkStatus={checkStatus} size={size(2.5)} />
             <Text
-              style={{
-                color,
-                fontSize: 14,
-                fontWeight: "bold",
-                textTransform: "uppercase",
-                letterSpacing: 0.7,
-                marginLeft: 10
-              }}
+              style={[styles.validityStatusText, { color }]}
               testID="validity-header-label"
             >
               {label}
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <Feather
-              name={isExpanded ? "chevron-up" : "chevron-down"}
-              size={16}
-              color={DARK}
-              testID="validity-header-icon"
-            />
-          </View>
+          <Feather
+            name={isExpanded ? "chevron-up" : "chevron-down"}
+            size={size(2)}
+            color={colorPalette("grey", 40)}
+            testID="validity-header-icon"
+          />
         </View>
       </TouchableHighlight>
     </View>

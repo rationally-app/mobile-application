@@ -1,24 +1,31 @@
 import React, { FunctionComponent, ReactNode } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { VERY_LIGHT, DARK } from "../../common/colors";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+  SafeAreaView
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { color, size, shadow } from "../../common/styles";
 
 const styles = StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: color("grey", 0)
+  },
   header: {
     flexDirection: "row",
-    height: 56,
+    height: size(7),
     width: "100%",
-    marginBottom: 5,
-    alignItems: "center"
+    alignItems: "stretch"
   },
-  borderBottom: {
-    borderBottomWidth: 2,
-    borderStyle: "solid",
-    borderColor: VERY_LIGHT
+  withShadow: {
+    zIndex: 1,
+    ...shadow(1)
   },
   headerBackButton: {
-    paddingLeft: 24,
-    paddingRight: 24,
+    paddingLeft: size(3),
+    paddingRight: size(2),
     justifyContent: "center"
   }
 });
@@ -42,27 +49,30 @@ export const HeaderBackButton: FunctionComponent<HeaderBackButton> = ({
       onPress={onPress}
       style={styles.headerBackButton}
     >
-      <Ionicons name="md-arrow-round-back" size={24} color={DARK} />
+      <Feather name="arrow-left" size={size(3)} color={color("grey", 40)} />
     </TouchableOpacity>
   );
 };
 
 export interface Header {
   goBack?: () => void;
-  hasBorder?: boolean;
+  hasShadow?: boolean;
   children?: ReactNode;
+  style?: ViewStyle;
 }
 
 export const Header: FunctionComponent<Header> = ({
   goBack,
-  hasBorder = true,
-  children
+  hasShadow = true,
+  children,
+  style
 }) => (
-  <View
-    testID="header-bar"
-    style={[styles.header, hasBorder && styles.borderBottom]}
+  <SafeAreaView
+    style={[styles.safeAreaView, hasShadow && styles.withShadow, style]}
   >
-    {goBack ? <HeaderBackButton onPress={goBack} /> : null}
-    {children}
-  </View>
+    <View testID="header-bar" style={[styles.header]}>
+      {goBack ? <HeaderBackButton onPress={goBack} /> : null}
+      {children}
+    </View>
+  </SafeAreaView>
 );

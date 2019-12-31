@@ -3,6 +3,7 @@ import { CheckStatus } from "../constants";
 import { getStatusProps } from "../utils";
 import { View, Text } from "react-native";
 import { ValidityIcon } from "../ValidityIcon";
+import { size, fontSize } from "../../../common/styles";
 
 interface ValidityCardCheckItem {
   checkStatus: CheckStatus;
@@ -19,14 +20,14 @@ export const ValidityCardCheckItem: FunctionComponent<ValidityCardCheckItem> = (
     <View
       style={{
         flexDirection: "row",
-        marginBottom: 20
+        marginBottom: size(2.5)
       }}
     >
-      <View style={{ marginRight: 16 }}>
-        <ValidityIcon checkStatus={checkStatus} size={20} />
+      <View style={{ marginRight: size(2) }}>
+        <ValidityIcon checkStatus={checkStatus} size={size(2.5)} />
       </View>
       <Text
-        style={{ color, fontSize: 14, flexShrink: 1 }}
+        style={{ color, fontSize: fontSize(-1), flexShrink: 1 }}
         testID="validity-check-message"
       >
         {message}

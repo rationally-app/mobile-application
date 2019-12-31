@@ -1,10 +1,9 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
 import { DocumentListScreen } from "./DocumentListScreen";
+import { mockNavigation } from "../../test/helpers/navigation";
 
 jest.mock("../../common/navigation");
-
-const navigation: any = {};
 
 describe("DocumentListScreen", () => {
   it("should render only loading view and nav when documents is undefined", () => {
@@ -13,7 +12,7 @@ describe("DocumentListScreen", () => {
       <DocumentListScreen
         navigateToDoc={() => true}
         navigateToScanner={() => {}}
-        navigation={navigation}
+        navigation={mockNavigation}
       />
     );
     expect(queryByTestId("document-list")).toBeNull();
@@ -29,7 +28,7 @@ describe("DocumentListScreen", () => {
         documentItems={[]}
         navigateToDoc={() => true}
         navigateToScanner={() => {}}
-        navigation={navigation}
+        navigation={mockNavigation}
       />
     );
     expect(queryByTestId("document-list")).toBeNull();
@@ -45,7 +44,7 @@ describe("DocumentListScreen", () => {
         documentItems={[{ id: "foo", title: "bar" }]}
         navigateToDoc={() => true}
         navigateToScanner={() => {}}
-        navigation={navigation}
+        navigation={mockNavigation}
       />
     );
     expect(queryByTestId("document-list")).not.toBeNull();

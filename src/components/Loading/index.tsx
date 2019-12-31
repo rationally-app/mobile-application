@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { View, ActivityIndicator } from "react-native";
-import { DARK } from "../../common/colors";
+import { color } from "../../common/styles";
 
 export const LoadingView: FunctionComponent = () => {
   return (
@@ -13,7 +13,7 @@ export const LoadingView: FunctionComponent = () => {
         justifyContent: "center"
       }}
     >
-      <ActivityIndicator size="large" color={DARK} />
+      <ActivityIndicator size="large" color={color("grey", 40)} />
     </View>
   );
 };

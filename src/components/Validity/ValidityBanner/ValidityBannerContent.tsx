@@ -2,6 +2,7 @@ import React, { FunctionComponent, useRef, useEffect, useState } from "react";
 import { View, Animated, LayoutChangeEvent, Easing } from "react-native";
 import { getStatusProps } from "../utils";
 import { CheckStatus } from "../constants";
+import { size } from "../../../common/styles";
 
 interface ValidityBannerContent {
   checkStatus?: CheckStatus;
@@ -35,7 +36,7 @@ export const ValidityBannerContent: FunctionComponent<ValidityBannerContent> = (
     <Animated.View
       style={{
         height: heightAnimation.current,
-        paddingHorizontal: 24,
+        paddingHorizontal: size(3),
         backgroundColor,
         overflow: "hidden"
       }}
@@ -44,8 +45,8 @@ export const ValidityBannerContent: FunctionComponent<ValidityBannerContent> = (
       <View
         onLayout={maxHeight > 0 ? undefined : handleLayout}
         style={{
-          paddingTop: 8,
-          paddingBottom: 12,
+          paddingTop: size(1),
+          paddingBottom: size(1.5),
           position: "absolute",
           opacity: 0,
           zIndex: -99
@@ -53,7 +54,9 @@ export const ValidityBannerContent: FunctionComponent<ValidityBannerContent> = (
       >
         {children}
       </View>
-      <View style={{ paddingTop: 8, paddingBottom: 12 }}>{children}</View>
+      <View style={{ paddingTop: size(1), paddingBottom: size(1.5) }}>
+        {children}
+      </View>
     </Animated.View>
   );
 };

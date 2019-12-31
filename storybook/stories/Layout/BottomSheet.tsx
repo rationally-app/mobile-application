@@ -1,10 +1,10 @@
 import React, { ReactElement, useState, FunctionComponent } from "react";
 import { storiesOf } from "@storybook/react-native";
-
 import { BottomSheet } from "../../../src/components/Layout/BottomSheet";
 import { View, Text, LayoutChangeEvent } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import { letterSpacing, borderRadius } from "../../../src/common/styles";
 
 const Lorem = (): ReactElement => (
   <View>
@@ -46,7 +46,7 @@ const Example: FunctionComponent = () => {
                       fontSize: 14,
                       fontWeight: "bold",
                       textTransform: "uppercase",
-                      letterSpacing: 0.5
+                      letterSpacing: letterSpacing(1)
                     }}
                   >
                     Civil Aviation Authority of Singapore
@@ -58,7 +58,7 @@ const Example: FunctionComponent = () => {
                     backgroundColor: "#F2F2F2",
                     height: 48,
                     width: 48,
-                    borderRadius: 8,
+                    borderRadius: borderRadius(3),
                     justifyContent: "center",
                     alignItems: "center"
                   }}

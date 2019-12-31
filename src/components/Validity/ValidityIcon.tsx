@@ -1,9 +1,9 @@
 import React, { FunctionComponent, useRef, useEffect } from "react";
 import { Animated, Easing } from "react-native";
 import { Feather, AntDesign } from "@expo/vector-icons";
-import { LIGHT_ALT } from "../../common/colors";
 import { getStatusProps } from "./utils";
 import { CheckStatus } from "./constants";
+import { color, size as sizeScale } from "../../common/styles";
 
 interface ValidityIcon {
   checkStatus: CheckStatus;
@@ -12,7 +12,7 @@ interface ValidityIcon {
 
 export const ValidityIcon: FunctionComponent<ValidityIcon> = ({
   checkStatus,
-  size = 14
+  size = sizeScale(2.5)
 }) => {
   const rotationAnimation = useRef(new Animated.Value(0));
   const animationTiming = useRef<Animated.CompositeAnimation>();
@@ -52,7 +52,7 @@ export const ValidityIcon: FunctionComponent<ValidityIcon> = ({
     [CheckStatus.CHECKING]: {
       iconCategory: AntDesign,
       iconName: "loading2",
-      color: LIGHT_ALT
+      color: color("grey", 20)
     }
   });
 

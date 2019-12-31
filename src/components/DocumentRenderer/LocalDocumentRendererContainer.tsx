@@ -9,7 +9,6 @@ import {
 import { DocumentRenderer } from "./DocumentRenderer";
 import { DocumentDetailsSheet } from "./DocumentDetailsSheet";
 import { LoadingView } from "../Loading";
-import { ScreenView } from "../ScreenView";
 import { CheckStatus } from "../Validity";
 
 export const LocalDocumentRendererContainer: FunctionComponent<NavigationProps> = ({
@@ -37,7 +36,7 @@ export const LocalDocumentRendererContainer: FunctionComponent<NavigationProps> 
     await document?.atomicUpdate(updateFunction);
   };
 
-  const output = document ? (
+  return document ? (
     <View style={{ flex: 1 }}>
       <DocumentRenderer
         document={document.document}
@@ -51,6 +50,4 @@ export const LocalDocumentRendererContainer: FunctionComponent<NavigationProps> 
   ) : (
     <LoadingView />
   );
-
-  return <ScreenView>{output}</ScreenView>;
 };

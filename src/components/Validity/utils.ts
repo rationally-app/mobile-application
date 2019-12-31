@@ -1,12 +1,5 @@
-import {
-  GREEN_30,
-  GREEN_20,
-  RED_30,
-  RED_20,
-  YELLOW_20,
-  DARK
-} from "../../common/colors";
 import { CheckStatus } from "./constants";
+import { color } from "../../common/styles";
 
 type StatusProps<T extends {}> = T & {
   color: string;
@@ -42,21 +35,21 @@ export function getStatusProps<T extends {}>(
   switch (checkStatus) {
     case CheckStatus.VALID:
       return {
-        color: GREEN_30,
-        backgroundColor: GREEN_20,
+        color: color("green", 30),
+        backgroundColor: color("green", 20),
         ...overrides?.[CheckStatus.VALID]
       };
     case CheckStatus.INVALID:
       return {
-        color: RED_30,
-        backgroundColor: RED_20,
+        color: color("red", 30),
+        backgroundColor: color("red", 20),
         ...overrides?.[CheckStatus.INVALID]
       };
     case CheckStatus.CHECKING:
     default:
       return {
-        color: DARK,
-        backgroundColor: YELLOW_20,
+        color: color("grey", 30),
+        backgroundColor: color("yellow", 20),
         ...overrides?.[CheckStatus.CHECKING]
       };
   }

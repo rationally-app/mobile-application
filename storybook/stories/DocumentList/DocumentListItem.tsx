@@ -1,11 +1,11 @@
 import React from "react";
-import { CenterDecorator } from "../decorators";
+import { CenterVerticalDecorator } from "../decorators";
 import { storiesOf } from "@storybook/react-native";
 
 import { DocumentListItem } from "../../../src/components/DocumentList/DocumentListItem";
 
 storiesOf("DocumentList", module)
-  .addDecorator(CenterDecorator)
+  .addDecorator(CenterVerticalDecorator)
   .add("DocumentListItem", () => (
     <DocumentListItem
       title="UAPL"

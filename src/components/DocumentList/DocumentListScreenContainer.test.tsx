@@ -91,7 +91,7 @@ describe("DocumentListScreenContainer", () => {
       </MockDbProvider>
     );
     whenDbSubscriptionReturns([]);
-    fireEvent.press(getByText("Add"));
+    fireEvent.press(getByText("Scan to add"));
     expect(mockNavigation.dispatch).toHaveBeenCalledWith({
       routeName: "QrScannerScreen",
       type: "Navigation/REPLACE"

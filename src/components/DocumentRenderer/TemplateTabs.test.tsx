@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { TemplateTabs, Tab } from "./TemplateTabs";
-import { DARK } from "../../common/colors";
+import { color } from "../../common/styles";
 
 const sampleTabs: Tab[] = [
   {
@@ -46,7 +46,7 @@ describe("TemplateTabs", () => {
 
     expect(secondTab).toHaveStyle({
       borderBottomWidth: 2,
-      borderBottomColor: DARK
+      borderBottomColor: color("orange", 40)
     });
   });
 

@@ -5,7 +5,10 @@ export const mockNavigation: any = {
   dispatch: jest.fn(),
   goBack: jest.fn(),
   getParam: (key: string) => params[key],
-  addListener: jest.fn()
+  addListener: jest.fn(),
+  state: {
+    routeName: "routeName"
+  }
 };
 
 export const resetNavigation = (): void => {

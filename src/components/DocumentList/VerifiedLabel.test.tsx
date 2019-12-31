@@ -3,25 +3,25 @@ import { render } from "@testing-library/react-native";
 import { VerifiedLabel } from "./VerifiedLabel";
 
 describe("VerifiedLabel", () => {
-  it("should show VERIFIED when isVerified is true", async () => {
+  it("should show Verified when isVerified is true", async () => {
     expect.assertions(1);
     const { queryByText } = render(
       <VerifiedLabel isVerified={true} lastVerification={1} />
     );
-    expect(queryByText("VERIFIED")).not.toBeNull();
+    expect(queryByText("Verified")).not.toBeNull();
   });
 
-  it("should show INVALID when isVerified is false and lastVerification is set", async () => {
+  it("should show Invalid when isVerified is false and lastVerification is set", async () => {
     expect.assertions(1);
     const { queryByText } = render(
       <VerifiedLabel isVerified={false} lastVerification={1} />
     );
-    expect(queryByText("INVALID")).not.toBeNull();
+    expect(queryByText("Invalid")).not.toBeNull();
   });
 
-  it("should show UNKNOWN when isVerified is false and lastVerification is falsey", async () => {
+  it("should show Unknown when isVerified is false and lastVerification is falsey", async () => {
     expect.assertions(1);
     const { queryByText } = render(<VerifiedLabel isVerified={false} />);
-    expect(queryByText("UNKNOWN")).not.toBeNull();
+    expect(queryByText("Unknown")).not.toBeNull();
   });
 });

@@ -1,13 +1,13 @@
 import {
   NavigationParams,
   NavigationScreenProp,
-  NavigationState
+  NavigationRoute
 } from "react-navigation";
 import { RxDocument, RxCollection, RxDatabase } from "rxdb";
 import { Document } from "@govtechsg/open-attestation";
 
 export interface NavigationProps {
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+  navigation: NavigationScreenProp<NavigationRoute, NavigationParams>;
 }
 
 export type DocumentProperties = {

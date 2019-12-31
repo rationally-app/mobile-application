@@ -11,20 +11,20 @@ const navigateToDoc = (id: string): boolean => {
 
 const navigateToScanner = (): void => alert("Going to scanner");
 
-storiesOf("DocumentList", module).add("DocumentListScreen (Empty)", () => (
-  <DocumentListScreen
-    documentItems={[]}
-    navigateToDoc={navigateToDoc}
-    navigateToScanner={navigateToScanner}
-    navigation={navigation}
-  />
-));
-
-storiesOf("DocumentList", module).add("DocumentListScreen (Populated)", () => (
-  <DocumentListScreen
-    documentItems={documents}
-    navigateToDoc={navigateToDoc}
-    navigateToScanner={navigateToScanner}
-    navigation={navigation}
-  />
-));
+storiesOf("DocumentList", module)
+  .add("DocumentListScreen (Empty)", () => (
+    <DocumentListScreen
+      documentItems={[]}
+      navigateToDoc={navigateToDoc}
+      navigateToScanner={navigateToScanner}
+      navigation={navigation}
+    />
+  ))
+  .add("DocumentListScreen (Populated)", () => (
+    <DocumentListScreen
+      documentItems={documents}
+      navigateToDoc={navigateToDoc}
+      navigateToScanner={navigateToScanner}
+      navigation={navigation}
+    />
+  ));

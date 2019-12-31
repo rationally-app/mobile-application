@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { ValidityCardHeader } from "./ValidityCardHeader";
 import { ValidityCardCheckItem } from "./ValidityCardCheckItem";
 import { CheckStatus, CHECK_MESSAGES } from "../constants";
+import { color, size, borderRadius, shadow } from "../../../common/styles";
 
 interface ValidityCard {
   tamperedCheck: CheckStatus;
@@ -28,13 +29,13 @@ export const ValidityCard: FunctionComponent<ValidityCard> = ({
         maxWidth: "70%",
         borderWidth: 1,
         borderColor: backgroundColor,
-        backgroundColor: "white",
-        borderRadius: 8,
-        overflow: "hidden"
+        backgroundColor: color("grey", 0),
+        borderRadius: borderRadius(3),
+        ...shadow(4, backgroundColor)
       }}
     >
       <ValidityCardHeader checkStatus={checkStatus} />
-      <View style={{ padding: 32, paddingBottom: 12 }}>
+      <View style={{ padding: size(4), paddingBottom: size(1.5) }}>
         <ValidityCardCheckItem
           checkStatus={tamperedCheck}
           messages={CHECK_MESSAGES.TAMPERED_CHECK}

@@ -5,15 +5,58 @@ import React, {
   useEffect,
   ReactNode
 } from "react";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import BottomSheetBehavior from "reanimated-bottom-sheet";
 import Animated from "react-native-reanimated";
+import { color, size, borderRadius, shadow } from "../../common/styles";
 
 const { call } = Animated;
 
 const FLICK_THRESHOLD = 0.04;
 const OPEN_THRESHOLD = 0.7;
 const CLOSE_THRESHOLD = 0.3;
+
+const styles = StyleSheet.create({
+  fixedHeaderWrapper: {
+    height: 52,
+    overflow: "hidden"
+  },
+  fixedHeader: {
+    borderRadius: borderRadius(4),
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    backgroundColor: color("grey", 5),
+    marginTop: size(4),
+    height: size(2.5),
+    borderColor: color("grey", 10),
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    ...shadow(4)
+  },
+  dragIndicator: {
+    position: "absolute",
+    alignSelf: "center",
+    top: size(1),
+    width: size(6),
+    height: size(0.5),
+    borderRadius: borderRadius(5),
+    backgroundColor: "#E0E0E0"
+  },
+  connector: {
+    // Ensures the header and content are connected nicely
+    position: "absolute",
+    bottom: -1,
+    height: 2,
+    backgroundColor: color("grey", 5),
+    width: "100%"
+  },
+  contentWrapper: {
+    minHeight: "100%",
+    padding: size(3),
+    paddingTop: size(0.5),
+    backgroundColor: color("grey", 5)
+  }
+});
 
 type BottomSheetChildrenFn = (openSheet: () => null | void) => ReactNode;
 
@@ -144,67 +187,15 @@ export const BottomSheet: FunctionComponent<BottomSheet> = ({
 
 const FixedHeader: FunctionComponent = () => (
   <>
-    <View
-      style={{
-        height: 52,
-        overflow: "hidden"
-      }}
-    >
-      <View
-        style={{
-          position: "absolute",
-          left: "-0.5%",
-          width: "101%",
-          borderRadius: 16,
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          borderBottomWidth: 0,
-          backgroundColor: "white",
-          marginTop: 32,
-          height: 20,
-          borderColor: "rgba(0,0,0,0.1)",
-          borderWidth: 1,
-          shadowColor: "#000",
-          shadowOpacity: 0.2,
-          shadowRadius: 16,
-          elevation: 24
-        }}
-      >
-        <View
-          testID="drag-indicator"
-          style={{
-            position: "absolute",
-            alignSelf: "center",
-            top: 8,
-            width: 48,
-            height: 4,
-            borderRadius: 24,
-            backgroundColor: "#E0E0E0"
-          }}
-        />
+    <View style={styles.fixedHeaderWrapper}>
+      <View style={styles.fixedHeader}>
+        <View testID="drag-indicator" style={styles.dragIndicator} />
       </View>
     </View>
-    <View
-      style={{
-        position: "absolute",
-        bottom: -1,
-        height: 2,
-        backgroundColor: "white",
-        width: "100%"
-      }}
-    />
+    <View style={styles.connector} />
   </>
 );
 
 const ContentWrapper: FunctionComponent = ({ children }) => (
-  <View
-    style={{
-      minHeight: "100%",
-      padding: 24,
-      paddingTop: 4,
-      backgroundColor: "white"
-    }}
-  >
-    {children}
-  </View>
+  <View style={styles.contentWrapper}>{children}</View>
 );

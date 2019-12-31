@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { View } from "react-native";
 import { NavigationProps } from "../../types";
-import { ScreenView } from "../ScreenView";
 import { QrCamera } from "./QrCamera";
 import { processQr } from "../../services/QrProcessor";
 import { Document } from "@govtechsg/open-attestation";
@@ -51,17 +50,16 @@ export const QrScannerScreenContainer: FunctionComponent<QrScannerScreenContaine
   }, [navigation]);
 
   return (
-    <ScreenView>
+    <>
       <View
         style={{
           width: "100%",
-          height: "100%",
-          justifyContent: "space-between"
+          height: "100%"
         }}
       >
         <QrCamera onQrData={onQrData} disabled={scanningDisabled} />
         <BottomNav navigation={navigation} />
       </View>
-    </ScreenView>
+    </>
   );
 };

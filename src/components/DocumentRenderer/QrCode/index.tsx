@@ -1,9 +1,7 @@
-import React, { FunctionComponent } from "react";
-import { View, ActivityIndicator } from "react-native";
+import React, { FunctionComponent, useState } from "react";
+import { View, ActivityIndicator, LayoutChangeEvent } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import { DARK, VERY_LIGHT } from "../../../common/colors";
-
-const QR_CODE_SIZE = 250;
+import { color, size } from "../../../common/styles";
 
 interface QrCode {
   qrCode?: string;
@@ -14,40 +12,36 @@ export const QrCode: FunctionComponent<QrCode> = ({
   qrCode,
   qrCodeLoading
 }) => {
+  const [width, setWidth] = useState(0);
+  const onLayout = (event: LayoutChangeEvent): void => {
+    const { width } = event.nativeEvent.layout;
+    setWidth(width);
+  };
+
   if (!qrCode && !qrCodeLoading) return null;
   if (qrCode)
     return (
       <View
         testID="qr-code"
         style={{
-          marginVertical: 24,
-          width: "100%",
-          alignItems: "center"
+          margin: size(3),
+          alignSelf: "stretch"
         }}
       >
-        <QRCode value={qrCode} size={QR_CODE_SIZE} />
+        <View onLayout={onLayout}>
+          <QRCode value={qrCode} size={width} />
+        </View>
       </View>
     );
   return (
     <View
       testID="qr-code-loading"
       style={{
-        width: "100%",
-        marginVertical: 24,
-        alignItems: "center"
+        aspectRatio: 1,
+        justifyContent: "center"
       }}
     >
-      <View
-        style={{
-          width: QR_CODE_SIZE,
-          aspectRatio: 1,
-          backgroundColor: VERY_LIGHT,
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-      >
-        <ActivityIndicator size="large" color={DARK} />
-      </View>
+      <ActivityIndicator size="large" color={color("grey", 40)} />
     </View>
   );
 };

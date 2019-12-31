@@ -5,6 +5,7 @@ import ScannedDocumentScreen from "./ScannedDocumentScreen";
 import QrScannerScreen from "./QrScannerScreen";
 import SettingsScreen from "./SettingsScreen";
 import ValidityCheckScreen from "./ValidityCheckScreen";
+import { color } from "../../common/styles";
 
 const StackNavigator = createStackNavigator(
   {
@@ -28,7 +29,8 @@ const StackNavigator = createStackNavigator(
     }
   },
   {
-    headerMode: "none"
+    headerMode: "none",
+    cardStyle: { backgroundColor: color("grey", 5) }
   }
 );
 

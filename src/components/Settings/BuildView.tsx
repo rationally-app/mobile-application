@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from "react";
 import { View, Text, TouchableWithoutFeedback } from "react-native";
-import { LIGHT } from "../../common/colors";
+import { color } from "../../common/styles";
 import { BUILD_NO } from "../../config/index";
 
 const contributors = [
@@ -21,7 +21,7 @@ export const BuildView: FunctionComponent = () => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={{ flexDirection: "row-reverse" }} testID="build-no">
-        <Text style={{ color: LIGHT }}>{displayedText}</Text>
+        <Text style={{ color: color("grey", 20) }}>{displayedText}</Text>
       </View>
     </TouchableWithoutFeedback>
   );

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Text } from "react-native";
-import { DARK } from "../../../common/colors";
+import { color, fontSize } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 
 export interface Button {
@@ -10,6 +10,14 @@ export interface Button {
 
 export const Button: FunctionComponent<Button> = ({ onPress, text }) => (
   <BaseButton onPress={onPress}>
-    <Text style={{ color: DARK, fontWeight: "bold" }}>{text}</Text>
+    <Text
+      style={{
+        color: color("grey", 40),
+        fontWeight: "bold",
+        fontSize: fontSize(-2)
+      }}
+    >
+      {text}
+    </Text>
   </BaseButton>
 );

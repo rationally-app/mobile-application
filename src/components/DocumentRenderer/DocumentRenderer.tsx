@@ -1,14 +1,9 @@
 // Given a OA document and url, render it with webview
 import React, { FunctionComponent, useState } from "react";
 import { Document } from "@govtechsg/open-attestation";
-import ReactNative, { View } from "react-native";
 import { Tab } from "./TemplateTabs";
 import { WebViewFrame } from "./WebViewFrame";
 import { DocumentRendererHeader } from "./DocumentRendererHeader";
-
-const wrapperStyle: ReactNative.ViewStyle = {
-  flex: 1
-};
 
 interface DocumentRenderer {
   document: Document;
@@ -29,7 +24,7 @@ export const DocumentRenderer: FunctionComponent<DocumentRenderer> = ({
   };
 
   return (
-    <View style={wrapperStyle}>
+    <>
       <DocumentRendererHeader
         goBack={goBack}
         tabs={tabs}
@@ -42,6 +37,6 @@ export const DocumentRenderer: FunctionComponent<DocumentRenderer> = ({
         setActiveTabId={setActiveTabId}
         setTabs={setTabs}
       />
-    </View>
+    </>
   );
 };

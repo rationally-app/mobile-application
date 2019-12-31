@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Text } from "react-native";
-import { DARK, LIGHT } from "../../../common/colors";
+import { color, fontSize } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 
 export interface DarkButton {
@@ -12,7 +12,15 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
   onPress,
   text
 }) => (
-  <BaseButton onPress={onPress} backgroundColor={LIGHT}>
-    <Text style={{ color: DARK, fontWeight: "bold" }}>{text}</Text>
+  <BaseButton onPress={onPress} backgroundColor={color("orange", 30)}>
+    <Text
+      style={{
+        color: color("grey", 40),
+        fontWeight: "bold",
+        fontSize: fontSize(-2)
+      }}
+    >
+      {text}
+    </Text>
   </BaseButton>
 );

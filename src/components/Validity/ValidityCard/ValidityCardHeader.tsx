@@ -3,6 +3,7 @@ import { getStatusProps } from "../utils";
 import { View, Text } from "react-native";
 import { ValidityIcon } from "../ValidityIcon";
 import { CheckStatus } from "../constants";
+import { size, fontSize, letterSpacing } from "../../../common/styles";
 
 interface ValidityCardHeader {
   checkStatus: CheckStatus;
@@ -27,19 +28,19 @@ export const ValidityCardHeader: FunctionComponent<ValidityCardHeader> = ({
     <View
       style={{
         backgroundColor,
-        padding: 32,
+        padding: size(4),
         alignItems: "center"
       }}
     >
-      <ValidityIcon checkStatus={checkStatus} size={32} />
+      <ValidityIcon checkStatus={checkStatus} size={size(4)} />
       <Text
         style={{
           color,
-          fontSize: 16,
+          fontSize: fontSize(0),
           fontWeight: "bold",
           textTransform: "uppercase",
-          letterSpacing: 0.7,
-          marginTop: 12
+          letterSpacing: letterSpacing(2),
+          marginTop: size(1.5)
         }}
         testID="validity-header-label"
       >

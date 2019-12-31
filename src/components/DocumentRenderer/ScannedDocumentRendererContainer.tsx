@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from "react";
 import { NavigationProps, DocumentProperties } from "../../types";
 import { DocumentRenderer } from "./DocumentRenderer";
-import { ScreenView } from "../ScreenView";
 import { SignedDocument, getData } from "@govtechsg/open-attestation";
 import { ScannedDocumentActionSheet } from "./ScannedDocumentActionSheet";
 import { useDbContext } from "../../context/db";
 import { resetRouteFn } from "../../common/navigation";
 import { CheckStatus } from "../Validity";
 import { VerificationStatuses } from "../../common/hooks/useDocumentVerifier";
+import { View } from "react-native";
 
 export const ScannedDocumentRendererContainer: FunctionComponent<NavigationProps> = ({
   navigation
@@ -47,13 +47,11 @@ export const ScannedDocumentRendererContainer: FunctionComponent<NavigationProps
   };
 
   return (
-    <>
-      <ScreenView>
-        <DocumentRenderer
-          document={document}
-          goBack={() => navigation.goBack()}
-        />
-      </ScreenView>
+    <View style={{ flex: 1 }}>
+      <DocumentRenderer
+        document={document}
+        goBack={() => navigation.goBack()}
+      />
       <ScannedDocumentActionSheet
         verificationStatuses={verificationStatuses}
         issuedBy={issuedBy}
@@ -62,6 +60,6 @@ export const ScannedDocumentRendererContainer: FunctionComponent<NavigationProps
         onDone={() => navigation.goBack()}
         onSave={onSave}
       />
-    </>
+    </View>
   );
 };
