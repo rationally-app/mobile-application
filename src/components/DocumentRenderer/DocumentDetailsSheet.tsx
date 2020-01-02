@@ -1,4 +1,10 @@
-import React, { FunctionComponent, useState, useRef, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useRef,
+  useEffect,
+  ReactNode
+} from "react";
 import {
   Animated,
   LayoutChangeEvent,
@@ -9,7 +15,7 @@ import {
   Platform
 } from "react-native";
 import { BottomSheet } from "../Layout/BottomSheet";
-import { Document, SignedDocument, getData } from "@govtechsg/open-attestation";
+import { SignedDocument, getData } from "@govtechsg/open-attestation";
 import QRIcon from "../../../assets/icons/qr.svg";
 import { ValidityBanner } from "../Validity/ValidityBanner";
 import { useDocumentVerifier } from "../../common/hooks/useDocumentVerifier";
@@ -24,6 +30,9 @@ import {
   letterSpacing,
   borderRadius
 } from "../../common/styles";
+import { InvalidPanel } from "./InvalidPanel";
+import { DocumentProperties } from "../../types";
+import { DocumentMetadata } from "./DocumentMetadata";
 
 interface BackgroundOverlay {
   isVisible: boolean;
@@ -105,7 +114,7 @@ const styles = StyleSheet.create({
     letterSpacing: letterSpacing(1),
     color: color("grey", 40)
   },
-  qrCodeBg: {
+  priorityContentBg: {
     height: "50%",
     backgroundColor: color("blue", 50),
     marginHorizontal: -size(3),
@@ -127,18 +136,67 @@ const styles = StyleSheet.create({
     paddingBottom: size(8),
     paddingHorizontal: size(3),
     backgroundColor: color("blue", 50),
-    flexGrow: 1
+    flexGrow: 1,
+    position: "relative",
+    top: -1
   },
   divider: {
-    marginTop: size(1),
-    marginBottom: size(4),
+    marginTop: size(6),
     backgroundColor: color("grey", 30),
-    height: 1
+    height: 2
   }
 });
 
+interface ShareButton {
+  isSheetOpen: boolean;
+  openSheet: () => void | null;
+}
+const ShareButton: FunctionComponent<ShareButton> = ({
+  isSheetOpen,
+  openSheet
+}) => {
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  React.useEffect(() => {
+    setIsAnimating(true);
+    Animated.timing(fadeAnim, {
+      toValue: isSheetOpen ? 0 : 1,
+      duration: 300
+    }).start(() => setIsAnimating(false));
+  }, [fadeAnim, isSheetOpen]);
+
+  return (
+    <Animated.View
+      style={{
+        opacity: fadeAnim
+      }}
+      pointerEvents={isSheetOpen ? "none" : "auto"}
+    >
+      <TouchableOpacity
+        onPress={openSheet}
+        style={[
+          styles.shareButton,
+          isAnimating && {
+            elevation: 0
+          }
+        ]}
+        activeOpacity={0.9}
+      >
+        <View
+          accessible
+          style={{ justifyContent: "center", alignItems: "center" }}
+        >
+          <QRIcon width={size(3)} height={size(3)} />
+          <Text style={styles.shareButtonLabel}>Share</Text>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
 export interface DocumentDetailsSheet {
-  document: Document;
+  document: DocumentProperties;
   onVerification: (checkStatus: CheckStatus) => void;
 }
 
@@ -146,9 +204,7 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
   document,
   onVerification
 }) => {
-  const [isBackgroundOverlayVisible, setIsBackgroundOverlayVisible] = useState(
-    false
-  );
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { qrCode, qrCodeLoading, generateQr } = useQrGenerator();
   const [headerHeight, setHeaderHeight] = useState(0);
   const hasHeaderHeightBeenSet = useRef(false);
@@ -160,7 +216,7 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
     }
   };
 
-  const { issuers } = getData(document);
+  const { issuers } = getData(document.document);
   const issuedBy =
     issuers[0]?.identityProof?.location || "Issuer's identity not found";
 
@@ -170,27 +226,68 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
     revokedCheck,
     issuerCheck,
     overallValidity
-  } = useDocumentVerifier(document as SignedDocument);
+  } = useDocumentVerifier(document.document as SignedDocument);
+  const haveChecksFinished = overallValidity !== CheckStatus.CHECKING;
+  const isDocumentValid = overallValidity === CheckStatus.VALID;
+  const isDocumentInvalid = overallValidity === CheckStatus.INVALID;
 
   useEffect(() => {
-    if (overallValidity !== CheckStatus.CHECKING) {
+    if (haveChecksFinished) {
       onVerification(overallValidity);
     }
-  }, [onVerification, overallValidity]);
+  }, [haveChecksFinished, onVerification, overallValidity]);
+
+  useEffect(() => {
+    // In the event that the sheet was opened before document verification completes,
+    // this ensures that a qr will be generated while the sheet is opened.
+    if (isDocumentValid && isSheetOpen && !qrCode && !qrCodeLoading) {
+      generateQr(document.document)();
+    }
+  }, [
+    document,
+    generateQr,
+    isDocumentValid,
+    isSheetOpen,
+    qrCode,
+    qrCodeLoading
+  ]);
+
+  let priorityContent: ReactNode = null;
+  if (haveChecksFinished) {
+    let children: ReactNode = null;
+    if (isDocumentValid) {
+      children = (
+        <View style={styles.qrCodeWrapper}>
+          <QrCode qrCode={qrCode} qrCodeLoading={qrCodeLoading} />
+        </View>
+      );
+    } else if (isDocumentInvalid) {
+      children = <InvalidPanel />;
+    }
+    priorityContent = (
+      <View style={{ position: "relative" }}>
+        <View style={styles.priorityContentBg} />
+        {children}
+        <View style={styles.divider} />
+      </View>
+    );
+  }
 
   return (
     <>
-      <BackgroundOverlay isVisible={isBackgroundOverlayVisible} />
+      <BackgroundOverlay isVisible={isSheetOpen} />
       <BottomSheet
         snapPoints={[headerHeight, "90%"]}
         onOpenStart={() => {
-          generateQr(document)();
-          setIsBackgroundOverlayVisible(true);
+          if (isDocumentValid && !qrCodeLoading) {
+            generateQr(document.document)();
+          }
         }}
-        onCloseEnd={() => setIsBackgroundOverlayVisible(false)}
+        onOpenEnd={() => setIsSheetOpen(true)}
+        onCloseEnd={() => setIsSheetOpen(false)}
       >
         {openSheet => (
-          <View testID="document-details" style={{ minHeight: "100%" }}>
+          <View style={{ minHeight: "100%" }}>
             <View onLayout={onHeaderLayout} style={styles.header}>
               <View style={styles.validityBannerWrapper}>
                 <ValidityBanner
@@ -206,31 +303,17 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
                   <Text style={styles.heading}>Issued by</Text>
                   <Text style={styles.issuerName}>{issuedBy}</Text>
                 </View>
-                <TouchableOpacity
-                  onPress={openSheet}
-                  style={styles.shareButton}
-                >
-                  <View
-                    accessible
-                    style={{ justifyContent: "center", alignItems: "center" }}
-                  >
-                    <QRIcon width={size(3)} height={size(3)} />
-                    <Text style={styles.shareButtonLabel}>Share</Text>
-                  </View>
-                </TouchableOpacity>
+                {isDocumentValid && (
+                  <ShareButton
+                    isSheetOpen={isSheetOpen}
+                    openSheet={openSheet}
+                  />
+                )}
               </View>
             </View>
-            <View style={{ position: "relative" }}>
-              <View style={styles.qrCodeBg} />
-              <View style={styles.qrCodeWrapper}>
-                <QrCode qrCode={qrCode} qrCodeLoading={qrCodeLoading} />
-              </View>
-            </View>
+            {priorityContent}
             <View style={styles.contentWrapper}>
-              {(qrCodeLoading || qrCode !== "") && (
-                <View style={styles.divider} />
-              )}
-              <Text style={{ color: color("grey", 0) }}>Metadata</Text>
+              <DocumentMetadata document={document} />
             </View>
           </View>
         )}

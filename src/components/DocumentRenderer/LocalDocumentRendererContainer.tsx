@@ -43,7 +43,7 @@ export const LocalDocumentRendererContainer: FunctionComponent<NavigationProps> 
         goBack={() => navigation.goBack()}
       />
       <DocumentDetailsSheet
-        document={document.document}
+        document={document}
         onVerification={onVerification}
       />
     </View>
