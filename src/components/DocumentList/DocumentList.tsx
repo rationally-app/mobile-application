@@ -8,6 +8,7 @@ export interface DocumentItem {
   title: string;
   isVerified?: boolean;
   lastVerification?: number;
+  issuedBy?: string;
 }
 
 export interface DocumentList {
@@ -25,6 +26,7 @@ export const DocumentList: FunctionComponent<DocumentList> = ({
       title={doc.title}
       isVerified={doc.isVerified}
       lastVerification={doc.lastVerification}
+      issuedBy={doc.issuedBy}
       onPress={(): void => navigateToDoc(doc.id)}
     />
   ));

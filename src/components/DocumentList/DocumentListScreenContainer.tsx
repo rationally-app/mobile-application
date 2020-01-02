@@ -5,6 +5,11 @@ import { useDbContext } from "../../context/db";
 import { replaceRouteFn } from "../../common/navigation";
 import { DocumentListScreen } from "./DocumentListScreen";
 
+const getIssuerName = (document: DocumentObject): string => {
+  const { issuers } = getData(document.document);
+  return issuers[0]?.identityProof?.location;
+};
+
 export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
@@ -30,7 +35,8 @@ export const DocumentListScreenContainer: FunctionComponent<NavigationProps> = (
       id: doc.id,
       title: docClear.name,
       isVerified: doc.isVerified,
-      lastVerification: doc.verified
+      lastVerification: doc.verified,
+      issuedBy: getIssuerName(doc)
     };
   });
   return (
