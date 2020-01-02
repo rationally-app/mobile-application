@@ -1,4 +1,7 @@
-import { createStackNavigator } from "react-navigation-stack";
+import {
+  createStackNavigator,
+  StackViewTransitionConfigs
+} from "react-navigation-stack";
 import DocumentListScreen from "./DocumentListScreen";
 import LocalDocumentScreen from "./LocalDocumentScreen";
 import ScannedDocumentScreen from "./ScannedDocumentScreen";
@@ -30,7 +33,11 @@ const StackNavigator = createStackNavigator(
   },
   {
     headerMode: "none",
-    cardStyle: { backgroundColor: color("grey", 5) }
+    cardStyle: { backgroundColor: color("grey", 5) },
+    transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
+    navigationOptions: {
+      gesturesEnabled: true
+    }
   }
 );
 
