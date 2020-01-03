@@ -10,6 +10,7 @@ jest.mock("@expo/vector-icons", () => ({
 }));
 
 jest.mock("expo-constants", () => ({ manifest: { revisionId: "BUILD NO" } }));
+jest.mock("expo-sqlite", () => ({ default: {} }));
 
 const globalAny: any = global;
 globalAny.alert = jest.fn(); // eslint-disable-line jest/prefer-spy-on

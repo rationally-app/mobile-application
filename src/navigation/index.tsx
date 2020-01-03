@@ -2,12 +2,16 @@ import React, { ReactElement } from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { DbContextProvider } from "../context/db";
 import StackNavigator from "./StackNavigator";
-import LoadingScreen from "./LoadingScreen";
 import { StatusBar, View, Platform } from "react-native";
+import InitialisationScreen from "./InitialisationScreen";
+import { Linking } from "expo";
 
 const SwitchNavigator = createSwitchNavigator(
-  { LoadingScreen, StackNavigator },
-  { initialRouteName: "LoadingScreen" }
+  {
+    InitialisationScreen: { screen: InitialisationScreen, path: "action" },
+    StackNavigator
+  },
+  { initialRouteName: "InitialisationScreen" }
 );
 
 const AppContainer = createAppContainer(SwitchNavigator);
@@ -21,7 +25,7 @@ const App = (): ReactElement => (
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
       }}
     >
-      <AppContainer />
+      <AppContainer uriPrefix={Linking.makeUrl("/")} />
     </View>
   </DbContextProvider>
 );

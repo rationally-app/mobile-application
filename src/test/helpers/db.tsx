@@ -4,6 +4,7 @@ import { DbContext } from "../../context/db";
 
 export const mockSubscribe = jest.fn();
 export const mockInsert = jest.fn();
+export const mockSetDb = jest.fn();
 
 const documents = {
   find: () => documents,
@@ -19,7 +20,9 @@ const mockDb: any = {
 };
 
 export const MockDbProvider: FunctionComponent = ({ children }) => (
-  <DbContext.Provider value={{ db: mockDb }}>{children}</DbContext.Provider>
+  <DbContext.Provider value={{ db: mockDb, setDb: mockSetDb }}>
+    {children}
+  </DbContext.Provider>
 );
 
 export const whenDbSubscriptionReturns = (results: any): void => {
