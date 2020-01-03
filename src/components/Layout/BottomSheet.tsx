@@ -84,7 +84,10 @@ export const BottomSheet: FunctionComponent<BottomSheet> = ({
   // Snap to the first point whenever snapPoints changes,
   // this allows snapPoints to be dynamic
   useEffect(() => {
-    bottomSheetRef.current && bottomSheetRef.current.snapTo(0);
+    requestAnimationFrame(() => {
+      bottomSheetRef.current && bottomSheetRef.current.snapTo(0);
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...snapPoints]);
 
