@@ -10,7 +10,7 @@ import {
 } from "./fetchDocument";
 // The universal transfer method uses the query string's field as the action type
 // and the uriencoded value as the payload
-const universalTransferDataRegex = /https:\/\/openattestation.com\/action\?(.*)=(.*)/;
+const universalTransferDataRegex = /https:\/\/action.openattestation.com\?q=(.*)/;
 
 export enum ActionType {
   DOCUMENT = "DOCUMENT"
@@ -26,14 +26,10 @@ export const decodeAction = (data: string): Action => {
     throw new Error("Invalid QR Protocol");
   }
   try {
-    const actionType = data.match(universalTransferDataRegex)![1].toUpperCase();
-    const encodedPayload = data.match(universalTransferDataRegex)![2];
-    const decodedPayload = JSON.parse(decodeURI(encodedPayload));
-    validateAction(actionType, decodedPayload);
-    return {
-      type: actionType,
-      payload: decodedPayload
-    };
+    const encodedAction = data.match(universalTransferDataRegex)![1];
+    const decodedAction = JSON.parse(decodeURI(encodedAction));
+    validateAction(decodedAction);
+    return decodedAction;
   } catch (e) {
     throw new Error(`Invalid QR Action: ${e.message}`);
   }

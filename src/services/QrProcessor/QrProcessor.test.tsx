@@ -2,7 +2,7 @@ import { decodeAction, processQr } from "./index";
 import demoEncrypted from "../../../fixtures/demo-encrypted-oc.json";
 import demoOc from "../../../fixtures/demo-oc.json";
 
-const dataPrefix = "https://openattestation.com/action?document=";
+const dataPrefix = "https://action.openattestation.com?q=";
 
 describe("decodeAction", () => {
   it("should throw on invalid protocols", () => {
@@ -16,11 +16,11 @@ describe("decodeAction", () => {
   it("should throw on invalid actions", () => {
     expect.assertions(2);
     expect(() =>
-      decodeAction("https://openattestation.com/action?document=abc")
+      decodeAction("https://action.openattestation.com?q=abc")
     ).toThrow("Invalid QR Action");
     expect(() =>
       decodeAction(
-        "https://openattestation.com/action?document=%7B%22foo%22:%22bar%22%7D"
+        "https://action.openattestation.com?q=%7B%22foo%22:%22bar%22%7D"
       )
     ).toThrow("Invalid QR Action");
   });
@@ -28,21 +28,20 @@ describe("decodeAction", () => {
   describe("valid actions", () => {
     it("should return action for plaintext document", () => {
       expect.assertions(1);
-      const input = `https://openattestation.com/action?document=%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22%7D`;
-      const output = {
+      const input = `https://action.openattestation.com?q=%7B%22type%22:%22DOCUMENT%22,%22payload%22:%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22%7D%7D`;
+      const expectedAction = {
+        type: "DOCUMENT",
         payload: {
           uri: "https://hosted-document.com/doc/foo-bar"
-        },
-        type: "DOCUMENT"
+        }
       };
-      expect(decodeAction(input)).toStrictEqual(output);
+      expect(decodeAction(input)).toStrictEqual(expectedAction);
     });
 
     it("should return action for encrypted document", () => {
       expect.assertions(1);
-      const input =
-        "https://openattestation.com/action?document=%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22,%22key%22:%22a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b%22%7D";
-      const action = {
+      const input = `https://action.openattestation.com?q=%7B%22type%22:%22DOCUMENT%22,%22payload%22:%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22,%22key%22:%22a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b%22%7D%7D`;
+      const expectedAction = {
         type: "DOCUMENT",
         payload: {
           uri: "https://hosted-document.com/doc/foo-bar",
@@ -50,13 +49,11 @@ describe("decodeAction", () => {
             "a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b"
         }
       };
-      expect(decodeAction(input)).toStrictEqual(action);
+      expect(decodeAction(input)).toStrictEqual(expectedAction);
     });
 
     it("should return action for encrypted document with permitted action and redirect", () => {
       expect.assertions(1);
-      const input =
-        "https://openattestation.com/action?document=%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22,%22key%22:%22a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b%22,%22permittedActions%22:%5B%22VIEW%22%5D,%22redirect%22:%22https://tradetrust.io/%22%7D";
       const action = {
         type: "DOCUMENT",
         payload: {
@@ -67,6 +64,7 @@ describe("decodeAction", () => {
           redirect: "https://tradetrust.io/"
         }
       };
+      const input = `https://action.openattestation.com?q=%7B%22type%22:%22DOCUMENT%22,%22payload%22:%7B%22uri%22:%22https://hosted-document.com/doc/foo-bar%22,%22key%22:%22a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b%22,%22permittedActions%22:%5B%22VIEW%22%5D,%22redirect%22:%22https://tradetrust.io/%22%7D%7D`;
       expect(decodeAction(input)).toStrictEqual(action);
     });
   });
@@ -89,7 +87,12 @@ describe("processQr", () => {
     const onDocumentView = jest.fn();
     await processQr(
       dataPrefix +
-        encodeURI(JSON.stringify({ uri: "https://api.myjson.com/bins/kv1de" })),
+        encodeURI(
+          JSON.stringify({
+            type: "DOCUMENT",
+            payload: { uri: "https://api.myjson.com/bins/kv1de" }
+          })
+        ),
       { onDocumentStore, onDocumentView }
     );
     expect(onDocumentView).toHaveBeenCalledWith("MOCK_JSON_DOCUMENT");
@@ -105,8 +108,11 @@ describe("processQr", () => {
       dataPrefix +
         encodeURI(
           JSON.stringify({
-            uri: "https://api.myjson.com/bins/kv1de",
-            permittedActions: ["STORE"]
+            type: "DOCUMENT",
+            payload: {
+              uri: "https://api.myjson.com/bins/kv1de",
+              permittedActions: ["STORE"]
+            }
           })
         ),
       { onDocumentStore, onDocumentView }
@@ -121,9 +127,12 @@ describe("processQr", () => {
     const onDocumentView = jest.fn();
     await expect(
       processQr(
-        "https://openattestation.com/action?cow=" +
+        dataPrefix +
           encodeURI(
-            JSON.stringify({ uri: "https://api.myjson.com/bins/kv1de" })
+            JSON.stringify({
+              type: "COW",
+              payload: { uri: "https://api.myjson.com/bins/kv1de" }
+            })
           ),
         { onDocumentStore, onDocumentView }
       )
@@ -141,7 +150,10 @@ describe("processQr", () => {
       processQr(
         dataPrefix +
           encodeURI(
-            JSON.stringify({ uri: "https://api.myjson.com/bins/kv1de" })
+            JSON.stringify({
+              type: "DOCUMENT",
+              payload: { uri: "https://api.myjson.com/bins/kv1de" }
+            })
           ),
         { onDocumentStore, onDocumentView }
       )
@@ -157,7 +169,10 @@ describe("processQr", () => {
       processQr(
         dataPrefix +
           encodeURI(
-            JSON.stringify({ uri: "https://api.myjson.com/bins/kv1de" })
+            JSON.stringify({
+              type: "DOCUMENT",
+              payload: { uri: "https://api.myjson.com/bins/kv1de" }
+            })
           ),
         { onDocumentStore, onDocumentView }
       )
@@ -175,8 +190,11 @@ describe("processQr", () => {
         dataPrefix +
           encodeURI(
             JSON.stringify({
-              uri: "https://api.myjson.com/bins/kv1de",
-              permittedActions: ["STORE"]
+              type: "DOCUMENT",
+              payload: {
+                uri: "https://api.myjson.com/bins/kv1de",
+                permittedActions: ["STORE"]
+              }
             })
           ),
         { onDocumentStore, onDocumentView }
@@ -194,8 +212,11 @@ describe("processQr", () => {
         dataPrefix +
           encodeURI(
             JSON.stringify({
-              uri: "https://api.myjson.com/bins/kv1de",
-              permittedActions: ["STORE"]
+              type: "DOCUMENT",
+              payload: {
+                uri: "https://api.myjson.com/bins/kv1de",
+                permittedActions: ["STORE"]
+              }
             })
           ),
         { onDocumentStore, onDocumentView }
@@ -212,9 +233,12 @@ describe("processQr", () => {
       dataPrefix +
         encodeURI(
           JSON.stringify({
-            uri: "https://example.com/some-id",
-            key:
-              "a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b"
+            type: "DOCUMENT",
+            payload: {
+              uri: "https://api.myjson.com/bins/kv1de",
+              key:
+                "a0c820de75a302927c80b2c9b8a1143b8d519862d5ce972bdf0a76387464811b"
+            }
           })
         ),
       { onDocumentStore, onDocumentView }
@@ -232,9 +256,12 @@ describe("processQr", () => {
         dataPrefix +
           encodeURI(
             JSON.stringify({
-              uri: "https://example.com/some-id",
-              key:
-                "7e22da661c5d574ed611bf507db9350c5d50028df21fd7038fa0bb3b02e4e9b5"
+              type: "DOCUMENT",
+              payload: {
+                uri: "https://api.myjson.com/bins/kv1de",
+                key:
+                  "7e22da661c5d574ed611bf507db9350c5d50028df21fd7038fa0bb3b02e4e9b5"
+              }
             })
           ),
         { onDocumentStore, onDocumentView }
