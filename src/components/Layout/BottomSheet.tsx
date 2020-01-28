@@ -63,6 +63,7 @@ type BottomSheetChildrenFn = (openSheet: () => null | void) => ReactNode;
 interface BottomSheet {
   children: ReactNode | BottomSheetChildrenFn;
   snapPoints?: (number | string)[];
+  initialSnap?: number;
   onOpenEnd?: () => void;
   onCloseEnd?: () => void;
   onOpenStart?: () => void;
@@ -77,7 +78,8 @@ export const BottomSheet: FunctionComponent<BottomSheet> = ({
   onCloseEnd,
   onOpenStart,
   onCloseStart,
-  snapPoints = ["20%", "100%"]
+  snapPoints = ["20%", "100%"],
+  initialSnap
 }) => {
   const bottomSheetRef: RefObject<BottomSheetBehavior> = useRef(null);
 
@@ -164,6 +166,7 @@ export const BottomSheet: FunctionComponent<BottomSheet> = ({
         )}
         enabledContentTapInteraction={false}
         snapPoints={snapPoints}
+        initialSnap={initialSnap}
         callbackNode={sheetHiddenPercentage}
         onOpenStart={() => {
           sheetStatus.current = "opening";

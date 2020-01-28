@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
-import { QrCode } from "./index";
+import { QrCode } from "./QrCode";
 
 describe("QrCode", () => {
   it("should not display anything if both qrCode and qrCodeLoading is false", () => {
@@ -18,6 +18,14 @@ describe("QrCode", () => {
   it("should render loading when qrCodeLoading is true", () => {
     expect.assertions(1);
     const { queryByTestId } = render(<QrCode qrCodeLoading={true} />);
+    expect(queryByTestId("qr-code-loading")).not.toBeNull();
+  });
+
+  it("should render loading when qrCodeLoading is true and qrCode exists", () => {
+    expect.assertions(1);
+    const { queryByTestId } = render(
+      <QrCode qrCodeLoading={true} qrCode="TEST" />
+    );
     expect(queryByTestId("qr-code-loading")).not.toBeNull();
   });
 });

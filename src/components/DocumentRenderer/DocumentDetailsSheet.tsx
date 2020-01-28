@@ -20,8 +20,6 @@ import QRIcon from "../../../assets/icons/qr.svg";
 import { ValidityBanner } from "../Validity/ValidityBanner";
 import { useDocumentVerifier } from "../../common/hooks/useDocumentVerifier";
 import { CheckStatus } from "../Validity";
-import { QrCode } from "./QrCode";
-import { useQrGenerator } from "../../common/hooks/useQrGenerator";
 import {
   color,
   size,
@@ -31,8 +29,9 @@ import {
   borderRadius
 } from "../../common/styles";
 import { InvalidPanel } from "./InvalidPanel";
-import { DocumentProperties } from "../../types";
+import { DocumentObject, DocumentProperties } from "../../types";
 import { DocumentMetadata } from "./DocumentMetadata";
+import { QrCodeContainerRef, QrCodeContainer } from "./QrCode/QrCodeContainer";
 
 interface BackgroundOverlay {
   isVisible: boolean;
@@ -195,17 +194,27 @@ const ShareButton: FunctionComponent<ShareButton> = ({
   );
 };
 
+const PriorityContent: FunctionComponent = ({ children }) => (
+  <View style={{ position: "relative" }} testID="priority-content">
+    <View style={styles.priorityContentBg} />
+    {children}
+    <View style={styles.divider} />
+  </View>
+);
+
 export interface DocumentDetailsSheet {
-  document: DocumentProperties;
+  document: DocumentProperties & Pick<DocumentObject, "atomicUpdate">;
   onVerification: (checkStatus: CheckStatus) => void;
+  initialSheetOpen?: boolean;
 }
 
 export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
   document,
-  onVerification
+  onVerification,
+  initialSheetOpen = false
 }) => {
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const { qrCode, qrCodeLoading, generateQr } = useQrGenerator();
+  const qrCodeRef = useRef<QrCodeContainerRef>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(initialSheetOpen);
   const [headerHeight, setHeaderHeight] = useState(0);
   const hasHeaderHeightBeenSet = useRef(false);
   const onHeaderLayout = (event: LayoutChangeEvent): void => {
@@ -238,38 +247,33 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
   }, [haveChecksFinished, onVerification, overallValidity]);
 
   useEffect(() => {
-    // In the event that the sheet was opened before document verification completes,
-    // this ensures that a qr will be generated while the sheet is opened.
-    if (isDocumentValid && isSheetOpen && !qrCode && !qrCodeLoading) {
-      generateQr(document.document)();
+    if (isDocumentValid && isSheetOpen) {
+      qrCodeRef.current?.triggerGenerateQr();
     }
-  }, [
-    document,
-    generateQr,
-    isDocumentValid,
-    isSheetOpen,
-    qrCode,
-    qrCodeLoading
-  ]);
+  }, [isDocumentValid, isSheetOpen]);
+
+  // Valid when there's a URL and an expiry that's in the future
+  const hasValidQrCode =
+    document.qrCode?.url &&
+    (!document.qrCode.expiry ||
+      (document.qrCode?.expiry && document.qrCode?.expiry > Date.now()));
 
   let priorityContent: ReactNode = null;
-  if (haveChecksFinished) {
-    let children: ReactNode = null;
-    if (isDocumentValid) {
-      children = (
-        <View style={styles.qrCodeWrapper}>
-          <QrCode qrCode={qrCode} qrCodeLoading={qrCodeLoading} />
-        </View>
-      );
-    } else if (isDocumentInvalid) {
-      children = <InvalidPanel />;
-    }
+  if (hasValidQrCode || isDocumentValid) {
     priorityContent = (
-      <View style={{ position: "relative" }}>
-        <View style={styles.priorityContentBg} />
-        {children}
-        <View style={styles.divider} />
-      </View>
+      <PriorityContent>
+        <QrCodeContainer
+          document={document}
+          ref={qrCodeRef}
+          refreshPaused={!isSheetOpen}
+        />
+      </PriorityContent>
+    );
+  } else if (isDocumentInvalid) {
+    priorityContent = (
+      <PriorityContent>
+        <InvalidPanel />
+      </PriorityContent>
     );
   }
 
@@ -278,11 +282,7 @@ export const DocumentDetailsSheet: FunctionComponent<DocumentDetailsSheet> = ({
       <BackgroundOverlay isVisible={isSheetOpen} />
       <BottomSheet
         snapPoints={[headerHeight, "90%"]}
-        onOpenStart={() => {
-          if (isDocumentValid && !qrCodeLoading) {
-            generateQr(document.document)();
-          }
-        }}
+        initialSnap={initialSheetOpen ? 1 : 0}
         onOpenEnd={() => setIsSheetOpen(true)}
         onCloseEnd={() => setIsSheetOpen(false)}
       >

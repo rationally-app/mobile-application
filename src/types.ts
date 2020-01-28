@@ -16,6 +16,10 @@ export type DocumentProperties = {
   document: Document;
   verified?: number;
   isVerified?: boolean;
+  qrCode?: {
+    url: string;
+    expiry?: number;
+  };
 };
 
 export type DocumentObject = RxDocument<DocumentProperties>;

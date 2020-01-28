@@ -1,6 +1,9 @@
 import { Document } from "@govtechsg/open-attestation";
 import { validateAction } from "../actionValidator/validator";
-import { DocumentPermittedAction } from "../actionValidator/documentActionValidator";
+import {
+  DocumentPermittedAction,
+  DocumentAction
+} from "../actionValidator/documentActionValidator";
 import {
   fetchCleartextDocument,
   fetchEncryptedDocument
@@ -15,12 +18,7 @@ export enum ActionType {
 
 export interface Action {
   type: string;
-  payload: {
-    uri: string;
-    key?: string;
-    permittedActions?: DocumentPermittedAction[];
-    redirect?: string;
-  };
+  payload: DocumentAction;
 }
 
 export const decodeAction = (data: string): Action => {

@@ -3,7 +3,15 @@ import { uploadDocument } from "./index";
 const mockJsonResponse = jest.fn();
 const mockFetch = jest.fn();
 
+let dateMock: any;
+
 describe("uploadDocument", () => {
+  beforeAll(() => {
+    dateMock = jest
+      .spyOn(Date, "now")
+      .mockImplementation(() => new Date(2020, 0, 1).getTime());
+  });
+
   beforeEach(() => {
     mockJsonResponse.mockReset();
     const globalAny: any = global;
@@ -13,17 +21,25 @@ describe("uploadDocument", () => {
     }));
   });
 
+  afterAll(() => {
+    dateMock.mockRestore();
+  });
+
   it("should return the correct qr code", async () => {
     expect.assertions(1);
     const document: any = "SAMPLE_DOCUMENT";
+    const expiry = Date.now() + 30000;
     mockJsonResponse.mockResolvedValue({
       id: "DOCUMENT-ID",
-      key: "SECRET-KEY"
+      key: "SECRET-KEY",
+      ttl: expiry
     });
-    const qrCode = await uploadDocument(document);
-    expect(qrCode).toStrictEqual(
-      "https://openattestation.com/action?document=%7B%22uri%22:%22https://api-ropsten.opencerts.io/storage/DOCUMENT-ID%22,%22key%22:%22SECRET-KEY%22%7D"
-    );
+    const qrCode = await uploadDocument(document, 30000);
+    expect(qrCode).toStrictEqual({
+      url:
+        "https://openattestation.com/action?document=%7B%22uri%22:%22https://api-ropsten.opencerts.io/storage/DOCUMENT-ID%22,%22key%22:%22SECRET-KEY%22%7D",
+      expiry
+    });
   });
 
   it("should throw if the request fail", async () => {

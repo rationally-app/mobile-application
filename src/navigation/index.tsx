@@ -5,6 +5,7 @@ import StackNavigator from "./StackNavigator";
 import { StatusBar, View, Platform } from "react-native";
 import InitialisationScreen from "./InitialisationScreen";
 import { Linking } from "expo";
+import { NetworkContextProvider } from "../context/network";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -18,15 +19,17 @@ const AppContainer = createAppContainer(SwitchNavigator);
 
 const App = (): ReactElement => (
   <DbContextProvider>
-    <StatusBar />
-    <View
-      style={{
-        flex: 1,
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-      }}
-    >
-      <AppContainer uriPrefix={Linking.makeUrl("/")} />
-    </View>
+    <NetworkContextProvider>
+      <StatusBar />
+      <View
+        style={{
+          flex: 1,
+          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+        }}
+      >
+        <AppContainer uriPrefix={Linking.makeUrl("/")} />
+      </View>
+    </NetworkContextProvider>
   </DbContextProvider>
 );
 

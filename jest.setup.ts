@@ -12,5 +12,12 @@ jest.mock("@expo/vector-icons", () => ({
 jest.mock("expo-constants", () => ({ manifest: { revisionId: "BUILD NO" } }));
 jest.mock("expo-sqlite", () => ({ default: {} }));
 
+import { NativeModules } from "react-native";
+NativeModules.RNCNetInfo = {
+  getCurrentState: jest.fn(),
+  addListener: jest.fn(),
+  removeListeners: jest.fn()
+};
+
 const globalAny: any = global;
 globalAny.alert = jest.fn(); // eslint-disable-line jest/prefer-spy-on
