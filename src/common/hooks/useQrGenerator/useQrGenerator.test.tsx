@@ -5,6 +5,9 @@ import { uploadDocument } from "../../../services/DocumentSharing";
 
 jest.mock("../../../services/DocumentSharing");
 jest.mock("lodash/debounce", () => (fn: any) => fn);
+jest.mock("../useConfig", () => ({
+  useConfig: () => ({ config: { network: "mainnet" } })
+}));
 
 const mockUploadDocument = uploadDocument as jest.Mock;
 
@@ -12,6 +15,7 @@ describe("useQrGenerator", () => {
   it("should have empty qr code that is not loading by default", () => {
     expect.assertions(3);
     const { result } = renderHook(() => useQrGenerator());
+
     expect(result.current.qrCode.url).toBe("");
     expect(result.current.qrCode.expiry).toBeUndefined();
     expect(result.current.qrCodeLoading).toBe(false);
@@ -43,6 +47,18 @@ describe("useQrGenerator", () => {
     expect(result.current.qrCode.url).toBe("QR_CODE");
     expect(result.current.qrCode.expiry).toBe(3);
     expect(result.current.qrCodeLoading).toBe(false);
+  });
+
+  it("should upload document using the correct network", async () => {
+    expect.assertions(1);
+    const { result } = renderHook(() => useQrGenerator());
+    const { generateQr } = result.current;
+    mockUploadDocument.mockResolvedValue("QR_CODE");
+    await act(async () => {
+      await generateQr(sampleDoc);
+    });
+
+    expect(mockUploadDocument.mock.calls[0][1]).toBe("mainnet");
   });
 
   it("should alert errors", async () => {

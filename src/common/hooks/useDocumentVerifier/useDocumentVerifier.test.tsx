@@ -3,14 +3,32 @@ import { useDocumentVerifier } from "./index";
 import { SignedDocument } from "@govtechsg/open-attestation";
 import { renderHook } from "@testing-library/react-hooks";
 import { CheckStatus } from "../../../components/Validity/";
-
 import { checkValidity } from "../../../services/DocumentVerifier";
+jest.mock("../useConfig", () => ({
+  useConfig: () => ({ config: { network: "mainnet" } })
+}));
 jest.mock("../../../services/DocumentVerifier");
 const mockCheckValidity = checkValidity as jest.Mock;
 
 jest.useFakeTimers();
 
 describe("useDocumentVerifier", () => {
+  it("should use the correct network to verify document", async () => {
+    expect.assertions(1);
+    mockCheckValidity.mockReturnValue([
+      Promise.resolve({ checksumMatch: true }),
+      Promise.resolve({ issuedOnAll: true }),
+      Promise.resolve({ revokedOnAny: false }),
+      Promise.resolve({ identifiedOnAll: true }),
+      Promise.resolve(true)
+    ]);
+
+    const { waitForNextUpdate } = renderHook(() =>
+      useDocumentVerifier(sampleDoc as SignedDocument)
+    );
+    await waitForNextUpdate();
+    expect(mockCheckValidity.mock.calls[0][1]).toBe("mainnet");
+  });
   it("should return the correct check status as the checks resolve at different times", async () => {
     expect.assertions(3);
     mockCheckValidity.mockReturnValue([

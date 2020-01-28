@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { uploadDocument } from "../../../services/DocumentSharing";
 import { Document } from "@govtechsg/open-attestation";
 import debounce from "lodash/debounce";
+import { useConfig } from "../useConfig";
 
 const GENERATE_QR_DEBOUNCE_MS = 500;
 
@@ -15,6 +16,9 @@ export interface QrGenerator {
 export const useQrGenerator = (
   initialQrCode: QrCode = { url: "" }
 ): QrGenerator => {
+  const {
+    config: { network }
+  } = useConfig();
   const isMounted = useRef(false);
   const [qrCode, setQrCode] = useState<QrCode>(initialQrCode);
   const [qrCodeLoading, setQrCodeLoading] = useState(false);
@@ -30,7 +34,7 @@ export const useQrGenerator = (
     debounce(async (document: Document) => {
       try {
         setQrCodeLoading(true);
-        const code = await uploadDocument(document);
+        const code = await uploadDocument(document, network);
         if (!isMounted.current) {
           return;
         }

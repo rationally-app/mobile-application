@@ -27,3 +27,8 @@ export type DatabaseCollections = {
   documents: RxCollection<DocumentProperties>;
 };
 export type Database = RxDatabase<DatabaseCollections>;
+
+export enum NetworkTypes {
+  ropsten = "ropsten",
+  mainnet = "mainnet"
+}

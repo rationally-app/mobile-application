@@ -2,8 +2,17 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { Settings } from "./Settings";
 import { mockNavigation, resetNavigation } from "../../test/helpers/navigation";
+import { useConfig } from "../../common/hooks/useConfig";
 
 jest.mock("../../common/navigation");
+jest.mock("../../common/hooks/useConfig");
+
+const mockUseConfig = useConfig as jest.Mock;
+const mockSetValue = jest.fn();
+mockUseConfig.mockReturnValue({
+  config: { network: "ropsten" },
+  setValue: mockSetValue
+});
 
 describe("Settings", () => {
   beforeEach(() => {
@@ -65,5 +74,24 @@ describe("Settings", () => {
       routeName: "QrScannerScreen",
       type: "Navigation/REPLACE"
     });
+  });
+  it("should show network from config", () => {
+    expect.assertions(1);
+    const { queryByText } = render(
+      <Settings onResetDocumentData={() => {}} navigation={mockNavigation} />
+    );
+    expect(queryByText("ROPSTEN")).not.toBeNull();
+  });
+  it("should toggle network when netowrk toggle is pressed", () => {
+    expect.assertions(1);
+    const mockOnResetDocumentData = jest.fn();
+    const { getByText } = render(
+      <Settings
+        onResetDocumentData={mockOnResetDocumentData}
+        navigation={mockNavigation}
+      />
+    );
+    fireEvent.press(getByText("ROPSTEN"));
+    expect(mockSetValue).toHaveBeenCalledWith("network", "mainnet");
   });
 });
