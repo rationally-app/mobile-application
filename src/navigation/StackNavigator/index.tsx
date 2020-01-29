@@ -2,33 +2,21 @@ import {
   createStackNavigator,
   StackViewTransitionConfigs
 } from "react-navigation-stack";
-import DocumentListScreen from "./DocumentListScreen";
-import LocalDocumentScreen from "./LocalDocumentScreen";
-import ScannedDocumentScreen from "./ScannedDocumentScreen";
-import QrScannerScreen from "./QrScannerScreen";
-import SettingsScreen from "./SettingsScreen";
-import ValidityCheckScreen from "./ValidityCheckScreen";
+import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
+import CustomerQuotaScreen from "./CustomerQuotaScreen";
+import TransactionConfirmationScreen from "./TransactionConfirmationScreen";
 import { color } from "../../common/styles";
 
 const StackNavigator = createStackNavigator(
   {
-    DocumentListScreen: {
-      screen: DocumentListScreen
+    CollectCustomerDetailsScreen: {
+      screen: CollectCustomerDetailsScreen
     },
-    LocalDocumentScreen: {
-      screen: LocalDocumentScreen
+    CustomerQuotaScreen: {
+      screen: CustomerQuotaScreen
     },
-    ValidityCheckScreen: {
-      screen: ValidityCheckScreen
-    },
-    ScannedDocumentScreen: {
-      screen: ScannedDocumentScreen
-    },
-    QrScannerScreen: {
-      screen: QrScannerScreen
-    },
-    SettingsScreen: {
-      screen: SettingsScreen
+    TransactionConfirmationScreen: {
+      screen: TransactionConfirmationScreen
     }
   },
   {

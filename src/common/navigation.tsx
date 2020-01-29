@@ -23,8 +23,20 @@ export const resetRouteFn = (
   const action = StackActions.reset({
     index: 1,
     actions: [
-      NavigationActions.navigate({ routeName: "DocumentListScreen" }),
+      NavigationActions.navigate({ routeName: "CollectCustomerDetailsScreen" }),
       NavigationActions.navigate({ routeName, params })
+    ]
+  });
+  return navigation.dispatch(action);
+};
+
+export const navigateHome = (
+  navigation: NavigationProps["navigation"]
+): boolean => {
+  const action = StackActions.reset({
+    index: 0,
+    actions: [
+      NavigationActions.navigate({ routeName: "CollectCustomerDetailsScreen" })
     ]
   });
   return navigation.dispatch(action);
