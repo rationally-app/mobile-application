@@ -1,13 +1,12 @@
-import React, { FunctionComponent, useState, useEffect, useRef } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import {
   View,
-  Platform,
   Text,
   ActivityIndicator,
   StyleSheet
 } from "react-native";
 import * as Permissions from "expo-permissions";
-import { Camera } from "expo-camera";
+import { BarCodeScanner } from "expo-barcode-scanner";
 import { size, fontSize, color } from "../../common/styles";
 
 const styles = StyleSheet.create({
@@ -45,12 +44,12 @@ interface BarCodeScanningResult {
 }
 
 export interface QrCamera {
-  onQrData: (data: string) => void;
+  onQrData?: (data: string) => void;
   disabled?: boolean;
 }
 
 export const QrCamera: FunctionComponent<QrCamera> = ({
-  onQrData,
+  // onQrData,
   disabled = false
 }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState();
@@ -64,19 +63,8 @@ export const QrCamera: FunctionComponent<QrCamera> = ({
 
   const onBarCodeScanned = (event: BarCodeScanningResult): void => {
     if (event.data && !disabled) {
-      onQrData(event.data);
+      alert(event.data);
     }
-  };
-
-  const cameraRef = useRef<Camera>(null);
-  const [isCameraReady, setIsCameraReady] = useState(false);
-  const [ratio, setRatio] = useState();
-  const onCameraReady = async (): Promise<void> => {
-    if (Platform.OS === "android" && cameraRef.current) {
-      const ratios = await cameraRef.current.getSupportedRatiosAsync();
-      setRatio(ratios[ratios.length - 1]);
-    }
-    setIsCameraReady(true);
   };
 
   if (hasCameraPermission === undefined || disabled) {
@@ -87,14 +75,10 @@ export const QrCamera: FunctionComponent<QrCamera> = ({
   }
   return (
     <>
-      {!isCameraReady && <LoadingView />}
-      <Camera
-        ref={cameraRef}
-        style={{ flex: isCameraReady ? 1 : 0 }}
+      <BarCodeScanner
+        barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
+        style={{ flex: 1 }}
         onBarCodeScanned={onBarCodeScanned}
-        onCameraReady={onCameraReady}
-        ratio={ratio}
-        testID="qr-camera"
       />
     </>
   );

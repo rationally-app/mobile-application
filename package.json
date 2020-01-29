@@ -19,6 +19,7 @@
     "@govtechsg/open-attestation": "^1.1.42",
     "@react-native-community/netinfo": "~3.2.1",
     "expo": "^35.0.0",
+    "expo-barcode-scanner": "~7.0.0",
     "expo-camera": "^7.0.0",
     "expo-constants": "^7.0.1",
     "expo-permissions": "^7.0.0",
