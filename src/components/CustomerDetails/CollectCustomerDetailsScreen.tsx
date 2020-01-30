@@ -7,6 +7,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { fontSize } from "../../common/styles";
 import * as Permissions from "expo-permissions";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { useAuthenticationContext } from "../../context/auth";
 
 interface BarCodeScanningResult {
   type: string;
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
 export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  const { authKey } = useAuthenticationContext();
   const [scannerEnabled, setScannerEnabled] = useState(true);
   const [nric, setNric] = useState("");
   const [hasCameraPermission, setHasCameraPermission] = useState();

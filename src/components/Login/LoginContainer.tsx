@@ -5,6 +5,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Header } from "../Layout/Header";
 import { fontSize } from "../../common/styles";
 import { authenticate } from "../../services/auth";
+import { useAuthenticationContext } from "../../context/auth";
 
 const styles = StyleSheet.create({
   headerText: {
@@ -16,21 +17,20 @@ const styles = StyleSheet.create({
   }
 });
 
-// TODO need to set context for auth
-
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }: NavigationProps) => {
-  const [authKey, setAuthKey] = useState("");
+  const { setAuthKey } = useAuthenticationContext();
+  const [inputAuthKey, setInputAuthKey] = useState(__DEV__ ? "test-key" : "");
   const [loginEnable, setLoginEnable] = useState(true);
 
   const onLogin = async (): Promise<void> => {
     if (!loginEnable) return;
     setLoginEnable(false);
     try {
-      console.log(`Logging in with ${authKey}`);
-      const authenticated = await authenticate(authKey);
+      const authenticated = await authenticate(inputAuthKey);
       if (authenticated) {
+        setAuthKey(inputAuthKey);
         setLoginEnable(true);
         navigation.navigate("CollectCustomerDetailsScreen");
       } else {
@@ -54,8 +54,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       </Header>
       <TextInput
         style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-        value={authKey}
-        onChange={({ nativeEvent: { text } }) => setAuthKey(text)}
+        value={inputAuthKey}
+        onChange={({ nativeEvent: { text } }) => setInputAuthKey(text)}
       />
       <DarkButton text="Login" onPress={onLogin} />
     </View>

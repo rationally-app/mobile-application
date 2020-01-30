@@ -4,6 +4,7 @@ import StackNavigator from "./StackNavigator";
 import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { Linking } from "expo";
+import { AuthenticationContextProvider } from "../context/auth";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -16,7 +17,7 @@ const SwitchNavigator = createSwitchNavigator(
 const AppContainer = createAppContainer(SwitchNavigator);
 
 const App = (): ReactElement => (
-  <>
+  <AuthenticationContextProvider>
     <StatusBar />
     <View
       style={{
@@ -26,7 +27,7 @@ const App = (): ReactElement => (
     >
       <AppContainer uriPrefix={Linking.makeUrl("/")} />
     </View>
-  </>
+  </AuthenticationContextProvider>
 );
 
 export default App;
