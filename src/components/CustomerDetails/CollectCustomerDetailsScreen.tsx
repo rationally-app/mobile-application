@@ -6,7 +6,7 @@ import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { fontSize, size, color } from "../../common/styles";
 import * as Permissions from "expo-permissions";
 import { useAuthenticationContext } from "../../context/auth";
-import { validate } from "./validateNric";
+import { validate, nricRegex } from "./validateNric";
 import { getQuota } from "../../services/quota";
 import { AppName } from "../Layout/AppName";
 import { InputWithLabel } from "../Layout/InputWithLabel";
@@ -93,8 +93,9 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
     try {
       const isNricValid = validate(input);
       if (!isNricValid) throw new Error("Invalid NRIC number");
-      const quota = await getQuota(input, authKey);
-      navigation.navigate("CustomerQuotaScreen", { quota, nric: input });
+      const nric = input.match(nricRegex)?.[0].toUpperCase();
+      const quota = await getQuota(nric!, authKey);
+      navigation.navigate("CustomerQuotaScreen", { quota, nric });
     } catch (e) {
       alert(e.message || e);
     }
