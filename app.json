@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Identity Wallet",
-    "slug": "identitywallet",
+    "name": "Musket",
+    "slug": "musket",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
