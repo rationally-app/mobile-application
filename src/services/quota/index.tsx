@@ -23,7 +23,7 @@ export const getQuota = async (
   // Mock implementation of get quota endpoint
   await wait(500);
   return {
-    remainingQuota: 7,
+    remainingQuota: 1,
     history: [
       {
         quantity: 5,

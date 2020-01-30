@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   SafeAreaView,
   ActivityIndicator
@@ -14,6 +13,7 @@ import { useAuthenticationContext } from "../../context/auth";
 import { AppName } from "../Layout/AppName";
 import { Card } from "../Layout/Card";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
+import { AppText } from "../Layout/AppText";
 
 const styles = StyleSheet.create({
   bg: {
@@ -32,8 +32,7 @@ const styles = StyleSheet.create({
     marginBottom: size(3)
   },
   nricText: {
-    fontWeight: "bold",
-    fontSize: fontSize(0)
+    fontFamily: "inter-bold"
   },
   resultWrapper: {
     marginTop: size(3),
@@ -55,17 +54,14 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: fontSize(3),
-    marginBottom: size(2)
+    marginBottom: size(1)
   },
   statusTitle: {
-    color: color("blue", 50),
     fontSize: fontSize(3),
-    fontWeight: "bold",
+    fontFamily: "inter-bold",
     marginBottom: size(2)
   },
   statusMessage: {
-    color: color("blue", 50),
-    fontSize: fontSize(0),
     marginBottom: size(3)
   },
   buttonRow: {
@@ -77,11 +73,11 @@ const PurchasedResult: FunctionComponent<{ onCancel: () => void }> = ({
   onCancel
 }) => (
   <>
-    <Text style={styles.emoji}>✅</Text>
-    <Text style={styles.statusTitle}>Purchased!</Text>
-    <Text style={styles.statusMessage}>
+    <AppText style={styles.emoji}>✅</AppText>
+    <AppText style={styles.statusTitle}>Purchased!</AppText>
+    <AppText style={styles.statusMessage}>
       Customer has purchased 1 box of masks.
-    </Text>
+    </AppText>
     <DarkButton text="Next customer" onPress={onCancel} />
   </>
 );
@@ -92,8 +88,8 @@ const CanBuyResult: FunctionComponent<{
   onCancel: () => void;
 }> = ({ isLoading, onRecordTransaction, onCancel }) => (
   <>
-    <Text style={styles.emoji}>👍</Text>
-    <Text style={styles.statusTitle}>Can buy 1 box of masks</Text>
+    <AppText style={styles.emoji}>👍</AppText>
+    <AppText style={styles.statusTitle}>Can buy 1 box of masks</AppText>
     {isLoading ? (
       <View style={{ height: size(6), justifyContent: "center" }}>
         <ActivityIndicator size="small" color={color("grey", 40)} />
@@ -113,8 +109,8 @@ const CannotBuyResult: FunctionComponent<{ onCancel: () => void }> = ({
   onCancel
 }) => (
   <>
-    <Text style={styles.emoji}>❌</Text>
-    <Text style={styles.statusTitle}>Cannot buy</Text>
+    <AppText style={styles.emoji}>❌</AppText>
+    <AppText style={styles.statusTitle}>Cannot buy</AppText>
     <DarkButton text="Next customer" onPress={onCancel} />
   </>
 );
@@ -171,7 +167,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             <AppName />
           </View>
           <Card>
-            <Text style={styles.nricText}>Customer NRIC: {nric}</Text>
+            <AppText style={styles.nricText}>Customer NRIC: {nric}</AppText>
             <View
               style={[
                 styles.resultWrapper,
@@ -191,9 +187,9 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
               ) : (
                 <CannotBuyResult onCancel={onCancel} />
               )}
-              {/* <Text>{quota.remainingQuota} masks left</Text>
-              <Text>Enter quantity to buy...</Text>
-              <TextInput
+              {/* <AppText>{quota.remainingQuota} masks left</AppText>
+              <AppText>Enter quantity to buy...</AppText>
+              <AppTextInput
                 autoFocus={true}
                 style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
                 value={quantity}

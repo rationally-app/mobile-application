@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactNode } from "react";
-import { Text } from "react-native";
 import { color, fontSize } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
+import { AppText } from "../AppText";
 
 export interface DarkButton {
   onPress?: () => void;
@@ -19,14 +19,13 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
     backgroundColor={color("blue", 50)}
     fullWidth={fullWidth}
   >
-    <Text
+    <AppText
       style={{
         color: color("grey", 0),
-        fontWeight: "bold",
-        fontSize: fontSize(0)
+        fontFamily: "inter-bold"
       }}
     >
       {text}
-    </Text>
+    </AppText>
   </BaseButton>
 );

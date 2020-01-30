@@ -9,7 +9,7 @@ import { Transaction } from "../../services/quota";
 
 const styles = StyleSheet.create({
   headerText: {
-    fontWeight: "bold",
+    fontFamily: "inter-bold",
     fontSize: fontSize(1),
     flex: 1,
     textAlign: "center",

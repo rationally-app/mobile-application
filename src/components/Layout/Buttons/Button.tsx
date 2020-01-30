@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
-import { Text } from "react-native";
 import { color, fontSize } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
+import { AppText } from "../AppText";
 
 export interface Button {
   onPress?: () => void;
@@ -10,14 +10,14 @@ export interface Button {
 
 export const Button: FunctionComponent<Button> = ({ onPress, text }) => (
   <BaseButton onPress={onPress}>
-    <Text
+    <AppText
       style={{
         color: color("grey", 40),
-        fontWeight: "bold",
+        fontFamily: "inter-bold",
         fontSize: fontSize(-2)
       }}
     >
       {text}
-    </Text>
+    </AppText>
   </BaseButton>
 );

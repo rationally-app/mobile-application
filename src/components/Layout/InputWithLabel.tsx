@@ -1,18 +1,11 @@
 import React, { FunctionComponent } from "react";
-import {
-  TextInput,
-  Text,
-  View,
-  StyleSheet,
-  TextInputProps
-} from "react-native";
+import { TextInput, View, StyleSheet, TextInputProps } from "react-native";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
+import { AppText } from "./AppText";
 
 const styles = StyleSheet.create({
   label: {
-    fontWeight: "bold",
-    fontSize: fontSize(0),
-    color: color("blue", 50)
+    fontFamily: "inter-bold"
   },
   input: {
     height: size(6),
@@ -34,7 +27,7 @@ export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
   ...props
 }) => (
   <View>
-    <Text style={styles.label}>{label}</Text>
+    <AppText style={styles.label}>{label}</AppText>
     <TextInput style={styles.input} {...props} />
   </View>
 );

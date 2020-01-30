@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, StyleSheet, SafeAreaView } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -12,6 +12,7 @@ import { AppName } from "../Layout/AppName";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { Card } from "../Layout/Card";
 import { BarCodeScanningResult, NricScanner } from "./NricScanner";
+import { AppText } from "../Layout/AppText";
 
 const styles = StyleSheet.create({
   bg: {
@@ -41,10 +42,6 @@ const styles = StyleSheet.create({
   headerText: {
     marginBottom: size(3)
   },
-  mainText: {
-    fontSize: fontSize(0),
-    color: color("blue", 50)
-  },
   scanButtonWrapper: {
     marginTop: size(4),
     marginBottom: size(6)
@@ -63,8 +60,7 @@ const styles = StyleSheet.create({
   },
   orText: {
     fontSize: fontSize(-1),
-    fontWeight: "bold",
-    color: color("blue", 50)
+    fontFamily: "inter-bold"
   },
   inputAndButtonWrapper: {
     marginTop: size(6),
@@ -82,7 +78,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
 }) => {
   const { authKey } = useAuthenticationContext();
   const [scannerEnabled, setScannerEnabled] = useState(false);
-  const [nric, setNric] = useState("");
+  const [nric, setNric] = useState("S1234567D");
   const [hasCameraPermission, setHasCameraPermission] = useState();
 
   const askForCameraPermission = async (): Promise<void> => {
@@ -115,6 +111,11 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
     return onCheck(nric);
   };
 
+  useEffect(() => {
+    // onCheckPress();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onToggleScanner = (): void => {
     setScannerEnabled(!scannerEnabled);
   };
@@ -138,10 +139,10 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
             </View>
           ) : (
             <Card>
-              <Text style={styles.mainText}>
+              <AppText>
                 Enter customer’s NRIC to retrieve the number of masks he/she can
                 purchase
-              </Text>
+              </AppText>
               <View style={styles.scanButtonWrapper}>
                 <DarkButton
                   fullWidth={true}
@@ -152,7 +153,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
               <View style={{ position: "relative" }}>
                 <View style={styles.horizontalRule} />
                 <View style={styles.orWrapper}>
-                  <Text style={styles.orText}>OR</Text>
+                  <AppText style={styles.orText}>OR</AppText>
                 </View>
               </View>
 
