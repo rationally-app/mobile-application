@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactNode } from "react";
-import { color, fontSize } from "../../../common/styles";
+import { color } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
 

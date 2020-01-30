@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { TextInput, View, StyleSheet, TextInputProps } from "react-native";
-import { size, color, borderRadius, fontSize } from "../../common/styles";
+import { size, color, borderRadius } from "../../common/styles";
 import { AppText } from "./AppText";
 
 const styles = StyleSheet.create({
