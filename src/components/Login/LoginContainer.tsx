@@ -4,6 +4,7 @@ import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Header } from "../Layout/Header";
 import { fontSize } from "../../common/styles";
+import { authenticate } from "../../services/auth";
 
 const styles = StyleSheet.create({
   headerText: {
@@ -15,14 +16,30 @@ const styles = StyleSheet.create({
   }
 });
 
+// TODO need to set context for auth
+
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }: NavigationProps) => {
   const [authKey, setAuthKey] = useState("");
+  const [loginEnable, setLoginEnable] = useState(true);
 
-  const onLogin = (): void => {
-    console.log(`Logging in with ${authKey}`);
-    navigation.navigate("CollectCustomerDetailsScreen");
+  const onLogin = async (): Promise<void> => {
+    if (!loginEnable) return;
+    setLoginEnable(false);
+    try {
+      console.log(`Logging in with ${authKey}`);
+      const authenticated = await authenticate(authKey);
+      if (authenticated) {
+        setLoginEnable(true);
+        navigation.navigate("CollectCustomerDetailsScreen");
+      } else {
+        throw new Error("Authentication key is invalid");
+      }
+    } catch (e) {
+      alert(e.message || e);
+      setLoginEnable(true);
+    }
   };
 
   return (
