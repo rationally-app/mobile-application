@@ -8,6 +8,8 @@ import { fontSize } from "../../common/styles";
 import * as Permissions from "expo-permissions";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useAuthenticationContext } from "../../context/auth";
+import { validate } from "./validateNric";
+import { getQuota } from "../../services/quota";
 
 interface BarCodeScanningResult {
   type: string;
@@ -46,8 +48,15 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
     }
   };
 
-  const onCheck = () => {
-    navigation.navigate("CustomerQuotaScreen");
+  const onCheck = async (): Promise<void> => {
+    try {
+      const isNricValid = validate(nric);
+      if (!isNricValid) throw new Error("Invalid NRIC number");
+      const quota = await getQuota(nric);
+      navigation.navigate("CustomerQuotaScreen", { quota });
+    } catch (e) {
+      alert(e.message || e);
+    }
   };
 
   const onToggleScanner = () => {
