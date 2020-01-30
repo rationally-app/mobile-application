@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
   },
   input: {
     minHeight: size(6),
-    paddingVertical: size(1.5),
     paddingLeft: size(1),
     marginTop: size(1),
     backgroundColor: color("grey", 0),
