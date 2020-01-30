@@ -1,14 +1,12 @@
 import React, { FunctionComponent, useState } from "react";
 import {
   View,
-  TextInput,
   Text,
   StyleSheet,
   SafeAreaView,
   ActivityIndicator
 } from "react-native";
 import { NavigationProps } from "../../types";
-import { replaceRouteFn } from "../../common/navigation";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { color, size, borderRadius, fontSize } from "../../common/styles";
 import { QuotaResponse, postTransaction } from "../../services/quota";
@@ -127,7 +125,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const { authKey } = useAuthenticationContext();
   const quota: QuotaResponse = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
-  const [quantity, setQuantity] = useState("1");
+  const [quantity] = useState("1");
   const [hasPurchased, setHasPurchased] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -145,8 +143,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         throw new Error("Quantity cannot exceed quota");
       if (qtyNum <= 0) throw new Error("Quantity must be greater than 0");
 
-      const transactions = await postTransaction(nric, qtyNum, authKey);
-
+      await postTransaction(nric, qtyNum, authKey);
       // TODO: error handling
 
       setHasPurchased(true);

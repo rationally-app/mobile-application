@@ -14,7 +14,6 @@ jobs:
       - run:
           name: test
           command: npm run test -- --coverage
-      - sonarcloud/scan
   deploy_branch:
     docker:
       - image: "openattestation/expo-build:latest"
@@ -28,10 +27,10 @@ jobs:
           command: expo login -u $EXPO_USERNAME --non-interactive
       - run:
           name: expo_publish_channel
-          command: expo publish --non-interactive --release-channel $(echo $CI_PULL_REQUEST | cut -c 58-)
+          command: expo publish --non-interactive --release-channel $(echo $CI_PULL_REQUEST | cut -c 52-)
       - run:
           name: expo_publish_storybook_channel
-          command: expo publish --non-interactive --release-channel storybook-$(echo $CI_PULL_REQUEST | cut -c 58-)
+          command: expo publish --non-interactive --release-channel storybook-$(echo $CI_PULL_REQUEST | cut -c 52-)
       - run:
           name: github_comment_published_link
           command: ./scripts/commenter.sh
@@ -52,14 +51,11 @@ jobs:
       - run:
           name: expo_publish_channel
           command: expo publish --non-interactive --release-channel storybook-default
-orbs:
-  sonarcloud: sonarsource/sonarcloud@1.0.1
 workflows:
   version: 2
   test_and_publish:
     jobs:
-      - build:
-          context: SonarCloud
+      - build
       - deploy_branch:
           requires:
             - build
