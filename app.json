@@ -18,7 +18,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "sg.gov.tech.musket"
+    },
+    "android": {
+      "package": "sg.gov.tech.musket"
     },
     "packagerOpts": {
       "config": "metro.config.js",
