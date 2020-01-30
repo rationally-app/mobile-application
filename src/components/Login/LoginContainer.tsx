@@ -1,5 +1,10 @@
 import React, { useState, FunctionComponent } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  KeyboardAvoidingView
+} from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { authenticate } from "../../services/auth";
@@ -20,7 +25,6 @@ const styles = StyleSheet.create({
     padding: size(3),
     width: "100%",
     height: "100%",
-    position: "absolute",
     justifyContent: "center"
   },
   headerText: {
@@ -59,11 +63,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   };
 
   return (
-    <View
+    <KeyboardAvoidingView
       style={{
         width: "100%",
         height: "100%"
       }}
+      behavior="padding"
     >
       <View style={styles.bg} />
       <View style={styles.content}>
@@ -87,6 +92,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           )}
         </Card>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };

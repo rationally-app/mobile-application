@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { TextInput, View, StyleSheet, TextInputProps } from "react-native";
-import { size, color, borderRadius } from "../../common/styles";
+import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { AppText } from "./AppText";
 
 const styles = StyleSheet.create({
@@ -8,13 +8,15 @@ const styles = StyleSheet.create({
     fontFamily: "inter-bold"
   },
   input: {
-    height: size(6),
+    minHeight: size(6),
+    paddingVertical: size(1.5),
     paddingLeft: size(1),
     marginTop: size(1),
     backgroundColor: color("grey", 0),
     borderWidth: 1,
     borderRadius: borderRadius(2),
-    borderColor: color("grey", 20)
+    borderColor: color("grey", 20),
+    fontSize: fontSize(0)
   }
 });
 

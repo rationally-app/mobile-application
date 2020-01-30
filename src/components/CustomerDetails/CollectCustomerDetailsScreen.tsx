@@ -1,5 +1,11 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  KeyboardAvoidingView
+} from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -25,7 +31,8 @@ const styles = StyleSheet.create({
     position: "relative",
     padding: size(3),
     height: "100%",
-    width: "100%"
+    width: "100%",
+    paddingBottom: size(8)
   },
   cameraWrapper: {
     position: "absolute",
@@ -119,54 +126,56 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   const shouldShowCamera = hasCameraPermission && scannerEnabled;
 
   return (
-    <View>
+    <ScrollView>
       <View style={styles.bg} />
       <SafeAreaView>
-        <View style={styles.content}>
-          <View style={styles.headerText}>
-            <AppName />
-          </View>
-          {shouldShowCamera ? (
-            <View style={styles.cameraWrapper}>
-              <NricScanner onBarCodeScanned={onBarCodeScanned} />
-              <View style={styles.cancelButtonWrapper}>
-                <DarkButton text="Cancel" onPress={onToggleScanner} />
-              </View>
+        <KeyboardAvoidingView behavior="position">
+          <View style={styles.content}>
+            <View style={styles.headerText}>
+              <AppName />
             </View>
-          ) : (
-            <Card>
-              <AppText>
-                Enter customer’s NRIC to retrieve the number of masks he/she can
-                purchase
-              </AppText>
-              <View style={styles.scanButtonWrapper}>
-                <DarkButton
-                  fullWidth={true}
-                  text="Scan customer's NRIC"
-                  onPress={onToggleScanner}
-                />
-              </View>
-              <View style={{ position: "relative" }}>
-                <View style={styles.horizontalRule} />
-                <View style={styles.orWrapper}>
-                  <AppText style={styles.orText}>OR</AppText>
+            {shouldShowCamera ? (
+              <View style={styles.cameraWrapper}>
+                <NricScanner onBarCodeScanned={onBarCodeScanned} />
+                <View style={styles.cancelButtonWrapper}>
+                  <DarkButton text="Cancel" onPress={onToggleScanner} />
                 </View>
               </View>
-
-              <View style={styles.inputAndButtonWrapper}>
-                <View style={styles.inputWrapper}>
-                  <InputWithLabel
-                    label="Customer NRIC"
-                    value={nric}
-                    onChange={({ nativeEvent: { text } }) => setNric(text)}
+            ) : (
+              <Card>
+                <AppText>
+                  Enter customer’s NRIC to retrieve the number of masks he/she
+                  can purchase
+                </AppText>
+                <View style={styles.scanButtonWrapper}>
+                  <DarkButton
+                    fullWidth={true}
+                    text="Scan customer's NRIC"
+                    onPress={onToggleScanner}
                   />
                 </View>
-                <SecondaryButton text="Check" onPress={onCheckPress} />
-              </View>
-            </Card>
-          )}
-        </View>
+                <View style={{ position: "relative" }}>
+                  <View style={styles.horizontalRule} />
+                  <View style={styles.orWrapper}>
+                    <AppText style={styles.orText}>OR</AppText>
+                  </View>
+                </View>
+
+                <View style={styles.inputAndButtonWrapper}>
+                  <View style={styles.inputWrapper}>
+                    <InputWithLabel
+                      label="Customer NRIC"
+                      value={nric}
+                      onChange={({ nativeEvent: { text } }) => setNric(text)}
+                    />
+                  </View>
+                  <SecondaryButton text="Check" onPress={onCheckPress} />
+                </View>
+              </Card>
+            )}
+          </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
-    </View>
+    </ScrollView>
   );
 };

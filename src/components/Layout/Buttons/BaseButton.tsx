@@ -29,7 +29,7 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
           paddingVertical: size(1.5),
           paddingHorizontal: size(3),
           borderRadius: borderRadius(2),
-          height: size(6),
+          minHeight: size(6),
           minWidth: size(10),
           width: fullWidth ? "100%" : "auto"
         }}

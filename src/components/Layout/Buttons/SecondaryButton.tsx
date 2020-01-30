@@ -22,7 +22,8 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
   >
     <AppText
       style={{
-        fontFamily: "inter-bold"
+        fontFamily: "inter-bold",
+        textAlign: "center"
       }}
     >
       {text}
