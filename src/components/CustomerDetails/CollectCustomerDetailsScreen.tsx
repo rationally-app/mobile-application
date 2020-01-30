@@ -21,14 +21,9 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { Card } from "../Layout/Card";
 import { BarCodeScanningResult, NricScanner } from "./NricScanner";
 import { AppText } from "../Layout/AppText";
+import { TopBackground } from "../Layout/TopBackground";
 
 const styles = StyleSheet.create({
-  bg: {
-    backgroundColor: color("blue", 50),
-    width: "100%",
-    height: "40%",
-    position: "absolute"
-  },
   content: {
     position: "relative",
     padding: size(3),
@@ -161,7 +156,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   return (
     <>
       <ScrollView>
-        <View style={styles.bg} />
+        <TopBackground />
         <SafeAreaView>
           <KeyboardAvoidingView behavior="position">
             <View style={styles.content}>
@@ -212,17 +207,15 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
         </SafeAreaView>
       </ScrollView>
       {shouldShowCamera && (
-        <View
-          style={[
-            styles.cameraWrapper,
-            isLoading ? { backgroundColor: color("blue", 50) } : {}
-          ]}
-        >
+        <View style={styles.cameraWrapper}>
           {isLoading ? (
-            <Card>
-              <ActivityIndicator size="large" color={color("grey", 40)} />
-              <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
-            </Card>
+            <>
+              <TopBackground style={{ height: "100%" }} />
+              <Card>
+                <ActivityIndicator size="large" color={color("grey", 40)} />
+                <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
+              </Card>
+            </>
           ) : (
             <>
               <NricScanner onBarCodeScanned={onBarCodeScanned} />

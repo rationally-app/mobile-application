@@ -4,26 +4,22 @@ import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { authenticate } from "../../services/auth";
 import { useAuthenticationContext } from "../../context/auth";
-import { color, size } from "../../common/styles";
+import { size } from "../../common/styles";
 import { AppName } from "../Layout/AppName";
 import { Card } from "../Layout/Card";
 import { InputWithLabel } from "../Layout/InputWithLabel";
+import { TopBackground } from "../Layout/TopBackground";
 
 const styles = StyleSheet.create({
-  bg: {
-    backgroundColor: color("blue", 50),
-    width: "100%",
-    height: "50%",
-    position: "absolute"
-  },
   content: {
     padding: size(3),
+    marginTop: -size(3),
     width: "100%",
     height: "100%",
     justifyContent: "center"
   },
   headerText: {
-    marginBottom: size(3),
+    marginBottom: size(4),
     textAlign: "center",
     alignSelf: "center"
   },
@@ -65,7 +61,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       }}
       behavior="padding"
     >
-      <View style={styles.bg} />
+      <TopBackground style={{ height: "50%" }} />
       <View style={styles.content}>
         <View style={styles.headerText}>
           <AppName />

@@ -9,14 +9,9 @@ import { AppName } from "../Layout/AppName";
 import { Card } from "../Layout/Card";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { AppText } from "../Layout/AppText";
+import { TopBackground } from "../Layout/TopBackground";
 
 const styles = StyleSheet.create({
-  bg: {
-    backgroundColor: color("blue", 50),
-    width: "100%",
-    height: "40%",
-    position: "absolute"
-  },
   content: {
     position: "relative",
     padding: size(3),
@@ -154,7 +149,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
   return (
     <View>
-      <View style={styles.bg} />
+      <TopBackground />
       <SafeAreaView>
         <View style={styles.content}>
           <View style={styles.headerText}>
