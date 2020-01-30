@@ -16,11 +16,11 @@ const wait = async (timeout: number): Promise<void> => {
   });
 };
 
-export const getQuota = async (nric: string): Promise<QuotaResponse> => {
+export const getQuota = async (nric: string, key: string): Promise<QuotaResponse> => {
   // Mock implementation of get quota endpoint
   await wait(500);
   return {
-    remainingQuota: 0,
+    remainingQuota: 7,
     history: [
       {
         quantity: 5,

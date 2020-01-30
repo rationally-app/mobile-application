@@ -2,9 +2,9 @@ import { getQuota } from "./index";
 
 describe("getQuota", () => {
   it("should return the quota of a nric number", async () => {
-    const quota = await getQuota("S8174504H");
+    const quota = await getQuota("S8174504H", "test-key");
     expect(quota).toEqual({
-      remainingQuota: 0,
+      remainingQuota: 7,
       history: [
         {
           quantity: 5,

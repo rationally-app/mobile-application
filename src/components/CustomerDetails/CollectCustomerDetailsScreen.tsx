@@ -52,8 +52,8 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
     try {
       const isNricValid = validate(nric);
       if (!isNricValid) throw new Error("Invalid NRIC number");
-      const quota = await getQuota(nric);
-      navigation.navigate("CustomerQuotaScreen", { quota });
+      const quota = await getQuota(nric, authKey);
+      navigation.navigate("CustomerQuotaScreen", { quota, nric });
     } catch (e) {
       alert(e.message || e);
     }

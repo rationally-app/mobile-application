@@ -5,6 +5,7 @@ import { replaceRouteFn } from "../../common/navigation";
 import { Header } from "../Layout/Header";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { fontSize } from "../../common/styles";
+import { QuotaResponse } from "../../services/quota";
 
 const styles = StyleSheet.create({
   headerText: {
@@ -18,10 +19,25 @@ const styles = StyleSheet.create({
 export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
-  const [quantity, setQuantity] = useState("");
+  const quota: QuotaResponse = navigation.getParam("quota");
+  const nric: string = navigation.getParam("nric");
+  const [quantity, setQuantity] = useState("1");
 
   const onRecordTransaction = () => {
-    replaceRouteFn(navigation, "TransactionConfirmationScreen")();
+    try {
+      // Checks if quantity is correct
+      const qtyNum = Number(quantity);
+      if (isNaN(qtyNum)) throw new Error("Invalid quantity");
+      if (!Number.isInteger(qtyNum))
+        throw new Error("Quantity cannot have decimals");
+      if (qtyNum > quota.remainingQuota)
+        throw new Error("Quantity cannot exceed quota");
+      if (qtyNum <= 0) throw new Error("Quantity must be greater than 0");
+
+      replaceRouteFn(navigation, "TransactionConfirmationScreen")();
+    } catch (e) {
+      alert(e.message || e);
+    }
   };
 
   const onCancel = () => {
@@ -33,8 +49,11 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       <Header>
         <Text style={styles.headerText}>Make Purchase</Text>
       </Header>
+      <Text>Customer NRIC: {nric}</Text>
+      <Text>{quota.remainingQuota} masks left</Text>
       <Text>Enter quantity to buy...</Text>
       <TextInput
+        autoFocus={true}
         style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
         value={quantity}
         onChange={({ nativeEvent: { text } }) => setQuantity(text)}
