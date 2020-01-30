@@ -12,7 +12,7 @@ interface AuthenticationContext {
 
 export const AuthenticationContext = createContext<AuthenticationContext>({
   authKey: "",
-  setAuthKey: () => {}
+  setAuthKey: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
 export const useAuthenticationContext = (): AuthenticationContext =>

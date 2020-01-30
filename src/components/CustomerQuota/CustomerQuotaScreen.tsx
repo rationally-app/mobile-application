@@ -25,7 +25,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const nric: string = navigation.getParam("nric");
   const [quantity, setQuantity] = useState("1");
 
-  const onRecordTransaction = async () => {
+  const onRecordTransaction = async (): Promise<void> => {
     try {
       // Checks if quantity is correct
       const qtyNum = Number(quantity);
@@ -47,7 +47,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     }
   };
 
-  const onCancel = () => {
+  const onCancel = (): void => {
     navigation.goBack();
   };
 

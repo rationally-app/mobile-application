@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState } from "react";
-import { View, TextInput, Text, StyleSheet } from "react-native";
+import React, { FunctionComponent } from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { NavigationProps } from "../../types";
 import { navigateHome } from "../../common/navigation";
 import { Header } from "../Layout/Header";
@@ -22,7 +22,7 @@ export const TransactionConfirmationScreen: FunctionComponent<NavigationProps> =
   const nric: string = navigation.getParam("nric");
   const transactions: Transaction[] = navigation.getParam("transactions");
 
-  const onNextCustomer = () => {
+  const onNextCustomer = (): void => {
     navigateHome(navigation);
   };
 

@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
 import { NavigationProps } from "../../types";
-import { replaceRouteFn } from "../../common/navigation";
 import { Header } from "../Layout/Header";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { fontSize } from "../../common/styles";
@@ -41,17 +40,6 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
     askForCameraPermission();
   }, []);
 
-  const onBarCodeScanned = (event: BarCodeScanningResult): void => {
-    if (event.data) {
-      setNric(event.data);
-      onCheck(event.data);
-    }
-  };
-
-  const onCheckPress = () => {
-    return onCheck(nric);
-  };
-
   const onCheck = async (input: string): Promise<void> => {
     try {
       const isNricValid = validate(input);
@@ -63,7 +51,18 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
     }
   };
 
-  const onToggleScanner = () => {
+  const onBarCodeScanned = (event: BarCodeScanningResult): void => {
+    if (event.data) {
+      setNric(event.data);
+      onCheck(event.data);
+    }
+  };
+
+  const onCheckPress = (): Promise<void> => {
+    return onCheck(nric);
+  };
+
+  const onToggleScanner = (): void => {
     setScannerEnabled(!scannerEnabled);
   };
 
@@ -72,7 +71,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
       <Header>
         <Text style={styles.headerText}>Input NRIC</Text>
       </Header>
-      <Text>Enter customer's NRIC...</Text>
+      <Text>Enter customer&apos;s NRIC...</Text>
       {scannerEnabled && (
         <BarCodeScanner
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
