@@ -6,6 +6,7 @@ export interface BaseButton {
   onPress?: () => void;
   backgroundColor?: ViewStyle["backgroundColor"];
   borderColor?: ViewStyle["borderColor"];
+  disabled?: boolean;
   fullWidth?: boolean;
 }
 
@@ -14,10 +15,11 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
   children,
   backgroundColor,
   borderColor,
+  disabled = false,
   fullWidth = false
 }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
       <View
         style={{
           backgroundColor,

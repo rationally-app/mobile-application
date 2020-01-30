@@ -5,7 +5,8 @@ import {
   SafeAreaView,
   ScrollView,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  ActivityIndicator
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -25,15 +26,15 @@ const styles = StyleSheet.create({
   bg: {
     backgroundColor: color("blue", 50),
     width: "100%",
-    height: "30%",
+    height: "40%",
     position: "absolute"
   },
   content: {
     position: "relative",
     padding: size(3),
+    paddingVertical: size(8),
     height: "100%",
-    width: "100%",
-    paddingBottom: size(8)
+    width: "100%"
   },
   cameraWrapper: {
     position: "absolute",
@@ -41,7 +42,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: color("grey", 0)
   },
   cancelButtonWrapper: {
     marginTop: size(3),
@@ -88,7 +91,8 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [showScanner, setShowScanner] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true);
-  const [nric, setNric] = useState("");
+  const [nricInput, setNricInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -98,35 +102,59 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
     askForCameraPermission();
   }, []);
 
+  useEffect(() => {
+    const willBlurSubscription = navigation.addListener("willBlur", () => {
+      setScanningEnabled(false);
+    });
+    const willFocusSubscription = navigation.addListener("willFocus", () => {
+      setScanningEnabled(true);
+    });
+    return () => {
+      willBlurSubscription.remove();
+      willFocusSubscription.remove();
+    };
+  }, [navigation]);
+
   const onCheck = async (input: string): Promise<void> => {
     try {
       const isNricValid = validate(input);
       if (!isNricValid) throw new Error("Invalid NRIC number");
       const nric = input.match(nricRegex)?.[0].toUpperCase();
+
+      setIsLoading(true);
       const quota = await getQuota(nric!, authKey);
+      setIsLoading(false);
+
       navigation.navigate("CustomerQuotaScreen", { quota, nric });
+      setNricInput("");
     } catch (e) {
+      setIsLoading(false);
       setScanningEnabled(false);
-      Alert.alert("Error", e.message || e, [
-        { text: "Dimiss", onPress: () => setScanningEnabled(true) }
-      ]);
+      Alert.alert(
+        "Error",
+        e.message || e,
+        [
+          {
+            text: "Dimiss",
+            onPress: () => setScanningEnabled(true)
+          }
+        ],
+        {
+          onDismiss: () => setScanningEnabled(true) // for android outside alert clicks
+        }
+      );
     }
   };
 
   const onBarCodeScanned = (event: BarCodeScanningResult): void => {
-    if (scanningEnabled && event.data) {
-      setNric(event.data);
+    if (scanningEnabled && !isLoading && event.data) {
       onCheck(event.data);
     }
   };
 
-  const onCheckPress = (): Promise<void> => {
-    return onCheck(nric);
-  };
+  const onCheckPress = (): Promise<void> => onCheck(nricInput);
 
-  const onToggleScanner = (): void => {
-    setShowScanner(s => !s);
-  };
+  const onToggleScanner = (): void => setShowScanner(s => !s);
 
   const shouldShowCamera = hasCameraPermission && showScanner;
 
@@ -164,11 +192,18 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
                     <View style={styles.inputWrapper}>
                       <InputWithLabel
                         label="Customer NRIC"
-                        value={nric}
-                        onChange={({ nativeEvent: { text } }) => setNric(text)}
+                        value={nricInput}
+                        onChange={({ nativeEvent: { text } }) =>
+                          setNricInput(text)
+                        }
+                        onSubmitEditing={onCheckPress}
                       />
                     </View>
-                    <SecondaryButton text="Check" onPress={onCheckPress} />
+                    <SecondaryButton
+                      text="Check"
+                      onPress={onCheckPress}
+                      isLoading={isLoading}
+                    />
                   </View>
                 </Card>
               )}
@@ -177,11 +212,28 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
         </SafeAreaView>
       </ScrollView>
       {shouldShowCamera && (
-        <View style={styles.cameraWrapper}>
-          <NricScanner onBarCodeScanned={onBarCodeScanned} />
-          <View style={styles.cancelButtonWrapper}>
-            <DarkButton text="Cancel" onPress={onToggleScanner} />
-          </View>
+        <View
+          style={[
+            styles.cameraWrapper,
+            isLoading ? { backgroundColor: color("blue", 50) } : {}
+          ]}
+        >
+          {isLoading ? (
+            <Card>
+              <ActivityIndicator size="large" color={color("grey", 40)} />
+              <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
+            </Card>
+          ) : (
+            <>
+              <NricScanner onBarCodeScanned={onBarCodeScanned} />
+              <View style={styles.cancelButtonWrapper}>
+                <SecondaryButton
+                  text="Enter NRIC manually"
+                  onPress={onToggleScanner}
+                />
+              </View>
+            </>
+          )}
         </View>
       )}
     </>

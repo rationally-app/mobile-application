@@ -1,10 +1,5 @@
 import React, { FunctionComponent, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  ActivityIndicator
-} from "react-native";
+import { View, StyleSheet, SafeAreaView } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { color, size, borderRadius, fontSize } from "../../common/styles";
@@ -19,12 +14,13 @@ const styles = StyleSheet.create({
   bg: {
     backgroundColor: color("blue", 50),
     width: "100%",
-    height: "30%",
+    height: "40%",
     position: "absolute"
   },
   content: {
     position: "relative",
     padding: size(3),
+    paddingVertical: size(8),
     height: "100%",
     width: "100%"
   },
@@ -78,7 +74,7 @@ const PurchasedResult: FunctionComponent<{ onCancel: () => void }> = ({
     <AppText style={styles.statusMessage}>
       Customer has purchased 1 box of masks.
     </AppText>
-    <DarkButton text="Next customer" onPress={onCancel} />
+    <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
   </>
 );
 
@@ -90,18 +86,16 @@ const CanBuyResult: FunctionComponent<{
   <>
     <AppText style={styles.emoji}>👍</AppText>
     <AppText style={styles.statusTitle}>Can buy 1 box of masks</AppText>
-    {isLoading ? (
-      <View style={{ height: size(6), justifyContent: "center" }}>
-        <ActivityIndicator size="small" color={color("grey", 40)} />
+    <View style={styles.buttonRow}>
+      <View style={{ marginRight: size(2) }}>
+        <DarkButton
+          text="Buy 1 box"
+          onPress={onRecordTransaction}
+          isLoading={isLoading}
+        />
       </View>
-    ) : (
-      <View style={styles.buttonRow}>
-        <View style={{ marginRight: size(2) }}>
-          <DarkButton text="Buy 1 box" onPress={onRecordTransaction} />
-        </View>
-        <SecondaryButton text="Cancel" onPress={onCancel} />
-      </View>
-    )}
+      {!isLoading && <SecondaryButton text="Cancel" onPress={onCancel} />}
+    </View>
   </>
 );
 
@@ -111,7 +105,7 @@ const CannotBuyResult: FunctionComponent<{ onCancel: () => void }> = ({
   <>
     <AppText style={styles.emoji}>❌</AppText>
     <AppText style={styles.statusTitle}>Cannot buy</AppText>
-    <DarkButton text="Next customer" onPress={onCancel} />
+    <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
   </>
 );
 

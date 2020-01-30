@@ -1,10 +1,5 @@
 import React, { useState, FunctionComponent } from "react";
-import {
-  View,
-  StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView
-} from "react-native";
+import { View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { authenticate } from "../../services/auth";
@@ -42,23 +37,23 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 }: NavigationProps) => {
   const { setAuthKey } = useAuthenticationContext();
   const [inputAuthKey, setInputAuthKey] = useState(__DEV__ ? "test-key" : "");
-  const [loginEnabled, setLoginEnabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onLogin = async (): Promise<void> => {
-    if (!loginEnabled) return;
-    setLoginEnabled(false);
+    if (isLoading) return;
+    setIsLoading(true);
     try {
       const authenticated = await authenticate(inputAuthKey);
       if (authenticated) {
         setAuthKey(inputAuthKey);
-        setLoginEnabled(true);
+        setIsLoading(false);
         navigation.navigate("CollectCustomerDetailsScreen");
       } else {
         throw new Error("Authentication key is invalid");
       }
     } catch (e) {
       alert(e.message || e);
-      setLoginEnabled(true);
+      setIsLoading(false);
     }
   };
 
@@ -83,13 +78,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               onChange={({ nativeEvent: { text } }) => setInputAuthKey(text)}
             />
           </View>
-          {loginEnabled ? (
-            <DarkButton text="Login" onPress={onLogin} fullWidth={true} />
-          ) : (
-            <View style={{ height: size(6), justifyContent: "center" }}>
-              <ActivityIndicator size="small" color={color("grey", 40)} />
-            </View>
-          )}
+          <DarkButton
+            text="Login"
+            onPress={onLogin}
+            fullWidth={true}
+            isLoading={isLoading}
+          />
         </Card>
       </View>
     </KeyboardAvoidingView>
