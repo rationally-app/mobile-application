@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   bg: {
     backgroundColor: color("blue", 50),
     width: "100%",
-    height: 240,
+    height: "30%",
     position: "absolute"
   },
   content: {
@@ -78,7 +78,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
 }) => {
   const { authKey } = useAuthenticationContext();
   const [scannerEnabled, setScannerEnabled] = useState(false);
-  const [nric, setNric] = useState("S1234567D");
+  const [nric, setNric] = useState("");
   const [hasCameraPermission, setHasCameraPermission] = useState();
 
   const askForCameraPermission = async (): Promise<void> => {
@@ -110,11 +110,6 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   const onCheckPress = (): Promise<void> => {
     return onCheck(nric);
   };
-
-  useEffect(() => {
-    // onCheckPress();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onToggleScanner = (): void => {
     setScannerEnabled(!scannerEnabled);

@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   bg: {
     backgroundColor: color("blue", 50),
     width: "100%",
-    height: 240,
+    height: "30%",
     position: "absolute"
   },
   content: {

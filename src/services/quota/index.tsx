@@ -26,7 +26,7 @@ export const getQuota = async (
     remainingQuota: 1,
     history: [
       {
-        quantity: 5,
+        quantity: 1,
         transactionTime: 1580330434981
       }
     ]

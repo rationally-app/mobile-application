@@ -5,7 +5,6 @@ import {
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerQuotaScreen from "./CustomerQuotaScreen";
 import TransactionConfirmationScreen from "./TransactionConfirmationScreen";
-import { color } from "../../common/styles";
 
 const StackNavigator = createStackNavigator(
   {
@@ -21,7 +20,6 @@ const StackNavigator = createStackNavigator(
   },
   {
     headerMode: "none",
-    cardStyle: { backgroundColor: color("grey", 5) },
     transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
     navigationOptions: {
       gesturesEnabled: true

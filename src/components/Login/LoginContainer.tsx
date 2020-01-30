@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent, useEffect } from "react";
+import React, { useState, FunctionComponent } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -57,11 +57,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       setLoginEnabled(true);
     }
   };
-
-  useEffect(() => {
-    onLogin();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <View
