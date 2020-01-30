@@ -44,16 +44,20 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   const onBarCodeScanned = (event: BarCodeScanningResult): void => {
     if (event.data) {
       setNric(event.data);
-      onCheck();
+      onCheck(event.data);
     }
   };
 
-  const onCheck = async (): Promise<void> => {
+  const onCheckPress = () => {
+    return onCheck(nric);
+  };
+
+  const onCheck = async (input: string): Promise<void> => {
     try {
-      const isNricValid = validate(nric);
+      const isNricValid = validate(input);
       if (!isNricValid) throw new Error("Invalid NRIC number");
-      const quota = await getQuota(nric, authKey);
-      navigation.navigate("CustomerQuotaScreen", { quota, nric });
+      const quota = await getQuota(input, authKey);
+      navigation.navigate("CustomerQuotaScreen", { quota, nric: input });
     } catch (e) {
       alert(e.message || e);
     }
@@ -81,7 +85,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
         value={nric}
         onChange={({ nativeEvent: { text } }) => setNric(text)}
       />
-      <DarkButton text="Check" onPress={onCheck} />
+      <DarkButton text="Check" onPress={onCheckPress} />
       <DarkButton text="Toggle Scanner" onPress={onToggleScanner} />
     </View>
   );

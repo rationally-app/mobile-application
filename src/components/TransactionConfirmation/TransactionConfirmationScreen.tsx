@@ -5,6 +5,7 @@ import { navigateHome } from "../../common/navigation";
 import { Header } from "../Layout/Header";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { fontSize } from "../../common/styles";
+import { Transaction } from "../../services/quota";
 
 const styles = StyleSheet.create({
   headerText: {
@@ -18,6 +19,8 @@ const styles = StyleSheet.create({
 export const TransactionConfirmationScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  const nric: string = navigation.getParam("nric");
+  const transactions: Transaction[] = navigation.getParam("transactions");
 
   const onNextCustomer = () => {
     navigateHome(navigation);
@@ -29,9 +32,9 @@ export const TransactionConfirmationScreen: FunctionComponent<NavigationProps> =
         <Text style={styles.headerText}>Transaction Confirmation</Text>
       </Header>
       <Text>Purchased!</Text>
-      <Text>S7654321A</Text>
+      <Text>{nric}</Text>
       <Text>purchase</Text>
-      <Text>1 mask</Text>
+      <Text>{JSON.stringify(transactions)}</Text>
       <DarkButton text="Next Customer" onPress={onNextCustomer} />
     </View>
   );

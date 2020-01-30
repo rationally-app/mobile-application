@@ -5,7 +5,8 @@ import { replaceRouteFn } from "../../common/navigation";
 import { Header } from "../Layout/Header";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { fontSize } from "../../common/styles";
-import { QuotaResponse } from "../../services/quota";
+import { QuotaResponse, postTransaction } from "../../services/quota";
+import { useAuthenticationContext } from "../../context/auth";
 
 const styles = StyleSheet.create({
   headerText: {
@@ -19,11 +20,12 @@ const styles = StyleSheet.create({
 export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  const { authKey } = useAuthenticationContext();
   const quota: QuotaResponse = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
   const [quantity, setQuantity] = useState("1");
 
-  const onRecordTransaction = () => {
+  const onRecordTransaction = async () => {
     try {
       // Checks if quantity is correct
       const qtyNum = Number(quantity);
@@ -34,7 +36,12 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         throw new Error("Quantity cannot exceed quota");
       if (qtyNum <= 0) throw new Error("Quantity must be greater than 0");
 
-      replaceRouteFn(navigation, "TransactionConfirmationScreen")();
+      const transactions = await postTransaction(nric, qtyNum, authKey);
+
+      replaceRouteFn(navigation, "TransactionConfirmationScreen", {
+        transactions,
+        nric
+      })();
     } catch (e) {
       alert(e.message || e);
     }
