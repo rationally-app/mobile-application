@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginBottom: size(3)
   },
   mainText: {
-    fontSize: size(2),
+    fontSize: fontSize(0),
     color: color("blue", 50)
   },
   scanButtonWrapper: {

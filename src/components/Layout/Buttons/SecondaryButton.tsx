@@ -16,7 +16,7 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
 }) => (
   <BaseButton
     onPress={onPress}
-    backgroundColor={color("grey", 0)}
+    backgroundColor="transparent"
     borderColor={color("blue", 50)}
     fullWidth={fullWidth}
   >

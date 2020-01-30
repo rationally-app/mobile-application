@@ -6,12 +6,12 @@ import {
   StyleSheet,
   TextInputProps
 } from "react-native";
-import { size, color, borderRadius } from "../../common/styles";
+import { size, color, borderRadius, fontSize } from "../../common/styles";
 
 const styles = StyleSheet.create({
   label: {
     fontWeight: "bold",
-    fontSize: size(2),
+    fontSize: fontSize(0),
     color: color("blue", 50)
   },
   input: {
