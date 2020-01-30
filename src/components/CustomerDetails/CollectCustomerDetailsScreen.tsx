@@ -4,7 +4,8 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -84,9 +85,10 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   navigation
 }) => {
   const { authKey } = useAuthenticationContext();
-  const [scannerEnabled, setScannerEnabled] = useState(false);
-  const [nric, setNric] = useState("");
   const [hasCameraPermission, setHasCameraPermission] = useState();
+  const [showScanner, setShowScanner] = useState(false);
+  const [scanningEnabled, setScanningEnabled] = useState(true);
+  const [nric, setNric] = useState("");
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -104,12 +106,15 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
       const quota = await getQuota(nric!, authKey);
       navigation.navigate("CustomerQuotaScreen", { quota, nric });
     } catch (e) {
-      alert(e.message || e);
+      setScanningEnabled(false);
+      Alert.alert("Error", e.message || e, [
+        { text: "Dimiss", onPress: () => setScanningEnabled(true) }
+      ]);
     }
   };
 
   const onBarCodeScanned = (event: BarCodeScanningResult): void => {
-    if (event.data) {
+    if (scanningEnabled && event.data) {
       setNric(event.data);
       onCheck(event.data);
     }
@@ -120,10 +125,10 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   };
 
   const onToggleScanner = (): void => {
-    setScannerEnabled(!scannerEnabled);
+    setShowScanner(s => !s);
   };
 
-  const shouldShowCamera = hasCameraPermission && scannerEnabled;
+  const shouldShowCamera = hasCameraPermission && showScanner;
 
   return (
     <>
