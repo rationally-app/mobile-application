@@ -10,6 +10,6 @@ export const AppName: FunctionComponent = () => (
       fontSize: fontSize(4)
     }}
   >
-    MaskEnough
+    Rationally
   </AppText>
 );
