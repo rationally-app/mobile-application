@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     padding: size(3),
     paddingVertical: size(8),
     height: "100%",
-    width: "100%"
+    width: 512,
+    maxWidth: "100%"
   },
   headerText: {
     marginBottom: size(3)
@@ -148,7 +149,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   };
 
   return (
-    <View>
+    <View style={{ alignItems: "center" }}>
       <TopBackground />
       <SafeAreaView>
         <View style={styles.content}>

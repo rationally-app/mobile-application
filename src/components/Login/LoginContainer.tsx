@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
   content: {
     padding: size(3),
     marginTop: -size(3),
+    maxWidth: 512,
     width: "100%",
     height: "100%",
     justifyContent: "center"
@@ -57,11 +58,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     <KeyboardAvoidingView
       style={{
         width: "100%",
-        height: "100%"
+        height: "100%",
+        alignItems: "center"
       }}
       behavior="padding"
     >
-      <TopBackground style={{ height: "50%" }} />
+      <TopBackground style={{ height: "50%", maxHeight: "auto" }} />
       <View style={styles.content}>
         <View style={styles.headerText}>
           <AppName />

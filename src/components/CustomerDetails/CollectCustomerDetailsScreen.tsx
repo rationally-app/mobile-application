@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
     padding: size(3),
     paddingVertical: size(8),
     height: "100%",
-    width: "100%"
+    width: 512,
+    maxWidth: "100%"
   },
   cameraWrapper: {
     position: "absolute",
@@ -155,7 +156,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
 
   return (
     <>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ alignItems: "center" }}>
         <TopBackground />
         <SafeAreaView>
           <KeyboardAvoidingView behavior="position">
@@ -210,7 +211,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
         <View style={styles.cameraWrapper}>
           {isLoading ? (
             <>
-              <TopBackground style={{ height: "100%" }} />
+              <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
               <Card>
                 <ActivityIndicator size="large" color={color("grey", 40)} />
                 <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
