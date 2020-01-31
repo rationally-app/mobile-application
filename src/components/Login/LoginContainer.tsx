@@ -1,15 +1,22 @@
-import React, { useState, FunctionComponent } from "react";
+import React, { useState, FunctionComponent, useEffect } from "react";
 import { View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { authenticate } from "../../services/auth";
 import { useAuthenticationContext } from "../../context/auth";
-import { size } from "../../common/styles";
+import { size, color } from "../../common/styles";
 import { AppName } from "../Layout/AppName";
 import { Card } from "../Layout/Card";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { TopBackground } from "../Layout/TopBackground";
 import { AppText } from "../Layout/AppText";
+import * as Permissions from "expo-permissions";
+import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
+import {
+  NricScanner,
+  BarCodeScanningResult
+} from "../CustomerDetails/NricScanner";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 const styles = StyleSheet.create({
   content: {
@@ -20,14 +27,34 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center"
   },
+  cameraWrapper: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: color("grey", 0)
+  },
+  cancelButtonWrapper: {
+    marginTop: size(3),
+    marginBottom: size(4)
+  },
   headerText: {
     marginBottom: size(4),
     textAlign: "center",
     alignSelf: "center"
   },
-  inputWrapper: {
+  inputAndButtonWrapper: {
+    flexDirection: "row",
+    alignItems: "flex-end",
     marginTop: size(3),
     marginBottom: size(3)
+  },
+  inputWrapper: {
+    flex: 1,
+    marginRight: size(1)
   }
 });
 
@@ -37,6 +64,17 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const { setAuthKey } = useAuthenticationContext();
   const [inputAuthKey, setInputAuthKey] = useState(__DEV__ ? "test-key" : "");
   const [isLoading, setIsLoading] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState();
+  const [showScanner, setShowScanner] = useState(false);
+
+  const askForCameraPermission = async (): Promise<void> => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    setHasCameraPermission(status === "granted");
+  };
+
+  useEffect(() => {
+    askForCameraPermission();
+  }, []);
 
   const onLogin = async (): Promise<void> => {
     if (isLoading) return;
@@ -56,40 +94,76 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     }
   };
 
+  const onToggleScanner = (): void => {
+    if (!hasCameraPermission) {
+      askForCameraPermission();
+    }
+    setShowScanner(s => !s);
+  };
+
+  const onBarCodeScanned = (event: BarCodeScanningResult): void => {
+    if (!isLoading && event.data) {
+      setInputAuthKey(event.data);
+      onToggleScanner();
+      onLogin();
+    }
+  };
+
+  const shouldShowCamera = hasCameraPermission && showScanner;
+
   return (
-    <KeyboardAvoidingView
-      style={{
-        width: "100%",
-        height: "100%",
-        alignItems: "center"
-      }}
-      behavior="padding"
-    >
-      <TopBackground style={{ height: "50%", maxHeight: "auto" }} />
-      <View style={styles.content}>
-        <View style={styles.headerText}>
-          <AppName />
-        </View>
-        <Card>
-          <AppText>
-            Please log in with your Unique ID provided by your supervisor / in
-            your letter.
-          </AppText>
-          <View style={styles.inputWrapper}>
-            <InputWithLabel
-              label="Unique ID"
-              value={inputAuthKey}
-              onChange={({ nativeEvent: { text } }) => setInputAuthKey(text)}
-            />
+    <>
+      <KeyboardAvoidingView
+        style={{
+          width: "100%",
+          height: "100%",
+          alignItems: "center"
+        }}
+        behavior="padding"
+      >
+        <TopBackground style={{ height: "50%", maxHeight: "auto" }} />
+        <View style={styles.content}>
+          <View style={styles.headerText}>
+            <AppName />
           </View>
-          <DarkButton
-            text="Login"
-            onPress={onLogin}
-            fullWidth={true}
-            isLoading={isLoading}
+          <Card>
+            <AppText>
+              Please log in with your Unique ID provided by your supervisor / in
+              your letter.
+            </AppText>
+            <View style={styles.inputAndButtonWrapper}>
+              <View style={styles.inputWrapper}>
+                <InputWithLabel
+                  label="Unique ID"
+                  value={inputAuthKey}
+                  onChange={({ nativeEvent: { text } }) =>
+                    setInputAuthKey(text)
+                  }
+                  onSubmitEditing={onLogin}
+                />
+              </View>
+              <SecondaryButton text="Scan" onPress={onToggleScanner} />
+            </View>
+            <DarkButton
+              text="Login"
+              onPress={onLogin}
+              fullWidth={true}
+              isLoading={isLoading}
+            />
+          </Card>
+        </View>
+      </KeyboardAvoidingView>
+      {shouldShowCamera && (
+        <View style={styles.cameraWrapper}>
+          <NricScanner
+            onBarCodeScanned={onBarCodeScanned}
+            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           />
-        </Card>
-      </View>
-    </KeyboardAvoidingView>
+          <View style={styles.cancelButtonWrapper}>
+            <SecondaryButton text="Cancel" onPress={onToggleScanner} />
+          </View>
+        </View>
+      )}
+    </>
   );
 };

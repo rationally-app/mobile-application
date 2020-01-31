@@ -150,7 +150,12 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
 
   const onCheckPress = (): Promise<void> => onCheck(nricInput);
 
-  const onToggleScanner = (): void => setShowScanner(s => !s);
+  const onToggleScanner = (): void => {
+    if (!hasCameraPermission) {
+      askForCameraPermission();
+    }
+    setShowScanner(s => !s);
+  };
 
   const shouldShowCamera = hasCameraPermission && showScanner;
 

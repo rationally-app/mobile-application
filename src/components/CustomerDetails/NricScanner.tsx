@@ -9,13 +9,15 @@ export interface BarCodeScanningResult {
 
 interface NricScanner {
   onBarCodeScanned: (event: BarCodeScanningResult) => void;
+  barCodeTypes?: string[];
 }
 
 export const NricScanner: FunctionComponent<NricScanner> = ({
-  onBarCodeScanned
+  onBarCodeScanned,
+  barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39]
 }) => (
   <BarCodeScanner
-    barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
+    barCodeTypes={barCodeTypes}
     style={{
       flex: 1,
       backgroundColor: color("grey", 0),
