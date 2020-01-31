@@ -133,10 +133,6 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       // TODO: error handling
 
       setHasPurchased(true);
-      // replaceRouteFn(navigation, "TransactionConfirmationScreen", {
-      //   transactions,
-      //   nric
-      // })();
     } catch (e) {
       alert(e.message || e);
     } finally {
@@ -177,17 +173,6 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
               ) : (
                 <CannotBuyResult onCancel={onCancel} />
               )}
-              {/* <AppText>{quota.remainingQuota} masks left</AppText>
-              <AppText>Enter quantity to buy...</AppText>
-              <AppTextInput
-                autoFocus={true}
-                style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-                value={quantity}
-                onChange={({ nativeEvent: { text } }) => setQuantity(text)}
-                keyboardType="numeric"
-              />
-              <DarkButton text="Buy Mask" onPress={onRecordTransaction} />
-              <DarkButton text="Cancel" onPress={onCancel} /> */}
             </View>
           </Card>
         </View>

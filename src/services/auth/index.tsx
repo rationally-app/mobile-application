@@ -1,13 +1,16 @@
-const wait = async (timeout: number): Promise<void> => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, timeout);
-  });
-};
+import { ENDPOINT } from "../../config";
 
 export const authenticate = async (key: string): Promise<boolean> => {
-  // Mock implementation of authentication endpoint
-  await wait(500);
-  return key !== "" ? true : false;
+  try {
+    const status = await fetch(`${ENDPOINT}/auth`, {
+      method: "GET",
+      headers: {
+        Authorization: key
+      }
+    }).then(res => res.json());
+    return status.message === "OK";
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
 };
