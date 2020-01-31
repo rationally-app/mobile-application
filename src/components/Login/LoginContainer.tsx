@@ -9,6 +9,7 @@ import { AppName } from "../Layout/AppName";
 import { Card } from "../Layout/Card";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { TopBackground } from "../Layout/TopBackground";
+import { AppText } from "../Layout/AppText";
 
 const styles = StyleSheet.create({
   content: {
@@ -25,6 +26,7 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   inputWrapper: {
+    marginTop: size(3),
     marginBottom: size(3)
   }
 });
@@ -69,6 +71,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           <AppName />
         </View>
         <Card>
+          <AppText>
+            Please log in with your Unique ID provided by your supervisor / in
+            your letter.
+          </AppText>
           <View style={styles.inputWrapper}>
             <InputWithLabel
               label="Unique ID"

@@ -66,9 +66,9 @@ const PurchasedResult: FunctionComponent<{ onCancel: () => void }> = ({
 }) => (
   <>
     <AppText style={styles.emoji}>✅</AppText>
-    <AppText style={styles.statusTitle}>Purchased!</AppText>
+    <AppText style={styles.statusTitle}>Purchased 1 box!</AppText>
     <AppText style={styles.statusMessage}>
-      Customer has purchased 1 box of masks.
+      Customer can purchase another box in a week.
     </AppText>
     <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
   </>
@@ -81,7 +81,10 @@ const CanBuyResult: FunctionComponent<{
 }> = ({ isLoading, onRecordTransaction, onCancel }) => (
   <>
     <AppText style={styles.emoji}>👍</AppText>
-    <AppText style={styles.statusTitle}>Can buy 1 box of masks</AppText>
+    <AppText style={styles.statusTitle}>Customer can purchase</AppText>
+    <AppText style={styles.statusMessage}>
+      They have 1 box left until next week.
+    </AppText>
     <View style={styles.buttonRow}>
       <View style={{ marginRight: size(2) }}>
         <DarkButton
@@ -100,7 +103,10 @@ const CannotBuyResult: FunctionComponent<{ onCancel: () => void }> = ({
 }) => (
   <>
     <AppText style={styles.emoji}>❌</AppText>
-    <AppText style={styles.statusTitle}>Cannot buy</AppText>
+    <AppText style={styles.statusTitle}>Customer cannot purchase</AppText>
+    <AppText style={styles.statusMessage}>
+      Customer can purchase 1 box in a week.
+    </AppText>
     <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
   </>
 );
@@ -115,6 +121,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const [hasPurchased, setHasPurchased] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // TODO: provide the correct date to buy another box of masks
   const canBuy = quota.remainingQuota > 0;
 
   const onRecordTransaction = async (): Promise<void> => {

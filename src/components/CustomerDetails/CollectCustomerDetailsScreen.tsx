@@ -167,8 +167,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
               {!shouldShowCamera && (
                 <Card>
                   <AppText>
-                    Enter customer’s NRIC to retrieve the number of masks he/she
-                    can purchase
+                    Check the number of masks your customer can purchase
                   </AppText>
                   <View style={styles.scanButtonWrapper}>
                     <DarkButton
@@ -187,7 +186,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
                   <View style={styles.inputAndButtonWrapper}>
                     <View style={styles.inputWrapper}>
                       <InputWithLabel
-                        label="Customer NRIC"
+                        label="Enter NRIC number"
                         value={nricInput}
                         onChange={({ nativeEvent: { text } }) =>
                           setNricInput(text)
