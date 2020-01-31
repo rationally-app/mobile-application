@@ -76,6 +76,13 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     askForCameraPermission();
   }, []);
 
+  const onToggleScanner = (): void => {
+    if (!hasCameraPermission) {
+      askForCameraPermission();
+    }
+    setShowScanner(s => !s);
+  };
+
   const onLogin = async (): Promise<void> => {
     if (isLoading) return;
     setIsLoading(true);
@@ -84,21 +91,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       if (authenticated) {
         setAuthKey(inputAuthKey);
         setIsLoading(false);
+        setShowScanner(false);
         navigation.navigate("CollectCustomerDetailsScreen");
       } else {
         throw new Error("Authentication key is invalid");
       }
     } catch (e) {
+      setShowScanner(false);
       alert(e.message || e);
       setIsLoading(false);
     }
-  };
-
-  const onToggleScanner = (): void => {
-    if (!hasCameraPermission) {
-      askForCameraPermission();
-    }
-    setShowScanner(s => !s);
   };
 
   const onBarCodeScanned = (event: BarCodeScanningResult): void => {
