@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Musket",
-    "slug": "musket",
+    "name": "Rationally",
+    "slug": "rationally",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
@@ -22,7 +22,7 @@
       "bundleIdentifier": "sg.gov.tech.musket"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 5,
       "package": "sg.gov.tech.musket"
     },
     "packagerOpts": {
