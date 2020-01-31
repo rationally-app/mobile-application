@@ -62,7 +62,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }: NavigationProps) => {
   const { setAuthKey } = useAuthenticationContext();
-  const [inputAuthKey, setInputAuthKey] = useState(__DEV__ ? "test-key" : "");
+  const [inputAuthKey, setInputAuthKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [showScanner, setShowScanner] = useState(false);

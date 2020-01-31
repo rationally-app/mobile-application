@@ -1,3 +1,5 @@
+import { ENDPOINT } from "../../config";
+
 export interface Transaction {
   quantity: number;
   transactionTime: number;
@@ -8,29 +10,20 @@ export interface QuotaResponse {
   history: Transaction[];
 }
 
-const wait = async (timeout: number): Promise<void> => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, timeout);
-  });
-};
-
 export const getQuota = async (
   nric: string,
   key: string
 ): Promise<QuotaResponse> => {
-  // Mock implementation of get quota endpoint
-  await wait(500);
-  return {
-    remainingQuota: 1,
-    history: [
-      {
-        quantity: 1,
-        transactionTime: 1580330434981
+  const quotaResponse: QuotaResponse = await fetch(
+    `${ENDPOINT}/quota/${nric}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: key
       }
-    ]
-  };
+    }
+  ).then(res => res.json());
+  return quotaResponse;
 };
 
 export const postTransaction = async (
@@ -38,12 +31,18 @@ export const postTransaction = async (
   quantity: number,
   key: string
 ): Promise<Transaction[]> => {
-  // Mock implementation of post transaction endpoint
-  await wait(500);
-  return [
+  console.log(nric, quantity, key);
+  const quotaResponse: Transaction[] = await fetch(
+    `${ENDPOINT}/transactions/${nric}`,
     {
-      quantity: 5,
-      transactionTime: 1580330642589
+      method: "POST",
+      headers: {
+        Authorization: key
+      },
+      body: JSON.stringify({
+        quantity
+      })
     }
-  ];
+  ).then(res => res.json());
+  return quotaResponse;
 };

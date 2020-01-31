@@ -1,17 +1,52 @@
-import { getQuota } from "./index";
+import { getQuota, postTransaction } from "./index";
+import { ENDPOINT } from "../../config";
+
+const anyGlobal: any = global;
+const mockFetch = jest.fn();
+anyGlobal.fetch = mockFetch;
 
 describe("getQuota", () => {
   it("should return the quota of a nric number", async () => {
-    expect.assertions(1);
-    const quota = await getQuota("S8174504H", "test-key");
+    expect.assertions(2);
+    mockFetch.mockReturnValueOnce({
+      then: () => ({
+        remainingQuota: 5,
+        history: []
+      })
+    });
+    const quota = await getQuota("S000000J", "KEY");
+    expect(mockFetch.mock.calls[0]).toStrictEqual([
+      `${ENDPOINT}/quota/S000000J`,
+      { method: "GET", headers: { Authorization: "KEY" } }
+    ]);
     expect(quota).toStrictEqual({
-      remainingQuota: 1,
-      history: [
+      remainingQuota: 5,
+      history: []
+    });
+  });
+});
+
+describe("postTransaction", () => {
+  it("should create a new transaction", async () => {
+    expect.assertions(2);
+    mockFetch.mockReturnValueOnce({
+      then: () => [
         {
-          quantity: 1,
-          transactionTime: 1580330434981
+          quantity: 5,
+          transactionTime: 1580330642589
         }
       ]
     });
+    const history = await postTransaction("S000000J", 1, "KEY");
+    expect(mockFetch.mock.calls[0]).toStrictEqual([
+      `${ENDPOINT}/quota/S000000J`,
+      { method: "GET", headers: { Authorization: "KEY" } }
+    ]);
+    expect(history).toStrictEqual([
+      {
+        quantity: 5,
+        transactionTime: 1580330642589
+      }
+    ]);
   });
 });
