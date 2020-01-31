@@ -14,7 +14,7 @@ describe("authenticate", () => {
       })
     });
     const auth = await authenticate("CORRECT_KEY");
-    expect(mockFetch.mock.calls[0]).toStrictEqual([
+    expect(mockFetch.mock.calls[0]).toEqual([
       `${ENDPOINT}/auth`,
       { method: "GET", headers: { Authorization: "CORRECT_KEY" } }
     ]);

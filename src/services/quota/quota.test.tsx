@@ -15,11 +15,11 @@ describe("getQuota", () => {
       })
     });
     const quota = await getQuota("S000000J", "KEY");
-    expect(mockFetch.mock.calls[0]).toStrictEqual([
+    expect(mockFetch.mock.calls[0]).toEqual([
       `${ENDPOINT}/quota/S000000J`,
       { method: "GET", headers: { Authorization: "KEY" } }
     ]);
-    expect(quota).toStrictEqual({
+    expect(quota).toEqual({
       remainingQuota: 5,
       history: []
     });
@@ -38,11 +38,11 @@ describe("postTransaction", () => {
       ]
     });
     const history = await postTransaction("S000000J", 1, "KEY");
-    expect(mockFetch.mock.calls[0]).toStrictEqual([
+    expect(mockFetch.mock.calls[0]).toEqual([
       `${ENDPOINT}/quota/S000000J`,
       { method: "GET", headers: { Authorization: "KEY" } }
     ]);
-    expect(history).toStrictEqual([
+    expect(history).toEqual([
       {
         quantity: 5,
         transactionTime: 1580330642589

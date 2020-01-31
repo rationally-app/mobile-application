@@ -50,7 +50,8 @@ module.exports = {
     {
       files: ["**/*.test.tsx", "storybook/**/*.tsx"],
       rules: {
-        "@typescript-eslint/no-empty-function": "off"
+        "@typescript-eslint/no-empty-function": "off",
+        "jest/prefer-strict-equal": "off"
       }
     }
   ]
