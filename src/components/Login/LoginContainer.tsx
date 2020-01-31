@@ -83,13 +83,13 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setShowScanner(s => !s);
   };
 
-  const onLogin = async (): Promise<void> => {
+  const onLogin = async (key): Promise<void> => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const authenticated = await authenticate(inputAuthKey);
+      const authenticated = await authenticate(key);
       if (authenticated) {
-        setAuthKey(inputAuthKey);
+        setAuthKey(key);
         setIsLoading(false);
         setShowScanner(false);
         navigation.navigate("CollectCustomerDetailsScreen");
@@ -107,7 +107,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     if (!isLoading && event.data) {
       setInputAuthKey(event.data);
       onToggleScanner();
-      onLogin();
+      onLogin(event.data);
     }
   };
 
@@ -148,7 +148,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             </View>
             <DarkButton
               text="Login"
-              onPress={onLogin}
+              onPress={() => onLogin(inputAuthKey)}
               fullWidth={true}
               isLoading={isLoading}
             />
