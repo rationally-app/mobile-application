@@ -9,9 +9,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splashscreen.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#305367"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,7 +19,12 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "sg.gov.tech.musket"
+      "bundleIdentifier": "sg.gov.tech.musket",
+      "splash": {
+        "image": "./assets/splashscreen.png",
+        "tabletImage": "./assets/splashscreen-tablet.png",
+        "backgroundColor": "#305367"
+      }
     },
     "android": {
       "versionCode": 5,
