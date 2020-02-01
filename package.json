@@ -42,6 +42,7 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.18",
     "rxdb": "^8.7.5",
     "rxjs": "^6.5.4",
+    "sentry-expo": "^2.0.1",
     "yup": "^0.27.0"
   },
   "devDependencies": {
