@@ -162,7 +162,10 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
 
   return (
     <>
-      <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+      <ScrollView
+        contentContainerStyle={{ alignItems: "center" }}
+        keyboardShouldPersistTaps="handled"
+      >
         <TopBackground />
         <SafeAreaView>
           <KeyboardAvoidingView behavior="position">
