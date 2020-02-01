@@ -83,7 +83,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setShowScanner(s => !s);
   };
 
-  const onLogin = async (key): Promise<void> => {
+  const onLogin = async (key: string): Promise<void> => {
     if (isLoading) return;
     setIsLoading(true);
     try {
@@ -141,7 +141,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
                   onChange={({ nativeEvent: { text } }) =>
                     setInputAuthKey(text)
                   }
-                  onSubmitEditing={onLogin}
+                  onSubmitEditing={() => onLogin(inputAuthKey)}
                 />
               </View>
               <SecondaryButton text="Scan" onPress={onToggleScanner} />
