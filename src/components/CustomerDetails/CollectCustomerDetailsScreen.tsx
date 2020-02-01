@@ -22,6 +22,7 @@ import { Card } from "../Layout/Card";
 import { BarCodeScanningResult, NricScanner } from "./NricScanner";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
+import { Credits } from "../Credits";
 
 const styles = StyleSheet.create({
   content: {
@@ -211,6 +212,9 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
           </KeyboardAvoidingView>
         </SafeAreaView>
       </ScrollView>
+      <SafeAreaView>
+        <Credits style={{ bottom: size(3) }} />
+      </SafeAreaView>
       {shouldShowCamera && (
         <View style={styles.cameraWrapper}>
           {isLoading ? (

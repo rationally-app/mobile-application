@@ -10,6 +10,7 @@ import { Card } from "../Layout/Card";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
+import { Credits } from "../Credits";
 
 const styles = StyleSheet.create({
   content: {
@@ -183,6 +184,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             </View>
           </Card>
         </View>
+        <Credits style={{ bottom: size(3) }} />
       </SafeAreaView>
     </View>
   );

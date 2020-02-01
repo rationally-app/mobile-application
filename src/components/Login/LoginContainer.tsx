@@ -17,6 +17,7 @@ import {
   BarCodeScanningResult
 } from "../CustomerDetails/NricScanner";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { Credits } from "../Credits";
 
 const styles = StyleSheet.create({
   content: {
@@ -153,6 +154,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               isLoading={isLoading}
             />
           </Card>
+          <Credits />
         </View>
       </KeyboardAvoidingView>
       {shouldShowCamera && (
