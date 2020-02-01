@@ -9,7 +9,8 @@ describe("authenticate", () => {
   it("should check the validity of the key", async () => {
     expect.assertions(2);
     mockFetch.mockReturnValueOnce({
-      then: () => ({
+      status: 200,
+      json: () => ({
         message: "OK"
       })
     });
