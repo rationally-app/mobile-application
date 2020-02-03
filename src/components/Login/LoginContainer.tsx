@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
+import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { authenticate } from "../../services/auth";
 import { useAuthenticationContext } from "../../context/auth";
 import { size, color } from "../../common/styles";
@@ -155,6 +156,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               <AppName mode={config.appMode} />
             </View>
           </TouchableWithoutFeedback>
+          {config.appMode !== AppMode.production && (
+            <View style={{ marginTop: 20, marginBottom: 20 }}>
+              <DangerButton
+                text="Exit Testing Mode"
+                onPress={onToggleAppMode}
+                fullWidth={true}
+                isLoading={isLoading}
+              />
+            </View>
+          )}
           <Card>
             <AppText>
               Please log in with your Unique ID provided by your supervisor / in
