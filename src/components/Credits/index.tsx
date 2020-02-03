@@ -41,14 +41,14 @@ export const Credits: FunctionComponent<ViewProps> = ({ style }) => {
     setClicks(c => c + 1);
   };
   const displayedText =
-    clicks < 7 ? "" : contributors[clicks % contributors.length];
+    clicks < 3 ? "" : contributors[clicks % contributors.length];
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.wrapper, style]}>
         <HiveLogo />
         <View style={styles.content}>
-          <AppText style={styles.text}>Built by GovTech Singapore</AppText>
+          <AppText style={styles.text}>Built by GDS, GovTech Singapore</AppText>
           {displayedText.length > 0 && (
             <AppText style={styles.subText}>{displayedText}</AppText>
           )}
