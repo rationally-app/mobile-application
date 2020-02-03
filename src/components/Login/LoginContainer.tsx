@@ -1,5 +1,11 @@
 import React, { useState, FunctionComponent, useEffect } from "react";
-import { View, StyleSheet, KeyboardAvoidingView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback
+} from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { authenticate } from "../../services/auth";
@@ -18,6 +24,9 @@ import {
 } from "../CustomerDetails/NricScanner";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
+import { useConfig, AppMode } from "../../common/hooks/useConfig";
+
+const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
 const styles = StyleSheet.create({
   content: {
@@ -67,6 +76,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [showScanner, setShowScanner] = useState(false);
+  const { config, setValue } = useConfig();
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -76,6 +86,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   useEffect(() => {
     askForCameraPermission();
   }, []);
+
+  const onToggleAppMode = () => {
+    const nextMode = config.appMode === AppMode.production ?  AppMode.staging :  AppMode.production;
+    setValue("appMode", nextMode);
+    alert(`Rationally in ${nextMode.toUpperCase()} mode`);
+  };
 
   const onToggleScanner = (): void => {
     if (!hasCameraPermission) {
@@ -88,7 +104,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const authenticated = await authenticate(key);
+      const authenticated = await authenticate(key, config.appMode);
       if (authenticated) {
         setAuthKey(key);
         setIsLoading(false);
@@ -124,11 +140,19 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         }}
         behavior="padding"
       >
-        <TopBackground style={{ height: "50%", maxHeight: "auto" }} />
+        <TopBackground
+          style={{ height: "50%", maxHeight: "auto" }}
+          mode={config.appMode}
+        />
         <View style={styles.content}>
-          <View style={styles.headerText}>
-            <AppName />
-          </View>
+          <TouchableWithoutFeedback
+            delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
+            onLongPress={onToggleAppMode}
+          >
+            <View style={styles.headerText}>
+              <AppName mode={config.appMode} />
+            </View>
+          </TouchableWithoutFeedback>
           <Card>
             <AppText>
               Please log in with your Unique ID provided by your supervisor / in
