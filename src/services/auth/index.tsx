@@ -1,8 +1,14 @@
-import { ENDPOINT } from "../../config";
+import { STAGING_ENDPOINT, PRODUCTION_ENDPOINT } from "../../config";
+import { AppMode } from "../../common/hooks/useConfig";
 
-export const authenticate = async (key: string): Promise<boolean> => {
+export const authenticate = async (
+  key: string,
+  mode: AppMode
+): Promise<boolean> => {
+  const endpoint =
+    mode === AppMode.production ? PRODUCTION_ENDPOINT : STAGING_ENDPOINT;
   try {
-    const response = await fetch(`${ENDPOINT}/auth`, {
+    const response = await fetch(`${endpoint}/auth`, {
       method: "GET",
       headers: {
         Authorization: key

@@ -1,5 +1,5 @@
 import { authenticate } from "./index";
-import { ENDPOINT } from "../../config";
+import { STAGING_ENDPOINT } from "../../config";
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
@@ -16,7 +16,7 @@ describe("authenticate", () => {
     });
     const auth = await authenticate("CORRECT_KEY");
     expect(mockFetch.mock.calls[0]).toEqual([
-      `${ENDPOINT}/auth`,
+      `${STAGING_ENDPOINT}/auth`,
       { method: "GET", headers: { Authorization: "CORRECT_KEY" } }
     ]);
     expect(auth).toBe(true);

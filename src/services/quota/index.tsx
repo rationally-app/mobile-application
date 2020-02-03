@@ -1,4 +1,5 @@
-import { ENDPOINT } from "../../config";
+import { STAGING_ENDPOINT, PRODUCTION_ENDPOINT } from "../../config";
+import { AppMode } from "../../common/hooks/useConfig";
 
 export interface Transaction {
   quantity: number;
@@ -12,10 +13,14 @@ export interface QuotaResponse {
 
 export const getQuota = async (
   nric: string,
-  key: string
+  key: string,
+  mode: AppMode
 ): Promise<QuotaResponse> => {
+  const endpoint =
+    mode === AppMode.production ? PRODUCTION_ENDPOINT : STAGING_ENDPOINT;
+
   const quotaResponse: QuotaResponse = await fetch(
-    `${ENDPOINT}/quota/${nric}`,
+    `${endpoint}/quota/${nric}`,
     {
       method: "GET",
       headers: {
@@ -29,11 +34,13 @@ export const getQuota = async (
 export const postTransaction = async (
   nric: string,
   quantity: number,
-  key: string
+  key: string,
+  mode: AppMode
 ): Promise<Transaction[]> => {
-  console.log(nric, quantity, key);
+  const endpoint =
+    mode === AppMode.production ? PRODUCTION_ENDPOINT : STAGING_ENDPOINT;
   const quotaResponse: Transaction[] = await fetch(
-    `${ENDPOINT}/transactions/${nric}`,
+    `${endpoint}/transactions/${nric}`,
     {
       method: "POST",
       headers: {

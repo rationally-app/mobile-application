@@ -11,6 +11,7 @@ import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
+import { useConfig } from "../../common/hooks/useConfig";
 
 const styles = StyleSheet.create({
   content: {
@@ -121,6 +122,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const [quantity] = useState("1");
   const [hasPurchased, setHasPurchased] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { config } = useConfig();
 
   // TODO: provide the correct date to buy another box of masks
   const canBuy = quota.remainingQuota > 0;
@@ -137,7 +139,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         throw new Error("Quantity cannot exceed quota");
       if (qtyNum <= 0) throw new Error("Quantity must be greater than 0");
 
-      await postTransaction(nric, qtyNum, authKey);
+      await postTransaction(nric, qtyNum, authKey, config.appMode);
       // TODO: error handling
 
       setHasPurchased(true);
@@ -154,11 +156,11 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
   return (
     <View style={{ alignItems: "center" }}>
-      <TopBackground />
+      <TopBackground mode={config.appMode} />
       <SafeAreaView>
         <View style={styles.content}>
           <View style={styles.headerText}>
-            <AppName />
+            <AppName mode={config.appMode} />
           </View>
           <Card>
             <AppText style={styles.nricText}>Customer NRIC: {nric}</AppText>

@@ -23,6 +23,7 @@ import { BarCodeScanningResult, NricScanner } from "./NricScanner";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
+import { useConfig } from "../../common/hooks/useConfig";
 
 const styles = StyleSheet.create({
   content: {
@@ -90,6 +91,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   const [scanningEnabled, setScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { config } = useConfig();
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -119,7 +121,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
       const nric = input.match(nricRegex)?.[0].toUpperCase();
 
       setIsLoading(true);
-      const quota = await getQuota(nric!, authKey);
+      const quota = await getQuota(nric!, authKey, config.appMode);
       setIsLoading(false);
 
       navigation.navigate("CustomerQuotaScreen", { quota, nric });
@@ -166,12 +168,12 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
         contentContainerStyle={{ alignItems: "center" }}
         keyboardShouldPersistTaps="handled"
       >
-        <TopBackground />
+        <TopBackground mode={config.appMode} />
         <SafeAreaView>
           <KeyboardAvoidingView behavior="position">
             <View style={styles.content}>
               <View style={styles.headerText}>
-                <AppName />
+                <AppName mode={config.appMode} />
               </View>
               {!shouldShowCamera && (
                 <Card>
