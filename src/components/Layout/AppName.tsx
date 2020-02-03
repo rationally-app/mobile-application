@@ -23,7 +23,7 @@ export const AppName: FunctionComponent<AppName> = (
     {mode === AppMode.staging ? (
       <AppText
         style={{
-          color: "red",
+          color: color("red", 60),
           fontFamily: "inter-bold",
           fontSize: fontSize(2)
         }}
