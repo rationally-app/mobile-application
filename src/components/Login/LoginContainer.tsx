@@ -157,7 +157,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             </View>
           </TouchableWithoutFeedback>
           {config.appMode !== AppMode.production && (
-            <View style={{ marginTop: 20, marginBottom: 20 }}>
+            <View style={{ marginVertical: size(2.5) }}>
               <DangerButton
                 text="Exit Testing Mode"
                 onPress={onToggleAppMode}
