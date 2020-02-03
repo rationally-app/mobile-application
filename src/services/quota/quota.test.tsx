@@ -1,5 +1,5 @@
 import { getQuota, postTransaction } from "./index";
-import { ENDPOINT } from "../../config";
+import { STAGING_ENDPOINT } from "../../config";
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
@@ -16,7 +16,7 @@ describe("getQuota", () => {
     });
     const quota = await getQuota("S000000J", "KEY");
     expect(mockFetch.mock.calls[0]).toEqual([
-      `${ENDPOINT}/quota/S000000J`,
+      `${STAGING_ENDPOINT}/quota/S000000J`,
       { method: "GET", headers: { Authorization: "KEY" } }
     ]);
     expect(quota).toEqual({
@@ -39,7 +39,7 @@ describe("postTransaction", () => {
     });
     const history = await postTransaction("S000000J", 1, "KEY");
     expect(mockFetch.mock.calls[0]).toEqual([
-      `${ENDPOINT}/quota/S000000J`,
+      `${STAGING_ENDPOINT}/quota/S000000J`,
       { method: "GET", headers: { Authorization: "KEY" } }
     ]);
     expect(history).toEqual([

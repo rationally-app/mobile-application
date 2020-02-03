@@ -1,13 +1,7 @@
 export type ColorName = "grey" | "orange" | "blue" | "green" | "red";
 export type ToneLevel = 0 | 5 | 10 | 15 | 20 | 30 | 40 | 50 | 100;
-export type ToneLookup = {
-  [color in ColorName]: Tone;
-};
-interface Tone {
-  [toneLevel: number]: string;
-}
 
-const palette: ToneLookup = {
+const palette: { [color in ColorName]: { [tone: string]: string } } = {
   grey: {
     "0": "#FFFFFF",
     "5": "#FEFCFA",
@@ -38,15 +32,20 @@ const palette: ToneLookup = {
   }
 };
 
+export function color(
+  colorName: "grey",
+  tone: 0 | 5 | 10 | 15 | 20 | 30 | 40 | 100
+): string;
+export function color(colorName: "orange", tone: 10 | 20 | 30): string;
+export function color(colorName: "green", tone: 10 | 20 | 30): string;
+export function color(colorName: "red", tone: 10 | 20 | 50): string;
+export function color(colorName: "blue", tone: 50): string;
 /**
  * Returns the color according to the given color name and tone.
  *
  * @param colorName grey, orange, blue, green, red
  * @param tone based on the colorName
  */
-export function color<T extends ColorName, K extends ToneLevel>(
-  colorName: T,
-  tone: K
-): typeof palette[T][K] {
+export function color(colorName: ColorName, tone: ToneLevel): string {
   return palette[colorName][tone];
 }

@@ -1,8 +1,8 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { FunctionComponent } from "react";
 import { color } from "../../common/styles";
-import { ViewProps, View, Text } from "react-native";
-import { useConfig, AppMode } from "../../common/hooks/useConfig";
+import { ViewProps } from "react-native";
+import { AppMode } from "../../common/hooks/useConfig";
 
 interface TopBackground extends ViewProps {
   mode?: AppMode;
@@ -13,13 +13,15 @@ export const TopBackground: FunctionComponent<TopBackground> = ({
   mode = AppMode.production
 }) => {
   const isProduction = mode === AppMode.production;
-  const primaryColor = isProduction ? "blue" : "red";
-  const secondaryColor = isProduction ? "green" : "orange";
+  const primaryColor = isProduction ? color("blue", 50) : color("red", 50);
+  const secondaryColor = isProduction
+    ? color("green", 30)
+    : color("orange", 30);
   return (
     <LinearGradient
       style={[
         {
-          backgroundColor: color(primaryColor, 50),
+          backgroundColor: primaryColor,
           width: "100%",
           height: "40%",
           maxHeight: 240,
@@ -27,7 +29,7 @@ export const TopBackground: FunctionComponent<TopBackground> = ({
         },
         style
       ]}
-      colors={[color(primaryColor, 50), color(secondaryColor, 30)]}
+      colors={[primaryColor, secondaryColor]}
       start={[0.5, 0]}
       end={[0, 1.2]}
     />

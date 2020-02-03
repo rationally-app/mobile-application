@@ -1,6 +1,5 @@
 import React, { useState, FunctionComponent, useEffect } from "react";
 import {
-  Text,
   View,
   StyleSheet,
   KeyboardAvoidingView,
@@ -87,8 +86,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     askForCameraPermission();
   }, []);
 
-  const onToggleAppMode = () => {
-    const nextMode = config.appMode === AppMode.production ?  AppMode.staging :  AppMode.production;
+  const onToggleAppMode = (): void => {
+    const nextMode =
+      config.appMode === AppMode.production
+        ? AppMode.staging
+        : AppMode.production;
     setValue("appMode", nextMode);
     alert(`Rationally in ${nextMode.toUpperCase()} mode`);
   };
