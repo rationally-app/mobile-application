@@ -3,8 +3,7 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  SafeAreaView
+  TouchableWithoutFeedback
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";

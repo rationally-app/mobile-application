@@ -2,7 +2,6 @@ import React, { FunctionComponent, useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   KeyboardAvoidingView,
   Alert,
