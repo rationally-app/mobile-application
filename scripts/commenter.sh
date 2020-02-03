@@ -1,6 +1,6 @@
 #!/bin/bash
-PULL_REQUEST_ID=$(echo $CI_PULL_REQUEST | cut -c 58-)
-GITHUB_PROJECT="Open-Attestation/identity-wallet"
+PULL_REQUEST_ID=$(echo $CI_PULL_REQUEST | cut -c 52-)
+GITHUB_PROJECT="corona-avengers/ration-app"
 EXPO_PROJECT="@dlt/identitywallet"
 
 PUBLISH_TEXT="Published to https://exp.host/${EXPO_PROJECT}?release-channel=${PULL_REQUEST_ID}"
