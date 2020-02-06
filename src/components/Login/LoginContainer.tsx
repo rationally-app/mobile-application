@@ -135,14 +135,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   return (
     <>
-      <KeyboardAvoidingView
-        style={{
-          width: "100%",
-          height: "100%",
-          alignItems: "center"
-        }}
-        behavior="padding"
-      >
+      <KeyboardAvoidingView style={{ alignItems: "center" }} behavior="padding">
         <TopBackground
           style={{ height: "50%", maxHeight: "auto" }}
           mode={config.appMode}
@@ -191,9 +184,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               isLoading={isLoading}
             />
           </Card>
-          <Credits />
         </View>
       </KeyboardAvoidingView>
+      <Credits style={{ bottom: size(3) }} />
       {shouldShowCamera && (
         <View style={styles.cameraWrapper}>
           <NricScanner

@@ -2,7 +2,6 @@ import React, { FunctionComponent, useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   KeyboardAvoidingView,
   Alert,
@@ -169,57 +168,53 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
         keyboardShouldPersistTaps="handled"
       >
         <TopBackground mode={config.appMode} />
-        <SafeAreaView>
-          <KeyboardAvoidingView behavior="position">
-            <View style={styles.content}>
-              <View style={styles.headerText}>
-                <AppName mode={config.appMode} />
-              </View>
-              {!shouldShowCamera && (
-                <Card>
-                  <AppText>
-                    Check the number of masks your customer can purchase
-                  </AppText>
-                  <View style={styles.scanButtonWrapper}>
-                    <DarkButton
-                      fullWidth={true}
-                      text="Scan customer's NRIC"
-                      onPress={onToggleScanner}
-                    />
-                  </View>
-                  <View style={{ position: "relative" }}>
-                    <View style={styles.horizontalRule} />
-                    <View style={styles.orWrapper}>
-                      <AppText style={styles.orText}>OR</AppText>
-                    </View>
-                  </View>
-
-                  <View style={styles.inputAndButtonWrapper}>
-                    <View style={styles.inputWrapper}>
-                      <InputWithLabel
-                        label="Enter NRIC number"
-                        value={nricInput}
-                        onChange={({ nativeEvent: { text } }) =>
-                          setNricInput(text)
-                        }
-                        onSubmitEditing={onCheckPress}
-                      />
-                    </View>
-                    <SecondaryButton
-                      text="Check"
-                      onPress={onCheckPress}
-                      isLoading={isLoading}
-                    />
-                  </View>
-                </Card>
-              )}
+        <KeyboardAvoidingView behavior="position">
+          <View style={styles.content}>
+            <View style={styles.headerText}>
+              <AppName mode={config.appMode} />
             </View>
-          </KeyboardAvoidingView>
-        </SafeAreaView>
+            {!shouldShowCamera && (
+              <Card>
+                <AppText>
+                  Check the number of masks your customer can purchase
+                </AppText>
+                <View style={styles.scanButtonWrapper}>
+                  <DarkButton
+                    fullWidth={true}
+                    text="Scan customer's NRIC"
+                    onPress={onToggleScanner}
+                  />
+                </View>
+                <View style={{ position: "relative" }}>
+                  <View style={styles.horizontalRule} />
+                  <View style={styles.orWrapper}>
+                    <AppText style={styles.orText}>OR</AppText>
+                  </View>
+                </View>
+
+                <View style={styles.inputAndButtonWrapper}>
+                  <View style={styles.inputWrapper}>
+                    <InputWithLabel
+                      label="Enter NRIC number"
+                      value={nricInput}
+                      onChange={({ nativeEvent: { text } }) =>
+                        setNricInput(text)
+                      }
+                      onSubmitEditing={onCheckPress}
+                    />
+                  </View>
+                  <SecondaryButton
+                    text="Check"
+                    onPress={onCheckPress}
+                    isLoading={isLoading}
+                  />
+                </View>
+              </Card>
+            )}
+          </View>
+        </KeyboardAvoidingView>
       </ScrollView>
-      <SafeAreaView>
-        <Credits style={{ bottom: size(3) }} />
-      </SafeAreaView>
+      <Credits style={{ bottom: size(3) }} />
       {shouldShowCamera && (
         <View style={styles.cameraWrapper}>
           {isLoading ? (
