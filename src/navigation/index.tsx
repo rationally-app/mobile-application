@@ -1,11 +1,10 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement } from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import StackNavigator from "./StackNavigator";
 import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { AuthenticationContextProvider } from "../context/auth";
-import * as Font from "expo-font";
-import { LoadingView } from "../components/Loading";
+import { FontLoader } from "../components/FontLoader";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -18,19 +17,6 @@ const SwitchNavigator = createSwitchNavigator(
 const AppContainer = createAppContainer(SwitchNavigator);
 
 const App = (): ReactElement => {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-  useEffect(() => {
-    const loadFonts = async (): Promise<void> => {
-      await Font.loadAsync({
-        inter: require("../../assets/fonts/Inter-Regular.otf"),
-        "inter-bold": require("../../assets/fonts/Inter-Bold.otf")
-      });
-      setFontsLoaded(true);
-    };
-
-    loadFonts();
-  }, []);
-
   return (
     <AuthenticationContextProvider>
       <StatusBar />
@@ -40,7 +26,9 @@ const App = (): ReactElement => {
           paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
         }}
       >
-        {fontsLoaded ? <AppContainer /> : <LoadingView />}
+        <FontLoader>
+          <AppContainer />
+        </FontLoader>
       </View>
     </AuthenticationContextProvider>
   );
