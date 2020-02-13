@@ -27,10 +27,10 @@ jobs:
           command: expo login -u $EXPO_USERNAME --non-interactive
       - run:
           name: expo_publish_channel
-          command: expo publish --non-interactive --release-channel $(echo $CI_PULL_REQUEST | cut -c 52-)
+          command: expo publish --non-interactive --release-channel $(echo $CI_PULL_REQUEST | cut -c 59-)
       - run:
           name: expo_publish_storybook_channel
-          command: expo publish --non-interactive --release-channel storybook-$(echo $CI_PULL_REQUEST | cut -c 52-)
+          command: expo publish --non-interactive --release-channel storybook-$(echo $CI_PULL_REQUEST | cut -c 59-)
       - run:
           name: github_comment_published_link
           command: ./scripts/commenter.sh
