@@ -20,7 +20,6 @@ export interface PostTransaction {
 
 export interface PostTransactionResponse {
   transactions: Transaction[];
-  timestamp: number;
 }
 
 export const mockGetQuota = async (
@@ -64,8 +63,7 @@ export const mockPostTransaction = async ({
 }: PostTransaction): Promise<PostTransactionResponse> => {
   if (nric === "S0000000J") throw new Error("Something broke");
   return {
-    transactions,
-    timestamp: 1580330642589
+    transactions
   };
 };
 
