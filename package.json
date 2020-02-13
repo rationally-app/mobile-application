@@ -2,6 +2,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "start:mock": "EXPO_MOCK=true expo start",
     "test": "jest",
     "test:watch": "jest --watch",
     "storybook": "EXPO_START_STORYBOOK=true expo start",
