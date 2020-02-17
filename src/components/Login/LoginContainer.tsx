@@ -25,6 +25,7 @@ import {
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfig, AppMode } from "../../common/hooks/useConfig";
+import { Feather } from "@expo/vector-icons";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -175,7 +176,17 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
                   onSubmitEditing={() => onLogin(inputAuthKey)}
                 />
               </View>
-              <SecondaryButton text="Scan" onPress={onToggleScanner} />
+              <SecondaryButton
+                text="Scan"
+                onPress={onToggleScanner}
+                icon={
+                  <Feather
+                    name="maximize"
+                    size={size(2)}
+                    color={color("blue", 50)}
+                  />
+                }
+              />
             </View>
             <DarkButton
               text="Login"

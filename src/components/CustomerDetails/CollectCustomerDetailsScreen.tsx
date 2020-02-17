@@ -23,6 +23,7 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfig } from "../../common/hooks/useConfig";
+import { Feather } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   content: {
@@ -182,6 +183,13 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
                   <DarkButton
                     fullWidth={true}
                     text="Scan customer's NRIC"
+                    icon={
+                      <Feather
+                        name="maximize"
+                        size={size(2)}
+                        color={color("grey", 0)}
+                      />
+                    }
                     onPress={onToggleScanner}
                   />
                 </View>
