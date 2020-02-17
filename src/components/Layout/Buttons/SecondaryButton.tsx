@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactNode } from "react";
+import React, { FunctionComponent } from "react";
 import { color } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
@@ -6,7 +6,7 @@ import { ActivityIndicator } from "react-native";
 
 export interface SecondaryButton {
   onPress?: () => void;
-  text: ReactNode;
+  text: string;
   fullWidth?: boolean;
   isLoading?: boolean;
 }
