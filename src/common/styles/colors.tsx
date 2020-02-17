@@ -58,7 +58,7 @@ export function color(colorName: "blue-green", tone: 40): string;
 /**
  * Returns the color according to the given color name and tone.
  *
- * @param colorName grey, orange, blue, green, red
+ * @param colorName grey, yellow, orange, blue, blue-green, green, red
  * @param tone based on the colorName
  */
 export function color(colorName: ColorName, tone: ToneLevel): string {
