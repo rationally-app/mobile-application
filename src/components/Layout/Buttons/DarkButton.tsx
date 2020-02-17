@@ -1,21 +1,23 @@
-import React, { FunctionComponent, ReactNode } from "react";
-import { color } from "../../../common/styles";
+import React, { FunctionComponent, ReactNode, ReactElement } from "react";
+import { color, size } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 export interface DarkButton {
   onPress?: () => void;
   text: ReactNode;
   fullWidth?: boolean;
   isLoading?: boolean;
+  icon?: ReactElement;
 }
 
 export const DarkButton: FunctionComponent<DarkButton> = ({
   onPress,
   text,
   fullWidth = false,
-  isLoading = false
+  isLoading = false,
+  icon
 }) => (
   <BaseButton
     onPress={onPress}
@@ -26,15 +28,18 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
     {isLoading ? (
       <ActivityIndicator size="small" color={color("grey", 0)} />
     ) : (
-      <AppText
-        style={{
-          color: color("grey", 0),
-          fontFamily: "inter-bold",
-          textAlign: "center"
-        }}
-      >
-        {text}
-      </AppText>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {icon && <View style={{ marginRight: size(1) }}>{icon}</View>}
+        <AppText
+          style={{
+            color: color("grey", 0),
+            fontFamily: "inter-bold",
+            textAlign: "center"
+          }}
+        >
+          {text}
+        </AppText>
+      </View>
     )}
   </BaseButton>
 );
