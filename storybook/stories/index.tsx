@@ -1,2 +1,2 @@
-import "./TransactionConfirmationScreen";
+import "./CustomerQuotaScreen";
 import "./Layout";
