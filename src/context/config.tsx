@@ -48,7 +48,10 @@ export const ConfigContextProvider: FunctionComponent = ({ children }) => {
   const loadConfigFromStore = async (): Promise<void> => {
     const configStr = await AsyncStorage.getItem(CONFIG_KEY);
     if (configStr) {
-      setConfig(JSON.parse(configStr));
+      setConfig({
+        ...DEFAULT_CONFIG,
+        ...JSON.parse(configStr)
+      });
     } else {
       await AsyncStorage.setItem(CONFIG_KEY, JSON.stringify(DEFAULT_CONFIG));
     }
