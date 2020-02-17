@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { color, fontSize } from "../../common/styles";
 import { AppText } from "./AppText";
-import { AppMode } from "../../common/hooks/useConfig";
+import { AppMode } from "../../context/config";
 
 interface AppName {
   mode?: AppMode;

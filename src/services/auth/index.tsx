@@ -1,5 +1,5 @@
 import { STAGING_ENDPOINT, PRODUCTION_ENDPOINT } from "../../config";
-import { AppMode } from "../../common/hooks/useConfig";
+import { AppMode } from "../../context/config";
 
 export const authenticate = async (
   key: string,

@@ -11,7 +11,7 @@ import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
-import { useConfig } from "../../common/hooks/useConfig";
+import { useConfigContext } from "../../context/config";
 
 const styles = StyleSheet.create({
   content: {
@@ -122,7 +122,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const [quantity] = useState("1");
   const [hasPurchased, setHasPurchased] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { config } = useConfig();
+  const { config } = useConfigContext();
 
   // TODO: provide the correct date to buy another box of masks
   const canBuy = quota.remainingQuota > 0;

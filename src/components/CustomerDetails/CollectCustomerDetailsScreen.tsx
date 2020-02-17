@@ -22,7 +22,7 @@ import { BarCodeScanningResult, NricScanner } from "./NricScanner";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
-import { useConfig } from "../../common/hooks/useConfig";
+import { useConfigContext } from "../../context/config";
 
 const styles = StyleSheet.create({
   content: {
@@ -90,7 +90,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   const [scanningEnabled, setScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { config } = useConfig();
+  const { config } = useConfigContext();
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
