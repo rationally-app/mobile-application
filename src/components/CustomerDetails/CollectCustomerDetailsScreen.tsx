@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     marginBottom: size(6)
   },
   horizontalRule: {
-    borderBottomColor: color("grey", 15),
+    borderBottomColor: color("grey", 30),
     marginHorizontal: -size(3),
     borderBottomWidth: 1
   },

@@ -5,7 +5,8 @@ import { size, color, borderRadius, shadow } from "../../common/styles";
 export const Card: FunctionComponent = ({ children }) => (
   <View
     style={{
-      paddingVertical: size(4),
+      paddingTop: size(3),
+      paddingBottom: size(4),
       paddingHorizontal: size(3),
       backgroundColor: color("grey", 0),
       borderRadius: borderRadius(4),

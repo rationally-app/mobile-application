@@ -13,9 +13,9 @@ export const TopBackground: FunctionComponent<TopBackground> = ({
   mode = AppMode.production
 }) => {
   const isProduction = mode === AppMode.production;
-  const primaryColor = isProduction ? color("blue", 50) : color("red", 50);
+  const primaryColor = isProduction ? color("blue", 50) : color("red", 30);
   const secondaryColor = isProduction
-    ? color("green", 30)
+    ? color("blue-green", 40)
     : color("orange", 30);
   return (
     <LinearGradient

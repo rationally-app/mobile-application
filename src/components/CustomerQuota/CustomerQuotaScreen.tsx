@@ -1,9 +1,15 @@
-import React, { FunctionComponent, useState } from "react";
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import React, {
+  FunctionComponent,
+  useState,
+  Dispatch,
+  SetStateAction,
+  ReactElement
+} from "react";
+import { View, StyleSheet, SafeAreaView, Alert } from "react-native";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { color, size, borderRadius, fontSize } from "../../common/styles";
-import { QuotaResponse, postTransaction } from "../../services/quota";
+import { postTransaction, Quota } from "../../services/quota";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppName } from "../Layout/AppName";
 import { Card } from "../Layout/Card";
@@ -12,6 +18,8 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfig } from "../../common/hooks/useConfig";
+import { Feather } from "@expo/vector-icons";
+import { Checkbox } from "../Layout/Checkbox";
 
 const styles = StyleSheet.create({
   content: {
@@ -34,9 +42,11 @@ const styles = StyleSheet.create({
     marginBottom: -size(4),
     paddingHorizontal: size(3),
     paddingVertical: size(4),
+    backgroundColor: color("grey", 10),
     borderBottomLeftRadius: borderRadius(4),
     borderBottomRightRadius: borderRadius(4),
-    borderWidth: 1
+    borderWidth: 1,
+    borderColor: color("grey", 20)
   },
   successfulResultWrapper: {
     backgroundColor: color("green", 10),
@@ -46,9 +56,40 @@ const styles = StyleSheet.create({
     backgroundColor: color("red", 10),
     borderColor: color("red", 20)
   },
+  categoryText: {
+    fontSize: fontSize(2)
+  },
+  noQuotaCategoryItemOuterWrapper: {
+    paddingHorizontal: size(3)
+  },
+  noQuotaCategoryItemInnerWrapper: {
+    flexDirection: "row",
+    paddingVertical: size(2),
+    borderBottomColor: color("grey", 20),
+    borderBottomWidth: 1
+  },
+  labelWrapper: {
+    flex: 1
+  },
+  noQuotaCategoryItemFeedback: {
+    height: size(6),
+    backgroundColor: color("yellow", 10),
+    borderWidth: 1,
+    borderColor: color("yellow", 20),
+    borderRadius: borderRadius(3),
+    paddingHorizontal: size(1.5),
+    justifyContent: "center"
+  },
+  noQuotaCategoryItemFeedbackText: {
+    textAlign: "center",
+    textAlignVertical: "center",
+    color: color("yellow", 50),
+    fontSize: fontSize(-2),
+    fontFamily: "inter-bold"
+  },
   emoji: {
     fontSize: fontSize(3),
-    marginBottom: size(1)
+    marginBottom: size(2)
   },
   statusTitle: {
     fontSize: fontSize(3),
@@ -58,20 +99,51 @@ const styles = StyleSheet.create({
   statusMessage: {
     marginBottom: size(3)
   },
+  purchasedItemsList: {
+    marginTop: size(1),
+    lineHeight: 1.5 * fontSize(0)
+  },
+  purchasedItemText: {
+    marginBottom: size(0.5)
+  },
   buttonRow: {
     flexDirection: "row"
-  }
+  },
+  submitButton: { flex: 1 }
 });
 
-const PurchasedResult: FunctionComponent<{ onCancel: () => void }> = ({
-  onCancel
+interface CartState {
+  [category: string]: boolean | null;
+}
+
+const NoQuotaCategoryItem: FunctionComponent<{ label: ReactElement }> = ({
+  label
 }) => (
+  <View style={styles.noQuotaCategoryItemOuterWrapper}>
+    <View style={styles.noQuotaCategoryItemInnerWrapper}>
+      <View style={styles.labelWrapper}>{label}</View>
+      <View style={styles.noQuotaCategoryItemFeedback}>
+        <AppText style={styles.noQuotaCategoryItemFeedbackText}>
+          Cannot{"\n"}purchase
+        </AppText>
+      </View>
+    </View>
+  </View>
+);
+
+const PurchasedResult: FunctionComponent<{
+  onCancel: () => void;
+  purchasedItems: string[];
+}> = ({ onCancel, purchasedItems }) => (
   <>
     <AppText style={styles.emoji}>✅</AppText>
-    <AppText style={styles.statusTitle}>Purchased 1 box!</AppText>
-    <AppText style={styles.statusMessage}>
-      Customer can purchase another box in a week.
-    </AppText>
+    <AppText style={styles.statusTitle}>Purchased!</AppText>
+    <View style={styles.statusMessage}>
+      <AppText>Customer purchased the following:</AppText>
+      <AppText style={styles.purchasedItemsList}>
+        {purchasedItems.map(item => `• ${item}\n`)}
+      </AppText>
+    </View>
     <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
   </>
 );
@@ -80,22 +152,75 @@ const CanBuyResult: FunctionComponent<{
   isLoading: boolean;
   onRecordTransaction: () => Promise<void>;
   onCancel: () => void;
-}> = ({ isLoading, onRecordTransaction, onCancel }) => (
+  cart: CartState;
+  setCart: Dispatch<SetStateAction<CartState>>;
+}> = ({ isLoading, onRecordTransaction, onCancel, cart, setCart }) => (
   <>
-    <AppText style={styles.emoji}>👍</AppText>
-    <AppText style={styles.statusTitle}>Customer can purchase</AppText>
-    <AppText style={styles.statusMessage}>
-      They have 1 box left until next week.
-    </AppText>
+    <View
+      style={{
+        marginHorizontal: -size(3),
+        marginTop: -size(2),
+        marginBottom: size(5)
+      }}
+    >
+      {Object.entries(cart)
+        .sort()
+        .map(([category, canBuy]) => {
+          return canBuy === null ? (
+            <NoQuotaCategoryItem
+              key={category}
+              label={<AppText style={styles.categoryText}>{category}</AppText>}
+            />
+          ) : (
+            <Checkbox
+              key={category}
+              label={<AppText style={styles.categoryText}>{category}</AppText>}
+              isChecked={canBuy}
+              onToggle={() =>
+                setCart(cart => ({
+                  ...cart,
+                  [category]: !cart[category]
+                }))
+              }
+            />
+          );
+        })}
+    </View>
     <View style={styles.buttonRow}>
-      <View style={{ marginRight: size(2) }}>
+      <View
+        style={[styles.submitButton, !isLoading && { marginRight: size(2) }]}
+      >
         <DarkButton
-          text="Buy 1 box"
+          text="Checkout"
+          icon={
+            <Feather
+              name="shopping-cart"
+              size={size(2)}
+              color={color("grey", 0)}
+            />
+          }
           onPress={onRecordTransaction}
           isLoading={isLoading}
+          fullWidth={true}
         />
       </View>
-      {!isLoading && <SecondaryButton text="Cancel" onPress={onCancel} />}
+      {!isLoading && (
+        <SecondaryButton
+          text="Cancel"
+          onPress={() => {
+            Alert.alert("Cancel transaction?", undefined, [
+              {
+                text: "No"
+              },
+              {
+                text: "Yes",
+                onPress: onCancel,
+                style: "destructive"
+              }
+            ]);
+          }}
+        />
+      )}
     </View>
   </>
 );
@@ -107,7 +232,7 @@ const CannotBuyResult: FunctionComponent<{ onCancel: () => void }> = ({
     <AppText style={styles.emoji}>❌</AppText>
     <AppText style={styles.statusTitle}>Customer cannot purchase</AppText>
     <AppText style={styles.statusMessage}>
-      Customer can purchase 1 box in a week.
+      Customer has already used up their quota.
     </AppText>
     <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
   </>
@@ -117,34 +242,52 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const { authKey } = useAuthenticationContext();
-  const quota: QuotaResponse = navigation.getParam("quota");
+  const quota: Quota[] = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
-  const [quantity] = useState("1");
+
+  const initialQuantities: CartState = quota.reduce(
+    (state, { category, remainingQuota }) => {
+      state[category] = remainingQuota > 0 ? true : null;
+      return state;
+    },
+    {} as CartState
+  );
+  const [cart, setCart] = useState(initialQuantities);
   const [hasPurchased, setHasPurchased] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { config } = useConfig();
 
   // TODO: provide the correct date to buy another box of masks
-  const canBuy = quota.remainingQuota > 0;
+  const canBuy = quota.some(({ remainingQuota }) => remainingQuota > 0);
 
   const onRecordTransaction = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      // Checks if quantity is correct
-      const qtyNum = Number(quantity);
-      if (isNaN(qtyNum)) throw new Error("Invalid quantity");
-      if (!Number.isInteger(qtyNum))
-        throw new Error("Quantity cannot have decimals");
-      if (qtyNum > quota.remainingQuota)
-        throw new Error("Quantity cannot exceed quota");
-      if (qtyNum <= 0) throw new Error("Quantity must be greater than 0");
+      const transactions = Object.entries(cart)
+        .filter(([_, quantity]) => quantity)
+        .reduce((transactions, [category]) => {
+          transactions.push({
+            category,
+            quantity: 1
+          });
+          return transactions;
+        }, []);
 
-      await postTransaction(nric, qtyNum, authKey, config.appMode);
+      if (transactions.length === 0) {
+        throw new Error("Please tick at least one item to checkout");
+      }
+
+      // await postTransaction({
+      //   nric,
+      //   key: authKey,
+      //   transactions,
+      //   mode: config.appMode
+      // });
       // TODO: error handling
 
       setHasPurchased(true);
     } catch (e) {
-      alert(e.message || e);
+      Alert.alert("Error", e.message || e);
     } finally {
       setIsLoading(false);
     }
@@ -167,18 +310,25 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             <View
               style={[
                 styles.resultWrapper,
-                hasPurchased || canBuy
+                hasPurchased
                   ? styles.successfulResultWrapper
-                  : styles.failureResultWrapper
+                  : !canBuy && styles.failureResultWrapper
               ]}
             >
               {hasPurchased ? (
-                <PurchasedResult onCancel={onCancel} />
+                <PurchasedResult
+                  onCancel={onCancel}
+                  purchasedItems={Object.entries(cart)
+                    .filter(([_, hasPurchased]) => hasPurchased)
+                    .map(([category]) => category)}
+                />
               ) : canBuy ? (
                 <CanBuyResult
                   isLoading={isLoading}
                   onRecordTransaction={onRecordTransaction}
                   onCancel={onCancel}
+                  cart={cart}
+                  setCart={setCart}
                 />
               ) : (
                 <CannotBuyResult onCancel={onCancel} />
