@@ -271,18 +271,18 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             quantity: 1
           });
           return transactions;
-        }, []);
+        }, [] as any); // TODO: type this properly
 
       if (transactions.length === 0) {
         throw new Error("Please tick at least one item to checkout");
       }
 
-      // await postTransaction({
-      //   nric,
-      //   key: authKey,
-      //   transactions,
-      //   mode: config.appMode
-      // });
+      await postTransaction({
+        nric,
+        key: authKey,
+        transactions,
+        mode: config.appMode
+      });
       // TODO: error handling
 
       setHasPurchased(true);
