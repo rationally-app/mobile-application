@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
     borderColor: color("grey", 30)
   },
   toggleChecked: {
-    backgroundColor: color("green", 20),
-    borderColor: color("green", 30)
+    backgroundColor: color("green", 30),
+    borderColor: color("green", 50)
   }
 });
 
@@ -47,7 +47,7 @@ const Toggle: FunctionComponent<Toggle> = ({ isChecked }) => {
       ]}
     >
       {isChecked && (
-        <Feather name="check" size={size(3)} color={color("green", 40)} />
+        <Feather name="check" size={size(3)} color={color("green", 60)} />
       )}
     </View>
   );

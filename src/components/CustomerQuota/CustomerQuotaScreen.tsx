@@ -49,12 +49,12 @@ const styles = StyleSheet.create({
     borderColor: color("grey", 20)
   },
   successfulResultWrapper: {
-    backgroundColor: color("green", 10),
-    borderColor: color("green", 20)
+    backgroundColor: color("green", 20),
+    borderColor: color("green", 30)
   },
   failureResultWrapper: {
-    backgroundColor: color("red", 10),
-    borderColor: color("red", 20)
+    backgroundColor: color("red", 20),
+    borderColor: color("red", 30)
   },
   categoryText: {
     fontSize: fontSize(2)

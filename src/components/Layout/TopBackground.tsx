@@ -13,7 +13,7 @@ export const TopBackground: FunctionComponent<TopBackground> = ({
   mode = AppMode.production
 }) => {
   const isProduction = mode === AppMode.production;
-  const primaryColor = isProduction ? color("blue", 50) : color("red", 30);
+  const primaryColor = isProduction ? color("blue", 50) : color("red", 40);
   const secondaryColor = isProduction
     ? color("blue-green", 40)
     : color("orange", 30);
