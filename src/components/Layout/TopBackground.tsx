@@ -24,14 +24,14 @@ export const TopBackground: FunctionComponent<TopBackground> = ({
           backgroundColor: primaryColor,
           width: "100%",
           height: "40%",
-          maxHeight: 240,
+          maxHeight: 360,
           position: "absolute"
         },
         style
       ]}
       colors={[primaryColor, secondaryColor]}
       start={[0.5, 0]}
-      end={[0, 1.2]}
+      end={[-0.5, 1.8]}
     />
   );
 };
