@@ -251,23 +251,26 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const { authKey } = useAuthenticationContext();
-  const quota: Quota[] = navigation.getParam("quota");
+  const quota: Quota = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
 
-  const initialQuantities: CartState = quota.reduce(
-    (state, { category, remainingQuota }) => {
-      state[category] = remainingQuota > 0 ? true : null;
+  const initialQuantities: CartState = Object.keys(quota.remainingQuota).reduce(
+    (state, key) => {
+      state[key] = quota.remainingQuota[key] > 0 ? true : null;
       return state;
     },
     {} as CartState
   );
+
   const [cart, setCart] = useState(initialQuantities);
   const [hasPurchased, setHasPurchased] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { config } = useConfig();
 
   // TODO: provide the correct date to buy another box of masks
-  const canBuy = quota.some(({ remainingQuota }) => remainingQuota > 0);
+  const canBuy = Object.keys(quota.remainingQuota).reduce((state, key) => {
+    return quota.remainingQuota[key] > 0 || state;
+  }, false);
 
   const onRecordTransaction = async (): Promise<void> => {
     try {
@@ -277,7 +280,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         .reduce((transactions, [category]) => {
           transactions.push({
             category,
-            quantity: 1
+            quantity: quota.remainingQuota[category]
           });
           return transactions;
         }, [] as any); // TODO: type this properly
