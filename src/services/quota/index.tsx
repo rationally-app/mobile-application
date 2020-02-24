@@ -2,13 +2,16 @@ import { STAGING_ENDPOINT, PRODUCTION_ENDPOINT, IS_MOCK } from "../../config";
 import { AppMode } from "../../common/hooks/useConfig";
 
 export interface Transaction {
-  sku: string;
+  category: string;
   quantity: number;
 }
 
+export interface QuotaList {
+  [key: string]: number;
+}
+
 export interface Quota {
-  remainingQuota: number;
-  category: string;
+  remainingQuota: QuotaList;
 }
 
 export interface PostTransaction {
@@ -26,29 +29,26 @@ export const mockGetQuota = async (
   nric: string,
   _key: string,
   _mode: AppMode
-): Promise<Quota[]> => {
+): Promise<Quota> => {
   if (nric === "S0000000J") throw new Error("Something broke");
-  return [
-    {
-      category: "product-1",
-      remainingQuota: 1
-    },
-    {
-      category: "product-2",
-      remainingQuota: 0
+  return {
+    remainingQuota: {
+      "toilet-paper": 1000,
+      "instant-noodles": 60,
+      chocolate: 1
     }
-  ];
+  };
 };
 
 export const liveGetQuota = async (
   nric: string,
   key: string,
   mode: AppMode
-): Promise<Quota[]> => {
+): Promise<Quota> => {
   const endpoint =
     mode === AppMode.production ? PRODUCTION_ENDPOINT : STAGING_ENDPOINT;
 
-  const quotaResponse: Quota[] = await fetch(`${endpoint}/quota/${nric}`, {
+  const quotaResponse: Quota = await fetch(`${endpoint}/quota/${nric}`, {
     method: "GET",
     headers: {
       Authorization: key

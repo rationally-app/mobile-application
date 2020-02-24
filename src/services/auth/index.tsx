@@ -5,21 +5,12 @@ export interface Policy {
   category: string;
   name: string;
   unit: string;
-  quantityPerPeriod: number; // Not needed now
+  quantityLimit: number; // Not needed now
   period: number; // Not needed now
 }
 
-export interface Barcode {
-  sku: string;
-  name: string;
-  category: string;
-  unit: string; // May be redundant
-  quantity: number;
-}
-
 export interface AuthenticationResponse {
-  policy: Policy[];
-  barcode: Barcode[];
+  policies: Policy[];
 }
 
 export const liveAuthenticate = async (
@@ -43,36 +34,27 @@ export const mockAuthenticate = async (
 ): Promise<AuthenticationResponse> => {
   if (key != "CORRECT_KEY") throw new Error("Fail to authenticate");
   return {
-    policy: [
+    policies: [
       {
-        category: "product-1",
-        name: "Product 1",
-        unit: "piece",
-        quantityPerPeriod: 1,
-        period: 604800
+        category: "toilet-paper",
+        name: "Toilet Paper",
+        period: 7,
+        quantityLimit: 1000,
+        unit: "piece"
       },
       {
-        category: "product-2",
-        name: "Product 2",
-        unit: "ml",
-        quantityPerPeriod: 500,
-        period: 604800
-      }
-    ],
-    barcode: [
-      {
-        sku: "6001106119225",
-        category: "product-x",
-        unit: "ml",
-        quantity: 200,
-        name: "Dettol Hand Sanitiser 200ml"
+        category: "instant-noodles",
+        name: "Instant Noodles",
+        period: 30,
+        quantityLimit: 60,
+        unit: "packs"
       },
       {
-        sku: "608912992255",
-        category: "product-y",
-        unit: "piece",
-        quantity: 50,
-        name: "Filter Mask - 50 Count 3-Ply Disposable Face Mask"
+        category: "chocolate",
+        name: "Chocolate",
+        period: 14,
+        quantityLimit: 1,
+        unit: "grams"
       }
     ]
   };
