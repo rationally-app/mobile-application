@@ -6,6 +6,7 @@ import React, {
   ReactElement
 } from "react";
 import { View, StyleSheet, SafeAreaView, Alert } from "react-native";
+import { keyBy, mapValues } from "lodash";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { color, size, borderRadius, fontSize } from "../../common/styles";
@@ -254,12 +255,11 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const quota: Quota = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
 
-  const initialQuantities: CartState = Object.keys(quota.remainingQuota).reduce(
-    (state, key) => {
-      state[key] = quota.remainingQuota[key] > 0 ? true : null;
-      return state;
-    },
-    {} as CartState
+  console.log(quota);
+
+  const initialQuantities: CartState = mapValues(
+    keyBy(quota.remainingQuota, "category"),
+    lineQuota => (lineQuota.quantity > 0 ? true : null)
   );
 
   const [cart, setCart] = useState(initialQuantities);
@@ -268,9 +268,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfig();
 
   // TODO: provide the correct date to buy another box of masks
-  const canBuy = Object.keys(quota.remainingQuota).reduce((state, key) => {
-    return quota.remainingQuota[key] > 0 || state;
-  }, false);
+  const canBuy = quota.remainingQuota.some(val => val.quantity > 0);
 
   const onRecordTransaction = async (): Promise<void> => {
     try {
@@ -280,7 +278,9 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         .reduce((transactions, [category]) => {
           transactions.push({
             category,
-            quantity: quota.remainingQuota[category]
+            quantity: quota.remainingQuota.find(
+              line => line.category === category
+            )!.quantity
           });
           return transactions;
         }, [] as any); // TODO: type this properly

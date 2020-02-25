@@ -6,12 +6,8 @@ export interface Transaction {
   quantity: number;
 }
 
-export interface QuotaList {
-  [key: string]: number;
-}
-
 export interface Quota {
-  remainingQuota: QuotaList;
+  remainingQuota: Transaction[];
 }
 
 export interface PostTransaction {
@@ -32,11 +28,11 @@ export const mockGetQuota = async (
 ): Promise<Quota> => {
   if (nric === "S0000000J") throw new Error("Something broke");
   return {
-    remainingQuota: {
-      "toilet-paper": 1000,
-      "instant-noodles": 60,
-      chocolate: 1
-    }
+    remainingQuota: [
+      { category: "toilet-paper", quantity: 1000 },
+      { category: "instant-noodles", quantity: 60 },
+      { category: "chocolate", quantity: 1 }
+    ]
   };
 };
 
