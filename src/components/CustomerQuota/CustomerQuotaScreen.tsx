@@ -21,7 +21,7 @@ import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
 import { Checkbox } from "../Layout/Checkbox";
 import { CustomerCard } from "./CustomerCard";
-import { getProduct } from "../../context/products";
+import { useProductContext } from "../../context/products";
 
 const styles = StyleSheet.create({
   content: {
@@ -131,28 +131,31 @@ const PurchasedResult: FunctionComponent<{
   nric: string;
   onCancel: () => void;
   purchasedItems: string[];
-}> = ({ nric, onCancel, purchasedItems }) => (
-  <View>
-    <CustomerCard nric={nric}>
-      <View style={[styles.resultWrapper, styles.successfulResultWrapper]}>
-        <AppText style={styles.emoji}>✅</AppText>
-        <AppText style={styles.statusTitle}>Purchased!</AppText>
-        <View>
-          <AppText>Customer purchased the following:</AppText>
-          <AppText style={styles.purchasedItemsList}>
-            {purchasedItems.map(category => {
-              const categoryName = getProduct(category)?.name || category;
-              return `• ${categoryName}\n`;
-            })}
-          </AppText>
+}> = ({ nric, onCancel, purchasedItems }) => {
+  const { getProduct } = useProductContext();
+  return (
+    <View>
+      <CustomerCard nric={nric}>
+        <View style={[styles.resultWrapper, styles.successfulResultWrapper]}>
+          <AppText style={styles.emoji}>✅</AppText>
+          <AppText style={styles.statusTitle}>Purchased!</AppText>
+          <View>
+            <AppText>Customer purchased the following:</AppText>
+            <AppText style={styles.purchasedItemsList}>
+              {purchasedItems.map(category => {
+                const categoryName = getProduct(category)?.name || category;
+                return `• ${categoryName}\n`;
+              })}
+            </AppText>
+          </View>
         </View>
+      </CustomerCard>
+      <View style={styles.ctaButtonsWrapper}>
+        <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
       </View>
-    </CustomerCard>
-    <View style={styles.ctaButtonsWrapper}>
-      <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
     </View>
-  </View>
-);
+  );
+};
 
 const CanBuyResult: FunctionComponent<{
   nric: string;
@@ -161,84 +164,87 @@ const CanBuyResult: FunctionComponent<{
   onCancel: () => void;
   cart: CartState;
   setCart: Dispatch<SetStateAction<CartState>>;
-}> = ({ nric, isLoading, onRecordTransaction, onCancel, cart, setCart }) => (
-  <View>
-    <CustomerCard nric={nric}>
-      <View style={styles.resultWrapper}>
-        {Object.entries(cart)
-          .sort()
-          .map(([category, canBuy]) => {
-            const product = getProduct(category);
-            const categoryText = product?.name || category;
-            return canBuy === null ? (
-              <View style={styles.checkboxesListItem} key={category}>
-                <NoQuotaCategoryItem
-                  label={
-                    <AppText style={styles.categoryText}>
-                      {categoryText}
-                    </AppText>
-                  }
-                />
-              </View>
-            ) : (
-              <View style={styles.checkboxesListItem} key={category}>
-                <Checkbox
-                  label={
-                    <AppText style={styles.categoryText}>
-                      {categoryText}
-                    </AppText>
-                  }
-                  isChecked={canBuy}
-                  onToggle={() =>
-                    setCart(cart => ({
-                      ...cart,
-                      [category]: !cart[category]
-                    }))
-                  }
-                />
-              </View>
-            );
-          })}
+}> = ({ nric, isLoading, onRecordTransaction, onCancel, cart, setCart }) => {
+  const { getProduct } = useProductContext();
+  return (
+    <View>
+      <CustomerCard nric={nric}>
+        <View style={styles.resultWrapper}>
+          {Object.entries(cart)
+            .sort()
+            .map(([category, canBuy]) => {
+              const product = getProduct(category);
+              const categoryText = product?.name || category;
+              return canBuy === null ? (
+                <View style={styles.checkboxesListItem} key={category}>
+                  <NoQuotaCategoryItem
+                    label={
+                      <AppText style={styles.categoryText}>
+                        {categoryText}
+                      </AppText>
+                    }
+                  />
+                </View>
+              ) : (
+                <View style={styles.checkboxesListItem} key={category}>
+                  <Checkbox
+                    label={
+                      <AppText style={styles.categoryText}>
+                        {categoryText}
+                      </AppText>
+                    }
+                    isChecked={canBuy}
+                    onToggle={() =>
+                      setCart(cart => ({
+                        ...cart,
+                        [category]: !cart[category]
+                      }))
+                    }
+                  />
+                </View>
+              );
+            })}
+        </View>
+      </CustomerCard>
+      <View style={[styles.ctaButtonsWrapper, styles.buttonRow]}>
+        <View
+          style={[styles.submitButton, !isLoading && { marginRight: size(2) }]}
+        >
+          <DarkButton
+            text="Checkout"
+            icon={
+              <Feather
+                name="shopping-cart"
+                size={size(2)}
+                color={color("grey", 0)}
+              />
+            }
+            onPress={onRecordTransaction}
+            isLoading={isLoading}
+            fullWidth={true}
+          />
+        </View>
+        {!isLoading && (
+          <SecondaryButton
+            text="Cancel"
+            onPress={() => {
+              Alert.alert("Cancel transaction?", undefined, [
+                {
+                  text: "No"
+                },
+                {
+                  text: "Yes",
+                  onPress: onCancel,
+                  style: "destructive"
+                }
+              ]);
+            }}
+          />
+        )}
       </View>
-    </CustomerCard>
-    <View style={[styles.ctaButtonsWrapper, styles.buttonRow]}>
-      <View
-        style={[styles.submitButton, !isLoading && { marginRight: size(2) }]}
-      >
-        <DarkButton
-          text="Checkout"
-          icon={
-            <Feather
-              name="shopping-cart"
-              size={size(2)}
-              color={color("grey", 0)}
-            />
-          }
-          onPress={onRecordTransaction}
-          isLoading={isLoading}
-          fullWidth={true}
-        />
-      </View>
-      {!isLoading && (
-        <SecondaryButton
-          text="Cancel"
-          onPress={() => {
-            Alert.alert("Cancel transaction?", undefined, [
-              {
-                text: "No"
-              },
-              {
-                text: "Yes",
-                onPress: onCancel,
-                style: "destructive"
-              }
-            ]);
-          }}
-        />
-      )}
     </View>
-  </View>
-);
+  );
+};
 
 const CannotBuyResult: FunctionComponent<{
   nric: string;

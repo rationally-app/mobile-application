@@ -16,11 +16,13 @@ interface Product {
 interface ProductContext {
   products: Product[];
   setProducts: (products: Product[]) => void;
+  getProduct: (category: string) => Product | undefined;
 }
 
 export const ProductContext = createContext<ProductContext>({
   products: [],
-  setProducts: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
+  setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  getProduct: () => undefined
 });
 
 export const useProductContext = (): ProductContext =>
@@ -28,15 +30,12 @@ export const useProductContext = (): ProductContext =>
 
 export const ProductContextProvider: FunctionComponent = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const getProduct = (category: string): Product | undefined =>
+    products.find(product => product.category === category);
 
   return (
-    <ProductContext.Provider value={{ products, setProducts }}>
+    <ProductContext.Provider value={{ products, setProducts, getProduct }}>
       {children}
     </ProductContext.Provider>
   );
-};
-
-export const getProduct = (category: string): Product | undefined => {
-  const { products } = useProductContext();
-  return products.find(product => product.category === category);
 };
