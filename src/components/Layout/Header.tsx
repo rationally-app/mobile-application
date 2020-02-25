@@ -49,7 +49,7 @@ export const HeaderBackButton: FunctionComponent<HeaderBackButton> = ({
       onPress={onPress}
       style={styles.headerBackButton}
     >
-      <Feather name="arrow-left" size={size(3)} color={color("grey", 40)} />
+      <Feather name="arrow-left" size={size(3)} color={color("grey", 100)} />
     </TouchableOpacity>
   );
 };

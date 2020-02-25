@@ -1,50 +1,70 @@
-export type ColorName = "grey" | "orange" | "blue" | "green" | "red";
-export type ToneLevel = 0 | 5 | 10 | 15 | 20 | 30 | 40 | 50 | 60 | 100;
+export type ColorName =
+  | "grey"
+  | "yellow"
+  | "orange"
+  | "blue"
+  | "blue-green"
+  | "green"
+  | "red";
+export type ToneLevel = 0 | 10 | 20 | 30 | 40 | 50 | 60 | 100;
 
 const palette: { [color in ColorName]: { [tone: string]: string } } = {
   grey: {
     "0": "#FFFFFF",
-    "5": "#FEFCFA",
-    "10": "#F2F2F2",
-    "15": "#E8E8E8",
-    "20": "#828282",
-    "30": "#4F4F4F",
-    "40": "#333333",
+    "10": "#F8FAFC",
+    "20": "#EEF1F7",
+    "30": "#CBD2D9",
+    "40": "#9AA5B1",
     "100": "#000000"
   },
+  yellow: {
+    "10": "#FFFBEA",
+    "20": "#FFF3C4",
+    "50": "#CB6E17"
+  },
   orange: {
-    "10": "#F8EBDB",
-    "20": "#EFE1CF",
     "30": "#F9DBAF"
   },
   blue: {
     "50": "#305367"
   },
+  "blue-green": {
+    "40": "#0E8086"
+  },
   green: {
-    "10": "#DBF8E3",
-    "20": "#B0E2BE",
-    "30": "#378282"
+    "10": "#F2FDF3",
+    "20": "#E3F9E5",
+    "30": "#C8F4CD",
+    "40": "#B1EFB5",
+    "50": "#51CA58",
+    "60": "#0F8613"
   },
   red: {
-    "10": "#F8DBDB",
-    "20": "#EAC6C6",
-    "50": "#FB8383",
-    "60": "#F94343"
+    "10": "#FFF5F5",
+    "20": "#FFE3E3",
+    "30": "#FFD1D1",
+    "40": "#FB8383",
+    "50": "#F94343",
+    "60": "#D14541"
   }
 };
 
 export function color(
   colorName: "grey",
-  tone: 0 | 5 | 10 | 15 | 20 | 30 | 40 | 100
+  tone: 0 | 10 | 20 | 30 | 40 | 100
 ): string;
-export function color(colorName: "orange", tone: 10 | 20 | 30): string;
-export function color(colorName: "green", tone: 10 | 20 | 30): string;
-export function color(colorName: "red", tone: 10 | 20 | 50 | 60): string;
+export function color(
+  colorName: "green" | "red",
+  tone: 10 | 20 | 30 | 40 | 50 | 60
+): string;
+export function color(colorName: "yellow", tone: 10 | 20 | 50): string;
+export function color(colorName: "orange", tone: 30): string;
 export function color(colorName: "blue", tone: 50): string;
+export function color(colorName: "blue-green", tone: 40): string;
 /**
  * Returns the color according to the given color name and tone.
  *
- * @param colorName grey, orange, blue, green, red
+ * @param colorName grey, yellow, orange, blue, blue-green, green, red
  * @param tone based on the colorName
  */
 export function color(colorName: ColorName, tone: ToneLevel): string {

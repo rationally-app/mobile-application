@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactNode } from "react";
+import React, { FunctionComponent } from "react";
 import { color } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
@@ -6,7 +6,7 @@ import { ActivityIndicator } from "react-native";
 
 export interface DangerButton {
   onPress?: () => void;
-  text: ReactNode;
+  text: string;
   fullWidth?: boolean;
   isLoading?: boolean;
 }
@@ -19,7 +19,7 @@ export const DangerButton: FunctionComponent<DangerButton> = ({
 }) => (
   <BaseButton
     onPress={onPress}
-    backgroundColor={color("red", 50)}
+    backgroundColor={color("red", 40)}
     fullWidth={fullWidth}
     disabled={isLoading}
   >

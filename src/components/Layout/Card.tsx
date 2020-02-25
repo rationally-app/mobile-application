@@ -1,16 +1,20 @@
 import React, { FunctionComponent } from "react";
-import { View } from "react-native";
+import { View, ViewProps } from "react-native";
 import { size, color, borderRadius, shadow } from "../../common/styles";
 
-export const Card: FunctionComponent = ({ children }) => (
+export const Card: FunctionComponent<ViewProps> = ({ children, style }) => (
   <View
-    style={{
-      paddingVertical: size(4),
-      paddingHorizontal: size(3),
-      backgroundColor: color("grey", 0),
-      borderRadius: borderRadius(4),
-      ...shadow(2)
-    }}
+    style={[
+      {
+        paddingTop: size(3),
+        paddingBottom: size(4),
+        paddingHorizontal: size(3),
+        backgroundColor: color("grey", 0),
+        borderRadius: borderRadius(4),
+        ...shadow(2)
+      },
+      style
+    ]}
   >
     {children}
   </View>

@@ -1,26 +1,63 @@
-import { STAGING_ENDPOINT, PRODUCTION_ENDPOINT } from "../../config";
+import { STAGING_ENDPOINT, PRODUCTION_ENDPOINT, IS_MOCK } from "../../config";
 import { AppMode } from "../../context/config";
 
-export const authenticate = async (
+export interface Policy {
+  category: string;
+  name: string;
+  unit: string;
+  quantityLimit: number; // Not needed now
+  period: number; // Not needed now
+}
+
+export interface AuthenticationResponse {
+  policies: Policy[];
+}
+
+export const liveAuthenticate = async (
   key: string,
   mode: AppMode
-): Promise<boolean> => {
+): Promise<AuthenticationResponse> => {
   const endpoint =
     mode === AppMode.production ? PRODUCTION_ENDPOINT : STAGING_ENDPOINT;
-  try {
-    const response = await fetch(`${endpoint}/auth`, {
-      method: "GET",
-      headers: {
-        Authorization: key
-      }
-    });
-    if (response.status === 200) {
-      const status = await response.json();
-      return status.message === "OK";
+  const response: AuthenticationResponse = await fetch(`${endpoint}/auth`, {
+    method: "GET",
+    headers: {
+      Authorization: key
     }
-    return false;
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
+  }).then(res => res.json());
+  return response;
 };
+
+export const mockAuthenticate = async (
+  key: string,
+  _mode: AppMode
+): Promise<AuthenticationResponse> => {
+  if (key != "CORRECT_KEY") throw new Error("Fail to authenticate");
+  return {
+    policies: [
+      {
+        category: "toilet-paper",
+        name: "Toilet Paper",
+        period: 7,
+        quantityLimit: 1000,
+        unit: "piece"
+      },
+      {
+        category: "instant-noodles",
+        name: "Instant Noodles",
+        period: 30,
+        quantityLimit: 60,
+        unit: "packs"
+      },
+      {
+        category: "chocolate",
+        name: "Chocolate",
+        period: 14,
+        quantityLimit: 1,
+        unit: "grams"
+      }
+    ]
+  };
+};
+
+export const authenticate = IS_MOCK ? mockAuthenticate : liveAuthenticate;

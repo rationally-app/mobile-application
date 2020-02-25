@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback
 } from "react-native";
+import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
@@ -25,6 +26,7 @@ import {
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
+import { useProductContext } from "../../context/products";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -71,6 +73,7 @@ const styles = StyleSheet.create({
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }: NavigationProps) => {
+  const { setProducts } = useProductContext();
   const { setAuthKey } = useAuthenticationContext();
   const [inputAuthKey, setInputAuthKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -112,6 +115,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         setAuthKey(key);
         setIsLoading(false);
         setShowScanner(false);
+        setProducts(authenticated.policies);
         navigation.navigate("CollectCustomerDetailsScreen");
       } else {
         throw new Error("Authentication key is invalid");
@@ -175,7 +179,17 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
                   onSubmitEditing={() => onLogin(inputAuthKey)}
                 />
               </View>
-              <SecondaryButton text="Scan" onPress={onToggleScanner} />
+              <SecondaryButton
+                text="Scan"
+                onPress={onToggleScanner}
+                icon={
+                  <Feather
+                    name="maximize"
+                    size={size(2)}
+                    color={color("blue", 50)}
+                  />
+                }
+              />
             </View>
             <DarkButton
               text="Login"

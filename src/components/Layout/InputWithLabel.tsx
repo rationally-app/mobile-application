@@ -14,8 +14,9 @@ const styles = StyleSheet.create({
     backgroundColor: color("grey", 0),
     borderWidth: 1,
     borderRadius: borderRadius(2),
-    borderColor: color("grey", 20),
-    fontSize: fontSize(0)
+    borderColor: color("grey", 40),
+    fontSize: fontSize(0),
+    color: color("blue", 50)
   }
 });
 

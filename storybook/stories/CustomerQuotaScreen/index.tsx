@@ -1,2 +1,2 @@
 import "./CustomerQuotaScreen";
-import "./Layout";
+import "./CustomerCard";

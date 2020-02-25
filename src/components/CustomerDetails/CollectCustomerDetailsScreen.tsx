@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator
 } from "react-native";
+import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     marginBottom: size(6)
   },
   horizontalRule: {
-    borderBottomColor: color("grey", 15),
+    borderBottomColor: color("grey", 30),
     marginHorizontal: -size(3),
     borderBottomWidth: 1
   },
@@ -182,6 +183,13 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
                   <DarkButton
                     fullWidth={true}
                     text="Scan customer's NRIC"
+                    icon={
+                      <Feather
+                        name="maximize"
+                        size={size(2)}
+                        color={color("grey", 0)}
+                      />
+                    }
                     onPress={onToggleScanner}
                   />
                 </View>
