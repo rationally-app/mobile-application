@@ -255,8 +255,6 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const quota: Quota = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
 
-  console.log(quota);
-
   const initialQuantities: CartState = mapValues(
     keyBy(quota.remainingQuota, "category"),
     lineQuota => (lineQuota.quantity > 0 ? true : null)
