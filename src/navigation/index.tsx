@@ -4,6 +4,7 @@ import StackNavigator from "./StackNavigator";
 import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { AuthenticationContextProvider } from "../context/auth";
+import { ConfigContextProvider } from "../context/config";
 import { FontLoader } from "../components/FontLoader";
 
 const SwitchNavigator = createSwitchNavigator(
@@ -19,17 +20,19 @@ const AppContainer = createAppContainer(SwitchNavigator);
 const App = (): ReactElement => {
   return (
     <AuthenticationContextProvider>
-      <StatusBar />
-      <View
-        style={{
-          flex: 1,
-          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-        }}
-      >
-        <FontLoader>
-          <AppContainer />
-        </FontLoader>
-      </View>
+      <ConfigContextProvider>
+        <StatusBar />
+        <View
+          style={{
+            flex: 1,
+            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+          }}
+        >
+          <FontLoader>
+            <AppContainer />
+          </FontLoader>
+        </View>
+      </ConfigContextProvider>
     </AuthenticationContextProvider>
   );
 };

@@ -1,6 +1,6 @@
 import { authenticate } from "./index";
 import { STAGING_ENDPOINT } from "../../config";
-import { AppMode } from "../../common/hooks/useConfig";
+import { AppMode } from "../../context/config";
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();

@@ -1,5 +1,5 @@
 import { STAGING_ENDPOINT, PRODUCTION_ENDPOINT, IS_MOCK } from "../../config";
-import { AppMode } from "../../common/hooks/useConfig";
+import { AppMode } from "../../context/config";
 
 export interface Policy {
   category: string;

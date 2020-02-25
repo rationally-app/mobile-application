@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { View, StyleSheet, SafeAreaView, Alert } from "react-native";
 import { keyBy, mapValues } from "lodash";
+import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { color, size, borderRadius, fontSize } from "../../common/styles";
@@ -17,8 +18,7 @@ import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
-import { useConfig } from "../../common/hooks/useConfig";
-import { Feather } from "@expo/vector-icons";
+import { useConfigContext } from "../../context/config";
 import { Checkbox } from "../Layout/Checkbox";
 import { CustomerCard } from "./CustomerCard";
 
@@ -263,7 +263,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const [cart, setCart] = useState(initialQuantities);
   const [hasPurchased, setHasPurchased] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { config } = useConfig();
+  const { config } = useConfigContext();
 
   // TODO: provide the correct date to buy another box of masks
   const canBuy = quota.remainingQuota.some(val => val.quantity > 0);

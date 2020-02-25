@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback
 } from "react-native";
+import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
@@ -24,8 +25,7 @@ import {
 } from "../CustomerDetails/NricScanner";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
-import { useConfig, AppMode } from "../../common/hooks/useConfig";
-import { Feather } from "@expo/vector-icons";
+import { useConfigContext, AppMode } from "../../context/config";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -77,7 +77,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [showScanner, setShowScanner] = useState(false);
-  const { config, setValue } = useConfig();
+  const { config, setConfigValue } = useConfigContext();
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -93,7 +93,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       config.appMode === AppMode.production
         ? AppMode.staging
         : AppMode.production;
-    setValue("appMode", nextMode);
+    setConfigValue("appMode", nextMode);
     alert(`Rationally in ${nextMode.toUpperCase()} mode`);
   };
 

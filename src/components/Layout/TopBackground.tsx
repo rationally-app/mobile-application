@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { FunctionComponent } from "react";
 import { color } from "../../common/styles";
 import { ViewProps } from "react-native";
-import { AppMode } from "../../common/hooks/useConfig";
+import { AppMode } from "../../context/config";
 
 interface TopBackground extends ViewProps {
   mode?: AppMode;
