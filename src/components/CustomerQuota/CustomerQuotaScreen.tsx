@@ -6,7 +6,6 @@ import React, {
   ReactElement
 } from "react";
 import { View, StyleSheet, SafeAreaView, Alert } from "react-native";
-import { keyBy, mapValues } from "lodash";
 import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
