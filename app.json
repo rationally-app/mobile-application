@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Rationally",
-    "slug": "rationally",
+    "name": "SupplyAlly",
+    "slug": "supply-ally",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/splashscreen.png",
       "resizeMode": "contain",
-      "backgroundColor": "#305367"
+      "backgroundColor": "#F1FAFA"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,10 +23,10 @@
       "splash": {
         "image": "./assets/splashscreen.png",
         "tabletImage": "./assets/splashscreen-tablet.png",
-        "backgroundColor": "#305367"
+        "backgroundColor": "#F1FAFA"
       },
       "infoPlist": {
-        "NSCameraUsageDescription": "Rationally requires access to your camera to scan QR codes/barcodes.",
+        "NSCameraUsageDescription": "SupplyAlly requires access to your camera to scan QR codes/barcodes.",
         "NSPhotoLibraryUsageDescription": "This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.",
         "NSPhotoLibraryAddUsageDescription": "This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.",
         "NSLocationWhenInUseUsageDescription": "This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.",
