@@ -177,7 +177,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
             {!shouldShowCamera && (
               <Card>
                 <AppText>
-                  Check the number of masks your customer can purchase
+                  Check the number of items your customer can purchase
                 </AppText>
                 <View style={styles.scanButtonWrapper}>
                   <DarkButton

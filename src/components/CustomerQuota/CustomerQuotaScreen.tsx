@@ -283,7 +283,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { config } = useConfigContext();
 
-  // TODO: provide the correct date to buy another box of masks
+  // TODO: provide the correct date to buy somemore
   const canBuy = quota.remainingQuota.some(val => val.quantity > 0);
 
   const onRecordTransaction = async (): Promise<void> => {
