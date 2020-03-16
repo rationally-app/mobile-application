@@ -1,7 +1,7 @@
 #!/bin/bash
 PULL_REQUEST_ID=$(echo $CI_PULL_REQUEST | cut -c 59-)
 GITHUB_PROJECT="rationally-app/mobile-application"
-EXPO_PROJECT="@musket/supply-ally"
+EXPO_PROJECT="@musket/rationally"
 
 PUBLISH_TEXT="Published to https://exp.host/${EXPO_PROJECT}?release-channel=${PULL_REQUEST_ID}"
 STORYBOOK_PUBLISH_TEXT="Published to https://exp.host/${EXPO_PROJECT}?release-channel=storybook-${PULL_REQUEST_ID}"
