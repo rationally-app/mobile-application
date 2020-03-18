@@ -96,7 +96,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         ? AppMode.staging
         : AppMode.production;
     setConfigValue("appMode", nextMode);
-    alert(`Rationally in ${nextMode.toUpperCase()} mode`);
+    alert(`SupplyAlly in ${nextMode.toUpperCase()} mode`);
   };
 
   const onToggleScanner = (): void => {
