@@ -26,13 +26,13 @@ const styles = StyleSheet.create({
   content: {
     position: "relative",
     padding: size(3),
-    paddingVertical: size(8),
+    paddingVertical: size(5),
     height: "100%",
     width: 512,
     maxWidth: "100%"
   },
   headerText: {
-    marginBottom: size(3)
+    marginBottom: size(2)
   },
   resultWrapper: {
     padding: size(3)
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: borderRadius(3),
     alignItems: "center",
-    minHeight: size(9),
+    minHeight: size(7),
     borderStyle: "dashed",
     borderWidth: 1,
     borderColor: color("grey", 20)

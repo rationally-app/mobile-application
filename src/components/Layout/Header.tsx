@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    height: size(7),
+    height: size(5),
     width: "100%",
     alignItems: "stretch"
   },

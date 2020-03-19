@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: borderRadius(4),
     borderTopRightRadius: borderRadius(4),
     paddingHorizontal: size(3),
-    paddingVertical: size(2.5),
+    paddingVertical: size(2),
     backgroundColor: color("blue-green", 40),
     flexDirection: "row",
     alignItems: "center"
