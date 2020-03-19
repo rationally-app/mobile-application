@@ -22,7 +22,6 @@ import { AppName } from "../Layout/AppName";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
-import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
 import { Checkbox } from "../Layout/Checkbox";
 import { CustomerCard } from "./CustomerCard";
