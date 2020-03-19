@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   content: {
     position: "relative",
     padding: size(3),
-    paddingVertical: size(5),
+    paddingTop: size(5),
     paddingBottom: size(9),
     height: "100%",
     width: 512,
