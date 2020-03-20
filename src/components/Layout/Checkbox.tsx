@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: borderRadius(3),
     alignItems: "center",
-    minHeight: size(9),
+    minHeight: size(7),
     borderWidth: 1
   },
   wrapperUnchecked: {

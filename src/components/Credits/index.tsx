@@ -33,7 +33,13 @@ const styles = StyleSheet.create({
   }
 });
 
-const contributors = ["Chow Ruijie", "Raymond Yeh", "Sebastian Quek"];
+const contributors = [
+  "Chow Ruijie",
+  "Raymond Yeh",
+  "Sebastian Quek",
+  "Lim Zui Young",
+  "Immanuella Lim"
+];
 
 export const Credits: FunctionComponent<ViewProps> = ({ style }) => {
   const [clicks, setClicks] = useState(0);

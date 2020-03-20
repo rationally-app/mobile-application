@@ -5,7 +5,13 @@ import React, {
   SetStateAction,
   ReactElement
 } from "react";
-import { View, StyleSheet, SafeAreaView, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+  ScrollView
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -16,7 +22,6 @@ import { AppName } from "../Layout/AppName";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
-import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
 import { Checkbox } from "../Layout/Checkbox";
 import { CustomerCard } from "./CustomerCard";
@@ -26,13 +31,14 @@ const styles = StyleSheet.create({
   content: {
     position: "relative",
     padding: size(3),
-    paddingVertical: size(8),
+    paddingTop: size(5),
+    paddingBottom: size(9),
     height: "100%",
     width: 512,
     maxWidth: "100%"
   },
   headerText: {
-    marginBottom: size(3)
+    marginBottom: size(2)
   },
   resultWrapper: {
     padding: size(3)
@@ -56,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: borderRadius(3),
     alignItems: "center",
-    minHeight: size(9),
+    minHeight: size(7),
     borderStyle: "dashed",
     borderWidth: 1,
     borderColor: color("grey", 20)
@@ -104,7 +110,8 @@ const styles = StyleSheet.create({
     marginTop: size(5)
   },
   buttonRow: {
-    flexDirection: "row"
+    flexDirection: "row",
+    paddingBottom: size(10)
   },
   submitButton: { flex: 1 }
 });
@@ -329,7 +336,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     <View style={{ alignItems: "center" }}>
       <TopBackground mode={config.appMode} />
       <SafeAreaView>
-        <View style={styles.content}>
+        <ScrollView style={styles.content}>
           <View style={styles.headerText}>
             <AppName mode={config.appMode} />
           </View>
@@ -354,8 +361,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
           ) : (
             <CannotBuyResult nric={nric} onCancel={onCancel} />
           )}
-        </View>
-        <Credits style={{ bottom: size(3) }} />
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
