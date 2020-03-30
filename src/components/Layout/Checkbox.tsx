@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: borderRadius(3),
     alignItems: "center",
-    minHeight: size(7),
+    minHeight: size(10),
     borderWidth: 1
   },
   wrapperUnchecked: {
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   toggle: {
     borderWidth: 1,
     marginRight: size(3),
+    marginLeft: size(2.5),
     width: size(3),
     height: size(3),
     borderRadius: 9999,

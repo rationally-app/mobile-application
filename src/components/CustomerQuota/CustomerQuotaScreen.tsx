@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: borderRadius(3),
     alignItems: "center",
-    minHeight: size(7),
+    minHeight: size(9),
     borderStyle: "dashed",
     borderWidth: 1,
     borderColor: color("grey", 20)
@@ -177,10 +177,28 @@ const CanBuyResult: FunctionComponent<{
       <CustomerCard nric={nric}>
         <View style={styles.resultWrapper}>
           {Object.entries(cart)
-            .sort()
+            .sort((itemOne, itemTwo) => {
+              const itemOneName = getProduct(itemOne[0])?.name || "";
+              const itemOneOrder = itemOneName.slice(
+                0,
+                itemOneName.indexOf(" ")
+              );
+              const itemTwoName = getProduct(itemTwo[0])?.name || "";
+              const itemTwoOrder = itemTwoName.slice(
+                0,
+                itemTwoName.indexOf(" ")
+              );
+
+              return parseInt(itemOneOrder) - parseInt(itemTwoOrder);
+            })
             .map(([category, canBuy]) => {
               const product = getProduct(category);
-              const categoryText = product?.name || category;
+              let categoryText;
+              if (product?.name) {
+                categoryText = product?.name.slice(product?.name.indexOf(" "));
+              } else {
+                categoryText = category.split("-");
+              }
               return canBuy === null ? (
                 <View style={styles.checkboxesListItem} key={category}>
                   <NoQuotaCategoryItem
