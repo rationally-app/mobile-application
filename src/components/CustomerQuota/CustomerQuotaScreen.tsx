@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: borderRadius(3),
     alignItems: "center",
-    minHeight: size(7),
+    minHeight: size(9),
     borderStyle: "dashed",
     borderWidth: 1,
     borderColor: color("grey", 20)
@@ -177,7 +177,12 @@ const CanBuyResult: FunctionComponent<{
       <CustomerCard nric={nric}>
         <View style={styles.resultWrapper}>
           {Object.entries(cart)
-            .sort()
+            .sort((itemOne, itemTwo) => {
+              const productOneOrder = getProduct(itemOne[0])?.order || 0;
+              const productTwoOrder = getProduct(itemTwo[0])?.order || 0;
+
+              return productOneOrder - productTwoOrder;
+            })
             .map(([category, canBuy]) => {
               const product = getProduct(category);
               const categoryText = product?.name || category;
@@ -279,7 +284,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
   const initialQuantities: CartState = quota.remainingQuota.reduce(
     (state, curr) => {
-      state[curr.category] = curr.quantity > 0 ? true : null;
+      state[curr.category] = curr.quantity > 0 ? false : null;
       return state;
     },
     {} as CartState
