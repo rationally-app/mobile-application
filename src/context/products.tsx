@@ -11,6 +11,7 @@ interface Product {
   unit: string;
   period?: number;
   quantityLimit?: number;
+  order: number;
 }
 
 interface ProductContext {

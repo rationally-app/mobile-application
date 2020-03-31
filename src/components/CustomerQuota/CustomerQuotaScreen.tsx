@@ -178,27 +178,14 @@ const CanBuyResult: FunctionComponent<{
         <View style={styles.resultWrapper}>
           {Object.entries(cart)
             .sort((itemOne, itemTwo) => {
-              const itemOneName = getProduct(itemOne[0])?.name || "";
-              const itemOneOrder = itemOneName.slice(
-                0,
-                itemOneName.indexOf(" ")
-              );
-              const itemTwoName = getProduct(itemTwo[0])?.name || "";
-              const itemTwoOrder = itemTwoName.slice(
-                0,
-                itemTwoName.indexOf(" ")
-              );
+              const ProductOneOrder = getProduct(itemOne[0])?.order || 0;
+              const ProductTwoOrder = getProduct(itemTwo[0])?.order || 0;
 
-              return parseInt(itemOneOrder) - parseInt(itemTwoOrder);
+              return ProductOneOrder - ProductTwoOrder;
             })
             .map(([category, canBuy]) => {
               const product = getProduct(category);
-              let categoryText;
-              if (product?.name) {
-                categoryText = product?.name.slice(product?.name.indexOf(" "));
-              } else {
-                categoryText = category.split("-");
-              }
+              const categoryText = product?.name || category;
               return canBuy === null ? (
                 <View style={styles.checkboxesListItem} key={category}>
                   <NoQuotaCategoryItem
@@ -297,7 +284,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
   const initialQuantities: CartState = quota.remainingQuota.reduce(
     (state, curr) => {
-      state[curr.category] = curr.quantity > 0 ? true : null;
+      state[curr.category] = curr.quantity > 0 ? false : null;
       return state;
     },
     {} as CartState
