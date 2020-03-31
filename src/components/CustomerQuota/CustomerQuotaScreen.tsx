@@ -178,10 +178,10 @@ const CanBuyResult: FunctionComponent<{
         <View style={styles.resultWrapper}>
           {Object.entries(cart)
             .sort((itemOne, itemTwo) => {
-              const ProductOneOrder = getProduct(itemOne[0])?.order || 0;
-              const ProductTwoOrder = getProduct(itemTwo[0])?.order || 0;
+              const productOneOrder = getProduct(itemOne[0])?.order || 0;
+              const productTwoOrder = getProduct(itemTwo[0])?.order || 0;
 
-              return ProductOneOrder - ProductTwoOrder;
+              return productOneOrder - productTwoOrder;
             })
             .map(([category, canBuy]) => {
               const product = getProduct(category);
