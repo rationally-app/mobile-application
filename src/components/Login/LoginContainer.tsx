@@ -111,6 +111,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setIsLoading(true);
     try {
       const authenticated = await authenticate(key, config.appMode);
+      console.log("GOT RESPONSE: ", authenticated);
       if (authenticated) {
         setAuthKey(key);
         setIsLoading(false);
