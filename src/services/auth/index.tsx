@@ -7,6 +7,7 @@ export interface Policy {
   unit: string;
   quantityLimit: number; // Not needed now
   period: number; // Not needed now
+  order: number;
 }
 
 export interface AuthenticationResponse {
@@ -40,21 +41,24 @@ export const mockAuthenticate = async (
         name: "Toilet Paper",
         period: 7,
         quantityLimit: 1000,
-        unit: "piece"
+        unit: "piece",
+        order: 1
       },
       {
         category: "instant-noodles",
         name: "Instant Noodles",
         period: 30,
         quantityLimit: 60,
-        unit: "packs"
+        unit: "packs",
+        order: 2
       },
       {
         category: "chocolate",
         name: "Chocolate",
         period: 14,
         quantityLimit: 1,
-        unit: "grams"
+        unit: "grams",
+        order: 3
       }
     ]
   };
