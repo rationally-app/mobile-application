@@ -107,11 +107,11 @@ const styles = StyleSheet.create({
     marginBottom: size(0.5)
   },
   ctaButtonsWrapper: {
-    marginTop: size(5)
+    marginTop: size(5),
+    paddingBottom: size(10)
   },
   buttonRow: {
-    flexDirection: "row",
-    paddingBottom: size(10)
+    flexDirection: "row"
   },
   submitButton: { flex: 1 }
 });
