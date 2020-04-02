@@ -28,6 +28,8 @@ import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
 import { useProductContext } from "../../context/products";
 
+const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
+
 const styles = StyleSheet.create({
   content: {
     padding: size(3),
@@ -94,11 +96,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         ? AppMode.staging
         : AppMode.production;
     setConfigValue("appMode", nextMode);
-    if (nextMode === AppMode.production) {
-      alert(`SupplyAlly in NORMAL mode`);
-    } else if (nextMode === AppMode.staging) {
-      alert(`SupplyAlly in MASK DISTRIBUTION mode`);
-    }
+    alert(`SupplyAlly in ${nextMode.toUpperCase()} mode`);
   };
 
   const onToggleScanner = (): void => {
@@ -147,25 +145,18 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           mode={config.appMode}
         />
         <View style={styles.content}>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
+            onLongPress={onToggleAppMode}
+          >
             <View style={styles.headerText}>
               <AppName mode={config.appMode} />
             </View>
           </TouchableWithoutFeedback>
-          {config.appMode === AppMode.staging && (
+          {config.appMode !== AppMode.production && (
             <View style={{ marginVertical: size(2.5) }}>
               <DangerButton
-                text="Switch to Normal Mode"
-                onPress={onToggleAppMode}
-                fullWidth={true}
-                isLoading={isLoading}
-              />
-            </View>
-          )}
-          {config.appMode === AppMode.production && (
-            <View style={{ marginVertical: size(2.5) }}>
-              <DarkButton
-                text="Switch to Mask Distribution Mode"
+                text="Exit Testing Mode"
                 onPress={onToggleAppMode}
                 fullWidth={true}
                 isLoading={isLoading}
