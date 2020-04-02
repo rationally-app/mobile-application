@@ -21,7 +21,7 @@ export const AppName: FunctionComponent<AppName> = (
           fontSize: fontSize(2)
         }}
       >
-        MASK DISTRIBUTION MODE
+        TESTING MODE
       </AppText>
     ) : null}
   </>
