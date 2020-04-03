@@ -31,6 +31,8 @@ import { decodeQr } from "./utils";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
+const ALLOW_MODE_CHANGE = false;
+
 const styles = StyleSheet.create({
   content: {
     padding: size(3),
@@ -92,6 +94,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   }, []);
 
   const onToggleAppMode = (): void => {
+    if (!ALLOW_MODE_CHANGE) return;
     const nextMode =
       config.appMode === AppMode.production
         ? AppMode.staging
