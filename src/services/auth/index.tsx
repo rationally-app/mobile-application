@@ -1,12 +1,5 @@
 import { IS_MOCK } from "../../config";
-export interface Policy {
-  category: string;
-  name: string;
-  unit: string;
-  quantityLimit: number; // Not needed now
-  period: number; // Not needed now
-  order: number;
-}
+import { Policy } from "../../types";
 
 export interface AuthenticationResponse {
   policies: Policy[];
@@ -38,7 +31,8 @@ export const mockAuthenticate = async (
         period: 7,
         quantityLimit: 1000,
         unit: "piece",
-        order: 1
+        order: 1,
+        default: true
       },
       {
         category: "instant-noodles",

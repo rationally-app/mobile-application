@@ -32,3 +32,13 @@ export enum NetworkTypes {
   ropsten = "ropsten",
   mainnet = "mainnet"
 }
+
+export interface Policy {
+  category: string;
+  name: string;
+  unit: string;
+  quantityLimit: number;
+  period: number;
+  order: number;
+  default?: boolean;
+}
