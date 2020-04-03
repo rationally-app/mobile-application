@@ -34,7 +34,7 @@ export const useConfigContext = (): ConfigContext =>
   useContext<ConfigContext>(ConfigContext);
 
 export const ConfigContextProvider: FunctionComponent = ({ children }) => {
-  const [config, setConfig] = useState();
+  const [config, setConfig] = useState(DEFAULT_CONFIG);
 
   const setConfigValue: ConfigContext["setConfigValue"] = (key, value) => {
     const nextConfig = {
