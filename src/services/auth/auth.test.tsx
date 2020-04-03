@@ -1,6 +1,4 @@
 import { authenticate } from "./index";
-import { STAGING_ENDPOINT } from "../../config";
-import { AppMode } from "../../context/config";
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
@@ -39,9 +37,9 @@ describe("authenticate", () => {
       status: 200,
       json: () => mockAuthRes
     });
-    await authenticate("CORRECT_KEY", AppMode.staging);
+    await authenticate("CORRECT_KEY", "https://myendpoint.com");
     expect(mockFetch.mock.calls[0]).toEqual([
-      `${STAGING_ENDPOINT}/auth`,
+      `https://myendpoint.com/auth`,
       { method: "GET", headers: { Authorization: "CORRECT_KEY" } }
     ]);
   });
@@ -50,7 +48,7 @@ describe("authenticate", () => {
     expect.assertions(1);
     mockFetch.mockRejectedValueOnce(new Error("Boom"));
     await expect(
-      authenticate("INCORRECT_TOKEN", AppMode.staging)
+      authenticate("INCORRECT_TOKEN", "https://myendpoint.com")
     ).rejects.toThrow("Boom");
   });
 });

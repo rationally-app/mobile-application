@@ -1,5 +1,4 @@
-import { STAGING_ENDPOINT, PRODUCTION_ENDPOINT, IS_MOCK } from "../../config";
-import { AppMode } from "../../context/config";
+import { IS_MOCK } from "../../config";
 
 export interface Transaction {
   category: string;
@@ -14,7 +13,7 @@ export interface PostTransaction {
   nric: string;
   transactions: Transaction[];
   key: string;
-  mode: AppMode;
+  endpoint: string;
 }
 
 export interface PostTransactionResponse {
@@ -24,7 +23,7 @@ export interface PostTransactionResponse {
 export const mockGetQuota = async (
   nric: string,
   _key: string,
-  _mode: AppMode
+  _endpoint: string
 ): Promise<Quota> => {
   if (nric === "S0000000J") throw new Error("Something broke");
   return {
@@ -39,11 +38,8 @@ export const mockGetQuota = async (
 export const liveGetQuota = async (
   nric: string,
   key: string,
-  mode: AppMode
+  endpoint: string
 ): Promise<Quota> => {
-  const endpoint =
-    mode === AppMode.production ? PRODUCTION_ENDPOINT : STAGING_ENDPOINT;
-
   const quotaResponse: Quota = await fetch(`${endpoint}/quota/${nric}`, {
     method: "GET",
     headers: {
@@ -65,12 +61,10 @@ export const mockPostTransaction = async ({
 
 export const livePostTransaction = async ({
   nric,
-  mode,
+  endpoint,
   key,
   transactions
 }: PostTransaction): Promise<PostTransactionResponse> => {
-  const endpoint =
-    mode === AppMode.production ? PRODUCTION_ENDPOINT : STAGING_ENDPOINT;
   const quotaResponse: PostTransactionResponse = await fetch(
     `${endpoint}/transactions/${nric}`,
     {

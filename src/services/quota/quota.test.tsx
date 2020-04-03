@@ -1,6 +1,4 @@
 import { getQuota, postTransaction } from "./index";
-import { STAGING_ENDPOINT } from "../../config";
-import { AppMode } from "../../context/config";
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
@@ -32,9 +30,9 @@ describe("quota", () => {
       mockFetch.mockReturnValueOnce({
         then: () => mockGetQuotaResponse
       });
-      const quota = await getQuota("S000000J", "KEY", AppMode.staging);
+      const quota = await getQuota("S000000J", "KEY", "https://myendpoint.com");
       expect(mockFetch.mock.calls[0]).toEqual([
-        `${STAGING_ENDPOINT}/quota/S000000J`,
+        `https://myendpoint.com/quota/S000000J`,
         { method: "GET", headers: { Authorization: "KEY" } }
       ]);
       expect(quota).toEqual(mockGetQuotaResponse);
@@ -50,15 +48,15 @@ describe("quota", () => {
       const history = await postTransaction({
         nric: "S000000J",
         key: "KEY",
-        transactions: [{ sku: "abc123", quantity: 2 }],
-        mode: AppMode.staging
+        transactions: [{ category: "abc123", quantity: 2 }],
+        endpoint: "https://myendpoint.com"
       });
       expect(mockFetch.mock.calls[0]).toEqual([
-        `${STAGING_ENDPOINT}/transactions/S000000J`,
+        `https://myendpoint.com/transactions/S000000J`,
         {
           method: "POST",
           headers: { Authorization: "KEY" },
-          body: JSON.stringify([{ sku: "abc123", quantity: 2 }])
+          body: JSON.stringify([{ category: "abc123", quantity: 2 }])
         }
       ]);
       expect(history).toEqual(mockPostTransactionResponse);
