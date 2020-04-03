@@ -4,20 +4,12 @@ import React, {
   FunctionComponent,
   useState
 } from "react";
-
-interface Product {
-  category: string;
-  name: string;
-  unit: string;
-  period?: number;
-  quantityLimit?: number;
-  order: number;
-}
+import { Policy } from "../types";
 
 interface ProductContext {
-  products: Product[];
-  setProducts: (products: Product[]) => void;
-  getProduct: (category: string) => Product | undefined;
+  products: Policy[];
+  setProducts: (products: Policy[]) => void;
+  getProduct: (category: string) => Policy | undefined;
 }
 
 export const ProductContext = createContext<ProductContext>({
@@ -30,8 +22,8 @@ export const useProductContext = (): ProductContext =>
   useContext<ProductContext>(ProductContext);
 
 export const ProductContextProvider: FunctionComponent = ({ children }) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const getProduct = (category: string): Product | undefined =>
+  const [products, setProducts] = useState<Policy[]>([]);
+  const getProduct = (category: string): Policy | undefined =>
     products.find(product => product.category === category);
 
   return (
