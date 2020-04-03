@@ -27,8 +27,11 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
 import { useProductContext } from "../../context/products";
+import { decodeQr } from "./utils";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
+
+const ALLOW_MODE_CHANGE = false;
 
 const styles = StyleSheet.create({
   content: {
@@ -74,10 +77,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }: NavigationProps) => {
   const { setProducts } = useProductContext();
-  const { setAuthKey } = useAuthenticationContext();
+  const { setAuthKey, setEndpoint } = useAuthenticationContext();
   const [inputAuthKey, setInputAuthKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [hasCameraPermission, setHasCameraPermission] = useState();
+  const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const { config, setConfigValue } = useConfigContext();
 
@@ -91,6 +94,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   }, []);
 
   const onToggleAppMode = (): void => {
+    if (!ALLOW_MODE_CHANGE) return;
     const nextMode =
       config.appMode === AppMode.production
         ? AppMode.staging
@@ -106,13 +110,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setShowScanner(s => !s);
   };
 
-  const onLogin = async (key: string): Promise<void> => {
+  const onLogin = async (qrCode: string): Promise<void> => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const authenticated = await authenticate(key, config.appMode);
+      const { key, endpoint } = decodeQr(qrCode);
+      const authenticated = await authenticate(key, endpoint);
       if (authenticated) {
         setAuthKey(key);
+        setEndpoint(endpoint);
         setIsLoading(false);
         setShowScanner(false);
         setProducts(authenticated.policies);

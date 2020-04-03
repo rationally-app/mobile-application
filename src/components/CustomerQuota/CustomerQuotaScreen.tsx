@@ -278,7 +278,7 @@ const CannotBuyResult: FunctionComponent<{
 export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
-  const { authKey } = useAuthenticationContext();
+  const { authKey, endpoint } = useAuthenticationContext();
   const quota: Quota = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
 
@@ -321,7 +321,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         nric,
         key: authKey,
         transactions,
-        mode: config.appMode
+        endpoint
       });
       // TODO: error handling
 

@@ -1,6 +1,4 @@
-import { STAGING_ENDPOINT, PRODUCTION_ENDPOINT, IS_MOCK } from "../../config";
-import { AppMode } from "../../context/config";
-
+import { IS_MOCK } from "../../config";
 export interface Policy {
   category: string;
   name: string;
@@ -16,10 +14,8 @@ export interface AuthenticationResponse {
 
 export const liveAuthenticate = async (
   key: string,
-  mode: AppMode
+  endpoint: string
 ): Promise<AuthenticationResponse> => {
-  const endpoint =
-    mode === AppMode.production ? PRODUCTION_ENDPOINT : STAGING_ENDPOINT;
   const response: AuthenticationResponse = await fetch(`${endpoint}/auth`, {
     method: "GET",
     headers: {
@@ -31,7 +27,7 @@ export const liveAuthenticate = async (
 
 export const mockAuthenticate = async (
   key: string,
-  _mode: AppMode
+  _endpoint: string
 ): Promise<AuthenticationResponse> => {
   if (key != "CORRECT_KEY") throw new Error("Fail to authenticate");
   return {
