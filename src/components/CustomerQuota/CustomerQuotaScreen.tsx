@@ -171,7 +171,6 @@ const CanBuyResult: FunctionComponent<{
   cart: CartState;
   setCart: Dispatch<SetStateAction<CartState>>;
 }> = ({ nric, isLoading, onRecordTransaction, onCancel, cart, setCart }) => {
-  console.log(cart);
   const { getProduct } = useProductContext();
   return (
     <View>
@@ -289,7 +288,6 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       const product = getProduct(curr.category);
       const defaultSelectedQuantity = product?.default ?? false;
       state[curr.category] = curr.quantity > 0 ? defaultSelectedQuantity : null;
-      console.log("current", curr);
       return state;
     },
     {} as CartState
@@ -337,8 +335,6 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       setIsLoading(false);
     }
   };
-
-  console.log(cart);
 
   const onCancel = (): void => {
     navigation.goBack();
