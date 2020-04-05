@@ -26,7 +26,7 @@ import { useConfigContext } from "../../context/config";
 import { Checkbox } from "../Layout/Checkbox";
 import { CustomerCard } from "./CustomerCard";
 import { useProductContext } from "../../context/products";
-import { format } from "date-fns";
+import { format, differenceInSeconds, formatDistance } from "date-fns";
 
 const styles = StyleSheet.create({
   content: {
@@ -94,10 +94,13 @@ const styles = StyleSheet.create({
     marginBottom: size(2),
     marginTop: size(1)
   },
+  statusTitleWrapper: {
+    marginBottom: size(2)
+  },
   statusTitle: {
     fontSize: fontSize(3),
-    fontFamily: "inter-bold",
-    marginBottom: size(2)
+    lineHeight: 1.3 * fontSize(3),
+    fontFamily: "inter-bold"
   },
   purchasedItemsList: {
     marginTop: size(1),
@@ -145,7 +148,9 @@ const PurchasedResult: FunctionComponent<{
       <CustomerCard nric={nric}>
         <View style={[styles.resultWrapper, styles.successfulResultWrapper]}>
           <AppText style={styles.emoji}>✅</AppText>
-          <AppText style={styles.statusTitle}>Purchased!</AppText>
+          <AppText style={styles.statusTitleWrapper}>
+            <AppText style={styles.statusTitle}>Purchased!</AppText>
+          </AppText>
           <View>
             <AppText>Customer purchased the following:</AppText>
             <AppText style={styles.purchasedItemsList}>
@@ -267,36 +272,52 @@ const CannotBuyResult: FunctionComponent<{
   nric: string;
   remainingQuota: Transaction[];
   onCancel: () => void;
-}> = ({ nric, remainingQuota, onCancel }) => (
-  <View>
-    <CustomerCard nric={nric} headerBackgroundColor={color("red", 60)}>
-      <View style={[styles.resultWrapper, styles.failureResultWrapper]}>
-        <AppText style={styles.emoji}>❌</AppText>
-        <AppText style={styles.statusTitle}>
-          Customer has reached their quota
-        </AppText>
-        {remainingQuota[0].transactionTime ? (
-          <AppText style={{ lineHeight: 1.5 * fontSize(0) }}>
-            <AppText>Quota was used up at </AppText>
-            <AppText style={{ fontFamily: "inter-bold" }}>
-              {format(remainingQuota[0].transactionTime, "hh:mm:ss a")}
-            </AppText>
-            <AppText> on </AppText>
-            <AppText style={{ fontFamily: "inter-bold" }}>
-              {format(remainingQuota[0].transactionTime, "do MMMM yyyy")}
-            </AppText>
-            .
+}> = ({ nric, remainingQuota, onCancel }) => {
+  const now = new Date();
+  const secondsFromNow = remainingQuota[0].transactionTime
+    ? differenceInSeconds(now, new Date(remainingQuota[0].transactionTime))
+    : -1;
+  return (
+    <View>
+      <CustomerCard nric={nric} headerBackgroundColor={color("red", 60)}>
+        <View style={[styles.resultWrapper, styles.failureResultWrapper]}>
+          <AppText style={styles.emoji}>❌</AppText>
+          <AppText style={styles.statusTitleWrapper}>
+            {secondsFromNow > 0 ? (
+              secondsFromNow > 60 * 10 ? (
+                <>
+                  <AppText style={styles.statusTitle}>
+                    Limit reached on{" "}
+                  </AppText>
+                  <AppText style={styles.statusTitle}>
+                    {format(
+                      remainingQuota[0].transactionTime,
+                      "hh:mm a, do MMMM"
+                    )}
+                    .
+                  </AppText>
+                </>
+              ) : (
+                <>
+                  <AppText style={styles.statusTitle}>Limit reached </AppText>
+                  <AppText style={styles.statusTitle}>
+                    {formatDistance(now, remainingQuota[0].transactionTime)}
+                  </AppText>
+                  <AppText style={styles.statusTitle}> ago.</AppText>
+                </>
+              )
+            ) : (
+              <AppText style={styles.statusTitle}>Limit reached.</AppText>
+            )}
           </AppText>
-        ) : (
-          <AppText>Customer has already used up their quota.</AppText>
-        )}
+        </View>
+      </CustomerCard>
+      <View style={styles.ctaButtonsWrapper}>
+        <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
       </View>
-    </CustomerCard>
-    <View style={styles.ctaButtonsWrapper}>
-      <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
     </View>
-  </View>
-);
+  );
+};
 
 export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
