@@ -16,7 +16,7 @@ import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { color, size, borderRadius, fontSize } from "../../common/styles";
-import { postTransaction, Quota } from "../../services/quota";
+import { postTransaction, Quota, Transaction } from "../../services/quota";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppName } from "../Layout/AppName";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -26,6 +26,7 @@ import { useConfigContext } from "../../context/config";
 import { Checkbox } from "../Layout/Checkbox";
 import { CustomerCard } from "./CustomerCard";
 import { useProductContext } from "../../context/products";
+import { format } from "date-fns";
 
 const styles = StyleSheet.create({
   content: {
@@ -257,16 +258,38 @@ const CanBuyResult: FunctionComponent<{
   );
 };
 
+/**
+ * Shows when the user cannot purchase anything
+ *
+ * Precondition: Only rendered when remainingQuota are all 0
+ */
 const CannotBuyResult: FunctionComponent<{
   nric: string;
+  remainingQuota: Transaction[];
   onCancel: () => void;
-}> = ({ nric, onCancel }) => (
+}> = ({ nric, remainingQuota, onCancel }) => (
   <View>
     <CustomerCard nric={nric} headerBackgroundColor={color("red", 60)}>
       <View style={[styles.resultWrapper, styles.failureResultWrapper]}>
         <AppText style={styles.emoji}>❌</AppText>
-        <AppText style={styles.statusTitle}>Customer cannot purchase</AppText>
-        <AppText>Customer has already used up their quota.</AppText>
+        <AppText style={styles.statusTitle}>
+          Customer has reached their quota
+        </AppText>
+        {remainingQuota[0].transactionTime ? (
+          <AppText style={{ lineHeight: 1.5 * fontSize(0) }}>
+            <AppText>Quota was used up at </AppText>
+            <AppText style={{ fontFamily: "inter-bold" }}>
+              {format(remainingQuota[0].transactionTime, "hh:mm:ss a")}
+            </AppText>
+            <AppText> on </AppText>
+            <AppText style={{ fontFamily: "inter-bold" }}>
+              {format(remainingQuota[0].transactionTime, "do MMMM yyyy")}
+            </AppText>
+            .
+          </AppText>
+        ) : (
+          <AppText>Customer has already used up their quota.</AppText>
+        )}
       </View>
     </CustomerCard>
     <View style={styles.ctaButtonsWrapper}>
@@ -367,7 +390,11 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
               setCart={setCart}
             />
           ) : (
-            <CannotBuyResult nric={nric} onCancel={onCancel} />
+            <CannotBuyResult
+              nric={nric}
+              remainingQuota={quota.remainingQuota}
+              onCancel={onCancel}
+            />
           )}
         </ScrollView>
       </SafeAreaView>
