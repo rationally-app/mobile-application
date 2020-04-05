@@ -213,7 +213,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           </View>
         </KeyboardAvoidingView>
       </ScrollView>
-      <Credits style={{ bottom: size(3) }} />
+      <Credits style={{ bottom: size(3), zIndex: -1 }} />
       {shouldShowCamera && (
         <View style={styles.cameraWrapper}>
           {isLoading ? (
