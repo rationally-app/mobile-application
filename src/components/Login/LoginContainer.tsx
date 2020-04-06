@@ -17,16 +17,12 @@ import { Card } from "../Layout/Card";
 import { TopBackground } from "../Layout/TopBackground";
 import { AppText } from "../Layout/AppText";
 import * as Permissions from "expo-permissions";
-import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
-import {
-  NricScanner,
-  BarCodeScanningResult
-} from "../CustomerDetails/NricScanner";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
 import { useProductContext } from "../../context/products";
 import { decodeQr } from "./utils";
+import { IdScanner } from "../IdScanner/IdScanner";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -40,20 +36,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     justifyContent: "center"
-  },
-  cameraWrapper: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: color("grey", 0)
-  },
-  cancelButtonWrapper: {
-    marginTop: size(3),
-    marginBottom: size(4)
   },
   headerText: {
     marginBottom: size(4),
@@ -124,7 +106,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     }
   };
 
-  const onBarCodeScanned = (event: BarCodeScanningResult): void => {
+  const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (!isLoading && event.data) {
       onToggleScanner();
       onLogin(event.data);
@@ -183,15 +165,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       </KeyboardAvoidingView>
       <Credits style={{ bottom: size(3) }} />
       {shouldShowCamera && (
-        <View style={styles.cameraWrapper}>
-          <NricScanner
-            onBarCodeScanned={onBarCodeScanned}
-            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-          />
-          <View style={styles.cancelButtonWrapper}>
-            <SecondaryButton text="Cancel" onPress={onToggleScanner} />
-          </View>
-        </View>
+        <IdScanner
+          onBarCodeScanned={onBarCodeScanned}
+          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+          onCancel={onToggleScanner}
+          cancelButtonText="Cancel"
+        />
       )}
     </>
   );

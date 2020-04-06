@@ -18,7 +18,6 @@ import { getQuota } from "../../services/quota";
 import { AppName } from "../Layout/AppName";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { Card } from "../Layout/Card";
-import { BarCodeScanningResult, NricScanner } from "./NricScanner";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
@@ -27,6 +26,8 @@ import {
   withNavigationFocus,
   NavigationFocusInjectedProps
 } from "react-navigation";
+import { IdScanner } from "../IdScanner/IdScanner";
+import { BarCodeScannedCallback } from "expo-barcode-scanner";
 
 const styles = StyleSheet.create({
   content: {
@@ -37,19 +38,14 @@ const styles = StyleSheet.create({
     width: 512,
     maxWidth: "100%"
   },
-  cameraWrapper: {
+  loadingWrapper: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: color("grey", 0)
-  },
-  cancelButtonWrapper: {
-    marginTop: size(3),
-    marginBottom: size(4)
+    justifyContent: "center"
   },
   headerText: {
     marginBottom: size(3)
@@ -136,7 +132,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
-  const onBarCodeScanned = (event: BarCodeScanningResult): void => {
+  const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (isFocused && scanningEnabled && !isLoading && event.data) {
       onCheck(event.data);
     }
@@ -214,29 +210,22 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         </KeyboardAvoidingView>
       </ScrollView>
       <Credits style={{ bottom: size(3) }} />
-      {shouldShowCamera && (
-        <View style={styles.cameraWrapper}>
-          {isLoading ? (
-            <>
-              <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
-              <Card>
-                <ActivityIndicator size="large" color={color("grey", 40)} />
-                <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
-              </Card>
-            </>
-          ) : (
-            <>
-              <NricScanner onBarCodeScanned={onBarCodeScanned} />
-              <View style={styles.cancelButtonWrapper}>
-                <SecondaryButton
-                  text="Enter NRIC manually"
-                  onPress={onToggleScanner}
-                />
-              </View>
-            </>
-          )}
-        </View>
-      )}
+      {shouldShowCamera &&
+        (isLoading ? (
+          <View style={styles.loadingWrapper}>
+            <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
+            <Card>
+              <ActivityIndicator size="large" color={color("grey", 40)} />
+              <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
+            </Card>
+          </View>
+        ) : (
+          <IdScanner
+            onBarCodeScanned={onBarCodeScanned}
+            onCancel={onToggleScanner}
+            cancelButtonText="Enter NRIC manually"
+          />
+        ))}
     </>
   );
 };
