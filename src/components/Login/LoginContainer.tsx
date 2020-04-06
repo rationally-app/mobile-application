@@ -14,7 +14,6 @@ import { useAuthenticationContext } from "../../context/auth";
 import { size, color } from "../../common/styles";
 import { AppName } from "../Layout/AppName";
 import { Card } from "../Layout/Card";
-import { InputWithLabel } from "../Layout/InputWithLabel";
 import { TopBackground } from "../Layout/TopBackground";
 import { AppText } from "../Layout/AppText";
 import * as Permissions from "expo-permissions";
@@ -61,15 +60,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignSelf: "center"
   },
-  inputAndButtonWrapper: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    marginTop: size(3),
-    marginBottom: size(3)
-  },
-  inputWrapper: {
-    flex: 1,
-    marginRight: size(1)
+  scanButtonWrapper: {
+    marginTop: size(3)
   }
 });
 
@@ -78,7 +70,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 }: NavigationProps) => {
   const { setProducts } = useProductContext();
   const { setAuthKey, setEndpoint } = useAuthenticationContext();
-  const [inputAuthKey, setInputAuthKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
@@ -135,7 +126,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   const onBarCodeScanned = (event: BarCodeScanningResult): void => {
     if (!isLoading && event.data) {
-      setInputAuthKey(event.data);
       onToggleScanner();
       onLogin(event.data);
     }
@@ -171,38 +161,23 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           )}
           <Card>
             <AppText>
-              Please log in with your Unique ID provided by your supervisor / in
-              your letter.
+              Please log in with your Unique ID provided by your supervisor
             </AppText>
-            <View style={styles.inputAndButtonWrapper}>
-              <View style={styles.inputWrapper}>
-                <InputWithLabel
-                  label="Unique ID"
-                  value={inputAuthKey}
-                  onChange={({ nativeEvent: { text } }) =>
-                    setInputAuthKey(text)
-                  }
-                  onSubmitEditing={() => onLogin(inputAuthKey)}
-                />
-              </View>
-              <SecondaryButton
-                text="Scan"
+            <View style={styles.scanButtonWrapper}>
+              <DarkButton
+                text="Scan to Login"
                 onPress={onToggleScanner}
                 icon={
                   <Feather
                     name="maximize"
                     size={size(2)}
-                    color={color("blue", 50)}
+                    color={color("grey", 0)}
                   />
                 }
+                fullWidth={true}
+                isLoading={isLoading}
               />
             </View>
-            <DarkButton
-              text="Login"
-              onPress={() => onLogin(inputAuthKey)}
-              fullWidth={true}
-              isLoading={isLoading}
-            />
           </Card>
         </View>
       </KeyboardAvoidingView>

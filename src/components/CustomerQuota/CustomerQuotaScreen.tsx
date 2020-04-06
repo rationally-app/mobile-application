@@ -386,10 +386,10 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   };
 
   return (
-    <View style={{ alignItems: "center" }}>
+    <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <TopBackground mode={config.appMode} />
       <SafeAreaView>
-        <ScrollView style={styles.content}>
+        <View style={styles.content}>
           <View style={styles.headerText}>
             <AppName mode={config.appMode} />
           </View>
@@ -418,8 +418,8 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
               onCancel={onCancel}
             />
           )}
-        </ScrollView>
+        </View>
       </SafeAreaView>
-    </View>
+    </ScrollView>
   );
 };
