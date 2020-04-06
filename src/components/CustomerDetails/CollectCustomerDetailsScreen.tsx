@@ -8,7 +8,6 @@ import {
   ActivityIndicator
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { fontSize, size, color } from "../../common/styles";
@@ -24,6 +23,10 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
+import {
+  withNavigationFocus,
+  NavigationFocusInjectedProps
+} from "react-navigation";
 
 const styles = StyleSheet.create({
   content: {
@@ -82,8 +85,9 @@ const styles = StyleSheet.create({
   }
 });
 
-export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
+  navigation,
+  isFocused
 }) => {
   const { authKey, endpoint } = useAuthenticationContext();
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
@@ -100,19 +104,6 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   useEffect(() => {
     askForCameraPermission();
   }, []);
-
-  useEffect(() => {
-    const willBlurSubscription = navigation.addListener("willBlur", () => {
-      setScanningEnabled(false);
-    });
-    const willFocusSubscription = navigation.addListener("willFocus", () => {
-      setScanningEnabled(true);
-    });
-    return () => {
-      willBlurSubscription.remove();
-      willFocusSubscription.remove();
-    };
-  }, [navigation]);
 
   const onCheck = async (input: string): Promise<void> => {
     try {
@@ -146,7 +137,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   };
 
   const onBarCodeScanned = (event: BarCodeScanningResult): void => {
-    if (scanningEnabled && !isLoading && event.data) {
+    if (isFocused && scanningEnabled && !isLoading && event.data) {
       onCheck(event.data);
     }
   };
@@ -249,3 +240,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
     </>
   );
 };
+
+export const CollectCustomerDetailsScreenContainer = withNavigationFocus(
+  CollectCustomerDetailsScreen
+);
