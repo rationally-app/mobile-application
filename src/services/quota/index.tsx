@@ -3,6 +3,7 @@ import { IS_MOCK } from "../../config";
 export interface Transaction {
   category: string;
   quantity: number;
+  transactionTime: number;
 }
 
 export interface Quota {
@@ -28,9 +29,17 @@ export const mockGetQuota = async (
   if (nric === "S0000000J") throw new Error("Something broke");
   return {
     remainingQuota: [
-      { category: "toilet-paper", quantity: 1000 },
-      { category: "instant-noodles", quantity: 60 },
-      { category: "chocolate", quantity: 1 }
+      {
+        category: "toilet-paper",
+        quantity: 1000,
+        transactionTime: 1586095465905
+      },
+      {
+        category: "instant-noodles",
+        quantity: 60,
+        transactionTime: 1586095465905
+      },
+      { category: "chocolate", quantity: 1, transactionTime: 1586095465905 }
     ]
   };
 };
