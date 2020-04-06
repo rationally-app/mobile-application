@@ -263,6 +263,7 @@ const CanBuyResult: FunctionComponent<{
   );
 };
 
+const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 /**
  * Shows when the user cannot purchase anything
  *
@@ -274,7 +275,7 @@ const CannotBuyResult: FunctionComponent<{
   onCancel: () => void;
 }> = ({ nric, remainingQuota, onCancel }) => {
   const now = new Date();
-  const secondsFromNow = remainingQuota[0].transactionTime
+  const secondsFromLastTransaction = remainingQuota[0].transactionTime
     ? differenceInSeconds(now, new Date(remainingQuota[0].transactionTime))
     : -1;
   return (
@@ -283,8 +284,8 @@ const CannotBuyResult: FunctionComponent<{
         <View style={[styles.resultWrapper, styles.failureResultWrapper]}>
           <AppText style={styles.emoji}>❌</AppText>
           <AppText style={styles.statusTitleWrapper}>
-            {secondsFromNow > 0 ? (
-              secondsFromNow > 60 * 10 ? (
+            {secondsFromLastTransaction > 0 ? (
+              secondsFromLastTransaction > DURATION_THRESHOLD_SECONDS ? (
                 <>
                   <AppText style={styles.statusTitle}>
                     Limit reached on{" "}
