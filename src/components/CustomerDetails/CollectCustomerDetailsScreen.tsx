@@ -7,7 +7,7 @@ import {
   Alert,
   ActivityIndicator
 } from "react-native";
-import { fontSize, size, color } from "../../common/styles";
+import { size, color } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
 import { getQuota } from "../../services/quota";
 import { AppName } from "../Layout/AppName";
@@ -45,35 +45,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginBottom: size(3)
-  },
-  scanButtonWrapper: {
-    marginTop: size(4),
-    marginBottom: size(6)
-  },
-  horizontalRule: {
-    borderBottomColor: color("grey", 30),
-    marginHorizontal: -size(3),
-    borderBottomWidth: 1
-  },
-  orWrapper: {
-    position: "absolute",
-    top: -fontSize(0),
-    alignSelf: "center",
-    backgroundColor: color("grey", 0),
-    padding: size(1)
-  },
-  orText: {
-    fontSize: fontSize(-1),
-    fontFamily: "inter-bold"
-  },
-  inputAndButtonWrapper: {
-    marginTop: size(6),
-    flexDirection: "row",
-    alignItems: "flex-end"
-  },
-  inputWrapper: {
-    flex: 1,
-    marginRight: size(1)
   }
 });
 
