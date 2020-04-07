@@ -49,3 +49,11 @@ export const validate = (nricInput: string): boolean => {
   // check last letter of nric for foreigners
   return nricLetterFG[letterIndex] === nricLetter;
 };
+
+export const validateAndCleanNric = (inputNric: string): string => {
+  const isNricValid = validate(inputNric);
+  if (!isNricValid) throw new Error("Invalid NRIC number");
+  const cleanedNric = inputNric.match(nricRegex)?.[0].toUpperCase();
+  if (!cleanedNric) throw new Error("Invalid NRIC number");
+  return cleanedNric;
+};

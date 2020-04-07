@@ -1,4 +1,4 @@
-import { validate } from "./validateNric";
+import { validate } from "../components/CustomerDetails/validateNric";
 
 describe("validate", () => {
   it("should return true for valid nric number with S/T/F/G", () => {
