@@ -1,5 +1,6 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
+import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
 import { BarCodeScanner, BarCodeScannerProps } from "expo-barcode-scanner";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -48,11 +49,28 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   barCodeTypes,
   onCancel,
   cancelButtonText
-}) => (
-  <View style={styles.cameraWrapper}>
-    <Camera onBarCodeScanned={onBarCodeScanned} barCodeTypes={barCodeTypes} />
-    <View style={styles.cancelButtonWrapper}>
-      <SecondaryButton text={cancelButtonText} onPress={onCancel} />
+}) => {
+  const [hasCameraPermission, setHasCameraPermission] = useState(false);
+
+  useEffect(() => {
+    const askForCameraPermission = async (): Promise<void> => {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      if (status === "granted") {
+        setHasCameraPermission(true);
+      } else {
+        onCancel();
+      }
+    };
+
+    askForCameraPermission();
+  }, [onCancel]);
+
+  return hasCameraPermission ? (
+    <View style={styles.cameraWrapper}>
+      <Camera onBarCodeScanned={onBarCodeScanned} barCodeTypes={barCodeTypes} />
+      <View style={styles.cancelButtonWrapper}>
+        <SecondaryButton text={cancelButtonText} onPress={onCancel} />
+      </View>
     </View>
-  </View>
-);
+  ) : null;
+};

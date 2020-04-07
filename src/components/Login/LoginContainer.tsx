@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent, useEffect } from "react";
+import React, { useState, FunctionComponent } from "react";
 import {
   View,
   StyleSheet,
@@ -16,7 +16,6 @@ import { AppName } from "../Layout/AppName";
 import { Card } from "../Layout/Card";
 import { TopBackground } from "../Layout/TopBackground";
 import { AppText } from "../Layout/AppText";
-import * as Permissions from "expo-permissions";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
@@ -53,18 +52,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const { setProducts } = useProductContext();
   const { setAuthKey, setEndpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [hasCameraPermission, setHasCameraPermission] = useState(false);
-  const [showScanner, setShowScanner] = useState(false);
+  const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const { config, setConfigValue } = useConfigContext();
-
-  const askForCameraPermission = async (): Promise<void> => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    setHasCameraPermission(status === "granted");
-  };
-
-  useEffect(() => {
-    askForCameraPermission();
-  }, []);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
@@ -74,13 +63,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         : AppMode.production;
     setConfigValue("appMode", nextMode);
     alert(`SupplyAlly in ${nextMode.toUpperCase()} mode`);
-  };
-
-  const onToggleScanner = (): void => {
-    if (!hasCameraPermission) {
-      askForCameraPermission();
-    }
-    setShowScanner(s => !s);
   };
 
   const onLogin = async (qrCode: string): Promise<void> => {
@@ -93,14 +75,14 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         setAuthKey(key);
         setEndpoint(endpoint);
         setIsLoading(false);
-        setShowScanner(false);
+        setShouldShowCamera(false);
         setProducts(authenticated.policies);
         navigation.navigate("CollectCustomerDetailsScreen");
       } else {
         throw new Error("Authentication key is invalid");
       }
     } catch (e) {
-      setShowScanner(false);
+      setShouldShowCamera(false);
       alert(e.message || e);
       setIsLoading(false);
     }
@@ -108,12 +90,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (!isLoading && event.data) {
-      onToggleScanner();
+      setShouldShowCamera(false);
       onLogin(event.data);
     }
   };
-
-  const shouldShowCamera = hasCameraPermission && showScanner;
 
   return (
     <>
@@ -148,7 +128,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             <View style={styles.scanButtonWrapper}>
               <DarkButton
                 text="Scan to Login"
-                onPress={onToggleScanner}
+                onPress={() => setShouldShowCamera(true)}
                 icon={
                   <Feather
                     name="maximize"
@@ -168,7 +148,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         <IdScanner
           onBarCodeScanned={onBarCodeScanned}
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-          onCancel={onToggleScanner}
+          onCancel={() => setShouldShowCamera(false)}
           cancelButtonText="Cancel"
         />
       )}
