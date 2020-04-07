@@ -3,20 +3,28 @@ import React, {
   useState,
   Dispatch,
   SetStateAction,
-  ReactElement
+  ReactElement,
+  useEffect,
+  useCallback
 } from "react";
 import {
   View,
   StyleSheet,
   SafeAreaView,
   Alert,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { color, size, borderRadius, fontSize } from "../../common/styles";
-import { postTransaction, Quota, Transaction } from "../../services/quota";
+import {
+  postTransaction,
+  Quota,
+  Transaction,
+  getQuota
+} from "../../services/quota";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppName } from "../Layout/AppName";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -27,8 +35,18 @@ import { Checkbox } from "../Layout/Checkbox";
 import { CustomerCard } from "./CustomerCard";
 import { useProductContext } from "../../context/products";
 import { format, differenceInSeconds, formatDistance } from "date-fns";
+import { Card } from "../Layout/Card";
 
 const styles = StyleSheet.create({
+  loadingWrapper: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center"
+  },
   content: {
     position: "relative",
     padding: size(3),
@@ -174,10 +192,13 @@ const CanBuyResult: FunctionComponent<{
   isLoading: boolean;
   onRecordTransaction: () => Promise<void>;
   onCancel: () => void;
-  cart: CartState;
-  setCart: Dispatch<SetStateAction<CartState>>;
+  cart?: CartState;
+  setCart: Dispatch<SetStateAction<CartState | undefined>>;
 }> = ({ nric, isLoading, onRecordTransaction, onCancel, cart, setCart }) => {
   const { getProduct } = useProductContext();
+  if (!cart) {
+    return null;
+  }
   return (
     <View>
       <CustomerCard nric={nric}>
@@ -214,7 +235,7 @@ const CanBuyResult: FunctionComponent<{
                     onToggle={() =>
                       setCart(cart => ({
                         ...cart,
-                        [category]: !cart[category]
+                        [category]: !cart?.[category]
                       }))
                     }
                   />
@@ -275,7 +296,7 @@ const CannotBuyResult: FunctionComponent<{
   onCancel: () => void;
 }> = ({ nric, remainingQuota, onCancel }) => {
   const now = new Date();
-  const secondsFromLastTransaction = remainingQuota[0].transactionTime
+  const secondsFromLastTransaction = remainingQuota[0]?.transactionTime
     ? differenceInSeconds(now, new Date(remainingQuota[0].transactionTime))
     : -1;
   return (
@@ -323,48 +344,88 @@ const CannotBuyResult: FunctionComponent<{
 export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  const { config } = useConfigContext();
   const { getProduct } = useProductContext();
   const { authKey, endpoint } = useAuthenticationContext();
-  const quota: Quota = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
 
-  const initialQuantities: CartState = quota.remainingQuota.reduce(
-    (state, curr) => {
-      const product = getProduct(curr.category);
-      const defaultSelectedQuantity = product?.default ?? false;
-      state[curr.category] = curr.quantity > 0 ? defaultSelectedQuantity : null;
-      return state;
-    },
-    {} as CartState
-  );
+  const [isCheckingQuota, setIsCheckingQuota] = useState(true);
+  const [quota, setQuota] = useState<Quota>();
 
-  const [cart, setCart] = useState(initialQuantities);
+  const onCancel = useCallback((): void => {
+    navigation.goBack();
+  }, [navigation]);
+
+  useEffect(() => {
+    const onCheck = async (): Promise<void> => {
+      try {
+        setIsCheckingQuota(true);
+        const quotaResponse = await getQuota(nric, authKey, endpoint);
+        setQuota(quotaResponse);
+        setIsCheckingQuota(false);
+      } catch (e) {
+        setIsCheckingQuota(false);
+        Alert.alert(
+          "Error",
+          e.message || e,
+          [
+            {
+              text: "Dimiss",
+              onPress: onCancel
+            }
+          ],
+          {
+            onDismiss: onCancel // for android outside alert clicks
+          }
+        );
+      }
+    };
+    onCheck();
+  }, [authKey, endpoint, nric, onCancel]);
+
+  const [cart, setCart] = useState<CartState>();
+
+  useEffect(() => {
+    if (quota) {
+      const initialQuantities = quota.remainingQuota.reduce((state, curr) => {
+        const product = getProduct(curr.category);
+        const defaultSelectedQuantity = product?.default ?? false;
+        state[curr.category] =
+          curr.quantity > 0 ? defaultSelectedQuantity : null;
+        return state;
+      }, {} as CartState);
+      setCart(initialQuantities);
+    }
+  }, [getProduct, quota]);
+
   const [hasPurchased, setHasPurchased] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { config } = useConfigContext();
+  const [isProcessingTransaction, setIsProcessingTransaction] = useState(false);
 
   // TODO: provide the correct date to buy somemore
-  const canBuy = quota.remainingQuota.some(val => val.quantity > 0);
+  const canBuy = quota?.remainingQuota.some(val => val.quantity > 0) ?? false;
 
   const onRecordTransaction = async (): Promise<void> => {
     try {
-      setIsLoading(true);
-      const transactions = Object.entries(cart)
-        .filter(([_, quantity]) => quantity)
-        .reduce((transactions, [category]) => {
-          transactions.push({
-            category,
-            quantity: quota.remainingQuota.find(
-              line => line.category === category
-            )!.quantity
-          });
-          return transactions;
-        }, [] as any); // TODO: type this properly
+      setIsProcessingTransaction(true);
+      const transactions = cart
+        ? Object.entries(cart)
+            .filter(([_, quantity]) => quantity)
+            .reduce((transactions, [category]) => {
+              transactions.push({
+                category,
+                quantity: quota?.remainingQuota.find(
+                  line => line.category === category
+                )!.quantity
+              });
+              return transactions;
+            }, [] as any) // TODO: type this properly
+        : [];
 
       if (transactions.length === 0) {
         throw new Error("Please tick at least one item to checkout");
       }
 
+      // Use returned data to populate purchased result
       await postTransaction({
         nric,
         key: authKey,
@@ -377,15 +438,19 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     } catch (e) {
       Alert.alert("Error", e.message || e);
     } finally {
-      setIsLoading(false);
+      setIsProcessingTransaction(false);
     }
   };
 
-  const onCancel = (): void => {
-    navigation.goBack();
-  };
-
-  return (
+  return isCheckingQuota ? (
+    <View style={styles.loadingWrapper}>
+      <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
+      <Card>
+        <ActivityIndicator size="large" color={color("grey", 40)} />
+        <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
+      </Card>
+    </View>
+  ) : (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <TopBackground mode={config.appMode} />
       <SafeAreaView>
@@ -398,14 +463,18 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             <PurchasedResult
               nric={nric}
               onCancel={onCancel}
-              purchasedItems={Object.entries(cart)
-                .filter(([_, hasPurchased]) => hasPurchased)
-                .map(([category]) => category)}
+              purchasedItems={
+                cart
+                  ? Object.entries(cart)
+                      .filter(([_, hasPurchased]) => hasPurchased)
+                      .map(([category]) => category)
+                  : []
+              }
             />
           ) : canBuy ? (
             <CanBuyResult
               nric={nric}
-              isLoading={isLoading}
+              isLoading={isProcessingTransaction}
               onRecordTransaction={onRecordTransaction}
               onCancel={onCancel}
               cart={cart}
@@ -414,7 +483,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
           ) : (
             <CannotBuyResult
               nric={nric}
-              remainingQuota={quota.remainingQuota}
+              remainingQuota={quota?.remainingQuota ?? []}
               onCancel={onCancel}
             />
           )}
