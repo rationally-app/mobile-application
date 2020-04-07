@@ -4,6 +4,7 @@ import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
 import { BarCodeScanner, BarCodeScannerProps } from "expo-barcode-scanner";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
+import { LoadingView } from "../Loading";
 
 const styles = StyleSheet.create({
   cameraWrapper: {
@@ -65,12 +66,21 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
     askForCameraPermission();
   }, [onCancel]);
 
-  return hasCameraPermission ? (
+  return (
     <View style={styles.cameraWrapper}>
-      <Camera onBarCodeScanned={onBarCodeScanned} barCodeTypes={barCodeTypes} />
+      {hasCameraPermission ? (
+        <Camera
+          onBarCodeScanned={onBarCodeScanned}
+          barCodeTypes={barCodeTypes}
+        />
+      ) : (
+        <View style={{ flex: 1 }}>
+          <LoadingView />
+        </View>
+      )}
       <View style={styles.cancelButtonWrapper}>
         <SecondaryButton text={cancelButtonText} onPress={onCancel} />
       </View>
     </View>
-  ) : null;
+  );
 };
