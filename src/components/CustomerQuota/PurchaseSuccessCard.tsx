@@ -6,6 +6,7 @@ import { AppText } from "../Layout/AppText";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, fontSize } from "../../common/styles";
+import { CartHook } from "../../hooks/useCart/useCart";
 
 const styles = StyleSheet.create({
   purchasedItemsList: {
@@ -19,20 +20,30 @@ const styles = StyleSheet.create({
 });
 
 interface PurchaseSuccessCard {
-  nric: string;
+  nrics: string[];
   onCancel: () => void;
-  purchasedItems: string[];
+  checkoutResult: CartHook["checkoutResult"];
 }
 
 export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
-  nric,
+  nrics,
   onCancel,
-  purchasedItems
+  checkoutResult
 }) => {
   const { getProduct } = useProductContext();
+  let purchasedItems = "";
+  checkoutResult?.transactions.forEach((userTransaction, idx) => {
+    const userNric = nrics[idx];
+    const { transaction } = userTransaction;
+    transaction.forEach(({ category }) => {
+      const categoryName = getProduct(category)?.name ?? category;
+      purchasedItems += `• ${categoryName} (${userNric})\n`;
+    });
+  });
+
   return (
     <View>
-      <CustomerCard nrics={[nric]}>
+      <CustomerCard nrics={nrics}>
         <View
           style={[
             sharedStyles.resultWrapper,
@@ -46,10 +57,7 @@ export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
           <View>
             <AppText>Customer purchased the following:</AppText>
             <AppText style={styles.purchasedItemsList}>
-              {purchasedItems.map(category => {
-                const categoryName = getProduct(category)?.name || category;
-                return `• ${categoryName}\n`;
-              })}
+              {purchasedItems}
             </AppText>
           </View>
         </View>
