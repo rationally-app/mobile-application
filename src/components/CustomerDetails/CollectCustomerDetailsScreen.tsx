@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -11,14 +11,12 @@ import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { fontSize, size, color } from "../../common/styles";
-import * as Permissions from "expo-permissions";
 import { useAuthenticationContext } from "../../context/auth";
 import { validate, nricRegex } from "./validateNric";
 import { getQuota } from "../../services/quota";
 import { AppName } from "../Layout/AppName";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { Card } from "../Layout/Card";
-import { BarCodeScanningResult, NricScanner } from "./NricScanner";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
@@ -27,6 +25,8 @@ import {
   withNavigationFocus,
   NavigationFocusInjectedProps
 } from "react-navigation";
+import { IdScanner } from "../IdScanner/IdScanner";
+import { BarCodeScannedCallback } from "expo-barcode-scanner";
 
 const styles = StyleSheet.create({
   content: {
@@ -37,19 +37,14 @@ const styles = StyleSheet.create({
     width: 512,
     maxWidth: "100%"
   },
-  cameraWrapper: {
+  loadingWrapper: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: color("grey", 0)
-  },
-  cancelButtonWrapper: {
-    marginTop: size(3),
-    marginBottom: size(4)
+    justifyContent: "center"
   },
   headerText: {
     marginBottom: size(3)
@@ -90,20 +85,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   isFocused
 }) => {
   const { authKey, endpoint } = useAuthenticationContext();
-  const [hasCameraPermission, setHasCameraPermission] = useState(false);
-  const [showScanner, setShowScanner] = useState(false);
-  const [scanningEnabled, setScanningEnabled] = useState(true);
+  const [shouldShowCamera, setShouldShowCamera] = useState(false);
+  const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { config } = useConfigContext();
-
-  const askForCameraPermission = async (): Promise<void> => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    setHasCameraPermission(status === "granted");
-  };
-  useEffect(() => {
-    askForCameraPermission();
-  }, []);
 
   const onCheck = async (input: string): Promise<void> => {
     try {
@@ -119,39 +105,30 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setNricInput("");
     } catch (e) {
       setIsLoading(false);
-      setScanningEnabled(false);
+      setIsScanningEnabled(false);
       Alert.alert(
         "Error",
         e.message || e,
         [
           {
             text: "Dimiss",
-            onPress: () => setScanningEnabled(true)
+            onPress: () => setIsScanningEnabled(true)
           }
         ],
         {
-          onDismiss: () => setScanningEnabled(true) // for android outside alert clicks
+          onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
         }
       );
     }
   };
 
-  const onBarCodeScanned = (event: BarCodeScanningResult): void => {
-    if (isFocused && scanningEnabled && !isLoading && event.data) {
+  const onBarCodeScanned: BarCodeScannedCallback = event => {
+    if (isFocused && isScanningEnabled && !isLoading && event.data) {
       onCheck(event.data);
     }
   };
 
   const onCheckPress = (): Promise<void> => onCheck(nricInput);
-
-  const onToggleScanner = (): void => {
-    if (!hasCameraPermission) {
-      askForCameraPermission();
-    }
-    setShowScanner(s => !s);
-  };
-
-  const shouldShowCamera = hasCameraPermission && showScanner;
 
   return (
     <>
@@ -165,78 +142,66 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             <View style={styles.headerText}>
               <AppName mode={config.appMode} />
             </View>
-            {!shouldShowCamera && (
-              <Card>
-                <AppText>
-                  Check the number of items your customer can purchase
-                </AppText>
-                <View style={styles.scanButtonWrapper}>
-                  <DarkButton
-                    fullWidth={true}
-                    text="Scan customer's NRIC"
-                    icon={
-                      <Feather
-                        name="maximize"
-                        size={size(2)}
-                        color={color("grey", 0)}
-                      />
-                    }
-                    onPress={onToggleScanner}
-                  />
-                </View>
-                <View style={{ position: "relative" }}>
-                  <View style={styles.horizontalRule} />
-                  <View style={styles.orWrapper}>
-                    <AppText style={styles.orText}>OR</AppText>
-                  </View>
-                </View>
-
-                <View style={styles.inputAndButtonWrapper}>
-                  <View style={styles.inputWrapper}>
-                    <InputWithLabel
-                      label="Enter NRIC number"
-                      value={nricInput}
-                      onChange={({ nativeEvent: { text } }) =>
-                        setNricInput(text)
-                      }
-                      onSubmitEditing={onCheckPress}
+            <Card>
+              <AppText>
+                Check the number of items your customer can purchase
+              </AppText>
+              <View style={styles.scanButtonWrapper}>
+                <DarkButton
+                  fullWidth={true}
+                  text="Scan customer's NRIC"
+                  icon={
+                    <Feather
+                      name="maximize"
+                      size={size(2)}
+                      color={color("grey", 0)}
                     />
-                  </View>
-                  <SecondaryButton
-                    text="Check"
-                    onPress={onCheckPress}
-                    isLoading={isLoading}
+                  }
+                  onPress={() => setShouldShowCamera(true)}
+                />
+              </View>
+              <View style={{ position: "relative" }}>
+                <View style={styles.horizontalRule} />
+                <View style={styles.orWrapper}>
+                  <AppText style={styles.orText}>OR</AppText>
+                </View>
+              </View>
+              <View style={styles.inputAndButtonWrapper}>
+                <View style={styles.inputWrapper}>
+                  <InputWithLabel
+                    label="Enter NRIC number"
+                    value={nricInput}
+                    onChange={({ nativeEvent: { text } }) => setNricInput(text)}
+                    onSubmitEditing={onCheckPress}
                   />
                 </View>
-              </Card>
-            )}
+                <SecondaryButton
+                  text="Check"
+                  onPress={onCheckPress}
+                  isLoading={isLoading}
+                />
+              </View>
+            </Card>
           </View>
         </KeyboardAvoidingView>
       </ScrollView>
       <Credits style={{ bottom: size(3) }} />
-      {shouldShowCamera && (
-        <View style={styles.cameraWrapper}>
-          {isLoading ? (
-            <>
-              <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
-              <Card>
-                <ActivityIndicator size="large" color={color("grey", 40)} />
-                <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
-              </Card>
-            </>
-          ) : (
-            <>
-              <NricScanner onBarCodeScanned={onBarCodeScanned} />
-              <View style={styles.cancelButtonWrapper}>
-                <SecondaryButton
-                  text="Enter NRIC manually"
-                  onPress={onToggleScanner}
-                />
-              </View>
-            </>
-          )}
-        </View>
-      )}
+      {shouldShowCamera &&
+        (isLoading ? (
+          <View style={styles.loadingWrapper}>
+            <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
+            <Card>
+              <ActivityIndicator size="large" color={color("grey", 40)} />
+              <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
+            </Card>
+          </View>
+        ) : (
+          <IdScanner
+            onBarCodeScanned={onBarCodeScanned}
+            onCancel={() => setShouldShowCamera(false)}
+            cancelButtonText="Enter NRIC manually"
+          />
+        ))}
     </>
   );
 };
