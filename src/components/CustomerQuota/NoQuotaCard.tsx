@@ -10,6 +10,34 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
+const DistantTransactionContent: FunctionComponent<{
+  transactionTime: number;
+}> = ({ transactionTime }) => (
+  <>
+    <AppText style={sharedStyles.statusTitle}>Limit reached on </AppText>
+    <AppText style={sharedStyles.statusTitle}>
+      {format(transactionTime, "hh:mm a, do MMMM")}.
+    </AppText>
+  </>
+);
+
+const RecentTransactionContent: FunctionComponent<{
+  now: Date;
+  transactionTime: number;
+}> = ({ now, transactionTime }) => (
+  <>
+    <AppText style={sharedStyles.statusTitle}>Limit reached </AppText>
+    <AppText style={sharedStyles.statusTitle}>
+      {formatDistance(now, transactionTime)}
+    </AppText>
+    <AppText style={sharedStyles.statusTitle}> ago.</AppText>
+  </>
+);
+
+const NoPreviousTransactionContent: FunctionComponent = () => (
+  <AppText style={sharedStyles.statusTitle}>Limit reached.</AppText>
+);
+
 interface NoQuotaCard {
   nric: string;
   remainingQuota: Transaction[];
@@ -43,31 +71,17 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           <AppText style={sharedStyles.statusTitleWrapper}>
             {secondsFromLastTransaction > 0 ? (
               secondsFromLastTransaction > DURATION_THRESHOLD_SECONDS ? (
-                <>
-                  <AppText style={sharedStyles.statusTitle}>
-                    Limit reached on{" "}
-                  </AppText>
-                  <AppText style={sharedStyles.statusTitle}>
-                    {format(
-                      remainingQuota[0].transactionTime,
-                      "hh:mm a, do MMMM"
-                    )}
-                    .
-                  </AppText>
-                </>
+                <DistantTransactionContent
+                  transactionTime={remainingQuota[0].transactionTime}
+                />
               ) : (
-                <>
-                  <AppText style={sharedStyles.statusTitle}>
-                    Limit reached{" "}
-                  </AppText>
-                  <AppText style={sharedStyles.statusTitle}>
-                    {formatDistance(now, remainingQuota[0].transactionTime)}
-                  </AppText>
-                  <AppText style={sharedStyles.statusTitle}> ago.</AppText>
-                </>
+                <RecentTransactionContent
+                  now={now}
+                  transactionTime={remainingQuota[0].transactionTime}
+                />
               )
             ) : (
-              <AppText style={sharedStyles.statusTitle}>Limit reached.</AppText>
+              <NoPreviousTransactionContent />
             )}
           </AppText>
         </View>
