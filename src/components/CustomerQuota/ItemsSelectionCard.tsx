@@ -91,7 +91,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   }
   return (
     <View>
-      <CustomerCard nric={nric}>
+      <CustomerCard nrics={[nric]}>
         <View style={sharedStyles.resultWrapper}>
           {Object.entries(cart)
             .sort((itemOne, itemTwo) => {

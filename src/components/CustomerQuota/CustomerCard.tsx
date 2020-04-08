@@ -35,9 +35,9 @@ const styles = StyleSheet.create({
 });
 
 export const CustomerCard: FunctionComponent<{
-  nric: string;
+  nrics: string[];
   headerBackgroundColor?: ViewStyle["backgroundColor"];
-}> = ({ nric, headerBackgroundColor, children }) => (
+}> = ({ nrics, headerBackgroundColor, children }) => (
   <Card
     style={{
       paddingTop: 0,
@@ -54,7 +54,7 @@ export const CustomerCard: FunctionComponent<{
       <Feather name="user" size={size(3)} color={color("grey", 0)} />
       <View style={styles.headerText}>
         <AppText style={styles.nricLabel}>Customer NRIC</AppText>
-        <AppText style={styles.nricText}>{nric}</AppText>
+        <AppText style={styles.nricText}>{nrics[0]}</AppText>
       </View>
     </View>
     <View style={styles.childrenWrapper}>{children}</View>

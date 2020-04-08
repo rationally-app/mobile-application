@@ -60,7 +60,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     : -1;
   return (
     <View>
-      <CustomerCard nric={nric} headerBackgroundColor={color("red", 60)}>
+      <CustomerCard nrics={[nric]} headerBackgroundColor={color("red", 60)}>
         <View
           style={[
             sharedStyles.resultWrapper,

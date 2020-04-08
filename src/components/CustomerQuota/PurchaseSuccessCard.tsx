@@ -32,7 +32,7 @@ export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
   const { getProduct } = useProductContext();
   return (
     <View>
-      <CustomerCard nric={nric}>
+      <CustomerCard nrics={[nric]}>
         <View
           style={[
             sharedStyles.resultWrapper,
