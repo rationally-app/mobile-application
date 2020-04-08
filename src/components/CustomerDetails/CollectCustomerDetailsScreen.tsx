@@ -64,7 +64,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       const nric = validateAndCleanNric(input);
 
       setIsLoading(true);
-      const quota = await getQuota(nric!, authKey, endpoint);
+      const quota = await getQuota(nric, authKey, endpoint);
       setIsLoading(false);
 
       navigation.navigate("CustomerQuotaScreen", { quota, nric });
