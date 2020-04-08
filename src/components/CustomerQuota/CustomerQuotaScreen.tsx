@@ -5,13 +5,7 @@ import React, {
   SetStateAction,
   ReactElement
 } from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Alert,
-  ScrollView
-} from "react-native";
+import { View, StyleSheet, Alert, ScrollView } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -32,7 +26,7 @@ const styles = StyleSheet.create({
   content: {
     position: "relative",
     padding: size(3),
-    paddingTop: size(5),
+    paddingTop: size(8),
     paddingBottom: size(9),
     height: "100%",
     width: 512,
@@ -388,38 +382,36 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <TopBackground mode={config.appMode} />
-      <SafeAreaView>
-        <View style={styles.content}>
-          <View style={styles.headerText}>
-            <AppName mode={config.appMode} />
-          </View>
-
-          {hasPurchased ? (
-            <PurchasedResult
-              nric={nric}
-              onCancel={onCancel}
-              purchasedItems={Object.entries(cart)
-                .filter(([_, hasPurchased]) => hasPurchased)
-                .map(([category]) => category)}
-            />
-          ) : canBuy ? (
-            <CanBuyResult
-              nric={nric}
-              isLoading={isLoading}
-              onRecordTransaction={onRecordTransaction}
-              onCancel={onCancel}
-              cart={cart}
-              setCart={setCart}
-            />
-          ) : (
-            <CannotBuyResult
-              nric={nric}
-              remainingQuota={quota.remainingQuota}
-              onCancel={onCancel}
-            />
-          )}
+      <View style={styles.content}>
+        <View style={styles.headerText}>
+          <AppName mode={config.appMode} />
         </View>
-      </SafeAreaView>
+
+        {hasPurchased ? (
+          <PurchasedResult
+            nric={nric}
+            onCancel={onCancel}
+            purchasedItems={Object.entries(cart)
+              .filter(([_, hasPurchased]) => hasPurchased)
+              .map(([category]) => category)}
+          />
+        ) : canBuy ? (
+          <CanBuyResult
+            nric={nric}
+            isLoading={isLoading}
+            onRecordTransaction={onRecordTransaction}
+            onCancel={onCancel}
+            cart={cart}
+            setCart={setCart}
+          />
+        ) : (
+          <CannotBuyResult
+            nric={nric}
+            remainingQuota={quota.remainingQuota}
+            onCancel={onCancel}
+          />
+        )}
+      </View>
     </ScrollView>
   );
 };
