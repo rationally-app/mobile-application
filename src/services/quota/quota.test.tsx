@@ -1,22 +1,38 @@
-import { getQuota, postTransaction } from "./index";
+import {
+  getQuota,
+  postTransaction,
+  PostTransaction,
+  Quota,
+  PostTransactionResponse
+} from "./index";
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
 anyGlobal.fetch = mockFetch;
 
-const mockGetQuotaResponse = [
+const transactions: PostTransaction["transactions"] = [
   {
     category: "product-1",
-    remainingQuota: 1
+    quantity: 1
   },
   {
     category: "product-2",
-    remainingQuota: 0
+    quantity: 0
   }
 ];
+const timestamp = new Date(2020, 3, 1).getTime();
 
-const mockPostTransactionResponse = {
-  transactions: mockGetQuotaResponse
+const mockGetQuotaResponse: Quota = {
+  remainingQuota: transactions.map(t => ({ ...t, transactionTime: timestamp }))
+};
+
+const mockPostTransactionResponse: PostTransactionResponse = {
+  transactions: [
+    {
+      transaction: transactions,
+      timestamp
+    }
+  ]
 };
 
 describe("quota", () => {
@@ -30,10 +46,18 @@ describe("quota", () => {
       mockFetch.mockReturnValueOnce({
         then: () => mockGetQuotaResponse
       });
-      const quota = await getQuota("S000000J", "KEY", "https://myendpoint.com");
+      const quota = await getQuota(
+        ["S0000000J"],
+        "KEY",
+        "https://myendpoint.com"
+      );
       expect(mockFetch.mock.calls[0]).toEqual([
-        `https://myendpoint.com/quota/S000000J`,
-        { method: "GET", headers: { Authorization: "KEY" } }
+        `https://myendpoint.com/quota`,
+        {
+          method: "POST",
+          headers: { Authorization: "KEY" },
+          body: JSON.stringify({ ids: ["S0000000J"] })
+        }
       ]);
       expect(quota).toEqual(mockGetQuotaResponse);
     });
@@ -46,17 +70,20 @@ describe("quota", () => {
         then: () => mockPostTransactionResponse
       });
       const history = await postTransaction({
-        nric: "S000000J",
+        nrics: ["S0000000J"],
         key: "KEY",
         transactions: [{ category: "abc123", quantity: 2 }],
         endpoint: "https://myendpoint.com"
       });
       expect(mockFetch.mock.calls[0]).toEqual([
-        `https://myendpoint.com/transactions/S000000J`,
+        `https://myendpoint.com/transactions`,
         {
           method: "POST",
           headers: { Authorization: "KEY" },
-          body: JSON.stringify([{ category: "abc123", quantity: 2 }])
+          body: JSON.stringify({
+            ids: ["S0000000J"],
+            transaction: [{ category: "abc123", quantity: 2 }]
+          })
         }
       ]);
       expect(history).toEqual(mockPostTransactionResponse);
