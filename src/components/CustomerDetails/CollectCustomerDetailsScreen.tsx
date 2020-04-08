@@ -7,15 +7,10 @@ import {
   Alert,
   ActivityIndicator
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { DarkButton } from "../Layout/Buttons/DarkButton";
-import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
-import { fontSize, size, color } from "../../common/styles";
+import { size, color } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
-import { validate, nricRegex } from "./validateNric";
 import { getQuota } from "../../services/quota";
 import { AppName } from "../Layout/AppName";
-import { InputWithLabel } from "../Layout/InputWithLabel";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -27,6 +22,8 @@ import {
 } from "react-navigation";
 import { IdScanner } from "../IdScanner/IdScanner";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
+import { validateAndCleanNric } from "../../utils/validateNric";
+import { InputNricSection } from "./InputNricSection";
 
 const styles = StyleSheet.create({
   content: {
@@ -48,35 +45,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginBottom: size(3)
-  },
-  scanButtonWrapper: {
-    marginTop: size(4),
-    marginBottom: size(6)
-  },
-  horizontalRule: {
-    borderBottomColor: color("grey", 30),
-    marginHorizontal: -size(3),
-    borderBottomWidth: 1
-  },
-  orWrapper: {
-    position: "absolute",
-    top: -fontSize(0),
-    alignSelf: "center",
-    backgroundColor: color("grey", 0),
-    padding: size(1)
-  },
-  orText: {
-    fontSize: fontSize(-1),
-    fontFamily: "inter-bold"
-  },
-  inputAndButtonWrapper: {
-    marginTop: size(6),
-    flexDirection: "row",
-    alignItems: "flex-end"
-  },
-  inputWrapper: {
-    flex: 1,
-    marginRight: size(1)
   }
 });
 
@@ -93,12 +61,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onCheck = async (input: string): Promise<void> => {
     try {
-      const isNricValid = validate(input);
-      if (!isNricValid) throw new Error("Invalid NRIC number");
-      const nric = input.match(nricRegex)?.[0].toUpperCase();
+      const nric = validateAndCleanNric(input);
 
       setIsLoading(true);
-      const quota = await getQuota(nric!, authKey, endpoint);
+      const quota = await getQuota(nric, authKey, endpoint);
       setIsLoading(false);
 
       navigation.navigate("CustomerQuotaScreen", { quota, nric });
@@ -128,8 +94,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
-  const onCheckPress = (): Promise<void> => onCheck(nricInput);
-
   return (
     <>
       <ScrollView
@@ -146,41 +110,12 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               <AppText>
                 Check the number of items your customer can purchase
               </AppText>
-              <View style={styles.scanButtonWrapper}>
-                <DarkButton
-                  fullWidth={true}
-                  text="Scan customer's NRIC"
-                  icon={
-                    <Feather
-                      name="maximize"
-                      size={size(2)}
-                      color={color("grey", 0)}
-                    />
-                  }
-                  onPress={() => setShouldShowCamera(true)}
-                />
-              </View>
-              <View style={{ position: "relative" }}>
-                <View style={styles.horizontalRule} />
-                <View style={styles.orWrapper}>
-                  <AppText style={styles.orText}>OR</AppText>
-                </View>
-              </View>
-              <View style={styles.inputAndButtonWrapper}>
-                <View style={styles.inputWrapper}>
-                  <InputWithLabel
-                    label="Enter NRIC number"
-                    value={nricInput}
-                    onChange={({ nativeEvent: { text } }) => setNricInput(text)}
-                    onSubmitEditing={onCheckPress}
-                  />
-                </View>
-                <SecondaryButton
-                  text="Check"
-                  onPress={onCheckPress}
-                  isLoading={isLoading}
-                />
-              </View>
+              <InputNricSection
+                openCamera={() => setShouldShowCamera(true)}
+                nricInput={nricInput}
+                setNricInput={setNricInput}
+                submitNric={() => onCheck(nricInput)}
+              />
             </Card>
           </View>
         </KeyboardAvoidingView>
