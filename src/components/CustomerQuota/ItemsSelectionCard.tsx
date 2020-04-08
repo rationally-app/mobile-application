@@ -83,7 +83,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const { getProduct } = useProductContext();
   return (
     <View>
-      <CustomerCard nrics={nrics}>
+      <CustomerCard nrics={nrics} onAddNric={() => console.log("add")}>
         <View style={sharedStyles.resultWrapper}>
           {cart.map(({ category, quantity, maxQuantity }) => {
             const product = getProduct(category);
