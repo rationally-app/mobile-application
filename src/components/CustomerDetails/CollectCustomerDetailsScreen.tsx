@@ -4,12 +4,9 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
-  Alert,
-  ActivityIndicator
+  Alert
 } from "react-native";
-import { size, color } from "../../common/styles";
-import { useAuthenticationContext } from "../../context/auth";
-import { getQuota } from "../../services/quota";
+import { size } from "../../common/styles";
 import { AppName } from "../Layout/AppName";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
@@ -34,15 +31,6 @@ const styles = StyleSheet.create({
     width: 512,
     maxWidth: "100%"
   },
-  loadingWrapper: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center"
-  },
   headerText: {
     marginBottom: size(3)
   }
@@ -52,25 +40,17 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   navigation,
   isFocused
 }) => {
-  const { authKey, endpoint } = useAuthenticationContext();
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { config } = useConfigContext();
 
   const onCheck = async (input: string): Promise<void> => {
     try {
       const nric = validateAndCleanNric(input);
-
-      setIsLoading(true);
-      const quota = await getQuota(nric, authKey, endpoint);
-      setIsLoading(false);
-
-      navigation.navigate("CustomerQuotaScreen", { quota, nric });
+      navigation.navigate("CustomerQuotaScreen", { nric });
       setNricInput("");
     } catch (e) {
-      setIsLoading(false);
       setIsScanningEnabled(false);
       Alert.alert(
         "Error",
@@ -89,7 +69,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
-    if (isFocused && isScanningEnabled && !isLoading && event.data) {
+    if (isFocused && isScanningEnabled && event.data) {
       onCheck(event.data);
     }
   };
@@ -121,22 +101,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         </KeyboardAvoidingView>
       </ScrollView>
       <Credits style={{ bottom: size(3) }} />
-      {shouldShowCamera &&
-        (isLoading ? (
-          <View style={styles.loadingWrapper}>
-            <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
-            <Card>
-              <ActivityIndicator size="large" color={color("grey", 40)} />
-              <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
-            </Card>
-          </View>
-        ) : (
-          <IdScanner
-            onBarCodeScanned={onBarCodeScanned}
-            onCancel={() => setShouldShowCamera(false)}
-            cancelButtonText="Enter NRIC manually"
-          />
-        ))}
+      {shouldShowCamera && (
+        <IdScanner
+          onBarCodeScanned={onBarCodeScanned}
+          onCancel={() => setShouldShowCamera(false)}
+          cancelButtonText="Enter NRIC manually"
+        />
+      )}
     </>
   );
 };
