@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement } from "react";
+import React, { FunctionComponent, ReactElement, useState } from "react";
 import { useProductContext } from "../../context/products";
 import { View, StyleSheet, Alert } from "react-native";
 import { CustomerCard } from "./CustomerCard";
@@ -10,6 +10,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { Feather } from "@expo/vector-icons";
 import { Cart, CartHook } from "../../hooks/useCart/useCart";
+import { AddUserModal } from "./AddUserModal";
 
 const styles = StyleSheet.create({
   noQuotaCategoryItemWrapper: {
@@ -65,6 +66,7 @@ const NoQuotaCategoryItem: FunctionComponent<{ label: ReactElement }> = ({
 
 interface ItemsSelectionCard {
   nrics: string[];
+  addNric: (nric: string) => void;
   isLoading: boolean;
   checkoutCart: () => void;
   onCancel: () => void;
@@ -74,6 +76,7 @@ interface ItemsSelectionCard {
 
 export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   nrics,
+  addNric,
   isLoading,
   checkoutCart,
   onCancel,
@@ -81,9 +84,13 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const { getProduct } = useProductContext();
+  const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   return (
     <View>
-      <CustomerCard nrics={nrics} onAddNric={() => console.log("add")}>
+      <CustomerCard
+        nrics={nrics}
+        onAddNric={() => setIsAddUserModalVisible(true)}
+      >
         <View style={sharedStyles.resultWrapper}>
           {cart.map(({ category, quantity, maxQuantity }) => {
             const product = getProduct(category);
@@ -155,6 +162,12 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           />
         )}
       </View>
+      <AddUserModal
+        isVisible={isAddUserModalVisible}
+        setIsVisible={setIsAddUserModalVisible}
+        nrics={nrics}
+        addNric={addNric}
+      />
     </View>
   );
 };

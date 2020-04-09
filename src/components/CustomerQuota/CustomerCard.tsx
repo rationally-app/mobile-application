@@ -27,11 +27,13 @@ const styles = StyleSheet.create({
   },
   nricLabel: {
     color: color("grey", 0),
-    fontSize: fontSize(-2)
+    fontSize: fontSize(-2),
+    marginBottom: 2
   },
   nricText: {
     color: color("grey", 0),
     fontSize: fontSize(1),
+    lineHeight: 1.2 * fontSize(1),
     fontFamily: "inter-bold"
   },
   childrenWrapper: {
