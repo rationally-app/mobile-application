@@ -80,6 +80,10 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
   };
 
+  const handleChange = (text: string): void => {
+    /^\d*$/.test(text) && setOTPValue(text);
+  };
+
   return (
     <Card>
       <AppText>We&apos;re sending you the one-time password...</AppText>
@@ -87,8 +91,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         <InputWithLabel
           label="OTP"
           value={oTPValue}
-          onChange={({ nativeEvent: { text } }) => setOTPValue(text)}
+          onChange={({ nativeEvent: { text } }) => handleChange(text)}
           onSubmitEditing={onSubmitOTP}
+          keyboardType="numeric"
         />
         <View style={styles.buttonsWrapper}>
           {resendDisabledTime > 0 ? (
