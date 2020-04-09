@@ -89,7 +89,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   navigation,
   isFocused
 }) => {
-  const { authKey, endpoint } = useAuthenticationContext();
+  const { token, endpoint } = useAuthenticationContext();
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true);
@@ -112,7 +112,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       const nric = input.match(nricRegex)?.[0].toUpperCase();
 
       setIsLoading(true);
-      const quota = await getQuota(nric!, authKey, endpoint);
+      const quota = await getQuota(nric!, token, endpoint);
       setIsLoading(false);
 
       navigation.navigate("CustomerQuotaScreen", { quota, nric });

@@ -6,15 +6,12 @@ export interface ValidateOTPResponse {
 
 export const liveRequestOTP = async (
   mobileNumber: string,
-  key: string,
+  code: string,
   endpoint: string
 ): Promise<void> => {
-  const payload = { code: key, phone: mobileNumber };
+  const payload = { code, phone: mobileNumber };
   const response = await fetch(`${endpoint}/auth/register`, {
     method: "POST",
-    headers: {
-      Authorization: key,
-    },
     body: JSON.stringify(payload),
   });
   if (!response.ok) {
@@ -25,15 +22,12 @@ export const liveRequestOTP = async (
 export const liveValidateOTP = async (
   otp: string,
   mobileNumber: string,
-  key: string,
+  code: string,
   endpoint: string
 ): Promise<ValidateOTPResponse> => {
-  const payload = { code: key, otp, phone: mobileNumber };
+  const payload = { code, otp, phone: mobileNumber };
   const response = await fetch(`${endpoint}/auth/confirm`, {
     method: "POST",
-    headers: {
-      Authorization: key,
-    },
     body: JSON.stringify(payload),
   });
   if (!response.ok) {
@@ -44,7 +38,7 @@ export const liveValidateOTP = async (
 
 export const mockValidateOTP = async (
   _otp: string,
-  mobileNumber: string,
+  _mobileNumber: string,
   _key: string,
   _endpoint: string
 ): Promise<ValidateOTPResponse> => {

@@ -27,20 +27,22 @@ interface LoginMobileNumberCard {
   setLoginStage: Dispatch<SetStateAction<LOGIN_STAGES>>;
   mobileNumber: string;
   setMobileNumber: Dispatch<SetStateAction<string>>;
+  codeKey: string;
 }
 
 export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
   setLoginStage,
   mobileNumber,
-  setMobileNumber
+  setMobileNumber,
+  codeKey
 }: LoginMobileNumberCard) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { authKey, endpoint } = useAuthenticationContext();
+  const { endpoint } = useAuthenticationContext();
 
   const onRequestOTP = async (mobileNumber: string): Promise<void> => {
     setIsLoading(true);
     try {
-      await requestOTP(mobileNumber, authKey, endpoint);
+      await requestOTP(mobileNumber, codeKey, endpoint);
       setIsLoading(false);
       setLoginStage(LOGIN_STAGES.OTP);
     } catch (e) {

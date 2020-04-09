@@ -1,4 +1,4 @@
-import { requestOTP, validateOTP } from "./index";
+import { requestOTP } from "./index";
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
@@ -20,7 +20,6 @@ describe("requestOTP", () => {
       `${endpoint}/auth/register`,
       {
         method: "POST",
-        headers: { Authorization: "CORRECT_KEY" },
         body: JSON.stringify(payload),
       },
     ]);

@@ -9,7 +9,6 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { NavigationProps } from "../../types";
 import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP } from "../../services/auth";
-import { useConfigContext } from "../../context/config";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -30,19 +29,20 @@ const styles = StyleSheet.create({
 
 interface LoginOTPCard extends NavigationProps {
   mobileNumber: string;
+  codeKey: string;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   navigation,
   mobileNumber,
+  codeKey,
 }: LoginOTPCard) => {
   const [isLoading, setIsLoading] = useState(false);
   const [oTPValue, setOTPValue] = useState("");
   const [resendDisabledTime, setResendDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT
   );
-  const { authKey, endpoint } = useAuthenticationContext();
-  const { setConfigValue } = useConfigContext();
+  const { endpoint, setSessionToken } = useAuthenticationContext();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -63,9 +63,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const onValidateOTP = async (otp: string): Promise<void> => {
     setIsLoading(true);
     try {
-      const response = await validateOTP(otp, mobileNumber, authKey, endpoint);
+      const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
       setIsLoading(false);
-      setConfigValue("session", response.session);
+      setSessionToken(response.session);
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
       alert(e.message || e);

@@ -65,13 +65,14 @@ const styles = StyleSheet.create({
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation,
 }: NavigationProps) => {
-  const { setAuthKey, setEndpoint } = useAuthenticationContext();
+  const { setEndpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const { config, setConfigValue } = useConfigContext();
   const [loginStage, setLoginStage] = useState(LOGIN_STAGES.SCAN);
   const [mobileNumber, setMobileNumber] = useState("");
+  const [codeKey, setCodeKey] = useState("");
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -105,7 +106,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       onToggleScanner();
       setIsLoading(true);
       const { key, endpoint } = decodeQr(qrCode);
-      setAuthKey(key);
+      setCodeKey(key);
       setEndpoint(endpoint);
       setIsLoading(false);
       setShowScanner(false);
@@ -153,10 +154,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               setLoginStage={setLoginStage}
               mobileNumber={mobileNumber}
               setMobileNumber={setMobileNumber}
+              codeKey={codeKey}
             />
           )}
           {loginStage === LOGIN_STAGES.OTP && (
-            <LoginOTPCard navigation={navigation} mobileNumber={mobileNumber} />
+            <LoginOTPCard
+              navigation={navigation}
+              mobileNumber={mobileNumber}
+              codeKey={codeKey}
+            />
           )}
         </View>
       </KeyboardAvoidingView>

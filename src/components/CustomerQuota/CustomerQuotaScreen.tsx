@@ -3,7 +3,7 @@ import React, {
   useState,
   Dispatch,
   SetStateAction,
-  ReactElement
+  ReactElement,
 } from "react";
 import { View, StyleSheet, Alert, ScrollView } from "react-native";
 import { Feather } from "@expo/vector-icons";
@@ -30,28 +30,28 @@ const styles = StyleSheet.create({
     paddingBottom: size(9),
     height: "100%",
     width: 512,
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   headerText: {
-    marginBottom: size(2)
+    marginBottom: size(2),
   },
   resultWrapper: {
-    padding: size(3)
+    padding: size(3),
   },
   successfulResultWrapper: {
     backgroundColor: color("green", 10),
-    borderColor: color("green", 30)
+    borderColor: color("green", 30),
   },
   failureResultWrapper: {
     paddingBottom: size(4),
     backgroundColor: color("red", 10),
-    borderColor: color("red", 30)
+    borderColor: color("red", 30),
   },
   categoryText: {
-    fontSize: fontSize(2)
+    fontSize: fontSize(2),
   },
   checkboxesListItem: {
-    marginBottom: size(1.5)
+    marginBottom: size(1.5),
   },
   noQuotaCategoryItemWrapper: {
     flexDirection: "row",
@@ -60,11 +60,11 @@ const styles = StyleSheet.create({
     minHeight: size(9),
     borderStyle: "dashed",
     borderWidth: 1,
-    borderColor: color("grey", 20)
+    borderColor: color("grey", 20),
   },
   labelWrapper: {
     marginLeft: size(2.5),
-    flex: 1
+    flex: 1,
   },
   noQuotaCategoryItemFeedback: {
     height: size(6),
@@ -74,44 +74,44 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(3),
     paddingHorizontal: size(1.5),
     marginRight: size(2),
-    justifyContent: "center"
+    justifyContent: "center",
   },
   noQuotaCategoryItemFeedbackText: {
     textAlign: "center",
     textAlignVertical: "center",
     color: color("yellow", 50),
     fontSize: fontSize(-2),
-    fontFamily: "inter-bold"
+    fontFamily: "inter-bold",
   },
   emoji: {
     fontSize: fontSize(3),
     marginBottom: size(2),
-    marginTop: size(1)
+    marginTop: size(1),
   },
   statusTitleWrapper: {
-    marginBottom: size(2)
+    marginBottom: size(2),
   },
   statusTitle: {
     fontSize: fontSize(3),
     lineHeight: 1.3 * fontSize(3),
-    fontFamily: "inter-bold"
+    fontFamily: "inter-bold",
   },
   purchasedItemsList: {
     marginTop: size(1),
     lineHeight: 1.5 * fontSize(0),
-    marginBottom: -size(2)
+    marginBottom: -size(2),
   },
   purchasedItemText: {
-    marginBottom: size(0.5)
+    marginBottom: size(0.5),
   },
   ctaButtonsWrapper: {
     marginTop: size(5),
-    paddingBottom: size(10)
+    paddingBottom: size(10),
   },
   buttonRow: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
-  submitButton: { flex: 1 }
+  submitButton: { flex: 1 },
 });
 
 interface CartState {
@@ -119,7 +119,7 @@ interface CartState {
 }
 
 const NoQuotaCategoryItem: FunctionComponent<{ label: ReactElement }> = ({
-  label
+  label,
 }) => (
   <View style={styles.noQuotaCategoryItemWrapper}>
     <View style={styles.labelWrapper}>{label}</View>
@@ -148,7 +148,7 @@ const PurchasedResult: FunctionComponent<{
           <View>
             <AppText>Customer purchased the following:</AppText>
             <AppText style={styles.purchasedItemsList}>
-              {purchasedItems.map(category => {
+              {purchasedItems.map((category) => {
                 const categoryName = getProduct(category)?.name || category;
                 return `• ${categoryName}\n`;
               })}
@@ -206,9 +206,9 @@ const CanBuyResult: FunctionComponent<{
                     }
                     isChecked={canBuy}
                     onToggle={() =>
-                      setCart(cart => ({
+                      setCart((cart) => ({
                         ...cart,
-                        [category]: !cart[category]
+                        [category]: !cart[category],
                       }))
                     }
                   />
@@ -241,13 +241,13 @@ const CanBuyResult: FunctionComponent<{
             onPress={() => {
               Alert.alert("Cancel transaction?", undefined, [
                 {
-                  text: "No"
+                  text: "No",
                 },
                 {
                   text: "Yes",
                   onPress: onCancel,
-                  style: "destructive"
-                }
+                  style: "destructive",
+                },
               ]);
             }}
           />
@@ -315,10 +315,10 @@ const CannotBuyResult: FunctionComponent<{
 };
 
 export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+  navigation,
 }) => {
   const { getProduct } = useProductContext();
-  const { authKey, endpoint } = useAuthenticationContext();
+  const { token, endpoint } = useAuthenticationContext();
   const quota: Quota = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
 
@@ -338,7 +338,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
 
   // TODO: provide the correct date to buy somemore
-  const canBuy = quota.remainingQuota.some(val => val.quantity > 0);
+  const canBuy = quota.remainingQuota.some((val) => val.quantity > 0);
 
   const onRecordTransaction = async (): Promise<void> => {
     try {
@@ -349,8 +349,8 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
           transactions.push({
             category,
             quantity: quota.remainingQuota.find(
-              line => line.category === category
-            )!.quantity
+              (line) => line.category === category
+            )!.quantity,
           });
           return transactions;
         }, [] as any); // TODO: type this properly
@@ -361,9 +361,9 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
       await postTransaction({
         nric,
-        key: authKey,
+        key: token,
         transactions,
-        endpoint
+        endpoint,
       });
       // TODO: error handling
 
