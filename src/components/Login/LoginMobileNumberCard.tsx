@@ -2,7 +2,7 @@ import React, {
   useState,
   FunctionComponent,
   Dispatch,
-  SetStateAction,
+  SetStateAction
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -17,11 +17,11 @@ import { mobileNumberValidator } from "./utils";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
-    marginTop: size(3),
+    marginTop: size(3)
   },
   inputWrapper: {
-    marginBottom: size(2),
-  },
+    marginBottom: size(2)
+  }
 });
 
 interface LoginMobileNumberCard {
@@ -35,7 +35,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   setLoginStage,
   mobileNumber,
   setMobileNumber,
-  codeKey,
+  codeKey
 }: LoginMobileNumberCard) => {
   const [isLoading, setIsLoading] = useState(false);
   const { endpoint } = useAuthenticationContext();
