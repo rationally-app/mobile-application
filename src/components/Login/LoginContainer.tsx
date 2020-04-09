@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }: NavigationProps) => {
-  const { token, endpoint, setEndpointValue } = useAuthenticationContext();
+  const { token, endpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
@@ -73,6 +73,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [loginStage, setLoginStage] = useState(LOGIN_STAGES.SCAN);
   const [mobileNumber, setMobileNumber] = useState("");
   const [codeKey, setCodeKey] = useState("");
+  const [endpointTemp, setEndpointTemp] = useState("");
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -111,7 +112,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       setIsLoading(true);
       const { key, endpoint } = decodeQr(qrCode);
       setCodeKey(key);
-      setEndpointValue(endpoint);
+      setEndpointTemp(endpoint);
       setIsLoading(false);
       setShowScanner(false);
       setLoginStage(LOGIN_STAGES.MOBILE_NUMBER);
@@ -159,6 +160,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               mobileNumber={mobileNumber}
               setMobileNumber={setMobileNumber}
               codeKey={codeKey}
+              endpoint={endpointTemp}
             />
           )}
           {loginStage === LOGIN_STAGES.OTP && (
@@ -166,6 +168,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               navigation={navigation}
               mobileNumber={mobileNumber}
               codeKey={codeKey}
+              endpoint={endpointTemp}
             />
           )}
         </View>

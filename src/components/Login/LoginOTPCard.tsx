@@ -30,19 +30,21 @@ const styles = StyleSheet.create({
 interface LoginOTPCard extends NavigationProps {
   mobileNumber: string;
   codeKey: string;
+  endpoint: string;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   navigation,
   mobileNumber,
-  codeKey
+  codeKey,
+  endpoint
 }: LoginOTPCard) => {
   const [isLoading, setIsLoading] = useState(false);
   const [oTPValue, setOTPValue] = useState("");
   const [resendDisabledTime, setResendDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT
   );
-  const { endpoint, setSessionToken } = useAuthenticationContext();
+  const { setSessionToken, setEndpointValue } = useAuthenticationContext();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -66,6 +68,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
       setIsLoading(false);
       setSessionToken(response.session);
+      setEndpointValue(endpoint);
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
       setIsLoading(false);

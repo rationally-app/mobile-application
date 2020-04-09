@@ -12,7 +12,6 @@ import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { LOGIN_STAGES } from "../../types";
 import { requestOTP } from "../../services/auth";
-import { useAuthenticationContext } from "../../context/auth";
 import { mobileNumberValidator } from "./utils";
 
 const styles = StyleSheet.create({
@@ -29,16 +28,17 @@ interface LoginMobileNumberCard {
   mobileNumber: string;
   setMobileNumber: Dispatch<SetStateAction<string>>;
   codeKey: string;
+  endpoint: string;
 }
 
 export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
   setLoginStage,
   mobileNumber,
   setMobileNumber,
-  codeKey
+  codeKey,
+  endpoint
 }: LoginMobileNumberCard) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { endpoint } = useAuthenticationContext();
 
   const onRequestOTP = async (mobileNumber: string): Promise<void> => {
     setIsLoading(true);
