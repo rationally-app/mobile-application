@@ -68,6 +68,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       setSessionToken(response.session);
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
+      setIsLoading(false);
       alert(e.message || e);
     }
   };
