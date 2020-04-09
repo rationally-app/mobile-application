@@ -13,9 +13,6 @@ const styles = StyleSheet.create({
     marginTop: size(1),
     lineHeight: 1.5 * fontSize(0),
     marginBottom: -size(2)
-  },
-  purchasedItemText: {
-    marginBottom: size(0.5)
   }
 });
 
@@ -37,7 +34,9 @@ export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
     const { transaction } = userTransaction;
     transaction.forEach(({ category }) => {
       const categoryName = getProduct(category)?.name ?? category;
-      purchasedItems += `• ${categoryName} (${userNric})\n`;
+      purchasedItems += `• ${categoryName}${
+        nrics.length > 1 ? ` (${userNric})` : ""
+      }\n`;
     });
   });
 
@@ -55,7 +54,7 @@ export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
             <AppText style={sharedStyles.statusTitle}>Purchased!</AppText>
           </AppText>
           <View>
-            <AppText>Customer purchased the following:</AppText>
+            <AppText>The following have been purchased:</AppText>
             <AppText style={styles.purchasedItemsList}>
               {purchasedItems}
             </AppText>
