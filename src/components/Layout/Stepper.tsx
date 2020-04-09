@@ -113,15 +113,25 @@ export const Stepper: FunctionComponent<Stepper> = ({
     delayedClampAndRound.current(internalValue, bounds.min, bounds.max, step);
   }, [internalValue, bounds.min, bounds.max, step]);
 
-  const decrement = (): void =>
-    setInternalValue(
-      v => `${clamp(parseNumber(v) - step, bounds.min, bounds.max)}`
+  const decrement = (): void => {
+    const newValue = clamp(
+      parseNumber(internalValue) - step,
+      bounds.min,
+      bounds.max
     );
+    setInternalValue(`${newValue}`);
+    setValue(newValue);
+  };
 
-  const increment = (): void =>
-    setInternalValue(
-      v => `${clamp(parseNumber(v) + step, bounds.min, bounds.max)}`
+  const increment = (): void => {
+    const newValue = clamp(
+      parseNumber(internalValue) + step,
+      bounds.min,
+      bounds.max
     );
+    setInternalValue(`${newValue}`);
+    setValue(newValue);
+  };
 
   const onChangeTextValue = (value: string): void => {
     if (value === "") {
