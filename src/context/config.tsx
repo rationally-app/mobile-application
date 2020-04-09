@@ -15,6 +15,7 @@ export enum AppMode {
 
 interface Config {
   appMode: AppMode;
+  session?: string;
 }
 
 interface ConfigContext {
