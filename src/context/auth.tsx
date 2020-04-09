@@ -2,7 +2,8 @@ import React, {
   createContext,
   useContext,
   FunctionComponent,
-  useState
+  useState,
+  useEffect
 } from "react";
 import { AsyncStorage } from "react-native";
 
@@ -45,6 +46,19 @@ export const AuthenticationContextProvider: FunctionComponent = ({
     setEndpoint(endpoint);
     AsyncStorage.setItem(SESSION_TOKEN_KEY, token);
   };
+
+  const loadAuthFromStore = async (): Promise<void> => {
+    const sessionToken = await AsyncStorage.getItem(SESSION_TOKEN_KEY);
+    const endpoint = await AsyncStorage.getItem(ENDPOINT_KEY);
+    if (sessionToken && endpoint) {
+      setToken(sessionToken);
+      setEndpoint(endpoint);
+    }
+  };
+
+  useEffect(() => {
+    loadAuthFromStore();
+  }, []);
 
   return (
     <AuthenticationContext.Provider

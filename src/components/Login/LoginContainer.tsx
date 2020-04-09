@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }: NavigationProps) => {
-  const { setEndpointValue } = useAuthenticationContext();
+  const { token, endpoint, setEndpointValue } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
@@ -80,8 +80,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   };
 
   useEffect(() => {
-    askForCameraPermission();
-  }, []);
+    if (token && endpoint) {
+      navigation.navigate("CollectCustomerDetailsScreen");
+    } else {
+      askForCameraPermission();
+    }
+  }, [endpoint, navigation, token]);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
