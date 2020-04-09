@@ -71,6 +71,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [showScanner, setShowScanner] = useState(false);
   const { config, setConfigValue } = useConfigContext();
   const [loginStage, setLoginStage] = useState(LOGIN_STAGES.SCAN);
+  const [mobileNumber, setMobileNumber] = useState("");
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -148,13 +149,14 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             />
           )}
           {loginStage === LOGIN_STAGES.MOBILE_NUMBER && (
-            <LoginMobileNumberCard setLoginStage={setLoginStage} />
+            <LoginMobileNumberCard
+              setLoginStage={setLoginStage}
+              mobileNumber={mobileNumber}
+              setMobileNumber={setMobileNumber}
+            />
           )}
           {loginStage === LOGIN_STAGES.OTP && (
-            <LoginOTPCard
-              navigation={navigation}
-              setLoginStage={setLoginStage}
-            />
+            <LoginOTPCard navigation={navigation} mobileNumber={mobileNumber} />
           )}
         </View>
       </KeyboardAvoidingView>
