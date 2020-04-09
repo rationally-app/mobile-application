@@ -3,30 +3,27 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { NavigationProps } from "../../types";
-import { DarkButton } from "../Layout/Buttons/DarkButton";
+import { NavigationProps, LOGIN_STAGES } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
-import { authenticate } from "../../services/auth";
 import { useAuthenticationContext } from "../../context/auth";
 import { size, color } from "../../common/styles";
 import { AppName } from "../Layout/AppName";
-import { Card } from "../Layout/Card";
 import { TopBackground } from "../Layout/TopBackground";
-import { AppText } from "../Layout/AppText";
 import * as Permissions from "expo-permissions";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import {
   NricScanner,
-  BarCodeScanningResult
+  BarCodeScanningResult,
 } from "../CustomerDetails/NricScanner";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
-import { useProductContext } from "../../context/products";
 import { decodeQr } from "./utils";
+import { LoginScanCard } from "./LoginScanCard";
+import { LoginMobileNumberCard } from "./LoginMobileNumberCard";
+import { LoginOTPCard } from "./LoginOTPCard";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -39,7 +36,7 @@ const styles = StyleSheet.create({
     maxWidth: 512,
     width: "100%",
     height: "100%",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   cameraWrapper: {
     position: "absolute",
@@ -49,31 +46,31 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: color("grey", 0)
+    backgroundColor: color("grey", 0),
   },
   cancelButtonWrapper: {
     marginTop: size(3),
-    marginBottom: size(4)
+    marginBottom: size(4),
   },
   headerText: {
     marginBottom: size(4),
     textAlign: "center",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   scanButtonWrapper: {
-    marginTop: size(3)
-  }
+    marginTop: size(3),
+  },
 });
 
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
-  navigation
+  navigation,
 }: NavigationProps) => {
-  const { setProducts } = useProductContext();
   const { setAuthKey, setEndpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const { config, setConfigValue } = useConfigContext();
+  const [loginStage, setLoginStage] = useState(LOGIN_STAGES.SCAN);
 
   const askForCameraPermission = async (): Promise<void> => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -98,36 +95,20 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     if (!hasCameraPermission) {
       askForCameraPermission();
     }
-    setShowScanner(s => !s);
-  };
-
-  const onLogin = async (qrCode: string): Promise<void> => {
-    if (isLoading) return;
-    setIsLoading(true);
-    try {
-      const { key, endpoint } = decodeQr(qrCode);
-      const authenticated = await authenticate(key, endpoint);
-      if (authenticated) {
-        setAuthKey(key);
-        setEndpoint(endpoint);
-        setIsLoading(false);
-        setShowScanner(false);
-        setProducts(authenticated.policies);
-        navigation.navigate("CollectCustomerDetailsScreen");
-      } else {
-        throw new Error("Authentication key is invalid");
-      }
-    } catch (e) {
-      setShowScanner(false);
-      alert(e.message || e);
-      setIsLoading(false);
-    }
+    setShowScanner((s) => !s);
   };
 
   const onBarCodeScanned = (event: BarCodeScanningResult): void => {
     if (!isLoading && event.data) {
+      const qrCode = event.data;
       onToggleScanner();
-      onLogin(event.data);
+      setIsLoading(true);
+      const { key, endpoint } = decodeQr(qrCode);
+      setAuthKey(key);
+      setEndpoint(endpoint);
+      setIsLoading(false);
+      setShowScanner(false);
+      setLoginStage(LOGIN_STAGES.MOBILE_NUMBER);
     }
   };
 
@@ -159,26 +140,22 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               />
             </View>
           )}
-          <Card>
-            <AppText>
-              Please log in with your Unique ID provided by your supervisor
-            </AppText>
-            <View style={styles.scanButtonWrapper}>
-              <DarkButton
-                text="Scan to Login"
-                onPress={onToggleScanner}
-                icon={
-                  <Feather
-                    name="maximize"
-                    size={size(2)}
-                    color={color("grey", 0)}
-                  />
-                }
-                fullWidth={true}
-                isLoading={isLoading}
-              />
-            </View>
-          </Card>
+          {loginStage === LOGIN_STAGES.SCAN && (
+            <LoginScanCard
+              setLoginStage={setLoginStage}
+              onToggleScanner={onToggleScanner}
+              isLoading={isLoading}
+            />
+          )}
+          {loginStage === LOGIN_STAGES.MOBILE_NUMBER && (
+            <LoginMobileNumberCard setLoginStage={setLoginStage} />
+          )}
+          {loginStage === LOGIN_STAGES.OTP && (
+            <LoginOTPCard
+              navigation={navigation}
+              setLoginStage={setLoginStage}
+            />
+          )}
         </View>
       </KeyboardAvoidingView>
       <Credits style={{ bottom: size(3) }} />
