@@ -21,7 +21,6 @@ interface LoginScanCard {
 
 export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   onToggleScanner,
-  setLoginStage,
   isLoading
 }: LoginScanCard) => {
   return (
@@ -38,11 +37,6 @@ export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
           }
           fullWidth={true}
           isLoading={isLoading}
-        />
-        <DarkButton
-          text="Change view"
-          onPress={() => setLoginStage(LOGIN_STAGES.MOBILE_NUMBER)}
-          fullWidth={true}
         />
       </View>
     </Card>

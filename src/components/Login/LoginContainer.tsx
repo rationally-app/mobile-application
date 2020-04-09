@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }: NavigationProps) => {
-  const { setEndpoint } = useAuthenticationContext();
+  const { setEndpointValue } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
@@ -107,7 +107,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       setIsLoading(true);
       const { key, endpoint } = decodeQr(qrCode);
       setCodeKey(key);
-      setEndpoint(endpoint);
+      setEndpointValue(endpoint);
       setIsLoading(false);
       setShowScanner(false);
       setLoginStage(LOGIN_STAGES.MOBILE_NUMBER);

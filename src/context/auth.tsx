@@ -7,19 +7,20 @@ import React, {
 import { AsyncStorage } from "react-native";
 
 export const SESSION_TOKEN_KEY = "SESSION_TOKEN";
+export const ENDPOINT_KEY = "ENDPOINT_KEY";
 
 interface AuthenticationContext {
   token: string;
   endpoint: string;
   setSessionToken: (key: string) => void;
-  setEndpoint: (key: string) => void;
+  setEndpointValue: (key: string) => void;
 }
 
 export const AuthenticationContext = createContext<AuthenticationContext>({
   token: "",
   setSessionToken: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   endpoint: "",
-  setEndpoint: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
+  setEndpointValue: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
 export const useAuthenticationContext = (): AuthenticationContext =>
@@ -38,9 +39,16 @@ export const AuthenticationContextProvider: FunctionComponent = ({
     AsyncStorage.setItem(SESSION_TOKEN_KEY, token);
   };
 
+  const setEndpointValue: AuthenticationContext["setEndpointValue"] = (
+    endpoint: string
+  ) => {
+    setEndpoint(endpoint);
+    AsyncStorage.setItem(SESSION_TOKEN_KEY, token);
+  };
+
   return (
     <AuthenticationContext.Provider
-      value={{ token, setSessionToken, endpoint, setEndpoint }}
+      value={{ token, setSessionToken, endpoint, setEndpointValue }}
     >
       {children}
     </AuthenticationContext.Provider>
