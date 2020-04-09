@@ -1,4 +1,4 @@
-import { decodeQr } from "./utils";
+import { decodeQr, mobileNumberValidator } from "./utils";
 
 describe("decodeQr", () => {
   it("should fail for old QR codes", () => {
@@ -24,5 +24,22 @@ describe("decodeQr", () => {
 
     const missingEndpoint = `{"key": "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4","endpointed": "https://somewhere.com"}`;
     expect(() => decodeQr(missingEndpoint)).toThrow("No endpoint specified");
+  });
+});
+
+describe("mobileNumberValidator", () => {
+  it("should return false for invalid numbers", () => {
+    expect.assertions(3);
+    expect(mobileNumberValidator("1237123871239018273128901290")).toBe(false);
+    expect(mobileNumberValidator("asd")).toBe(false);
+    expect(mobileNumberValidator("9182678_LAKASF)Q!K")).toBe(false);
+  });
+
+  it("should return true for valid numbers", () => {
+    expect.assertions(4);
+    expect(mobileNumberValidator("91234567")).toBe(true);
+    expect(mobileNumberValidator("+6598261749")).toBe(true);
+    expect(mobileNumberValidator("+65 98219374")).toBe(true);
+    expect(mobileNumberValidator("0098219374")).toBe(true);
   });
 });

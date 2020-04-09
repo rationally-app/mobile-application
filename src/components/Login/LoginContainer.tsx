@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native";
 import { NavigationProps, LOGIN_STAGES } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
@@ -15,7 +15,7 @@ import * as Permissions from "expo-permissions";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import {
   NricScanner,
-  BarCodeScanningResult
+  BarCodeScanningResult,
 } from "../CustomerDetails/NricScanner";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     maxWidth: 512,
     width: "100%",
     height: "100%",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   cameraWrapper: {
     position: "absolute",
@@ -46,31 +46,31 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: color("grey", 0)
+    backgroundColor: color("grey", 0),
   },
   cancelButtonWrapper: {
     marginTop: size(3),
-    marginBottom: size(4)
+    marginBottom: size(4),
   },
   headerText: {
     marginBottom: size(4),
     textAlign: "center",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   scanButtonWrapper: {
-    marginTop: size(3)
-  }
+    marginTop: size(3),
+  },
 });
 
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
-  navigation
+  navigation,
 }: NavigationProps) => {
   const { token, endpoint, setEndpointValue } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const { config, setConfigValue } = useConfigContext();
-  const [loginStage, setLoginStage] = useState(LOGIN_STAGES.SCAN);
+  const [loginStage, setLoginStage] = useState(LOGIN_STAGES.MOBILE_NUMBER);
   const [mobileNumber, setMobileNumber] = useState("");
   const [codeKey, setCodeKey] = useState("");
 
@@ -101,7 +101,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     if (!hasCameraPermission) {
       askForCameraPermission();
     }
-    setShowScanner(s => !s);
+    setShowScanner((s) => !s);
   };
 
   const onBarCodeScanned = (event: BarCodeScanningResult): void => {
