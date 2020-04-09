@@ -85,42 +85,35 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     <View>
       <CustomerCard nrics={nrics}>
         <View style={sharedStyles.resultWrapper}>
-          {Object.values(cart)
-            .sort((itemOne, itemTwo) => {
-              const productOneOrder = getProduct(itemOne.category)?.order || 0;
-              const productTwoOrder = getProduct(itemTwo.category)?.order || 0;
-
-              return productOneOrder - productTwoOrder;
-            })
-            .map(({ category, quantity, maxQuantity }) => {
-              const product = getProduct(category);
-              const categoryText = product?.name || category;
-              return maxQuantity === 0 ? (
-                <View style={styles.checkboxesListItem} key={category}>
-                  <NoQuotaCategoryItem
-                    label={
-                      <AppText style={styles.categoryText}>
-                        {categoryText}
-                      </AppText>
-                    }
-                  />
-                </View>
-              ) : (
-                <View style={styles.checkboxesListItem} key={category}>
-                  <Checkbox
-                    label={
-                      <AppText style={styles.categoryText}>
-                        {categoryText}
-                      </AppText>
-                    }
-                    isChecked={quantity > 0}
-                    onToggle={() =>
-                      updateCart(category, quantity > 0 ? 0 : maxQuantity)
-                    }
-                  />
-                </View>
-              );
-            })}
+          {cart.map(({ category, quantity, maxQuantity }) => {
+            const product = getProduct(category);
+            const categoryText = product?.name || category;
+            return maxQuantity === 0 ? (
+              <View style={styles.checkboxesListItem} key={category}>
+                <NoQuotaCategoryItem
+                  label={
+                    <AppText style={styles.categoryText}>
+                      {categoryText}
+                    </AppText>
+                  }
+                />
+              </View>
+            ) : (
+              <View style={styles.checkboxesListItem} key={category}>
+                <Checkbox
+                  label={
+                    <AppText style={styles.categoryText}>
+                      {categoryText}
+                    </AppText>
+                  }
+                  isChecked={quantity > 0}
+                  onToggle={() =>
+                    updateCart(category, quantity > 0 ? 0 : maxQuantity)
+                  }
+                />
+              </View>
+            );
+          })}
         </View>
       </CustomerCard>
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>

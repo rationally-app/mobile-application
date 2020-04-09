@@ -1,19 +1,61 @@
+import React, { FunctionComponent } from "react";
 import { renderHook } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
 import { wait } from "@testing-library/react-native";
+import { ProductContext } from "../../context/products";
+import { Policy } from "../../types";
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
 anyGlobal.fetch = mockFetch;
+
+const products: Policy[] = [
+  {
+    category: "toilet-paper",
+    name: "Toilet Paper",
+    unit: "roll",
+    quantityLimit: 2,
+    period: 7,
+    order: 1
+  },
+  {
+    category: "chocolate",
+    name: "Chocolate",
+    unit: "bar",
+    quantityLimit: 15,
+    period: 7,
+    order: 2
+  }
+];
+
+const getProduct = (
+  category: string,
+  products?: Policy[]
+): Policy | undefined =>
+  products?.find(product => product.category === category) ?? undefined;
+
+const wrapper: FunctionComponent = ({ children }) => (
+  <ProductContext.Provider
+    value={{ products, getProduct, setProducts: jest.fn() }}
+  >
+    {children}
+  </ProductContext.Provider>
+);
+
+const transactionTime = new Date(2020, 3, 1);
 
 const mockQuotaResSingleId = {
   remainingQuota: [
     {
       category: "toilet-paper",
       quantity: 2,
-      transactionTime: 1586095465905
+      transactionTime: transactionTime.getTime()
     },
-    { category: "chocolate", quantity: 15, transactionTime: 1586095465905 }
+    {
+      category: "chocolate",
+      quantity: 15,
+      transactionTime: transactionTime.getTime()
+    }
   ]
 };
 const mockQuotaResSingleIdNoQuota = {
@@ -21,9 +63,13 @@ const mockQuotaResSingleIdNoQuota = {
     {
       category: "toilet-paper",
       quantity: 0,
-      transactionTime: 1586095465905
+      transactionTime: transactionTime.getTime()
     },
-    { category: "chocolate", quantity: 0, transactionTime: 1586095465905 }
+    {
+      category: "chocolate",
+      quantity: 0,
+      transactionTime: transactionTime.getTime()
+    }
   ]
 };
 const mockQuotaResMultipleIds = {
@@ -31,9 +77,13 @@ const mockQuotaResMultipleIds = {
     {
       category: "toilet-paper",
       quantity: 4,
-      transactionTime: 1586095465905
+      lastTransactionTime: undefined
     },
-    { category: "chocolate", quantity: 30, transactionTime: 1586095465905 }
+    {
+      category: "chocolate",
+      quantity: 30,
+      lastTransactionTime: undefined
+    }
   ]
 };
 
@@ -42,9 +92,13 @@ const mockTransaction = {
     {
       category: "toilet-paper",
       quantity: 1,
-      transactionTime: 1586095465905
+      transactionTime: transactionTime.getTime()
     },
-    { category: "chocolate", quantity: 5, transactionTime: 1586095465905 }
+    {
+      category: "chocolate",
+      quantity: 5,
+      transactionTime: transactionTime.getTime()
+    }
   ]
 };
 
@@ -59,26 +113,30 @@ describe("useCart", () => {
       mockFetch.mockReturnValueOnce({
         then: () => mockQuotaResSingleId
       });
+
       const ids = ["ID1"];
-      const { result, waitForNextUpdate } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { result, waitForNextUpdate } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
       expect(result.current.cartState).toBe("FETCHING_QUOTA");
 
       await waitForNextUpdate();
       expect(result.current.cartState).toBe("DEFAULT");
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 2
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 0,
-          maxQuantity: 15
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0
         }
-      });
+      ]);
     });
 
     it("should have cart state be NO_QUOTA when no quota is available", async () => {
@@ -87,25 +145,28 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleIdNoQuota
       });
       const ids = ["ID1"];
-      const { result, waitForNextUpdate } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { result, waitForNextUpdate } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
       expect(result.current.cartState).toBe("FETCHING_QUOTA");
 
       await waitForNextUpdate();
       expect(result.current.cartState).toBe("NO_QUOTA");
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 0
+          lastTransactionTime: transactionTime,
+          maxQuantity: 0,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 0,
-          maxQuantity: 0
+          lastTransactionTime: transactionTime,
+          maxQuantity: 0,
+          quantity: 0
         }
-      });
+      ]);
     });
   });
 
@@ -116,8 +177,9 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleId
       });
       let ids = ["ID1"];
-      const { rerender, result, waitForNextUpdate } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { rerender, result, waitForNextUpdate } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
 
       await waitForNextUpdate();
@@ -129,18 +191,20 @@ describe("useCart", () => {
       rerender([ids, "CORRECT_KEY", "https://myendpoint.com"]);
 
       await waitForNextUpdate();
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 4
+          lastTransactionTime: undefined,
+          maxQuantity: 4,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 0,
-          maxQuantity: 30
+          lastTransactionTime: undefined,
+          maxQuantity: 30,
+          quantity: 0
         }
-      });
+      ]);
     });
 
     it("should update the cart when quantities change", async () => {
@@ -149,24 +213,27 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleId
       });
       const ids = ["ID1"];
-      const { result, waitForNextUpdate } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { result, waitForNextUpdate } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
 
       await waitForNextUpdate();
       await wait(() => result.current.updateCart("chocolate", 5));
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 2
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 5,
-          maxQuantity: 15
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5
         }
-      });
+      ]);
     });
 
     it("should maintain cart quantities when more ids are added", async () => {
@@ -175,24 +242,27 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleId
       });
       let ids = ["ID1"];
-      const { rerender, result, waitForNextUpdate } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { rerender, result, waitForNextUpdate } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
 
       await waitForNextUpdate();
       await wait(() => result.current.updateCart("chocolate", 5));
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 2
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 5,
-          maxQuantity: 15
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5
         }
-      });
+      ]);
 
       mockFetch.mockReturnValueOnce({
         then: () => mockQuotaResMultipleIds
@@ -200,18 +270,20 @@ describe("useCart", () => {
       ids = ["ID1", "ID2"];
       rerender([ids, "CORRECT_KEY", "https://myendpoint.com"]);
       await waitForNextUpdate();
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 4
+          lastTransactionTime: undefined,
+          maxQuantity: 4,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 5,
-          maxQuantity: 30
+          lastTransactionTime: undefined,
+          maxQuantity: 30,
+          quantity: 5
         }
-      });
+      ]);
     });
 
     it("should set error when updateCart is given a negative quantity", async () => {
@@ -220,8 +292,9 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleId
       });
       const ids = ["ID1"];
-      const { result } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { result } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
 
       await wait(() => {
@@ -229,18 +302,20 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe("Invalid quantity");
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 2
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 0,
-          maxQuantity: 15
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0
         }
-      });
+      ]);
     });
 
     it("should set error when updateCart is given a quantity over the limit", async () => {
@@ -249,26 +324,29 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleId
       });
       const ids = ["ID1"];
-      const { result } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { result } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
 
       await wait(() => {
         result.current.updateCart("chocolate", 100);
       });
       expect(result.current.error?.message).toBe("Insufficient quota");
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 2
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 0,
-          maxQuantity: 15
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0
         }
-      });
+      ]);
     });
 
     it("should set error when updateCart is given a category that does not exist", async () => {
@@ -277,26 +355,29 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleId
       });
       const ids = ["ID1"];
-      const { result } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { result } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
 
       await wait(() => {
         result.current.updateCart("eggs", 1);
       });
       expect(result.current.error?.message).toBe("Category does not exist");
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 2
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 0,
-          maxQuantity: 15
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0
         }
-      });
+      ]);
     });
   });
 
@@ -307,8 +388,9 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleId
       });
       const ids = ["ID1"];
-      const { result } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { result } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
 
       await wait(() => {
@@ -326,18 +408,20 @@ describe("useCart", () => {
       });
 
       expect(result.current.cartState).toBe("PURCHASED");
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 1,
-          maxQuantity: 2
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 1
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 5,
-          maxQuantity: 15
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5
         }
-      });
+      ]);
       expect(result.current.checkoutResult).toStrictEqual(mockTransaction);
     });
 
@@ -347,8 +431,9 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleId
       });
       const ids = ["ID1"];
-      const { result } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { result } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
 
       await wait(() => {
@@ -359,18 +444,20 @@ describe("useCart", () => {
         "Please select at least one item to checkout"
       );
       expect(result.current.cartState).toBe("DEFAULT");
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 0,
-          maxQuantity: 2
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 0
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 0,
-          maxQuantity: 15
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0
         }
-      });
+      ]);
     });
 
     it("should set error when transaction does not succeed", async () => {
@@ -379,8 +466,9 @@ describe("useCart", () => {
         then: () => mockQuotaResSingleId
       });
       const ids = ["ID1"];
-      const { result } = renderHook(() =>
-        useCart(ids, "CORRECT_KEY", "https://myendpoint.com")
+      const { result } = renderHook(
+        () => useCart(ids, "CORRECT_KEY", "https://myendpoint.com"),
+        { wrapper }
       );
 
       await wait(() => {
@@ -398,18 +486,20 @@ describe("useCart", () => {
         "Couldn't checkout, please try again later"
       );
       expect(result.current.cartState).toBe("DEFAULT");
-      expect(result.current.cart).toStrictEqual({
-        "toilet-paper": {
+      expect(result.current.cart).toStrictEqual([
+        {
           category: "toilet-paper",
-          quantity: 1,
-          maxQuantity: 2
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 1
         },
-        chocolate: {
+        {
           category: "chocolate",
-          quantity: 5,
-          maxQuantity: 15
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5
         }
-      });
+      ]);
     });
   });
 });

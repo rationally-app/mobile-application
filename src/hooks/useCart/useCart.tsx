@@ -7,16 +7,20 @@ import {
   QuotaItem,
   PostTransaction
 } from "../../services/quota";
+import { useProductContext, ProductContextValue } from "../../context/products";
 
 type CartItem = {
   category: string;
   quantity: number;
   maxQuantity: number;
+  /**
+   * Indicates the previous time quota was used.
+   * It will be undefined for batch quotas.
+   */
+  lastTransactionTime?: Date;
 };
 
-export type Cart = {
-  [category: string]: CartItem;
-};
+export type Cart = CartItem[];
 
 type CartState =
   | "FETCHING_QUOTA"
@@ -35,15 +39,37 @@ export type CartHook = {
   clearError: () => void;
 };
 
-const mergeWithCart = (cart: Cart, quota: QuotaItem[]): Cart => {
-  return quota.reduce((newCart, item) => {
-    newCart[item.category] = {
-      category: item.category,
-      quantity: Math.min(item.quantity, cart[item.category]?.quantity ?? 0),
-      maxQuantity: item.quantity
-    };
-    return newCart;
-  }, {} as Cart);
+const getItem = (
+  cart: Cart,
+  category: string
+): [CartItem | undefined, number] => {
+  const idx = cart.findIndex(item => item.category === category);
+  return [cart[idx], idx];
+};
+
+const mergeWithCart = (
+  cart: Cart,
+  quota: QuotaItem[],
+  getProduct: ProductContextValue["getProduct"]
+): Cart => {
+  return quota
+    .sort((itemOne, itemTwo) => {
+      const productOneOrder = getProduct(itemOne.category)?.order || 0;
+      const productTwoOrder = getProduct(itemTwo.category)?.order || 0;
+
+      return productOneOrder - productTwoOrder;
+    })
+    .map(({ category, quantity, transactionTime }) => {
+      const [existingItem] = getItem(cart, category);
+      return {
+        category,
+        quantity: Math.min(quantity, existingItem?.quantity ?? 0),
+        maxQuantity: quantity,
+        lastTransactionTime: transactionTime
+          ? new Date(transactionTime)
+          : undefined
+      };
+    });
 };
 
 const hasNoQuota = (quota: Quota): boolean =>
@@ -54,7 +80,8 @@ export const useCart = (
   authKey: string,
   endpoint: string
 ): CartHook => {
-  const [cart, setCart] = useState<Cart>({});
+  const { getProduct } = useProductContext();
+  const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<
     PostTransactionResponse
@@ -79,14 +106,16 @@ export const useCart = (
 
         // Note that we must use a callback within this setState to avoid
         // having cart as a dependency which causes an infinite loop.
-        setCart(cart => mergeWithCart(cart, quotaResponse.remainingQuota));
+        setCart(cart =>
+          mergeWithCart(cart, quotaResponse.remainingQuota, getProduct)
+        );
       } catch (e) {
         setError(e); // Cart will remain in FETCHING_QUOTA state.
       }
     };
 
     fetchQuota();
-  }, [authKey, endpoint, ids]);
+  }, [authKey, endpoint, getProduct, ids]);
 
   /**
    * Update quantity of an item in the cart.
@@ -97,15 +126,17 @@ export const useCart = (
         setError(new Error("Invalid quantity"));
         return;
       }
-      if (cart.hasOwnProperty(category)) {
-        if (quantity <= cart[category].maxQuantity) {
-          setCart({
-            ...cart,
-            [category]: {
-              ...cart[category],
+      const [item, itemIdx] = getItem(cart, category);
+      if (item) {
+        if (quantity <= item.maxQuantity) {
+          setCart([
+            ...cart.slice(0, itemIdx),
+            {
+              ...item,
               quantity
-            }
-          });
+            },
+            ...cart.slice(itemIdx + 1)
+          ]);
         } else {
           setError(new Error("Insufficient quota"));
           return;

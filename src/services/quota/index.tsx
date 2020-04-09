@@ -3,7 +3,7 @@ import { IS_MOCK } from "../../config";
 export interface QuotaItem {
   category: string;
   quantity: number;
-  transactionTime: number;
+  transactionTime?: number;
 }
 
 export interface Quota {
@@ -54,16 +54,26 @@ export const liveGetQuota = async (
   key: string,
   endpoint: string
 ): Promise<Quota> => {
-  const quotaResponse: Quota = await fetch(`${endpoint}/quota`, {
-    method: "POST",
-    headers: {
-      Authorization: key
-    },
-    body: JSON.stringify({
-      ids: nrics
-    })
-  }).then(res => res.json());
-  return quotaResponse;
+  if (nrics.length === 1) {
+    const quotaResponse: Quota = await fetch(`${endpoint}/quota/${nrics[0]}`, {
+      method: "GET",
+      headers: {
+        Authorization: key
+      }
+    }).then(res => res.json());
+    return quotaResponse;
+  } else {
+    const batchQuotaResponse: Quota = await fetch(`${endpoint}/quota`, {
+      method: "POST",
+      headers: {
+        Authorization: key
+      },
+      body: JSON.stringify({
+        ids: nrics
+      })
+    }).then(res => res.json());
+    return batchQuotaResponse;
+  }
 };
 
 export const mockPostTransaction = async ({

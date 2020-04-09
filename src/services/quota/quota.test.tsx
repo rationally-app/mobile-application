@@ -22,8 +22,12 @@ const transactions: PostTransaction["transactions"] = [
 ];
 const timestamp = new Date(2020, 3, 1).getTime();
 
-const mockGetQuotaResponse: Quota = {
+const mockGetQuotaResponseSingleId: Quota = {
   remainingQuota: transactions.map(t => ({ ...t, transactionTime: timestamp }))
+};
+
+const mockGetQuotaResponseMultipleId: Quota = {
+  remainingQuota: transactions
 };
 
 const mockPostTransactionResponse: PostTransactionResponse = {
@@ -44,10 +48,30 @@ describe("quota", () => {
     it("should return the quota of a nric number", async () => {
       expect.assertions(2);
       mockFetch.mockReturnValueOnce({
-        then: () => mockGetQuotaResponse
+        then: () => mockGetQuotaResponseSingleId
       });
       const quota = await getQuota(
         ["S0000000J"],
+        "KEY",
+        "https://myendpoint.com"
+      );
+      expect(mockFetch.mock.calls[0]).toEqual([
+        `https://myendpoint.com/quota/S0000000J`,
+        {
+          method: "GET",
+          headers: { Authorization: "KEY" }
+        }
+      ]);
+      expect(quota).toEqual(mockGetQuotaResponseSingleId);
+    });
+
+    it("should return the combined quota of multiple nric numbers", async () => {
+      expect.assertions(2);
+      mockFetch.mockReturnValueOnce({
+        then: () => mockGetQuotaResponseMultipleId
+      });
+      const quota = await getQuota(
+        ["S0000000J", "S0000001I"],
         "KEY",
         "https://myendpoint.com"
       );
@@ -56,10 +80,10 @@ describe("quota", () => {
         {
           method: "POST",
           headers: { Authorization: "KEY" },
-          body: JSON.stringify({ ids: ["S0000000J"] })
+          body: JSON.stringify({ ids: ["S0000000J", "S0000001I"] })
         }
       ]);
-      expect(quota).toEqual(mockGetQuotaResponse);
+      expect(quota).toEqual(mockGetQuotaResponseMultipleId);
     });
   });
 
