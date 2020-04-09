@@ -47,6 +47,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       setIsLoading(false);
       setLoginStage(LOGIN_STAGES.OTP);
     } catch (e) {
+      setIsLoading(false);
       alert(e.message || e);
     }
   };
@@ -69,6 +70,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
           <InputWithLabel
             label="Mobile phone number"
             value={mobileNumber}
+            keyboardType="phone-pad"
             onChange={({ nativeEvent: { text } }) => setMobileNumber(text)}
             onSubmitEditing={onSubmitMobileNumber}
           />
