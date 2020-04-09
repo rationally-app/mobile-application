@@ -11,6 +11,7 @@ import { Feather } from "@expo/vector-icons";
 import { clamp, debounce } from "lodash";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppText } from "./AppText";
+import { useIsMounted } from "../../hooks/useIsMounted/useIsMounted";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -91,13 +92,16 @@ export const Stepper: FunctionComponent<Stepper> = ({
   step = 1,
   unit
 }) => {
+  const isMounted = useIsMounted();
   const [internalValue, setInternalValue] = useState<string>(`${value}`);
 
   const delayedClampAndRound = useRef(
     debounce<typeof clampAndRound>((...props) => {
       const num = clampAndRound(...props);
-      setInternalValue(`${num}`);
-      setValue(num);
+      if (isMounted.current) {
+        setInternalValue(`${num}`);
+        setValue(num);
+      }
       return num;
     }, 800)
   );
