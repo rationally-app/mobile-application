@@ -12,7 +12,7 @@ export const liveRequestOTP = async (
   const payload = { code, phone: mobileNumber };
   const response = await fetch(`${endpoint}/auth/register`, {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
   if (!response.ok) {
     throw new Error("Failed to generate OTP");
@@ -28,7 +28,7 @@ export const liveValidateOTP = async (
   const payload = { code, otp, phone: mobileNumber };
   const response = await fetch(`${endpoint}/auth/confirm`, {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
   if (!response.ok) {
     throw new Error("OTP invalid");
@@ -43,7 +43,7 @@ export const mockValidateOTP = async (
   _endpoint: string
 ): Promise<ValidateOTPResponse> => {
   return {
-    session: "some-valid-session",
+    session: "some-valid-session"
   };
 };
 

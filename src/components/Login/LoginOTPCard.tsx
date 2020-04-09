@@ -14,17 +14,17 @@ const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
-    marginTop: size(3),
+    marginTop: size(3)
   },
   buttonsWrapper: {
     marginTop: size(2),
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "center"
   },
   submitWrapper: {
     flex: 1,
-    marginLeft: size(1),
-  },
+    marginLeft: size(1)
+  }
 });
 
 interface LoginOTPCard extends NavigationProps {
@@ -35,7 +35,7 @@ interface LoginOTPCard extends NavigationProps {
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   navigation,
   mobileNumber,
-  codeKey,
+  codeKey
 }: LoginOTPCard) => {
   const [isLoading, setIsLoading] = useState(false);
   const [oTPValue, setOTPValue] = useState("");

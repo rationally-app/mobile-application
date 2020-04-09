@@ -12,7 +12,7 @@ describe("requestOTP", () => {
     expect.assertions(1);
     mockFetch.mockResolvedValueOnce({
       status: 200,
-      ok: true,
+      ok: true
     });
     const payload = { code: "CORRECT_KEY", phone };
     await requestOTP(phone, "CORRECT_KEY", endpoint);
@@ -20,8 +20,8 @@ describe("requestOTP", () => {
       `${endpoint}/auth/register`,
       {
         method: "POST",
-        body: JSON.stringify(payload),
-      },
+        body: JSON.stringify(payload)
+      }
     ]);
   });
 
