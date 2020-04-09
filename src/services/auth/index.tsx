@@ -1,7 +1,7 @@
 import { IS_MOCK } from "../../config";
 
 export interface ValidateOTPResponse {
-  session: string;
+  sessionToken: string;
 }
 
 export const liveRequestOTP = async (
@@ -43,7 +43,7 @@ export const mockValidateOTP = async (
   _endpoint: string
 ): Promise<ValidateOTPResponse> => {
   return {
-    session: "some-valid-session"
+    sessionToken: "some-valid-session-token"
   };
 };
 
