@@ -143,6 +143,13 @@ export const Stepper: FunctionComponent<Stepper> = ({
     }
   };
 
+  // When input is blurred, immediately clamp and round
+  const onBlur = (): void => {
+    const num = clampAndRound(internalValue, bounds.min, bounds.max, step);
+    setInternalValue(`${num}`);
+    setValue(num);
+  };
+
   return (
     <View style={styles.wrapper}>
       <TouchableOpacity
@@ -164,6 +171,7 @@ export const Stepper: FunctionComponent<Stepper> = ({
           style={styles.input}
           value={internalValue}
           onChangeText={onChangeTextValue}
+          onBlur={onBlur}
           keyboardType="number-pad"
           maxLength={Math.ceil(Math.log10(bounds.max + 1))}
         />
