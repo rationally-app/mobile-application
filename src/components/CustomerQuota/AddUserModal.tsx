@@ -124,52 +124,50 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   };
 
   return (
-    <View style={{ ...StyleSheet.absoluteFillObject }}>
-      <Modal
-        visible={isVisible}
-        onRequestClose={() => setIsVisible(false)}
-        transparent={true}
-        animationType="fade"
-      >
-        {shouldShowCamera ? (
-          <View style={styles.cameraWrapper}>
-            <IdScanner
-              onBarCodeScanned={onBarCodeScanned}
-              onCancel={() => setShouldShowCamera(false)}
-              cancelButtonText="Enter NRIC manually"
-            />
-          </View>
-        ) : (
-          <ScrollView
-            contentContainerStyle={styles.scrollWrapper}
-            keyboardShouldPersistTaps="handled"
-          >
-            <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
-              <View style={styles.background} />
-            </TouchableWithoutFeedback>
-            <View style={styles.cardWrapper}>
-              <KeyboardAvoidingView behavior="position">
-                <Card style={styles.card}>
-                  <View style={styles.cardHeader}>
-                    <AppText style={{ flex: 1 }}>
-                      Add another NRIC to combine your quotas
-                    </AppText>
-                    <View style={{ marginLeft: size(1) }}>
-                      <CloseButton onPress={() => setIsVisible(false)} />
-                    </View>
+    <Modal
+      visible={isVisible}
+      onRequestClose={() => setIsVisible(false)}
+      transparent={true}
+      animationType="fade"
+    >
+      {shouldShowCamera ? (
+        <View style={styles.cameraWrapper}>
+          <IdScanner
+            onBarCodeScanned={onBarCodeScanned}
+            onCancel={() => setShouldShowCamera(false)}
+            cancelButtonText="Enter NRIC manually"
+          />
+        </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.scrollWrapper}
+          keyboardShouldPersistTaps="handled"
+        >
+          <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
+            <View style={styles.background} />
+          </TouchableWithoutFeedback>
+          <View style={styles.cardWrapper}>
+            <KeyboardAvoidingView behavior="position">
+              <Card style={styles.card}>
+                <View style={styles.cardHeader}>
+                  <AppText style={{ flex: 1 }}>
+                    Add another NRIC to combine your quotas
+                  </AppText>
+                  <View style={{ marginLeft: size(1) }}>
+                    <CloseButton onPress={() => setIsVisible(false)} />
                   </View>
-                  <InputNricSection
-                    openCamera={() => setShouldShowCamera(true)}
-                    nricInput={nricInput}
-                    setNricInput={setNricInput}
-                    submitNric={() => onCheck(nricInput)}
-                  />
-                </Card>
-              </KeyboardAvoidingView>
-            </View>
-          </ScrollView>
-        )}
-      </Modal>
-    </View>
+                </View>
+                <InputNricSection
+                  openCamera={() => setShouldShowCamera(true)}
+                  nricInput={nricInput}
+                  setNricInput={setNricInput}
+                  submitNric={() => onCheck(nricInput)}
+                />
+              </Card>
+            </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      )}
+    </Modal>
   );
 };
