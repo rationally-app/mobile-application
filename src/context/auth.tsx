@@ -34,17 +34,17 @@ export const AuthenticationContextProvider: FunctionComponent = ({
   const [endpoint, setEndpoint] = useState("");
 
   const setSessionToken: AuthenticationContext["setSessionToken"] = (
-    token: string
+    tokenInput: string
   ) => {
-    setToken(token);
-    AsyncStorage.setItem(SESSION_TOKEN_KEY, token);
+    setToken(tokenInput);
+    AsyncStorage.setItem(SESSION_TOKEN_KEY, tokenInput);
   };
 
   const setEndpointValue: AuthenticationContext["setEndpointValue"] = (
-    endpoint: string
+    endpointInput: string
   ) => {
-    setEndpoint(endpoint);
-    AsyncStorage.setItem(SESSION_TOKEN_KEY, token);
+    setEndpoint(endpointInput);
+    AsyncStorage.setItem(ENDPOINT_KEY, endpointInput);
   };
 
   const loadAuthFromStore = async (): Promise<void> => {
