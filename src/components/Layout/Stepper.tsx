@@ -81,6 +81,60 @@ const clampAndRound = (
   return roundedNum;
 };
 
+interface StepperButton {
+  onPress: () => void;
+  variant: "PLUS" | "MINUS";
+  disabled?: boolean;
+}
+
+const StepperButton: FunctionComponent<StepperButton> = ({
+  onPress,
+  variant,
+  disabled = false
+}) => {
+  const [isPressedIn, setIsPressedIn] = useState(false);
+  const [longPressStartTime, setLongPressStartTime] = useState(0);
+
+  useEffect(() => {
+    let timeout: any;
+    if (longPressStartTime > 0 && isPressedIn) {
+      // Exponential decay so that the rate of change in value changes with time.
+      const duration = Math.round(
+        400 * 0.4 ** ((Date.now() - longPressStartTime) / 1000)
+      );
+      timeout = setTimeout(onPress, duration);
+    } else {
+      clearTimeout(timeout);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [isPressedIn, longPressStartTime, onPress]);
+
+  return (
+    <TouchableOpacity
+      style={styles.stepButton}
+      onPress={onPress}
+      disabled={disabled}
+      delayLongPress={300}
+      onPressIn={() => setIsPressedIn(true)}
+      onPressOut={() => {
+        setIsPressedIn(false);
+        setLongPressStartTime(0);
+      }}
+      onLongPress={() => {
+        setLongPressStartTime(Date.now());
+      }}
+    >
+      <Feather
+        name={variant === "PLUS" ? "plus" : "minus"}
+        size={size(2.5)}
+        color={color("grey", disabled ? 30 : 80)}
+      />
+    </TouchableOpacity>
+  );
+};
+
 export interface Stepper {
   value: number;
   setValue: Dispatch<SetStateAction<number>>;
@@ -169,17 +223,11 @@ export const Stepper: FunctionComponent<Stepper> = ({
 
   return (
     <View style={styles.wrapper}>
-      <TouchableOpacity
-        style={styles.stepButton}
+      <StepperButton
+        variant="MINUS"
         onPress={decrement}
-        disabled={value === bounds?.min}
-      >
-        <Feather
-          name="minus"
-          size={size(2.5)}
-          color={color("grey", value === bounds?.min ? 30 : 80)}
-        />
-      </TouchableOpacity>
+        disabled={value === bounds.min}
+      />
       <View style={styles.inputAndSuffixWrapper}>
         {unit?.type === "PREFIX" && (
           <AppText style={styles.suffix}>{unit?.label}</AppText>
@@ -196,17 +244,11 @@ export const Stepper: FunctionComponent<Stepper> = ({
           <AppText style={styles.suffix}>{unit?.label}</AppText>
         )}
       </View>
-      <TouchableOpacity
-        style={styles.stepButton}
+      <StepperButton
+        variant="PLUS"
         onPress={increment}
-        disabled={value === bounds?.max}
-      >
-        <Feather
-          name="plus"
-          size={size(2.5)}
-          color={color("grey", value === bounds?.max ? 30 : 80)}
-        />
-      </TouchableOpacity>
+        disabled={value === bounds.max}
+      />
     </View>
   );
 };
