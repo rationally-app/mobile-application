@@ -13,16 +13,14 @@ export const ENDPOINT_KEY = "ENDPOINT_KEY";
 interface AuthenticationContext {
   token: string;
   endpoint: string;
-  setSessionToken: (key: string) => void;
-  setEndpointValue: (key: string) => void;
+  setAuthInfo: (token: string, endpoint: string) => void;
   clearAuthInfo: () => void;
 }
 
 export const AuthenticationContext = createContext<AuthenticationContext>({
   token: "",
-  setSessionToken: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   endpoint: "",
-  setEndpointValue: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  setAuthInfo: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   clearAuthInfo: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
@@ -35,18 +33,22 @@ export const AuthenticationContextProvider: FunctionComponent = ({
   const [token, setToken] = useState("");
   const [endpoint, setEndpoint] = useState("");
 
-  const setSessionToken: AuthenticationContext["setSessionToken"] = (
-    tokenInput: string
-  ) => {
+  const setAuthInfo: AuthenticationContext["setAuthInfo"] = (
+    tokenInput: string,
+    endpointInput: string
+  ): void => {
     setToken(tokenInput);
-    AsyncStorage.setItem(SESSION_TOKEN_KEY, tokenInput);
+    setEndpoint(endpointInput);
+    AsyncStorage.multiSet([
+      [SESSION_TOKEN_KEY, tokenInput],
+      [ENDPOINT_KEY, endpointInput]
+    ]);
   };
 
-  const setEndpointValue: AuthenticationContext["setEndpointValue"] = (
-    endpointInput: string
-  ) => {
-    setEndpoint(endpointInput);
-    AsyncStorage.setItem(ENDPOINT_KEY, endpointInput);
+  const clearAuthInfo: AuthenticationContext["clearAuthInfo"] = (): void => {
+    setToken("");
+    setEndpoint("");
+    AsyncStorage.multiRemove([SESSION_TOKEN_KEY, ENDPOINT_KEY]);
   };
 
   const loadAuthFromStore = async (): Promise<void> => {
@@ -58,12 +60,6 @@ export const AuthenticationContextProvider: FunctionComponent = ({
     }
   };
 
-  const clearAuthInfo = (): void => {
-    setToken("");
-    setEndpoint("");
-    AsyncStorage.multiRemove([SESSION_TOKEN_KEY, ENDPOINT_KEY]);
-  };
-
   useEffect(() => {
     loadAuthFromStore();
   }, []);
@@ -72,9 +68,8 @@ export const AuthenticationContextProvider: FunctionComponent = ({
     <AuthenticationContext.Provider
       value={{
         token,
-        setSessionToken,
         endpoint,
-        setEndpointValue,
+        setAuthInfo,
         clearAuthInfo
       }}
     >

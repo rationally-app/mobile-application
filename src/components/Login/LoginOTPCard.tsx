@@ -44,7 +44,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const [resendDisabledTime, setResendDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT
   );
-  const { setSessionToken, setEndpointValue } = useAuthenticationContext();
+  const { setAuthInfo } = useAuthenticationContext();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -67,8 +67,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     try {
       const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
       setIsLoading(false);
-      setSessionToken(response.sessionToken);
-      setEndpointValue(endpoint);
+      setAuthInfo(response.sessionToken, endpoint);
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
       setIsLoading(false);
