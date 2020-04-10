@@ -10,15 +10,20 @@ export interface Quota {
   remainingQuota: QuotaItem[];
 }
 
+export interface Transaction {
+  category: string;
+  quantity: number;
+}
+
 export interface PostTransaction {
   nrics: string[];
-  transactions: Pick<QuotaItem, "category" | "quantity">[];
+  transactions: Transaction[];
   key: string;
   endpoint: string;
 }
 
 export interface TransactionItemResponse {
-  transaction: Pick<QuotaItem, "category" | "quantity">[];
+  transaction: Transaction[];
   timestamp: number;
 }
 
