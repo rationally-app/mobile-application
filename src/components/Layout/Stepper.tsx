@@ -6,7 +6,13 @@ import React, {
   useEffect,
   useState
 } from "react";
-import { View, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  Platform
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { clamp, debounce } from "lodash";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
@@ -35,9 +41,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   input: {
-    marginTop: -2,
     marginHorizontal: 2,
-    fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: fontSize(1),
     color: color("blue", 50),
@@ -45,7 +49,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     textAlign: "center",
     paddingVertical: 0,
-    paddingHorizontal: 2
+    paddingHorizontal: 2,
+    ...Platform.select({
+      ios: {
+        fontFamily: "Menlo"
+      },
+      android: {
+        fontFamily: "monospace",
+        marginTop: -2
+      }
+    })
   },
   suffix: {
     marginTop: -2,
