@@ -15,13 +15,15 @@ interface AuthenticationContext {
   endpoint: string;
   setSessionToken: (key: string) => void;
   setEndpointValue: (key: string) => void;
+  clearAuthInfo: () => void;
 }
 
 export const AuthenticationContext = createContext<AuthenticationContext>({
   token: "",
   setSessionToken: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   endpoint: "",
-  setEndpointValue: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
+  setEndpointValue: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  clearAuthInfo: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
 export const useAuthenticationContext = (): AuthenticationContext =>
@@ -56,13 +58,25 @@ export const AuthenticationContextProvider: FunctionComponent = ({
     }
   };
 
+  const clearAuthInfo = (): void => {
+    setToken("");
+    setEndpoint("");
+    AsyncStorage.multiRemove([SESSION_TOKEN_KEY, ENDPOINT_KEY]);
+  };
+
   useEffect(() => {
     loadAuthFromStore();
   }, []);
 
   return (
     <AuthenticationContext.Provider
-      value={{ token, setSessionToken, endpoint, setEndpointValue }}
+      value={{
+        token,
+        setSessionToken,
+        endpoint,
+        setEndpointValue,
+        clearAuthInfo
+      }}
     >
       {children}
     </AuthenticationContext.Provider>
