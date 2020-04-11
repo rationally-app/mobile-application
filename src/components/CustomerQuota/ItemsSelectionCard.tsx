@@ -1,9 +1,4 @@
-import React, {
-  FunctionComponent,
-  ReactElement,
-  Dispatch,
-  SetStateAction
-} from "react";
+import React, { FunctionComponent, ReactElement } from "react";
 import { useProductContext } from "../../context/products";
 import { View, StyleSheet, Alert } from "react-native";
 import { CustomerCard } from "./CustomerCard";
@@ -14,7 +9,7 @@ import { Checkbox } from "../Layout/Checkbox";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { Feather } from "@expo/vector-icons";
-import { CartState } from "./types";
+import { Cart, CartHook } from "../../hooks/useCart/useCart";
 
 const styles = StyleSheet.create({
   noQuotaCategoryItemWrapper: {
@@ -69,69 +64,56 @@ const NoQuotaCategoryItem: FunctionComponent<{ label: ReactElement }> = ({
 );
 
 interface ItemsSelectionCard {
-  nric: string;
+  nrics: string[];
   isLoading: boolean;
-  onRecordTransaction: () => Promise<void>;
+  checkoutCart: () => void;
   onCancel: () => void;
-  cart?: CartState;
-  setCart: Dispatch<SetStateAction<CartState | undefined>>;
+  cart: Cart;
+  updateCart: CartHook["updateCart"];
 }
 
 export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
-  nric,
+  nrics,
   isLoading,
-  onRecordTransaction,
+  checkoutCart,
   onCancel,
   cart,
-  setCart
+  updateCart
 }) => {
   const { getProduct } = useProductContext();
-  if (!cart) {
-    return null;
-  }
   return (
     <View>
-      <CustomerCard nric={nric}>
+      <CustomerCard nrics={nrics}>
         <View style={sharedStyles.resultWrapper}>
-          {Object.entries(cart)
-            .sort((itemOne, itemTwo) => {
-              const productOneOrder = getProduct(itemOne[0])?.order || 0;
-              const productTwoOrder = getProduct(itemTwo[0])?.order || 0;
-
-              return productOneOrder - productTwoOrder;
-            })
-            .map(([category, canBuy]) => {
-              const product = getProduct(category);
-              const categoryText = product?.name || category;
-              return canBuy === null ? (
-                <View style={styles.checkboxesListItem} key={category}>
-                  <NoQuotaCategoryItem
-                    label={
-                      <AppText style={styles.categoryText}>
-                        {categoryText}
-                      </AppText>
-                    }
-                  />
-                </View>
-              ) : (
-                <View style={styles.checkboxesListItem} key={category}>
-                  <Checkbox
-                    label={
-                      <AppText style={styles.categoryText}>
-                        {categoryText}
-                      </AppText>
-                    }
-                    isChecked={canBuy}
-                    onToggle={() =>
-                      setCart(cart => ({
-                        ...cart,
-                        [category]: !cart?.[category]
-                      }))
-                    }
-                  />
-                </View>
-              );
-            })}
+          {cart.map(({ category, quantity, maxQuantity }) => {
+            const product = getProduct(category);
+            const categoryText = product?.name || category;
+            return maxQuantity === 0 ? (
+              <View style={styles.checkboxesListItem} key={category}>
+                <NoQuotaCategoryItem
+                  label={
+                    <AppText style={styles.categoryText}>
+                      {categoryText}
+                    </AppText>
+                  }
+                />
+              </View>
+            ) : (
+              <View style={styles.checkboxesListItem} key={category}>
+                <Checkbox
+                  label={
+                    <AppText style={styles.categoryText}>
+                      {categoryText}
+                    </AppText>
+                  }
+                  isChecked={quantity > 0}
+                  onToggle={() =>
+                    updateCart(category, quantity > 0 ? 0 : maxQuantity)
+                  }
+                />
+              </View>
+            );
+          })}
         </View>
       </CustomerCard>
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
@@ -150,7 +132,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 color={color("grey", 0)}
               />
             }
-            onPress={onRecordTransaction}
+            onPress={checkoutCart}
             isLoading={isLoading}
             fullWidth={true}
           />

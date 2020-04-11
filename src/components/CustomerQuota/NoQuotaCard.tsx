@@ -1,17 +1,27 @@
 import React, { FunctionComponent } from "react";
-import { Transaction } from "../../services/quota";
+import { compareDesc } from "date-fns";
 import { differenceInSeconds, format, formatDistance } from "date-fns";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { CustomerCard } from "./CustomerCard";
 import { AppText } from "../Layout/AppText";
-import { color } from "../../common/styles";
+import { color, size, fontSize } from "../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
+import { Cart } from "../../hooks/useCart/useCart";
+import { useProductContext } from "../../context/products";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
-const DistantTransactionContent: FunctionComponent<{
-  transactionTime: number;
+const styles = StyleSheet.create({
+  itemTransactions: {
+    marginTop: size(1),
+    lineHeight: 1.5 * fontSize(0),
+    marginBottom: -size(2)
+  }
+});
+
+const DistantTransactionTitle: FunctionComponent<{
+  transactionTime: Date;
 }> = ({ transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>Limit reached on </AppText>
@@ -21,9 +31,9 @@ const DistantTransactionContent: FunctionComponent<{
   </>
 );
 
-const RecentTransactionContent: FunctionComponent<{
+const RecentTransactionTitle: FunctionComponent<{
   now: Date;
-  transactionTime: number;
+  transactionTime: Date;
 }> = ({ now, transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>Limit reached </AppText>
@@ -34,33 +44,50 @@ const RecentTransactionContent: FunctionComponent<{
   </>
 );
 
-const NoPreviousTransactionContent: FunctionComponent = () => (
+const NoPreviousTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>Limit reached.</AppText>
 );
 
 interface NoQuotaCard {
-  nric: string;
-  remainingQuota: Transaction[];
+  nrics: string[];
+  cart: Cart;
   onCancel: () => void;
 }
 
 /**
  * Shows when the user cannot purchase anything
  *
- * Precondition: Only rendered when remainingQuota are all 0
+ * Precondition: Only rendered when all items in cart have max quantity of 0
  */
 export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
-  nric,
-  remainingQuota,
+  nrics,
+  cart,
   onCancel
 }) => {
+  const { getProduct } = useProductContext();
+
+  const sortedCart = cart.sort((item1, item2) =>
+    compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
+  );
+
+  let itemTransactions = "";
+  sortedCart.forEach(({ category, lastTransactionTime }) => {
+    if (lastTransactionTime) {
+      const categoryName = getProduct(category)?.name ?? category;
+      const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
+      itemTransactions += `• ${categoryName} (${formattedDate})\n`;
+    }
+  });
+
   const now = new Date();
-  const secondsFromLastTransaction = remainingQuota[0]?.transactionTime
-    ? differenceInSeconds(now, new Date(remainingQuota[0].transactionTime))
+  const latestTransactionTime = sortedCart[0]?.lastTransactionTime ?? undefined;
+  const secondsFromLatestTransaction = latestTransactionTime
+    ? differenceInSeconds(now, latestTransactionTime)
     : -1;
+
   return (
     <View>
-      <CustomerCard nric={nric} headerBackgroundColor={color("red", 60)}>
+      <CustomerCard nrics={nrics} headerBackgroundColor={color("red", 60)}>
         <View
           style={[
             sharedStyles.resultWrapper,
@@ -69,21 +96,29 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         >
           <AppText style={sharedStyles.emoji}>❌</AppText>
           <AppText style={sharedStyles.statusTitleWrapper}>
-            {secondsFromLastTransaction > 0 ? (
-              secondsFromLastTransaction > DURATION_THRESHOLD_SECONDS ? (
-                <DistantTransactionContent
-                  transactionTime={remainingQuota[0].transactionTime}
+            {secondsFromLatestTransaction > 0 ? (
+              secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
+                <DistantTransactionTitle
+                  transactionTime={latestTransactionTime!}
                 />
               ) : (
-                <RecentTransactionContent
+                <RecentTransactionTitle
                   now={now}
-                  transactionTime={remainingQuota[0].transactionTime}
+                  transactionTime={latestTransactionTime!}
                 />
               )
             ) : (
-              <NoPreviousTransactionContent />
+              <NoPreviousTransactionTitle />
             )}
           </AppText>
+          {itemTransactions.length > 0 && (
+            <View>
+              <AppText>When limits were reached:</AppText>
+              <AppText style={styles.itemTransactions}>
+                {itemTransactions}
+              </AppText>
+            </View>
+          )}
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>

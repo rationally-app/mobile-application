@@ -6,33 +6,43 @@ import { AppText } from "../Layout/AppText";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, fontSize } from "../../common/styles";
+import { CartHook } from "../../hooks/useCart/useCart";
 
 const styles = StyleSheet.create({
   purchasedItemsList: {
     marginTop: size(1),
     lineHeight: 1.5 * fontSize(0),
     marginBottom: -size(2)
-  },
-  purchasedItemText: {
-    marginBottom: size(0.5)
   }
 });
 
 interface PurchaseSuccessCard {
-  nric: string;
+  nrics: string[];
   onCancel: () => void;
-  purchasedItems: string[];
+  checkoutResult: CartHook["checkoutResult"];
 }
 
 export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
-  nric,
+  nrics,
   onCancel,
-  purchasedItems
+  checkoutResult
 }) => {
   const { getProduct } = useProductContext();
+  let purchasedItems = "";
+  checkoutResult?.transactions.forEach((userTransaction, idx) => {
+    const userNric = nrics[idx];
+    const { transaction } = userTransaction;
+    transaction.forEach(({ category }) => {
+      const categoryName = getProduct(category)?.name ?? category;
+      purchasedItems += `• ${categoryName}${
+        nrics.length > 1 ? ` (${userNric})` : ""
+      }\n`;
+    });
+  });
+
   return (
     <View>
-      <CustomerCard nric={nric}>
+      <CustomerCard nrics={nrics}>
         <View
           style={[
             sharedStyles.resultWrapper,
@@ -44,12 +54,9 @@ export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
             <AppText style={sharedStyles.statusTitle}>Purchased!</AppText>
           </AppText>
           <View>
-            <AppText>Customer purchased the following:</AppText>
+            <AppText>The following have been purchased:</AppText>
             <AppText style={styles.purchasedItemsList}>
-              {purchasedItems.map(category => {
-                const categoryName = getProduct(category)?.name || category;
-                return `• ${categoryName}\n`;
-              })}
+              {purchasedItems}
             </AppText>
           </View>
         </View>

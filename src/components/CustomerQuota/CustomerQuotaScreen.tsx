@@ -13,18 +13,16 @@ import {
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
-import { postTransaction, Quota, getQuota } from "../../services/quota";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppName } from "../Layout/AppName";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
-import { useProductContext } from "../../context/products";
 import { Card } from "../Layout/Card";
 import { ItemsSelectionCard } from "./ItemsSelectionCard";
 import { NoQuotaCard } from "./NoQuotaCard";
-import { CartState } from "./types";
 import { PurchaseSuccessCard } from "./PurchaseSuccessCard";
+import { useCart } from "../../hooks/useCart/useCart";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -50,108 +48,46 @@ const styles = StyleSheet.create({
   }
 });
 
+const showAlert = (message: string, onDismiss: () => void): void =>
+  Alert.alert("Error", message, [{ text: "Dimiss", onPress: onDismiss }], {
+    onDismiss: onDismiss // for android outside alert clicks
+  });
+
 export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const { config } = useConfigContext();
-  const { getProduct } = useProductContext();
   const { authKey, endpoint } = useAuthenticationContext();
-  const nric: string = navigation.getParam("nric");
+  const [nrics] = useState([navigation.getParam("nric")]);
 
-  const [isCheckingQuota, setIsCheckingQuota] = useState(true);
-  const [quota, setQuota] = useState<Quota>();
+  const {
+    cartState,
+    cart,
+    updateCart,
+    checkoutCart,
+    checkoutResult,
+    error,
+    clearError
+  } = useCart(nrics, authKey, endpoint);
 
   const onCancel = useCallback((): void => {
     navigation.goBack();
   }, [navigation]);
 
   useEffect(() => {
-    const onCheck = async (): Promise<void> => {
-      try {
-        setIsCheckingQuota(true);
-        const quotaResponse = await getQuota(nric, authKey, endpoint);
-        setQuota(quotaResponse);
-        setIsCheckingQuota(false);
-      } catch (e) {
-        setIsCheckingQuota(false);
-        Alert.alert(
-          "Error",
-          e.message || e,
-          [
-            {
-              text: "Dimiss",
-              onPress: onCancel
-            }
-          ],
-          {
-            onDismiss: onCancel // for android outside alert clicks
-          }
-        );
-      }
-    };
-    onCheck();
-  }, [authKey, endpoint, nric, onCancel]);
-
-  const [cart, setCart] = useState<CartState>();
-
-  useEffect(() => {
-    if (quota) {
-      const initialQuantities = quota.remainingQuota.reduce((state, curr) => {
-        const product = getProduct(curr.category);
-        const defaultSelectedQuantity = product?.default ?? false;
-        state[curr.category] =
-          curr.quantity > 0 ? defaultSelectedQuantity : null;
-        return state;
-      }, {} as CartState);
-      setCart(initialQuantities);
+    if (!error) {
+      return;
     }
-  }, [getProduct, quota]);
-
-  const [hasPurchased, setHasPurchased] = useState(false);
-  const [isProcessingTransaction, setIsProcessingTransaction] = useState(false);
-
-  // TODO: provide the correct date to buy somemore
-  const canBuy = quota?.remainingQuota.some(val => val.quantity > 0) ?? false;
-
-  const onRecordTransaction = async (): Promise<void> => {
-    try {
-      setIsProcessingTransaction(true);
-      const transactions = cart
-        ? Object.entries(cart)
-            .filter(([_, quantity]) => quantity)
-            .reduce((transactions, [category]) => {
-              transactions.push({
-                category,
-                quantity: quota?.remainingQuota.find(
-                  line => line.category === category
-                )!.quantity
-              });
-              return transactions;
-            }, [] as any) // TODO: type this properly
-        : [];
-
-      if (transactions.length === 0) {
-        throw new Error("Please tick at least one item to checkout");
-      }
-
-      // Use returned data to populate purchased result
-      await postTransaction({
-        nric,
-        key: authKey,
-        transactions,
-        endpoint
-      });
-      // TODO: error handling
-
-      setHasPurchased(true);
-    } catch (e) {
-      Alert.alert("Error", e.message || e);
-    } finally {
-      setIsProcessingTransaction(false);
+    if (cartState === "FETCHING_QUOTA") {
+      const message =
+        error.message ?? "Encounted an error while fetching quota";
+      showAlert(message, onCancel);
+    } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
+      showAlert(error.message, () => clearError());
     }
-  };
+  }, [cartState, clearError, error, onCancel]);
 
-  return isCheckingQuota ? (
+  return cartState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
       <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
       <Card>
@@ -167,32 +103,22 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
           <AppName mode={config.appMode} />
         </View>
 
-        {hasPurchased ? (
+        {cartState === "PURCHASED" ? (
           <PurchaseSuccessCard
-            nric={nric}
+            nrics={nrics}
             onCancel={onCancel}
-            purchasedItems={
-              cart
-                ? Object.entries(cart)
-                    .filter(([_, hasPurchased]) => hasPurchased)
-                    .map(([category]) => category)
-                : []
-            }
+            checkoutResult={checkoutResult}
           />
-        ) : canBuy ? (
+        ) : cartState === "NO_QUOTA" ? (
+          <NoQuotaCard nrics={nrics} cart={cart} onCancel={onCancel} />
+        ) : (
           <ItemsSelectionCard
-            nric={nric}
-            isLoading={isProcessingTransaction}
-            onRecordTransaction={onRecordTransaction}
+            nrics={nrics}
+            isLoading={cartState === "CHECKING_OUT"}
+            checkoutCart={checkoutCart}
             onCancel={onCancel}
             cart={cart}
-            setCart={setCart}
-          />
-        ) : (
-          <NoQuotaCard
-            nric={nric}
-            remainingQuota={quota?.remainingQuota ?? []}
-            onCancel={onCancel}
+            updateCart={updateCart}
           />
         )}
       </View>
