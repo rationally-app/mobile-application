@@ -42,6 +42,7 @@ export const AppNameComponent: FunctionComponent<AppName> = ({
         routeName: "LoginScreen"
       })
     );
+    Alert.alert("You have successfully been logged out");
   };
 
   const onPressLogout = (): void => {
