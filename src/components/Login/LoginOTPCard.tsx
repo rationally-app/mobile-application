@@ -10,7 +10,7 @@ import { NavigationProps } from "../../types";
 import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP, requestOTP } from "../../services/auth";
 
-const RESEND_OTP_TIME_LIMIT = 5 * 1000;
+const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -40,7 +40,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   endpoint
 }: LoginOTPCard) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isResending, setIsResending] = useState(true);
+  const [isResending, setIsResending] = useState(false);
   const [oTPValue, setOTPValue] = useState("");
   const [resendDisabledTime, setResendDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT
