@@ -141,6 +141,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
       ) : (
         <ScrollView
           contentContainerStyle={styles.scrollWrapper}
+          scrollIndicatorInsets={{ right: 1 }}
           keyboardShouldPersistTaps="handled"
         >
           <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>

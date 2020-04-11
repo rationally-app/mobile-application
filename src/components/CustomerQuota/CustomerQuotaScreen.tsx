@@ -102,6 +102,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   ) : (
     <ScrollView
       contentContainerStyle={{ alignItems: "center" }}
+      scrollIndicatorInsets={{ right: 1 }}
       keyboardShouldPersistTaps="handled"
     >
       <TopBackground mode={config.appMode} />
