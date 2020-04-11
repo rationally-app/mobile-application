@@ -134,7 +134,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             onLongPress={onToggleAppMode}
           >
             <View style={styles.headerText}>
-              <AppName mode={config.appMode} />
+              <AppName mode={config.appMode} hideLogout />
             </View>
           </TouchableWithoutFeedback>
           {config.appMode !== AppMode.production && (
