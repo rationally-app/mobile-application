@@ -8,9 +8,9 @@ import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { NavigationProps } from "../../types";
 import { useAuthenticationContext } from "../../context/auth";
-import { validateOTP } from "../../services/auth";
+import { validateOTP, requestOTP } from "../../services/auth";
 
-const RESEND_OTP_TIME_LIMIT = 30 * 1000;
+const RESEND_OTP_TIME_LIMIT = 5 * 1000;
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -40,6 +40,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   endpoint
 }: LoginOTPCard) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(true);
   const [oTPValue, setOTPValue] = useState("");
   const [resendDisabledTime, setResendDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT
@@ -79,8 +80,16 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     onValidateOTP(oTPValue);
   };
 
-  const resendOTP = (): void => {
-    setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
+  const resendOTP = async (): Promise<void> => {
+    setIsResending(true);
+    try {
+      await requestOTP(mobileNumber, codeKey, endpoint);
+      setIsResending(false);
+      setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
+    } catch (e) {
+      setIsResending(false);
+      alert(e.message || e);
+    }
   };
 
   const handleChange = (text: string): void => {
@@ -102,7 +111,12 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           {resendDisabledTime > 0 ? (
             <AppText>Resend in {resendDisabledTime / 1000}s</AppText>
           ) : (
-            <SecondaryButton text="Resend" onPress={resendOTP} />
+            <SecondaryButton
+              text="Resend"
+              onPress={resendOTP}
+              isLoading={isResending}
+              disabled={isLoading}
+            />
           )}
           <View style={styles.submitWrapper}>
             <DarkButton
@@ -110,6 +124,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
               fullWidth
               onPress={onSubmitOTP}
               isLoading={isLoading}
+              disabled={isResending}
             />
           </View>
         </View>
