@@ -86,7 +86,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     } else {
       askForCameraPermission();
     }
-  }, [endpoint, navigation, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;

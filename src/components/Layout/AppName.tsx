@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import { color, fontSize, size } from "../../common/styles";
 import { View, StyleSheet, Alert } from "react-native";
 import { AppText } from "./AppText";
@@ -9,6 +9,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAuthenticationContext } from "../../context/auth";
 import { withNavigation, NavigationActions } from "react-navigation";
 import { NavigationProps } from "../../types";
+
+const TIME_BEFORE_WARNING = 900000;
+let warningTimer: NodeJS.Timeout;
+let logoutTimer: NodeJS.Timeout;
 
 interface AppName extends NavigationProps {
   mode?: AppMode;
@@ -29,7 +33,7 @@ export const AppNameComponent: FunctionComponent<AppName> = ({
   hideLogout,
   navigation
 }) => {
-  const { clearAuthInfo } = useAuthenticationContext();
+  const { expiry, clearAuthInfo } = useAuthenticationContext();
 
   const handleLogout = (): void => {
     clearAuthInfo();
@@ -40,7 +44,7 @@ export const AppNameComponent: FunctionComponent<AppName> = ({
     );
   };
 
-  const onPress = (): void => {
+  const onPressLogout = (): void => {
     Alert.alert(
       "You are about to logout",
       "Are you sure?",
@@ -58,12 +62,43 @@ export const AppNameComponent: FunctionComponent<AppName> = ({
     );
   };
 
+  useEffect(() => {
+    if (!hideLogout) {
+      const showWarning = (): void => {
+        Alert.alert(
+          "Your QR code will expire in 15mins",
+          "Please logout and login with a new QR code.",
+          [
+            {
+              text: "Logout now",
+              onPress: handleLogout
+            },
+            {
+              text: "I'll do so in 15mins",
+              style: "cancel"
+            }
+          ],
+          { cancelable: false }
+        );
+      };
+
+      const timeLeft = Number(expiry) - new Date().getTime();
+      warningTimer = setTimeout(showWarning, timeLeft - TIME_BEFORE_WARNING);
+      logoutTimer = setTimeout(handleLogout, timeLeft);
+      return () => {
+        clearTimeout(warningTimer);
+        clearTimeout(logoutTimer);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <View style={styles.AppNameWrapper}>
         <AppLogo />
         {!hideLogout && (
-          <BaseButton onPress={onPress} iconOnly>
+          <BaseButton onPress={onPressLogout} iconOnly>
             <MaterialCommunityIcons
               name="logout"
               size={size(3)}

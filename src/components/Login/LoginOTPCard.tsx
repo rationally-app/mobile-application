@@ -67,7 +67,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     try {
       const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
       setIsLoading(false);
-      setAuthInfo(response.sessionToken, endpoint);
+      setAuthInfo(response.sessionToken, response.ttl, endpoint);
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
       setIsLoading(false);
