@@ -67,7 +67,7 @@ export const AppNameComponent: FunctionComponent<AppName> = ({
     if (!hideLogout) {
       const showWarning = (): void => {
         Alert.alert(
-          "Your QR code will expire in 15mins",
+          "Your QR code will expire in 15 mins",
           "Please logout and login with a new QR code.",
           [
             {
@@ -75,7 +75,7 @@ export const AppNameComponent: FunctionComponent<AppName> = ({
               onPress: handleLogout
             },
             {
-              text: "I'll do so in 15mins",
+              text: "I'll do so in 15 mins",
               style: "cancel"
             }
           ],
