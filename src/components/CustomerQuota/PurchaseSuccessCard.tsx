@@ -32,11 +32,13 @@ export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
   checkoutResult?.transactions.forEach((userTransaction, idx) => {
     const userNric = nrics[idx];
     const { transaction } = userTransaction;
-    transaction.forEach(({ category }) => {
-      const categoryName = getProduct(category)?.name ?? category;
-      purchasedItems += `• ${categoryName}${
-        nrics.length > 1 ? ` (${userNric})` : ""
-      }\n`;
+    transaction.forEach(({ category, quantity }) => {
+      if (quantity > 0) {
+        const categoryName = getProduct(category)?.name ?? category;
+        purchasedItems += `• ${categoryName}${
+          nrics.length > 1 ? ` (${userNric})` : ""
+        }\n`;
+      }
     });
   });
 

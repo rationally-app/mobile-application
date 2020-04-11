@@ -58,7 +58,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 }) => {
   const { config } = useConfigContext();
   const { authKey, endpoint } = useAuthenticationContext();
-  const [nrics] = useState([navigation.getParam("nric")]);
+  const [nrics, setNrics] = useState([navigation.getParam("nric")]);
 
   const {
     cartState,
@@ -73,6 +73,10 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const onCancel = useCallback((): void => {
     navigation.goBack();
   }, [navigation]);
+
+  const addNric = useCallback((nric: string): void => {
+    setNrics(nrics => [...nrics, nric]);
+  }, []);
 
   useEffect(() => {
     if (!error) {
@@ -96,7 +100,10 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       </Card>
     </View>
   ) : (
-    <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+    <ScrollView
+      contentContainerStyle={{ alignItems: "center" }}
+      keyboardShouldPersistTaps="handled"
+    >
       <TopBackground mode={config.appMode} />
       <View style={styles.content}>
         <View style={styles.headerText}>
@@ -114,6 +121,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         ) : (
           <ItemsSelectionCard
             nrics={nrics}
+            addNric={addNric}
             isLoading={cartState === "CHECKING_OUT"}
             checkoutCart={checkoutCart}
             onCancel={onCancel}

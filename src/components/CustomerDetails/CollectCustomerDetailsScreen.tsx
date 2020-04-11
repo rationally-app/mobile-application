@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -45,8 +45,15 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const [nricInput, setNricInput] = useState("");
   const { config } = useConfigContext();
 
+  useEffect(() => {
+    if (isFocused) {
+      setIsScanningEnabled(true);
+    }
+  }, [isFocused]);
+
   const onCheck = async (input: string): Promise<void> => {
     try {
+      setIsScanningEnabled(false);
       const nric = validateAndCleanNric(input);
       navigation.navigate("CustomerQuotaScreen", { nric });
       setNricInput("");
@@ -103,6 +110,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       <Credits style={{ bottom: size(3) }} />
       {shouldShowCamera && (
         <IdScanner
+          isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
           cancelButtonText="Enter NRIC manually"

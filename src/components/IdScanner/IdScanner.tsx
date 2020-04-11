@@ -43,13 +43,15 @@ const Camera: FunctionComponent<Camera> = ({
 interface IdScanner extends Camera {
   onCancel: () => void;
   cancelButtonText: string;
+  isScanningEnabled?: boolean;
 }
 
 export const IdScanner: FunctionComponent<IdScanner> = ({
   onBarCodeScanned,
   barCodeTypes,
   onCancel,
-  cancelButtonText
+  cancelButtonText,
+  isScanningEnabled = true
 }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
 
@@ -68,7 +70,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
 
   return (
     <View style={styles.cameraWrapper}>
-      {hasCameraPermission ? (
+      {hasCameraPermission && isScanningEnabled ? (
         <Camera
           onBarCodeScanned={onBarCodeScanned}
           barCodeTypes={barCodeTypes}
