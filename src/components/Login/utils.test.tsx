@@ -1,4 +1,4 @@
-import { decodeQr, mobileNumberValidator } from "./utils";
+import { decodeQr, mobileNumberValidator, countryCodeValidator } from "./utils";
 
 describe("decodeQr", () => {
   it("should fail for old QR codes", () => {
@@ -41,5 +41,21 @@ describe("mobileNumberValidator", () => {
     expect(mobileNumberValidator("+6598261749")).toBe(true);
     expect(mobileNumberValidator("+65 98219374")).toBe(true);
     expect(mobileNumberValidator("0098219374")).toBe(true);
+  });
+});
+
+describe("countryCodeValidator", () => {
+  it("should return false for invalid country codes", () => {
+    expect.assertions(2);
+    expect(countryCodeValidator("65")).toBe(false);
+    expect(countryCodeValidator("+900")).toBe(false);
+  });
+
+  it("should return true for valid country codes", () => {
+    expect.assertions(4);
+    expect(countryCodeValidator("+65")).toBe(true);
+    expect(countryCodeValidator("+1")).toBe(true);
+    expect(countryCodeValidator("+61")).toBe(true);
+    expect(countryCodeValidator("+370")).toBe(true);
   });
 });
