@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     color: color("grey", 0),
     fontSize: fontSize(1),
     lineHeight: 1.2 * fontSize(1),
-    fontFamily: "inter-bold"
+    fontFamily: "brand-bold"
   },
   childrenWrapper: {
     overflow: "hidden",
@@ -66,7 +66,7 @@ export const AddButton: FunctionComponent<AddButton> = ({ text, onPress }) => {
       >
         <AppText
           style={{
-            fontFamily: "inter-bold",
+            fontFamily: "brand-bold",
             textAlign: "center"
           }}
         >

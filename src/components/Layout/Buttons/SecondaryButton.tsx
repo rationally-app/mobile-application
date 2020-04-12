@@ -33,7 +33,7 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
         {icon && <View style={{ marginRight: size(1) }}>{icon}</View>}
         <AppText
           style={{
-            fontFamily: "inter-bold",
+            fontFamily: "brand-bold",
             textAlign: "center"
           }}
         >

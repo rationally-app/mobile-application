@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     color: color("yellow", 50),
     fontSize: fontSize(-2),
-    fontFamily: "inter-bold"
+    fontFamily: "brand-bold"
   },
   checkboxesListItem: {
     marginBottom: size(1.5)

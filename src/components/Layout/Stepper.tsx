@@ -50,19 +50,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingVertical: 0,
     paddingHorizontal: 2,
+    fontFamily: "brand-bold",
     ...Platform.select({
-      ios: {
-        fontFamily: "Menlo"
-      },
       android: {
-        fontFamily: "monospace",
         marginTop: -2
       }
     })
   },
   suffix: {
     marginTop: -2,
-    fontFamily: "inter",
+    fontFamily: "brand-regular",
     fontSize: fontSize(0)
   }
 });
