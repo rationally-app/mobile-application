@@ -103,7 +103,7 @@ const StepperButton: FunctionComponent<StepperButton> = ({
     if (longPressStartTime > 0 && isPressedIn) {
       // Exponential decay so that the rate of change in value changes with time.
       const duration = Math.round(
-        400 * 0.4 ** ((Date.now() - longPressStartTime) / 1000)
+        300 * 0.4 ** ((Date.now() - longPressStartTime) / 1000)
       );
       timeout = setTimeout(() => {
         Vibration.vibrate(5);
