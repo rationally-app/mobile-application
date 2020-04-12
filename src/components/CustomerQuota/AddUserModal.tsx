@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Vibration
 } from "react-native";
 import { InputNricSection } from "../CustomerDetails/InputNricSection";
 import { IdScanner } from "../IdScanner/IdScanner";
@@ -91,6 +92,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
     try {
       setIsScanningEnabled(false);
       const nric = validateAndCleanNric(input);
+      Vibration.vibrate(50);
       if (nrics.indexOf(nric) > -1) {
         throw new Error(
           "You've added this NRIC before, please scan a different NRIC."

@@ -3,7 +3,8 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Vibration
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { NavigationProps } from "../../types";
@@ -72,6 +73,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       const { key, endpoint } = decodeQr(qrCode);
       const authenticated = await authenticate(key, endpoint);
       if (authenticated) {
+        Vibration.vibrate(50);
         setAuthKey(key);
         setEndpoint(endpoint);
         setIsLoading(false);

@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  Platform
+  Platform,
+  Vibration
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { clamp, debounce } from "lodash";
@@ -104,7 +105,10 @@ const StepperButton: FunctionComponent<StepperButton> = ({
       const duration = Math.round(
         400 * 0.4 ** ((Date.now() - longPressStartTime) / 1000)
       );
-      timeout = setTimeout(onPress, duration);
+      timeout = setTimeout(() => {
+        Vibration.vibrate(5);
+        onPress();
+      }, duration);
     } else {
       clearTimeout(timeout);
     }
@@ -116,7 +120,10 @@ const StepperButton: FunctionComponent<StepperButton> = ({
   return (
     <TouchableOpacity
       style={styles.stepButton}
-      onPress={onPress}
+      onPress={() => {
+        onPress();
+        Vibration.vibrate(10);
+      }}
       disabled={disabled}
       delayLongPress={300}
       onPressIn={() => setIsPressedIn(true)}

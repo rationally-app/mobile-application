@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactElement } from "react";
-import { TouchableHighlight, View, StyleSheet } from "react-native";
+import { TouchableHighlight, View, StyleSheet, Vibration } from "react-native";
 import { size, color, borderRadius } from "../../common/styles";
 import { Feather } from "@expo/vector-icons";
 
@@ -74,7 +74,10 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
 }) => {
   return (
     <TouchableHighlight
-      onPress={() => onToggle(!isChecked)}
+      onPress={() => {
+        onToggle(!isChecked);
+        Vibration.vibrate(10);
+      }}
       underlayColor="transparent"
       activeOpacity={1}
     >
