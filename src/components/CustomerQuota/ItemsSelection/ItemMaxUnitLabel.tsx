@@ -10,5 +10,5 @@ export const ItemMaxUnitLabel: FunctionComponent<{
       ? `${unit.label}${maxQuantity}`
       : `${maxQuantity}${unit.label}`
     : maxQuantity;
-  return <>(max {maxUnit})</>;
+  return <>max {maxUnit}</>;
 };
