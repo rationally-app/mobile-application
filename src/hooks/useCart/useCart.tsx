@@ -9,7 +9,7 @@ import {
 } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 
-type CartItem = {
+export type CartItem = {
   category: string;
   quantity: number;
   maxQuantity: number;

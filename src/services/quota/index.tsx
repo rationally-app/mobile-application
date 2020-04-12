@@ -37,21 +37,39 @@ export const mockGetQuota = async (
   _endpoint: string
 ): Promise<Quota> => {
   if (nrics[0] === "S0000000J") throw new Error("Something broke");
-  return {
-    remainingQuota: [
-      {
-        category: "toilet-paper",
-        quantity: 2,
-        transactionTime: 1586095465905
-      },
-      {
-        category: "instant-noodles",
-        quantity: 2,
-        transactionTime: 1586095465905
-      },
-      { category: "chocolate", quantity: 30, transactionTime: 1586095465905 }
-    ]
-  };
+  if (nrics.length === 1) {
+    return {
+      remainingQuota: [
+        {
+          category: "toilet-paper",
+          quantity: 0,
+          transactionTime: 1586095465905
+        },
+        {
+          category: "instant-noodles",
+          quantity: 1,
+          transactionTime: 1586095465905
+        },
+        { category: "chocolate", quantity: 30, transactionTime: 1586095465905 }
+      ]
+    };
+  } else {
+    return {
+      remainingQuota: [
+        {
+          category: "toilet-paper",
+          quantity: 2,
+          transactionTime: 1586095465905
+        },
+        {
+          category: "instant-noodles",
+          quantity: 2,
+          transactionTime: 1586095465905
+        },
+        { category: "chocolate", quantity: 60, transactionTime: 1586095465905 }
+      ]
+    };
+  }
 };
 
 export const liveGetQuota = async (

@@ -25,7 +25,7 @@ import { InputNricSection } from "./InputNricSection";
 const styles = StyleSheet.create({
   content: {
     position: "relative",
-    padding: size(3),
+    padding: size(2),
     paddingVertical: size(8),
     height: "100%",
     width: 512,

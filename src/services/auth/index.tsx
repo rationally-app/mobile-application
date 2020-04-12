@@ -27,28 +27,46 @@ export const mockAuthenticate = async (
     policies: [
       {
         category: "toilet-paper",
-        name: "Toilet Paper",
-        period: 7,
-        quantityLimit: 1000,
-        unit: "piece",
+        name: "🧻 Toilet Paper",
+        description: "1 ply / 2 ply / 3 ply",
         order: 1,
-        default: true
+        quantity: {
+          period: 7,
+          limit: 2,
+          unit: {
+            type: "POSTFIX",
+            label: " pack(s)"
+          }
+        }
       },
       {
         category: "instant-noodles",
-        name: "Instant Noodles",
-        period: 30,
-        quantityLimit: 60,
-        unit: "packs",
-        order: 2
+        name: "🍜 Instant Noodles",
+        description: "Indomee",
+        order: 2,
+        quantity: {
+          period: 30,
+          limit: 1,
+          unit: {
+            type: "POSTFIX",
+            label: " pack(s)"
+          }
+        }
       },
       {
         category: "chocolate",
-        name: "Chocolate",
-        period: 14,
-        quantityLimit: 1,
-        unit: "grams",
-        order: 3
+        name: "🍫 Chocolate",
+        description: "Dark / White / Assorted",
+        order: 3,
+        quantity: {
+          period: 14,
+          limit: 30,
+          step: 5,
+          unit: {
+            type: "PREFIX",
+            label: "$"
+          }
+        }
       }
     ]
   };

@@ -26,8 +26,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     minHeight: size(6),
     borderWidth: 1,
-    borderRadius: borderRadius(2),
+    borderRadius: borderRadius(2)
+  },
+  wrapperDefault: {
     borderColor: color("grey", 30)
+  },
+  wrapperHighlighted: {
+    borderColor: color("green", 50)
   },
   stepButton: {
     minWidth: size(6),
@@ -219,7 +224,12 @@ export const Stepper: FunctionComponent<Stepper> = ({
   };
 
   return (
-    <View style={styles.wrapper}>
+    <View
+      style={[
+        styles.wrapper,
+        value > 0 ? styles.wrapperHighlighted : styles.wrapperDefault
+      ]}
+    >
       <StepperButton
         variant="MINUS"
         onPress={decrement}

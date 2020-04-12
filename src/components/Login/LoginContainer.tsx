@@ -29,7 +29,7 @@ const ALLOW_MODE_CHANGE = false;
 
 const styles = StyleSheet.create({
   content: {
-    padding: size(3),
+    padding: size(2),
     marginTop: -size(3),
     maxWidth: 512,
     width: "100%",
