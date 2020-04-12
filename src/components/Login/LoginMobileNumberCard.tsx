@@ -48,7 +48,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       setLoginStage(LOGIN_STAGES.OTP);
     } catch (e) {
       setIsLoading(false);
-      alert(e.message || e);
+      alert(e);
     }
   };
 

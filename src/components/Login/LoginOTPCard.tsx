@@ -72,7 +72,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
       setIsLoading(false);
-      alert(e.message || e);
+      alert(e);
     }
   };
 

@@ -11,13 +11,17 @@ export const liveRequestOTP = async (
   endpoint: string
 ): Promise<void> => {
   const payload = { code, phone: mobileNumber };
-  const response = await fetch(`${endpoint}/auth/register`, {
+  await fetch(`${endpoint}/auth/register`, {
     method: "POST",
     body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    return response.json().then(error => {
+      throw new Error(error.message);
+    });
   });
-  if (!response.ok) {
-    throw new Error("Failed to generate OTP");
-  }
 };
 
 export const liveValidateOTP = async (
@@ -30,11 +34,15 @@ export const liveValidateOTP = async (
   const response = await fetch(`${endpoint}/auth/confirm`, {
     method: "POST",
     body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    return response.json().then(error => {
+      throw new Error(error.message);
+    });
   });
-  if (!response.ok) {
-    throw new Error("OTP invalid");
-  }
-  return response.json();
+  return response;
 };
 
 export const mockValidateOTP = async (
