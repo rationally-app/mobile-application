@@ -12,7 +12,10 @@ describe("requestOTP", () => {
     expect.assertions(1);
     mockFetch.mockResolvedValueOnce({
       status: 200,
-      ok: true
+      ok: true,
+      json: () => {
+        return Promise.resolve();
+      }
     });
     const payload = { code: "CORRECT_KEY", phone };
     await requestOTP(phone, "CORRECT_KEY", endpoint);
