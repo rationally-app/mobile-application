@@ -71,7 +71,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const initialisePolicies = async (token: string): Promise<void> => {
     try {
       const response = await getPolicies(token, endpoint);
-      console.log(response);
       setProducts(response.policies);
     } catch (e) {
       alert(e);
