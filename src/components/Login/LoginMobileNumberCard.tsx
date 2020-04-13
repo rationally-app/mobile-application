@@ -75,6 +75,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 }: LoginMobileNumberCard) => {
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("+65");
+  const [mobileNumberValue, setMobileNumberValue] = useState("");
 
   const onChangeCountryCode = (value: string): void => {
     if (value.length <= 4) {
@@ -84,15 +85,20 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   };
 
   const onChangeMobileNumber = (text: string): void => {
-    /^\d*$/.test(text) && setMobileNumber(text);
+    /^\d*$/.test(text) && setMobileNumberValue(text);
   };
 
   const onRequestOTP = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      const fullNumber = `${countryCode}${mobileNumber}`.replace(/\s/g, "");
+      const fullNumber = `${countryCode}${mobileNumberValue}`.replace(
+        /\s/g,
+        ""
+      );
+      console.log(fullNumber);
       await requestOTP(fullNumber, codeKey, endpoint);
       setIsLoading(false);
+      setMobileNumber(fullNumber);
       setLoginStage(LOGIN_STAGES.OTP);
     } catch (e) {
       setIsLoading(false);
@@ -103,7 +109,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const onSubmitMobileNumber = (): void => {
     if (!countryCodeValidator(countryCode)) {
       alert("Invalid country code");
-    } else if (!mobileNumberValidator(mobileNumber)) {
+    } else if (!mobileNumberValidator(mobileNumberValue)) {
       alert("Invalid mobile phone number");
     } else {
       onRequestOTP();
@@ -131,7 +137,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
             <TextInput
               style={styles.numberInput}
               keyboardType="phone-pad"
-              value={mobileNumber}
+              value={mobileNumberValue}
               onChange={({ nativeEvent: { text } }) =>
                 onChangeMobileNumber(text)
               }
