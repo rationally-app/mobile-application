@@ -39,7 +39,7 @@ const contributors = [
   "Sebastian Quek",
   "Immanuella Lim",
   "Tang Li Ren",
-  "Lim Zui Young",
+  "Lim Zui Young"
 ];
 
 export const Credits: FunctionComponent<ViewProps> = ({ style }) => {
