@@ -24,7 +24,9 @@ export const ItemContent: FunctionComponent<{
 }> = ({ name, description, unit, maxQuantity }) => (
   <View>
     <AppText style={styles.name}>{name}</AppText>
-    {description && <AppText style={styles.description}>{description}</AppText>}
+    {(description ?? "").length > 0 && (
+      <AppText style={styles.description}>{description}</AppText>
+    )}
     {maxQuantity === 1 && (
       <AppText style={sharedStyles.maxQuantityLabel}>
         <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
