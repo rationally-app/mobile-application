@@ -1,57 +1,69 @@
 import { IS_MOCK } from "../../config";
-import { Policy } from "../../types";
 
-export interface AuthenticationResponse {
-  policies: Policy[];
+export interface ValidateOTPResponse {
+  sessionToken: string;
+  ttl: number;
 }
 
-export const liveAuthenticate = async (
-  key: string,
+export const liveRequestOTP = async (
+  mobileNumber: string,
+  code: string,
   endpoint: string
-): Promise<AuthenticationResponse> => {
-  const response: AuthenticationResponse = await fetch(`${endpoint}/auth`, {
-    method: "GET",
-    headers: {
-      Authorization: key
+): Promise<void> => {
+  const payload = { code, phone: mobileNumber };
+  await fetch(`${endpoint}/auth/register`, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return response.json();
     }
-  }).then(res => res.json());
+    return response.json().then(error => {
+      throw new Error(error.message);
+    });
+  });
+};
+
+export const liveValidateOTP = async (
+  otp: string,
+  mobileNumber: string,
+  code: string,
+  endpoint: string
+): Promise<ValidateOTPResponse> => {
+  const payload = { code, otp, phone: mobileNumber };
+  const response = await fetch(`${endpoint}/auth/confirm`, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    return response.json().then(error => {
+      throw new Error(error.message);
+    });
+  });
   return response;
 };
 
-export const mockAuthenticate = async (
-  key: string,
+export const mockValidateOTP = async (
+  _otp: string,
+  _mobileNumber: string,
+  _key: string,
   _endpoint: string
-): Promise<AuthenticationResponse> => {
-  if (key != "CORRECT_KEY") throw new Error("Fail to authenticate");
+): Promise<ValidateOTPResponse> => {
   return {
-    policies: [
-      {
-        category: "toilet-paper",
-        name: "Toilet Paper",
-        period: 7,
-        quantityLimit: 1000,
-        unit: "piece",
-        order: 1,
-        default: true
-      },
-      {
-        category: "instant-noodles",
-        name: "Instant Noodles",
-        period: 30,
-        quantityLimit: 60,
-        unit: "packs",
-        order: 2
-      },
-      {
-        category: "chocolate",
-        name: "Chocolate",
-        period: 14,
-        quantityLimit: 1,
-        unit: "grams",
-        order: 3
-      }
-    ]
+    sessionToken: "some-valid-session-token",
+    ttl: 1686259452317
   };
 };
 
-export const authenticate = IS_MOCK ? mockAuthenticate : liveAuthenticate;
+export const mockRequestOTP = async (
+  _mobileNumber: string,
+  _key: string,
+  _endpoint: string
+): Promise<void> => {
+  Promise.resolve();
+};
+
+export const requestOTP = IS_MOCK ? mockRequestOTP : liveRequestOTP;
+export const validateOTP = IS_MOCK ? mockValidateOTP : liveValidateOTP;

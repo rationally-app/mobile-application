@@ -1,2 +1,2 @@
-import "./CustomerQuotaScreen";
+// import "./CustomerQuotaScreen";
 import "./Layout";

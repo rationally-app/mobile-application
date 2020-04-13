@@ -3,30 +3,24 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  ScrollView,
+  Vibration
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { NavigationProps } from "../../types";
-import { DarkButton } from "../Layout/Buttons/DarkButton";
+import { NavigationProps, LOGIN_STAGES } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
-import { authenticate } from "../../services/auth";
 import { useAuthenticationContext } from "../../context/auth";
-import { size, color } from "../../common/styles";
-import { AppName } from "../Layout/AppName";
-import { Card } from "../Layout/Card";
+import { size } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
-import { AppText } from "../Layout/AppText";
-import * as Permissions from "expo-permissions";
-import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
-import {
-  NricScanner,
-  BarCodeScanningResult
-} from "../CustomerDetails/NricScanner";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
-import { useProductContext } from "../../context/products";
 import { decodeQr } from "./utils";
+import { LoginScanCard } from "./LoginScanCard";
+import { LoginMobileNumberCard } from "./LoginMobileNumberCard";
+import { LoginOTPCard } from "./LoginOTPCard";
+import { AppName } from "../Layout/AppName";
+import { IdScanner } from "../IdScanner/IdScanner";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -34,26 +28,12 @@ const ALLOW_MODE_CHANGE = false;
 
 const styles = StyleSheet.create({
   content: {
-    padding: size(3),
+    padding: size(2),
     marginTop: -size(3),
-    maxWidth: 512,
-    width: "100%",
+    width: 512,
+    maxWidth: "100%",
     height: "100%",
     justifyContent: "center"
-  },
-  cameraWrapper: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: color("grey", 0)
-  },
-  cancelButtonWrapper: {
-    marginTop: size(3),
-    marginBottom: size(4)
   },
   headerText: {
     marginBottom: size(4),
@@ -67,22 +47,21 @@ const styles = StyleSheet.create({
 
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
-}: NavigationProps) => {
-  const { setProducts } = useProductContext();
-  const { setAuthKey, setEndpoint } = useAuthenticationContext();
+}) => {
+  const { token, endpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [hasCameraPermission, setHasCameraPermission] = useState(false);
-  const [showScanner, setShowScanner] = useState(false);
+  const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const { config, setConfigValue } = useConfigContext();
-
-  const askForCameraPermission = async (): Promise<void> => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    setHasCameraPermission(status === "granted");
-  };
+  const [loginStage, setLoginStage] = useState(LOGIN_STAGES.SCAN);
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [codeKey, setCodeKey] = useState("");
+  const [endpointTemp, setEndpointTemp] = useState("");
 
   useEffect(() => {
-    askForCameraPermission();
-  }, []);
+    if (token && endpoint) {
+      navigation.navigate("CollectCustomerDetailsScreen");
+    }
+  }, [endpoint, navigation, token]);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
@@ -94,104 +73,92 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     alert(`SupplyAlly in ${nextMode.toUpperCase()} mode`);
   };
 
-  const onToggleScanner = (): void => {
-    if (!hasCameraPermission) {
-      askForCameraPermission();
-    }
-    setShowScanner(s => !s);
-  };
-
-  const onLogin = async (qrCode: string): Promise<void> => {
-    if (isLoading) return;
-    setIsLoading(true);
-    try {
-      const { key, endpoint } = decodeQr(qrCode);
-      const authenticated = await authenticate(key, endpoint);
-      if (authenticated) {
-        setAuthKey(key);
-        setEndpoint(endpoint);
-        setIsLoading(false);
-        setShowScanner(false);
-        setProducts(authenticated.policies);
-        navigation.navigate("CollectCustomerDetailsScreen");
-      } else {
-        throw new Error("Authentication key is invalid");
-      }
-    } catch (e) {
-      setShowScanner(false);
-      alert(e.message || e);
-      setIsLoading(false);
-    }
-  };
-
-  const onBarCodeScanned = (event: BarCodeScanningResult): void => {
+  const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (!isLoading && event.data) {
-      onToggleScanner();
-      onLogin(event.data);
+      const qrCode = event.data;
+      setShouldShowCamera(false);
+      setIsLoading(true);
+      try {
+        const { key, endpoint } = decodeQr(qrCode);
+        Vibration.vibrate(50);
+        setCodeKey(key);
+        setEndpointTemp(endpoint);
+        setIsLoading(false);
+        setLoginStage(LOGIN_STAGES.MOBILE_NUMBER);
+      } catch (e) {
+        alert("Invalid QR code");
+        setIsLoading(false);
+      }
     }
   };
-
-  const shouldShowCamera = hasCameraPermission && showScanner;
 
   return (
     <>
-      <KeyboardAvoidingView style={{ alignItems: "center" }} behavior="padding">
-        <TopBackground
-          style={{ height: "50%", maxHeight: "auto" }}
-          mode={config.appMode}
-        />
-        <View style={styles.content}>
-          <TouchableWithoutFeedback
-            delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
-            onLongPress={onToggleAppMode}
-          >
-            <View style={styles.headerText}>
-              <AppName mode={config.appMode} />
-            </View>
-          </TouchableWithoutFeedback>
-          {config.appMode !== AppMode.production && (
-            <View style={{ marginVertical: size(2.5) }}>
-              <DangerButton
-                text="Exit Testing Mode"
-                onPress={onToggleAppMode}
-                fullWidth={true}
+      <ScrollView
+        contentContainerStyle={{ flex: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <KeyboardAvoidingView
+          style={{ alignItems: "center" }}
+          behavior="padding"
+        >
+          <TopBackground
+            style={{ height: "50%", maxHeight: "auto" }}
+            mode={config.appMode}
+          />
+          <View style={styles.content}>
+            <TouchableWithoutFeedback
+              delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
+              onLongPress={onToggleAppMode}
+            >
+              <View style={styles.headerText}>
+                <AppName mode={config.appMode} />
+              </View>
+            </TouchableWithoutFeedback>
+            {config.appMode !== AppMode.production && (
+              <View style={{ marginVertical: size(2.5) }}>
+                <DangerButton
+                  text="Exit Testing Mode"
+                  onPress={onToggleAppMode}
+                  fullWidth={true}
+                  isLoading={isLoading}
+                />
+              </View>
+            )}
+            {loginStage === LOGIN_STAGES.SCAN && (
+              <LoginScanCard
+                setLoginStage={setLoginStage}
+                onToggleScanner={() => setShouldShowCamera(true)}
                 isLoading={isLoading}
               />
-            </View>
-          )}
-          <Card>
-            <AppText>
-              Please log in with your Unique ID provided by your supervisor
-            </AppText>
-            <View style={styles.scanButtonWrapper}>
-              <DarkButton
-                text="Scan to Login"
-                onPress={onToggleScanner}
-                icon={
-                  <Feather
-                    name="maximize"
-                    size={size(2)}
-                    color={color("grey", 0)}
-                  />
-                }
-                fullWidth={true}
-                isLoading={isLoading}
+            )}
+            {loginStage === LOGIN_STAGES.MOBILE_NUMBER && (
+              <LoginMobileNumberCard
+                setLoginStage={setLoginStage}
+                setMobileNumber={setMobileNumber}
+                codeKey={codeKey}
+                endpoint={endpointTemp}
               />
-            </View>
-          </Card>
-        </View>
-      </KeyboardAvoidingView>
+            )}
+            {loginStage === LOGIN_STAGES.OTP && (
+              <LoginOTPCard
+                navigation={navigation}
+                mobileNumber={mobileNumber}
+                codeKey={codeKey}
+                endpoint={endpointTemp}
+              />
+            )}
+          </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
       <Credits style={{ bottom: size(3) }} />
       {shouldShowCamera && (
-        <View style={styles.cameraWrapper}>
-          <NricScanner
-            onBarCodeScanned={onBarCodeScanned}
-            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-          />
-          <View style={styles.cancelButtonWrapper}>
-            <SecondaryButton text="Cancel" onPress={onToggleScanner} />
-          </View>
-        </View>
+        <IdScanner
+          onBarCodeScanned={onBarCodeScanned}
+          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+          onCancel={() => setShouldShowCamera(false)}
+          cancelButtonText="Cancel"
+        />
       )}
     </>
   );

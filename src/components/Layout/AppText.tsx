@@ -10,7 +10,7 @@ export const AppText: FunctionComponent<TextProps> = ({
   <Text
     style={[
       {
-        fontFamily: "inter",
+        fontFamily: "brand-regular",
         fontSize: fontSize(0),
         color: color("blue", 50)
       },

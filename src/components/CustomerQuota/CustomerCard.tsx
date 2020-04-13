@@ -1,5 +1,11 @@
 import React, { FunctionComponent } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ViewStyle,
+  TouchableOpacity,
+  TouchableOpacityProps
+} from "react-native";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
@@ -9,23 +15,26 @@ const styles = StyleSheet.create({
   header: {
     borderTopLeftRadius: borderRadius(4),
     borderTopRightRadius: borderRadius(4),
-    paddingHorizontal: size(3),
+    paddingHorizontal: size(2),
     paddingVertical: size(2),
     backgroundColor: color("blue-green", 40),
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   headerText: {
-    marginLeft: size(1.5)
+    marginLeft: size(1.5),
+    flex: 1
   },
   nricLabel: {
     color: color("grey", 0),
-    fontSize: fontSize(-2)
+    fontSize: fontSize(-2),
+    marginBottom: 2
   },
   nricText: {
     color: color("grey", 0),
     fontSize: fontSize(1),
-    fontFamily: "inter-bold"
+    lineHeight: 1.2 * fontSize(1),
+    fontFamily: "brand-bold"
   },
   childrenWrapper: {
     overflow: "hidden",
@@ -34,10 +43,45 @@ const styles = StyleSheet.create({
   }
 });
 
+interface AddButton {
+  text: string;
+  onPress?: TouchableOpacityProps["onPress"];
+}
+
+export const AddButton: FunctionComponent<AddButton> = ({ text, onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View
+        style={{
+          backgroundColor: color("grey", 0),
+          borderColor: color("blue", 50),
+          borderWidth: 1,
+          alignSelf: "flex-start",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingVertical: size(1),
+          paddingHorizontal: size(2),
+          borderRadius: borderRadius(2)
+        }}
+      >
+        <AppText
+          style={{
+            fontFamily: "brand-bold",
+            textAlign: "center"
+          }}
+        >
+          {text}
+        </AppText>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 export const CustomerCard: FunctionComponent<{
-  nric: string;
+  nrics: string[];
+  onAddNric?: () => void;
   headerBackgroundColor?: ViewStyle["backgroundColor"];
-}> = ({ nric, headerBackgroundColor, children }) => (
+}> = ({ nrics, onAddNric, headerBackgroundColor, children }) => (
   <Card
     style={{
       paddingTop: 0,
@@ -53,9 +97,16 @@ export const CustomerCard: FunctionComponent<{
     >
       <Feather name="user" size={size(3)} color={color("grey", 0)} />
       <View style={styles.headerText}>
-        <AppText style={styles.nricLabel}>Customer NRIC</AppText>
-        <AppText style={styles.nricText}>{nric}</AppText>
+        <AppText style={styles.nricLabel}>
+          Customer NRIC{nrics.length > 1 ? "s" : ""}
+        </AppText>
+        {nrics.map(nric => (
+          <AppText key={nric} style={styles.nricText}>
+            {nric}
+          </AppText>
+        ))}
       </View>
+      {onAddNric && <AddButton onPress={onAddNric} text="+ Add"></AddButton>}
     </View>
     <View style={styles.childrenWrapper}>{children}</View>
   </Card>

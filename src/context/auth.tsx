@@ -2,21 +2,29 @@ import React, {
   createContext,
   useContext,
   FunctionComponent,
-  useState
+  useState,
+  useEffect
 } from "react";
+import { AsyncStorage } from "react-native";
+
+export const SESSION_TOKEN_KEY = "SESSION_TOKEN";
+export const EXPIRY_KEY = "EXPIRY_KEY";
+export const ENDPOINT_KEY = "ENDPOINT_KEY";
 
 interface AuthenticationContext {
-  authKey: string;
+  token: string;
+  expiry: string;
   endpoint: string;
-  setAuthKey: (key: string) => void;
-  setEndpoint: (key: string) => void;
+  setAuthInfo: (token: string, expiry: number, endpoint: string) => void;
+  clearAuthInfo: () => void;
 }
 
 export const AuthenticationContext = createContext<AuthenticationContext>({
-  authKey: "",
-  setAuthKey: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  token: "",
   endpoint: "",
-  setEndpoint: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
+  expiry: "",
+  setAuthInfo: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  clearAuthInfo: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
 export const useAuthenticationContext = (): AuthenticationContext =>
@@ -25,12 +33,56 @@ export const useAuthenticationContext = (): AuthenticationContext =>
 export const AuthenticationContextProvider: FunctionComponent = ({
   children
 }) => {
-  const [authKey, setAuthKey] = useState("");
+  const [token, setToken] = useState("");
+  const [expiry, setExpiry] = useState("");
   const [endpoint, setEndpoint] = useState("");
+
+  const setAuthInfo: AuthenticationContext["setAuthInfo"] = (
+    tokenInput: string,
+    expiryInput: number,
+    endpointInput: string
+  ): void => {
+    setToken(tokenInput);
+    const expiryString = expiryInput.toString();
+    setExpiry(expiryString);
+    setEndpoint(endpointInput);
+    AsyncStorage.multiSet([
+      [SESSION_TOKEN_KEY, tokenInput],
+      [EXPIRY_KEY, expiryString],
+      [ENDPOINT_KEY, endpointInput]
+    ]);
+  };
+
+  const clearAuthInfo: AuthenticationContext["clearAuthInfo"] = (): void => {
+    setToken("");
+    setEndpoint("");
+    AsyncStorage.multiRemove([SESSION_TOKEN_KEY, EXPIRY_KEY, ENDPOINT_KEY]);
+  };
+
+  const loadAuthFromStore = async (): Promise<void> => {
+    const sessionToken = await AsyncStorage.getItem(SESSION_TOKEN_KEY);
+    const expiry = await AsyncStorage.getItem(EXPIRY_KEY);
+    const endpoint = await AsyncStorage.getItem(ENDPOINT_KEY);
+    if (sessionToken && endpoint && expiry) {
+      setToken(sessionToken);
+      setExpiry(expiry);
+      setEndpoint(endpoint);
+    }
+  };
+
+  useEffect(() => {
+    loadAuthFromStore();
+  }, []);
 
   return (
     <AuthenticationContext.Provider
-      value={{ authKey, setAuthKey, endpoint, setEndpoint }}
+      value={{
+        token,
+        expiry,
+        endpoint,
+        setAuthInfo,
+        clearAuthInfo
+      }}
     >
       {children}
     </AuthenticationContext.Provider>

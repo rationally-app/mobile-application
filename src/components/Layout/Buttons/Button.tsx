@@ -13,7 +13,7 @@ export const Button: FunctionComponent<Button> = ({ onPress, text }) => (
     <AppText
       style={{
         color: color("blue", 50),
-        fontFamily: "inter-bold",
+        fontFamily: "brand-bold",
         fontSize: fontSize(-2)
       }}
     >

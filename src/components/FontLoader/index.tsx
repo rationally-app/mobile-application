@@ -11,8 +11,9 @@ export const FontLoader = ({
   useEffect(() => {
     const loadFonts = async (): Promise<void> => {
       await Font.loadAsync({
-        inter: require("../../../assets/fonts/Inter-Regular.otf"),
-        "inter-bold": require("../../../assets/fonts/Inter-Bold.otf")
+        "brand-regular": require("../../../assets/fonts/IBMPlexSans-Regular.ttf"),
+        "brand-italic": require("../../../assets/fonts/IBMPlexSans-Italic.ttf"),
+        "brand-bold": require("../../../assets/fonts/IBMPlexSans-Bold.ttf")
       });
       setFontsLoaded(true);
     };

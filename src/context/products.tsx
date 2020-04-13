@@ -6,20 +6,20 @@ import React, {
 } from "react";
 import { Policy } from "../types";
 
-interface ProductContext {
+export interface ProductContextValue {
   products: Policy[];
   setProducts: (products: Policy[]) => void;
   getProduct: (category: string) => Policy | undefined;
 }
 
-export const ProductContext = createContext<ProductContext>({
+export const ProductContext = createContext<ProductContextValue>({
   products: [],
   setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getProduct: () => undefined
 });
 
-export const useProductContext = (): ProductContext =>
-  useContext<ProductContext>(ProductContext);
+export const useProductContext = (): ProductContextValue =>
+  useContext<ProductContextValue>(ProductContext);
 
 export const ProductContextProvider: FunctionComponent = ({ children }) => {
   const [products, setProducts] = useState<Policy[]>([]);

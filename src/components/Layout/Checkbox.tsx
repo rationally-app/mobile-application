@@ -1,15 +1,24 @@
 import React, { FunctionComponent, ReactElement } from "react";
-import { TouchableHighlight, View, StyleSheet } from "react-native";
+import {
+  TouchableHighlight,
+  View,
+  StyleSheet,
+  Vibration,
+  Platform
+} from "react-native";
 import { size, color, borderRadius } from "../../common/styles";
 import { Feather } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   wrapper: {
     flexDirection: "row",
-    borderRadius: borderRadius(3),
     alignItems: "center",
     minHeight: size(10),
-    borderWidth: 1
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    paddingHorizontal: size(2),
+    paddingVertical: size(1.5)
   },
   wrapperUnchecked: {
     backgroundColor: color("grey", 10),
@@ -20,25 +29,22 @@ const styles = StyleSheet.create({
     borderColor: color("green", 40)
   },
   labelWrapper: {
-    marginLeft: size(2.5),
+    marginRight: size(1),
     flex: 1
   },
   toggle: {
     borderWidth: 1,
-    marginRight: size(3),
-    marginLeft: size(2.5),
-    width: size(3),
-    height: size(3),
-    borderRadius: 9999,
+    width: size(5),
+    height: size(5),
+    borderRadius: borderRadius(2),
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: color("grey", 0)
   },
   toggleUnchecked: {
-    backgroundColor: "white",
     borderColor: color("grey", 30)
   },
   toggleChecked: {
-    backgroundColor: color("green", 30),
     borderColor: color("green", 50)
   }
 });
@@ -56,7 +62,7 @@ const Toggle: FunctionComponent<Toggle> = ({ isChecked }) => {
       ]}
     >
       {isChecked && (
-        <Feather name="check" size={size(1.5)} color={color("green", 60)} />
+        <Feather name="check" size={size(2.5)} color={color("grey", 80)} />
       )}
     </View>
   );
@@ -74,7 +80,12 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
 }) => {
   return (
     <TouchableHighlight
-      onPress={() => onToggle(!isChecked)}
+      onPress={() => {
+        onToggle(!isChecked);
+        if (Platform.OS === "android") {
+          Vibration.vibrate(10);
+        }
+      }}
       underlayColor="transparent"
       activeOpacity={1}
     >
