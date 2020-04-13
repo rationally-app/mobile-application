@@ -1,4 +1,9 @@
-import { decodeQr, mobileNumberValidator, countryCodeValidator } from "./utils";
+import {
+  decodeQr,
+  createFullNumber,
+  mobileNumberValidator,
+  countryCodeValidator
+} from "./utils";
 
 describe("decodeQr", () => {
   it("should fail for old QR codes", () => {
@@ -27,20 +32,30 @@ describe("decodeQr", () => {
   });
 });
 
+describe("createFullNumber", () => {
+  it("should combine the 2 params properly to create a full phone number without spaces", () => {
+    expect.assertions(3);
+    expect(createFullNumber("+65", "98765432")).toBe("+6598765432");
+    expect(createFullNumber("+6 5", "98765432")).toBe("+6598765432");
+    expect(createFullNumber("+65", "987654 32")).toBe("+6598765432");
+  });
+});
+
 describe("mobileNumberValidator", () => {
   it("should return false for invalid numbers", () => {
-    expect.assertions(3);
-    expect(mobileNumberValidator("1237123871239018273128901290")).toBe(false);
-    expect(mobileNumberValidator("asd")).toBe(false);
-    expect(mobileNumberValidator("9182678_LAKASF)Q!K")).toBe(false);
+    expect.assertions(5);
+    expect(mobileNumberValidator("+65", "12345678")).toBe(false);
+    expect(mobileNumberValidator("+1", "91234567")).toBe(false);
+    expect(mobileNumberValidator("+65", " ")).toBe(false);
+    expect(mobileNumberValidator("+65", "")).toBe(false);
+    expect(mobileNumberValidator("+1", "asicdbaoisb")).toBe(false);
   });
 
   it("should return true for valid numbers", () => {
-    expect.assertions(4);
-    expect(mobileNumberValidator("91234567")).toBe(true);
-    expect(mobileNumberValidator("+6598261749")).toBe(true);
-    expect(mobileNumberValidator("+65 98219374")).toBe(true);
-    expect(mobileNumberValidator("0098219374")).toBe(true);
+    expect.assertions(3);
+    expect(mobileNumberValidator("+65", "96247612")).toBe(true);
+    expect(mobileNumberValidator("+65", "98261749")).toBe(true);
+    expect(mobileNumberValidator("+65", "98219374")).toBe(true);
   });
 });
 

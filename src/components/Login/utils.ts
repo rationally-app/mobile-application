@@ -26,18 +26,22 @@ export const decodeQr = (code: string): DecodedQrResponse => {
   }
 };
 
-export const mobileNumberValidator = (number: string): boolean => {
-  const phoneNumberUtil = new PhoneNumberUtil();
-  const regions = phoneNumberUtil.getSupportedRegions();
-  let validatorArray: boolean[] = [];
-  try {
-    validatorArray = regions.map(code => {
-      const mobileNumber = phoneNumberUtil.parse(number, code);
-      return phoneNumberUtil.isValidNumberForRegion(mobileNumber, code);
-    });
-  } catch {}
+export const createFullNumber = (countryCode: string, number: string): string =>
+  `${countryCode}${number}`.replace(/\s/g, "");
 
-  return validatorArray.includes(true);
+export const mobileNumberValidator = (
+  countryCode: string,
+  number: string
+): boolean => {
+  if (!/^[0-9]*$/.test(number) || number.length === 0) {
+    return false;
+  }
+  const phoneNumberUtil = new PhoneNumberUtil();
+  const parsedNumber = phoneNumberUtil.parse(
+    createFullNumber(countryCode, number)
+  );
+  const regionCode = phoneNumberUtil.getRegionCodeForNumber(parsedNumber);
+  return phoneNumberUtil.isValidNumberForRegion(parsedNumber, regionCode);
 };
 
 export const countryCodeValidator = (code: string): boolean => {

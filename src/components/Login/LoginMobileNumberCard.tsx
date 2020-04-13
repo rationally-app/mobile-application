@@ -11,7 +11,11 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { LOGIN_STAGES } from "../../types";
 import { requestOTP } from "../../services/auth";
-import { mobileNumberValidator, countryCodeValidator } from "./utils";
+import {
+  mobileNumberValidator,
+  countryCodeValidator,
+  createFullNumber
+} from "./utils";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -89,10 +93,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const onRequestOTP = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      const fullNumber = `${countryCode}${mobileNumberValue}`.replace(
-        /\s/g,
-        ""
-      );
+      const fullNumber = createFullNumber(countryCode, mobileNumberValue);
       await requestOTP(fullNumber, codeKey, endpoint);
       setIsLoading(false);
       setMobileNumber(fullNumber);
@@ -106,7 +107,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const onSubmitMobileNumber = (): void => {
     if (!countryCodeValidator(countryCode)) {
       alert("Invalid country code");
-    } else if (!mobileNumberValidator(mobileNumberValue)) {
+    } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
       alert("Invalid mobile phone number");
     } else {
       onRequestOTP();
