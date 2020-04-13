@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useCallback } from "react";
-import { color, size, borderRadius } from "../../common/styles";
+import { color, size } from "../../common/styles";
 import { View, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
