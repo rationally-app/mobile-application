@@ -19,7 +19,7 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
 import { Card } from "../Layout/Card";
-import { ItemsSelectionCard } from "./ItemsSelectionCard";
+import { ItemsSelectionCard } from "./ItemsSelection/ItemsSelectionCard";
 import { NoQuotaCard } from "./NoQuotaCard";
 import { PurchaseSuccessCard } from "./PurchaseSuccessCard";
 import { useCart } from "../../hooks/useCart/useCart";
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   content: {
     position: "relative",
-    padding: size(3),
+    padding: size(2),
     paddingTop: size(8),
     paddingBottom: size(9),
     height: "100%",

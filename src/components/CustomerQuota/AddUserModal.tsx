@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Vibration
 } from "react-native";
 import { InputNricSection } from "../CustomerDetails/InputNricSection";
 import { IdScanner } from "../IdScanner/IdScanner";
@@ -91,6 +92,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
     try {
       setIsScanningEnabled(false);
       const nric = validateAndCleanNric(input);
+      Vibration.vibrate(50);
       if (nrics.indexOf(nric) > -1) {
         throw new Error(
           "You've added this NRIC before, please scan a different NRIC."
@@ -152,7 +154,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
               <Card style={styles.card}>
                 <View style={styles.cardHeader}>
                   <AppText style={{ flex: 1 }}>
-                    Add another NRIC to combine your quotas
+                    Add another NRIC to combine customer quotas
                   </AppText>
                   <View style={{ marginLeft: size(1) }}>
                     <CloseButton onPress={() => setIsVisible(false)} />

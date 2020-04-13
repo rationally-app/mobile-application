@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   orText: {
     fontSize: fontSize(-1),
-    fontFamily: "inter-bold"
+    fontFamily: "brand-bold"
   },
   inputAndButtonWrapper: {
     marginTop: size(6),

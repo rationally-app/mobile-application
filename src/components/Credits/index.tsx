@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: fontSize(-4),
-    fontFamily: "inter-bold",
+    fontFamily: "brand-bold",
     color: "#CCCCCC"
   },
   subText: {

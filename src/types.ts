@@ -36,9 +36,17 @@ export enum NetworkTypes {
 export interface Policy {
   category: string;
   name: string;
-  unit: string;
-  quantityLimit: number;
-  period: number;
+  description?: string;
+  image?: string;
   order: number;
-  default?: boolean;
+  quantity: {
+    period: number;
+    limit: number;
+    default?: number;
+    step?: number;
+    unit?: {
+      type: "PREFIX" | "POSTFIX";
+      label: string;
+    };
+  };
 }

@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  Platform
+  Platform,
+  Vibration
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { clamp, debounce } from "lodash";
@@ -26,8 +27,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     minHeight: size(6),
     borderWidth: 1,
-    borderRadius: borderRadius(2),
+    borderRadius: borderRadius(2)
+  },
+  wrapperDefault: {
     borderColor: color("grey", 30)
+  },
+  wrapperHighlighted: {
+    borderColor: color("green", 50)
   },
   stepButton: {
     minWidth: size(6),
@@ -50,19 +56,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingVertical: 0,
     paddingHorizontal: 2,
+    fontFamily: "brand-bold",
     ...Platform.select({
-      ios: {
-        fontFamily: "Menlo"
-      },
       android: {
-        fontFamily: "monospace",
         marginTop: -2
       }
     })
   },
   suffix: {
     marginTop: -2,
-    fontFamily: "inter",
+    fontFamily: "brand-regular",
     fontSize: fontSize(0)
   }
 });
@@ -100,9 +103,12 @@ const StepperButton: FunctionComponent<StepperButton> = ({
     if (longPressStartTime > 0 && isPressedIn) {
       // Exponential decay so that the rate of change in value changes with time.
       const duration = Math.round(
-        400 * 0.4 ** ((Date.now() - longPressStartTime) / 1000)
+        300 * 0.4 ** ((Date.now() - longPressStartTime) / 1000)
       );
-      timeout = setTimeout(onPress, duration);
+      timeout = setTimeout(() => {
+        Vibration.vibrate(5);
+        onPress();
+      }, duration);
     } else {
       clearTimeout(timeout);
     }
@@ -114,7 +120,10 @@ const StepperButton: FunctionComponent<StepperButton> = ({
   return (
     <TouchableOpacity
       style={styles.stepButton}
-      onPress={onPress}
+      onPress={() => {
+        onPress();
+        Vibration.vibrate(10);
+      }}
       disabled={disabled}
       delayLongPress={300}
       onPressIn={() => setIsPressedIn(true)}
@@ -222,7 +231,12 @@ export const Stepper: FunctionComponent<Stepper> = ({
   };
 
   return (
-    <View style={styles.wrapper}>
+    <View
+      style={[
+        styles.wrapper,
+        value > 0 ? styles.wrapperHighlighted : styles.wrapperDefault
+      ]}
+    >
       <StepperButton
         variant="MINUS"
         onPress={decrement}

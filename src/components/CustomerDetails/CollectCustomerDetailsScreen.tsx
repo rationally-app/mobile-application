@@ -4,7 +4,8 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  Vibration
 } from "react-native";
 import { size } from "../../common/styles";
 import { AppName } from "../Layout/AppName";
@@ -25,7 +26,7 @@ import { InputNricSection } from "./InputNricSection";
 const styles = StyleSheet.create({
   content: {
     position: "relative",
-    padding: size(3),
+    padding: size(2),
     paddingVertical: size(8),
     height: "100%",
     width: 512,
@@ -55,6 +56,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     try {
       setIsScanningEnabled(false);
       const nric = validateAndCleanNric(input);
+      Vibration.vibrate(50);
       navigation.navigate("CustomerQuotaScreen", { nric });
       setNricInput("");
     } catch (e) {
