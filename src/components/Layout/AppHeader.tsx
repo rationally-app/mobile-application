@@ -79,7 +79,7 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
       );
     };
 
-    const timeLeft = Number(expiry) - new Date().getTime();
+    const timeLeft = Math.min(604800000, Number(expiry) - new Date().getTime());
     warningTimer = setTimeout(showWarning, timeLeft - TIME_BEFORE_WARNING);
     logoutTimer = setTimeout(handleLogout, timeLeft);
 
