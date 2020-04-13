@@ -8,7 +8,6 @@ export interface BaseButton {
   borderColor?: ViewStyle["borderColor"];
   disabled?: boolean;
   fullWidth?: boolean;
-  iconOnly?: boolean;
 }
 
 export const BaseButton: FunctionComponent<BaseButton> = ({
@@ -17,8 +16,7 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
   backgroundColor,
   borderColor,
   disabled = false,
-  fullWidth = false,
-  iconOnly
+  fullWidth = false
 }) => {
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
@@ -30,11 +28,11 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
           alignSelf: "flex-start",
           alignItems: "center",
           justifyContent: "center",
-          paddingVertical: iconOnly ? size(1) : size(1.5),
-          paddingHorizontal: iconOnly ? size(1) : size(3),
+          paddingVertical: size(1.5),
+          paddingHorizontal: size(3),
           borderRadius: borderRadius(2),
-          minHeight: iconOnly ? size(1) : size(6),
-          minWidth: iconOnly ? size(1) : size(10),
+          minHeight: size(6),
+          minWidth: size(10),
           width: fullWidth ? "100%" : "auto"
         }}
       >

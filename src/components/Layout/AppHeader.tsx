@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useEffect, useCallback } from "react";
-import { color, size } from "../../common/styles";
-import { View, StyleSheet, Alert } from "react-native";
+import { color, size, borderRadius } from "../../common/styles";
+import { View, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { AppMode } from "../../context/config";
-import { BaseButton } from "./Buttons/BaseButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAuthenticationContext } from "../../context/auth";
 import { withNavigation, NavigationActions } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppName } from "./AppName";
+import { AppText } from "./AppText";
 
 const TIME_BEFORE_WARNING = 900000;
 let warningTimer: NodeJS.Timeout;
@@ -92,13 +92,23 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   return (
     <View style={styles.appHeaderWrapper}>
       <AppName mode={mode} />
-      <BaseButton onPress={onPressLogout} iconOnly>
-        <MaterialCommunityIcons
-          name="logout"
-          size={size(3)}
-          color={color("grey", 0)}
-        />
-      </BaseButton>
+      <TouchableOpacity onPress={onPressLogout}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center"
+          }}
+        >
+          <AppText style={{ color: color("grey", 0), marginRight: size(1) }}>
+            Logout
+          </AppText>
+          <MaterialCommunityIcons
+            name="logout"
+            size={size(3)}
+            color={color("grey", 0)}
+          />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
