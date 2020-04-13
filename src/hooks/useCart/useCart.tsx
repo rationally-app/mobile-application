@@ -60,12 +60,16 @@ const mergeWithCart = (
 
       return productOneOrder - productTwoOrder;
     })
-    .map(({ category, quantity, transactionTime }) => {
+    .map(({ category, quantity: maxQuantity, transactionTime }) => {
       const [existingItem] = getItem(cart, category);
+      const defaultQuantity = getProduct(category)?.quantity.default || 0;
       return {
         category,
-        quantity: Math.min(quantity, existingItem?.quantity ?? 0),
-        maxQuantity: quantity,
+        quantity: Math.min(
+          maxQuantity,
+          existingItem?.quantity || defaultQuantity
+        ),
+        maxQuantity,
         lastTransactionTime: transactionTime
           ? new Date(transactionTime)
           : undefined

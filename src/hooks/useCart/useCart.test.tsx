@@ -13,25 +13,35 @@ const products: Policy[] = [
   {
     category: "toilet-paper",
     name: "Toilet Paper",
-    unit: "roll",
-    quantityLimit: 2,
-    period: 7,
-    order: 1
+    description: "",
+    order: 1,
+    quantity: {
+      period: 7,
+      limit: 2,
+      default: 1,
+      unit: {
+        type: "POSTFIX",
+        label: " roll"
+      }
+    }
   },
   {
     category: "chocolate",
     name: "Chocolate",
-    unit: "bar",
-    quantityLimit: 15,
-    period: 7,
-    order: 2
+    order: 2,
+    quantity: {
+      period: 7,
+      limit: 15,
+      default: 0,
+      unit: {
+        type: "POSTFIX",
+        label: "bar"
+      }
+    }
   }
 ];
 
-const getProduct = (
-  category: string,
-  products?: Policy[]
-): Policy | undefined =>
+const getProduct = (category: string): Policy | undefined =>
   products?.find(product => product.category === category) ?? undefined;
 
 const wrapper: FunctionComponent = ({ children }) => (
@@ -128,7 +138,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 0
+          quantity: 1
         },
         {
           category: "chocolate",
@@ -196,7 +206,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: undefined,
           maxQuantity: 4,
-          quantity: 0
+          quantity: 1
         },
         {
           category: "chocolate",
@@ -225,7 +235,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 0
+          quantity: 1
         },
         {
           category: "chocolate",
@@ -254,7 +264,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 0
+          quantity: 1
         },
         {
           category: "chocolate",
@@ -275,7 +285,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: undefined,
           maxQuantity: 4,
-          quantity: 0
+          quantity: 1
         },
         {
           category: "chocolate",
@@ -307,7 +317,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 0
+          quantity: 1
         },
         {
           category: "chocolate",
@@ -338,7 +348,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 0
+          quantity: 1
         },
         {
           category: "chocolate",
@@ -369,7 +379,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 0
+          quantity: 1
         },
         {
           category: "chocolate",
@@ -394,7 +404,7 @@ describe("useCart", () => {
       );
 
       await wait(() => {
-        result.current.updateCart("toilet-paper", 1);
+        result.current.updateCart("toilet-paper", 2);
         result.current.updateCart("chocolate", 5);
       });
 
@@ -413,7 +423,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 2
         },
         {
           category: "chocolate",
@@ -437,6 +447,7 @@ describe("useCart", () => {
       );
 
       await wait(() => {
+        result.current.updateCart("toilet-paper", 0);
         result.current.checkoutCart();
       });
 
@@ -472,7 +483,7 @@ describe("useCart", () => {
       );
 
       await wait(() => {
-        result.current.updateCart("toilet-paper", 1);
+        result.current.updateCart("toilet-paper", 2);
         result.current.updateCart("chocolate", 5);
       });
 
@@ -491,7 +502,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 2
         },
         {
           category: "chocolate",
