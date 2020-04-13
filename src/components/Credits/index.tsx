@@ -37,8 +37,9 @@ const contributors = [
   "Chow Ruijie",
   "Raymond Yeh",
   "Sebastian Quek",
-  "Lim Zui Young",
-  "Immanuella Lim"
+  "Immanuella Lim",
+  "Tang Li Ren",
+  "Lim Zui Young"
 ];
 
 export const Credits: FunctionComponent<ViewProps> = ({ style }) => {
