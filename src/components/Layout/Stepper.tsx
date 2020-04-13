@@ -23,9 +23,9 @@ import { useIsMounted } from "../../hooks/useIsMounted/useIsMounted";
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: color("grey", 0),
-    minWidth: 144,
+    minWidth: 160,
     flexDirection: "row",
-    minHeight: size(6),
+    minHeight: size(7),
     borderWidth: 1,
     borderRadius: borderRadius(2)
   },
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     borderColor: color("green", 50)
   },
   stepButton: {
-    minWidth: size(6),
+    minWidth: size(7),
     alignItems: "center",
     justifyContent: "center"
   },
@@ -141,7 +141,7 @@ const StepperButton: FunctionComponent<StepperButton> = ({
     >
       <Feather
         name={variant === "PLUS" ? "plus" : "minus"}
-        size={size(2.5)}
+        size={size(3)}
         color={color("grey", disabled ? 30 : 80)}
       />
     </TouchableOpacity>

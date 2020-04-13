@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   content: {
     position: "relative",
-    padding: size(2),
+    padding: size(1.5),
     paddingTop: size(8),
     paddingBottom: size(9),
     height: "100%",
