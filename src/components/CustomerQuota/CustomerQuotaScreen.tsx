@@ -12,7 +12,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { color, size, borderRadius, fontSize } from "../../common/styles";
 import { postTransaction, Quota, Transaction } from "../../services/quota";
 import { useAuthenticationContext } from "../../context/auth";
-import { AppName } from "../Layout/AppName";
+import { AppHeader } from "../Layout/AppHeader";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -318,7 +318,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const { getProduct } = useProductContext();
-  const { authKey, endpoint } = useAuthenticationContext();
+  const { token, endpoint } = useAuthenticationContext();
   const quota: Quota = navigation.getParam("quota");
   const nric: string = navigation.getParam("nric");
 
@@ -361,7 +361,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
       await postTransaction({
         nric,
-        key: authKey,
+        key: token,
         transactions,
         endpoint
       });
@@ -384,7 +384,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       <TopBackground mode={config.appMode} />
       <View style={styles.content}>
         <View style={styles.headerText}>
-          <AppName mode={config.appMode} />
+          <AppHeader mode={config.appMode} />
         </View>
 
         {hasPurchased ? (

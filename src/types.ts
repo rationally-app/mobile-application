@@ -42,3 +42,9 @@ export interface Policy {
   order: number;
   default?: boolean;
 }
+
+export enum LOGIN_STAGES {
+  SCAN,
+  MOBILE_NUMBER,
+  OTP
+}
