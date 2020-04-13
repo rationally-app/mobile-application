@@ -2,7 +2,7 @@ import React, { useState, useEffect, FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
-import { size } from "../../common/styles";
+import { size, fontSize } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center"
   },
+  resendCountdownText: { marginRight: size(1), fontSize: fontSize(-2) },
   submitWrapper: {
     flex: 1,
     marginLeft: size(1)
@@ -109,7 +110,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         />
         <View style={styles.buttonsWrapper}>
           {resendDisabledTime > 0 ? (
-            <AppText>Resend in {resendDisabledTime / 1000}s</AppText>
+            <AppText style={styles.resendCountdownText}>
+              Resend in {resendDisabledTime / 1000}s
+            </AppText>
           ) : (
             <SecondaryButton
               text="Resend"
