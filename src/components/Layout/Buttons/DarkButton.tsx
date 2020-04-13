@@ -35,7 +35,7 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
         <AppText
           style={{
             color: color("grey", 0),
-            fontFamily: "inter-bold",
+            fontFamily: "brand-bold",
             textAlign: "center"
           }}
         >

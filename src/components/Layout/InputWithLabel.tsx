@@ -5,7 +5,7 @@ import { AppText } from "./AppText";
 
 const styles = StyleSheet.create({
   label: {
-    fontFamily: "inter-bold"
+    fontFamily: "brand-bold"
   },
   input: {
     minHeight: size(6),
@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: borderRadius(2),
     borderColor: color("grey", 40),
+    fontFamily: "brand-regular",
     fontSize: fontSize(0),
     color: color("blue", 50)
   }

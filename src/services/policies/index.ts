@@ -32,29 +32,47 @@ const mockGetPolicies = async (
   return {
     policies: [
       {
-        category: "item-a",
-        name: "Item A",
-        period: 10,
-        quantityLimit: 1000,
-        unit: "item",
+        category: "toilet-paper",
+        name: "🧻 Toilet Paper",
+        description: "1 ply / 2 ply / 3 ply",
         order: 1,
-        default: true
+        quantity: {
+          period: 7,
+          limit: 2,
+          unit: {
+            type: "POSTFIX",
+            label: " pack(s)"
+          }
+        }
       },
       {
-        category: "item-b",
-        name: "Item B",
-        period: 30,
-        quantityLimit: 60,
-        unit: "item",
-        order: 2
+        category: "instant-noodles",
+        name: "🍜 Instant Noodles",
+        description: "Indomee",
+        order: 2,
+        quantity: {
+          period: 30,
+          limit: 1,
+          unit: {
+            type: "POSTFIX",
+            label: " pack(s)"
+          }
+        }
       },
       {
-        category: "item-c",
-        name: "Item C",
-        period: 20,
-        quantityLimit: 1,
-        unit: "item",
-        order: 3
+        category: "chocolate",
+        name: "🍫 Chocolate",
+        description: "Dark / White / Assorted",
+        order: 3,
+        quantity: {
+          period: 14,
+          limit: 30,
+          step: 5,
+          unit: {
+            type: "PREFIX",
+            label: "$"
+          }
+        }
       }
     ]
   };

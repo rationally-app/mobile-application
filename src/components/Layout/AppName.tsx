@@ -17,7 +17,7 @@ export const AppName: FunctionComponent<AppName> = (
       <AppText
         style={{
           color: color("red", 50),
-          fontFamily: "inter-bold",
+          fontFamily: "brand-bold",
           fontSize: fontSize(2)
         }}
       >

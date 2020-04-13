@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     marginBottom: size(2)
   },
   label: {
-    fontFamily: "inter-bold"
+    fontFamily: "brand-bold"
   },
   inputsWrapper: {
     flexDirection: "row",

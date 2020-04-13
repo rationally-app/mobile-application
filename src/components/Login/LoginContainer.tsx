@@ -4,20 +4,15 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  ScrollView
+  ScrollView,
+  Vibration
 } from "react-native";
 import { NavigationProps, LOGIN_STAGES } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { useAuthenticationContext } from "../../context/auth";
-import { size, color } from "../../common/styles";
+import { size } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
-import * as Permissions from "expo-permissions";
-import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
-import {
-  NricScanner,
-  BarCodeScanningResult
-} from "../CustomerDetails/NricScanner";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
 import { decodeQr } from "./utils";
@@ -25,6 +20,7 @@ import { LoginScanCard } from "./LoginScanCard";
 import { LoginMobileNumberCard } from "./LoginMobileNumberCard";
 import { LoginOTPCard } from "./LoginOTPCard";
 import { AppName } from "../Layout/AppName";
+import { IdScanner } from "../IdScanner/IdScanner";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -32,26 +28,12 @@ const ALLOW_MODE_CHANGE = false;
 
 const styles = StyleSheet.create({
   content: {
-    padding: size(3),
+    padding: size(2),
     marginTop: -size(3),
     width: 512,
     maxWidth: "100%",
     height: "100%",
     justifyContent: "center"
-  },
-  cameraWrapper: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: color("grey", 0)
-  },
-  cancelButtonWrapper: {
-    marginTop: size(3),
-    marginBottom: size(4)
   },
   headerText: {
     marginBottom: size(4),
@@ -68,24 +50,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 }) => {
   const { token, endpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [hasCameraPermission, setHasCameraPermission] = useState(false);
-  const [showScanner, setShowScanner] = useState(false);
+  const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const { config, setConfigValue } = useConfigContext();
   const [loginStage, setLoginStage] = useState(LOGIN_STAGES.SCAN);
   const [mobileNumber, setMobileNumber] = useState("");
   const [codeKey, setCodeKey] = useState("");
   const [endpointTemp, setEndpointTemp] = useState("");
 
-  const askForCameraPermission = async (): Promise<void> => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    setHasCameraPermission(status === "granted");
-  };
-
   useEffect(() => {
     if (token && endpoint) {
       navigation.navigate("CollectCustomerDetailsScreen");
-    } else {
-      askForCameraPermission();
     }
   }, [endpoint, navigation, token]);
 
@@ -99,28 +73,24 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     alert(`SupplyAlly in ${nextMode.toUpperCase()} mode`);
   };
 
-  const onToggleScanner = (): void => {
-    if (!hasCameraPermission) {
-      askForCameraPermission();
-    }
-    setShowScanner(s => !s);
-  };
-
-  const onBarCodeScanned = (event: BarCodeScanningResult): void => {
+  const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (!isLoading && event.data) {
       const qrCode = event.data;
-      onToggleScanner();
+      setShouldShowCamera(false);
       setIsLoading(true);
-      const { key, endpoint } = decodeQr(qrCode);
-      setCodeKey(key);
-      setEndpointTemp(endpoint);
-      setIsLoading(false);
-      setShowScanner(false);
-      setLoginStage(LOGIN_STAGES.MOBILE_NUMBER);
+      try {
+        const { key, endpoint } = decodeQr(qrCode);
+        Vibration.vibrate(50);
+        setCodeKey(key);
+        setEndpointTemp(endpoint);
+        setIsLoading(false);
+        setLoginStage(LOGIN_STAGES.MOBILE_NUMBER);
+      } catch (e) {
+        alert("Invalid QR code");
+        setIsLoading(false);
+      }
     }
   };
-
-  const shouldShowCamera = hasCameraPermission && showScanner;
 
   return (
     <>
@@ -158,7 +128,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             {loginStage === LOGIN_STAGES.SCAN && (
               <LoginScanCard
                 setLoginStage={setLoginStage}
-                onToggleScanner={onToggleScanner}
+                onToggleScanner={() => setShouldShowCamera(true)}
                 isLoading={isLoading}
               />
             )}
@@ -183,15 +153,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       </ScrollView>
       <Credits style={{ bottom: size(3) }} />
       {shouldShowCamera && (
-        <View style={styles.cameraWrapper}>
-          <NricScanner
-            onBarCodeScanned={onBarCodeScanned}
-            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-          />
-          <View style={styles.cancelButtonWrapper}>
-            <SecondaryButton text="Cancel" onPress={onToggleScanner} />
-          </View>
-        </View>
+        <IdScanner
+          onBarCodeScanned={onBarCodeScanned}
+          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+          onCancel={() => setShouldShowCamera(false)}
+          cancelButtonText="Cancel"
+        />
       )}
     </>
   );
