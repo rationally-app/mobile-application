@@ -39,7 +39,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   mobileNumber,
   codeKey,
   endpoint
-}: LoginOTPCard) => {
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [oTPValue, setOTPValue] = useState("");

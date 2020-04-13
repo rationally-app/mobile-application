@@ -18,7 +18,7 @@ interface AppHeader extends NavigationProps {
 }
 
 const styles = StyleSheet.create({
-  AppHeaderWrapper: {
+  appHeaderWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
@@ -90,7 +90,7 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   }, [expiry, handleLogout]);
 
   return (
-    <View style={styles.AppHeaderWrapper}>
+    <View style={styles.appHeaderWrapper}>
       <AppName mode={mode} />
       <BaseButton onPress={onPressLogout} iconOnly>
         <MaterialCommunityIcons

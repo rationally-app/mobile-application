@@ -22,7 +22,7 @@ interface LoginScanCard {
 export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   onToggleScanner,
   isLoading
-}: LoginScanCard) => (
+}) => (
   <Card>
     <AppText>
       Please log in with your Unique ID provided by your supervisor

@@ -74,7 +74,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   setMobileNumber,
   codeKey,
   endpoint
-}: LoginMobileNumberCard) => {
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("+65");
   const [mobileNumberValue, setMobileNumberValue] = useState("");

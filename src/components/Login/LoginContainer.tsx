@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
-}: NavigationProps) => {
+}) => {
   const { token, endpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
