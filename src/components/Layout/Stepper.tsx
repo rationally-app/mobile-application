@@ -106,7 +106,9 @@ const StepperButton: FunctionComponent<StepperButton> = ({
         300 * 0.4 ** ((Date.now() - longPressStartTime) / 1000)
       );
       timeout = setTimeout(() => {
-        Vibration.vibrate(5);
+        if (Platform.OS === "android") {
+          Vibration.vibrate(5);
+        }
         onPress();
       }, duration);
     } else {
@@ -122,7 +124,9 @@ const StepperButton: FunctionComponent<StepperButton> = ({
       style={styles.stepButton}
       onPress={() => {
         onPress();
-        Vibration.vibrate(10);
+        if (Platform.OS === "android") {
+          Vibration.vibrate(10);
+        }
       }}
       disabled={disabled}
       delayLongPress={300}
