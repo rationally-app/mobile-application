@@ -51,12 +51,12 @@ export const AppNameComponent: FunctionComponent<AppName> = ({
       "Are you sure?",
       [
         {
-          text: "Logout",
-          onPress: handleLogout
+          text: "Cancel"
         },
         {
-          text: "Cancel",
-          style: "cancel"
+          text: "Logout",
+          onPress: handleLogout,
+          style: "destructive"
         }
       ],
       { cancelable: false }
@@ -71,12 +71,12 @@ export const AppNameComponent: FunctionComponent<AppName> = ({
           "Please logout and login with a new QR code.",
           [
             {
-              text: "Logout now",
-              onPress: handleLogout
+              text: "I'll do so in 15 mins"
             },
             {
-              text: "I'll do so in 15 mins",
-              style: "cancel"
+              text: "Logout now",
+              onPress: handleLogout,
+              style: "destructive"
             }
           ],
           { cancelable: false }
@@ -86,11 +86,11 @@ export const AppNameComponent: FunctionComponent<AppName> = ({
       const timeLeft = Number(expiry) - new Date().getTime();
       warningTimer = setTimeout(showWarning, timeLeft - TIME_BEFORE_WARNING);
       logoutTimer = setTimeout(handleLogout, timeLeft);
-      return () => {
-        clearTimeout(warningTimer);
-        clearTimeout(logoutTimer);
-      };
     }
+    return () => {
+      clearTimeout(warningTimer);
+      clearTimeout(logoutTimer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
