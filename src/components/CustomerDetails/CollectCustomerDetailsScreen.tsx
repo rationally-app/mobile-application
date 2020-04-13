@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     maxWidth: "100%"
   },
   headerText: {
-    marginBottom: size(3)
+    marginBottom: size(4)
   }
 });
 
