@@ -3,7 +3,8 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  ScrollView
 } from "react-native";
 import { NavigationProps, LOGIN_STAGES } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
@@ -33,8 +34,8 @@ const styles = StyleSheet.create({
   content: {
     padding: size(3),
     marginTop: -size(3),
-    maxWidth: 512,
-    width: "100%",
+    width: 512,
+    maxWidth: "100%",
     height: "100%",
     justifyContent: "center"
   },
@@ -123,55 +124,63 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   return (
     <>
-      <KeyboardAvoidingView style={{ alignItems: "center" }} behavior="padding">
-        <TopBackground
-          style={{ height: "50%", maxHeight: "auto" }}
-          mode={config.appMode}
-        />
-        <View style={styles.content}>
-          <TouchableWithoutFeedback
-            delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
-            onLongPress={onToggleAppMode}
-          >
-            <View style={styles.headerText}>
-              <AppName mode={config.appMode} />
-            </View>
-          </TouchableWithoutFeedback>
-          {config.appMode !== AppMode.production && (
-            <View style={{ marginVertical: size(2.5) }}>
-              <DangerButton
-                text="Exit Testing Mode"
-                onPress={onToggleAppMode}
-                fullWidth={true}
+      <ScrollView
+        contentContainerStyle={{ flex: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <KeyboardAvoidingView
+          style={{ alignItems: "center" }}
+          behavior="padding"
+        >
+          <TopBackground
+            style={{ height: "50%", maxHeight: "auto" }}
+            mode={config.appMode}
+          />
+          <View style={styles.content}>
+            <TouchableWithoutFeedback
+              delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
+              onLongPress={onToggleAppMode}
+            >
+              <View style={styles.headerText}>
+                <AppName mode={config.appMode} />
+              </View>
+            </TouchableWithoutFeedback>
+            {config.appMode !== AppMode.production && (
+              <View style={{ marginVertical: size(2.5) }}>
+                <DangerButton
+                  text="Exit Testing Mode"
+                  onPress={onToggleAppMode}
+                  fullWidth={true}
+                  isLoading={isLoading}
+                />
+              </View>
+            )}
+            {loginStage === LOGIN_STAGES.SCAN && (
+              <LoginScanCard
+                setLoginStage={setLoginStage}
+                onToggleScanner={onToggleScanner}
                 isLoading={isLoading}
               />
-            </View>
-          )}
-          {loginStage === LOGIN_STAGES.SCAN && (
-            <LoginScanCard
-              setLoginStage={setLoginStage}
-              onToggleScanner={onToggleScanner}
-              isLoading={isLoading}
-            />
-          )}
-          {loginStage === LOGIN_STAGES.MOBILE_NUMBER && (
-            <LoginMobileNumberCard
-              setLoginStage={setLoginStage}
-              setMobileNumber={setMobileNumber}
-              codeKey={codeKey}
-              endpoint={endpointTemp}
-            />
-          )}
-          {loginStage === LOGIN_STAGES.OTP && (
-            <LoginOTPCard
-              navigation={navigation}
-              mobileNumber={mobileNumber}
-              codeKey={codeKey}
-              endpoint={endpointTemp}
-            />
-          )}
-        </View>
-      </KeyboardAvoidingView>
+            )}
+            {loginStage === LOGIN_STAGES.MOBILE_NUMBER && (
+              <LoginMobileNumberCard
+                setLoginStage={setLoginStage}
+                setMobileNumber={setMobileNumber}
+                codeKey={codeKey}
+                endpoint={endpointTemp}
+              />
+            )}
+            {loginStage === LOGIN_STAGES.OTP && (
+              <LoginOTPCard
+                navigation={navigation}
+                mobileNumber={mobileNumber}
+                codeKey={codeKey}
+                endpoint={endpointTemp}
+              />
+            )}
+          </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
       <Credits style={{ bottom: size(3) }} />
       {shouldShowCamera && (
         <View style={styles.cameraWrapper}>
