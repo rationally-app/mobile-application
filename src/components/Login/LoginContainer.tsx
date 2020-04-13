@@ -9,7 +9,6 @@ import { NavigationProps, LOGIN_STAGES } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { useAuthenticationContext } from "../../context/auth";
 import { size, color } from "../../common/styles";
-import { AppName } from "../Layout/AppName";
 import { TopBackground } from "../Layout/TopBackground";
 import * as Permissions from "expo-permissions";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -24,6 +23,7 @@ import { decodeQr } from "./utils";
 import { LoginScanCard } from "./LoginScanCard";
 import { LoginMobileNumberCard } from "./LoginMobileNumberCard";
 import { LoginOTPCard } from "./LoginOTPCard";
+import { AppName } from "../Layout/AppName";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -134,7 +134,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             onLongPress={onToggleAppMode}
           >
             <View style={styles.headerText}>
-              <AppName mode={config.appMode} hideLogout />
+              <AppName mode={config.appMode} />
             </View>
           </TouchableWithoutFeedback>
           {config.appMode !== AppMode.production && (

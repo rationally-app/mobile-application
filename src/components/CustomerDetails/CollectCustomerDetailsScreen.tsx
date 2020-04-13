@@ -15,7 +15,7 @@ import * as Permissions from "expo-permissions";
 import { useAuthenticationContext } from "../../context/auth";
 import { validate, nricRegex } from "./validateNric";
 import { getQuota } from "../../services/quota";
-import { AppName } from "../Layout/AppName";
+import { AppHeader } from "../Layout/AppHeader";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { Card } from "../Layout/Card";
 import { BarCodeScanningResult, NricScanner } from "./NricScanner";
@@ -163,7 +163,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         <KeyboardAvoidingView behavior="position">
           <View style={styles.content}>
             <View style={styles.headerText}>
-              <AppName mode={config.appMode} />
+              <AppHeader mode={config.appMode} />
             </View>
             {!shouldShowCamera && (
               <Card>

@@ -22,23 +22,21 @@ interface LoginScanCard {
 export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   onToggleScanner,
   isLoading
-}: LoginScanCard) => {
-  return (
-    <Card>
-      <AppText>
-        Please log in with your Unique ID provided by your supervisor
-      </AppText>
-      <View style={styles.scanButtonWrapper}>
-        <DarkButton
-          text="Scan to Login"
-          onPress={onToggleScanner}
-          icon={
-            <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
-          }
-          fullWidth={true}
-          isLoading={isLoading}
-        />
-      </View>
-    </Card>
-  );
-};
+}: LoginScanCard) => (
+  <Card>
+    <AppText>
+      Please log in with your Unique ID provided by your supervisor
+    </AppText>
+    <View style={styles.scanButtonWrapper}>
+      <DarkButton
+        text="Scan to Login"
+        onPress={onToggleScanner}
+        icon={
+          <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
+        }
+        fullWidth={true}
+        isLoading={isLoading}
+      />
+    </View>
+  </Card>
+);
