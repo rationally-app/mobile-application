@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
 
 interface LoginMobileNumberCard {
   setLoginStage: Dispatch<SetStateAction<LOGIN_STAGES>>;
-  mobileNumber: string;
   setMobileNumber: Dispatch<SetStateAction<string>>;
   codeKey: string;
   endpoint: string;
@@ -68,7 +67,6 @@ interface LoginMobileNumberCard {
 
 export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
   setLoginStage,
-  mobileNumber,
   setMobileNumber,
   codeKey,
   endpoint

@@ -86,8 +86,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     } else {
       askForCameraPermission();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [endpoint, navigation, token]);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
@@ -158,7 +157,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           {loginStage === LOGIN_STAGES.MOBILE_NUMBER && (
             <LoginMobileNumberCard
               setLoginStage={setLoginStage}
-              mobileNumber={mobileNumber}
               setMobileNumber={setMobileNumber}
               codeKey={codeKey}
               endpoint={endpointTemp}
