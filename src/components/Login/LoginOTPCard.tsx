@@ -8,9 +8,7 @@ import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { NavigationProps } from "../../types";
 import { useAuthenticationContext } from "../../context/auth";
-import { useProductContext } from "../../context/products";
 import { validateOTP, requestOTP } from "../../services/auth";
-import { getPolicies } from "../../services/policies";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -49,7 +47,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     RESEND_OTP_TIME_LIMIT
   );
   const { setAuthInfo } = useAuthenticationContext();
-  const { setProducts } = useProductContext();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -67,23 +64,12 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     };
   }, [resendDisabledTime]);
 
-  // Temporary initialisation of policies upon confirming OTP
-  const initialisePolicies = async (token: string): Promise<void> => {
-    try {
-      const response = await getPolicies(token, endpoint);
-      setProducts(response.policies);
-    } catch (e) {
-      alert(e);
-    }
-  };
-
   const onValidateOTP = async (otp: string): Promise<void> => {
     setIsLoading(true);
     try {
       const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
       setIsLoading(false);
       setAuthInfo(response.sessionToken, response.ttl, endpoint);
-      await initialisePolicies(response.sessionToken);
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
       setIsLoading(false);

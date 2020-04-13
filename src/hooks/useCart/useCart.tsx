@@ -8,6 +8,7 @@ import {
   PostTransaction
 } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
+import { getPolicies } from "../../services/policies";
 
 export type CartItem = {
   category: string;
@@ -80,7 +81,7 @@ export const useCart = (
   authKey: string,
   endpoint: string
 ): CartHook => {
-  const { getProduct } = useProductContext();
+  const { products, getProduct, setProducts } = useProductContext();
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<
@@ -97,6 +98,10 @@ export const useCart = (
     const fetchQuota = async (): Promise<void> => {
       setCartState("FETCHING_QUOTA");
       try {
+        if (products.length === 0) {
+          const response = await getPolicies(authKey, endpoint);
+          setProducts(response.policies);
+        }
         const quotaResponse = await getQuota(ids, authKey, endpoint);
         if (hasNoQuota(quotaResponse)) {
           setCartState("NO_QUOTA");
@@ -115,7 +120,7 @@ export const useCart = (
     };
 
     fetchQuota();
-  }, [authKey, endpoint, getProduct, ids]);
+  }, [authKey, endpoint, getProduct, ids, products.length, setProducts]);
 
   /**
    * Update quantity of an item in the cart.
