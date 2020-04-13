@@ -95,7 +95,6 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
         /\s/g,
         ""
       );
-      console.log(fullNumber);
       await requestOTP(fullNumber, codeKey, endpoint);
       setIsLoading(false);
       setMobileNumber(fullNumber);
