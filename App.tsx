@@ -6,7 +6,7 @@ import { IS_STORYBOOK_VIEW } from "./src/config";
 import { SENTRY_DSN } from "react-native-dotenv";
 
 Sentry.init({
-  dsn: SENTRY_DSN,
+  dsn: process.env.SENTRY_DSN || SENTRY_DSN,
   // enableInExpoDevelopment: true,
   debug: __DEV__
 });
