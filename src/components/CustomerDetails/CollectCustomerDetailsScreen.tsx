@@ -22,6 +22,7 @@ import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { validateAndCleanNric } from "../../utils/validateNric";
 import { InputNricSection } from "./InputNricSection";
 import { AppHeader } from "../Layout/AppHeader";
+import * as Sentry from "sentry-expo";
 
 const styles = StyleSheet.create({
   content: {
@@ -41,6 +42,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   navigation,
   isFocused
 }) => {
+  useEffect(() => {
+    Sentry.addBreadcrumb({
+      category: "navigation",
+      message: "CollectCustomerDetailsScreen"
+    });
+  }, []);
+
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");

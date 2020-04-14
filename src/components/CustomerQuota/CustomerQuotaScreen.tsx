@@ -23,6 +23,7 @@ import { ItemsSelectionCard } from "./ItemsSelection/ItemsSelectionCard";
 import { NoQuotaCard } from "./NoQuotaCard";
 import { PurchaseSuccessCard } from "./PurchaseSuccessCard";
 import { useCart } from "../../hooks/useCart/useCart";
+import * as Sentry from "sentry-expo";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -56,6 +57,13 @@ const showAlert = (message: string, onDismiss: () => void): void =>
 export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  useEffect(() => {
+    Sentry.addBreadcrumb({
+      category: "navigation",
+      message: "CustomerQuotaScreen"
+    });
+  }, []);
+
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
   const [nrics, setNrics] = useState([navigation.getParam("nric")]);
@@ -69,6 +77,13 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     error,
     clearError
   } = useCart(nrics, token, endpoint);
+
+  useEffect(() => {
+    Sentry.addBreadcrumb({
+      category: "cartState",
+      message: cartState
+    });
+  }, [cartState]);
 
   const onCancel = useCallback((): void => {
     navigation.goBack();

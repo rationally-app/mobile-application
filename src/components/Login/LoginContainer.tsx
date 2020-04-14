@@ -21,6 +21,7 @@ import { LoginMobileNumberCard } from "./LoginMobileNumberCard";
 import { LoginOTPCard } from "./LoginOTPCard";
 import { AppName } from "../Layout/AppName";
 import { IdScanner } from "../IdScanner/IdScanner";
+import * as Sentry from "sentry-expo";
 import { LoginStage } from "./types";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
@@ -49,6 +50,10 @@ const styles = StyleSheet.create({
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  useEffect(() => {
+    Sentry.addBreadcrumb({ category: "navigation", message: "LoginContainer" });
+  }, []);
+
   const { token, endpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
@@ -57,6 +62,13 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [mobileNumber, setMobileNumber] = useState("");
   const [codeKey, setCodeKey] = useState("");
   const [endpointTemp, setEndpointTemp] = useState("");
+
+  useEffect(() => {
+    Sentry.addBreadcrumb({
+      category: "loginStage",
+      message: loginStage
+    });
+  }, [loginStage]);
 
   useEffect(() => {
     if (token && endpoint) {
