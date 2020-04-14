@@ -9,7 +9,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
-import { LOGIN_STAGES } from "../../types";
+import { LoginStage } from "./types";
 import { requestOTP } from "../../services/auth";
 import {
   mobileNumberValidator,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 });
 
 interface LoginMobileNumberCard {
-  setLoginStage: Dispatch<SetStateAction<LOGIN_STAGES>>;
+  setLoginStage: Dispatch<SetStateAction<LoginStage>>;
   setMobileNumber: Dispatch<SetStateAction<string>>;
   codeKey: string;
   endpoint: string;
@@ -97,7 +97,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       await requestOTP(fullNumber, codeKey, endpoint);
       setIsLoading(false);
       setMobileNumber(fullNumber);
-      setLoginStage(LOGIN_STAGES.OTP);
+      setLoginStage("OTP");
     } catch (e) {
       setIsLoading(false);
       alert(e);

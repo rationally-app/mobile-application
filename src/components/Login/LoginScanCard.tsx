@@ -1,11 +1,10 @@
-import React, { FunctionComponent, Dispatch, SetStateAction } from "react";
+import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
-import { LOGIN_STAGES } from "../../types";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -14,7 +13,6 @@ const styles = StyleSheet.create({
 });
 
 interface LoginScanCard {
-  setLoginStage: Dispatch<SetStateAction<LOGIN_STAGES>>;
   onToggleScanner: () => void;
   isLoading: boolean;
 }

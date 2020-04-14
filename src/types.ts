@@ -25,9 +25,3 @@ export interface Policy {
     };
   };
 }
-
-export enum LOGIN_STAGES {
-  SCAN,
-  MOBILE_NUMBER,
-  OTP
-}
