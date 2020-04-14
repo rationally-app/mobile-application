@@ -4,7 +4,6 @@ import {
 } from "react-navigation-stack";
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerQuotaScreen from "./CustomerQuotaScreen";
-import TransactionConfirmationScreen from "./TransactionConfirmationScreen";
 
 const StackNavigator = createStackNavigator(
   {
@@ -13,9 +12,6 @@ const StackNavigator = createStackNavigator(
     },
     CustomerQuotaScreen: {
       screen: CustomerQuotaScreen
-    },
-    TransactionConfirmationScreen: {
-      screen: TransactionConfirmationScreen
     }
   },
   {

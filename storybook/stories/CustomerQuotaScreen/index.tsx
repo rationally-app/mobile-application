@@ -1,2 +1,0 @@
-import "./CustomerQuotaScreen";
-import "./CustomerCard";

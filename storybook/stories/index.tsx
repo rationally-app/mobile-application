@@ -1,2 +1,1 @@
-// import "./CustomerQuotaScreen";
 import "./Layout";
