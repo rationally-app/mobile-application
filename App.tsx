@@ -3,11 +3,12 @@ import * as Sentry from "sentry-expo";
 import Constants from "expo-constants";
 import Storybook from "./storybook";
 import { IS_STORYBOOK_VIEW } from "./src/config";
+import { SENTRY_DSN } from "react-native-dotenv";
 
 Sentry.init({
-  dsn: "https://2b6599445c3946aeaf4dd31cafc56378@sentry.io/2140518",
-  enableInExpoDevelopment: true,
-  debug: true
+  dsn: SENTRY_DSN,
+  // enableInExpoDevelopment: true,
+  debug: __DEV__
 });
 Sentry.setRelease(Constants.manifest.revisionId!);
 

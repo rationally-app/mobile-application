@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import React, { Component, ReactNode } from "react";
 import * as Sentry from "sentry-expo";
 import { Updates } from "expo";
 import { AppText } from "../Layout/AppText";
@@ -58,9 +58,8 @@ export class ErrorBoundary extends Component<{}, State> {
     return { hasError: true, errorMessage: error.name };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("ERROR", error.toString());
-    // Sentry.captureException(error);
+  componentDidCatch(error: Error): void {
+    Sentry.captureException(error);
   }
 
   render(): ReactNode {
