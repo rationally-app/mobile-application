@@ -4,10 +4,11 @@ import { View, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAuthenticationContext } from "../../context/auth";
-import { withNavigation, NavigationActions } from "react-navigation";
+import { withNavigation } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppName } from "./AppName";
 import { AppText } from "./AppText";
+import { useProductContext } from "../../context/products";
 
 const TIME_BEFORE_WARNING = 900000;
 let warningTimer: NodeJS.Timeout;
@@ -31,16 +32,14 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   navigation
 }) => {
   const { expiry, clearAuthInfo } = useAuthenticationContext();
+  const { setProducts } = useProductContext();
 
   const handleLogout = useCallback((): void => {
     clearAuthInfo();
-    navigation.dispatch(
-      NavigationActions.navigate({
-        routeName: "LoginScreen"
-      })
-    );
+    setProducts([]);
+    navigation.navigate("LoginScreen");
     Alert.alert("You have successfully been logged out");
-  }, [clearAuthInfo, navigation]);
+  }, [clearAuthInfo, navigation, setProducts]);
 
   const onPressLogout = (): void => {
     Alert.alert(
