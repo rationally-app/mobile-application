@@ -53,9 +53,9 @@
         {
           "file": "sentry-expo/upload-sourcemaps",
           "config": {
-            "organization": "govtech-hive",
-            "project": "govtech-rationally",
-            "authToken": "ed0d90b858a24fc4b291367ef853dc4f2cd21309f4694200a084e0fe7d24ddde"
+            "organization": "",
+            "project": "",
+            "authToken": ""
           }
         }
       ]

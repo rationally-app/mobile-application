@@ -7,7 +7,7 @@ import {
   ScrollView,
   Vibration
 } from "react-native";
-import { NavigationProps, LOGIN_STAGES } from "../../types";
+import { NavigationProps } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { useAuthenticationContext } from "../../context/auth";
 import { size } from "../../common/styles";
@@ -21,6 +21,8 @@ import { LoginMobileNumberCard } from "./LoginMobileNumberCard";
 import { LoginOTPCard } from "./LoginOTPCard";
 import { AppName } from "../Layout/AppName";
 import { IdScanner } from "../IdScanner/IdScanner";
+import * as Sentry from "sentry-expo";
+import { LoginStage } from "./types";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -48,14 +50,25 @@ const styles = StyleSheet.create({
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  useEffect(() => {
+    Sentry.addBreadcrumb({ category: "navigation", message: "LoginContainer" });
+  }, []);
+
   const { token, endpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const { config, setConfigValue } = useConfigContext();
-  const [loginStage, setLoginStage] = useState(LOGIN_STAGES.SCAN);
+  const [loginStage, setLoginStage] = useState<LoginStage>("SCAN");
   const [mobileNumber, setMobileNumber] = useState("");
   const [codeKey, setCodeKey] = useState("");
   const [endpointTemp, setEndpointTemp] = useState("");
+
+  useEffect(() => {
+    Sentry.addBreadcrumb({
+      category: "loginStage",
+      message: loginStage
+    });
+  }, [loginStage]);
 
   useEffect(() => {
     if (token && endpoint) {
@@ -84,7 +97,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         setCodeKey(key);
         setEndpointTemp(endpoint);
         setIsLoading(false);
-        setLoginStage(LOGIN_STAGES.MOBILE_NUMBER);
+        setLoginStage("MOBILE_NUMBER");
       } catch (e) {
         alert("Invalid QR code");
         setIsLoading(false);
@@ -125,14 +138,13 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
                 />
               </View>
             )}
-            {loginStage === LOGIN_STAGES.SCAN && (
+            {loginStage === "SCAN" && (
               <LoginScanCard
-                setLoginStage={setLoginStage}
                 onToggleScanner={() => setShouldShowCamera(true)}
                 isLoading={isLoading}
               />
             )}
-            {loginStage === LOGIN_STAGES.MOBILE_NUMBER && (
+            {loginStage === "MOBILE_NUMBER" && (
               <LoginMobileNumberCard
                 setLoginStage={setLoginStage}
                 setMobileNumber={setMobileNumber}
@@ -140,7 +152,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
                 endpoint={endpointTemp}
               />
             )}
-            {loginStage === LOGIN_STAGES.OTP && (
+            {loginStage === "OTP" && (
               <LoginOTPCard
                 navigation={navigation}
                 mobileNumber={mobileNumber}
