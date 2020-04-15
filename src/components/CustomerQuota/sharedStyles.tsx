@@ -19,7 +19,7 @@ export const sharedStyles = StyleSheet.create({
   },
   ctaButtonsWrapper: {
     marginTop: size(5),
-    paddingBottom: size(10)
+    paddingBottom: size(2)
   },
   buttonRow: {
     flexDirection: "row"

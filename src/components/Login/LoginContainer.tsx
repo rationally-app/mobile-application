@@ -23,6 +23,8 @@ import { AppName } from "../Layout/AppName";
 import { IdScanner } from "../IdScanner/IdScanner";
 import * as Sentry from "sentry-expo";
 import { LoginStage } from "./types";
+import { useHelpModalContext } from "../../context/help";
+import { HelpButton } from "../Layout/Buttons/HelpButton";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -62,6 +64,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [mobileNumber, setMobileNumber] = useState("");
   const [codeKey, setCodeKey] = useState("");
   const [endpointTemp, setEndpointTemp] = useState("");
+  const { showHelpModal } = useHelpModalContext();
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -160,6 +163,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
                 endpoint={endpointTemp}
               />
             )}
+            <HelpButton onPress={showHelpModal} />
           </View>
         </KeyboardAvoidingView>
       </ScrollView>

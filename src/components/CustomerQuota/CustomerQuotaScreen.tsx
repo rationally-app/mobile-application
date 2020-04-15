@@ -24,6 +24,8 @@ import { NoQuotaCard } from "./NoQuotaCard";
 import { PurchaseSuccessCard } from "./PurchaseSuccessCard";
 import { useCart } from "../../hooks/useCart/useCart";
 import * as Sentry from "sentry-expo";
+import { useHelpModalContext } from "../../context/help";
+import { HelpButton } from "../Layout/Buttons/HelpButton";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
     position: "relative",
     padding: size(1.5),
     paddingTop: size(8),
-    paddingBottom: size(9),
+    paddingBottom: size(10),
     height: "100%",
     width: 512,
     maxWidth: "100%"
@@ -66,6 +68,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
+  const { showHelpModal } = useHelpModalContext();
   const [nrics, setNrics] = useState([navigation.getParam("nric")]);
 
   const {
@@ -145,6 +148,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             updateCart={updateCart}
           />
         )}
+        <HelpButton onPress={showHelpModal} />
       </View>
     </ScrollView>
   );
