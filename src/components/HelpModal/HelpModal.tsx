@@ -99,7 +99,7 @@ export const HelpModal: FunctionComponent<{
     }
   }, []);
 
-  const onFront = (): void => {
+  const onForward = (): void => {
     if (webViewRef.current) {
       webViewRef.current.goForward();
     }
@@ -148,7 +148,7 @@ export const HelpModal: FunctionComponent<{
               <NavigationIcon name="chevron-left" />
             </NavigationButton>
             <View style={{ marginLeft: size(0.5) }}>
-              <NavigationButton disabled={!canGoForward} onPress={onFront}>
+              <NavigationButton disabled={!canGoForward} onPress={onForward}>
                 <NavigationIcon name={"chevron-right"} />
               </NavigationButton>
             </View>
