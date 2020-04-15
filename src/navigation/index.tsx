@@ -8,6 +8,7 @@ import { ConfigContextProvider } from "../context/config";
 import { ProductContextProvider } from "../context/products";
 import { FontLoader } from "../components/FontLoader";
 import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
+import { HelpModalContextProvider } from "../context/help";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -22,24 +23,26 @@ const AppContainer = createAppContainer(SwitchNavigator);
 const App = (): ReactElement => {
   return (
     <ErrorBoundary>
-      <AuthenticationContextProvider>
-        <ConfigContextProvider>
-          <ProductContextProvider>
-            <StatusBar />
-            <View
-              style={{
-                flex: 1,
-                paddingTop:
-                  Platform.OS === "android" ? StatusBar.currentHeight : 0
-              }}
-            >
-              <FontLoader>
-                <AppContainer />
-              </FontLoader>
-            </View>
-          </ProductContextProvider>
-        </ConfigContextProvider>
-      </AuthenticationContextProvider>
+      <FontLoader>
+        <AuthenticationContextProvider>
+          <ConfigContextProvider>
+            <ProductContextProvider>
+              <HelpModalContextProvider>
+                <StatusBar />
+                <View
+                  style={{
+                    flex: 1,
+                    paddingTop:
+                      Platform.OS === "android" ? StatusBar.currentHeight : 0
+                  }}
+                >
+                  <AppContainer />
+                </View>
+              </HelpModalContextProvider>
+            </ProductContextProvider>
+          </ConfigContextProvider>
+        </AuthenticationContextProvider>
+      </FontLoader>
     </ErrorBoundary>
   );
 };
