@@ -2,8 +2,7 @@ import React, {
   useState,
   FunctionComponent,
   Dispatch,
-  SetStateAction,
-  useEffect
+  SetStateAction
 } from "react";
 import { View, StyleSheet, TextInput } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -79,12 +78,6 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("+65");
   const [mobileNumberValue, setMobileNumberValue] = useState("");
-
-  useEffect(() => {
-    if (mobileNumberValue === "123") {
-      throw new Error("don't play punk");
-    }
-  }, [mobileNumberValue]);
 
   const onChangeCountryCode = (value: string): void => {
     if (value.length <= 4) {
