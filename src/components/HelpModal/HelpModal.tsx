@@ -1,17 +1,11 @@
-import React, {
-  FunctionComponent,
-  useRef,
-  useState,
-  useEffect,
-  useCallback
-} from "react";
+import React, { FunctionComponent, useRef, useState } from "react";
 import { WebView } from "react-native-webview";
 import {
   View,
   StyleSheet,
   TouchableOpacity,
-  BackHandler,
-  Modal
+  Modal,
+  WebViewProps
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -93,11 +87,11 @@ export const HelpModal: FunctionComponent<{
     }
   };
 
-  const onBack = useCallback((): void => {
+  const onBack = (): void => {
     if (webViewRef.current) {
       webViewRef.current.goBack();
     }
-  }, []);
+  };
 
   const onForward = (): void => {
     if (webViewRef.current) {
@@ -105,31 +99,30 @@ export const HelpModal: FunctionComponent<{
     }
   };
 
-  const onNavigationStateChange = (navState: any): void => {
-    setCanGoBack(navState.canGoBack);
-    setCanGoForward(navState.canGoForward);
+  const onNavigationStateChange: WebViewProps["onNavigationStateChange"] = navState => {
+    setCanGoBack(navState.canGoBack ?? false);
+    setCanGoForward(navState.canGoForward ?? false);
   };
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        if (canGoBack) {
-          onBack();
-          return true;
-        } else {
-          onExit();
-          return true;
-        }
-      }
-    );
-    return () => {
-      backHandler.remove();
-    };
-  }, [canGoBack, onBack, onExit]);
+  /**
+   * Modal catches the physical back button events and calls onRequestClose.
+   * This checks if there's more pages to go back within the WebView,
+   * before actually closing the modal.
+   */
+  const onRequestClose = (): void => {
+    if (canGoBack) {
+      onBack();
+    } else {
+      onExit();
+    }
+  };
 
   return (
-    <Modal visible={isVisible} onRequestClose={onExit} animationType="slide">
+    <Modal
+      visible={isVisible}
+      onRequestClose={onRequestClose}
+      animationType="slide"
+    >
       <SafeAreaView style={{ flex: 1 }}>
         <View style={[styles.bar, styles.topBar]}>
           <AppText style={styles.pageTitle}>Help &amp; Support</AppText>
