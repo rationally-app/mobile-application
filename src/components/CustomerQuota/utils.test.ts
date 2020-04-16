@@ -1,6 +1,6 @@
-import { formatQuantityText, getCheckoutResultByCategory } from "./utils";
+import { formatQuantityText, getPurchasedQuantitiesByItem } from "./utils";
 import { PostTransactionResponse } from "../../services/quota";
-import { CheckoutResultByCategory } from "./types";
+import { PurchasedQuantitiesByItem } from "./types";
 
 describe("formatQuantityText", () => {
   it("should return only the quantity when no unit is given", () => {
@@ -30,7 +30,7 @@ describe("formatQuantityText", () => {
   });
 });
 
-describe("transformCheckoutResult", () => {
+describe("getPurchasedQuantitiesByItem", () => {
   it("should return the correct result", () => {
     expect.assertions(1);
     const transactionTime = new Date(2020, 3, 1);
@@ -64,7 +64,7 @@ describe("transformCheckoutResult", () => {
         }
       ]
     };
-    const transformed: CheckoutResultByCategory = [
+    const transformed: PurchasedQuantitiesByItem = [
       {
         category: "toilet-paper",
         quantities: {
@@ -82,7 +82,7 @@ describe("transformCheckoutResult", () => {
     ];
 
     expect(
-      getCheckoutResultByCategory(["id-1", "id-2"], checkoutResult)
+      getPurchasedQuantitiesByItem(["id-1", "id-2"], checkoutResult)
     ).toStrictEqual(transformed);
   });
 });

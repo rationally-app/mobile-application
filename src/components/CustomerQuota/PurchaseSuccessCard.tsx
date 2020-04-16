@@ -8,8 +8,8 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, fontSize, color } from "../../common/styles";
 import { CartHook } from "../../hooks/useCart/useCart";
 import { Policy } from "../../types";
-import { getCheckoutResultByCategory, formatQuantityText } from "./utils";
-import { CategoryQuantities } from "./types";
+import { getPurchasedQuantitiesByItem, formatQuantityText } from "./utils";
+import { ItemQuantities } from "./types";
 import { sum } from "lodash";
 
 const styles = StyleSheet.create({
@@ -24,14 +24,14 @@ const styles = StyleSheet.create({
   purchasedItemHeaderText: {
     fontFamily: "brand-bold"
   },
-  purchasedItemByIdText: {
+  purchasedQuantityByIdText: {
     fontSize: fontSize(-1)
   },
-  breakdownByIdWrapper: {
+  purchasedQuantitiesWrapper: {
     flexDirection: "row",
     marginTop: size(0.5)
   },
-  breakdownByIdBorder: {
+  purchasedQuantitiesBorder: {
     borderLeftWidth: 1,
     borderLeftColor: color("grey", 30),
     marginLeft: size(1),
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const PurchasedItemById: FunctionComponent<{
+const PurchasedQuantityById: FunctionComponent<{
   id: string;
   quantity: number;
   unit?: Policy["quantity"]["unit"];
@@ -47,17 +47,17 @@ const PurchasedItemById: FunctionComponent<{
   const quantityText = formatQuantityText(quantity, unit);
   return (
     <View style={styles.purchasedItemRow}>
-      <AppText style={styles.purchasedItemByIdText}>{id}</AppText>
-      <AppText style={styles.purchasedItemByIdText}>{quantityText}</AppText>
+      <AppText style={styles.purchasedQuantityByIdText}>{id}</AppText>
+      <AppText style={styles.purchasedQuantityByIdText}>{quantityText}</AppText>
     </View>
   );
 };
 
 const PurchasedItem: FunctionComponent<{
-  categoryQuantities: CategoryQuantities;
-}> = ({ categoryQuantities }) => {
+  itemQuantities: ItemQuantities;
+}> = ({ itemQuantities }) => {
   const { getProduct } = useProductContext();
-  const { category, quantities } = categoryQuantities;
+  const { category, quantities } = itemQuantities;
   const categoryName = getProduct(category)?.name ?? category;
   const unit = getProduct(category)?.quantity.unit;
   const totalQuantity = sum(Object.values(quantities));
@@ -70,13 +70,13 @@ const PurchasedItem: FunctionComponent<{
           {totalQuantityText}
         </AppText>
       </View>
-      <View style={styles.breakdownByIdWrapper}>
-        <View style={styles.breakdownByIdBorder} />
+      <View style={styles.purchasedQuantitiesWrapper}>
+        <View style={styles.purchasedQuantitiesBorder} />
         <View style={{ flexGrow: 1 }}>
           {Object.entries(quantities)
             .filter(([_, quantity]) => quantity > 0)
             .map(([id, quantity]) => (
-              <PurchasedItemById
+              <PurchasedQuantityById
                 key={id}
                 id={id}
                 quantity={quantity}
@@ -100,7 +100,7 @@ export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
   onCancel,
   checkoutResult
 }) => {
-  const checkoutResultByCategory = getCheckoutResultByCategory(
+  const purchasedQuantitiesByItem = getPurchasedQuantitiesByItem(
     nrics,
     checkoutResult!
   );
@@ -120,11 +120,8 @@ export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
           <View>
             <AppText>The following have been purchased:</AppText>
             <View style={styles.purchasedItemsList}>
-              {checkoutResultByCategory.map(result => (
-                <PurchasedItem
-                  key={result.category}
-                  categoryQuantities={result}
-                />
+              {purchasedQuantitiesByItem.map(item => (
+                <PurchasedItem key={item.category} itemQuantities={item} />
               ))}
             </View>
           </View>

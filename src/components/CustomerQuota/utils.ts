@@ -1,6 +1,6 @@
 import { chain } from "lodash";
 import { PostTransactionResponse } from "../../services/quota";
-import { CheckoutResultByCategory, CategoryQuantities } from "./types";
+import { PurchasedQuantitiesByItem, ItemQuantities } from "./types";
 import { Policy } from "../../types";
 
 export const formatQuantityText = (
@@ -13,10 +13,10 @@ export const formatQuantityText = (
       : `${quantity}${unit.label}`
     : `${quantity}`;
 
-export const getCheckoutResultByCategory = (
+export const getPurchasedQuantitiesByItem = (
   ids: string[],
   checkoutResult: PostTransactionResponse
-): CheckoutResultByCategory => {
+): PurchasedQuantitiesByItem => {
   const result = chain(checkoutResult.transactions)
     .map((user, idx) =>
       user.transaction.map(transaction => ({
@@ -32,9 +32,9 @@ export const getCheckoutResultByCategory = (
         quantities: users.reduce((res, user) => {
           res[user.id] = user.quantity;
           return res;
-        }, {} as CategoryQuantities["quantities"])
+        }, {} as ItemQuantities["quantities"])
       });
       return res;
-    }, [] as CategoryQuantities[]);
+    }, [] as ItemQuantities[]);
   return result.value();
 };

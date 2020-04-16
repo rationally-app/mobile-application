@@ -2,11 +2,11 @@ export interface CartState {
   [category: string]: boolean | null;
 }
 
-export type CategoryQuantities = {
+export type ItemQuantities = {
   category: string;
   quantities: {
     [id: string]: number;
   };
 };
 
-export type CheckoutResultByCategory = CategoryQuantities[];
+export type PurchasedQuantitiesByItem = ItemQuantities[];
