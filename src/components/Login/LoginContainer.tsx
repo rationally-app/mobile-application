@@ -25,6 +25,7 @@ import * as Sentry from "sentry-expo";
 import { LoginStage } from "./types";
 import { useHelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
+import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -163,7 +164,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
                 endpoint={endpointTemp}
               />
             )}
-            <HelpButton onPress={showHelpModal} />
+            <FeatureToggler feature="HELP_MODAL">
+              <HelpButton onPress={showHelpModal} />
+            </FeatureToggler>
           </View>
         </KeyboardAvoidingView>
       </ScrollView>

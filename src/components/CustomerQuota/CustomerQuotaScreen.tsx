@@ -26,6 +26,7 @@ import { useCart } from "../../hooks/useCart/useCart";
 import * as Sentry from "sentry-expo";
 import { useHelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
+import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -148,7 +149,9 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             updateCart={updateCart}
           />
         )}
-        <HelpButton onPress={showHelpModal} />
+        <FeatureToggler feature="HELP_MODAL">
+          <HelpButton onPress={showHelpModal} />
+        </FeatureToggler>
       </View>
     </ScrollView>
   );

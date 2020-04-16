@@ -25,6 +25,7 @@ import { AppHeader } from "../Layout/AppHeader";
 import * as Sentry from "sentry-expo";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { useHelpModalContext } from "../../context/help";
+import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 
 const styles = StyleSheet.create({
   content: {
@@ -118,7 +119,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 submitNric={() => onCheck(nricInput)}
               />
             </Card>
-            <HelpButton onPress={showHelpModal} />
+            <FeatureToggler feature="HELP_MODAL">
+              <HelpButton onPress={showHelpModal} />
+            </FeatureToggler>
           </View>
         </KeyboardAvoidingView>
       </ScrollView>
