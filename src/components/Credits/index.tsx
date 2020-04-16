@@ -42,13 +42,17 @@ const contributors = [
   "Lim Zui Young"
 ];
 
+const THRESHOLD_CLICKS = 3;
+
 export const Credits: FunctionComponent<ViewProps> = ({ style }) => {
   const [clicks, setClicks] = useState(0);
   const onPress = (): void => {
     setClicks(c => c + 1);
   };
   const displayedText =
-    clicks < 3 ? "" : contributors[clicks % contributors.length];
+    clicks < THRESHOLD_CLICKS
+      ? ""
+      : contributors[(clicks - THRESHOLD_CLICKS) % contributors.length];
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
