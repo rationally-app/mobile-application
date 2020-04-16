@@ -14,7 +14,6 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "babel-plugin-inline-dotenv": "^1.5.0",
     "date-fns": "^2.11.1",
     "expo": "^35.0.0",
     "expo-barcode-scanner": "~7.0.0",
@@ -31,10 +30,10 @@
     "react-native-reanimated": "~1.2.0",
     "react-native-screens": "^2.4.0",
     "react-native-svg": "9.9.5",
+    "react-native-webview": "7.0.5",
     "react-navigation": "^4.1.0",
     "react-navigation-stack": "^1.10.3",
-    "sentry-expo": "^2.0.3",
-    "react-native-webview": "7.0.5"
+    "sentry-expo": "^2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -54,6 +53,7 @@
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
     "babel-loader": "^8.0.6",
+    "babel-plugin-inline-dotenv": "^1.5.0",
     "babel-preset-expo": "^7.1.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
