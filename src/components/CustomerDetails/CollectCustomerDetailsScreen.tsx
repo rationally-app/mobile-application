@@ -23,6 +23,9 @@ import { validateAndCleanNric } from "../../utils/validateNric";
 import { InputNricSection } from "./InputNricSection";
 import { AppHeader } from "../Layout/AppHeader";
 import * as Sentry from "sentry-expo";
+import { HelpButton } from "../Layout/Buttons/HelpButton";
+import { useHelpModalContext } from "../../context/help";
+import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 
 const styles = StyleSheet.create({
   content: {
@@ -53,6 +56,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");
   const { config } = useConfigContext();
+  const { showHelpModal } = useHelpModalContext();
 
   useEffect(() => {
     if (isFocused) {
@@ -115,6 +119,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 submitNric={() => onCheck(nricInput)}
               />
             </Card>
+            <FeatureToggler feature="HELP_MODAL">
+              <HelpButton onPress={showHelpModal} />
+            </FeatureToggler>
           </View>
         </KeyboardAvoidingView>
       </ScrollView>
