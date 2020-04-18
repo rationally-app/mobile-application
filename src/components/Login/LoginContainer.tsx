@@ -1,4 +1,10 @@
-import React, { useState, FunctionComponent, useEffect } from "react";
+import React, {
+  useState,
+  FunctionComponent,
+  useEffect,
+  useLayoutEffect,
+  useContext
+} from "react";
 import {
   View,
   StyleSheet,
@@ -23,7 +29,7 @@ import { AppName } from "../Layout/AppName";
 import { IdScanner } from "../IdScanner/IdScanner";
 import * as Sentry from "sentry-expo";
 import { LoginStage } from "./types";
-import { useHelpModalContext } from "../../context/help";
+import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 
@@ -65,7 +71,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [mobileNumber, setMobileNumber] = useState("");
   const [codeKey, setCodeKey] = useState("");
   const [endpointTemp, setEndpointTemp] = useState("");
-  const { showHelpModal } = useHelpModalContext();
+  const showHelpModal = useContext(HelpModalContext);
 
   useEffect(() => {
     Sentry.addBreadcrumb({

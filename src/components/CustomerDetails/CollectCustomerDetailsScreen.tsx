@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useContext
+} from "react";
 import {
   View,
   StyleSheet,
@@ -24,7 +29,7 @@ import { InputNricSection } from "./InputNricSection";
 import { AppHeader } from "../Layout/AppHeader";
 import * as Sentry from "sentry-expo";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
-import { useHelpModalContext } from "../../context/help";
+import { HelpModalContext } from "../../context/help";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 
 const styles = StyleSheet.create({
@@ -56,7 +61,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");
   const { config } = useConfigContext();
-  const { showHelpModal } = useHelpModalContext();
+  const showHelpModal = useContext(HelpModalContext);
 
   useEffect(() => {
     if (isFocused) {

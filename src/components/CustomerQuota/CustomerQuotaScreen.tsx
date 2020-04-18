@@ -2,7 +2,8 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useCallback
+  useCallback,
+  useContext
 } from "react";
 import {
   View,
@@ -24,7 +25,7 @@ import { NoQuotaCard } from "./NoQuotaCard";
 import { PurchaseSuccessCard } from "./PurchaseSuccessCard";
 import { useCart } from "../../hooks/useCart/useCart";
 import * as Sentry from "sentry-expo";
-import { useHelpModalContext } from "../../context/help";
+import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 
@@ -69,7 +70,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
-  const { showHelpModal } = useHelpModalContext();
+  const showHelpModal = useContext(HelpModalContext);
   const [nrics, setNrics] = useState([navigation.getParam("nric")]);
 
   const {
