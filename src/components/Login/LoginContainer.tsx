@@ -80,7 +80,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     });
   }, [loginStage]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (token && endpoint) {
       navigation.navigate("CollectCustomerDetailsScreen");
     }
