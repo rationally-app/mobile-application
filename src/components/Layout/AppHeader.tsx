@@ -1,18 +1,13 @@
-import React, { FunctionComponent, useEffect, useCallback } from "react";
+import React, { FunctionComponent, useCallback } from "react";
 import { color, size } from "../../common/styles";
 import { View, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAuthenticationContext } from "../../context/auth";
 import { withNavigation } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppName } from "./AppName";
 import { AppText } from "./AppText";
-import { useProductContext } from "../../context/products";
-
-const TIME_BEFORE_WARNING = 900000;
-let warningTimer: NodeJS.Timeout;
-let logoutTimer: NodeJS.Timeout;
+import { useLogout } from "../../hooks/useLogout";
 
 interface AppHeader extends NavigationProps {
   mode?: AppMode;
@@ -31,15 +26,11 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   mode = AppMode.production,
   navigation
 }) => {
-  const { expiry, clearAuthInfo } = useAuthenticationContext();
-  const { setProducts } = useProductContext();
+  const { logout } = useLogout();
 
   const handleLogout = useCallback((): void => {
-    clearAuthInfo();
-    setProducts([]);
-    navigation.navigate("LoginScreen");
-    Alert.alert("You have successfully been logged out");
-  }, [clearAuthInfo, navigation, setProducts]);
+    logout(navigation.dispatch);
+  }, [logout, navigation.dispatch]);
 
   const onPressLogout = (): void => {
     Alert.alert(
@@ -58,35 +49,6 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
       { cancelable: false }
     );
   };
-
-  useEffect(() => {
-    const showWarning = (): void => {
-      Alert.alert(
-        "Your QR code will expire in 15 mins",
-        "Please logout and login with a new QR code.",
-        [
-          {
-            text: "I'll do so in 15 mins"
-          },
-          {
-            text: "Logout now",
-            onPress: handleLogout,
-            style: "destructive"
-          }
-        ],
-        { cancelable: false }
-      );
-    };
-
-    const timeLeft = Math.min(604800000, Number(expiry) - new Date().getTime());
-    warningTimer = setTimeout(showWarning, timeLeft - TIME_BEFORE_WARNING);
-    logoutTimer = setTimeout(handleLogout, timeLeft);
-
-    return () => {
-      clearTimeout(warningTimer);
-      clearTimeout(logoutTimer);
-    };
-  }, [expiry, handleLogout]);
 
   return (
     <View style={styles.appHeaderWrapper}>

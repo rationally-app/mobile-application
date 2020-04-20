@@ -9,6 +9,7 @@ import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
+import { useValidateExpiry } from "../hooks/useValidateExpiry";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -23,13 +24,20 @@ const AppContainer = createAppContainer(SwitchNavigator);
 export const Content = (): ReactElement => {
   const navigatorRef = useRef<NavigationContainerComponent>(null);
   const appState = useAppState();
-  const checkUpdates = useCheckUpdates();
 
+  const checkUpdates = useCheckUpdates();
   useEffect(() => {
     if (appState === "active") {
       checkUpdates();
     }
   }, [appState, checkUpdates]);
+
+  const validateTokenExpiry = useValidateExpiry(navigatorRef.current?.dispatch);
+  useEffect(() => {
+    if (appState === "active") {
+      validateTokenExpiry();
+    }
+  }, [appState, validateTokenExpiry]);
 
   return (
     <>
