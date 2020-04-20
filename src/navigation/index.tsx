@@ -7,22 +7,23 @@ import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
 import { HelpModalContextProvider } from "../context/help";
 import { ImportantMessageContextProvider } from "../context/importantMessage";
 import { Content } from "./Content";
+import { Providers } from "../context/composeProviders";
 
 const App = (): ReactElement => {
   return (
     <ErrorBoundary>
       <FontLoader>
-        <ConfigContextProvider>
-          <ProductContextProvider>
-            <AuthenticationContextProvider>
-              <HelpModalContextProvider>
-                <ImportantMessageContextProvider>
-                  <Content />
-                </ImportantMessageContextProvider>
-              </HelpModalContextProvider>
-            </AuthenticationContextProvider>
-          </ProductContextProvider>
-        </ConfigContextProvider>
+        <Providers
+          providers={[
+            ConfigContextProvider,
+            ProductContextProvider,
+            AuthenticationContextProvider,
+            HelpModalContextProvider,
+            ImportantMessageContextProvider
+          ]}
+        >
+          <Content />
+        </Providers>
       </FontLoader>
     </ErrorBoundary>
   );
