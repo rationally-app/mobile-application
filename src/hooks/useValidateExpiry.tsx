@@ -5,8 +5,8 @@ import { ImportantMessageSetterContext } from "../context/importantMessage";
 import { useAuthenticationContext } from "../context/auth";
 import { useLogout } from "./useLogout";
 
-const ABOUT_TO_EXPIRE_SECONDS = 60;
-const MAX_INTERVAL_SECONDS = 60;
+const ABOUT_TO_EXPIRE_SECONDS = 30 * 60;
+const MAX_INTERVAL_SECONDS = 60; // refreshes countdown at most every minute
 let timeout = 0;
 
 export const useValidateExpiry = (
