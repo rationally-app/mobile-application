@@ -28,6 +28,8 @@ import * as Sentry from "sentry-expo";
 import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
+import { Banner } from "../Layout/Banner";
+import { ImportantMessageContentContext } from "../../context/importantMessage";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -50,6 +52,9 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginBottom: size(4)
+  },
+  bannerWrapper: {
+    marginBottom: size(1.5)
   }
 });
 
@@ -68,6 +73,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
+  const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
   const showHelpModal = useContext(HelpModalContext);
@@ -130,6 +136,12 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         <View style={styles.headerText}>
           <AppHeader mode={config.appMode} />
         </View>
+
+        {messageContent && (
+          <View style={styles.bannerWrapper}>
+            <Banner {...messageContent} />
+          </View>
+        )}
 
         {cartState === "PURCHASED" ? (
           <PurchaseSuccessCard

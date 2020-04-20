@@ -31,6 +31,8 @@ import * as Sentry from "sentry-expo";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { HelpModalContext } from "../../context/help";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
+import { Banner } from "../Layout/Banner";
+import { ImportantMessageContentContext } from "../../context/importantMessage";
 
 const styles = StyleSheet.create({
   content: {
@@ -43,6 +45,9 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginBottom: size(4)
+  },
+  bannerWrapper: {
+    marginBottom: size(1.5)
   }
 });
 
@@ -57,6 +62,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     });
   }, []);
 
+  const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");
@@ -113,6 +119,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             <View style={styles.headerText}>
               <AppHeader mode={config.appMode} />
             </View>
+            {messageContent && (
+              <View style={styles.bannerWrapper}>
+                <Banner {...messageContent} />
+              </View>
+            )}
             <Card>
               <AppText>
                 Check the number of items your customer can purchase
