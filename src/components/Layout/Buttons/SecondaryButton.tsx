@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactElement } from "react";
-import { color, size } from "../../../common/styles";
+import { color, size as sizeScale } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
 import { ActivityIndicator, View } from "react-native";
@@ -11,6 +11,7 @@ export interface SecondaryButton {
   isLoading?: boolean;
   icon?: ReactElement;
   disabled?: boolean;
+  size?: "medium" | "small";
 }
 
 export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
@@ -19,7 +20,8 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
   fullWidth = false,
   isLoading = false,
   icon,
-  disabled
+  disabled,
+  size = "medium"
 }) => (
   <BaseButton
     onPress={onPress}
@@ -27,12 +29,13 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
     borderColor={color("blue", disabled ? 20 : 50)}
     fullWidth={fullWidth}
     disabled={disabled || isLoading}
+    size={size}
   >
     {isLoading ? (
       <ActivityIndicator size="small" color={color("grey", 40)} />
     ) : (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        {icon && <View style={{ marginRight: size(1) }}>{icon}</View>}
+        {icon && <View style={{ marginRight: sizeScale(1) }}>{icon}</View>}
         <AppText
           style={{
             color: color("blue", disabled ? 20 : 50),
