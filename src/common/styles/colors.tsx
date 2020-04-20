@@ -21,6 +21,7 @@ const palette: { [color in ColorName]: { [tone: string]: string } } = {
   yellow: {
     "10": "#FFFBEA",
     "20": "#FFF3C4",
+    "30": "#F8E495",
     "50": "#CB6E17"
   },
   orange: {
@@ -63,7 +64,7 @@ export function color(
   colorName: "green" | "red" | "blue",
   tone: 10 | 20 | 30 | 40 | 50 | 60
 ): string;
-export function color(colorName: "yellow", tone: 10 | 20 | 50): string;
+export function color(colorName: "yellow", tone: 10 | 20 | 30 | 50): string;
 export function color(colorName: "orange", tone: 30): string;
 export function color(colorName: "blue-green", tone: 40): string;
 /**
