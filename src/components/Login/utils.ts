@@ -33,7 +33,7 @@ export const mobileNumberValidator = (
   countryCode: string,
   number: string
 ): boolean => {
-  if (!/^\d*$/.test(number) || number.length === 0) {
+  if (!/^\d*$/.test(number) || number.length <= 1) {
     return false;
   }
   const phoneNumberUtil = new PhoneNumberUtil();
