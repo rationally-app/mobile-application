@@ -4,7 +4,6 @@ import * as Sentry from "sentry-expo";
 import { differenceInMinutes } from "date-fns";
 import { useContext, useCallback } from "react";
 import { ImportantMessageSetterContext } from "../context/importantMessage";
-import { Flags } from "../flags";
 
 const LAST_UPDATE_KEY = "LAST_UPDATE";
 const CHECK_UPDATE_INTERVAL_MINUTES = 60;
@@ -13,7 +12,7 @@ export const useCheckUpdates = (): (() => void) => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
 
   const checkForUpdates = useCallback(async () => {
-    if (__DEV__ || Flags.AUTO_CHECK_UPDATES === false) {
+    if (__DEV__) {
       return;
     }
     try {
