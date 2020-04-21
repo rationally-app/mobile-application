@@ -43,8 +43,10 @@ describe("createFullNumber", () => {
 
 describe("mobileNumberValidator", () => {
   it("should return false for invalid numbers", () => {
-    expect.assertions(5);
+    expect.assertions(7);
     expect(mobileNumberValidator("+65", "12345678")).toBe(false);
+    expect(mobileNumberValidator("+65", "1")).toBe(false);
+    expect(mobileNumberValidator("+65", "12")).toBe(false);
     expect(mobileNumberValidator("+1", "91234567")).toBe(false);
     expect(mobileNumberValidator("+65", " ")).toBe(false);
     expect(mobileNumberValidator("+65", "")).toBe(false);
