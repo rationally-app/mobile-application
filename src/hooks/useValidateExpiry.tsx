@@ -49,20 +49,22 @@ export const useValidateExpiry = (
     if (expiry === "" || isLoggingOut) {
       return;
     }
-    const diffInSeconds = Math.max(
-      0,
-      differenceInSeconds(Number(expiry), Date.now())
-    );
-    if (diffInSeconds === 0) {
+
+    const diffInSeconds = differenceInSeconds(Number(expiry), Date.now());
+    if (diffInSeconds <= 0) {
       onExpired();
     } else if (diffInSeconds <= ABOUT_TO_EXPIRE_SECONDS) {
       onAboutToExpire(diffInSeconds);
       let durationInSeconds = MAX_INTERVAL_SECONDS;
       if (diffInSeconds > MAX_INTERVAL_SECONDS) {
         if (diffInSeconds % MAX_INTERVAL_SECONDS > 0) {
+          // set timeout to the nearest interval first.
+          // e.g. when max interval is 60s, with 2min 20s left,
+          // 1st timeout will be after 20s, 2nd timeout will be after another 60s.
           durationInSeconds = diffInSeconds % MAX_INTERVAL_SECONDS;
         }
       } else {
+        // countdown once there's less than 1 minute left
         durationInSeconds = 1;
       }
       timeout = setTimeout(() => {
