@@ -3,7 +3,8 @@ import React, {
   useContext,
   FunctionComponent,
   useState,
-  useEffect
+  useEffect,
+  useCallback
 } from "react";
 import { AsyncStorage } from "react-native";
 
@@ -37,32 +38,40 @@ export const AuthenticationContextProvider: FunctionComponent = ({
   const [expiry, setExpiry] = useState("");
   const [endpoint, setEndpoint] = useState("");
 
-  const setAuthInfo: AuthenticationContext["setAuthInfo"] = (
+  const setAuthInfo = async (
     tokenInput: string,
     expiryInput: number,
     endpointInput: string
-  ): void => {
+  ): Promise<void> => {
     setToken(tokenInput);
     const expiryString = expiryInput.toString();
     setExpiry(expiryString);
     setEndpoint(endpointInput);
-    AsyncStorage.multiSet([
+    await AsyncStorage.multiSet([
       [SESSION_TOKEN_KEY, tokenInput],
       [EXPIRY_KEY, expiryString],
       [ENDPOINT_KEY, endpointInput]
     ]);
   };
 
-  const clearAuthInfo: AuthenticationContext["clearAuthInfo"] = (): void => {
+  const clearAuthInfo = useCallback(async (): Promise<void> => {
     setToken("");
+    setExpiry("");
     setEndpoint("");
-    AsyncStorage.multiRemove([SESSION_TOKEN_KEY, EXPIRY_KEY, ENDPOINT_KEY]);
-  };
+    await AsyncStorage.multiRemove([
+      SESSION_TOKEN_KEY,
+      EXPIRY_KEY,
+      ENDPOINT_KEY
+    ]);
+  }, []);
 
   const loadAuthFromStore = async (): Promise<void> => {
-    const sessionToken = await AsyncStorage.getItem(SESSION_TOKEN_KEY);
-    const expiry = await AsyncStorage.getItem(EXPIRY_KEY);
-    const endpoint = await AsyncStorage.getItem(ENDPOINT_KEY);
+    const values = await AsyncStorage.multiGet([
+      SESSION_TOKEN_KEY,
+      EXPIRY_KEY,
+      ENDPOINT_KEY
+    ]);
+    const [sessionToken, expiry, endpoint] = values.map(value => value[1]);
     if (sessionToken && endpoint && expiry) {
       setToken(sessionToken);
       setExpiry(expiry);

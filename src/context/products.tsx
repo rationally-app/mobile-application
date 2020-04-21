@@ -2,7 +2,8 @@ import React, {
   createContext,
   useContext,
   FunctionComponent,
-  useState
+  useState,
+  useCallback
 } from "react";
 import { Policy } from "../types";
 
@@ -23,8 +24,11 @@ export const useProductContext = (): ProductContextValue =>
 
 export const ProductContextProvider: FunctionComponent = ({ children }) => {
   const [products, setProducts] = useState<Policy[]>([]);
-  const getProduct = (category: string): Policy | undefined =>
-    products.find(product => product.category === category);
+  const getProduct = useCallback(
+    (category: string): Policy | undefined =>
+      products.find(product => product.category === category),
+    [products]
+  );
 
   return (
     <ProductContext.Provider value={{ products, setProducts, getProduct }}>
