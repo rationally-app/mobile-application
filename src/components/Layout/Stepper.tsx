@@ -18,7 +18,7 @@ import { Feather } from "@expo/vector-icons";
 import { clamp, debounce } from "lodash";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppText } from "./AppText";
-import { useIsMounted } from "../../hooks/useIsMounted/useIsMounted";
+import { useIsMounted } from "../../hooks/useIsMounted";
 
 const styles = StyleSheet.create({
   wrapper: {

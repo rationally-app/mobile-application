@@ -2,7 +2,8 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useCallback
+  useCallback,
+  useContext
 } from "react";
 import {
   View,
@@ -24,9 +25,11 @@ import { NoQuotaCard } from "./NoQuotaCard";
 import { PurchaseSuccessCard } from "./PurchaseSuccessCard";
 import { useCart } from "../../hooks/useCart/useCart";
 import * as Sentry from "sentry-expo";
-import { useHelpModalContext } from "../../context/help";
+import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
+import { Banner } from "../Layout/Banner";
+import { ImportantMessageContentContext } from "../../context/importantMessage";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -49,6 +52,9 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginBottom: size(4)
+  },
+  bannerWrapper: {
+    marginBottom: size(1.5)
   }
 });
 
@@ -67,9 +73,10 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
+  const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
-  const { showHelpModal } = useHelpModalContext();
+  const showHelpModal = useContext(HelpModalContext);
   const [nrics, setNrics] = useState([navigation.getParam("nric")]);
 
   const {
@@ -129,6 +136,12 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         <View style={styles.headerText}>
           <AppHeader mode={config.appMode} />
         </View>
+
+        {messageContent && (
+          <View style={styles.bannerWrapper}>
+            <Banner {...messageContent} />
+          </View>
+        )}
 
         {cartState === "PURCHASED" ? (
           <PurchaseSuccessCard

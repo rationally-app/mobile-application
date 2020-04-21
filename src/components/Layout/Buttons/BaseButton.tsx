@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { TouchableOpacity, View, ViewStyle } from "react-native";
-import { size, borderRadius } from "../../../common/styles";
+import { size as sizeScale, borderRadius } from "../../../common/styles";
 
 export interface BaseButton {
   onPress?: () => void;
@@ -8,6 +8,7 @@ export interface BaseButton {
   borderColor?: ViewStyle["borderColor"];
   disabled?: boolean;
   fullWidth?: boolean;
+  size?: "medium" | "small";
 }
 
 export const BaseButton: FunctionComponent<BaseButton> = ({
@@ -16,7 +17,8 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
   backgroundColor,
   borderColor,
   disabled = false,
-  fullWidth = false
+  fullWidth = false,
+  size = "medium"
 }) => {
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
@@ -28,11 +30,11 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
           alignSelf: "flex-start",
           alignItems: "center",
           justifyContent: "center",
-          paddingVertical: size(1.5),
-          paddingHorizontal: size(3),
+          paddingVertical: size === "small" ? sizeScale(1) : sizeScale(1.5),
+          paddingHorizontal: size === "small" ? sizeScale(2) : sizeScale(3),
           borderRadius: borderRadius(2),
-          minHeight: size(6),
-          minWidth: size(10),
+          minHeight: size === "small" ? sizeScale(4) : sizeScale(6),
+          minWidth: size === "small" ? sizeScale(6) : sizeScale(10),
           width: fullWidth ? "100%" : "auto"
         }}
       >

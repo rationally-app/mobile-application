@@ -10,7 +10,7 @@ export const Card: FunctionComponent<ViewProps> = ({ children, style }) => (
         paddingBottom: size(4),
         paddingHorizontal: size(3),
         backgroundColor: color("grey", 0),
-        borderRadius: borderRadius(4),
+        borderRadius: borderRadius(3),
         ...shadow(2)
       },
       style

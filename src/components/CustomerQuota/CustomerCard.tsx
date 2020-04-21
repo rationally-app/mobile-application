@@ -13,8 +13,8 @@ import { size, color, borderRadius, fontSize } from "../../common/styles";
 
 const styles = StyleSheet.create({
   header: {
-    borderTopLeftRadius: borderRadius(4),
-    borderTopRightRadius: borderRadius(4),
+    borderTopLeftRadius: borderRadius(3),
+    borderTopRightRadius: borderRadius(3),
     paddingHorizontal: size(2),
     paddingVertical: size(2),
     backgroundColor: color("blue-green", 40),

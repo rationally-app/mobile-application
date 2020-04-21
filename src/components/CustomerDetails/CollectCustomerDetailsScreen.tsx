@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useContext
+} from "react";
 import {
   View,
   StyleSheet,
@@ -24,8 +29,11 @@ import { InputNricSection } from "./InputNricSection";
 import { AppHeader } from "../Layout/AppHeader";
 import * as Sentry from "sentry-expo";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
-import { useHelpModalContext } from "../../context/help";
+import { HelpModalContext } from "../../context/help";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
+import { Banner } from "../Layout/Banner";
+import { ImportantMessageContentContext } from "../../context/importantMessage";
+import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 
 const styles = StyleSheet.create({
   content: {
@@ -38,6 +46,9 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginBottom: size(4)
+  },
+  bannerWrapper: {
+    marginBottom: size(1.5)
   }
 });
 
@@ -52,17 +63,25 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     });
   }, []);
 
+  const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");
   const { config } = useConfigContext();
-  const { showHelpModal } = useHelpModalContext();
+  const showHelpModal = useContext(HelpModalContext);
+  const checkUpdates = useCheckUpdates();
 
   useEffect(() => {
     if (isFocused) {
       setIsScanningEnabled(true);
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (isFocused) {
+      checkUpdates();
+    }
+  }, [isFocused, checkUpdates]);
 
   const onCheck = async (input: string): Promise<void> => {
     try {
@@ -108,6 +127,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             <View style={styles.headerText}>
               <AppHeader mode={config.appMode} />
             </View>
+            {messageContent && (
+              <View style={styles.bannerWrapper}>
+                <Banner {...messageContent} />
+              </View>
+            )}
             <Card>
               <AppText>
                 Check the number of items your customer can purchase
