@@ -32,6 +32,8 @@ import { LoginStage } from "./types";
 import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
+import { ImportantMessageContentContext } from "../../context/importantMessage";
+import { Banner } from "../Layout/Banner";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -53,6 +55,9 @@ const styles = StyleSheet.create({
   },
   scanButtonWrapper: {
     marginTop: size(3)
+  },
+  bannerWrapper: {
+    marginBottom: size(1.5)
   }
 });
 
@@ -72,6 +77,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [codeKey, setCodeKey] = useState("");
   const [endpointTemp, setEndpointTemp] = useState("");
   const showHelpModal = useContext(HelpModalContext);
+  const messageContent = useContext(ImportantMessageContentContext);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -148,6 +154,13 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
                 />
               </View>
             )}
+
+            {messageContent && (
+              <View style={styles.bannerWrapper}>
+                <Banner {...messageContent} />
+              </View>
+            )}
+
             {loginStage === "SCAN" && (
               <LoginScanCard
                 onToggleScanner={() => setShouldShowCamera(true)}

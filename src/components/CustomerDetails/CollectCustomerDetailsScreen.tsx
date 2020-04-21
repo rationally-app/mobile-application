@@ -33,6 +33,7 @@ import { HelpModalContext } from "../../context/help";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
+import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 
 const styles = StyleSheet.create({
   content: {
@@ -68,12 +69,19 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const [nricInput, setNricInput] = useState("");
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
+  const checkUpdates = useCheckUpdates();
 
   useEffect(() => {
     if (isFocused) {
       setIsScanningEnabled(true);
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (isFocused) {
+      checkUpdates();
+    }
+  }, [isFocused, checkUpdates]);
 
   const onCheck = async (input: string): Promise<void> => {
     try {
