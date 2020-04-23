@@ -5,7 +5,7 @@
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "3.2.0",
+    "version": "3.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -41,7 +41,7 @@
       }
     },
     "android": {
-      "versionCode": 32,
+      "versionCode": 33,
       "package": "sg.gov.tech.musket"
     },
     "packagerOpts": {
