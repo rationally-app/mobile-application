@@ -1,27 +1,42 @@
 import { IS_MOCK } from "../../config";
+import * as t from "io-ts";
+import { SessionCredentials } from "../../types";
+import { fetchWithValidator } from "../helpers";
 
-export interface ValidateOTPResponse {
-  sessionToken: string;
-  ttl: number;
+export class LoginError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "LoginError";
+  }
 }
 
 export const liveRequestOTP = async (
   mobileNumber: string,
   code: string,
   endpoint: string
-): Promise<void> => {
+): Promise<unknown> => {
   const payload = { code, phone: mobileNumber };
-  await fetch(`${endpoint}/auth/register`, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  }).then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-    return response.json().then(error => {
-      throw new Error(error.message);
-    });
-  });
+  try {
+    const response = await fetchWithValidator(
+      t.unknown,
+      `${endpoint}/auth/register`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload)
+      }
+    );
+    return response;
+  } catch (e) {
+    throw new LoginError(e.message);
+  }
+};
+
+export const mockRequestOTP = async (
+  _mobileNumber: string,
+  _key: string,
+  _endpoint: string
+): Promise<unknown> => {
+  return Promise.resolve();
 };
 
 export const liveValidateOTP = async (
@@ -29,20 +44,21 @@ export const liveValidateOTP = async (
   mobileNumber: string,
   code: string,
   endpoint: string
-): Promise<ValidateOTPResponse> => {
+): Promise<SessionCredentials> => {
   const payload = { code, otp, phone: mobileNumber };
-  const response = await fetch(`${endpoint}/auth/confirm`, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  }).then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-    return response.json().then(error => {
-      throw new Error(error.message);
-    });
-  });
-  return response;
+  try {
+    const response = await fetchWithValidator(
+      SessionCredentials,
+      `${endpoint}/auth/confirm`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload)
+      }
+    );
+    return response;
+  } catch (e) {
+    throw new LoginError(e.message);
+  }
 };
 
 export const mockValidateOTP = async (
@@ -50,19 +66,11 @@ export const mockValidateOTP = async (
   _mobileNumber: string,
   _key: string,
   _endpoint: string
-): Promise<ValidateOTPResponse> => {
+): Promise<SessionCredentials> => {
   return {
     sessionToken: "some-valid-session-token",
-    ttl: 1686259452317
+    ttl: new Date(2030, 0, 1)
   };
-};
-
-export const mockRequestOTP = async (
-  _mobileNumber: string,
-  _key: string,
-  _endpoint: string
-): Promise<void> => {
-  Promise.resolve();
 };
 
 export const requestOTP = IS_MOCK ? mockRequestOTP : liveRequestOTP;

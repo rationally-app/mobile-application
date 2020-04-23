@@ -1,15 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import {
-  getQuota,
-  Quota,
-  postTransaction,
-  PostTransactionResponse,
-  QuotaItem,
-  PostTransaction
-} from "../../services/quota";
+import { getQuota, postTransaction, QuotaError } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
-import { getPolicies } from "../../services/policies";
+import { getPolicies, PolicyError } from "../../services/policies";
 import { usePrevious } from "../usePrevious";
+import {
+  Transaction,
+  PostTransactionResult,
+  Quota,
+  ItemQuota
+} from "../../types";
 
 export type CartItem = {
   category: string;
@@ -36,7 +35,7 @@ export type CartHook = {
   cart: Cart;
   updateCart: (category: string, quantity: number) => void;
   checkoutCart: () => void;
-  checkoutResult?: PostTransactionResponse;
+  checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
 };
@@ -51,7 +50,7 @@ const getItem = (
 
 const mergeWithCart = (
   cart: Cart,
-  quota: QuotaItem[],
+  quota: ItemQuota[],
   getProduct: ProductContextValue["getProduct"]
 ): Cart => {
   return quota
@@ -72,8 +71,6 @@ const mergeWithCart = (
         ),
         maxQuantity,
         lastTransactionTime: transactionTime
-          ? new Date(transactionTime)
-          : undefined
       };
     });
 };
@@ -90,9 +87,7 @@ export const useCart = (
   const { products, getProduct, setProducts } = useProductContext();
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
-  const [checkoutResult, setCheckoutResult] = useState<
-    PostTransactionResponse
-  >();
+  const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
 
   const clearError = useCallback((): void => setError(undefined), []);
@@ -121,7 +116,22 @@ export const useCart = (
           mergeWithCart(cart, quotaResponse.remainingQuota, getProduct)
         );
       } catch (e) {
-        setError(e); // Cart will remain in FETCHING_QUOTA state.
+        // Cart will remain in FETCHING_QUOTA state.
+        if (e instanceof PolicyError) {
+          setError(
+            new Error(
+              "Encountered an issue obtaining policies. We've noted this down and are looking into it!"
+            )
+          );
+        } else if (e instanceof QuotaError) {
+          setError(
+            new Error(
+              "Error getting quota. We've noted this down and are looking into it!"
+            )
+          );
+        } else {
+          setError(e);
+        }
       }
     };
 
@@ -185,7 +195,7 @@ export const useCart = (
             quantity
           });
           return transactions;
-        }, [] as PostTransaction["transactions"]);
+        }, [] as Transaction[]);
 
       if (transactions.length === 0) {
         setError(new Error("Please select at least one item to checkout"));
@@ -195,7 +205,7 @@ export const useCart = (
 
       try {
         const transactionResponse = await postTransaction({
-          nrics: ids,
+          ids,
           key: authKey,
           transactions,
           endpoint

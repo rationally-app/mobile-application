@@ -1,6 +1,6 @@
 import { formatQuantityText, getPurchasedQuantitiesByItem } from "./utils";
-import { PostTransactionResponse } from "../../services/quota";
 import { PurchasedQuantitiesByItem } from "./types";
+import { PostTransactionResult } from "../../types";
 
 describe("formatQuantityText", () => {
   it("should return only the quantity when no unit is given", () => {
@@ -34,7 +34,7 @@ describe("getPurchasedQuantitiesByItem", () => {
   it("should return the correct result", () => {
     expect.assertions(1);
     const transactionTime = new Date(2020, 3, 1);
-    const checkoutResult: PostTransactionResponse = {
+    const checkoutResult: PostTransactionResult = {
       transactions: [
         {
           transaction: [
@@ -47,7 +47,7 @@ describe("getPurchasedQuantitiesByItem", () => {
               quantity: 5
             }
           ],
-          timestamp: transactionTime.getTime()
+          timestamp: transactionTime
         },
         {
           transaction: [
@@ -60,7 +60,7 @@ describe("getPurchasedQuantitiesByItem", () => {
               quantity: 3
             }
           ],
-          timestamp: transactionTime.getTime()
+          timestamp: transactionTime
         }
       ]
     };

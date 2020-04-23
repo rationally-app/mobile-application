@@ -1,16 +1,18 @@
 import {
   getQuota,
   postTransaction,
-  PostTransaction,
-  Quota,
-  PostTransactionResponse
+  QuotaError,
+  PostTransactionError
 } from "./index";
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
 anyGlobal.fetch = mockFetch;
 
-const transactions: PostTransaction["transactions"] = [
+const key = "KEY";
+const endpoint = "https://myendpoint.com";
+
+const transactions = [
   {
     category: "product-1",
     quantity: 1
@@ -20,17 +22,43 @@ const transactions: PostTransaction["transactions"] = [
     quantity: 0
   }
 ];
-const timestamp = new Date(2020, 3, 1).getTime();
+const timestamp = new Date(2020, 3, 1);
 
-const mockGetQuotaResponseSingleId: Quota = {
-  remainingQuota: transactions.map(t => ({ ...t, transactionTime: timestamp }))
+const mockGetQuotaResponseSingleId = {
+  remainingQuota: transactions.map(t => ({
+    ...t,
+    transactionTime: timestamp.getTime()
+  }))
 };
 
-const mockGetQuotaResponseMultipleId: Quota = {
+const mockGetQuotaResultSingleId = {
+  remainingQuota: transactions.map(t => ({
+    ...t,
+    transactionTime: timestamp
+  }))
+};
+
+const mockGetQuotaResponseMultipleId = {
   remainingQuota: transactions
 };
 
-const mockPostTransactionResponse: PostTransactionResponse = {
+const postTransactionParams = {
+  ids: ["S0000000J"],
+  transactions: [{ category: "product-1", quantity: 1 }],
+  key,
+  endpoint
+};
+
+const mockPostTransactionResponse = {
+  transactions: [
+    {
+      transaction: transactions,
+      timestamp: timestamp.getTime()
+    }
+  ]
+};
+
+const mockPostTransactionResult = {
   transactions: [
     {
       transaction: transactions,
@@ -45,72 +73,130 @@ describe("quota", () => {
   });
 
   describe("getQuota", () => {
-    it("should return the quota of a nric number", async () => {
-      expect.assertions(2);
-      mockFetch.mockReturnValueOnce({
-        then: () => mockGetQuotaResponseSingleId
+    it("should return the quota of an ID", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockGetQuotaResponseSingleId)
       });
-      const quota = await getQuota(
-        ["S0000000J"],
-        "KEY",
-        "https://myendpoint.com"
-      );
-      expect(mockFetch.mock.calls[0]).toEqual([
-        `https://myendpoint.com/quota/S0000000J`,
-        {
-          method: "GET",
-          headers: { Authorization: "KEY" }
-        }
-      ]);
-      expect(quota).toEqual(mockGetQuotaResponseSingleId);
+      const quota = await getQuota(["S0000000J"], key, endpoint);
+      expect(quota).toEqual(mockGetQuotaResultSingleId);
     });
 
-    it("should return the combined quota of multiple nric numbers", async () => {
-      expect.assertions(2);
-      mockFetch.mockReturnValueOnce({
-        then: () => mockGetQuotaResponseMultipleId
+    it("should return the combined quota of multiple IDs", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockGetQuotaResponseMultipleId)
       });
-      const quota = await getQuota(
-        ["S0000000J", "S0000001I"],
-        "KEY",
-        "https://myendpoint.com"
-      );
-      expect(mockFetch.mock.calls[0]).toEqual([
-        `https://myendpoint.com/quota`,
-        {
-          method: "POST",
-          headers: { Authorization: "KEY" },
-          body: JSON.stringify({ ids: ["S0000000J", "S0000001I"] })
-        }
-      ]);
+      const quota = await getQuota(["S0000000J", "S0000001I"], key, endpoint);
       expect(quota).toEqual(mockGetQuotaResponseMultipleId);
+    });
+
+    it("should throw error if no ID was provided", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        json: () => Promise.resolve({ message: "No ID was provided" })
+      });
+
+      await expect(getQuota([], key, endpoint)).rejects.toThrow(QuotaError);
+    });
+
+    it("should throw error if quota is malformed", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            remaining: mockGetQuotaResponseSingleId.remainingQuota
+          })
+      });
+
+      await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
+        QuotaError
+      );
+    });
+
+    it("should throw error if quota could not be retrieved", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        json: () => Promise.resolve({ message: "Invalid customer ID" })
+      });
+
+      await expect(getQuota(["invalid-id"], key, endpoint)).rejects.toThrow(
+        QuotaError
+      );
+    });
+
+    it("should throw error if there were issues fetching", async () => {
+      expect.assertions(1);
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
+
+      await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
+        "Network error"
+      );
     });
   });
 
   describe("postTransaction", () => {
-    it("should create a new transaction", async () => {
-      expect.assertions(2);
-      mockFetch.mockReturnValueOnce({
-        then: () => mockPostTransactionResponse
+    it("should return the correct success result", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockPostTransactionResponse)
       });
-      const history = await postTransaction({
-        nrics: ["S0000000J"],
-        key: "KEY",
-        transactions: [{ category: "abc123", quantity: 2 }],
-        endpoint: "https://myendpoint.com"
+      const result = await postTransaction(postTransactionParams);
+      expect(result).toEqual(mockPostTransactionResult);
+    });
+
+    it("should throw error if no ID was provided", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        json: () => Promise.resolve({ message: "No ID was provided" })
       });
-      expect(mockFetch.mock.calls[0]).toEqual([
-        `https://myendpoint.com/transactions`,
-        {
-          method: "POST",
-          headers: { Authorization: "KEY" },
-          body: JSON.stringify({
-            ids: ["S0000000J"],
-            transaction: [{ category: "abc123", quantity: 2 }]
+
+      await expect(
+        postTransaction({ ...postTransactionParams, ids: [] })
+      ).rejects.toThrow(PostTransactionError);
+    });
+
+    it("should throw error if result is malformed", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            t: mockPostTransactionResult.transactions
           })
-        }
-      ]);
-      expect(history).toEqual(mockPostTransactionResponse);
+      });
+
+      await expect(postTransaction(postTransactionParams)).rejects.toThrow(
+        PostTransactionError
+      );
+    });
+
+    it("should throw error if quota could not be retrieved", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        json: () => Promise.resolve({ message: "Invalid customer ID" })
+      });
+
+      await expect(
+        postTransaction({ ...postTransactionParams, ids: ["invalid-id"] })
+      ).rejects.toThrow(PostTransactionError);
+    });
+
+    it("should throw error if there were issues fetching", async () => {
+      expect.assertions(1);
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
+
+      await expect(postTransaction(postTransactionParams)).rejects.toThrow(
+        "Network error"
+      );
     });
   });
 });

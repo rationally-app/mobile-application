@@ -1,56 +1,53 @@
 import { IS_MOCK } from "../../config";
+import { Transaction, Quota, PostTransactionResult } from "../../types";
+import { fetchWithValidator } from "../helpers";
 
-export interface QuotaItem {
-  category: string;
-  quantity: number;
-  transactionTime?: number;
+export class QuotaError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "QuotaError";
+  }
 }
 
-export interface Quota {
-  remainingQuota: QuotaItem[];
+export class PostTransactionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PostTransactionError";
+  }
 }
 
-export interface Transaction {
-  category: string;
-  quantity: number;
-}
-
-export interface PostTransaction {
-  nrics: string[];
+interface PostTransaction {
+  ids: string[];
   transactions: Transaction[];
   key: string;
   endpoint: string;
 }
 
-export interface TransactionItemResponse {
-  transaction: Transaction[];
-  timestamp: number;
-}
-
-export interface PostTransactionResponse {
-  transactions: TransactionItemResponse[];
-}
-
 export const mockGetQuota = async (
-  nrics: string[],
+  ids: string[],
   _key: string,
   _endpoint: string
 ): Promise<Quota> => {
-  if (nrics[0] === "S0000000J") throw new Error("Something broke");
-  if (nrics.length === 1) {
+  if (ids[0] === "S0000000J") throw new Error("Something broke");
+  if (ids.length === 1) {
+    const transactionTime = new Date(2020, 3, 5);
     return {
       remainingQuota: [
         {
           category: "toilet-paper",
           quantity: 0,
-          transactionTime: 1586095465905
+          transactionTime
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime: 1586095465905
+          transactionTime
         },
-        { category: "chocolate", quantity: 30, transactionTime: 1586095465905 }
+        {
+          category: "chocolate",
+          quantity: 30,
+          transactionTime
+        }
       ]
     };
   } else {
@@ -58,53 +55,65 @@ export const mockGetQuota = async (
       remainingQuota: [
         {
           category: "toilet-paper",
-          quantity: 2,
-          transactionTime: 1586095465905
+          quantity: 2
         },
         {
           category: "instant-noodles",
-          quantity: 2,
-          transactionTime: 1586095465905
+          quantity: 2
         },
-        { category: "chocolate", quantity: 60, transactionTime: 1586095465905 }
+        {
+          category: "chocolate",
+          quantity: 60
+        }
       ]
     };
   }
 };
 
 export const liveGetQuota = async (
-  nrics: string[],
+  ids: string[],
   key: string,
   endpoint: string
 ): Promise<Quota> => {
-  if (nrics.length === 1) {
-    const quotaResponse: Quota = await fetch(`${endpoint}/quota/${nrics[0]}`, {
-      method: "GET",
-      headers: {
-        Authorization: key
-      }
-    }).then(res => res.json());
-    return quotaResponse;
-  } else {
-    const batchQuotaResponse: Quota = await fetch(`${endpoint}/quota`, {
-      method: "POST",
-      headers: {
-        Authorization: key
-      },
-      body: JSON.stringify({
-        ids: nrics
-      })
-    }).then(res => res.json());
-    return batchQuotaResponse;
+  let response;
+  if (ids.length === 0) {
+    throw new QuotaError("No ID was provided");
+  }
+  try {
+    if (ids.length === 1) {
+      response = await fetchWithValidator(
+        Quota,
+        `${endpoint}/quota/${ids[0]}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: key
+          }
+        }
+      );
+    } else {
+      response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
+        method: "POST",
+        headers: {
+          Authorization: key
+        },
+        body: JSON.stringify({
+          ids
+        })
+      });
+    }
+    return response;
+  } catch (e) {
+    throw new QuotaError(e.message);
   }
 };
 
 export const mockPostTransaction = async ({
-  nrics,
+  ids,
   transactions
-}: PostTransaction): Promise<PostTransactionResponse> => {
-  if (nrics[0] === "S0000000J") throw new Error("Something broke");
-  const timestamp = new Date().getTime();
+}: PostTransaction): Promise<PostTransactionResult> => {
+  if (ids[0] === "S0000000J") throw new Error("Something broke");
+  const timestamp = new Date();
   return {
     transactions: [
       {
@@ -116,25 +125,33 @@ export const mockPostTransaction = async ({
 };
 
 export const livePostTransaction = async ({
-  nrics,
+  ids,
   endpoint,
   key,
   transactions
-}: PostTransaction): Promise<PostTransactionResponse> => {
-  const quotaResponse: PostTransactionResponse = await fetch(
-    `${endpoint}/transactions`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: key
-      },
-      body: JSON.stringify({
-        ids: nrics,
-        transaction: transactions
-      })
-    }
-  ).then(res => res.json());
-  return quotaResponse;
+}: PostTransaction): Promise<PostTransactionResult> => {
+  if (ids.length === 0) {
+    throw new PostTransactionError("No ID was provided");
+  }
+  try {
+    const response = await fetchWithValidator(
+      PostTransactionResult,
+      `${endpoint}/transactions`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: key
+        },
+        body: JSON.stringify({
+          ids,
+          transaction: transactions
+        })
+      }
+    );
+    return response;
+  } catch (e) {
+    throw new PostTransactionError(e.message);
+  }
 };
 
 export const getQuota = IS_MOCK ? mockGetQuota : liveGetQuota;
