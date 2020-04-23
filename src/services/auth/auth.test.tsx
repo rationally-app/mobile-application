@@ -1,4 +1,9 @@
 import { requestOTP, LoginError, validateOTP } from "./index";
+import * as Sentry from "sentry-expo";
+
+jest.mock("sentry-expo");
+const mockCaptureException = jest.fn();
+(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
@@ -14,6 +19,7 @@ const sessionToken = "0000-11111-22222-33333-44444";
 describe("auth", () => {
   beforeEach(() => {
     mockFetch.mockReset();
+    mockCaptureException.mockReset();
   });
 
   describe("requestOTP", () => {
@@ -83,6 +89,23 @@ describe("auth", () => {
       await expect(validateOTP(otp, phone, code, endpoint)).rejects.toThrow(
         LoginError
       );
+    });
+
+    it("should capture exception through sentry if session credentials are malformed", async () => {
+      expect.assertions(2);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            session: sessionToken,
+            ttl: ttl.getTime()
+          })
+      });
+
+      await expect(validateOTP(otp, phone, code, endpoint)).rejects.toThrow(
+        LoginError
+      );
+      expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
 
     it("should throw error if OTP validation failed", async () => {

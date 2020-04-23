@@ -1,4 +1,9 @@
 import { getPolicies, PolicyError } from ".";
+import * as Sentry from "sentry-expo";
+
+jest.mock("sentry-expo");
+const mockCaptureException = jest.fn();
+(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
@@ -76,6 +81,7 @@ const endpoint = "https://myendpoint.com";
 describe("policies", () => {
   beforeEach(() => {
     mockFetch.mockReset();
+    mockCaptureException.mockReset();
   });
 
   describe("getPolicies", () => {
@@ -98,6 +104,17 @@ describe("policies", () => {
       });
 
       await expect(getPolicies(key, endpoint)).rejects.toThrow(PolicyError);
+    });
+
+    it("should capture exception through sentry if policy is malformed", async () => {
+      expect.assertions(2);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockGetPoliciesInvalidResponse)
+      });
+
+      await expect(getPolicies(key, endpoint)).rejects.toThrow(PolicyError);
+      expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
 
     it("should throw error if policy could not be retrieved", async () => {

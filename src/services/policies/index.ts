@@ -1,6 +1,7 @@
 import { IS_MOCK } from "../../config";
 import { Policies } from "../../types";
-import { fetchWithValidator } from "../helpers";
+import { fetchWithValidator, ValidationError } from "../helpers";
+import * as Sentry from "sentry-expo";
 
 export class PolicyError extends Error {
   constructor(message: string) {
@@ -22,6 +23,9 @@ const liveGetPolicies = async (
     });
     return response;
   } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    }
     throw new PolicyError(e.message);
   }
 };

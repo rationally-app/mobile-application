@@ -4,6 +4,11 @@ import {
   QuotaError,
   PostTransactionError
 } from "./index";
+import * as Sentry from "sentry-expo";
+
+jest.mock("sentry-expo");
+const mockCaptureException = jest.fn();
+(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const anyGlobal: any = global;
 const mockFetch = jest.fn();
@@ -70,6 +75,7 @@ const mockPostTransactionResult = {
 describe("quota", () => {
   beforeEach(() => {
     mockFetch.mockReset();
+    mockCaptureException.mockReset();
   });
 
   describe("getQuota", () => {
@@ -116,6 +122,22 @@ describe("quota", () => {
       await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
         QuotaError
       );
+    });
+
+    it("should capture exception through sentry if quota is malformed", async () => {
+      expect.assertions(2);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            remaining: mockGetQuotaResponseSingleId.remainingQuota
+          })
+      });
+
+      await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
+        QuotaError
+      );
+      expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
 
     it("should throw error if quota could not be retrieved", async () => {
@@ -176,6 +198,22 @@ describe("quota", () => {
       await expect(postTransaction(postTransactionParams)).rejects.toThrow(
         PostTransactionError
       );
+    });
+
+    it("should capture exception through sentry if result is malformed", async () => {
+      expect.assertions(2);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            t: mockPostTransactionResult.transactions
+          })
+      });
+
+      await expect(postTransaction(postTransactionParams)).rejects.toThrow(
+        PostTransactionError
+      );
+      expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
 
     it("should throw error if quota could not be retrieved", async () => {

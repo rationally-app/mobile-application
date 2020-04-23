@@ -1,7 +1,8 @@
 import { IS_MOCK } from "../../config";
 import * as t from "io-ts";
 import { SessionCredentials } from "../../types";
-import { fetchWithValidator } from "../helpers";
+import { fetchWithValidator, ValidationError } from "../helpers";
+import * as Sentry from "sentry-expo";
 
 export class LoginError extends Error {
   constructor(message: string) {
@@ -57,6 +58,9 @@ export const liveValidateOTP = async (
     );
     return response;
   } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    }
     throw new LoginError(e.message);
   }
 };

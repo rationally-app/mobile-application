@@ -1,6 +1,7 @@
 import { IS_MOCK } from "../../config";
 import { Transaction, Quota, PostTransactionResult } from "../../types";
-import { fetchWithValidator } from "../helpers";
+import { fetchWithValidator, ValidationError } from "../helpers";
+import * as Sentry from "sentry-expo";
 
 export class QuotaError extends Error {
   constructor(message: string) {
@@ -104,6 +105,9 @@ export const liveGetQuota = async (
     }
     return response;
   } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    }
     throw new QuotaError(e.message);
   }
 };
@@ -150,6 +154,9 @@ export const livePostTransaction = async ({
     );
     return response;
   } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    }
     throw new PostTransactionError(e.message);
   }
 };
