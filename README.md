@@ -12,9 +12,9 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
 4. Install Expo on your mobile device and/or simulator and login with the same account
 5. Install dependencies: `npm install`
 6. Run one of the following to start development:
-   a. `npm run start`
-   b. `npm run start:mock`: If you'd like to mock the APIs
-   c. `npm run storybook`: If you'd like to use Storybook for development
+   - `npm run start`
+   - `npm run start:mock`: If you'd like to mock the APIs
+   - `npm run storybook`: If you'd like to use Storybook for development
 7. Open Expo and launch the app
 
 ## Testing
