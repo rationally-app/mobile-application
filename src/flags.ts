@@ -1,3 +1,3 @@
 export const Flags = {
-  HELP_MODAL: false
+  HELP_MODAL: true
 };
