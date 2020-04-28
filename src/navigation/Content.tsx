@@ -10,10 +10,11 @@ import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
 import { useValidateExpiry } from "../hooks/useValidateExpiry";
+import { Linking } from "expo";
 
 const SwitchNavigator = createSwitchNavigator(
   {
-    LoginScreen: { screen: LoginScreen },
+    LoginScreen: { screen: LoginScreen, path: "login" },
     StackNavigator
   },
   { initialRouteName: "LoginScreen" }
@@ -24,6 +25,7 @@ const AppContainer = createAppContainer(SwitchNavigator);
 export const Content = (): ReactElement => {
   const navigatorRef = useRef<NavigationContainerComponent>(null);
   const appState = useAppState();
+  const prefix = Linking.makeUrl("/");
 
   const checkUpdates = useCheckUpdates();
   useEffect(() => {
@@ -48,7 +50,7 @@ export const Content = (): ReactElement => {
           paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
         }}
       >
-        <AppContainer ref={navigatorRef} />
+        <AppContainer ref={navigatorRef} uriPrefix={prefix} />
       </View>
     </>
   );

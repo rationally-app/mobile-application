@@ -92,6 +92,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     }
   }, [endpoint, navigation, token]);
 
+  useEffect(() => {
+    const navKey = navigation.getParam("key", "");
+    const navEndpoint = navigation.getParam("endpoint", "");
+    if (navKey && navEndpoint) {
+      setCodeKey(navKey);
+      setEndpointTemp(navEndpoint);
+      setLoginStage("MOBILE_NUMBER");
+    }
+  }, [navigation]);
+
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
     const nextMode =
