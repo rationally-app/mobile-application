@@ -126,9 +126,7 @@ const mockPostTransactionResult = {
 
 describe("useCart", () => {
   beforeEach(() => {
-    mockGetQuota.mockReset();
-    mockGetPolicies.mockReset();
-    mockPostTransaction.mockReset();
+    jest.resetAllMocks();
   });
 
   describe("fetch quota on initialisation", () => {
