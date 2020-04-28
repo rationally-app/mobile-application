@@ -11,6 +11,7 @@ import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
 import { useValidateExpiry } from "../hooks/useValidateExpiry";
 import { Linking } from "expo";
+import { AppText } from "../components/Layout/AppText";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -51,6 +52,12 @@ export const Content = (): ReactElement => {
         }}
       >
         <AppContainer ref={navigatorRef} uriPrefix={prefix} />
+        <AppText style={{ position: "absolute", bottom: 120 }}>
+          {prefix}
+        </AppText>
+        <AppText style={{ position: "absolute", bottom: 80 }}>
+          {Linking.makeUrl("/", { key: "key", endpoint: "endpoint" })}
+        </AppText>
       </View>
     </>
   );
