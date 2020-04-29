@@ -3,9 +3,8 @@ import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
 import { size } from "../../../src/common/styles";
 import { PurchaseSuccessCard } from "../../../src/components/CustomerQuota/PurchaseSuccessCard";
-import { Policy } from "../../../src/types";
 import { ProductContext } from "../../../src/context/products";
-import { PostTransactionResponse } from "../../../src/services/quota";
+import { Policy, PostTransactionResult } from "../../../src/types";
 
 const products: Policy[] = [
   {
@@ -40,7 +39,7 @@ const products: Policy[] = [
 ];
 
 const transactionTime = new Date(2020, 3, 1);
-const checkoutResult: PostTransactionResponse = {
+const checkoutResult: PostTransactionResult = {
   transactions: [
     {
       transaction: [
@@ -53,7 +52,7 @@ const checkoutResult: PostTransactionResponse = {
           quantity: 5
         }
       ],
-      timestamp: transactionTime.getTime()
+      timestamp: transactionTime
     },
     {
       transaction: [
@@ -66,7 +65,7 @@ const checkoutResult: PostTransactionResponse = {
           quantity: 3
         }
       ],
-      timestamp: transactionTime.getTime()
+      timestamp: transactionTime
     }
   ]
 };

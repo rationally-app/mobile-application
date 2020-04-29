@@ -1,34 +1,39 @@
-import { Policy } from "../../types";
 import { IS_MOCK } from "../../config";
+import { Policies } from "../../types";
+import { fetchWithValidator, ValidationError } from "../helpers";
+import * as Sentry from "sentry-expo";
 
-interface GetPoliciesResponse {
-  policies: Policy[];
+export class PolicyError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PolicyError";
+  }
 }
 
 const liveGetPolicies = async (
   token: string,
   endpoint: string
-): Promise<GetPoliciesResponse> => {
-  const response = await fetch(`${endpoint}/auth`, {
-    method: "GET",
-    headers: {
-      Authorization: token
-    }
-  }).then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-    return response.json().then(error => {
-      throw new Error(error.message);
+): Promise<Policies> => {
+  try {
+    const response = await fetchWithValidator(Policies, `${endpoint}/auth`, {
+      method: "GET",
+      headers: {
+        Authorization: token
+      }
     });
-  });
-  return response;
+    return response;
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    }
+    throw new PolicyError(e.message);
+  }
 };
 
 const mockGetPolicies = async (
   _token: string,
   _endpoint: string
-): Promise<GetPoliciesResponse> => {
+): Promise<Policies> => {
   return {
     policies: [
       {
