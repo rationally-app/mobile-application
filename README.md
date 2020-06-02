@@ -8,8 +8,8 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
 
 1. Setup [Sentry](https://sentry.io/). Copy `.env.example` to `.env` and populate with your values. You can skip this step if you don't want to use Sentry to track app errors.
 2. Install [`expo-cli`](https://docs.expo.io/workflow/expo-cli/) globally
-3. Create an account with Expo and login using `expo login`
-4. Install Expo on your mobile device and/or simulator and login with the same account
+3. Login to Expo using `expo login`. Ask someone for the credentials.
+4. Install Expo on your mobile device and/or simulator and login with the same account. When using a mobile device for testing, [it needs to be on the same network.](https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet)
 5. Install dependencies: `npm install`
 6. Run one of the following to start development:
    - `npm run start`
