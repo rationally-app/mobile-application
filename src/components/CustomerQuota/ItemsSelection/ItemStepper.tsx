@@ -21,8 +21,12 @@ export const ItemStepper: FunctionComponent<{
 
   useEffect(() => {
     if (stepperValue !== quantity) {
+<<<<<<< HEAD
       // No support for policies with identifiers of limit > 1
       updateCart(category, stepperValue, []);
+=======
+      updateCart(category, stepperValue, true);
+>>>>>>> 801c530... feat: only allow checking out when both identifiers have been filled in
     }
   }, [category, quantity, stepperValue, updateCart]);
 
