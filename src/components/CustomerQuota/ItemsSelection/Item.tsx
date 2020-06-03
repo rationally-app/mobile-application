@@ -33,6 +33,7 @@ export const Item: FunctionComponent<{
       )}
       {identifiers && (
         <ItemIdentifiersCard
+          cartItem={cartItem}
           identifiers={identifiers}
           updateCart={updateCart}
         />

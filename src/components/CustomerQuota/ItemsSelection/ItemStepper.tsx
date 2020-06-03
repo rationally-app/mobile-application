@@ -21,7 +21,7 @@ export const ItemStepper: FunctionComponent<{
 
   useEffect(() => {
     if (stepperValue !== quantity) {
-      updateCart(category, stepperValue);
+      updateCart(category, stepperValue, true);
     }
   }, [category, quantity, stepperValue, updateCart]);
 

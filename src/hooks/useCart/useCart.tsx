@@ -3,12 +3,7 @@ import { getQuota, postTransaction, QuotaError } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { getPolicies, PolicyError } from "../../services/policies";
 import { usePrevious } from "../usePrevious";
-import {
-  Transaction,
-  PostTransactionResult,
-  Quota,
-  ItemQuota
-} from "../../types";
+import { PostTransactionResult, Quota, ItemQuota } from "../../types";
 
 export type CartItem = {
   category: string;
@@ -19,6 +14,7 @@ export type CartItem = {
    * It will be undefined for batch quotas.
    */
   lastTransactionTime?: Date;
+  isVerified: boolean;
 };
 
 export type Cart = CartItem[];
@@ -33,7 +29,7 @@ type CartState =
 export type CartHook = {
   cartState: CartState;
   cart: Cart;
-  updateCart: (category: string, quantity: number) => void;
+  updateCart: (category: string, quantity: number, isVerified: boolean) => void;
   checkoutCart: () => void;
   checkoutResult?: PostTransactionResult;
   error?: Error;
@@ -62,7 +58,11 @@ const mergeWithCart = (
     })
     .map(({ category, quantity: maxQuantity, transactionTime }) => {
       const [existingItem] = getItem(cart, category);
-      const defaultQuantity = getProduct(category)?.quantity.default || 0;
+
+      const product = getProduct(category);
+      const defaultQuantity = product?.quantity.default || 0;
+      const identifiers = product?.identifiers;
+
       return {
         category,
         quantity: Math.min(
@@ -70,7 +70,8 @@ const mergeWithCart = (
           existingItem?.quantity || defaultQuantity
         ),
         maxQuantity,
-        lastTransactionTime: transactionTime
+        lastTransactionTime: transactionTime,
+        isVerified: !identifiers
       };
     });
 };
@@ -152,7 +153,7 @@ export const useCart = (
    * Update quantity of an item in the cart.
    */
   const updateCart: CartHook["updateCart"] = useCallback(
-    (category, quantity) => {
+    (category, quantity, isVerified) => {
       if (quantity < 0) {
         setError(new Error("Invalid quantity"));
         return;
@@ -164,7 +165,8 @@ export const useCart = (
             ...cart.slice(0, itemIdx),
             {
               ...item,
-              quantity
+              quantity,
+              isVerified
             },
             ...cart.slice(itemIdx + 1)
           ]);
@@ -189,13 +191,11 @@ export const useCart = (
       setCartState("CHECKING_OUT");
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
-        .reduce((transactions, { category, quantity }) => {
-          transactions.push({
-            category,
-            quantity
-          });
-          return transactions;
-        }, [] as Transaction[]);
+        .filter(({ category, quantity, isVerified }) => {
+          if (isVerified) {
+            return { category, quantity };
+          }
+        });
 
       if (transactions.length === 0) {
         setError(new Error("Please select at least one item to checkout"));

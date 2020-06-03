@@ -24,7 +24,9 @@ export const ItemCheckbox: FunctionComponent<{
         />
       }
       isChecked={quantity > 0}
-      onToggle={() => updateCart(category, quantity > 0 ? 0 : maxQuantity)}
+      onToggle={() =>
+        updateCart(category, quantity > 0 ? 0 : maxQuantity, true)
+      }
     />
   );
 };

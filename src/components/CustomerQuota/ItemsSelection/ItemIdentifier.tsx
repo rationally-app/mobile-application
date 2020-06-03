@@ -20,13 +20,15 @@ const styles = StyleSheet.create({
 
 export const ItemIdentifier: FunctionComponent<{
   label: string;
-}> = ({ label }) => {
+  updateIdentifierState: (label: string, isFilledIn: boolean) => void;
+}> = ({ label, updateIdentifierState }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [voucherCodeInput, setVoucherCodeInput] = useState("");
 
   const onCheck = async (input: string): Promise<void> => {
     try {
       setVoucherCodeInput(input);
+      updateIdentifierState(label, !!input);
       setShouldShowCamera(false);
     } catch (e) {
       setShouldShowCamera(false);
@@ -44,6 +46,11 @@ export const ItemIdentifier: FunctionComponent<{
     }
   };
 
+  const onManualInput = (input: string): void => {
+    setVoucherCodeInput(input);
+    updateIdentifierState(label, !!input);
+  };
+
   return (
     <>
       <View style={styles.inputAndButtonWrapper}>
@@ -51,7 +58,7 @@ export const ItemIdentifier: FunctionComponent<{
           <InputWithLabel
             label={label}
             value={voucherCodeInput}
-            onChange={({ nativeEvent: { text } }) => setVoucherCodeInput(text)}
+            onChange={({ nativeEvent: { text } }) => onManualInput(text)}
           />
         </View>
 
