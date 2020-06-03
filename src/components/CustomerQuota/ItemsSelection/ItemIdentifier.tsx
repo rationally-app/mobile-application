@@ -1,11 +1,11 @@
 import React, { FunctionComponent, useState } from "react";
 import { InputWithLabel } from "../../Layout/InputWithLabel";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert, Modal } from "react-native";
 import { size, color } from "../../../common/styles";
 import { Feather } from "@expo/vector-icons";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
-import { IdScannerModal } from "./IdScannerModal";
+import { IdScanner } from "../../IdScanner/IdScanner";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -64,12 +64,18 @@ export const ItemIdentifier: FunctionComponent<{
         />
       </View>
       {shouldShowCamera && (
-        <IdScannerModal
-          onBarCodeScanned={onBarCodeScanned}
-          onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText="Enter Voucher manually"
-          isVisible={shouldShowCamera}
-        />
+        <Modal
+          visible={shouldShowCamera}
+          onRequestClose={() => setShouldShowCamera(false)}
+          transparent={true}
+          animationType="slide"
+        >
+          <IdScanner
+            onBarCodeScanned={onBarCodeScanned}
+            onCancel={() => setShouldShowCamera(false)}
+            cancelButtonText={"Enter Voucher manually"}
+          />
+        </Modal>
       )}
     </>
   );
