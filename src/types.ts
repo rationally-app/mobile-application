@@ -32,6 +32,8 @@ const PolicyQuantity = t.intersection([
   })
 ]);
 
+const PolicyIdentifier = t.type({ scannerType: t.string, label: t.string });
+
 const Policy = t.intersection([
   t.type({
     category: t.string,
@@ -41,7 +43,8 @@ const Policy = t.intersection([
   }),
   t.partial({
     description: t.string,
-    image: t.string
+    image: t.string,
+    identifiers: t.array(PolicyIdentifier)
   })
 ]);
 
@@ -49,6 +52,7 @@ export const Policies = t.type({
   policies: t.array(Policy)
 });
 
+export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;
 export type Policies = t.TypeOf<typeof Policies>;
 

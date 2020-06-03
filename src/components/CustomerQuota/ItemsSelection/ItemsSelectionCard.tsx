@@ -34,7 +34,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     <View>
       <CustomerCard
         nrics={nrics}
-        onAddNric={() => setIsAddUserModalVisible(true)}
+        onAddNric={() => setIsAddUserModalVisible(true)} // TODO: need to remove for identifiers
       >
         <View style={sharedStyles.resultWrapper}>
           {cart.map(cartItem => (
