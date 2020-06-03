@@ -1,9 +1,11 @@
 import React, { FunctionComponent, useState } from "react";
 import { InputWithLabel } from "../../Layout/InputWithLabel";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { size, color } from "../../../common/styles";
 import { Feather } from "@expo/vector-icons";
+import { BarCodeScannedCallback } from "expo-barcode-scanner";
+import { IdScannerModal } from "./IdScannerModal";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -19,7 +21,28 @@ const styles = StyleSheet.create({
 export const ItemIdentifier: FunctionComponent<{
   label: string;
 }> = ({ label }) => {
-  const [voucherCodeInput, setVoucherCodeInput] = useState<string>("");
+  const [shouldShowCamera, setShouldShowCamera] = useState(false);
+  const [voucherCodeInput, setVoucherCodeInput] = useState("");
+
+  const onCheck = async (input: string): Promise<void> => {
+    try {
+      setVoucherCodeInput(input);
+      setShouldShowCamera(false);
+    } catch (e) {
+      setShouldShowCamera(false);
+      Alert.alert("Error", e.message || e, [
+        {
+          text: "Dimiss"
+        }
+      ]);
+    }
+  };
+
+  const onBarCodeScanned: BarCodeScannedCallback = event => {
+    if (event.data) {
+      onCheck(event.data);
+    }
+  };
 
   return (
     <>
@@ -37,9 +60,17 @@ export const ItemIdentifier: FunctionComponent<{
           icon={
             <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
           }
-          onPress={() => null} // TODO: openCamera
+          onPress={() => setShouldShowCamera(true)}
         />
       </View>
+      {shouldShowCamera && (
+        <IdScannerModal
+          onBarCodeScanned={onBarCodeScanned}
+          onCancel={() => setShouldShowCamera(false)}
+          cancelButtonText="Enter Voucher manually"
+          isVisible={shouldShowCamera}
+        />
+      )}
     </>
   );
 };
