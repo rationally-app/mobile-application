@@ -10,6 +10,7 @@ import { getPurchasedQuantitiesByItem } from "../utils";
 import { useProductContext } from "../../../context/products";
 import { RedeemedItem } from "./RedeemedItem";
 import { size } from "../../../common/styles";
+import { getCheckoutMessages } from "./checkoutMessages";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -33,15 +34,10 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     checkoutResult!
   );
   const { getProduct } = useProductContext();
-  const checkoutType = getProduct(checkoutQuantities[0].category)?.type;
-
-  const statusTitle = checkoutType === "redeem" ? "Redeemed!" : "Purchased!";
-  const pageTitle =
-    checkoutType === "redeem"
-      ? "Citizen has redeemed the following:"
-      : "The following have been purchased:";
-  const ctaButtonText =
-    checkoutType === "redeem" ? "Next citizen" : "Next customer";
+  const productType = getProduct(checkoutQuantities[0].category)?.type;
+  const { title, description, ctaButtonText } = getCheckoutMessages(
+    productType
+  );
 
   return (
     <View>
@@ -54,13 +50,13 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
         >
           <AppText style={sharedStyles.emoji}>✅</AppText>
           <AppText style={sharedStyles.statusTitleWrapper}>
-            <AppText style={sharedStyles.statusTitle}>{statusTitle}</AppText>
+            <AppText style={sharedStyles.statusTitle}>{title}</AppText>
           </AppText>
           <View>
-            <AppText>{pageTitle}</AppText>
+            <AppText>{description}</AppText>
             <View style={styles.checkoutItemsList}>
               {checkoutQuantities.map(item => {
-                return checkoutType === "redeem" ? (
+                return productType === "redeem" ? (
                   <RedeemedItem key={item.category} itemQuantities={item} />
                 ) : (
                   <PurchasedItem key={item.category} itemQuantities={item} />
