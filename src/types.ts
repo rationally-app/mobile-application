@@ -44,7 +44,8 @@ const Policy = t.intersection([
   t.partial({
     description: t.string,
     image: t.string,
-    identifiers: t.array(PolicyIdentifier)
+    identifiers: t.array(PolicyIdentifier),
+    type: t.string
   })
 ]);
 

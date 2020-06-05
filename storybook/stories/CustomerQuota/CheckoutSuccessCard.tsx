@@ -2,7 +2,7 @@ import React from "react";
 import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
 import { size } from "../../../src/common/styles";
-import { PurchaseSuccessCard } from "../../../src/components/CustomerQuota/PurchaseSuccessCard";
+import { CheckoutSuccessCard } from "../../../src/components/CustomerQuota/CheckoutSuccess/CheckoutSuccessCard";
 import { ProductContext } from "../../../src/context/products";
 import { Policy, PostTransactionResult } from "../../../src/types";
 
@@ -78,7 +78,7 @@ storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
     value={{ products, getProduct, setProducts: () => null }}
   >
     <View style={{ margin: size(3) }}>
-      <PurchaseSuccessCard
+      <CheckoutSuccessCard
         nrics={["S0000001I", "S0000002G"]}
         onCancel={() => null}
         checkoutResult={checkoutResult}

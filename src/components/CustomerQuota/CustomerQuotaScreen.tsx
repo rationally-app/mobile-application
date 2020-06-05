@@ -22,7 +22,7 @@ import { useConfigContext } from "../../context/config";
 import { Card } from "../Layout/Card";
 import { ItemsSelectionCard } from "./ItemsSelection/ItemsSelectionCard";
 import { NoQuotaCard } from "./NoQuotaCard";
-import { PurchaseSuccessCard } from "./PurchaseSuccessCard";
+import { CheckoutSuccessCard } from "./CheckoutSuccess/CheckoutSuccessCard";
 import { useCart } from "../../hooks/useCart/useCart";
 import * as Sentry from "sentry-expo";
 import { HelpModalContext } from "../../context/help";
@@ -150,7 +150,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         )}
 
         {cartState === "PURCHASED" ? (
-          <PurchaseSuccessCard
+          <CheckoutSuccessCard
             nrics={nrics}
             onCancel={onCancel}
             checkoutResult={checkoutResult}

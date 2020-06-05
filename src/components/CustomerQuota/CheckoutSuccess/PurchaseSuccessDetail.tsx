@@ -1,16 +1,13 @@
-import React, { FunctionComponent } from "react";
-import { useProductContext } from "../../context/products";
+import { FunctionComponent } from "react";
+import { size, fontSize, color } from "../../../common/styles";
+import { Policy } from "../../../types";
+import { formatQuantityText } from "../utils";
 import { View, StyleSheet } from "react-native";
-import { CustomerCard } from "./CustomerCard";
-import { AppText } from "../Layout/AppText";
-import { sharedStyles } from "./sharedStyles";
-import { DarkButton } from "../Layout/Buttons/DarkButton";
-import { size, fontSize, color } from "../../common/styles";
-import { CartHook } from "../../hooks/useCart/useCart";
-import { Policy } from "../../types";
-import { getPurchasedQuantitiesByItem, formatQuantityText } from "./utils";
-import { ItemQuantities } from "./types";
+import { AppText } from "../../Layout/AppText";
+import { ItemQuantities, PurchasedQuantitiesByItem } from "../types";
+import { useProductContext } from "../../../context/products";
 import { sum } from "lodash";
+import React from "react";
 
 const styles = StyleSheet.create({
   purchasedItemsList: {
@@ -89,46 +86,16 @@ const PurchasedItem: FunctionComponent<{
   );
 };
 
-interface PurchaseSuccessCard {
-  nrics: string[];
-  onCancel: () => void;
-  checkoutResult: CartHook["checkoutResult"];
-}
-
-export const PurchaseSuccessCard: FunctionComponent<PurchaseSuccessCard> = ({
-  nrics,
-  onCancel,
-  checkoutResult
-}) => {
-  const purchasedQuantitiesByItem = getPurchasedQuantitiesByItem(
-    nrics,
-    checkoutResult!
-  );
+export const PurchaseSuccessDetail: FunctionComponent<{
+  purchasedQuantitiesByItem: PurchasedQuantitiesByItem;
+}> = ({ purchasedQuantitiesByItem }) => {
   return (
     <View>
-      <CustomerCard nrics={nrics}>
-        <View
-          style={[
-            sharedStyles.resultWrapper,
-            sharedStyles.successfulResultWrapper
-          ]}
-        >
-          <AppText style={sharedStyles.emoji}>✅</AppText>
-          <AppText style={sharedStyles.statusTitleWrapper}>
-            <AppText style={sharedStyles.statusTitle}>Purchased!</AppText>
-          </AppText>
-          <View>
-            <AppText>The following have been purchased:</AppText>
-            <View style={styles.purchasedItemsList}>
-              {purchasedQuantitiesByItem.map(item => (
-                <PurchasedItem key={item.category} itemQuantities={item} />
-              ))}
-            </View>
-          </View>
-        </View>
-      </CustomerCard>
-      <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
+      <AppText>The following have been purchased:</AppText>
+      <View style={styles.purchasedItemsList}>
+        {purchasedQuantitiesByItem.map(item => (
+          <PurchasedItem key={item.category} itemQuantities={item} />
+        ))}
       </View>
     </View>
   );
