@@ -7,6 +7,7 @@ export type ItemQuantities = {
   quantities: {
     [id: string]: number;
   };
+  identifiers: string[];
 };
 
-export type PurchasedQuantitiesByItem = ItemQuantities[];
+export type CheckoutQuantitiesByItem = ItemQuantities[];

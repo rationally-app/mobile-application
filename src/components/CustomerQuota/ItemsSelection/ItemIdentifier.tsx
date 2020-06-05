@@ -19,16 +19,17 @@ const styles = StyleSheet.create({
 });
 
 export const ItemIdentifier: FunctionComponent<{
+  index: number;
   label: string;
-  updateIdentifierState: (label: string, isFilledIn: boolean) => void;
-}> = ({ label, updateIdentifierState }) => {
+  updateIdentifierValue: (index: number, value: string) => void;
+}> = ({ index, label, updateIdentifierValue }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [voucherCodeInput, setVoucherCodeInput] = useState("");
 
   const onCheck = async (input: string): Promise<void> => {
     try {
       setVoucherCodeInput(input);
-      updateIdentifierState(label, !!input);
+      updateIdentifierValue(index, input);
       setShouldShowCamera(false);
     } catch (e) {
       setShouldShowCamera(false);
@@ -48,7 +49,7 @@ export const ItemIdentifier: FunctionComponent<{
 
   const onManualInput = (input: string): void => {
     setVoucherCodeInput(input);
-    updateIdentifierState(label, !!input);
+    updateIdentifierValue(index, input);
   };
 
   return (

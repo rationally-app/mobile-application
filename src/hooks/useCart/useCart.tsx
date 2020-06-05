@@ -15,6 +15,7 @@ export type CartItem = {
    */
   lastTransactionTime?: Date;
   isVerified: boolean;
+  identifiers: string[];
 };
 
 export type Cart = CartItem[];
@@ -29,7 +30,12 @@ type CartState =
 export type CartHook = {
   cartState: CartState;
   cart: Cart;
-  updateCart: (category: string, quantity: number, isVerified: boolean) => void;
+  updateCart: (
+    category: string,
+    quantity: number,
+    isVerified: boolean,
+    identifiers?: string[]
+  ) => void;
   checkoutCart: () => void;
   checkoutResult?: PostTransactionResult;
   error?: Error;
@@ -71,7 +77,8 @@ const mergeWithCart = (
         ),
         maxQuantity,
         lastTransactionTime: transactionTime,
-        isVerified: !identifiers
+        isVerified: !identifiers,
+        identifiers: []
       };
     });
 };
@@ -153,7 +160,7 @@ export const useCart = (
    * Update quantity of an item in the cart.
    */
   const updateCart: CartHook["updateCart"] = useCallback(
-    (category, quantity, isVerified) => {
+    (category, quantity, isVerified, identifiers = []) => {
       if (quantity < 0) {
         setError(new Error("Invalid quantity"));
         return;
@@ -166,7 +173,8 @@ export const useCart = (
             {
               ...item,
               quantity,
-              isVerified
+              isVerified,
+              identifiers
             },
             ...cart.slice(itemIdx + 1)
           ]);
@@ -191,9 +199,9 @@ export const useCart = (
       setCartState("CHECKING_OUT");
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
-        .filter(({ category, quantity, isVerified }) => {
+        .filter(({ category, quantity, isVerified, identifiers }) => {
           if (isVerified) {
-            return { category, quantity };
+            return { category, quantity, identifiers };
           }
         });
 

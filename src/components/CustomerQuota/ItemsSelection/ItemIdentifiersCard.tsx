@@ -19,18 +19,24 @@ export const ItemIdentifiersCard: FunctionComponent<{
   identifiers: PolicyIdentifier[];
   updateCart: CartHook["updateCart"];
 }> = ({ cartItem, identifiers, updateCart }) => {
-  const [identifiersState, setIdentifiersState] = useState({});
+  const [identifierValues, setIdentifierValues] = useState<string[]>(
+    identifiers.map(() => "")
+  );
 
-  const updateIdentifierState = (label: string, isFilledIn: boolean): void =>
-    setIdentifiersState({ ...identifiersState, [label]: isFilledIn });
+  const updateIdentifierValue = (index: number, value: string): void =>
+    setIdentifierValues([
+      ...identifierValues.slice(0, index),
+      value,
+      ...identifierValues.slice(index + 1)
+    ]);
 
   useEffect(() => {
-    const isAllIdentifiersFilled =
-      Object.keys(identifiersState).length === identifiers.length &&
-      Object.values(identifiersState).reduce(
-        (accummulator, current) => accummulator && current
-      );
-    updateCart(cartItem.category, cartItem.quantity, !!isAllIdentifiersFilled);
+    updateCart(
+      cartItem.category,
+      cartItem.quantity,
+      !identifierValues.some(value => !value),
+      identifierValues
+    );
   });
 
   return (
@@ -38,8 +44,9 @@ export const ItemIdentifiersCard: FunctionComponent<{
       {identifiers.map((identifier, index) => (
         <ItemIdentifier
           key={index}
+          index={index}
           label={identifier.label}
-          updateIdentifierState={updateIdentifierState}
+          updateIdentifierValue={updateIdentifierValue}
         />
       ))}
     </View>

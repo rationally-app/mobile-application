@@ -1,14 +1,21 @@
 import React, { FunctionComponent } from "react";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { CartHook } from "../../../hooks/useCart/useCart";
-import { PurchaseSuccessDetail } from "./PurchaseSuccessDetail";
+import { PurchasedItem } from "./PurchasedItem";
 import { getPurchasedQuantitiesByItem } from "../utils";
 import { useProductContext } from "../../../context/products";
-import { RedeemSuccessDetail } from "./RedeemSuccessDetail";
+import { RedeemedItem } from "./RedeemedItem";
+import { size } from "../../../common/styles";
+
+const styles = StyleSheet.create({
+  checkoutItemsList: {
+    marginTop: size(2)
+  }
+});
 
 interface CheckoutSuccessCard {
   nrics: string[];
@@ -27,7 +34,12 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   );
   const { getProduct } = useProductContext();
   const checkoutType = getProduct(checkoutQuantities[0].category)?.type;
+
   const statusTitle = checkoutType === "redeem" ? "Redeemed!" : "Purchased!";
+  const pageTitle =
+    checkoutType === "redeem"
+      ? "Citizen has redeemed the following:"
+      : "The following have been purchased:";
   const ctaButtonText =
     checkoutType === "redeem" ? "Next citizen" : "Next customer";
 
@@ -44,13 +56,18 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
           <AppText style={sharedStyles.statusTitleWrapper}>
             <AppText style={sharedStyles.statusTitle}>{statusTitle}</AppText>
           </AppText>
-          {checkoutType === "redeem" ? (
-            <RedeemSuccessDetail />
-          ) : (
-            <PurchaseSuccessDetail
-              purchasedQuantitiesByItem={checkoutQuantities}
-            />
-          )}
+          <View>
+            <AppText>{pageTitle}</AppText>
+            <View style={styles.checkoutItemsList}>
+              {checkoutQuantities.map(item => {
+                return checkoutType === "redeem" ? (
+                  <RedeemedItem key={item.category} itemQuantities={item} />
+                ) : (
+                  <PurchasedItem key={item.category} itemQuantities={item} />
+                );
+              })}
+            </View>
+          </View>
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>

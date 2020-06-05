@@ -1,5 +1,5 @@
 import { chain } from "lodash";
-import { PurchasedQuantitiesByItem, ItemQuantities } from "./types";
+import { CheckoutQuantitiesByItem, ItemQuantities } from "./types";
 import { Policy, PostTransactionResult } from "../../types";
 
 export const formatQuantityText = (
@@ -15,7 +15,7 @@ export const formatQuantityText = (
 export const getPurchasedQuantitiesByItem = (
   ids: string[],
   checkoutResult: PostTransactionResult
-): PurchasedQuantitiesByItem => {
+): CheckoutQuantitiesByItem => {
   const result = chain(checkoutResult.transactions)
     .map((user, idx) =>
       user.transaction.map(transaction => ({
@@ -31,7 +31,8 @@ export const getPurchasedQuantitiesByItem = (
         quantities: users.reduce((res, user) => {
           res[user.id] = user.quantity;
           return res;
-        }, {} as ItemQuantities["quantities"])
+        }, {} as ItemQuantities["quantities"]),
+        identifiers: users[0].identifiers
       });
       return res;
     }, [] as ItemQuantities[]);

@@ -1,5 +1,5 @@
 import { formatQuantityText, getPurchasedQuantitiesByItem } from "./utils";
-import { PurchasedQuantitiesByItem } from "./types";
+import { CheckoutQuantitiesByItem } from "./types";
 import { PostTransactionResult } from "../../types";
 
 describe("formatQuantityText", () => {
@@ -64,7 +64,7 @@ describe("getPurchasedQuantitiesByItem", () => {
         }
       ]
     };
-    const transformed: PurchasedQuantitiesByItem = [
+    const transformed: CheckoutQuantitiesByItem = [
       {
         category: "toilet-paper",
         quantities: {

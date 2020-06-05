@@ -76,7 +76,8 @@ export type Quota = t.TypeOf<typeof Quota>;
 
 const Transaction = t.type({
   category: t.string,
-  quantity: t.number
+  quantity: t.number,
+  identifiers: t.array(t.string)
 });
 
 export const PostTransactionResult = t.type({
