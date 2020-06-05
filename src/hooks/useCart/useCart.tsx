@@ -197,13 +197,26 @@ export const useCart = (
   const checkoutCart: CartHook["checkoutCart"] = useCallback(() => {
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
+      let hasUnverifiedTransactions = false;
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .filter(({ category, quantity, isVerified, identifiers }) => {
           if (isVerified) {
             return { category, quantity, identifiers };
+          } else {
+            hasUnverifiedTransactions = true;
           }
         });
+
+      if (hasUnverifiedTransactions) {
+        setError(
+          new Error(
+            "Please make sure all compulsory identifiers have been filled in"
+          )
+        );
+        setCartState("DEFAULT");
+        return;
+      }
 
       if (transactions.length === 0) {
         setError(new Error("Please select at least one item to checkout"));
