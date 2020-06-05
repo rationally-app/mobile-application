@@ -77,6 +77,7 @@ export const Quota = t.type({
 export type ItemQuota = t.TypeOf<typeof ItemQuota>;
 export type Quota = t.TypeOf<typeof Quota>;
 
+<<<<<<< HEAD
 const Transaction = t.intersection([
   t.type({
     category: t.string,
@@ -84,6 +85,13 @@ const Transaction = t.intersection([
   }),
   t.partial({ identifiers: t.array(PolicyIdentifierInput) })
 ]);
+=======
+const Transaction = t.type({
+  category: t.string,
+  quantity: t.number,
+  identifiers: t.array(t.string)
+});
+>>>>>>> aa182e2... feat: added checkout for redemption
 
 export const PostTransactionResult = t.type({
   transactions: t.array(
