@@ -89,7 +89,7 @@ const Transaction = t.intersection([
 const Transaction = t.type({
   category: t.string,
   quantity: t.number,
-  identifiers: t.array(t.string)
+  identifiers: t.array(PolicyIdentifierInput)
 });
 >>>>>>> aa182e2... feat: added checkout for redemption
 
