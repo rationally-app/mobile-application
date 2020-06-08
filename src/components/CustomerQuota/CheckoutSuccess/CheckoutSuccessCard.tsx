@@ -34,7 +34,9 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     checkoutResult!
   );
   const { getProduct } = useProductContext();
-  const productType = getProduct(checkoutQuantities[0].category)?.type;
+  const productType = getProduct(
+    checkoutQuantities[0].category
+  )?.type?.toLowerCase();
   const { title, description, ctaButtonText } = getCheckoutMessages(
     productType
   );
