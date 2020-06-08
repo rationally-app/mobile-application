@@ -32,7 +32,7 @@ export const getPurchasedQuantitiesByItem = (
           res[user.id] = user.quantity;
           return res;
         }, {} as ItemQuantities["quantities"]),
-        identifiers: users[0].identifiers
+        identifiers: users[0].identifiers // Transactions with identifiers can only have single NRIC
       });
       return res;
     }, [] as ItemQuantities[]);
