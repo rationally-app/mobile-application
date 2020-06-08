@@ -13,7 +13,6 @@ export const RedeemedItem: FunctionComponent<{
   const { getProduct } = useProductContext();
   const { category, identifiers } = itemQuantities;
   const categoryName = getProduct(category)?.name ?? category;
-  console.log(identifiers);
   return (
     <View style={{ marginBottom: size(1.5) }}>
       <View style={sharedStyles.itemRow}>
@@ -22,7 +21,9 @@ export const RedeemedItem: FunctionComponent<{
       <View style={sharedStyles.quantitiesWrapper}>
         <View style={sharedStyles.quantitiesBorder} />
         <AppText style={sharedStyles.quantityByIdText}>
-          {`${identifiers[0]} — ${identifiers[identifiers.length - 1]}`}
+          {`${identifiers[0].value} — ${
+            identifiers[identifiers.length - 1].value
+          }`}
         </AppText>
       </View>
     </View>

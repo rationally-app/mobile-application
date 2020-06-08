@@ -3,7 +3,12 @@ import { getQuota, postTransaction, QuotaError } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { getPolicies, PolicyError } from "../../services/policies";
 import { usePrevious } from "../usePrevious";
-import { PostTransactionResult, Quota, ItemQuota } from "../../types";
+import {
+  PostTransactionResult,
+  Quota,
+  ItemQuota,
+  PolicyIdentifierInput
+} from "../../types";
 
 export type CartItem = {
   category: string;
@@ -14,8 +19,7 @@ export type CartItem = {
    * It will be undefined for batch quotas.
    */
   lastTransactionTime?: Date;
-  isVerified: boolean;
-  identifiers: string[];
+  identifiers: PolicyIdentifierInput[];
 };
 
 export type Cart = CartItem[];
@@ -33,8 +37,7 @@ export type CartHook = {
   updateCart: (
     category: string,
     quantity: number,
-    isVerified: boolean,
-    identifiers?: string[]
+    identifiers?: PolicyIdentifierInput[]
   ) => void;
   checkoutCart: () => void;
   checkoutResult?: PostTransactionResult;
@@ -67,7 +70,6 @@ const mergeWithCart = (
 
       const product = getProduct(category);
       const defaultQuantity = product?.quantity.default || 0;
-      const identifiers = product?.identifiers;
 
       return {
         category,
@@ -77,7 +79,6 @@ const mergeWithCart = (
         ),
         maxQuantity,
         lastTransactionTime: transactionTime,
-        isVerified: !identifiers,
         identifiers: []
       };
     });
@@ -160,7 +161,7 @@ export const useCart = (
    * Update quantity of an item in the cart.
    */
   const updateCart: CartHook["updateCart"] = useCallback(
-    (category, quantity, isVerified, identifiers = []) => {
+    (category, quantity, identifiers = []) => {
       if (quantity < 0) {
         setError(new Error("Invalid quantity"));
         return;
@@ -173,7 +174,6 @@ export const useCart = (
             {
               ...item,
               quantity,
-              isVerified,
               identifiers
             },
             ...cart.slice(itemIdx + 1)
@@ -197,21 +197,28 @@ export const useCart = (
   const checkoutCart: CartHook["checkoutCart"] = useCallback(() => {
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
-      let hasUnverifiedTransactions = false;
+
+      let numUnverifiedTransactions = 0;
+      let numIdentifiers = 0;
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
-        .filter(({ category, quantity, isVerified, identifiers }) => {
-          if (isVerified) {
-            return { category, quantity, identifiers };
-          } else {
-            hasUnverifiedTransactions = true;
+        .map(({ category, quantity, identifiers }) => {
+          if (
+            identifiers.length > 0 &&
+            identifiers.some(identifier => !identifier.value)
+          ) {
+            numUnverifiedTransactions += 1;
           }
+          numIdentifiers += identifiers.length;
+          return { category, quantity, identifiers };
         });
 
-      if (hasUnverifiedTransactions) {
+      if (numUnverifiedTransactions > 0) {
         setError(
           new Error(
-            "Please make sure all compulsory identifiers have been filled in"
+            `Please enter ${
+              numIdentifiers === 1 ? "code" : "unique codes"
+            } to checkout`
           )
         );
         setCartState("DEFAULT");
