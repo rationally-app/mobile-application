@@ -26,9 +26,13 @@ export const ItemCheckbox: FunctionComponent<{
         />
       }
       isChecked={quantity > 0}
+<<<<<<< HEAD
       onToggle={() =>
         updateCart(category, quantity > 0 ? 0 : maxQuantity, identifierInputs)
       }
+=======
+      onToggle={() => updateCart(category, quantity > 0 ? 0 : maxQuantity)}
+>>>>>>> 8529d73... fix: identifiers were not updated to cart correctly for multiple policies with identifiers
     />
   );
 };
