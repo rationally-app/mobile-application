@@ -9,6 +9,7 @@ import { Feather } from "@expo/vector-icons";
 import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
+import { useProductContext } from "../../../context/products";
 
 interface ItemsSelectionCard {
   nrics: string[];
@@ -30,22 +31,40 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
+  const { getProduct } = useProductContext();
+  const identifiers = cart.flatMap(
+    cartItem => getProduct(cartItem.category)?.identifiers
+  );
   return (
     <View>
-      <CustomerCard
-        nrics={nrics}
-        onAddNric={() => setIsAddUserModalVisible(true)}
-      >
-        <View style={sharedStyles.resultWrapper}>
-          {cart.map(cartItem => (
-            <Item
-              key={cartItem.category}
-              cartItem={cartItem}
-              updateCart={updateCart}
-            />
-          ))}
-        </View>
-      </CustomerCard>
+      {identifiers[0] && identifiers.length > 0 ? (
+        <CustomerCard nrics={nrics}>
+          <View style={sharedStyles.resultWrapper}>
+            {cart.map(cartItem => (
+              <Item
+                key={cartItem.category}
+                cartItem={cartItem}
+                updateCart={updateCart}
+              />
+            ))}
+          </View>
+        </CustomerCard>
+      ) : (
+        <CustomerCard
+          nrics={nrics}
+          onAddNric={() => setIsAddUserModalVisible(true)}
+        >
+          <View style={sharedStyles.resultWrapper}>
+            {cart.map(cartItem => (
+              <Item
+                key={cartItem.category}
+                cartItem={cartItem}
+                updateCart={updateCart}
+              />
+            ))}
+          </View>
+        </CustomerCard>
+      )}
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         <View
           style={[
