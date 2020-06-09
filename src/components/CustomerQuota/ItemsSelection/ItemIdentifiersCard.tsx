@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { PolicyIdentifier, PolicyIdentifierInput } from "../../../types";
 import { CartHook, CartItem } from "../../../hooks/useCart/useCart";
 import { ItemIdentifier } from "./ItemIdentifier";
@@ -23,16 +23,14 @@ export const ItemIdentifiersCard: FunctionComponent<{
     PolicyIdentifierInput[]
   >(identifiers.map(identifier => ({ label: identifier.label, value: "" })));
 
-  const updateIdentifierValue = (index: number, value: string): void =>
+  const updateIdentifierValue = (index: number, value: string): void => {
     setIdentifierInputs([
       ...identifierInputs.slice(0, index),
       { ...identifierInputs[index], value },
       ...identifierInputs.slice(index + 1)
     ]);
-
-  useEffect(() => {
     updateCart(cartItem.category, cartItem.quantity, identifierInputs);
-  });
+  };
 
   return (
     <View style={styles.content}>
