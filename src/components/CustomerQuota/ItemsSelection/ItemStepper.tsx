@@ -23,6 +23,7 @@ export const ItemStepper: FunctionComponent<{
     if (stepperValue !== quantity) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       // No support for policies with identifiers of limit > 1
       updateCart(category, stepperValue, []);
 =======
@@ -31,6 +32,10 @@ export const ItemStepper: FunctionComponent<{
 =======
       updateCart(category, stepperValue);
 >>>>>>> 8529d73... fix: identifiers were not updated to cart correctly for multiple policies with identifiers
+=======
+      // No support for policies with identifiers of limit > 1
+      updateCart(category, stepperValue, []);
+>>>>>>> 9974db7... fix: checkbox was resetting identifiers oops
     }
   }, [category, quantity, stepperValue, updateCart]);
 
