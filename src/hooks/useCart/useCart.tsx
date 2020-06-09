@@ -37,7 +37,7 @@ export type CartHook = {
   updateCart: (
     category: string,
     quantity: number,
-    identifiers?: PolicyIdentifierInput[]
+    identifiers: PolicyIdentifierInput[]
   ) => void;
   checkoutCart: () => void;
   checkoutResult?: PostTransactionResult;
@@ -161,7 +161,7 @@ export const useCart = (
    * Update quantity of an item in the cart.
    */
   const updateCart: CartHook["updateCart"] = useCallback(
-    (category, quantity, identifiers = []) => {
+    (category, quantity, identifiers) => {
       if (quantity < 0) {
         setError(new Error("Invalid quantity"));
         return;

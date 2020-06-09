@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState } from "react";
-import { PolicyIdentifier, PolicyIdentifierInput } from "../../../types";
+import React, { FunctionComponent } from "react";
+import { PolicyIdentifierInput } from "../../../types";
 import { CartHook, CartItem } from "../../../hooks/useCart/useCart";
 import { ItemIdentifier } from "./ItemIdentifier";
 import { View, StyleSheet } from "react-native";
@@ -16,13 +16,10 @@ const styles = StyleSheet.create({
 
 export const ItemIdentifiersCard: FunctionComponent<{
   cartItem: CartItem;
-  identifiers: PolicyIdentifier[];
+  identifierInputs: PolicyIdentifierInput[];
+  setIdentifierInputs: (input: PolicyIdentifierInput[]) => void;
   updateCart: CartHook["updateCart"];
-}> = ({ cartItem, identifiers, updateCart }) => {
-  const [identifierInputs, setIdentifierInputs] = useState<
-    PolicyIdentifierInput[]
-  >(identifiers.map(identifier => ({ label: identifier.label, value: "" })));
-
+}> = ({ cartItem, identifierInputs, setIdentifierInputs, updateCart }) => {
   const updateIdentifierValue = (index: number, value: string): void => {
     setIdentifierInputs([
       ...identifierInputs.slice(0, index),
@@ -34,7 +31,7 @@ export const ItemIdentifiersCard: FunctionComponent<{
 
   return (
     <View style={styles.content}>
-      {identifiers.map((identifier, index) => (
+      {identifierInputs.map((identifier, index) => (
         <ItemIdentifier
           key={index}
           index={index}
