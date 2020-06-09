@@ -30,7 +30,8 @@ export const ItemIdentifiersCard: FunctionComponent<{
 
   useEffect(() => {
     updateCart(cartItem.category, cartItem.quantity, identifierInputs);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [identifierInputs]);
 
   return (
     <View style={styles.content}>
