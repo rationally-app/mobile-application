@@ -89,6 +89,9 @@ const mergeWithCart = (
 const hasNoQuota = (quota: Quota): boolean =>
   quota.remainingQuota.every(item => item.quantity === 0);
 
+const validateUniqueInputs = (test: string[]): boolean =>
+  new Set(test).size === test.length;
+
 export const useCart = (
   ids: string[],
   authKey: string,
@@ -202,15 +205,20 @@ export const useCart = (
 
       let numUnverifiedTransactions = 0;
       let numIdentifiers = 0;
+      let uniqueInput = false;
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifiers }) => {
+          const values = identifiers.flatMap(identifier => identifier.value);
           if (
             identifiers.length > 0 &&
             identifiers.some(identifier => !identifier.value)
           ) {
             numUnverifiedTransactions += 1;
           }
+
+          uniqueInput = validateUniqueInputs(values) ? true : false;
+
           numIdentifiers += identifiers.length;
           return { category, quantity, identifiers };
         });
@@ -229,6 +237,12 @@ export const useCart = (
 
       if (transactions.length === 0) {
         setError(new Error("Please select at least one item to checkout"));
+        setCartState("DEFAULT");
+        return;
+      }
+
+      if (!uniqueInput) {
+        setError(new Error("Please enter unique codes to checkout"));
         setCartState("DEFAULT");
         return;
       }
