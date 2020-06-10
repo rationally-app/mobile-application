@@ -19,21 +19,21 @@ const styles = StyleSheet.create({
     alignItems: "baseline"
   },
   itemHeader: {
-    marginTop: size(1),
+    marginTop: size(1.5),
     lineHeight: 1.5 * fontSize(0),
-    marginBottom: -size(2)
+    marginBottom: -size(2),
+    fontFamily: "brand-bold"
   },
-  itemSubheaderWrapper: {
-    flexDirection: "row",
-    marginTop: size(0.5)
+  itemDetailWrapper: {
+    flexDirection: "row"
   },
-  itemSubheaderBorder: {
+  itemDetailBorder: {
     borderLeftWidth: 1,
     borderLeftColor: color("grey", 30),
     marginLeft: size(1),
     marginRight: size(1)
   },
-  itemSubheaderText: {
+  itemDetail: {
     fontSize: fontSize(-1)
   }
 });
@@ -63,17 +63,17 @@ const RecentTransactionTitle: FunctionComponent<{
 );
 
 const ItemTransaction: FunctionComponent<{
-  header: string;
-  subheader: string;
-}> = ({ header, subheader }) => (
+  itemHeader: string;
+  itemDetail: string;
+}> = ({ itemHeader, itemDetail }) => (
   <>
     <View style={styles.itemRow}>
-      <AppText style={styles.itemHeader}>{header}</AppText>
+      <AppText style={styles.itemHeader}>{itemHeader}</AppText>
     </View>
-    {!!subheader && (
-      <View style={styles.itemSubheaderWrapper}>
-        <View style={styles.itemSubheaderBorder} />
-        <AppText style={styles.itemSubheaderText}>{subheader}</AppText>
+    {!!itemDetail && (
+      <View style={styles.itemDetailWrapper}>
+        <View style={styles.itemDetailBorder} />
+        <AppText style={styles.itemDetail}>{itemDetail}</AppText>
       </View>
     )}
   </>
@@ -101,18 +101,22 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 }) => {
   const { getProduct } = useProductContext();
 
+  const policyType =
+    (cart.length > 0 && getProduct(cart[0].category)?.type) || "purchase";
+
   const sortedCart = cart.sort((item1, item2) =>
     compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
   );
 
-  const itemTransactions: { header: string; subheader: string }[] = [];
+  const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
   sortedCart.forEach(({ category, lastTransactionTime, identifiers }) => {
     if (lastTransactionTime) {
-      const categoryName = getProduct(category)?.name ?? category;
+      const policy = getProduct(category);
+      const categoryName = policy?.name ?? category;
       const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
       itemTransactions.push({
-        header: `• ${categoryName} (${formattedDate})`,
-        subheader:
+        itemHeader: `• ${categoryName} (${formattedDate})`,
+        itemDetail:
           identifiers && identifiers.length > 0
             ? `${identifiers[0].value} — ${
                 identifiers[identifiers.length - 1].value
@@ -156,16 +160,15 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           </AppText>
           {itemTransactions.length > 0 && (
             <View>
-              <AppText>When limits were reached:</AppText>
+              <AppText style={{ marginBottom: size(1) }}>
+                Items {policyType === "redeem" ? "redeemed" : "purchased"}:
+              </AppText>
               {itemTransactions.map(
-                (
-                  { header, subheader }: { header: string; subheader: string },
-                  index: number
-                ) => (
+                ({ itemHeader, itemDetail }, index: number) => (
                   <ItemTransaction
                     key={index}
-                    header={header}
-                    subheader={subheader}
+                    itemHeader={itemHeader}
+                    itemDetail={itemDetail}
                   />
                 )
               )}
