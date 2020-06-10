@@ -618,6 +618,47 @@ describe("useCart", () => {
       ]);
     });
 
+    it("should set error with message 'Please enter unique codes to checkout' when identifier values are identical", async () => {
+      expect.assertions(3);
+      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
+      const ids = ["ID1"];
+      const { result } = renderHook(() => useCart(ids, key, endpoint), {
+        wrapper: Wrapper
+      });
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 1, [
+          { value: "identical", label: "first" },
+          { value: "identical", label: "last" }
+        ]);
+        result.current.checkoutCart();
+      });
+
+      expect(result.current.error?.message).toBe(
+        "Please enter unique codes to checkout"
+      );
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          identifiers: [
+            { value: "identical", label: "first" },
+            { value: "identical", label: "last" }
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 1
+        },
+        {
+          category: "chocolate",
+          identifiers: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0
+        }
+      ]);
+    });
+
     it("should set error when transaction does not succeed", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
