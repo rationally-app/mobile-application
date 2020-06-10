@@ -13,10 +13,28 @@ import { useProductContext } from "../../context/products";
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
 const styles = StyleSheet.create({
-  itemTransactions: {
+  itemRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "baseline"
+  },
+  itemHeader: {
     marginTop: size(1),
     lineHeight: 1.5 * fontSize(0),
     marginBottom: -size(2)
+  },
+  itemSubheaderWrapper: {
+    flexDirection: "row",
+    marginTop: size(0.5)
+  },
+  itemSubheaderBorder: {
+    borderLeftWidth: 1,
+    borderLeftColor: color("grey", 30),
+    marginLeft: size(1),
+    marginRight: size(1)
+  },
+  itemSubheaderText: {
+    fontSize: fontSize(-1)
   }
 });
 
@@ -41,6 +59,23 @@ const RecentTransactionTitle: FunctionComponent<{
       {formatDistance(now, transactionTime)}
     </AppText>
     <AppText style={sharedStyles.statusTitle}> ago.</AppText>
+  </>
+);
+
+const ItemTransaction: FunctionComponent<{
+  header: string;
+  subheader: string;
+}> = ({ header, subheader }) => (
+  <>
+    <View style={styles.itemRow}>
+      <AppText style={styles.itemHeader}>{header}</AppText>
+    </View>
+    {!!subheader && (
+      <View style={styles.itemSubheaderWrapper}>
+        <View style={styles.itemSubheaderBorder} />
+        <AppText style={styles.itemSubheaderText}>{subheader}</AppText>
+      </View>
+    )}
   </>
 );
 
@@ -70,12 +105,20 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
   );
 
-  let itemTransactions = "";
-  sortedCart.forEach(({ category, lastTransactionTime }) => {
+  const itemTransactions: { header: string; subheader: string }[] = [];
+  sortedCart.forEach(({ category, lastTransactionTime, identifiers }) => {
     if (lastTransactionTime) {
       const categoryName = getProduct(category)?.name ?? category;
       const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
-      itemTransactions += `• ${categoryName} (${formattedDate})\n`;
+      itemTransactions.push({
+        header: `• ${categoryName} (${formattedDate})`,
+        subheader:
+          identifiers && identifiers.length > 0
+            ? `${identifiers[0].value} — ${
+                identifiers[identifiers.length - 1].value
+              }`
+            : ""
+      });
     }
   });
 
@@ -114,9 +157,18 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           {itemTransactions.length > 0 && (
             <View>
               <AppText>When limits were reached:</AppText>
-              <AppText style={styles.itemTransactions}>
-                {itemTransactions}
-              </AppText>
+              {itemTransactions.map(
+                (
+                  { header, subheader }: { header: string; subheader: string },
+                  index: number
+                ) => (
+                  <ItemTransaction
+                    key={index}
+                    header={header}
+                    subheader={subheader}
+                  />
+                )
+              )}
             </View>
           )}
         </View>
