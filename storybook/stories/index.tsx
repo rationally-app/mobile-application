@@ -1,2 +1,2 @@
-import "./CustomerQuota/PurchaseSuccessCard";
+import "./CustomerQuota/CheckoutSuccessCard";
 import "./Layout";

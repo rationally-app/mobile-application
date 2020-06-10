@@ -1,3 +1,5 @@
+import { PolicyIdentifierInput } from "../../types";
+
 export interface CartState {
   [category: string]: boolean | null;
 }
@@ -7,6 +9,7 @@ export type ItemQuantities = {
   quantities: {
     [id: string]: number;
   };
+  identifiers: PolicyIdentifierInput[];
 };
 
-export type PurchasedQuantitiesByItem = ItemQuantities[];
+export type CheckoutQuantitiesByItem = ItemQuantities[];

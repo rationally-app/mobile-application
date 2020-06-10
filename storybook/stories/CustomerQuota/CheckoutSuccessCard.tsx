@@ -2,7 +2,7 @@ import React from "react";
 import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
 import { size } from "../../../src/common/styles";
-import { PurchaseSuccessCard } from "../../../src/components/CustomerQuota/PurchaseSuccessCard";
+import { CheckoutSuccessCard } from "../../../src/components/CustomerQuota/CheckoutSuccess/CheckoutSuccessCard";
 import { ProductContext } from "../../../src/context/products";
 import { Policy, PostTransactionResult } from "../../../src/types";
 
@@ -45,11 +45,13 @@ const checkoutResult: PostTransactionResult = {
       transaction: [
         {
           category: "toilet-paper",
-          quantity: 0
+          quantity: 0,
+          identifiers: []
         },
         {
           category: "chocolate",
-          quantity: 5
+          quantity: 5,
+          identifiers: []
         }
       ],
       timestamp: transactionTime
@@ -58,11 +60,13 @@ const checkoutResult: PostTransactionResult = {
       transaction: [
         {
           category: "toilet-paper",
-          quantity: 1
+          quantity: 1,
+          identifiers: []
         },
         {
           category: "chocolate",
-          quantity: 3
+          quantity: 3,
+          identifiers: []
         }
       ],
       timestamp: transactionTime
@@ -78,7 +82,7 @@ storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
     value={{ products, getProduct, setProducts: () => null }}
   >
     <View style={{ margin: size(3) }}>
-      <PurchaseSuccessCard
+      <CheckoutSuccessCard
         nrics={["S0000001I", "S0000002G"]}
         onCancel={() => null}
         checkoutResult={checkoutResult}

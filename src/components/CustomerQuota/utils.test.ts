@@ -1,5 +1,5 @@
 import { formatQuantityText, getPurchasedQuantitiesByItem } from "./utils";
-import { PurchasedQuantitiesByItem } from "./types";
+import { CheckoutQuantitiesByItem } from "./types";
 import { PostTransactionResult } from "../../types";
 
 describe("formatQuantityText", () => {
@@ -40,11 +40,13 @@ describe("getPurchasedQuantitiesByItem", () => {
           transaction: [
             {
               category: "toilet-paper",
-              quantity: 0
+              quantity: 0,
+              identifiers: []
             },
             {
               category: "chocolate",
-              quantity: 5
+              quantity: 5,
+              identifiers: []
             }
           ],
           timestamp: transactionTime
@@ -53,31 +55,35 @@ describe("getPurchasedQuantitiesByItem", () => {
           transaction: [
             {
               category: "toilet-paper",
-              quantity: 1
+              quantity: 1,
+              identifiers: []
             },
             {
               category: "chocolate",
-              quantity: 3
+              quantity: 3,
+              identifiers: []
             }
           ],
           timestamp: transactionTime
         }
       ]
     };
-    const transformed: PurchasedQuantitiesByItem = [
+    const transformed: CheckoutQuantitiesByItem = [
       {
         category: "toilet-paper",
         quantities: {
           "id-1": 0,
           "id-2": 1
-        }
+        },
+        identifiers: []
       },
       {
         category: "chocolate",
         quantities: {
           "id-1": 5,
           "id-2": 3
-        }
+        },
+        identifiers: []
       }
     ];
 

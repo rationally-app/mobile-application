@@ -20,11 +20,13 @@ const endpoint = "https://myendpoint.com";
 const transactions = [
   {
     category: "product-1",
-    quantity: 1
+    quantity: 1,
+    identifiers: []
   },
   {
     category: "product-2",
-    quantity: 0
+    quantity: 0,
+    identifiers: []
   }
 ];
 const timestamp = new Date(2020, 3, 1);
@@ -49,7 +51,7 @@ const mockGetQuotaResponseMultipleId = {
 
 const postTransactionParams = {
   ids: ["S0000000J"],
-  transactions: [{ category: "product-1", quantity: 1 }],
+  transactions: [{ category: "product-1", quantity: 1, identifiers: [] }],
   key,
   endpoint
 };

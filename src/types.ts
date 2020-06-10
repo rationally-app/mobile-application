@@ -32,6 +32,9 @@ const PolicyQuantity = t.intersection([
   })
 ]);
 
+const PolicyIdentifier = t.type({ scannerType: t.string, label: t.string });
+const PolicyIdentifierInput = t.type({ label: t.string, value: t.string });
+
 const Policy = t.intersection([
   t.type({
     category: t.string,
@@ -41,7 +44,9 @@ const Policy = t.intersection([
   }),
   t.partial({
     description: t.string,
-    image: t.string
+    image: t.string,
+    identifiers: t.array(PolicyIdentifier),
+    type: t.string
   })
 ]);
 
@@ -49,6 +54,8 @@ export const Policies = t.type({
   policies: t.array(Policy)
 });
 
+export type PolicyIdentifierInput = t.TypeOf<typeof PolicyIdentifierInput>;
+export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;
 export type Policies = t.TypeOf<typeof Policies>;
 
@@ -69,10 +76,13 @@ export const Quota = t.type({
 export type ItemQuota = t.TypeOf<typeof ItemQuota>;
 export type Quota = t.TypeOf<typeof Quota>;
 
-const Transaction = t.type({
-  category: t.string,
-  quantity: t.number
-});
+const Transaction = t.intersection([
+  t.type({
+    category: t.string,
+    quantity: t.number
+  }),
+  t.partial({ identifiers: t.array(PolicyIdentifierInput) })
+]);
 
 export const PostTransactionResult = t.type({
   transactions: t.array(
