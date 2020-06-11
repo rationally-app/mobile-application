@@ -86,6 +86,25 @@ const mockQuotaResSingleId = {
     }
   ]
 };
+const mockQuotaResSingleIdWithIdentifiers = {
+  remainingQuota: [
+    {
+      category: "toilet-paper",
+      identifiers: [
+        { label: "first", value: "first identifier" },
+        { label: "last", value: "last identifier" }
+      ],
+      quantity: 1,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifiers: [],
+      quantity: 15,
+      transactionTime
+    }
+  ]
+};
 const mockQuotaResSingleIdNoQuota = {
   remainingQuota: [
     {
@@ -144,7 +163,7 @@ describe("useCart", () => {
   describe("fetch quota on initialisation", () => {
     it("should initialise the cart with the correct values", async () => {
       expect.assertions(3);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
+      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdWithIdentifiers);
 
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
@@ -158,9 +177,12 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifiers: [
+            { label: "first", value: "first identifier" },
+            { label: "last", value: "last identifier" }
+          ],
           lastTransactionTime: transactionTime,
-          maxQuantity: 2,
+          maxQuantity: 1,
           quantity: 1
         },
         {
