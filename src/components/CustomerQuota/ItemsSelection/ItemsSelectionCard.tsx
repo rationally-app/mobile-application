@@ -35,9 +35,10 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const identifiers = cart.flatMap(
     cartItem => getProduct(cartItem.category)?.identifiers
   );
+
   return (
     <View>
-      {identifiers[0] && identifiers.length > 0 ? (
+      {identifiers && identifiers.length > 0 ? (
         <CustomerCard nrics={nrics}>
           <View style={sharedStyles.resultWrapper}>
             {cart.map(cartItem => (
