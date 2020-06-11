@@ -10,6 +10,7 @@ import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
 import { useProductContext } from "../../../context/products";
+import content from "*.svg";
 
 interface ItemsSelectionCard {
   nrics: string[];
@@ -36,9 +37,15 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     cartItem => getProduct(cartItem.category)?.identifiers
   );
 
+  /* 
+  Current condition check if there is at least an identifier 
+  that exist (!undefined) in multiple categories, and removes '+add' 
+  button if that is true
+  */
   return (
     <View>
-      {identifiers && identifiers.length > 0 ? (
+      {!identifiers.every(identifier => !identifier) &&
+      identifiers.length > 0 ? (
         <CustomerCard nrics={nrics}>
           <View style={sharedStyles.resultWrapper}>
             {cart.map(cartItem => (
