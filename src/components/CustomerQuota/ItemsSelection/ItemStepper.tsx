@@ -21,21 +21,8 @@ export const ItemStepper: FunctionComponent<{
 
   useEffect(() => {
     if (stepperValue !== quantity) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       // No support for policies with identifiers of limit > 1
       updateCart(category, stepperValue, []);
-=======
-      updateCart(category, stepperValue, true);
->>>>>>> 801c530... feat: only allow checking out when both identifiers have been filled in
-=======
-      updateCart(category, stepperValue);
->>>>>>> 8529d73... fix: identifiers were not updated to cart correctly for multiple policies with identifiers
-=======
-      // No support for policies with identifiers of limit > 1
-      updateCart(category, stepperValue, []);
->>>>>>> 9974db7... fix: checkbox was resetting identifiers oops
     }
   }, [category, quantity, stepperValue, updateCart]);
 
