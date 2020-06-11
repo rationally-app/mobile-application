@@ -10,7 +10,6 @@ import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
 import { useProductContext } from "../../../context/products";
-import content from "*.svg";
 
 interface ItemsSelectionCard {
   nrics: string[];
