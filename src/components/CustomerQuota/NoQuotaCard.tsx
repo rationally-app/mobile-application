@@ -115,7 +115,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       const categoryName = policy?.name ?? category;
       const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
       itemTransactions.push({
-        itemHeader: `• ${categoryName} (${formattedDate})`,
+        itemHeader: `${categoryName} (${formattedDate})`,
         itemDetail:
           identifiers && identifiers.length > 0
             ? `${identifiers[0].value} — ${
