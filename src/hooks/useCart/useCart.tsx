@@ -205,11 +205,11 @@ export const useCart = (
 
       let numUnverifiedTransactions = 0;
       let numIdentifiers = 0;
+      let inputValues: string[] = [];
       let uniqueInput = false;
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifiers }) => {
-          const values = identifiers.flatMap(identifier => identifier.value);
           if (
             identifiers.length > 0 &&
             identifiers.some(identifier => !identifier.value)
@@ -217,7 +217,11 @@ export const useCart = (
             numUnverifiedTransactions += 1;
           }
 
-          uniqueInput = validateUniqueInputs(values) ? true : false;
+          const inputValue = identifiers.map(identifier => identifier.value);
+          inputValues = !inputValue.includes("")
+            ? inputValues.concat(inputValue)
+            : inputValues;
+          uniqueInput = validateUniqueInputs(inputValues) ? true : false;
 
           numIdentifiers += identifiers.length;
           return { category, quantity, identifiers };
