@@ -155,7 +155,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText="Enter NRIC manually"
+          cancelButtonText="Enter identification number manually"
         />
       )}
     </>
