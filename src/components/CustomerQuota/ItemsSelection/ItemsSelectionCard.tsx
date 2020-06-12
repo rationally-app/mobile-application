@@ -9,6 +9,7 @@ import { Feather } from "@expo/vector-icons";
 import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
+import { useProductContext } from "../../../context/products";
 
 interface ItemsSelectionCard {
   nrics: string[];
@@ -30,11 +31,26 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
+  const { getProduct } = useProductContext();
+  const identifiers = cart.flatMap(
+    cartItem => getProduct(cartItem.category)?.identifiers
+  );
+
+  /* 
+  Current condition check if there is at least an identifier 
+  that exist (!undefined) in multiple categories, and removes '+add' 
+  button if that is true
+  */
   return (
     <View>
       <CustomerCard
         nrics={nrics}
-        onAddNric={() => setIsAddUserModalVisible(true)}
+        onAddNric={
+          !identifiers.every(identifier => !identifier) &&
+          identifiers.length > 0
+            ? undefined
+            : () => setIsAddUserModalVisible(true)
+        }
       >
         <View style={sharedStyles.resultWrapper}>
           {cart.map(cartItem => (
@@ -46,6 +62,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           ))}
         </View>
       </CustomerCard>
+
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         <View
           style={[
