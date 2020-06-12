@@ -206,7 +206,7 @@ export const useCart = (
       let numUnverifiedTransactions = 0;
       let numIdentifiers = 0;
       let inputValues: string[] = [];
-      let uniqueInput = false;
+      let hasUniqueInputs = false;
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifiers }) => {
@@ -221,7 +221,7 @@ export const useCart = (
           inputValues = !inputValue.includes("")
             ? inputValues.concat(inputValue)
             : inputValues;
-          uniqueInput = validateUniqueInputs(inputValues) ? true : false;
+          hasUniqueInputs = validateUniqueInputs(inputValues) ? true : false;
 
           numIdentifiers += identifiers.length;
           return { category, quantity, identifiers };
@@ -245,7 +245,7 @@ export const useCart = (
         return;
       }
 
-      if (!uniqueInput) {
+      if (!hasUniqueInputs) {
         setError(new Error("Please enter unique codes to checkout"));
         setCartState("DEFAULT");
         return;
