@@ -10,7 +10,11 @@ export const getCheckoutMessages = (productType?: string): CheckoutMessage => {
       return {
         title: "Redeemed!",
         description: "Item(s) redeemed:",
+<<<<<<< HEAD
         ctaButtonText: "Next identity"
+=======
+        ctaButtonText: "Next citizen"
+>>>>>>> 167b27e... style: amend checkout message
       };
     case "purchase":
     default:
