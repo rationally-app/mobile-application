@@ -242,7 +242,7 @@ export const useCart = (
         setError(
           new Error(
             `Please enter ${
-              numIdentifiers === 1 ? "code" : "unique codes"
+              numIdentifiers === 1 ? "code" : "details"
             } to checkout`
           )
         );
