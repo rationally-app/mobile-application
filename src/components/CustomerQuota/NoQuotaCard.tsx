@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { compareDesc } from "date-fns";
 import { differenceInSeconds, format, formatDistance } from "date-fns";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { CustomerCard } from "./CustomerCard";
 import { AppText } from "../Layout/AppText";
 import { color, size, fontSize } from "../../common/styles";
@@ -141,7 +141,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
             sharedStyles.failureResultWrapper
           ]}
         >
-          <AppText style={sharedStyles.emoji}>❌</AppText>
+          <Text style={sharedStyles.emoji}>❌</Text>
           <AppText style={sharedStyles.statusTitleWrapper}>
             {secondsFromLatestTransaction > 0 ? (
               secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
