@@ -622,7 +622,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter unique codes to checkout' when identifier values are identical", async () => {
+    it("should set error with message 'Please enter unique codes to checkout' when identifier values are identical in the same category", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
