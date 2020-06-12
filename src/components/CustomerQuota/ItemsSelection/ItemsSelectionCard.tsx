@@ -43,7 +43,26 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   */
   return (
     <View>
-      {!identifiers.every(identifier => !identifier) &&
+      <CustomerCard
+        nrics={nrics}
+        onAddNric={
+          !identifiers.every(identifier => !identifier) &&
+          identifiers.length > 0
+            ? undefined
+            : () => setIsAddUserModalVisible(true)
+        }
+      >
+        <View style={sharedStyles.resultWrapper}>
+          {cart.map(cartItem => (
+            <Item
+              key={cartItem.category}
+              cartItem={cartItem}
+              updateCart={updateCart}
+            />
+          ))}
+        </View>
+      </CustomerCard>
+      {/* {!identifiers.every(identifier => !identifier) &&
       identifiers.length > 0 ? (
         <CustomerCard nrics={nrics}>
           <View style={sharedStyles.resultWrapper}>
@@ -71,7 +90,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             ))}
           </View>
         </CustomerCard>
-      )}
+      )} */}
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         <View
           style={[
