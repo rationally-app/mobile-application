@@ -65,7 +65,8 @@ const ItemQuota = t.intersection([
     quantity: t.number
   }),
   t.partial({
-    transactionTime: DateFromNumber
+    transactionTime: DateFromNumber,
+    identifiers: t.array(PolicyIdentifierInput)
   })
 ]);
 

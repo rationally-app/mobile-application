@@ -65,23 +65,25 @@ const mergeWithCart = (
 
       return productOneOrder - productTwoOrder;
     })
-    .map(({ category, quantity: maxQuantity, transactionTime }) => {
-      const [existingItem] = getItem(cart, category);
+    .map(
+      ({ category, quantity: maxQuantity, transactionTime, identifiers }) => {
+        const [existingItem] = getItem(cart, category);
 
-      const product = getProduct(category);
-      const defaultQuantity = product?.quantity.default || 0;
+        const product = getProduct(category);
+        const defaultQuantity = product?.quantity.default || 0;
 
-      return {
-        category,
-        quantity: Math.min(
+        return {
+          category,
+          quantity: Math.min(
+            maxQuantity,
+            existingItem?.quantity || defaultQuantity
+          ),
           maxQuantity,
-          existingItem?.quantity || defaultQuantity
-        ),
-        maxQuantity,
-        lastTransactionTime: transactionTime,
-        identifiers: []
-      };
-    });
+          lastTransactionTime: transactionTime,
+          identifiers: identifiers || []
+        };
+      }
+    );
 };
 
 const hasNoQuota = (quota: Quota): boolean =>

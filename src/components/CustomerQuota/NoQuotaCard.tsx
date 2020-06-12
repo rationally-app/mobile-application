@@ -13,10 +13,28 @@ import { useProductContext } from "../../context/products";
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
 const styles = StyleSheet.create({
-  itemTransactions: {
-    marginTop: size(1),
+  itemRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "baseline"
+  },
+  itemHeader: {
+    marginTop: size(1.5),
     lineHeight: 1.5 * fontSize(0),
-    marginBottom: -size(2)
+    marginBottom: -size(2),
+    fontFamily: "brand-bold"
+  },
+  itemDetailWrapper: {
+    flexDirection: "row"
+  },
+  itemDetailBorder: {
+    borderLeftWidth: 1,
+    borderLeftColor: color("grey", 30),
+    marginLeft: size(1),
+    marginRight: size(1)
+  },
+  itemDetail: {
+    fontSize: fontSize(-1)
   }
 });
 
@@ -44,6 +62,23 @@ const RecentTransactionTitle: FunctionComponent<{
   </>
 );
 
+const ItemTransaction: FunctionComponent<{
+  itemHeader: string;
+  itemDetail: string;
+}> = ({ itemHeader, itemDetail }) => (
+  <>
+    <View style={styles.itemRow}>
+      <AppText style={styles.itemHeader}>{itemHeader}</AppText>
+    </View>
+    {!!itemDetail && (
+      <View style={styles.itemDetailWrapper}>
+        <View style={styles.itemDetailBorder} />
+        <AppText style={styles.itemDetail}>{itemDetail}</AppText>
+      </View>
+    )}
+  </>
+);
+
 const NoPreviousTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>Limit reached.</AppText>
 );
@@ -66,16 +101,28 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 }) => {
   const { getProduct } = useProductContext();
 
+  const policyType =
+    (cart.length > 0 && getProduct(cart[0].category)?.type) || "purchase";
+
   const sortedCart = cart.sort((item1, item2) =>
     compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
   );
 
-  let itemTransactions = "";
-  sortedCart.forEach(({ category, lastTransactionTime }) => {
+  const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
+  sortedCart.forEach(({ category, lastTransactionTime, identifiers }) => {
     if (lastTransactionTime) {
-      const categoryName = getProduct(category)?.name ?? category;
+      const policy = getProduct(category);
+      const categoryName = policy?.name ?? category;
       const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
-      itemTransactions += `• ${categoryName} (${formattedDate})\n`;
+      itemTransactions.push({
+        itemHeader: `${categoryName} (${formattedDate})`,
+        itemDetail:
+          identifiers && identifiers.length > 0
+            ? `${identifiers[0].value} — ${
+                identifiers[identifiers.length - 1].value
+              }`
+            : ""
+      });
     }
   });
 
@@ -113,10 +160,18 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           </AppText>
           {itemTransactions.length > 0 && (
             <View>
-              <AppText>When limits were reached:</AppText>
-              <AppText style={styles.itemTransactions}>
-                {itemTransactions}
+              <AppText style={{ marginBottom: size(1) }}>
+                Items {policyType === "redeem" ? "redeemed" : "purchased"}:
               </AppText>
+              {itemTransactions.map(
+                ({ itemHeader, itemDetail }, index: number) => (
+                  <ItemTransaction
+                    key={index}
+                    itemHeader={itemHeader}
+                    itemDetail={itemDetail}
+                  />
+                )
+              )}
             </View>
           )}
         </View>
