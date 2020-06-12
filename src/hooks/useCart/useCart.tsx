@@ -103,6 +103,7 @@ export const useCart = (
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
+  const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
 
   const clearError = useCallback((): void => setError(undefined), []);
 
@@ -123,12 +124,7 @@ export const useCart = (
         } else {
           setCartState("DEFAULT");
         }
-
-        // Note that we must use a callback within this setState to avoid
-        // having cart as a dependency which causes an infinite loop.
-        setCart(cart =>
-          mergeWithCart(cart, quotaResponse.remainingQuota, getProduct)
-        );
+        setQuotaResponse(quotaResponse);
       } catch (e) {
         // Cart will remain in FETCHING_QUOTA state.
         if (e instanceof PolicyError) {
@@ -161,6 +157,19 @@ export const useCart = (
     products.length,
     setProducts
   ]);
+
+  /**
+   * Merge quota response with current cart whenever quota response or products change.
+   */
+  useEffect(() => {
+    if (quotaResponse) {
+      // Note that we must use a callback within this setState to avoid
+      // having cart as a dependency which causes an infinite loop.
+      setCart(cart =>
+        mergeWithCart(cart, quotaResponse.remainingQuota, getProduct)
+      );
+    }
+  }, [quotaResponse, products, getProduct]);
 
   /**
    * Update quantity of an item in the cart.
