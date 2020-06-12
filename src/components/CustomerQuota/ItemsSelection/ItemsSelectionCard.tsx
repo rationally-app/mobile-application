@@ -62,35 +62,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           ))}
         </View>
       </CustomerCard>
-      {/* {!identifiers.every(identifier => !identifier) &&
-      identifiers.length > 0 ? (
-        <CustomerCard nrics={nrics}>
-          <View style={sharedStyles.resultWrapper}>
-            {cart.map(cartItem => (
-              <Item
-                key={cartItem.category}
-                cartItem={cartItem}
-                updateCart={updateCart}
-              />
-            ))}
-          </View>
-        </CustomerCard>
-      ) : (
-        <CustomerCard
-          nrics={nrics}
-          onAddNric={() => setIsAddUserModalVisible(true)}
-        >
-          <View style={sharedStyles.resultWrapper}>
-            {cart.map(cartItem => (
-              <Item
-                key={cartItem.category}
-                cartItem={cartItem}
-                updateCart={updateCart}
-              />
-            ))}
-          </View>
-        </CustomerCard>
-      )} */}
+
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         <View
           style={[
