@@ -98,7 +98,7 @@ export const CustomerCard: FunctionComponent<{
       <Feather name="user" size={size(3)} color={color("grey", 0)} />
       <View style={styles.headerText}>
         <AppText style={styles.nricLabel}>
-          Customer NRIC{nrics.length > 1 ? "s" : ""}
+          Identification number{nrics.length > 1 ? "s" : ""}
         </AppText>
         {nrics.map(nric => (
           <AppText key={nric} style={styles.nricText}>
