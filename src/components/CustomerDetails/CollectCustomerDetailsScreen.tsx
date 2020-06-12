@@ -134,7 +134,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             )}
             <Card>
               <AppText>
-                Check the number of items your customer can purchase
+                Check the number of item(s) eligible for redemption
               </AppText>
               <InputNricSection
                 openCamera={() => setShouldShowCamera(true)}
