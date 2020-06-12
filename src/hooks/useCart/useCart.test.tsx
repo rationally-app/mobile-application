@@ -622,7 +622,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter unique codes to checkout' when identifier values are identical in the same category", async () => {
+    it("should set error with message 'Please enter unique details to checkout' when identifier values are identical in the same category", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -639,7 +639,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Please enter unique codes to checkout"
+        "Please enter unique details to checkout"
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -663,7 +663,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter unique codes to checkout' when some identifier values are identical across different categories", async () => {
+    it("should set error with message 'Please enter unique details to checkout' when some identifier values are identical across different categories", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -684,7 +684,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Please enter unique codes to checkout"
+        "Please enter unique details to checkout"
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
