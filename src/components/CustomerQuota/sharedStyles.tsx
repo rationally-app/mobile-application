@@ -28,7 +28,7 @@ export const sharedStyles = StyleSheet.create({
   emoji: {
     fontSize: fontSize(3),
     marginBottom: size(2),
-    marginTop: size(1)
+    marginTop: size(2)
   },
   statusTitleWrapper: {
     marginBottom: size(2)

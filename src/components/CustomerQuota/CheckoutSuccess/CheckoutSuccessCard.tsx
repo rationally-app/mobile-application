@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
@@ -50,7 +50,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             sharedStyles.successfulResultWrapper
           ]}
         >
-          <AppText style={sharedStyles.emoji}>✅</AppText>
+          <Text style={sharedStyles.emoji}>✅</Text>
           <AppText style={sharedStyles.statusTitleWrapper}>
             <AppText style={sharedStyles.statusTitle}>{title}</AppText>
           </AppText>
