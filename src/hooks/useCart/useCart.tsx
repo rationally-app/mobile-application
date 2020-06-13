@@ -210,29 +210,26 @@ export const useCart = (
 
       let numUnverifiedTransactions = 0;
       let numIdentifiers = 0;
-      const identifierInputValues: string[] = [];
+      const identiferValues: string[] = [];
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
-        .map(({ category, quantity, identifiers: identifierInputs }) => {
+        .map(({ category, quantity, identifiers }) => {
           if (
-            identifierInputs.length > 0 &&
-            identifierInputs.some(identifier => !identifier.value)
+            identifiers.length > 0 &&
+            identifiers.some(identifier => !identifier.value)
           ) {
             numUnverifiedTransactions += 1;
           } else {
-            identifierInputValues.push(
-              ...identifierInputs.map(idenfitier => idenfitier.value)
+            identiferValues.push(
+              ...identifiers.map(idenfitier => idenfitier.value)
             );
           }
 
-          numIdentifiers += identifierInputs.length;
-          return { category, quantity, identifiers: identifierInputs };
+          numIdentifiers += identifiers.length;
+          return { category, quantity, identifiers: identifiers };
         });
 
-      if (
-        numUnverifiedTransactions > 0 ||
-        !isUniqueList(identifierInputValues)
-      ) {
+      if (numUnverifiedTransactions > 0 || !isUniqueList(identiferValues)) {
         setError(
           new Error(
             `Please enter ${
