@@ -89,8 +89,8 @@ const mergeWithCart = (
 const hasNoQuota = (quota: Quota): boolean =>
   quota.remainingQuota.every(item => item.quantity === 0);
 
-const validateUniqueInputs = (test: string[]): boolean =>
-  new Set(test).size === test.length;
+const isUniqueList = (list: string[]): boolean =>
+  new Set(list).size === list.length;
 
 export const useCart = (
   ids: string[],
@@ -205,29 +205,29 @@ export const useCart = (
 
       let numUnverifiedTransactions = 0;
       let numIdentifiers = 0;
-      let inputValues: string[] = [];
-      let hasUniqueInputs = false;
+      const identifierInputValues: string[] = [];
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
-        .map(({ category, quantity, identifiers }) => {
+        .map(({ category, quantity, identifiers: identifierInputs }) => {
           if (
-            identifiers.length > 0 &&
-            identifiers.some(identifier => !identifier.value)
+            identifierInputs.length > 0 &&
+            identifierInputs.some(identifier => !identifier.value)
           ) {
             numUnverifiedTransactions += 1;
+          } else {
+            identifierInputValues.push(
+              ...identifierInputs.map(idenfitier => idenfitier.value)
+            );
           }
 
-          const inputValue = identifiers.map(identifier => identifier.value);
-          inputValues = !inputValue.includes("")
-            ? inputValues.concat(inputValue)
-            : inputValues;
-          hasUniqueInputs = validateUniqueInputs(inputValues) ? true : false;
-
-          numIdentifiers += identifiers.length;
-          return { category, quantity, identifiers };
+          numIdentifiers += identifierInputs.length;
+          return { category, quantity, identifiers: identifierInputs };
         });
 
-      if (numUnverifiedTransactions > 0) {
+      if (
+        numUnverifiedTransactions > 0 ||
+        !isUniqueList(identifierInputValues)
+      ) {
         setError(
           new Error(
             `Please enter ${
@@ -241,12 +241,6 @@ export const useCart = (
 
       if (transactions.length === 0) {
         setError(new Error("Please select at least one item to checkout"));
-        setCartState("DEFAULT");
-        return;
-      }
-
-      if (!hasUniqueInputs) {
-        setError(new Error("Please enter unique codes to checkout"));
         setCartState("DEFAULT");
         return;
       }
