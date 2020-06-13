@@ -218,6 +218,7 @@ export const useCart = (
       setCartState("CHECKING_OUT");
 
       let numUnverifiedTransactions = 0;
+      let numIdentifiers = 0;
       const identiferValues: string[] = [];
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
@@ -233,17 +234,18 @@ export const useCart = (
             );
           }
 
+          numIdentifiers += identifiers.length;
           return { category, quantity, identifiers: identifiers };
         });
 
-      if (numUnverifiedTransactions > 0) {
-        setError(new Error("Please enter details to checkout"));
-        setCartState("DEFAULT");
-        return;
-      }
-
-      if (!isUniqueList(identiferValues)) {
-        setError(new Error("Please enter unique details to checkout"));
+      if (numUnverifiedTransactions > 0 || !isUniqueList(identiferValues)) {
+        setError(
+          new Error(
+            `Please enter ${
+              numIdentifiers === 1 ? "" : "unique "
+            }details to checkout`
+          )
+        );
         setCartState("DEFAULT");
         return;
       }
