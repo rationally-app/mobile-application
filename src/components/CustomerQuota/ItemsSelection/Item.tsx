@@ -40,7 +40,7 @@ export const Item: FunctionComponent<{
       ) : (
         <ItemStepper cartItem={cartItem} updateCart={updateCart} />
       )}
-      {identifiers && identifiers.length > 0 && (
+      {cartItem.maxQuantity > 0 && identifiers && identifiers.length > 0 && (
         <ItemIdentifiersCard
           cartItem={cartItem}
           identifierInputs={identifierInputs}
