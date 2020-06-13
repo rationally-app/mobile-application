@@ -576,7 +576,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter code to checkout' when there is one identifier and it is empty", async () => {
+    it("should set error with message 'Please enter details to checkout' when there is one identifier and it is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce({
         remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
@@ -608,7 +608,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Please enter code to checkout"
+        "Please enter details to checkout"
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([

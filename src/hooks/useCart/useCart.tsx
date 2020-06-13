@@ -238,14 +238,14 @@ export const useCart = (
           return { category, quantity, identifiers: identifiers };
         });
 
-      if (numUnverifiedTransactions > 0 || !isUniqueList(identiferValues)) {
-        setError(
-          new Error(
-            `Please enter ${
-              numIdentifiers === 1 ? "" : "unique"
-            } details to checkout`
-          )
-        );
+      if (numUnverifiedTransactions > 0) {
+        setError(new Error("Please enter details to checkout"));
+        setCartState("DEFAULT");
+        return;
+      }
+
+      if (!isUniqueList(identiferValues)) {
+        setError(new Error("Please enter unique details to checkout"));
         setCartState("DEFAULT");
         return;
       }
