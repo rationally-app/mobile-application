@@ -137,11 +137,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
           <IdScanner
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
-<<<<<<< HEAD
             cancelButtonText="Enter ID manually"
-=======
-            cancelButtonText="Enter identification number manually"
->>>>>>> a87f56d... style: amend camera exit message
           />
         </View>
       ) : (
