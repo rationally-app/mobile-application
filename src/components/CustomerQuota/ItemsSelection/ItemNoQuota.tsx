@@ -31,7 +31,8 @@ export const ItemNoQuota: FunctionComponent<{
 }> = ({ cartItem }) => {
   const { category, maxQuantity } = cartItem;
   const { getProduct } = useProductContext();
-  const { name = category, description, quantity } = getProduct(category) || {};
+  const { name = category, description, quantity, type } =
+    getProduct(category) || {};
 
   return (
     <View style={[sharedStyles.wrapper, sharedStyles.wrapperDefault]}>
@@ -44,7 +45,9 @@ export const ItemNoQuota: FunctionComponent<{
         />
       </View>
       <View style={styles.feedbackWrapper}>
-        <AppText style={styles.feedbackText}>Cannot{"\n"}purchase</AppText>
+        <AppText style={styles.feedbackText}>
+          {type === "redeem" ? "Not\neligible" : "Cannot\npurchase"}
+        </AppText>
       </View>
     </View>
   );
