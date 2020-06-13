@@ -51,6 +51,29 @@ jobs:
       - run:
           name: expo_publish_channel
           command: expo publish --non-interactive --release-channel storybook-default
+      - run:
+          name: expo_logout
+          command: expo logout
+  deploy_master_to_musket:
+    docker:
+      - image: "openattestation/expo-build:latest"
+    steps:
+      - checkout
+      - run:
+          name: install
+          command: npm install
+      - run:
+          name: expo_login
+          command: expo login -u $EXPO_USERNAME_MUSKET -p $EXPO_CLI_PASSWORD_MUSKET --non-interactive
+      - run:
+          name: expo_publish_channel
+          command: expo publish --non-interactive --release-channel default
+      - run:
+          name: expo_publish_channel
+          command: expo publish --non-interactive --release-channel storybook-default
+      - run:
+          name: expo_logout
+          command: expo logout
 workflows:
   version: 2
   test_and_publish:
@@ -63,6 +86,12 @@ workflows:
             branches:
               ignore: master
       - deploy_master:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - deploy_master_to_musket:
           requires:
             - build
           filters:
