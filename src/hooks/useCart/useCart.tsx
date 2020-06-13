@@ -37,7 +37,7 @@ export type CartHook = {
   updateCart: (
     category: string,
     quantity: number,
-    identifiers: PolicyIdentifierInput[]
+    identifiers?: PolicyIdentifierInput[]
   ) => void;
   checkoutCart: () => void;
   checkoutResult?: PostTransactionResult;
@@ -71,6 +71,11 @@ const mergeWithCart = (
 
         const product = getProduct(category);
         const defaultQuantity = product?.quantity.default || 0;
+        const defaultIdentifiers =
+          product?.identifiers?.map(identifier => ({
+            label: identifier.label,
+            value: ""
+          })) || [];
 
         return {
           category,
@@ -80,7 +85,7 @@ const mergeWithCart = (
           ),
           maxQuantity,
           lastTransactionTime: transactionTime,
-          identifiers: identifiers || []
+          identifiers: identifiers || defaultIdentifiers
         };
       }
     );
@@ -89,8 +94,8 @@ const mergeWithCart = (
 const hasNoQuota = (quota: Quota): boolean =>
   quota.remainingQuota.every(item => item.quantity === 0);
 
-const validateUniqueInputs = (test: string[]): boolean =>
-  new Set(test).size === test.length;
+const isUniqueList = (list: string[]): boolean =>
+  new Set(list).size === list.length;
 
 export const useCart = (
   ids: string[],
@@ -188,7 +193,7 @@ export const useCart = (
             {
               ...item,
               quantity,
-              identifiers
+              identifiers: identifiers || cart[itemIdx].identifiers
             },
             ...cart.slice(itemIdx + 1)
           ]);
@@ -214,8 +219,7 @@ export const useCart = (
 
       let numUnverifiedTransactions = 0;
       let numIdentifiers = 0;
-      let inputValues: string[] = [];
-      let hasUniqueInputs = false;
+      const identiferValues: string[] = [];
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifiers }) => {
@@ -224,19 +228,17 @@ export const useCart = (
             identifiers.some(identifier => !identifier.value)
           ) {
             numUnverifiedTransactions += 1;
+          } else {
+            identiferValues.push(
+              ...identifiers.map(identifier => identifier.value)
+            );
           }
 
-          const inputValue = identifiers.map(identifier => identifier.value);
-          inputValues = !inputValue.includes("")
-            ? inputValues.concat(inputValue)
-            : inputValues;
-          hasUniqueInputs = validateUniqueInputs(inputValues) ? true : false;
-
           numIdentifiers += identifiers.length;
-          return { category, quantity, identifiers };
+          return { category, quantity, identifiers: identifiers };
         });
 
-      if (numUnverifiedTransactions > 0) {
+      if (numUnverifiedTransactions > 0 || !isUniqueList(identiferValues)) {
         setError(
           new Error(
             `Please enter ${
@@ -250,12 +252,6 @@ export const useCart = (
 
       if (transactions.length === 0) {
         setError(new Error("Please select at least one item to checkout"));
-        setCartState("DEFAULT");
-        return;
-      }
-
-      if (!hasUniqueInputs) {
-        setError(new Error("Please enter unique codes to checkout"));
         setCartState("DEFAULT");
         return;
       }

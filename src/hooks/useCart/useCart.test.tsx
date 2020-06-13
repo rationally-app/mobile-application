@@ -296,7 +296,7 @@ describe("useCart", () => {
       );
 
       await waitForNextUpdate();
-      await wait(() => result.current.updateCart("chocolate", 5, []));
+      await wait(() => result.current.updateCart("chocolate", 5));
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -325,7 +325,7 @@ describe("useCart", () => {
       );
 
       await waitForNextUpdate();
-      await wait(() => result.current.updateCart("chocolate", 5, []));
+      await wait(() => result.current.updateCart("chocolate", 5));
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -374,7 +374,7 @@ describe("useCart", () => {
       });
 
       await wait(() => {
-        result.current.updateCart("chocolate", -5, []);
+        result.current.updateCart("chocolate", -5);
       });
 
       expect(result.current.error?.message).toBe("Invalid quantity");
@@ -405,7 +405,7 @@ describe("useCart", () => {
       });
 
       await wait(() => {
-        result.current.updateCart("chocolate", 100, []);
+        result.current.updateCart("chocolate", 100);
       });
       expect(result.current.error?.message).toBe("Insufficient quota");
       expect(result.current.cart).toStrictEqual([
@@ -435,7 +435,7 @@ describe("useCart", () => {
       });
 
       await wait(() => {
-        result.current.updateCart("eggs", 1, []);
+        result.current.updateCart("eggs", 1);
       });
       expect(result.current.error?.message).toBe("Category does not exist");
       expect(result.current.cart).toStrictEqual([
@@ -467,8 +467,8 @@ describe("useCart", () => {
       });
 
       await wait(() => {
-        result.current.updateCart("toilet-paper", 2, []);
-        result.current.updateCart("chocolate", 5, []);
+        result.current.updateCart("toilet-paper", 2);
+        result.current.updateCart("chocolate", 5);
       });
 
       mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
@@ -509,7 +509,7 @@ describe("useCart", () => {
       });
 
       await wait(() => {
-        result.current.updateCart("toilet-paper", 0, []);
+        result.current.updateCart("toilet-paper", 0);
         result.current.checkoutCart();
       });
 
@@ -720,8 +720,8 @@ describe("useCart", () => {
       });
 
       await wait(() => {
-        result.current.updateCart("toilet-paper", 2, []);
-        result.current.updateCart("chocolate", 5, []);
+        result.current.updateCart("toilet-paper", 2);
+        result.current.updateCart("chocolate", 5);
       });
 
       mockPostTransaction.mockRejectedValueOnce(
