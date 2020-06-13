@@ -221,7 +221,7 @@ export const useCart = (
             numUnverifiedTransactions += 1;
           } else {
             identiferValues.push(
-              ...identifiers.map(idenfitier => idenfitier.value)
+              ...identifiers.map(identifier => identifier.value)
             );
           }
 
