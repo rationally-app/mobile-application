@@ -22,7 +22,7 @@ export const ItemStepper: FunctionComponent<{
   useEffect(() => {
     if (stepperValue !== quantity) {
       // No support for policies with identifiers of limit > 1
-      updateCart(category, stepperValue, []);
+      updateCart(category, stepperValue);
     }
   }, [category, quantity, stepperValue, updateCart]);
 

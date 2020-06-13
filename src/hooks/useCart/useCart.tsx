@@ -37,7 +37,7 @@ export type CartHook = {
   updateCart: (
     category: string,
     quantity: number,
-    identifiers: PolicyIdentifierInput[]
+    identifiers?: PolicyIdentifierInput[]
   ) => void;
   checkoutCart: () => void;
   checkoutResult?: PostTransactionResult;
@@ -71,6 +71,11 @@ const mergeWithCart = (
 
         const product = getProduct(category);
         const defaultQuantity = product?.quantity.default || 0;
+        const defaultIdentifiers =
+          product?.identifiers?.map(identifier => ({
+            label: identifier.label,
+            value: ""
+          })) || [];
 
         return {
           category,
@@ -80,7 +85,7 @@ const mergeWithCart = (
           ),
           maxQuantity,
           lastTransactionTime: transactionTime,
-          identifiers: identifiers || []
+          identifiers: identifiers || defaultIdentifiers
         };
       }
     );
@@ -179,7 +184,7 @@ export const useCart = (
             {
               ...item,
               quantity,
-              identifiers
+              identifiers: identifiers || cart[itemIdx].identifiers
             },
             ...cart.slice(itemIdx + 1)
           ]);
