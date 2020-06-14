@@ -242,8 +242,8 @@ export const useCart = (
         setError(
           new Error(
             `Please enter ${
-              numIdentifiers === 1 ? "code" : "unique codes"
-            } to checkout`
+              numIdentifiers === 1 ? "" : "unique "
+            }details to checkout`
           )
         );
         setCartState("DEFAULT");

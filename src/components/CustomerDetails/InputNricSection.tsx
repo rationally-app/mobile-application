@@ -57,7 +57,7 @@ export const InputNricSection: FunctionComponent<InputNricSection> = ({
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text="Scan customer's NRIC"
+          text="Scan identification"
           icon={
             <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
           }
@@ -73,7 +73,7 @@ export const InputNricSection: FunctionComponent<InputNricSection> = ({
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <InputWithLabel
-            label="Enter NRIC number"
+            label="Enter identification number"
             value={nricInput}
             onChange={({ nativeEvent: { text } }) => setNricInput(text)}
             onSubmitEditing={submitNric}

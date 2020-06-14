@@ -177,7 +177,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text="Next customer" onPress={onCancel} fullWidth={true} />
+        <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
       </View>
     </View>
   );
