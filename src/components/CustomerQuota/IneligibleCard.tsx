@@ -7,7 +7,7 @@ import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 
 const IneligibleTransactionTitle: FunctionComponent = () => (
-  <AppText style={sharedStyles.statusTitle}>Limit reached.</AppText>
+  <AppText style={sharedStyles.statusTitle}>Not eligible</AppText>
 );
 
 const IneligibleTransactionDescription: FunctionComponent = () => (
