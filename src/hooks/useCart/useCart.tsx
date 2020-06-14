@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { getQuota, postTransaction, QuotaError } from "../../services/quota";
+import {
+  getQuota,
+  postTransaction,
+  QuotaError,
+  EligibilityError
+} from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { getPolicies, PolicyError } from "../../services/policies";
-
-import { getEligibility, EligibilityError } from "../../services/eligibility";
-
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
@@ -123,15 +125,6 @@ export const useCart = (
     const fetchQuota = async (): Promise<void> => {
       setCartState("FETCHING_QUOTA");
       try {
-        const eligibilityResponse = await getEligibility(
-          ids,
-          authKey,
-          endpoint
-        );
-        if (eligibilityResponse) {
-          setCartState("NOT_ELIGIBLE");
-          return;
-        }
         if (products.length === 0) {
           const response = await getPolicies(authKey, endpoint);
           setProducts(response.policies);
@@ -144,13 +137,9 @@ export const useCart = (
         }
         setQuotaResponse(quotaResponse);
       } catch (e) {
-        // Cart will remain in FETCHING_QUOTA state.
         if (e instanceof EligibilityError) {
-          setError(
-            new Error(
-              "Encountered an issue checking eligibility. We've noted this down and are looking into it!"
-            )
-          );
+          setCartState("NOT_ELIGIBLE");
+          // Cart will remain in FETCHING_QUOTA state.
         } else if (e instanceof PolicyError) {
           setError(
             new Error(
