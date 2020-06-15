@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { getQuota, postTransaction, QuotaError } from "../../services/quota";
+import {
+  getQuota,
+  postTransaction,
+  QuotaError,
+  NotEligibleError
+} from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { getPolicies, PolicyError } from "../../services/policies";
 import { usePrevious } from "../usePrevious";
@@ -29,7 +34,8 @@ type CartState =
   | "NO_QUOTA"
   | "DEFAULT"
   | "CHECKING_OUT"
-  | "PURCHASED";
+  | "PURCHASED"
+  | "NOT_ELIGIBLE";
 
 export type CartHook = {
   cartState: CartState;
@@ -131,8 +137,10 @@ export const useCart = (
         }
         setQuotaResponse(quotaResponse);
       } catch (e) {
-        // Cart will remain in FETCHING_QUOTA state.
-        if (e instanceof PolicyError) {
+        if (e instanceof NotEligibleError) {
+          setCartState("NOT_ELIGIBLE");
+          // Cart will remain in FETCHING_QUOTA state.
+        } else if (e instanceof PolicyError) {
           setError(
             new Error(
               "Encountered an issue obtaining policies. We've noted this down and are looking into it!"

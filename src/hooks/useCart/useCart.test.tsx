@@ -4,7 +4,11 @@ import { useCart } from "./useCart";
 import { wait } from "@testing-library/react-native";
 import { ProductContext } from "../../context/products";
 import { Policy } from "../../types";
-import { getQuota, postTransaction } from "../../services/quota";
+import {
+  getQuota,
+  postTransaction,
+  NotEligibleError
+} from "../../services/quota";
 import { getPolicies } from "../../services/policies";
 
 jest.mock("../../services/quota");
@@ -16,6 +20,7 @@ const mockGetPolicies = getPolicies as jest.Mock;
 
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
+const eligibleIds = ["ID1", "ID2"];
 
 const defaultProducts: Policy[] = [
   {
@@ -159,6 +164,13 @@ const mockPostTransactionResult = {
   ]
 };
 
+const mockIdNotEligible: any = (id: string) => {
+  if (!eligibleIds.includes(id)) {
+    const errorMessage = "User is not eligible";
+    throw new NotEligibleError(errorMessage);
+  }
+};
+
 describe("useCart", () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -228,6 +240,22 @@ describe("useCart", () => {
           quantity: 0
         }
       ]);
+    });
+
+    it("should set cart state to be NOT_ELIGIBLE when NotEligibleError is thrown, and would not continue with fetching quota", async () => {
+      expect.assertions(1);
+
+      const ids = ["ID_NOT_ELIGIBLE"];
+
+      mockGetQuota.mockImplementation(() => {
+        mockIdNotEligible(ids[0]);
+      });
+
+      const { result } = renderHook(() => useCart(ids, key, endpoint), {
+        wrapper: Wrapper
+      });
+
+      expect(result.current.cartState).toBe("NOT_ELIGIBLE");
     });
 
     it("should fetch policies if there are no products in context", async () => {
