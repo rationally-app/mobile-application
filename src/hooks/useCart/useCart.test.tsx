@@ -164,7 +164,7 @@ const mockPostTransactionResult = {
   ]
 };
 
-const mockQuotaNotEligible: any = (id: string) => {
+const mockIdNotEligible: any = (id: string) => {
   if (!eligibleIds.includes(id)) {
     const errorMessage = "User is not eligible";
     throw new NotEligibleError(errorMessage);
@@ -248,7 +248,7 @@ describe("useCart", () => {
       const ids = ["ID_NOT_ELIGIBLE"];
 
       mockGetQuota.mockImplementation(() => {
-        mockQuotaNotEligible(ids[0]);
+        mockIdNotEligible(ids[0]);
       });
 
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
