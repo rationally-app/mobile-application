@@ -3,10 +3,10 @@ import { Transaction, Quota, PostTransactionResult } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import * as Sentry from "sentry-expo";
 
-export class EligibilityError extends Error {
+export class NotEligibleError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "EligibilityError";
+    this.name = "NotEligibleError";
   }
 }
 
@@ -116,7 +116,7 @@ export const liveGetQuota = async (
       Sentry.captureException(e);
     }
     if (e.message === "User is not eligible") {
-      throw new EligibilityError(e.message);
+      throw new NotEligibleError(e.message);
     }
     throw new QuotaError(e.message);
   }

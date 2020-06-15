@@ -7,7 +7,7 @@ import { Policy } from "../../types";
 import {
   getQuota,
   postTransaction,
-  EligibilityError
+  NotEligibleError
 } from "../../services/quota";
 import { getPolicies } from "../../services/policies";
 
@@ -167,7 +167,7 @@ const mockPostTransactionResult = {
 const mockQuotaNotEligible = (id: string) => {
   if (!eligibleIds.includes(id)) {
     const errorMessage = "User is not eligible";
-    throw new EligibilityError(errorMessage);
+    throw new NotEligibleError(errorMessage);
   }
 };
 
@@ -242,7 +242,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set cart state to be NOT_ELIGIBLE when eligibility error is thrown, and would not continue with fetching quota", async () => {
+    it("should set cart state to be NOT_ELIGIBLE when NotEligibleError is thrown, and would not continue with fetching quota", async () => {
       expect.assertions(1);
 
       const ids = ["ID_NOT_ELIGIBLE"];
