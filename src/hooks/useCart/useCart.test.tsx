@@ -164,7 +164,7 @@ const mockPostTransactionResult = {
   ]
 };
 
-const mockQuotaNotEligible = (id: string) => {
+const mockQuotaNotEligible: any = (id: string) => {
   if (!eligibleIds.includes(id)) {
     const errorMessage = "User is not eligible";
     throw new NotEligibleError(errorMessage);
