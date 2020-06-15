@@ -6,17 +6,17 @@ import { color, size } from "../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 
-const IneligibleTransactionTitle: FunctionComponent = () => (
+const NotEligibleTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>Not eligible</AppText>
 );
 
-const IneligibleTransactionDescription: FunctionComponent = () => (
+const NotEligibleTransactionDescription: FunctionComponent = () => (
   <AppText style={{ marginBottom: size(1) }}>
     Please log an appeal request.
   </AppText>
 );
 
-interface IneligibleCard {
+interface NotEligibleCard {
   nrics: string[];
   onCancel: () => void;
 }
@@ -24,7 +24,7 @@ interface IneligibleCard {
 /**
  * Shows when the user cannot is not eligible for redemption/purchase
  */
-export const IneligibleCard: FunctionComponent<IneligibleCard> = ({
+export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
   nrics,
   onCancel
 }) => {
@@ -39,10 +39,10 @@ export const IneligibleCard: FunctionComponent<IneligibleCard> = ({
         >
           <Text style={sharedStyles.emoji}>❌</Text>
           <AppText style={sharedStyles.statusTitleWrapper}>
-            <IneligibleTransactionTitle />
+            <NotEligibleTransactionTitle />
           </AppText>
           <View>
-            <IneligibleTransactionDescription />
+            <NotEligibleTransactionDescription />
           </View>
         </View>
       </CustomerCard>

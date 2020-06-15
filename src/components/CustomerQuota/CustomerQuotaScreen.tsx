@@ -31,7 +31,7 @@ import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
-import { IneligibleCard } from "./IneligibleCard";
+import { NotEligibleCard } from "./NotEligibleCard";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -159,7 +159,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         ) : cartState === "NO_QUOTA" ? (
           <NoQuotaCard nrics={nrics} cart={cart} onCancel={onCancel} />
         ) : cartState === "NOT_ELIGIBLE" ? (
-          <IneligibleCard nrics={nrics} onCancel={onCancel} />
+          <NotEligibleCard nrics={nrics} onCancel={onCancel} />
         ) : (
           <ItemsSelectionCard
             nrics={nrics}
