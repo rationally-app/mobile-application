@@ -3,7 +3,7 @@ import {
   getQuota,
   postTransaction,
   QuotaError,
-  EligibilityError
+  NotEligibleError
 } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { getPolicies, PolicyError } from "../../services/policies";
@@ -137,7 +137,7 @@ export const useCart = (
         }
         setQuotaResponse(quotaResponse);
       } catch (e) {
-        if (e instanceof EligibilityError) {
+        if (e instanceof NotEligibleError) {
           setCartState("NOT_ELIGIBLE");
           // Cart will remain in FETCHING_QUOTA state.
         } else if (e instanceof PolicyError) {
