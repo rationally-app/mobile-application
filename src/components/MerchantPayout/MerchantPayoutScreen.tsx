@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   submitWrapper: {
     flex: 1,
-    marginLeft: size(1)
+    marginRight: size(1)
   }
 });
 
@@ -121,7 +121,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               />
             </Card>
             <View style={styles.buttonsWrapper}>
-              <SecondaryButton text="Cancel" onPress={onCancel} />
               <View style={styles.submitWrapper}>
                 <DarkButton
                   fullWidth={true}
@@ -136,6 +135,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                   onPress={submitMerchantCode}
                 />
               </View>
+              <SecondaryButton text="Cancel" onPress={onCancel} />
             </View>
             <FeatureToggler feature="HELP_MODAL">
               <HelpButton onPress={showHelpModal} />
