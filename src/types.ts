@@ -32,7 +32,23 @@ const PolicyQuantity = t.intersection([
   })
 ]);
 
-const PolicyIdentifier = t.type({ scannerType: t.string, label: t.string });
+const PolicyIdentifier = t.type({
+  label: t.string,
+  textInput: t.type({
+    visible: t.boolean,
+    disabled: t.boolean,
+    type: t.string
+  }),
+  scanButton: t.intersection([
+    t.type({
+      visible: t.boolean,
+      disabled: t.boolean,
+      type: t.string
+    }),
+    t.partial({ text: t.string })
+  ])
+});
+
 const PolicyIdentifierInput = t.type({ label: t.string, value: t.string });
 
 const Policy = t.intersection([
