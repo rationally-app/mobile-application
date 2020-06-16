@@ -83,17 +83,29 @@ const defaultProducts: Policy[] = [
       }
     ]
   }
-];
+};
 
-const Wrapper: FunctionComponent<{ products?: Policy[] }> = ({
+const Wrapper: FunctionComponent<{
+  products?: Policy[];
+  features?: Feature | undefined;
+}> = ({
   children,
-  products = defaultProducts
+  products = defaultProducts.policies,
+  features = defaultProducts.features
 }) => {
   const getProduct = (category: string): Policy | undefined =>
     products?.find(product => product.category === category) ?? undefined;
+  const getFeature = (): Feature | undefined => features;
   return (
     <ProductContext.Provider
-      value={{ products, getProduct, setProducts: jest.fn() }}
+      value={{
+        products,
+        features,
+        getProduct,
+        setProducts: jest.fn(),
+        getFeature,
+        setFeatures: jest.fn()
+      }}
     >
       {children}
     </ProductContext.Provider>

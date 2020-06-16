@@ -40,7 +40,11 @@ const mockGetPoliciesValidResponse = {
         }
       }
     }
-  ]
+  ],
+  features: {
+    REQUIRE_OTP: true,
+    TRANSACTION_GROUPING: true
+  }
 };
 
 const mockGetPoliciesInvalidResponse = {
