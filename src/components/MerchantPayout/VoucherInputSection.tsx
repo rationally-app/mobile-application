@@ -1,16 +1,12 @@
 import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
-import { size, color, fontSize } from "../../common/styles";
+import { size, color } from "../../common/styles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
-<<<<<<< HEAD
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { Voucher } from "./MerchantPayoutScreen";
-=======
-import { VoucherChip } from "./VoucherChip";
->>>>>>> 0d3bff6... feat: added vouchersView for base merchant payout screen
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -21,7 +17,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -size(0.5),
     borderBottomWidth: 1
   },
-<<<<<<< HEAD
+
   horizontalRuleWrapper: {
     marginTop: size(4)
   },
@@ -31,17 +27,6 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontFamily: "brand-italic"
-=======
-  horizontalRuleWrapper:{
-    marginTop: size(4),
-  },
-  inputWrapper: {
-    marginTop: size(4),
-    flex: 1,
-  },
-  seeAllText: {
-    fontFamily: "brand-italic",
->>>>>>> 0d3bff6... feat: added vouchersView for base merchant payout screen
   },
   seeAllTextWrapper: {
     marginLeft: "auto"

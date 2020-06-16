@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
-import { Feather } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 
 const styles = StyleSheet.create({
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
 });
 
 interface VoucherChip {
-  valid?: boolean,
-  numVouchers: number
+  valid?: boolean;
+  numVouchers: number;
 }
 
 export const VoucherChip: FunctionComponent<VoucherChip> = ({
@@ -48,18 +48,28 @@ export const VoucherChip: FunctionComponent<VoucherChip> = ({
     <View>
       <View style={styles.validTextWrapper}>
         <View style={styles.validIcon}>
-          {valid ?
-            <Feather name="check-circle" size={size(2)} color={color("blue", 50)} />
-            :
+          {valid ? (
+            <Feather
+              name="check-circle"
+              size={size(2)}
+              color={color("blue", 50)}
+            />
+          ) : (
             <Feather name="x-circle" size={size(2)} color={color("blue", 50)} />
-          }
+          )}
         </View>
         <AppText style={styles.validText}>
-          {valid ?
-            "Valid" : "Invalid"}
+          {valid ? "Valid" : "Invalid"}
         </AppText>
       </View>
-      <View style={[styles.numVouchersWrapper, valid ? styles.validNumVouchersWrapper : styles.invalidNumVouchersWrapper]}>
+      <View
+        style={[
+          styles.numVouchersWrapper,
+          valid
+            ? styles.validNumVouchersWrapper
+            : styles.invalidNumVouchersWrapper
+        ]}
+      >
         <AppText style={styles.numVouchers}>
           {`${numVouchers} | $${numVouchers * 2}`}
         </AppText>
