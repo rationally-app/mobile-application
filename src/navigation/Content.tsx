@@ -18,8 +18,8 @@ const SwitchNavigator = createSwitchNavigator(
     LoginScreen: { screen: LoginScreen, path: "login" },
     CustomerQuotaStack,
     MerchantPayoutStack
-  },
-  { initialRouteName: "LoginScreen" }
+  }
+  // { initialRouteName: "LoginScreen" }
 );
 
 const AppContainer = createAppContainer(SwitchNavigator);

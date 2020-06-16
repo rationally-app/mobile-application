@@ -34,6 +34,7 @@ import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
+import { DarkButton } from "../Layout/Buttons/DarkButton";
 
 const styles = StyleSheet.create({
   content: {
@@ -141,6 +142,16 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 nricInput={nricInput}
                 setNricInput={setNricInput}
                 submitNric={() => onCheck(nricInput)}
+              />
+            </Card>
+            <Card>
+              <AppText>
+                Merchant Payout
+              </AppText>
+              <DarkButton
+                fullWidth={true}
+                text="Merchant Payout"
+                onPress={()=>navigation.navigate("MerchantPayoutScreen")}
               />
             </Card>
             <FeatureToggler feature="HELP_MODAL">
