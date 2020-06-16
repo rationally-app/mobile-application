@@ -14,10 +14,10 @@ import { Linking } from "expo";
 
 const SwitchNavigator = createSwitchNavigator(
   {
-    LoginScreen: { screen: LoginScreen, path: "login" },
+    // LoginScreen: { screen: LoginScreen, path: "login" },
     StackNavigator
   },
-  { initialRouteName: "LoginScreen" }
+  // { initialRouteName: "LoginScreen" }
 );
 
 const AppContainer = createAppContainer(SwitchNavigator);
