@@ -83,7 +83,7 @@ const mockGetPolicies = async (
         category: "vouchers",
         name: "Vouchers",
         order: 4,
-        quantity: { period: 1, limit: 1 },
+        quantity: { period: 1, limit: 1, default: 1 },
         identifiers: [
           {
             label: "Voucher code",
