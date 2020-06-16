@@ -34,18 +34,28 @@ const PolicyQuantity = t.intersection([
 
 const PolicyIdentifier = t.type({
   label: t.string,
-  textInput: t.type({
-    visible: t.boolean,
-    disabled: t.boolean,
-    type: t.string
-  }),
+  textInput: t.intersection([
+    t.type({
+      visible: t.boolean,
+      disabled: t.boolean
+    }),
+    t.partial({
+      type: t.union([
+        t.literal("STRING"),
+        t.literal("NUMBER"),
+        t.literal("PHONE_NUMBER")
+      ])
+    })
+  ]),
   scanButton: t.intersection([
     t.type({
       visible: t.boolean,
-      disabled: t.boolean,
-      type: t.string
+      disabled: t.boolean
     }),
-    t.partial({ text: t.string })
+    t.partial({
+      type: t.union([t.literal("QR"), t.literal("BARCODE")]),
+      text: t.string
+    })
   ])
 });
 
@@ -67,7 +77,7 @@ const Policy = t.intersection([
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
-    type: t.string
+    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")])
   })
 ]);
 
