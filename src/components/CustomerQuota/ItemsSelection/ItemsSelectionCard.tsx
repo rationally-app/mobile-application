@@ -31,7 +31,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
-  const { getProduct } = useProductContext();
+  const { getProduct, getFeature } = useProductContext();
   const identifiers = cart.flatMap(
     cartItem => getProduct(cartItem.category)?.identifiers
   );
@@ -46,8 +46,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <CustomerCard
         nrics={nrics}
         onAddNric={
-          !identifiers.every(identifier => !identifier) &&
-          identifiers.length > 0
+          getFeature()?.TRANSACTION_GROUPING
             ? undefined
             : () => setIsAddUserModalVisible(true)
         }

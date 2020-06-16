@@ -120,7 +120,13 @@ export const useCart = (
   endpoint: string
 ): CartHook => {
   const prevIds = usePrevious(ids);
-  const { products, getProduct, setProducts } = useProductContext();
+  const {
+    products,
+    getProduct,
+    setProducts,
+    setFeatures,
+    getFeature
+  } = useProductContext();
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
@@ -139,6 +145,7 @@ export const useCart = (
         if (products.length === 0) {
           const response = await getPolicies(authKey, endpoint);
           setProducts(response.policies);
+          setFeatures(response.features);
         }
         const quotaResponse = await getQuota(ids, authKey, endpoint);
         if (hasNoQuota(quotaResponse)) {
