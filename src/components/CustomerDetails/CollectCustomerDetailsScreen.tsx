@@ -145,13 +145,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               />
             </Card>
             <Card>
-              <AppText>
-                Merchant Payout
-              </AppText>
+              <AppText>Merchant Payout</AppText>
               <DarkButton
                 fullWidth={true}
                 text="Merchant Payout"
-                onPress={()=>navigation.navigate("MerchantPayoutScreen")}
+                onPress={() => navigation.navigate("MerchantPayoutScreen")}
               />
             </Card>
             <FeatureToggler feature="HELP_MODAL">

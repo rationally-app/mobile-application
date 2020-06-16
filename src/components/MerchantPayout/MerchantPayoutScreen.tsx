@@ -1,7 +1,16 @@
 import React, { FunctionComponent, useContext, useState } from "react";
-import { View, StyleSheet, KeyboardAvoidingView, ScrollView, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  Alert
+} from "react-native";
 import { size, color } from "../../common/styles";
-import { withNavigationFocus, NavigationFocusInjectedProps } from "react-navigation";
+import {
+  withNavigationFocus,
+  NavigationFocusInjectedProps
+} from "react-navigation";
 import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
 import { AppHeader } from "../Layout/AppHeader";
@@ -15,7 +24,7 @@ import { HelpModalContext } from "../../context/help";
 import { VoucherInputSection } from "./VoucherInputSection";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
-import { Feather } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
 import { validateMerchantCode } from "../../utils/validateMerchantCode";
 
 const styles = StyleSheet.create({
@@ -60,35 +69,30 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         "Invalid Merchant Code",
         [
           {
-            text: "Dismiss",
+            text: "Dismiss"
           }
         ],
-        {
-        }
+        {}
       );
     }
-    Alert.alert("Valid Merchant Code")
-  }
+    Alert.alert("Valid Merchant Code");
+  };
 
   const onCancel = (): void => {
-    Alert.alert(
-      "Warning",
-      "Cancelling clears all vouchers. Are you sure?",
-      [
-        {
-          text: "Yes",
-          onPress: () => {
-            setVouchers([]);
-            console.log("Yes Pressed")
-          }
-        },
-        {
-          text: "No",
-          onPress: () => console.log("No Pressed")
+    Alert.alert("Warning", "Cancelling clears all vouchers. Are you sure?", [
+      {
+        text: "Yes",
+        onPress: () => {
+          setVouchers([]);
+          console.log("Yes Pressed");
         }
-      ],
-    );
-  }
+      },
+      {
+        text: "No",
+        onPress: () => console.log("No Pressed")
+      }
+    ]);
+  };
 
   return (
     <>
@@ -113,7 +117,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 vouchers={vouchers}
                 merchantCode={merchantCode}
                 setMerchantCode={setMerchantCode}
-                submitMerchantCode={submitMerchantCode} />
+                submitMerchantCode={submitMerchantCode}
+              />
             </Card>
             <View style={styles.buttonsWrapper}>
               <SecondaryButton text="Cancel" onPress={onCancel} />
@@ -122,7 +127,11 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                   fullWidth={true}
                   text="Checkout"
                   icon={
-                    <Feather name="shopping-cart" size={size(2)} color={color("grey", 0)} />
+                    <Feather
+                      name="shopping-cart"
+                      size={size(2)}
+                      color={color("grey", 0)}
+                    />
                   }
                   onPress={submitMerchantCode}
                 />

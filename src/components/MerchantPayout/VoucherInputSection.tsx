@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
-import { size, color, fontSize } from "../../common/styles";
+import { size, color } from "../../common/styles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
@@ -16,15 +16,15 @@ const styles = StyleSheet.create({
     marginHorizontal: -size(0.5),
     borderBottomWidth: 1
   },
-  horizontalRuleWrapper:{
-    marginTop: size(4),
+  horizontalRuleWrapper: {
+    marginTop: size(4)
   },
   inputWrapper: {
     marginTop: size(4),
-    flex: 1,
+    flex: 1
   },
   seeAllText: {
-    fontFamily: "brand-italic",
+    fontFamily: "brand-italic"
   },
   seeAllTextWrapper: {
     marginLeft: "auto"
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 });
 
 interface VoucherInputSection {
-  vouchers: any,
+  vouchers: any;
   merchantCode: string;
   setMerchantCode: (merchantCode: string) => void;
   submitMerchantCode: () => void;
@@ -49,19 +49,16 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
 }) => {
   return (
     <>
-      {vouchers.length == 0 ?
-        <AppText>
-          Check the number of item(s) eligible for redemption
-        </AppText> :
+      {vouchers.length == 0 ? (
+        <AppText>Check the number of item(s) eligible for redemption</AppText>
+      ) : (
         <View style={styles.voucherChipWrapper}>
           <VoucherChip valid numVouchers={1} />
           <View style={styles.seeAllTextWrapper}>
-            <AppText style={styles.seeAllText}>
-              See all
-              </AppText>
+            <AppText style={styles.seeAllText}>See all</AppText>
           </View>
         </View>
-      }
+      )}
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
@@ -69,10 +66,12 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
           icon={
             <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
           }
-        // onPress={openCamera}
+          // onPress={openCamera}
         />
       </View>
-      {vouchers.length == 0 ? <></> :
+      {vouchers.length == 0 ? (
+        <></>
+      ) : (
         <>
           <View style={styles.horizontalRuleWrapper}>
             <View style={styles.horizontalRule} />
@@ -86,7 +85,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
             />
           </View>
         </>
-      }
+      )}
     </>
   );
 };
