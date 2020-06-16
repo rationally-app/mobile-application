@@ -15,7 +15,7 @@ const liveGetPolicies = async (
   endpoint: string
 ): Promise<Policies> => {
   try {
-    const response = await fetchWithValidator(Policies, `${endpoint}/auth`, {
+    const response = await fetchWithValidator(Policies, `${endpoint}/version`, {
       method: "GET",
       headers: {
         Authorization: token
@@ -97,7 +97,11 @@ const mockGetPolicies = async (
           }
         ]
       }
-    ]
+    ],
+    features: {
+      REQUIRE_OTP: true,
+      TRANSACTION_GROUPING: true
+    }
   };
 };
 
