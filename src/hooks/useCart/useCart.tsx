@@ -12,7 +12,7 @@ import {
   PostTransactionResult,
   Quota,
   ItemQuota,
-  PolicyIdentifierInput
+  IdentifierInput
 } from "../../types";
 
 export type CartItem = {
@@ -24,7 +24,7 @@ export type CartItem = {
    * It will be undefined for batch quotas.
    */
   lastTransactionTime?: Date;
-  identifiers: PolicyIdentifierInput[];
+  identifierInputs: IdentifierInput[];
 };
 
 export type Cart = CartItem[];
@@ -43,7 +43,7 @@ export type CartHook = {
   updateCart: (
     category: string,
     quantity: number,
-    identifiers?: PolicyIdentifierInput[]
+    identifierInputs?: IdentifierInput[]
   ) => void;
   checkoutCart: () => void;
   checkoutResult?: PostTransactionResult;
@@ -72,12 +72,17 @@ const mergeWithCart = (
       return productOneOrder - productTwoOrder;
     })
     .map(
-      ({ category, quantity: maxQuantity, transactionTime, identifiers }) => {
+      ({
+        category,
+        quantity: maxQuantity,
+        transactionTime,
+        identifierInputs
+      }) => {
         const [existingItem] = getItem(cart, category);
 
         const product = getProduct(category);
         const defaultQuantity = product?.quantity.default || 0;
-        const defaultIdentifiers =
+        const defaultIdentifierInputs =
           product?.identifiers?.map(identifier => ({
             label: identifier.label,
             value: ""
@@ -91,7 +96,7 @@ const mergeWithCart = (
           ),
           maxQuantity,
           lastTransactionTime: transactionTime,
-          identifiers: identifiers || defaultIdentifiers
+          identifierInputs: identifierInputs || defaultIdentifierInputs
         };
       }
     );
@@ -188,7 +193,7 @@ export const useCart = (
    * Update quantity of an item in the cart.
    */
   const updateCart: CartHook["updateCart"] = useCallback(
-    (category, quantity, identifiers) => {
+    (category, quantity, identifierInputs) => {
       if (quantity < 0) {
         setError(new Error("Invalid quantity"));
         return;
@@ -201,7 +206,8 @@ export const useCart = (
             {
               ...item,
               quantity,
-              identifiers: identifiers || cart[itemIdx].identifiers
+              identifierInputs:
+                identifierInputs || cart[itemIdx].identifierInputs
             },
             ...cart.slice(itemIdx + 1)
           ]);
@@ -230,20 +236,20 @@ export const useCart = (
       const identiferValues: string[] = [];
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
-        .map(({ category, quantity, identifiers }) => {
+        .map(({ category, quantity, identifierInputs }) => {
           if (
-            identifiers.length > 0 &&
-            identifiers.some(identifier => !identifier.value)
+            identifierInputs.length > 0 &&
+            identifierInputs.some(identifierInput => !identifierInput.value)
           ) {
             numUnverifiedTransactions += 1;
           } else {
             identiferValues.push(
-              ...identifiers.map(identifier => identifier.value)
+              ...identifierInputs.map(identifierInput => identifierInput.value)
             );
           }
 
-          numIdentifiers += identifiers.length;
-          return { category, quantity, identifiers: identifiers };
+          numIdentifiers += identifierInputs.length;
+          return { category, quantity, identifierInputs };
         });
 
       if (numUnverifiedTransactions > 0 || !isUniqueList(identiferValues)) {

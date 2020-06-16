@@ -49,7 +49,7 @@ const PolicyIdentifier = t.type({
   ])
 });
 
-const PolicyIdentifierInput = t.type({ label: t.string, value: t.string });
+const IdentifierInput = t.type({ label: t.string, value: t.string });
 
 const Policy = t.intersection([
   t.type({
@@ -70,7 +70,7 @@ export const Policies = t.type({
   policies: t.array(Policy)
 });
 
-export type PolicyIdentifierInput = t.TypeOf<typeof PolicyIdentifierInput>;
+export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;
 export type Policies = t.TypeOf<typeof Policies>;
@@ -82,7 +82,7 @@ const ItemQuota = t.intersection([
   }),
   t.partial({
     transactionTime: DateFromNumber,
-    identifiers: t.array(PolicyIdentifierInput)
+    identifierInputs: t.array(IdentifierInput)
   })
 ]);
 
@@ -98,7 +98,7 @@ const Transaction = t.intersection([
     category: t.string,
     quantity: t.number
   }),
-  t.partial({ identifiers: t.array(PolicyIdentifierInput) })
+  t.partial({ identifierInputs: t.array(IdentifierInput) })
 ]);
 
 export const PostTransactionResult = t.type({

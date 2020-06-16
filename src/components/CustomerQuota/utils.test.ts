@@ -41,12 +41,12 @@ describe("getPurchasedQuantitiesByItem", () => {
             {
               category: "toilet-paper",
               quantity: 0,
-              identifiers: []
+              identifierInputs: []
             },
             {
               category: "chocolate",
               quantity: 5,
-              identifiers: []
+              identifierInputs: []
             }
           ],
           timestamp: transactionTime
@@ -56,12 +56,12 @@ describe("getPurchasedQuantitiesByItem", () => {
             {
               category: "toilet-paper",
               quantity: 1,
-              identifiers: []
+              identifierInputs: []
             },
             {
               category: "chocolate",
               quantity: 3,
-              identifiers: []
+              identifierInputs: []
             }
           ],
           timestamp: transactionTime
@@ -75,7 +75,7 @@ describe("getPurchasedQuantitiesByItem", () => {
           "id-1": 0,
           "id-2": 1
         },
-        identifiers: []
+        identifierInputs: []
       },
       {
         category: "chocolate",
@@ -83,7 +83,7 @@ describe("getPurchasedQuantitiesByItem", () => {
           "id-1": 5,
           "id-2": 3
         },
-        identifiers: []
+        identifierInputs: []
       }
     ];
 

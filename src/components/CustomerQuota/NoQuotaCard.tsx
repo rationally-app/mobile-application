@@ -109,7 +109,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   );
 
   const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
-  sortedCart.forEach(({ category, lastTransactionTime, identifiers }) => {
+  sortedCart.forEach(({ category, lastTransactionTime, identifierInputs }) => {
     if (lastTransactionTime) {
       const policy = getProduct(category);
       const categoryName = policy?.name ?? category;
@@ -117,9 +117,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       itemTransactions.push({
         itemHeader: `${categoryName} (${formattedDate})`,
         itemDetail:
-          identifiers && identifiers.length > 0
-            ? `${identifiers[0].value} — ${
-                identifiers[identifiers.length - 1].value
+          identifierInputs && identifierInputs.length > 0
+            ? `${identifierInputs[0].value} — ${
+                identifierInputs[identifierInputs.length - 1].value
               }`
             : ""
       });

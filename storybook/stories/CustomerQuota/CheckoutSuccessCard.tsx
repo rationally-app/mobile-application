@@ -46,12 +46,12 @@ const checkoutResult: PostTransactionResult = {
         {
           category: "toilet-paper",
           quantity: 0,
-          identifiers: []
+          identifierInputs: []
         },
         {
           category: "chocolate",
           quantity: 5,
-          identifiers: []
+          identifierInputs: []
         }
       ],
       timestamp: transactionTime
@@ -61,12 +61,12 @@ const checkoutResult: PostTransactionResult = {
         {
           category: "toilet-paper",
           quantity: 1,
-          identifiers: []
+          identifierInputs: []
         },
         {
           category: "chocolate",
           quantity: 3,
-          identifiers: []
+          identifierInputs: []
         }
       ],
       timestamp: transactionTime
