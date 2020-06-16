@@ -1,6 +1,5 @@
-import React, { FunctionComponent, useContext } from "react";
-import { View, StyleSheet, KeyboardAvoidingView, ScrollView } from "react-native";
-import { AppText } from "../Layout/AppText";
+import React, { FunctionComponent, useContext, useState } from "react";
+import { View, StyleSheet, KeyboardAvoidingView, ScrollView, Alert } from "react-native";
 import { size, color } from "../../common/styles";
 import { withNavigationFocus, NavigationFocusInjectedProps } from "react-navigation";
 import { TopBackground } from "../Layout/TopBackground";
@@ -14,7 +13,10 @@ import { Card } from "../Layout/Card";
 import { Credits } from "../Credits";
 import { HelpModalContext } from "../../context/help";
 import { VoucherInputSection } from "./VoucherInputSection";
-
+import { DarkButton } from "../Layout/Buttons/DarkButton";
+import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
+import { Feather } from '@expo/vector-icons';
+import { validateMerchantCode } from "../../utils/validateMerchantCode";
 
 const styles = StyleSheet.create({
   content: {
@@ -30,6 +32,15 @@ const styles = StyleSheet.create({
   },
   bannerWrapper: {
     marginBottom: size(1.5)
+  },
+  buttonsWrapper: {
+    marginTop: size(2),
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  submitWrapper: {
+    flex: 1,
+    marginLeft: size(1)
   }
 });
 
@@ -39,6 +50,45 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
+  const [vouchers, setVouchers] = useState([{ valid: 5, invalid: 3 }]);
+  const [merchantCode, setMerchantCode] = useState("");
+
+  const submitMerchantCode = (): void => {
+    if (!validateMerchantCode(merchantCode)) {
+      return Alert.alert(
+        "Error",
+        "Invalid Merchant Code",
+        [
+          {
+            text: "Dismiss",
+          }
+        ],
+        {
+        }
+      );
+    }
+    Alert.alert("Valid Merchant Code")
+  }
+
+  const onCancel = (): void => {
+    Alert.alert(
+      "Warning",
+      "Cancelling clears all vouchers. Are you sure?",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            setVouchers([]);
+            console.log("Yes Pressed")
+          }
+        },
+        {
+          text: "No",
+          onPress: () => console.log("No Pressed")
+        }
+      ],
+    );
+  }
 
   return (
     <>
@@ -47,8 +97,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         scrollIndicatorInsets={{ right: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <TopBackground mode={config.appMode} />
         <KeyboardAvoidingView behavior="position">
+          <TopBackground mode={config.appMode} />
           <View style={styles.content}>
             <View style={styles.headerText}>
               <AppHeader mode={config.appMode} />
@@ -59,8 +109,25 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               </View>
             )}
             <Card>
-              <VoucherInputSection />
+              <VoucherInputSection
+                vouchers={vouchers}
+                merchantCode={merchantCode}
+                setMerchantCode={setMerchantCode}
+                submitMerchantCode={submitMerchantCode} />
             </Card>
+            <View style={styles.buttonsWrapper}>
+              <SecondaryButton text="Cancel" onPress={onCancel} />
+              <View style={styles.submitWrapper}>
+                <DarkButton
+                  fullWidth={true}
+                  text="Checkout"
+                  icon={
+                    <Feather name="shopping-cart" size={size(2)} color={color("grey", 0)} />
+                  }
+                  onPress={submitMerchantCode}
+                />
+              </View>
+            </View>
             <FeatureToggler feature="HELP_MODAL">
               <HelpButton onPress={showHelpModal} />
             </FeatureToggler>
