@@ -24,7 +24,7 @@ export const ProductContext = createContext<ProductContextValue>({
   },
   setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getProduct: () => undefined,
-  setFeatures: () => {}, // eslint-disable-line @typesc ript-eslint/no-empty-function
+  setFeatures: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getFeature: () => undefined
 });
 

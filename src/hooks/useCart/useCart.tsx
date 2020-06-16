@@ -124,8 +124,7 @@ export const useCart = (
     products,
     getProduct,
     setProducts,
-    setFeatures,
-    getFeature
+    setFeatures
   } = useProductContext();
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
@@ -186,7 +185,8 @@ export const useCart = (
     ids,
     prevIds,
     products.length,
-    setProducts
+    setProducts,
+    setFeatures
   ]);
 
   /**
