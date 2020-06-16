@@ -3,7 +3,12 @@ import { renderHook } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
 import { wait } from "@testing-library/react-native";
 import { ProductContext } from "../../context/products";
-import { Policy } from "../../types";
+import {
+  Policy,
+  Quota,
+  PostTransactionResult,
+  PolicyIdentifier
+} from "../../types";
 import {
   getQuota,
   postTransaction,
@@ -22,6 +27,12 @@ const key = "KEY";
 const endpoint = "https://myendpoint.com";
 const eligibleIds = ["ID1", "ID2"];
 
+const defaultIdentifier: PolicyIdentifier = {
+  label: "identifier",
+  textInput: { visible: true, disabled: false, type: "STRING" },
+  scanButton: { visible: true, disabled: false, type: "BARCODE" }
+};
+
 const defaultProducts: Policy[] = [
   {
     category: "toilet-paper",
@@ -38,8 +49,14 @@ const defaultProducts: Policy[] = [
       }
     },
     identifiers: [
-      { scannerType: "QR", label: "first" },
-      { scannerType: "QR", label: "last" }
+      {
+        ...defaultIdentifier,
+        label: "first"
+      },
+      {
+        ...defaultIdentifier,
+        label: "last"
+      }
     ]
   },
   {
@@ -56,8 +73,14 @@ const defaultProducts: Policy[] = [
       }
     },
     identifiers: [
-      { scannerType: "QR", label: "first" },
-      { scannerType: "QR", label: "last" }
+      {
+        ...defaultIdentifier,
+        label: "first"
+      },
+      {
+        ...defaultIdentifier,
+        label: "last"
+      }
     ]
   }
 ];
@@ -79,27 +102,27 @@ const Wrapper: FunctionComponent<{ products?: Policy[] }> = ({
 
 const transactionTime = new Date(2020, 3, 1);
 
-const mockQuotaResSingleId = {
+const mockQuotaResSingleId: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifiers: [],
+      identifierInputs: [],
       quantity: 2,
       transactionTime
     },
     {
       category: "chocolate",
-      identifiers: [],
+      identifierInputs: [],
       quantity: 15,
       transactionTime
     }
   ]
 };
-const mockQuotaResSingleIdWithIdentifiers = {
+const mockQuotaResSingleIdWithIdentifiers: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifiers: [
+      identifierInputs: [
         { label: "first", value: "first identifier" },
         { label: "last", value: "last identifier" }
       ],
@@ -108,58 +131,55 @@ const mockQuotaResSingleIdWithIdentifiers = {
     },
     {
       category: "chocolate",
-      identifiers: [],
+      identifierInputs: [],
       quantity: 15,
       transactionTime
     }
   ]
 };
-const mockQuotaResSingleIdNoQuota = {
+const mockQuotaResSingleIdNoQuota: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifiers: [],
+      identifierInputs: [],
       quantity: 0,
       transactionTime
     },
     {
       category: "chocolate",
-      identifiers: [],
+      identifierInputs: [],
       quantity: 0,
       transactionTime
     }
   ]
 };
-const mockQuotaResMultipleIds = {
+const mockQuotaResMultipleIds: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifiers: [],
-      quantity: 4,
-      lastTransactionTime: undefined
+      identifierInputs: [],
+      quantity: 4
     },
     {
       category: "chocolate",
-      identifiers: [],
-      quantity: 30,
-      lastTransactionTime: undefined
+      identifierInputs: [],
+      quantity: 30
     }
   ]
 };
 
-const mockPostTransactionResult = {
+const mockPostTransactionResult: PostTransactionResult = {
   transactions: [
     {
-      category: "toilet-paper",
-      identifiers: [],
-      quantity: 1,
-      transactionTime
-    },
-    {
-      category: "chocolate",
-      identifiers: [],
-      quantity: 5,
-      transactionTime
+      transaction: [
+        { category: "toilet-paper", identifierInputs: [], quantity: 1 },
+        {
+          category: "chocolate",
+          identifierInputs: [],
+          quantity: 5
+        }
+      ],
+      timestamp: transactionTime
     }
   ]
 };
@@ -193,7 +213,7 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [
+          identifierInputs: [
             { label: "first", value: "first identifier" },
             { label: "last", value: "last identifier" }
           ],
@@ -203,7 +223,7 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0
@@ -227,14 +247,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 0,
           quantity: 0
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 0,
           quantity: 0
@@ -298,14 +318,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 4,
           quantity: 1
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 30,
           quantity: 0
@@ -328,14 +348,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 5
@@ -357,14 +377,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 5
@@ -378,14 +398,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 4,
           quantity: 1
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 30,
           quantity: 5
@@ -409,14 +429,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0
@@ -439,14 +459,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0
@@ -469,14 +489,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0
@@ -510,14 +530,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 2
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 5
@@ -548,14 +568,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 0
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0
@@ -586,7 +606,7 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [
+          identifierInputs: [
             { value: "", label: "first" },
             { value: "value", label: "last" }
           ],
@@ -596,7 +616,7 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0
@@ -617,7 +637,12 @@ describe("useCart", () => {
           products={[
             {
               ...defaultProducts[0],
-              identifiers: [{ scannerType: "QR", label: "code" }]
+              identifiers: [
+                {
+                  ...defaultIdentifier,
+                  label: "code"
+                }
+              ]
             }
           ]}
         >
@@ -642,7 +667,7 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [{ value: "", label: "first" }],
+          identifierInputs: [{ value: "", label: "first" }],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1
@@ -673,7 +698,7 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [
+          identifierInputs: [
             { value: "identical", label: "first" },
             { value: "identical", label: "last" }
           ],
@@ -683,7 +708,7 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0
@@ -718,7 +743,7 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [
+          identifierInputs: [
             { value: "identical", label: "first" },
             { value: "not identical", label: "last" }
           ],
@@ -728,7 +753,7 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          identifiers: [
+          identifierInputs: [
             { value: "also not identical", label: "first" },
             { value: "identical", label: "last" }
           ],
@@ -767,14 +792,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 2
         },
         {
           category: "chocolate",
-          identifiers: [],
+          identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 5
