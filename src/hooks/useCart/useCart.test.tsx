@@ -123,8 +123,18 @@ const mockQuotaResSingleIdWithIdentifiers: Quota = {
     {
       category: "toilet-paper",
       identifierInputs: [
-        { label: "first", value: "first identifier" },
-        { label: "last", value: "last identifier" }
+        {
+          label: "first",
+          value: "first identifier",
+          textInputType: "STRING",
+          scanButtonType: "BARCODE"
+        },
+        {
+          label: "last",
+          value: "last identifier",
+          textInputType: "STRING",
+          scanButtonType: "BARCODE"
+        }
       ],
       quantity: 1,
       transactionTime
@@ -214,8 +224,18 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           identifierInputs: [
-            { label: "first", value: "first identifier" },
-            { label: "last", value: "last identifier" }
+            {
+              label: "first",
+              value: "first identifier",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            },
+            {
+              label: "last",
+              value: "last identifier",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            }
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 1,
@@ -593,8 +613,18 @@ describe("useCart", () => {
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
-          { value: "", label: "first" },
-          { value: "value", label: "last" }
+          {
+            value: "",
+            label: "first",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE"
+          },
+          {
+            value: "value",
+            label: "last",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE"
+          }
         ]);
         result.current.checkoutCart();
       });
@@ -607,8 +637,18 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           identifierInputs: [
-            { value: "", label: "first" },
-            { value: "value", label: "last" }
+            {
+              value: "",
+              label: "first",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            },
+            {
+              value: "value",
+              label: "last",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            }
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -655,7 +695,12 @@ describe("useCart", () => {
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
-          { value: "", label: "first" }
+          {
+            value: "",
+            label: "first",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE"
+          }
         ]);
         result.current.checkoutCart();
       });
@@ -667,7 +712,14 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [{ value: "", label: "first" }],
+          identifierInputs: [
+            {
+              value: "",
+              label: "first",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            }
+          ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1
@@ -685,8 +737,18 @@ describe("useCart", () => {
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
-          { value: "identical", label: "first" },
-          { value: "identical", label: "last" }
+          {
+            value: "identical",
+            label: "first",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE"
+          },
+          {
+            value: "identical",
+            label: "last",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE"
+          }
         ]);
         result.current.checkoutCart();
       });
@@ -699,8 +761,18 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           identifierInputs: [
-            { value: "identical", label: "first" },
-            { value: "identical", label: "last" }
+            {
+              value: "identical",
+              label: "first",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            },
+            {
+              value: "identical",
+              label: "last",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            }
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -726,12 +798,32 @@ describe("useCart", () => {
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
-          { value: "identical", label: "first" },
-          { value: "not identical", label: "last" }
+          {
+            value: "identical",
+            label: "first",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE"
+          },
+          {
+            value: "not identical",
+            label: "last",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE"
+          }
         ]);
         result.current.updateCart("chocolate", 1, [
-          { value: "also not identical", label: "first" },
-          { value: "identical", label: "last" }
+          {
+            value: "also not identical",
+            label: "first",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE"
+          },
+          {
+            value: "identical",
+            label: "last",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE"
+          }
         ]);
         result.current.checkoutCart();
       });
@@ -744,8 +836,18 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           identifierInputs: [
-            { value: "identical", label: "first" },
-            { value: "not identical", label: "last" }
+            {
+              value: "identical",
+              label: "first",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            },
+            {
+              value: "not identical",
+              label: "last",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            }
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -754,8 +856,18 @@ describe("useCart", () => {
         {
           category: "chocolate",
           identifierInputs: [
-            { value: "also not identical", label: "first" },
-            { value: "identical", label: "last" }
+            {
+              value: "also not identical",
+              label: "first",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            },
+            {
+              value: "identical",
+              label: "last",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            }
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,

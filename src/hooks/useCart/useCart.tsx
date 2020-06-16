@@ -85,7 +85,9 @@ const mergeWithCart = (
         const defaultIdentifierInputs =
           product?.identifiers?.map(identifier => ({
             label: identifier.label,
-            value: ""
+            value: "",
+            textInputType: identifier.textInput.type,
+            scanButtonType: identifier.scanButton.type
           })) || [];
 
         return {

@@ -49,7 +49,12 @@ const PolicyIdentifier = t.type({
   ])
 });
 
-const IdentifierInput = t.type({ label: t.string, value: t.string });
+const IdentifierInput = t.type({
+  label: t.string,
+  value: t.string,
+  textInputType: t.string,
+  scanButtonType: t.string
+});
 
 const Policy = t.intersection([
   t.type({
