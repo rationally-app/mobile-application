@@ -6,7 +6,7 @@ import { size, color } from "../../../common/styles";
 import { Feather } from "@expo/vector-icons";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { IdScanner } from "../../IdScanner/IdScanner";
-import { PolicyIdentifier } from "../../../types";
+import { PolicyIdentifier, TextInputType } from "../../../types";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -22,6 +22,31 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+
+const IdentifierTextInput: FunctionComponent<{
+  addMarginRight: boolean;
+  editable: boolean;
+  label: string;
+  onChange: (text: string) => void;
+  type: TextInputType | undefined;
+  value: string;
+}> = ({ addMarginRight, editable, label, onChange, type, value }) => (
+  <View
+    style={[
+      styles.inputWrapper,
+      ...(addMarginRight ? [{ marginRight: size(1) }] : [])
+    ]}
+  >
+    {type === "PHONE_NUMBER" ? null : (
+      <InputWithLabel
+        label={label}
+        value={value}
+        editable={editable}
+        onChange={({ nativeEvent: { text } }) => onChange(text)}
+      />
+    )}
+  </View>
+);
 
 export const ItemIdentifier: FunctionComponent<{
   index: number;
@@ -63,19 +88,14 @@ export const ItemIdentifier: FunctionComponent<{
     <>
       <View style={styles.inputAndButtonWrapper}>
         {textInput.visible && (
-          <View
-            style={[
-              styles.inputWrapper,
-              ...(scanButton.visible ? [{ marginRight: size(1) }] : [])
-            ]}
-          >
-            <InputWithLabel
-              label={label}
-              value={voucherCodeInput}
-              editable={!textInput.disabled}
-              onChange={({ nativeEvent: { text } }) => onManualInput(text)}
-            />
-          </View>
+          <IdentifierTextInput
+            addMarginRight={!scanButton.visible}
+            editable={!textInput.disabled}
+            label={label}
+            onChange={onManualInput}
+            type={textInput.type}
+            value={voucherCodeInput}
+          />
         )}
         {scanButton.visible && (
           <View style={styles.buttonWrapper}>
@@ -106,7 +126,7 @@ export const ItemIdentifier: FunctionComponent<{
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
             cancelButtonText={
-              textInput.disabled ? "Back" : "Enter Voucher manually" // TODO: check copy
+              textInput.disabled ? "Back" : "Enter manually" // TODO: check copy
             }
           />
         </Modal>
