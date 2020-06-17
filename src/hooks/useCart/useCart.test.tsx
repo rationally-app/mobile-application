@@ -5,7 +5,7 @@ import { wait } from "@testing-library/react-native";
 import { ProductContext } from "../../context/products";
 import {
   Policy,
-  Policies,
+  EnvVersion,
   Feature,
   Quota,
   PostTransactionResult,
@@ -16,14 +16,14 @@ import {
   postTransaction,
   NotEligibleError
 } from "../../services/quota";
-import { getPolicies } from "../../services/policies";
+import { getEnvVersion } from "../../services/policies";
 
 jest.mock("../../services/quota");
 const mockGetQuota = getQuota as jest.Mock;
 const mockPostTransaction = postTransaction as jest.Mock;
 
 jest.mock("../../services/policies");
-const mockGetPolicies = getPolicies as jest.Mock;
+const mockGetEnvVersion = getEnvVersion as jest.Mock;
 
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
@@ -35,7 +35,7 @@ const defaultIdentifier: PolicyIdentifier = {
   scanButton: { visible: true, disabled: false, type: "BARCODE" }
 };
 
-const defaultProducts: Policies = {
+const defaultProducts: EnvVersion = {
   policies: [
     {
       category: "toilet-paper",
@@ -333,7 +333,7 @@ describe("useCart", () => {
       expect(result.current.cartState).toBe("FETCHING_QUOTA");
 
       await waitForNextUpdate();
-      expect(mockGetPolicies).toHaveBeenCalledTimes(1);
+      expect(mockGetEnvVersion).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -371,7 +371,7 @@ describe("useCart", () => {
           quantity: 0
         }
       ]);
-      expect(mockGetPolicies).toHaveBeenCalledTimes(0);
+      expect(mockGetEnvVersion).toHaveBeenCalledTimes(0);
     });
 
     it("should update the cart when quantities change", async () => {

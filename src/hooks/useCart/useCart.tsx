@@ -6,7 +6,7 @@ import {
   NotEligibleError
 } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
-import { getPolicies, PolicyError } from "../../services/policies";
+import { getEnvVersion, EnvVersionError } from "../../services/policies";
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
@@ -142,7 +142,7 @@ export const useCart = (
       setCartState("FETCHING_QUOTA");
       try {
         if (products.length === 0) {
-          const response = await getPolicies(authKey, endpoint);
+          const response = await getEnvVersion(authKey, endpoint);
           setProducts(response.policies);
           setFeatures(response.features);
         }
@@ -157,7 +157,7 @@ export const useCart = (
         if (e instanceof NotEligibleError) {
           setCartState("NOT_ELIGIBLE");
           // Cart will remain in FETCHING_QUOTA state.
-        } else if (e instanceof PolicyError) {
+        } else if (e instanceof EnvVersionError) {
           setError(
             new Error(
               "Encountered an issue obtaining policies. We've noted this down and are looking into it!"

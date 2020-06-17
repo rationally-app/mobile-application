@@ -1,4 +1,4 @@
-import { getPolicies, PolicyError } from ".";
+import { getEnvVersion, EnvVersionError } from ".";
 import * as Sentry from "sentry-expo";
 
 jest.mock("sentry-expo");
@@ -9,7 +9,7 @@ const anyGlobal: any = global;
 const mockFetch = jest.fn();
 anyGlobal.fetch = mockFetch;
 
-const mockGetPoliciesValidResponse = {
+const mockGetEnvVersionValidResponse = {
   policies: [
     {
       category: "toilet-paper",
@@ -47,7 +47,7 @@ const mockGetPoliciesValidResponse = {
   }
 };
 
-const mockGetPoliciesInvalidResponse = {
+const mockGetEnvVersionInvalidResponse = {
   policies: [
     {
       category: "toilet-paper",
@@ -83,7 +83,7 @@ const mockGetPoliciesInvalidResponse = {
   }
 };
 
-const mockGetPoliciesInvalidResponseWithoutFeatures = {
+const mockGetEnvVersionInvalidResponseWithoutFeatures = {
   policies: [
     {
       category: "toilet-paper",
@@ -126,36 +126,40 @@ describe("policies", () => {
     mockCaptureException.mockReset();
   });
 
-  describe("getPolicies", () => {
+  describe("getEnvVersion", () => {
     it("should return the policies when it's valid", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockGetPoliciesValidResponse)
+        json: () => Promise.resolve(mockGetEnvVersionValidResponse)
       });
 
-      const policies = await getPolicies(key, endpoint);
-      expect(policies).toEqual(mockGetPoliciesValidResponse);
+      const policies = await getEnvVersion(key, endpoint);
+      expect(policies).toEqual(mockGetEnvVersionValidResponse);
     });
 
     it("should throw error if policy is malformed", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockGetPoliciesInvalidResponse)
+        json: () => Promise.resolve(mockGetEnvVersionInvalidResponse)
       });
 
-      await expect(getPolicies(key, endpoint)).rejects.toThrow(PolicyError);
+      await expect(getEnvVersion(key, endpoint)).rejects.toThrow(
+        EnvVersionError
+      );
     });
 
     it("should capture exception through sentry if policy is malformed", async () => {
       expect.assertions(2);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockGetPoliciesInvalidResponse)
+        json: () => Promise.resolve(mockGetEnvVersionInvalidResponse)
       });
 
-      await expect(getPolicies(key, endpoint)).rejects.toThrow(PolicyError);
+      await expect(getEnvVersion(key, endpoint)).rejects.toThrow(
+        EnvVersionError
+      );
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
 
@@ -167,7 +171,9 @@ describe("policies", () => {
           Promise.resolve({ message: "Invalid authentication token provided" })
       });
 
-      await expect(getPolicies(key, endpoint)).rejects.toThrow(PolicyError);
+      await expect(getEnvVersion(key, endpoint)).rejects.toThrow(
+        EnvVersionError
+      );
     });
 
     it("should throw error if features could not be retrieved", async () => {
@@ -175,17 +181,21 @@ describe("policies", () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () =>
-          Promise.resolve(mockGetPoliciesInvalidResponseWithoutFeatures)
+          Promise.resolve(mockGetEnvVersionInvalidResponseWithoutFeatures)
       });
 
-      await expect(getPolicies(key, endpoint)).rejects.toThrow(PolicyError);
+      await expect(getEnvVersion(key, endpoint)).rejects.toThrow(
+        EnvVersionError
+      );
     });
 
     it("should throw error if there were issues fetching", async () => {
       expect.assertions(1);
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      await expect(getPolicies(key, endpoint)).rejects.toThrow("Network error");
+      await expect(getEnvVersion(key, endpoint)).rejects.toThrow(
+        "Network error"
+      );
     });
   });
 });
