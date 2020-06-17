@@ -160,7 +160,7 @@ export const useCart = (
         } else if (e instanceof EnvVersionError) {
           setError(
             new Error(
-              "Encountered an issue obtaining policies. We've noted this down and are looking into it!"
+              "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
             )
           );
         } else if (e instanceof QuotaError) {
