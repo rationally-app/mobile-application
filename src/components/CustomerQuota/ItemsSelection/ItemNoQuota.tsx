@@ -46,7 +46,7 @@ export const ItemNoQuota: FunctionComponent<{
       </View>
       <View style={styles.feedbackWrapper}>
         <AppText style={styles.feedbackText}>
-          {type === "redeem" ? "Not eligible" : "Cannot\npurchase"}
+          {type === "REDEEM" ? "Not eligible" : "Cannot\npurchase"}
         </AppText>
       </View>
     </View>
