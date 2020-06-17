@@ -1,6 +1,6 @@
 import { validate } from "./validateNric";
 
-describe("validate", () => {
+describe("validate nric", () => {
   it("should return true for valid nric number with S/T/F/G", () => {
     expect.assertions(4);
     expect(validate("S6099517F")).toBe(true);

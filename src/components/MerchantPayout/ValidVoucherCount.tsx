@@ -30,12 +30,14 @@ const styles = StyleSheet.create({
   }
 });
 
-interface VoucherChip {
+interface ValidVoucherCount {
   numVouchers: number;
+  denomination: number;
 }
 
-export const VoucherChip: FunctionComponent<VoucherChip> = ({
-  numVouchers
+export const ValidVoucherCount: FunctionComponent<ValidVoucherCount> = ({
+  numVouchers,
+  denomination
 }) => {
   return (
     <View>
@@ -51,7 +53,7 @@ export const VoucherChip: FunctionComponent<VoucherChip> = ({
       </View>
       <View style={styles.numVouchersWrapper}>
         <AppText style={styles.numVouchers}>
-          {`${numVouchers} | $${numVouchers * 2}`}
+          {`${numVouchers} | $${numVouchers * denomination}`}
         </AppText>
       </View>
     </View>

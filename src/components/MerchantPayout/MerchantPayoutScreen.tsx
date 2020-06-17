@@ -4,7 +4,8 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   ScrollView,
-  Alert
+  Alert,
+  Vibration
 } from "react-native";
 import { size, color } from "../../common/styles";
 import {
@@ -53,45 +54,34 @@ const styles = StyleSheet.create({
   }
 });
 
+export type Voucher = {
+  serial: string;
+  denomination: number;
+};
+
 export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   navigation
 }) => {
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const [vouchers, setVouchers] = useState([{ valid: 5, invalid: 3 }]);
+  const [vouchers, setVouchers] = useState<Voucher[]>([
+    { serial: "000000001", denomination: 2 }
+  ]);
   const [merchantCode, setMerchantCode] = useState("");
 
-  const submitMerchantCode = (): void => {
-    if (!validateMerchantCode(merchantCode)) {
-      return Alert.alert(
-        "Error",
-        "Invalid Merchant Code",
-        [
-          {
-            text: "Dismiss"
-          }
-        ],
-        {}
-      );
-    }
-    Alert.alert("Valid Merchant Code");
-  };
-
-  const onCancel = (): void => {
-    Alert.alert("Warning", "Cancelling clears all vouchers. Are you sure?", [
-      {
-        text: "Yes",
-        onPress: () => {
-          setVouchers([]);
-          console.log("Yes Pressed");
+  const redeemVouchers = (): void => {
+    try {
+      validateMerchantCode(merchantCode);
+      Vibration.vibrate(50);
+      Alert.alert("Valid Merchant Code");
+    } catch (e) {
+      Alert.alert("Error", e.message || e, [
+        {
+          text: "Dismiss"
         }
-      },
-      {
-        text: "No",
-        onPress: () => console.log("No Pressed")
-      }
-    ]);
+      ]);
+    }
   };
 
   return (
@@ -117,26 +107,50 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 vouchers={vouchers}
                 merchantCode={merchantCode}
                 setMerchantCode={setMerchantCode}
-                submitMerchantCode={submitMerchantCode}
+                redeemVouchers={redeemVouchers}
               />
             </Card>
-            <View style={styles.buttonsWrapper}>
-              <View style={styles.submitWrapper}>
-                <DarkButton
-                  fullWidth={true}
-                  text="Checkout"
-                  icon={
-                    <Feather
-                      name="shopping-cart"
-                      size={size(2)}
-                      color={color("grey", 0)}
-                    />
-                  }
-                  onPress={submitMerchantCode}
+            {vouchers.length > 0 && (
+              <View style={styles.buttonsWrapper}>
+                <View style={styles.submitWrapper}>
+                  <DarkButton
+                    fullWidth={true}
+                    text="Checkout"
+                    icon={
+                      <Feather
+                        name="shopping-cart"
+                        size={size(2)}
+                        color={color("grey", 0)}
+                      />
+                    }
+                    onPress={redeemVouchers}
+                  />
+                </View>
+                <SecondaryButton
+                  text="Cancel"
+                  onPress={() => {
+                    Alert.alert(
+                      "Warning",
+                      "Cancelling clears all vouchers. Are you sure?",
+                      [
+                        {
+                          text: "No",
+                          onPress: () => console.log("No Pressed")
+                        },
+                        {
+                          text: "Yes",
+                          onPress: () => {
+                            setVouchers([]);
+                            console.log("Yes Pressed");
+                          },
+                          style: "destructive"
+                        }
+                      ]
+                    );
+                  }}
                 />
               </View>
-              <SecondaryButton text="Cancel" onPress={onCancel} />
-            </View>
+            )}
             <FeatureToggler feature="HELP_MODAL">
               <HelpButton onPress={showHelpModal} />
             </FeatureToggler>
