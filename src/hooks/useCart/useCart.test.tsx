@@ -16,7 +16,7 @@ import {
   postTransaction,
   NotEligibleError
 } from "../../services/quota";
-import { getEnvVersion } from "../../services/policies";
+import { getEnvVersion } from "../../services/envVersion";
 
 jest.mock("../../services/quota");
 const mockGetQuota = getQuota as jest.Mock;

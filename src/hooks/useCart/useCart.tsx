@@ -6,7 +6,7 @@ import {
   NotEligibleError
 } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
-import { getEnvVersion, EnvVersionError } from "../../services/policies";
+import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
