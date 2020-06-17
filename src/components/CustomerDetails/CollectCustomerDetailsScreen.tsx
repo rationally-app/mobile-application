@@ -8,6 +8,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  Keyboard,
   KeyboardAvoidingView,
   Alert,
   Vibration
@@ -82,6 +83,12 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       checkUpdates();
     }
   }, [isFocused, checkUpdates]);
+
+  useEffect(() => {
+    if (shouldShowCamera) {
+      Keyboard.dismiss();
+    }
+  }, [shouldShowCamera]);
 
   const onCheck = async (input: string): Promise<void> => {
     try {
