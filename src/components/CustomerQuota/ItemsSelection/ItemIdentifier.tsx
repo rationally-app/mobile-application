@@ -7,6 +7,7 @@ import { Feather } from "@expo/vector-icons";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { IdScanner } from "../../IdScanner/IdScanner";
 import { PolicyIdentifier, TextInputType } from "../../../types";
+import { PhoneNumberInput } from "../../Layout/PhoneNumberInput";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -43,6 +44,7 @@ const IdentifierTextInput: FunctionComponent<{
         value={value}
         editable={editable}
         onChange={({ nativeEvent: { text } }) => onChange(text)}
+        keyboardType={type === "NUMBER" ? "phone-pad" : "default"}
       />
     )}
   </View>
@@ -89,7 +91,7 @@ export const ItemIdentifier: FunctionComponent<{
       <View style={styles.inputAndButtonWrapper}>
         {textInput.visible && (
           <IdentifierTextInput
-            addMarginRight={!scanButton.visible}
+            addMarginRight={scanButton.visible}
             editable={!textInput.disabled}
             label={label}
             onChange={onManualInput}
@@ -125,9 +127,7 @@ export const ItemIdentifier: FunctionComponent<{
           <IdScanner
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
-            cancelButtonText={
-              textInput.disabled ? "Back" : "Enter manually" // TODO: check copy
-            }
+            cancelButtonText={textInput.disabled ? "Back" : "Enter manually"}
           />
         </Modal>
       )}
