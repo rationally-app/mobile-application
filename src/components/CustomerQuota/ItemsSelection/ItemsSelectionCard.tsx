@@ -39,8 +39,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         nrics={nrics}
         onAddNric={
           getFeature()?.TRANSACTION_GROUPING
-            ? undefined
-            : () => setIsAddUserModalVisible(true)
+            ? () => setIsAddUserModalVisible(true)
+            : undefined
         }
       >
         <View style={sharedStyles.resultWrapper}>
