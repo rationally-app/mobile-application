@@ -5,6 +5,8 @@ import { wait } from "@testing-library/react-native";
 import { ProductContext } from "../../context/products";
 import {
   Policy,
+  EnvVersion,
+  Feature,
   Quota,
   PostTransactionResult,
   PolicyIdentifier
@@ -14,14 +16,14 @@ import {
   postTransaction,
   NotEligibleError
 } from "../../services/quota";
-import { getPolicies } from "../../services/policies";
+import { getEnvVersion } from "../../services/envVersion";
 
 jest.mock("../../services/quota");
 const mockGetQuota = getQuota as jest.Mock;
 const mockPostTransaction = postTransaction as jest.Mock;
 
-jest.mock("../../services/policies");
-const mockGetPolicies = getPolicies as jest.Mock;
+jest.mock("../../services/envVersion");
+const mockGetEnvVersion = getEnvVersion as jest.Mock;
 
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
@@ -33,67 +35,85 @@ const defaultIdentifier: PolicyIdentifier = {
   scanButton: { visible: true, disabled: false, type: "BARCODE" }
 };
 
-const defaultProducts: Policy[] = [
-  {
-    category: "toilet-paper",
-    name: "Toilet Paper",
-    description: "",
-    order: 1,
-    quantity: {
-      period: 7,
-      limit: 2,
-      default: 1,
-      unit: {
-        type: "POSTFIX",
-        label: " roll"
-      }
-    },
-    identifiers: [
-      {
-        ...defaultIdentifier,
-        label: "first"
+const defaultProducts: EnvVersion = {
+  policies: [
+    {
+      category: "toilet-paper",
+      name: "Toilet Paper",
+      description: "",
+      order: 1,
+      quantity: {
+        period: 7,
+        limit: 2,
+        default: 1,
+        unit: {
+          type: "POSTFIX",
+          label: " roll"
+        }
       },
-      {
-        ...defaultIdentifier,
-        label: "last"
-      }
-    ]
-  },
-  {
-    category: "chocolate",
-    name: "Chocolate",
-    order: 2,
-    quantity: {
-      period: 7,
-      limit: 15,
-      default: 0,
-      unit: {
-        type: "POSTFIX",
-        label: "bar"
-      }
+      identifiers: [
+        {
+          ...defaultIdentifier,
+          label: "first"
+        },
+        {
+          ...defaultIdentifier,
+          label: "last"
+        }
+      ]
     },
-    identifiers: [
-      {
-        ...defaultIdentifier,
-        label: "first"
+    {
+      category: "chocolate",
+      name: "Chocolate",
+      order: 2,
+      quantity: {
+        period: 7,
+        limit: 15,
+        default: 0,
+        unit: {
+          type: "POSTFIX",
+          label: "bar"
+        }
       },
-      {
-        ...defaultIdentifier,
-        label: "last"
-      }
-    ]
+      identifiers: [
+        {
+          ...defaultIdentifier,
+          label: "first"
+        },
+        {
+          ...defaultIdentifier,
+          label: "last"
+        }
+      ]
+    }
+  ],
+  features: {
+    REQUIRE_OTP: true,
+    TRANSACTION_GROUPING: true
   }
-];
+};
 
-const Wrapper: FunctionComponent<{ products?: Policy[] }> = ({
+const Wrapper: FunctionComponent<{
+  products?: Policy[];
+  features?: Feature | undefined;
+}> = ({
   children,
-  products = defaultProducts
+  products = defaultProducts.policies,
+  features = defaultProducts.features
 }) => {
   const getProduct = (category: string): Policy | undefined =>
     products?.find(product => product.category === category) ?? undefined;
+  const getFeature = (): Feature | undefined => features;
   return (
     <ProductContext.Provider
-      value={{ products, getProduct, setProducts: jest.fn() }}
+      value={{
+        products,
+        features,
+        getProduct,
+        setProducts: jest.fn(),
+        getFeature,
+        setFeatures: jest.fn()
+      }}
     >
       {children}
     </ProductContext.Provider>
@@ -313,7 +333,7 @@ describe("useCart", () => {
       expect(result.current.cartState).toBe("FETCHING_QUOTA");
 
       await waitForNextUpdate();
-      expect(mockGetPolicies).toHaveBeenCalledTimes(1);
+      expect(mockGetEnvVersion).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -351,7 +371,7 @@ describe("useCart", () => {
           quantity: 0
         }
       ]);
-      expect(mockGetPolicies).toHaveBeenCalledTimes(0);
+      expect(mockGetEnvVersion).toHaveBeenCalledTimes(0);
     });
 
     it("should update the cart when quantities change", async () => {

@@ -1,39 +1,43 @@
 import { IS_MOCK } from "../../config";
-import { Policies } from "../../types";
+import { EnvVersion } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import * as Sentry from "sentry-expo";
 
-export class PolicyError extends Error {
+export class EnvVersionError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "PolicyError";
+    this.name = "EnvVersionError";
   }
 }
 
-const liveGetPolicies = async (
+const liveGetEnvVersion = async (
   token: string,
   endpoint: string
-): Promise<Policies> => {
+): Promise<EnvVersion> => {
   try {
-    const response = await fetchWithValidator(Policies, `${endpoint}/auth`, {
-      method: "GET",
-      headers: {
-        Authorization: token
+    const response = await fetchWithValidator(
+      EnvVersion,
+      `${endpoint}/version`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: token
+        }
       }
-    });
+    );
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
-    throw new PolicyError(e.message);
+    throw new EnvVersionError(e.message);
   }
 };
 
-const mockGetPolicies = async (
+const mockGetEnvVersion = async (
   _token: string,
   _endpoint: string
-): Promise<Policies> => {
+): Promise<EnvVersion> => {
   return {
     policies: [
       {
@@ -97,8 +101,12 @@ const mockGetPolicies = async (
           }
         ]
       }
-    ]
+    ],
+    features: {
+      REQUIRE_OTP: true,
+      TRANSACTION_GROUPING: true
+    }
   };
 };
 
-export const getPolicies = IS_MOCK ? mockGetPolicies : liveGetPolicies;
+export const getEnvVersion = IS_MOCK ? mockGetEnvVersion : liveGetEnvVersion;

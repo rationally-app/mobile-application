@@ -31,25 +31,16 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
-  const { getProduct } = useProductContext();
-  const identifiers = cart.flatMap(
-    cartItem => getProduct(cartItem.category)?.identifiers
-  );
+  const { getFeature } = useProductContext();
 
-  /* 
-  Current condition check if there is at least an identifier 
-  that exist (!undefined) in multiple categories, and removes '+add' 
-  button if that is true
-  */
   return (
     <View>
       <CustomerCard
         nrics={nrics}
         onAddNric={
-          !identifiers.every(identifier => !identifier) &&
-          identifiers.length > 0
-            ? undefined
-            : () => setIsAddUserModalVisible(true)
+          getFeature()?.TRANSACTION_GROUPING
+            ? () => setIsAddUserModalVisible(true)
+            : undefined
         }
       >
         <View style={sharedStyles.resultWrapper}>

@@ -85,14 +85,21 @@ const Policy = t.intersection([
   })
 ]);
 
-export const Policies = t.type({
-  policies: t.array(Policy)
+const Feature = t.type({
+  REQUIRE_OTP: t.boolean,
+  TRANSACTION_GROUPING: t.boolean
+});
+
+export const EnvVersion = t.type({
+  policies: t.array(Policy),
+  features: Feature
 });
 
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;
-export type Policies = t.TypeOf<typeof Policies>;
+export type EnvVersion = t.TypeOf<typeof EnvVersion>;
+export type Feature = t.TypeOf<typeof Feature>;
 
 const ItemQuota = t.intersection([
   t.type({
