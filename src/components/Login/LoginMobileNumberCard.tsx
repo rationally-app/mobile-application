@@ -21,12 +21,6 @@ import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
     marginTop: size(3)
-  },
-  numberWrapper: {
-    marginBottom: size(2)
-  },
-  label: {
-    fontFamily: "brand-bold"
   }
 });
 
@@ -88,16 +82,14 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
         Please enter your mobile phone number to receive a one-time password.
       </AppText>
       <View style={styles.inputAndButtonWrapper}>
-        <View style={styles.numberWrapper}>
-          <AppText style={styles.label}>Mobile phone number</AppText>
-          <PhoneNumberInput
-            countryCodeValue={countryCode}
-            mobileNumberValue={mobileNumberValue}
-            onChangeCountryCode={onChangeCountryCode}
-            onChangeMobileNumber={onChangeMobileNumber}
-            onSubmit={onSubmitMobileNumber}
-          />
-        </View>
+        <PhoneNumberInput
+          countryCodeValue={countryCode}
+          label="Mobile phone number"
+          mobileNumberValue={mobileNumberValue}
+          onChangeCountryCode={onChangeCountryCode}
+          onChangeMobileNumber={onChangeMobileNumber}
+          onSubmit={onSubmitMobileNumber}
+        />
 
         <DarkButton
           text="Send OTP"

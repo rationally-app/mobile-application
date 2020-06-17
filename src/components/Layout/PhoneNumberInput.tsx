@@ -36,38 +36,50 @@ const styles = StyleSheet.create({
     marginRight: size(1),
     marginLeft: size(1),
     fontSize: fontSize(3)
+  },
+  numberWrapper: {
+    marginBottom: size(2)
+  },
+  label: {
+    fontFamily: "brand-bold"
   }
 });
 
 export const PhoneNumberInput: FunctionComponent<{
   countryCodeValue: string;
+  label: string;
   mobileNumberValue: string;
   onChangeCountryCode: (text: string) => void;
   onChangeMobileNumber: (text: string) => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
 }> = ({
   countryCodeValue,
+  label,
   mobileNumberValue,
   onChangeCountryCode,
   onChangeMobileNumber,
-  onSubmit
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onSubmit = () => {}
 }) => {
   return (
-    <View style={styles.inputsWrapper}>
-      <TextInput
-        style={styles.countryCode}
-        keyboardType="phone-pad"
-        value={countryCodeValue}
-        onChange={({ nativeEvent: { text } }) => onChangeCountryCode(text)}
-      />
-      <AppText style={styles.hyphen}>-</AppText>
-      <TextInput
-        style={styles.numberInput}
-        keyboardType="phone-pad"
-        value={mobileNumberValue}
-        onChange={({ nativeEvent: { text } }) => onChangeMobileNumber(text)}
-        onSubmitEditing={onSubmit}
-      />
+    <View style={styles.numberWrapper}>
+      <AppText style={styles.label}>{label}</AppText>
+      <View style={styles.inputsWrapper}>
+        <TextInput
+          style={styles.countryCode}
+          keyboardType="phone-pad"
+          value={countryCodeValue}
+          onChange={({ nativeEvent: { text } }) => onChangeCountryCode(text)}
+        />
+        <AppText style={styles.hyphen}>-</AppText>
+        <TextInput
+          style={styles.numberInput}
+          keyboardType="phone-pad"
+          value={mobileNumberValue}
+          onChange={({ nativeEvent: { text } }) => onChangeMobileNumber(text)}
+          onSubmitEditing={onSubmit}
+        />
+      </View>
     </View>
   );
 };
