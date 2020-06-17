@@ -11,13 +11,20 @@ const styles = StyleSheet.create({
     minHeight: size(6),
     paddingHorizontal: size(1),
     marginTop: size(1),
-    backgroundColor: color("grey", 0),
     borderWidth: 1,
     borderRadius: borderRadius(2),
-    borderColor: color("grey", 40),
     fontFamily: "brand-regular",
-    fontSize: fontSize(0),
+    fontSize: fontSize(0)
+  },
+  inputEditable: {
+    backgroundColor: color("grey", 0),
+    borderColor: color("grey", 40),
     color: color("blue", 50)
+  },
+  inputNotEditable: {
+    backgroundColor: color("grey", 30),
+    borderColor: color("grey", 30),
+    color: color("grey", 0)
   }
 });
 
@@ -28,11 +35,18 @@ interface InputWithLabel extends TextInputProps {
 
 export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
   label,
-  editable,
+  editable = true,
   ...props
 }) => (
   <View>
     <AppText style={styles.label}>{label}</AppText>
-    <TextInput style={styles.input} editable={editable} {...props} />
+    <TextInput
+      style={[
+        styles.input,
+        ...(editable ? [styles.inputEditable] : [styles.inputNotEditable])
+      ]}
+      editable={editable}
+      {...props}
+    />
   </View>
 );
