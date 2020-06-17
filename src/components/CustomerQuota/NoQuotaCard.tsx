@@ -161,7 +161,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           {itemTransactions.length > 0 && (
             <View>
               <AppText style={{ marginBottom: size(1) }}>
-                Items {policyType === "redeem" ? "redeemed" : "purchased"}:
+                Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}:
               </AppText>
               {itemTransactions.map(
                 ({ itemHeader, itemDetail }, index: number) => (
