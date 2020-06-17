@@ -5,6 +5,8 @@ import { wait } from "@testing-library/react-native";
 import { ProductContext } from "../../context/products";
 import {
   Policy,
+  Policies,
+  Feature,
   Quota,
   PostTransactionResult,
   PolicyIdentifier
@@ -33,55 +35,61 @@ const defaultIdentifier: PolicyIdentifier = {
   scanButton: { visible: true, disabled: false, type: "BARCODE" }
 };
 
-const defaultProducts: Policy[] = [
-  {
-    category: "toilet-paper",
-    name: "Toilet Paper",
-    description: "",
-    order: 1,
-    quantity: {
-      period: 7,
-      limit: 2,
-      default: 1,
-      unit: {
-        type: "POSTFIX",
-        label: " roll"
-      }
-    },
-    identifiers: [
-      {
-        ...defaultIdentifier,
-        label: "first"
+const defaultProducts: Policies = {
+  policies: [
+    {
+      category: "toilet-paper",
+      name: "Toilet Paper",
+      description: "",
+      order: 1,
+      quantity: {
+        period: 7,
+        limit: 2,
+        default: 1,
+        unit: {
+          type: "POSTFIX",
+          label: " roll"
+        }
       },
-      {
-        ...defaultIdentifier,
-        label: "last"
-      }
-    ]
-  },
-  {
-    category: "chocolate",
-    name: "Chocolate",
-    order: 2,
-    quantity: {
-      period: 7,
-      limit: 15,
-      default: 0,
-      unit: {
-        type: "POSTFIX",
-        label: "bar"
-      }
+      identifiers: [
+        {
+          ...defaultIdentifier,
+          label: "first"
+        },
+        {
+          ...defaultIdentifier,
+          label: "last"
+        }
+      ]
     },
-    identifiers: [
-      {
-        ...defaultIdentifier,
-        label: "first"
+    {
+      category: "chocolate",
+      name: "Chocolate",
+      order: 2,
+      quantity: {
+        period: 7,
+        limit: 15,
+        default: 0,
+        unit: {
+          type: "POSTFIX",
+          label: "bar"
+        }
       },
-      {
-        ...defaultIdentifier,
-        label: "last"
-      }
-    ]
+      identifiers: [
+        {
+          ...defaultIdentifier,
+          label: "first"
+        },
+        {
+          ...defaultIdentifier,
+          label: "last"
+        }
+      ]
+    }
+  ],
+  features: {
+    REQUIRE_OTP: true,
+    TRANSACTION_GROUPING: true
   }
 };
 
