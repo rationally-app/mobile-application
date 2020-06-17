@@ -1,5 +1,4 @@
 import { PhoneNumberUtil } from "google-libphonenumber";
-import { IdentifierInput } from "../types";
 
 export const createFullNumber = (countryCode: string, number: string): string =>
   `${countryCode}${number}`.replace(/\s/g, "");
