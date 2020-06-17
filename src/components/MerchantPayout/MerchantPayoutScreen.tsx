@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useContext, useState } from "react";
+import React, {
+  FunctionComponent,
+  useContext,
+  useState,
+  useEffect
+} from "react";
 import {
   View,
   StyleSheet,
@@ -27,6 +32,9 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { Feather } from "@expo/vector-icons";
 import { validateMerchantCode } from "../../utils/validateMerchantCode";
+import { VoucherScanner } from "../VoucherScanner/VoucherScanner";
+import { BarCodeScannedCallback } from "expo-barcode-scanner";
+import { validateVoucherCode } from "../../utils/validateVoucherCode";
 
 const styles = StyleSheet.create({
   content: {
@@ -60,15 +68,54 @@ export type Voucher = {
 };
 
 export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
-  navigation
+  navigation,
+  isFocused
 }) => {
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const [vouchers, setVouchers] = useState<Voucher[]>([
-    { serial: "000000001", denomination: 2 }
-  ]);
+  const [shouldShowCamera, setShouldShowCamera] = useState(false);
+  const [isScanningEnabled, setIsScanningEnabled] = useState(true);
+  const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [merchantCode, setMerchantCode] = useState("");
+
+  useEffect(() => {
+    if (isFocused) {
+      setIsScanningEnabled(true);
+    }
+  }, [isFocused]);
+
+  const onCheckVoucher = async (input: string): Promise<void> => {
+    try {
+      setIsScanningEnabled(false);
+      const serialArr = vouchers.map(voucher => voucher.serial);
+      validateVoucherCode(input, serialArr);
+      setVouchers([...vouchers, { serial: input, denomination: 2 }]);
+      Vibration.vibrate(50);
+      setIsScanningEnabled(true);
+    } catch (e) {
+      setIsScanningEnabled(false);
+      Alert.alert(
+        "Error",
+        e.message || e,
+        [
+          {
+            text: "Dismiss",
+            onPress: () => setIsScanningEnabled(true)
+          }
+        ],
+        {
+          onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
+        }
+      );
+    }
+  };
+
+  const onBarCodeScanned: BarCodeScannedCallback = event => {
+    if (isFocused && isScanningEnabled && event.data) {
+      onCheckVoucher(event.data);
+    }
+  };
 
   const redeemVouchers = (): void => {
     try {
@@ -108,6 +155,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 merchantCode={merchantCode}
                 setMerchantCode={setMerchantCode}
                 redeemVouchers={redeemVouchers}
+                openCamera={() => setShouldShowCamera(true)}
               />
             </Card>
             {vouchers.length > 0 && (
@@ -158,6 +206,14 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         </KeyboardAvoidingView>
       </ScrollView>
       <Credits style={{ bottom: size(3) }} />
+      {shouldShowCamera && (
+        <VoucherScanner
+          vouchers={vouchers}
+          isScanningEnabled={isScanningEnabled}
+          onBarCodeScanned={onBarCodeScanned}
+          onCancel={() => setShouldShowCamera(false)}
+        />
+      )}
     </>
   );
 };

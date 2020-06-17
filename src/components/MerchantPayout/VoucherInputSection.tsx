@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
 });
 
 interface VoucherInputSection {
+  openCamera: () => void;
   vouchers: Voucher[];
   merchantCode: string;
   setMerchantCode: (merchantCode: string) => void;
@@ -44,6 +45,7 @@ interface VoucherInputSection {
 }
 
 export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
+  openCamera,
   vouchers,
   merchantCode,
   setMerchantCode,
@@ -71,7 +73,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
           icon={
             <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
           }
-          // onPress={openCamera}
+          onPress={openCamera}
         />
       </View>
       {vouchers.length > 0 && (
