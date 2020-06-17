@@ -4,9 +4,9 @@ import React, {
   Dispatch,
   SetStateAction
 } from "react";
-import { View, StyleSheet, TextInput } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
-import { size, color, borderRadius, fontSize } from "../../common/styles";
+import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { LoginStage } from "./types";
@@ -16,6 +16,7 @@ import {
   countryCodeValidator,
   createFullNumber
 } from "./utils";
+import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -26,39 +27,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: "brand-bold"
-  },
-  inputsWrapper: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  countryCode: {
-    minHeight: size(6),
-    paddingHorizontal: size(1),
-    marginTop: size(1),
-    backgroundColor: color("grey", 0),
-    borderWidth: 1,
-    borderRadius: borderRadius(2),
-    borderColor: color("grey", 40),
-    fontSize: fontSize(0),
-    color: color("blue", 50),
-    minWidth: size(7)
-  },
-  numberInput: {
-    flex: 1,
-    minHeight: size(6),
-    paddingHorizontal: size(1),
-    marginTop: size(1),
-    backgroundColor: color("grey", 0),
-    borderWidth: 1,
-    borderRadius: borderRadius(2),
-    borderColor: color("grey", 40),
-    fontSize: fontSize(0),
-    color: color("blue", 50)
-  },
-  hyphen: {
-    marginRight: size(1),
-    marginLeft: size(1),
-    fontSize: fontSize(3)
   }
 });
 
@@ -122,27 +90,15 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.numberWrapper}>
           <AppText style={styles.label}>Mobile phone number</AppText>
-          <View style={styles.inputsWrapper}>
-            <TextInput
-              style={styles.countryCode}
-              keyboardType="phone-pad"
-              value={countryCode}
-              onChange={({ nativeEvent: { text } }) =>
-                onChangeCountryCode(text)
-              }
-            />
-            <AppText style={styles.hyphen}>-</AppText>
-            <TextInput
-              style={styles.numberInput}
-              keyboardType="phone-pad"
-              value={mobileNumberValue}
-              onChange={({ nativeEvent: { text } }) =>
-                onChangeMobileNumber(text)
-              }
-              onSubmitEditing={onSubmitMobileNumber}
-            />
-          </View>
+          <PhoneNumberInput
+            countryCodeValue={countryCode}
+            mobileNumberValue={mobileNumberValue}
+            onChangeCountryCode={onChangeCountryCode}
+            onChangeMobileNumber={onChangeMobileNumber}
+            onSubmit={onSubmitMobileNumber}
+          />
         </View>
+
         <DarkButton
           text="Send OTP"
           onPress={onSubmitMobileNumber}
