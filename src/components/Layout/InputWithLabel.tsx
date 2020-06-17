@@ -23,14 +23,16 @@ const styles = StyleSheet.create({
 
 interface InputWithLabel extends TextInputProps {
   label: string;
+  editable: boolean;
 }
 
 export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
   label,
+  editable,
   ...props
 }) => (
   <View>
     <AppText style={styles.label}>{label}</AppText>
-    <TextInput style={styles.input} {...props} />
+    <TextInput style={styles.input} editable={editable} {...props} />
   </View>
 );

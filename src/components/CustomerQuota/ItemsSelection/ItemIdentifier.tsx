@@ -6,6 +6,7 @@ import { size, color } from "../../../common/styles";
 import { Feather } from "@expo/vector-icons";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { IdScanner } from "../../IdScanner/IdScanner";
+import { PolicyIdentifier } from "../../../types";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -20,11 +21,13 @@ const styles = StyleSheet.create({
 
 export const ItemIdentifier: FunctionComponent<{
   index: number;
-  label: string;
+  identifier: PolicyIdentifier;
   updateIdentifierValue: (index: number, value: string) => void;
-}> = ({ index, label, updateIdentifierValue }) => {
+}> = ({ index, identifier, updateIdentifierValue }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [voucherCodeInput, setVoucherCodeInput] = useState("");
+
+  const { label, textInput, scanButton } = identifier;
 
   const onCheck = async (input: string): Promise<void> => {
     try {
@@ -56,20 +59,29 @@ export const ItemIdentifier: FunctionComponent<{
     <>
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
-          <InputWithLabel
-            label={label}
-            value={voucherCodeInput}
-            onChange={({ nativeEvent: { text } }) => onManualInput(text)}
-          />
+          {textInput.visible && (
+            <InputWithLabel
+              label={label}
+              value={voucherCodeInput}
+              editable={!textInput.disabled}
+              onChange={({ nativeEvent: { text } }) => onManualInput(text)}
+            />
+          )}
         </View>
-
-        <DarkButton
-          text="Scan"
-          icon={
-            <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
-          }
-          onPress={() => setShouldShowCamera(true)}
-        />
+        {scanButton.visible && (
+          <DarkButton
+            text="Scan"
+            icon={
+              <Feather
+                name="maximize"
+                size={size(2)}
+                color={color("grey", 0)}
+              />
+            }
+            disabled={scanButton.disabled}
+            onPress={() => setShouldShowCamera(true)}
+          />
+        )}
       </View>
       {shouldShowCamera && (
         <Modal
