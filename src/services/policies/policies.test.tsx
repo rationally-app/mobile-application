@@ -76,6 +76,44 @@ const mockGetPoliciesInvalidResponse = {
         }
       }
     }
+  ],
+  features: {
+    REQUIRE_OTP: true,
+    TRANSACTION_GROUPING: true
+  }
+};
+
+const mockGetPoliciesInvalidResponseWithoutFeatures = {
+  policies: [
+    {
+      category: "toilet-paper",
+      name: "🧻 Toilet Paper",
+      description: "1 ply / 2 ply / 3 ply",
+      order: 1,
+      quantity: {
+        period: 7,
+        limit: 2,
+        unit: {
+          type: "POSTFIX",
+          label: " pack(s)"
+        }
+      }
+    },
+    {
+      category: "chocolate",
+      name: "🍫 Chocolate",
+      description: "Dark / White / Assorted",
+      order: 2,
+      quantity: {
+        period: 14,
+        limit: 30,
+        step: 5,
+        unit: {
+          type: "PREFIX",
+          label: "$"
+        }
+      }
+    }
   ]
 };
 
@@ -127,6 +165,17 @@ describe("policies", () => {
         ok: false,
         json: () =>
           Promise.resolve({ message: "Invalid authentication token provided" })
+      });
+
+      await expect(getPolicies(key, endpoint)).rejects.toThrow(PolicyError);
+    });
+
+    it("should throw error if features could not be retrieved", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve(mockGetPoliciesInvalidResponseWithoutFeatures)
       });
 
       await expect(getPolicies(key, endpoint)).rejects.toThrow(PolicyError);
