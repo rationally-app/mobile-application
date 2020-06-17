@@ -18,7 +18,7 @@ export const RedeemedItem: FunctionComponent<{
       <View style={sharedStyles.itemRow}>
         <AppText style={sharedStyles.itemHeaderText}>{categoryName}</AppText>
       </View>
-      {identifierInputs && identifierInputs.length > 0 && (
+      {identifierInputs && identifierInputs.length > 1 && (
         <View style={sharedStyles.quantitiesWrapper}>
           <View style={sharedStyles.quantitiesBorder} />
           <AppText style={sharedStyles.quantityByIdText}>
