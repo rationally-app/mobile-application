@@ -1,5 +1,3 @@
-import { PhoneNumberUtil } from "google-libphonenumber";
-
 interface QrCode {
   version: string;
   endpoint: string;
@@ -24,31 +22,4 @@ export const decodeQr = (code: string): DecodedQrResponse => {
       );
     throw e;
   }
-};
-
-export const createFullNumber = (countryCode: string, number: string): string =>
-  `${countryCode}${number}`.replace(/\s/g, "");
-
-export const mobileNumberValidator = (
-  countryCode: string,
-  number: string
-): boolean => {
-  if (!/^\d*$/.test(number) || number.length <= 1) {
-    return false;
-  }
-  const phoneNumberUtil = new PhoneNumberUtil();
-  const parsedNumber = phoneNumberUtil.parse(
-    createFullNumber(countryCode, number)
-  );
-  const regionCode = phoneNumberUtil.getRegionCodeForNumber(parsedNumber);
-  return phoneNumberUtil.isValidNumberForRegion(parsedNumber, regionCode);
-};
-
-export const countryCodeValidator = (code: string): boolean => {
-  const phoneNumberUtil = new PhoneNumberUtil();
-  const regions = phoneNumberUtil.getSupportedRegions();
-  const countryCodesList = regions.map(region =>
-    phoneNumberUtil.getCountryCodeForRegion(region).toString()
-  );
-  return code[0] === "+" && countryCodesList.includes(code.substring(1));
 };

@@ -14,6 +14,7 @@ import {
   ItemQuota,
   IdentifierInput
 } from "../../types";
+import { validatePhoneNumbers } from "../../utils/validatePhoneNumbers";
 
 export type CartItem = {
   category: string;
@@ -246,7 +247,7 @@ export const useCart = (
 
       let numUnverifiedTransactions = 0;
       let numIdentifiers = 0;
-      const identiferValues: string[] = [];
+      const allIdentifierInputs: IdentifierInput[] = [];
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
@@ -255,17 +256,19 @@ export const useCart = (
             identifierInputs.some(identifierInput => !identifierInput.value)
           ) {
             numUnverifiedTransactions += 1;
-          } else {
-            identiferValues.push(
-              ...identifierInputs.map(identifierInput => identifierInput.value)
-            );
           }
+          allIdentifierInputs.push(...identifierInputs);
 
           numIdentifiers += identifierInputs.length;
           return { category, quantity, identifierInputs };
         });
 
-      if (numUnverifiedTransactions > 0 || !isUniqueList(identiferValues)) {
+      if (
+        numUnverifiedTransactions > 0 ||
+        !isUniqueList(
+          allIdentifierInputs.map(identifierInput => identifierInput.value)
+        )
+      ) {
         setError(
           new Error(
             `Please enter ${
@@ -273,6 +276,21 @@ export const useCart = (
             }details to checkout`
           )
         );
+        setCartState("DEFAULT");
+        return;
+      }
+
+      if (
+        !validatePhoneNumbers(
+          allIdentifierInputs
+            .filter(
+              identifierInput =>
+                identifierInput.textInputType === "PHONE_NUMBER"
+            )
+            .map(identifierInput => identifierInput.value)
+        )
+      ) {
+        setError(new Error("Invalid mobile phone number"));
         setCartState("DEFAULT");
         return;
       }

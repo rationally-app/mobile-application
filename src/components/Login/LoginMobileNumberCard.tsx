@@ -11,12 +11,12 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { LoginStage } from "./types";
 import { requestOTP } from "../../services/auth";
-import {
-  mobileNumberValidator,
-  countryCodeValidator,
-  createFullNumber
-} from "./utils";
 import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
+import {
+  createFullNumber,
+  countryCodeValidator,
+  mobileNumberValidator
+} from "../../utils/validatePhoneNumbers";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {

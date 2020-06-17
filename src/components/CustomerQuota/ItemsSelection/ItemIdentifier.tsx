@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import { InputWithLabel } from "../../Layout/InputWithLabel";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { View, StyleSheet, Alert, Modal } from "react-native";
@@ -8,6 +8,7 @@ import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { IdScanner } from "../../IdScanner/IdScanner";
 import { PolicyIdentifier, TextInputType } from "../../../types";
 import { PhoneNumberInput } from "../../Layout/PhoneNumberInput";
+import { createFullNumber } from "../../../utils/validatePhoneNumbers";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -31,15 +32,10 @@ const IdentifierPhoneNumberInput: FunctionComponent<{
   const [countryCodeValue, setCountryCodeValue] = useState("+65");
   const [mobileNumber, setMobileNumber] = useState("");
 
-  const onChangeCountryCode = (text: string): void => {
-    setCountryCodeValue(text);
-    onPhoneNumberChange(text + mobileNumber);
-  };
-
-  const onMobileNumberChange = (text: string): void => {
-    setMobileNumber(text);
-    onPhoneNumberChange(countryCodeValue + text);
-  };
+  useEffect(() => {
+    onPhoneNumberChange(createFullNumber(countryCodeValue, mobileNumber));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countryCodeValue, mobileNumber]);
 
   return (
     <View style={[styles.inputWrapper]}>
@@ -47,8 +43,8 @@ const IdentifierPhoneNumberInput: FunctionComponent<{
         countryCodeValue={countryCodeValue}
         label={label}
         mobileNumberValue={mobileNumber}
-        onChangeCountryCode={onChangeCountryCode}
-        onChangeMobileNumber={onMobileNumberChange}
+        onChangeCountryCode={(text: string) => setCountryCodeValue(text)}
+        onChangeMobileNumber={(text: string) => setMobileNumber(text)}
       />
     </View>
   );
