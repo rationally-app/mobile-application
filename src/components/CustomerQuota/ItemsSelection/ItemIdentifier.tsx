@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { InputWithLabel } from "../../Layout/InputWithLabel";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { View, StyleSheet, Alert, Modal } from "react-native";
