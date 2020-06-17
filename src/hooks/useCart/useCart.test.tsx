@@ -22,7 +22,7 @@ jest.mock("../../services/quota");
 const mockGetQuota = getQuota as jest.Mock;
 const mockPostTransaction = postTransaction as jest.Mock;
 
-jest.mock("../../services/policies");
+jest.mock("../../services/envVersion");
 const mockGetEnvVersion = getEnvVersion as jest.Mock;
 
 const key = "KEY";
