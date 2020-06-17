@@ -78,6 +78,24 @@ const mockGetPolicies = async (
             label: "$"
           }
         }
+      },
+      {
+        category: "vouchers",
+        name: "Vouchers",
+        order: 4,
+        quantity: { period: 1, limit: 1, default: 1 },
+        identifiers: [
+          {
+            label: "Voucher code",
+            textInput: { visible: true, disabled: true, type: "STRING" },
+            scanButton: {
+              visible: true,
+              disabled: false,
+              type: "BARCODE",
+              text: "Scan"
+            }
+          }
+        ]
       }
     ]
   };

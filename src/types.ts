@@ -32,8 +32,43 @@ const PolicyQuantity = t.intersection([
   })
 ]);
 
-const PolicyIdentifier = t.type({ scannerType: t.string, label: t.string });
-const PolicyIdentifierInput = t.type({ label: t.string, value: t.string });
+const PolicyIdentifier = t.type({
+  label: t.string,
+  textInput: t.intersection([
+    t.type({
+      visible: t.boolean,
+      disabled: t.boolean
+    }),
+    t.partial({
+      type: t.union([
+        t.literal("STRING"),
+        t.literal("NUMBER"),
+        t.literal("PHONE_NUMBER")
+      ])
+    })
+  ]),
+  scanButton: t.intersection([
+    t.type({
+      visible: t.boolean,
+      disabled: t.boolean
+    }),
+    t.partial({
+      type: t.union([t.literal("QR"), t.literal("BARCODE")]),
+      text: t.string
+    })
+  ])
+});
+
+const IdentifierInput = t.intersection([
+  t.type({
+    label: t.string,
+    value: t.string
+  }),
+  t.partial({
+    textInputType: t.string,
+    scanButtonType: t.string
+  })
+]);
 
 const Policy = t.intersection([
   t.type({
@@ -46,7 +81,7 @@ const Policy = t.intersection([
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
-    type: t.string
+    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")])
   })
 ]);
 
@@ -54,7 +89,7 @@ export const Policies = t.type({
   policies: t.array(Policy)
 });
 
-export type PolicyIdentifierInput = t.TypeOf<typeof PolicyIdentifierInput>;
+export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;
 export type Policies = t.TypeOf<typeof Policies>;
@@ -66,7 +101,7 @@ const ItemQuota = t.intersection([
   }),
   t.partial({
     transactionTime: DateFromNumber,
-    identifiers: t.array(PolicyIdentifierInput)
+    identifierInputs: t.array(IdentifierInput)
   })
 ]);
 
@@ -82,7 +117,7 @@ const Transaction = t.intersection([
     category: t.string,
     quantity: t.number
   }),
-  t.partial({ identifiers: t.array(PolicyIdentifierInput) })
+  t.partial({ identifierInputs: t.array(IdentifierInput) })
 ]);
 
 export const PostTransactionResult = t.type({

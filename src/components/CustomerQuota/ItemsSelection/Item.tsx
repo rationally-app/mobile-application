@@ -7,7 +7,7 @@ import { CartHook, CartItem } from "../../../hooks/useCart/useCart";
 import { size } from "../../../common/styles";
 import { useProductContext } from "../../../context/products";
 import { ItemIdentifiersCard } from "./ItemIdentifiersCard";
-import { PolicyIdentifierInput } from "../../../types";
+import { IdentifierInput } from "../../../types";
 
 const styles = StyleSheet.create({
   cartItemComponent: {
@@ -23,9 +23,9 @@ export const Item: FunctionComponent<{
   const { getProduct } = useProductContext();
   const identifiers = getProduct(cartItem.category)?.identifiers || [];
 
-  const [identifierInputs, setIdentifierInputs] = useState<
-    PolicyIdentifierInput[]
-  >(identifiers.map(identifier => ({ label: identifier.label, value: "" })));
+  const [identifierInputs, setIdentifierInputs] = useState<IdentifierInput[]>(
+    cartItem.identifierInputs
+  );
 
   return (
     <View style={styles.cartItemComponent}>
@@ -40,7 +40,7 @@ export const Item: FunctionComponent<{
       ) : (
         <ItemStepper cartItem={cartItem} updateCart={updateCart} />
       )}
-      {cartItem.maxQuantity > 0 && identifiers && identifiers.length > 0 && (
+      {cartItem.maxQuantity > 0 && identifiers.length > 0 && (
         <ItemIdentifiersCard
           cartItem={cartItem}
           identifierInputs={identifierInputs}

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect } from "react";
-import { PolicyIdentifierInput } from "../../../types";
+import { IdentifierInput } from "../../../types";
 import { CartHook, CartItem } from "../../../hooks/useCart/useCart";
 import { ItemIdentifier } from "./ItemIdentifier";
 import { View, StyleSheet } from "react-native";
@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
 
 export const ItemIdentifiersCard: FunctionComponent<{
   cartItem: CartItem;
-  identifierInputs: PolicyIdentifierInput[];
-  setIdentifierInputs: (input: PolicyIdentifierInput[]) => void;
+  identifierInputs: IdentifierInput[];
+  setIdentifierInputs: (input: IdentifierInput[]) => void;
   updateCart: CartHook["updateCart"];
 }> = ({ cartItem, identifierInputs, setIdentifierInputs, updateCart }) => {
   const updateIdentifierValue = (index: number, value: string): void => {

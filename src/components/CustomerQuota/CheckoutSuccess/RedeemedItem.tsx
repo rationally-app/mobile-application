@@ -11,19 +11,19 @@ export const RedeemedItem: FunctionComponent<{
   itemQuantities: ItemQuantities;
 }> = ({ itemQuantities }) => {
   const { getProduct } = useProductContext();
-  const { category, identifiers } = itemQuantities;
+  const { category, identifierInputs } = itemQuantities;
   const categoryName = getProduct(category)?.name ?? category;
   return (
     <View style={{ marginBottom: size(1.5) }}>
       <View style={sharedStyles.itemRow}>
         <AppText style={sharedStyles.itemHeaderText}>{categoryName}</AppText>
       </View>
-      {identifiers && identifiers.length > 0 && (
+      {identifierInputs && identifierInputs.length > 0 && (
         <View style={sharedStyles.quantitiesWrapper}>
           <View style={sharedStyles.quantitiesBorder} />
           <AppText style={sharedStyles.quantityByIdText}>
-            {`${identifiers[0].value} — ${
-              identifiers[identifiers.length - 1].value
+            {`${identifierInputs[0].value} — ${
+              identifierInputs[identifierInputs.length - 1].value
             }`}
           </AppText>
         </View>
