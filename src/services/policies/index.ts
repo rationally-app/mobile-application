@@ -91,7 +91,7 @@ const mockGetPolicies = async (
             scanButton: {
               visible: true,
               disabled: false,
-              type: "QR",
+              type: "BARCODE",
               text: "Scan"
             }
           }
