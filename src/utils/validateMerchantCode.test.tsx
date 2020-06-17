@@ -9,8 +9,10 @@ describe("validate merchant code", () => {
 
   it("should return false for invalid merchant code", () => {
     expect.assertions(3);
-    expect(validateMerchantCode("")).toBe(false);
-    expect(validateMerchantCode("007")).toBe(false);
-    expect(validateMerchantCode("2020061711")).toBe(false);
+    expect(() => validateMerchantCode("")).toThrow("Invalid merchant code");
+    expect(() => validateMerchantCode("007")).toThrow("Invalid merchant code");
+    expect(() => validateMerchantCode("2020061711")).toThrow(
+      "Invalid merchant code"
+    );
   });
 });
