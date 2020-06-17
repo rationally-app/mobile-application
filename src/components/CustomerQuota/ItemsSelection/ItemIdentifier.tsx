@@ -11,11 +11,15 @@ import { PolicyIdentifier } from "../../../types";
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
     flexDirection: "row",
-    alignItems: "flex-end"
+    justifyContent: "center",
+    alignItems: "flex-end",
+    width: "100%"
   },
   inputWrapper: {
-    flex: 1,
-    marginRight: size(1)
+    flex: 2
+  },
+  buttonWrapper: {
+    flex: 1
   }
 });
 
@@ -58,29 +62,37 @@ export const ItemIdentifier: FunctionComponent<{
   return (
     <>
       <View style={styles.inputAndButtonWrapper}>
-        <View style={styles.inputWrapper}>
-          {textInput.visible && (
+        {textInput.visible && (
+          <View
+            style={[
+              styles.inputWrapper,
+              ...(scanButton.visible ? [{ marginRight: size(1) }] : [])
+            ]}
+          >
             <InputWithLabel
               label={label}
               value={voucherCodeInput}
               editable={!textInput.disabled}
               onChange={({ nativeEvent: { text } }) => onManualInput(text)}
             />
-          )}
-        </View>
+          </View>
+        )}
         {scanButton.visible && (
-          <DarkButton
-            text="Scan"
-            icon={
-              <Feather
-                name="maximize"
-                size={size(2)}
-                color={color("grey", 0)}
-              />
-            }
-            disabled={scanButton.disabled}
-            onPress={() => setShouldShowCamera(true)}
-          />
+          <View style={styles.buttonWrapper}>
+            <DarkButton
+              text={scanButton.text || "Scan"}
+              icon={
+                <Feather
+                  name="maximize"
+                  size={size(2)}
+                  color={color("grey", 0)}
+                />
+              }
+              disabled={scanButton.disabled}
+              fullWidth={!textInput.visible}
+              onPress={() => setShouldShowCamera(true)}
+            />
+          </View>
         )}
       </View>
       {shouldShowCamera && (
@@ -93,7 +105,9 @@ export const ItemIdentifier: FunctionComponent<{
           <IdScanner
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
-            cancelButtonText={"Enter Voucher manually"}
+            cancelButtonText={
+              textInput.disabled ? "Back" : "Enter Voucher manually" // TODO: check copy
+            }
           />
         </Modal>
       )}
