@@ -66,8 +66,7 @@ const styles = StyleSheet.create({
     marginTop: size(5)
   },
   valueText: {
-    marginLeft: size(1),
-    paddingLeft: size(1)
+    marginLeft: size(1)
   }
 });
 
@@ -126,7 +125,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
                 Voucher(s):
               </AppText>
               <AppText style={styles.valueText}>
-                ${vouchers.length * vouchers[0].denomination}
+                | ${vouchers.length * vouchers[0].denomination}
               </AppText>
             </View>
           </View>
