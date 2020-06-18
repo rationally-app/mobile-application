@@ -1,14 +1,12 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
-import { InputWithLabel } from "../../Layout/InputWithLabel";
-import { DarkButton } from "../../Layout/Buttons/DarkButton";
+import React, { FunctionComponent, useState } from "react";
 import { View, StyleSheet, Alert, Modal } from "react-native";
-import { size, color } from "../../../common/styles";
-import { Feather } from "@expo/vector-icons";
+import { size } from "../../../common/styles";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { IdScanner } from "../../IdScanner/IdScanner";
-import { PolicyIdentifier, TextInputType } from "../../../types";
-import { PhoneNumberInput } from "../../Layout/PhoneNumberInput";
-import { createFullNumber } from "../../../utils/validatePhoneNumbers";
+import { PolicyIdentifier } from "../../../types";
+import { IdentifierPhoneNumberInput } from "./IdentifierLayout/IdentifierPhoneNumberInput";
+import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
+import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -25,72 +23,6 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
-
-const IdentifierPhoneNumberInput: FunctionComponent<{
-  label: string;
-  onPhoneNumberChange: (text: string) => void;
-}> = ({ label, onPhoneNumberChange }) => {
-  const [countryCodeValue, setCountryCodeValue] = useState("+65");
-  const [phoneNumber, setPhoneNumber] = useState("");
-
-  useEffect(() => {
-    onPhoneNumberChange(createFullNumber(countryCodeValue, phoneNumber));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countryCodeValue, phoneNumber]);
-
-  return (
-    <View style={[styles.inputWrapper]}>
-      <PhoneNumberInput
-        countryCodeValue={countryCodeValue}
-        label={label}
-        mobileNumberValue={phoneNumber}
-        onChangeCountryCode={(text: string) => setCountryCodeValue(text)}
-        onChangeMobileNumber={(text: string) => setPhoneNumber(text)}
-      />
-    </View>
-  );
-};
-
-const IdentifierTextInput: FunctionComponent<{
-  addMarginRight: boolean;
-  editable: boolean;
-  label: string;
-  onChange: (text: string) => void;
-  type: TextInputType | undefined;
-  value: string;
-}> = ({ addMarginRight, editable, label, onChange, type, value }) => (
-  <View
-    style={[
-      styles.inputWrapper,
-      ...(addMarginRight ? [{ marginRight: size(1) }] : [])
-    ]}
-  >
-    <InputWithLabel
-      label={label}
-      value={value}
-      editable={editable}
-      onChange={({ nativeEvent: { text } }) => onChange(text)}
-      keyboardType={type === "NUMBER" ? "phone-pad" : "default"}
-    />
-  </View>
-);
-
-const IdentifierScanButton: FunctionComponent<{
-  disabled: boolean;
-  fullWidth: boolean;
-  onPress: () => void;
-  text: string | undefined;
-}> = ({ disabled, fullWidth, onPress, text }) => (
-  <View style={styles.buttonWrapper}>
-    <DarkButton
-      text={text || "Scan"}
-      icon={<Feather name="maximize" size={size(2)} color={color("grey", 0)} />}
-      disabled={disabled}
-      fullWidth={fullWidth}
-      onPress={onPress}
-    />
-  </View>
-);
 
 export const ItemIdentifier: FunctionComponent<{
   index: number;
