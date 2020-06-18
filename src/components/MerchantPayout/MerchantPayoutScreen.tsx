@@ -39,6 +39,7 @@ import {
   VoucherStatus,
   VoucherStatusModal
 } from "./VoucherStatusModal/VoucherStatusModal";
+import { AllValidVouchersModal } from "./AllValidVouchersModal";
 
 const styles = StyleSheet.create({
   content: {
@@ -142,6 +143,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       });
     }
   };
+  const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
+    false
+  );
 
   const redeemVouchers = (): void => {
     try {
@@ -155,6 +159,13 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         }
       ]);
     }
+  };
+
+  const onVoucherCodeRemove = (voucherCode: string): void => {
+    if (vouchers.length === 1) {
+      setShowAllValidVouchersModal(false);
+    }
+    setVouchers(vouchers.filter(voucher => voucher.serial !== voucherCode));
   };
 
   return (
@@ -182,6 +193,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 setMerchantCode={setMerchantCode}
                 redeemVouchers={redeemVouchers}
                 openCamera={() => setShouldShowCamera(true)}
+                openAllValidVouchersModal={() =>
+                  setShowAllValidVouchersModal(true)
+                }
               />
             </Card>
             {vouchers.length > 0 && (
@@ -229,6 +243,14 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <HelpButton onPress={showHelpModal} />
             </FeatureToggler>
           </View>
+          {vouchers.length > 0 && (
+            <AllValidVouchersModal
+              vouchers={vouchers}
+              isVisible={showAllValidVouchersModal}
+              onVoucherCodeRemove={onVoucherCodeRemove}
+              onExit={() => setShowAllValidVouchersModal(false)}
+            />
+          )}
         </KeyboardAvoidingView>
       </ScrollView>
       <Credits style={{ bottom: size(3) }} />

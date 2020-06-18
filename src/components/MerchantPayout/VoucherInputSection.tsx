@@ -7,6 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { Voucher } from "./MerchantPayoutScreen";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -42,6 +43,7 @@ interface VoucherInputSection {
   merchantCode: string;
   setMerchantCode: (merchantCode: string) => void;
   redeemVouchers: () => void;
+  openAllValidVouchersModal: () => void;
 }
 
 export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
@@ -49,7 +51,8 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
   vouchers,
   merchantCode,
   setMerchantCode,
-  redeemVouchers
+  redeemVouchers,
+  openAllValidVouchersModal
 }) => {
   return (
     <>
@@ -60,7 +63,9 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
             numVouchers={vouchers.length}
           />
           <View style={styles.seeAllTextWrapper}>
-            <AppText style={styles.seeAllText}>See all</AppText>
+            <TouchableOpacity onPress={openAllValidVouchersModal}>
+              <AppText style={styles.seeAllText}>See all</AppText>
+            </TouchableOpacity>
           </View>
         </View>
       ) : (
