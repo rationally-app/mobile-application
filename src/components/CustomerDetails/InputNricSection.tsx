@@ -73,7 +73,7 @@ export const InputNricSection: FunctionComponent<InputNricSection> = ({
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <InputWithLabel
-            label="Enter identification number"
+            label="Enter ID number"
             value={nricInput}
             onChange={({ nativeEvent: { text } }) => setNricInput(text)}
             onSubmitEditing={submitNric}
