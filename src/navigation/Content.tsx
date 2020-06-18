@@ -4,7 +4,8 @@ import {
   createSwitchNavigator,
   NavigationContainerComponent
 } from "react-navigation";
-import StackNavigator from "./StackNavigator";
+import CustomerQuotaStack from "./CustomerQuotaStack";
+import MerchantPayoutStack from "./MerchantPayoutStack";
 import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
@@ -15,7 +16,8 @@ import { Linking } from "expo";
 const SwitchNavigator = createSwitchNavigator(
   {
     LoginScreen: { screen: LoginScreen, path: "login" },
-    StackNavigator
+    CustomerQuotaStack,
+    MerchantPayoutStack
   },
   { initialRouteName: "LoginScreen" }
 );

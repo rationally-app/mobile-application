@@ -5,7 +5,7 @@ import {
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerQuotaScreen from "./CustomerQuotaScreen";
 
-const StackNavigator = createStackNavigator(
+const CustomerQuotaStack = createStackNavigator(
   {
     CollectCustomerDetailsScreen: {
       screen: CollectCustomerDetailsScreen
@@ -23,4 +23,4 @@ const StackNavigator = createStackNavigator(
   }
 );
 
-export default StackNavigator;
+export default CustomerQuotaStack;
