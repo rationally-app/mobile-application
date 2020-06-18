@@ -131,6 +131,18 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     }
   };
 
+  const onVoucherCodeSubmit = (voucherCode: string): void => {
+    if (isFocused && voucherCode) {
+      onCheckVoucher(voucherCode);
+    } else {
+      setVoucherStatus({
+        status: "INVALID",
+        errorMessage: "Please log an appeal request",
+        errorTitle: "Error during input"
+      });
+    }
+  };
+
   const redeemVouchers = (): void => {
     try {
       validateMerchantCode(merchantCode);
@@ -225,6 +237,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
           vouchers={vouchers}
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
+          onVoucherCodeSubmit={onVoucherCodeSubmit}
           onCancel={() => setShouldShowCamera(false)}
         />
       )}

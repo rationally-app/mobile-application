@@ -10,6 +10,7 @@ import { Voucher } from "../MerchantPayout/MerchantPayoutScreen";
 import { AppText } from "../Layout/AppText";
 import { ValidVoucherCount } from "../MerchantPayout/ValidVoucherCount";
 import { Feather } from "@expo/vector-icons";
+import { ManualAddVoucherModal } from "./ManualAddVoucherModal";
 
 const styles = StyleSheet.create({
   containerWrapper: {
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
 
 interface VoucherScanner extends Camera {
   onCancel: () => void;
+  onVoucherCodeSubmit: (input: string) => void;
   isScanningEnabled?: boolean;
   vouchers: Voucher[];
 }
@@ -45,11 +47,13 @@ interface VoucherScanner extends Camera {
 export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   vouchers,
   onBarCodeScanned,
+  onVoucherCodeSubmit,
   barCodeTypes,
   onCancel,
   isScanningEnabled = true
 }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
+  const [showManualInput, setShowManualInput] = useState(false);
 
   useEffect(() => {
     const askForCameraPermission = async (): Promise<void> => {
@@ -105,10 +109,18 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
       )}
       <View style={styles.cancelButtonWrapper}>
         <View style={styles.manualInputButtonWrapper}>
-          <SecondaryButton text="Enter manually" />
+          <SecondaryButton
+            text="Enter manually"
+            onPress={() => setShowManualInput(true)}
+          />
         </View>
         <DarkButton text="Complete" onPress={onCancel} />
       </View>
+      <ManualAddVoucherModal
+        isVisible={showManualInput}
+        onExit={() => setShowManualInput(false)}
+        onVoucherCodeSubmit={onVoucherCodeSubmit}
+      />
     </View>
   );
 };
