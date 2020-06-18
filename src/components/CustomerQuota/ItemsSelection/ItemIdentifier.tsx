@@ -1,12 +1,11 @@
 import React, { FunctionComponent, useState } from "react";
-import { View, StyleSheet, Alert, Modal } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { size } from "../../../common/styles";
-import { BarCodeScannedCallback } from "expo-barcode-scanner";
-import { IdScanner } from "../../IdScanner/IdScanner";
 import { PolicyIdentifier } from "../../../types";
 import { IdentifierPhoneNumberInput } from "./IdentifierLayout/IdentifierPhoneNumberInput";
 import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
+import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -34,7 +33,7 @@ export const ItemIdentifier: FunctionComponent<{
 
   const { label, textInput, scanButton } = identifier;
 
-  const onCheck = async (input: string): Promise<void> => {
+  const onScanInput = async (input: string): Promise<void> => {
     try {
       setInputValue(input);
       updateIdentifierValue(index, input);
@@ -46,12 +45,6 @@ export const ItemIdentifier: FunctionComponent<{
           text: "Dimiss"
         }
       ]);
-    }
-  };
-
-  const onBarCodeScanned: BarCodeScannedCallback = event => {
-    if (event.data) {
-      onCheck(event.data);
     }
   };
 
@@ -84,23 +77,18 @@ export const ItemIdentifier: FunctionComponent<{
             disabled={scanButton.disabled}
             fullWidth={!textInput.visible}
             onPress={() => setShouldShowCamera(true)}
-            text={scanButton.text}
+            text={scanButton.text || "Scan"}
           />
         )}
       </View>
       {shouldShowCamera && (
-        <Modal
-          visible={shouldShowCamera}
-          onRequestClose={() => setShouldShowCamera(false)}
-          transparent={true}
-          animationType="slide"
-        >
-          <IdScanner
-            onBarCodeScanned={onBarCodeScanned}
-            onCancel={() => setShouldShowCamera(false)}
-            cancelButtonText={textInput.disabled ? "Back" : "Enter manually"}
-          />
-        </Modal>
+        <IdentifierScanModal
+          cancelButtonText={textInput.disabled ? "Back" : "Enter manually"}
+          setShouldShowCamera={setShouldShowCamera}
+          shouldShowCamera={shouldShowCamera}
+          onScanInput={onScanInput}
+          type={scanButton.type || "BARCODE"}
+        />
       )}
     </>
   );
