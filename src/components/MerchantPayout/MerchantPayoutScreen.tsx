@@ -86,6 +86,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const [voucherStatus, setVoucherStatus] = useState<VoucherStatus>({
     status: "VALID"
   });
+  const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
+    false
+  );
 
   useEffect(() => {
     if (isFocused) {
@@ -143,9 +146,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       });
     }
   };
-  const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
-    false
-  );
 
   const redeemVouchers = (): void => {
     try {
