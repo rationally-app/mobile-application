@@ -23,8 +23,9 @@ const styles = StyleSheet.create({
     color: color("grey", 0)
   },
   numVouchersWrapper: {
+    marginTop: size(0.5),
     paddingHorizontal: size(1.5),
-    paddingVertical: size(1),
+    paddingVertical: size(0.5),
     borderRadius: borderRadius(2),
     backgroundColor: color("blue-green", 40)
   }

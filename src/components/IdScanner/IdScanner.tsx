@@ -23,9 +23,12 @@ const styles = StyleSheet.create({
   }
 });
 
-type Camera = Pick<BarCodeScannerProps, "onBarCodeScanned" | "barCodeTypes">;
+export type Camera = Pick<
+  BarCodeScannerProps,
+  "onBarCodeScanned" | "barCodeTypes"
+>;
 
-const Camera: FunctionComponent<Camera> = ({
+export const Camera: FunctionComponent<Camera> = ({
   onBarCodeScanned,
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39]
 }) => (
