@@ -161,11 +161,18 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     }
   };
 
+  const resetState = (): void => {
+    setVouchers([]);
+    setMerchantCode("");
+    setShouldShowCamera(false);
+  };
+
   const redeemVouchers = (): void => {
     try {
       validateMerchantCode(merchantCode);
       Vibration.vibrate(50);
-      Alert.alert("Valid Merchant Code");
+      navigation.navigate("PayoutFeedbackScreen", { merchantCode, vouchers });
+      resetState();
     } catch (e) {
       Alert.alert("Error", e.message || e, [
         {
