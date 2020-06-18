@@ -95,7 +95,7 @@ const mockGetEnvVersion = async (
         identifiers: [
           {
             label: "Voucher",
-            textInput: { visible: true, disabled: true, type: "STRING" },
+            textInput: { visible: true, disabled: false, type: "STRING" },
             scanButton: {
               visible: true,
               disabled: false,
