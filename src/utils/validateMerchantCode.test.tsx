@@ -11,7 +11,10 @@ describe("validate merchant code", () => {
     expect.assertions(3);
     expect(() => validateMerchantCode("")).toThrow("Invalid merchant code");
     expect(() => validateMerchantCode("007")).toThrow("Invalid merchant code");
-    expect(() => validateMerchantCode("2020061711")).toThrow(
+    expect(() => validateMerchantCode("A123456789")).toThrow(
+      "Invalid merchant code"
+    );
+    expect(() => validateMerchantCode("202A0C1D11")).toThrow(
       "Invalid merchant code"
     );
   });
