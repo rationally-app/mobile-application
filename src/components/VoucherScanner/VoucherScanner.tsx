@@ -93,9 +93,9 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
           />
         )}
       </View>
-      {hasCameraPermission && isScanningEnabled ? (
+      {hasCameraPermission ? (
         <Camera
-          onBarCodeScanned={onBarCodeScanned}
+          onBarCodeScanned={isScanningEnabled ? onBarCodeScanned : () => null}
           barCodeTypes={barCodeTypes}
         />
       ) : (
@@ -105,7 +105,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
       )}
       <View style={styles.cancelButtonWrapper}>
         <View style={styles.manualInputButtonWrapper}>
-          <SecondaryButton text="Enter ID manually" />
+          <SecondaryButton text="Enter manually" />
         </View>
         <DarkButton text="Complete" onPress={onCancel} />
       </View>

@@ -15,8 +15,8 @@ export const validateVoucherCode = (
   voucherCode: string,
   voucherCodes: string[]
 ): boolean => {
-  const merchantCodeArr = validate(voucherCode);
-  if (!merchantCodeArr) throw new Error("Invalid merchant code");
+  const isValid = validate(voucherCode);
+  if (!isValid) throw new Error("Invalid voucher code");
   const isDuplicate = checkDuplicate(voucherCode, voucherCodes);
   if (isDuplicate) throw new Error("Duplicate voucher code");
   return true;
