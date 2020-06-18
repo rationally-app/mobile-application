@@ -108,22 +108,28 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   );
 
   const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
-  sortedCart.forEach(({ category, lastTransactionTime, identifierInputs }) => {
-    if (lastTransactionTime) {
-      const policy = getProduct(category);
-      const categoryName = policy?.name ?? category;
-      const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
-      itemTransactions.push({
-        itemHeader: `${categoryName} (${formattedDate})`,
-        itemDetail:
-          identifierInputs && identifierInputs.length > 0
-            ? `${identifierInputs[0].value} — ${
-                identifierInputs[identifierInputs.length - 1].value
-              }`
-            : ""
-      });
+  sortedCart.forEach(
+    ({ category, lastTransactionTime, identifierInputs = [] }) => {
+      if (lastTransactionTime) {
+        const policy = getProduct(category);
+        const categoryName = policy?.name ?? category;
+        const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
+        const filteredIdentifierInputs = identifierInputs.filter(
+          identifierInput => identifierInput.value
+        );
+        itemTransactions.push({
+          itemHeader: `${categoryName} (${formattedDate})`,
+          itemDetail:
+            filteredIdentifierInputs.length > 0
+              ? `${filteredIdentifierInputs[0].value} — ${
+                  filteredIdentifierInputs[filteredIdentifierInputs.length - 1]
+                    .value
+                }`
+              : ""
+        });
+      }
     }
-  });
+  );
 
   const now = new Date();
   const latestTransactionTime = sortedCart[0]?.lastTransactionTime ?? undefined;
