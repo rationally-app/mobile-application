@@ -32,6 +32,14 @@ const PolicyQuantity = t.intersection([
   })
 ]);
 
+const TextInputType = t.union([
+  t.literal("STRING"),
+  t.literal("NUMBER"),
+  t.literal("PHONE_NUMBER")
+]);
+
+const ScanButtonType = t.union([t.literal("QR"), t.literal("BARCODE")]);
+
 const PolicyIdentifier = t.type({
   label: t.string,
   textInput: t.intersection([
@@ -40,11 +48,7 @@ const PolicyIdentifier = t.type({
       disabled: t.boolean
     }),
     t.partial({
-      type: t.union([
-        t.literal("STRING"),
-        t.literal("NUMBER"),
-        t.literal("PHONE_NUMBER")
-      ])
+      type: TextInputType
     })
   ]),
   scanButton: t.intersection([
@@ -53,7 +57,7 @@ const PolicyIdentifier = t.type({
       disabled: t.boolean
     }),
     t.partial({
-      type: t.union([t.literal("QR"), t.literal("BARCODE")]),
+      type: ScanButtonType,
       text: t.string
     })
   ])
@@ -65,8 +69,8 @@ const IdentifierInput = t.intersection([
     value: t.string
   }),
   t.partial({
-    textInputType: t.string,
-    scanButtonType: t.string
+    textInputType: TextInputType,
+    scanButtonType: ScanButtonType
   })
 ]);
 
@@ -95,6 +99,8 @@ export const EnvVersion = t.type({
   features: Feature
 });
 
+export type TextInputType = t.TypeOf<typeof TextInputType>;
+export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;

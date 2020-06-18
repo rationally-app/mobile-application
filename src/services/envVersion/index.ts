@@ -45,6 +45,7 @@ const mockGetEnvVersion = async (
         name: "🧻 Toilet Paper",
         description: "1 ply / 2 ply / 3 ply",
         order: 1,
+        type: "REDEEM",
         quantity: {
           period: 7,
           limit: 2,
@@ -59,6 +60,7 @@ const mockGetEnvVersion = async (
         name: "🍜 Instant Noodles",
         description: "Indomee",
         order: 2,
+        type: "REDEEM",
         quantity: {
           period: 30,
           limit: 1,
@@ -73,6 +75,7 @@ const mockGetEnvVersion = async (
         name: "🍫 Chocolate",
         description: "Dark / White / Assorted",
         order: 3,
+        type: "REDEEM",
         quantity: {
           period: 14,
           limit: 30,
@@ -87,6 +90,7 @@ const mockGetEnvVersion = async (
         category: "vouchers",
         name: "Vouchers",
         order: 4,
+        type: "REDEEM",
         quantity: { period: 1, limit: 1, default: 1 },
         identifiers: [
           {
@@ -94,6 +98,16 @@ const mockGetEnvVersion = async (
             textInput: { visible: true, disabled: true, type: "STRING" },
             scanButton: {
               visible: true,
+              disabled: false,
+              type: "BARCODE",
+              text: "Scan"
+            }
+          },
+          {
+            label: "Phone number",
+            textInput: { visible: true, disabled: true, type: "PHONE_NUMBER" },
+            scanButton: {
+              visible: false,
               disabled: false,
               type: "BARCODE",
               text: "Scan"

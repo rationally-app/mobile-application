@@ -896,6 +896,73 @@ describe("useCart", () => {
       ]);
     });
 
+    it("should set error when there is an invalid mobile number", async () => {
+      expect.assertions(3);
+      mockGetQuota.mockReturnValueOnce({
+        remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
+      });
+      const ids = ["ID1"];
+      const MobileNumberIdentifierProductWrapper: FunctionComponent = ({
+        children
+      }) => (
+        <Wrapper
+          products={[
+            {
+              ...defaultProducts[0],
+              identifiers: [
+                {
+                  label: "code",
+                  textInput: {
+                    visible: true,
+                    disabled: false,
+                    type: "PHONE_NUMBER"
+                  },
+                  scanButton: {
+                    visible: false,
+                    disabled: true
+                  }
+                }
+              ]
+            }
+          ]}
+        >
+          {children}
+        </Wrapper>
+      );
+      const { result } = renderHook(() => useCart(ids, key, endpoint), {
+        wrapper: MobileNumberIdentifierProductWrapper
+      });
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 1, [
+          {
+            value: "+659",
+            label: "code",
+            textInputType: "PHONE_NUMBER"
+          }
+        ]);
+        result.current.checkoutCart();
+      });
+
+      expect(result.current.error?.message).toBe("Invalid contact number");
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          identifierInputs: [
+            {
+              value: "+659",
+              label: "code",
+              textInputType: "PHONE_NUMBER"
+            }
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 1
+        }
+      ]);
+    });
+
     it("should set error when transaction does not succeed", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);

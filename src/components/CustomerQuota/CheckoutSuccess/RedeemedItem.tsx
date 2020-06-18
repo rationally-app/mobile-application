@@ -13,18 +13,28 @@ export const RedeemedItem: FunctionComponent<{
   const { getProduct } = useProductContext();
   const { category, identifierInputs } = itemQuantities;
   const categoryName = getProduct(category)?.name ?? category;
+
+  let identifierInputDisplay = "";
+  if (identifierInputs) {
+    if (identifierInputs.length === 1) {
+      identifierInputDisplay = identifierInputs[0].value;
+    } else if (identifierInputs.length > 1) {
+      identifierInputDisplay = `${identifierInputs[0].value} — ${
+        identifierInputs[identifierInputs.length - 1].value
+      }`;
+    }
+  }
+
   return (
     <View style={{ marginBottom: size(1.5) }}>
       <View style={sharedStyles.itemRow}>
         <AppText style={sharedStyles.itemHeaderText}>{categoryName}</AppText>
       </View>
-      {identifierInputs && identifierInputs.length > 0 && (
+      {identifierInputDisplay && (
         <View style={sharedStyles.quantitiesWrapper}>
           <View style={sharedStyles.quantitiesBorder} />
           <AppText style={sharedStyles.quantityByIdText}>
-            {`${identifierInputs[0].value} — ${
-              identifierInputs[identifierInputs.length - 1].value
-            }`}
+            {identifierInputDisplay}
           </AppText>
         </View>
       )}
