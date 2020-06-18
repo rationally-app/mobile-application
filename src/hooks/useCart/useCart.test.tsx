@@ -944,7 +944,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Invalid mobile phone number");
+      expect(result.current.error?.message).toBe("Invalid contact number");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {

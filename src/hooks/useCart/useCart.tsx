@@ -290,7 +290,7 @@ export const useCart = (
             .map(identifierInput => identifierInput.value)
         )
       ) {
-        setError(new Error("Invalid mobile phone number"));
+        setError(new Error("Invalid contact number"));
         setCartState("DEFAULT");
         return;
       }
