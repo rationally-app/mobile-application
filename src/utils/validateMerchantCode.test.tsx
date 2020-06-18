@@ -8,7 +8,7 @@ describe("validate merchant code", () => {
   });
 
   it("should return false for invalid merchant code", () => {
-    expect.assertions(3);
+    expect.assertions(4);
     expect(() => validateMerchantCode("")).toThrow("Invalid merchant code");
     expect(() => validateMerchantCode("007")).toThrow("Invalid merchant code");
     expect(() => validateMerchantCode("A123456789")).toThrow(

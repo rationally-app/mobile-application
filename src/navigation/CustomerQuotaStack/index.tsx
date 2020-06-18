@@ -4,45 +4,22 @@ import {
 } from "react-navigation-stack";
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerQuotaScreen from "./CustomerQuotaScreen";
-import MerchantPayoutScreen from "./MerchantPayoutScreen";
 
 const CustomerQuotaStack = createStackNavigator(
   {
-    CustomerQuotaStack: createStackNavigator(
-      {
-        CollectCustomerDetailsScreen: {
-          screen: CollectCustomerDetailsScreen
-        },
-        CustomerQuotaScreen: {
-          screen: CustomerQuotaScreen
-        }
-      },
-      {
-        headerMode: "none",
-        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
-        navigationOptions: {
-          gesturesEnabled: true
-        }
-      }
-    ),
-    MerchantPayoutStack: createStackNavigator(
-      {
-        MerchantPayoutScreen: {
-          screen: MerchantPayoutScreen
-        }
-      },
-      {
-        headerMode: "none",
-        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
-        navigationOptions: {
-          gesturesEnabled: true
-        }
-      }
-    )
+    CollectCustomerDetailsScreen: {
+      screen: CollectCustomerDetailsScreen
+    },
+    CustomerQuotaScreen: {
+      screen: CustomerQuotaScreen
+    }
   },
   {
     headerMode: "none",
-    initialRouteName: "CustomerQuotaStack"
+    transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
+    navigationOptions: {
+      gesturesEnabled: true
+    }
   }
 );
 
