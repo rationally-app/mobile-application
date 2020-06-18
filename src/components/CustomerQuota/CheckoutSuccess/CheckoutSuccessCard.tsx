@@ -34,9 +34,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     checkoutResult!
   );
   const { getProduct } = useProductContext();
-  const productType = getProduct(
-    checkoutQuantities[0].category
-  )?.type?.toLowerCase();
+  const productType = getProduct(checkoutQuantities[0].category)?.type;
   const { title, description, ctaButtonText } = getCheckoutMessages(
     productType
   );
@@ -58,7 +56,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             <AppText>{description}</AppText>
             <View style={styles.checkoutItemsList}>
               {checkoutQuantities.map(item => {
-                return productType === "redeem" ? (
+                return productType === "REDEEM" ? (
                   <RedeemedItem key={item.category} itemQuantities={item} />
                 ) : (
                   <PurchasedItem key={item.category} itemQuantities={item} />

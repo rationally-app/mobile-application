@@ -101,8 +101,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 }) => {
   const { getProduct } = useProductContext();
 
-  const policyType =
-    (cart.length > 0 && getProduct(cart[0].category)?.type) || "purchase";
+  const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
   const sortedCart = cart.sort((item1, item2) =>
     compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)

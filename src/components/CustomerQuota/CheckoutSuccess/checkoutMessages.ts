@@ -5,14 +5,14 @@ interface CheckoutMessage {
 }
 
 export const getCheckoutMessages = (productType?: string): CheckoutMessage => {
-  switch (productType?.toLowerCase()) {
-    case "redeem":
+  switch (productType) {
+    case "REDEEM":
       return {
         title: "Redeemed!",
         description: "Item(s) redeemed:",
         ctaButtonText: "Next identity"
       };
-    case "purchase":
+    case "PURCHASE":
     default:
       return {
         title: "Purchased!",
