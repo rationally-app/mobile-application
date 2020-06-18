@@ -2,7 +2,7 @@ import {
   createFullNumber,
   mobileNumberValidator,
   countryCodeValidator,
-  fullMobileNumberValidator,
+  fullPhoneNumberValidator,
   validatePhoneNumbers
 } from "./validatePhoneNumbers";
 
@@ -51,18 +51,18 @@ describe("countryCodeValidator", () => {
   });
 });
 
-describe("fullMobileNumberValidator", () => {
+describe("fullPhoneNumberValidator", () => {
   it("should return false for invalid phone numbers", () => {
     expect.assertions(2);
-    expect(fullMobileNumberValidator("+659")).toBe(false);
-    expect(fullMobileNumberValidator("+191234567")).toBe(false);
+    expect(fullPhoneNumberValidator("+659")).toBe(false);
+    expect(fullPhoneNumberValidator("+191234567")).toBe(false);
   });
 
   it("should return true for valid phone numbers", () => {
     expect.assertions(3);
-    expect(fullMobileNumberValidator("+6596247612")).toBe(true);
-    expect(fullMobileNumberValidator("+6598261749")).toBe(true);
-    expect(fullMobileNumberValidator("+6598219374")).toBe(true);
+    expect(fullPhoneNumberValidator("+6596247612")).toBe(true);
+    expect(fullPhoneNumberValidator("+6598261749")).toBe(true);
+    expect(fullPhoneNumberValidator("+6598219374")).toBe(true);
   });
 });
 

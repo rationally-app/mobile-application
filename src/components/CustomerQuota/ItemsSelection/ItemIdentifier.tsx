@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "flex-end",
-    width: "100%"
+    width: "100%",
+    marginTop: size(2)
   },
   inputWrapper: {
     flex: 2
@@ -30,21 +31,21 @@ const IdentifierPhoneNumberInput: FunctionComponent<{
   onPhoneNumberChange: (text: string) => void;
 }> = ({ label, onPhoneNumberChange }) => {
   const [countryCodeValue, setCountryCodeValue] = useState("+65");
-  const [mobileNumber, setMobileNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
-    onPhoneNumberChange(createFullNumber(countryCodeValue, mobileNumber));
+    onPhoneNumberChange(createFullNumber(countryCodeValue, phoneNumber));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countryCodeValue, mobileNumber]);
+  }, [countryCodeValue, phoneNumber]);
 
   return (
     <View style={[styles.inputWrapper]}>
       <PhoneNumberInput
         countryCodeValue={countryCodeValue}
         label={label}
-        mobileNumberValue={mobileNumber}
+        mobileNumberValue={phoneNumber}
         onChangeCountryCode={(text: string) => setCountryCodeValue(text)}
-        onChangeMobileNumber={(text: string) => setMobileNumber(text)}
+        onChangeMobileNumber={(text: string) => setPhoneNumber(text)}
       />
     </View>
   );

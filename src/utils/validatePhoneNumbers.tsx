@@ -3,7 +3,7 @@ import { PhoneNumberUtil } from "google-libphonenumber";
 export const createFullNumber = (countryCode: string, number: string): string =>
   `${countryCode}${number}`.replace(/\s/g, "");
 
-export const fullMobileNumberValidator = (fullNumber: string): boolean => {
+export const fullPhoneNumberValidator = (fullNumber: string): boolean => {
   try {
     const phoneNumberUtil = new PhoneNumberUtil();
     const parsedNumber = phoneNumberUtil.parse(fullNumber);
@@ -21,7 +21,7 @@ export const mobileNumberValidator = (
   if (!/^\d*$/.test(number) || number.length <= 1) {
     return false;
   }
-  return fullMobileNumberValidator(createFullNumber(countryCode, number));
+  return fullPhoneNumberValidator(createFullNumber(countryCode, number));
 };
 
 export const countryCodeValidator = (code: string): boolean => {
@@ -35,7 +35,7 @@ export const countryCodeValidator = (code: string): boolean => {
 
 export const validatePhoneNumbers = (phoneNumbers: string[]): boolean => {
   for (const phoneNumber of phoneNumbers) {
-    if (!fullMobileNumberValidator(phoneNumber)) {
+    if (!fullPhoneNumberValidator(phoneNumber)) {
       return false;
     }
   }
