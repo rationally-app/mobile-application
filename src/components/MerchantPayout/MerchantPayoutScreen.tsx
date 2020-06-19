@@ -35,6 +35,10 @@ import { validateMerchantCode } from "../../utils/validateMerchantCode";
 import { VoucherScanner } from "../VoucherScanner/VoucherScanner";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { validateVoucherCode } from "../../utils/validateVoucherCode";
+import {
+  VoucherStatus,
+  VoucherStatusModal
+} from "./VoucherStatusModal/VoucherStatusModal";
 
 const styles = StyleSheet.create({
   content: {
@@ -78,6 +82,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [merchantCode, setMerchantCode] = useState("");
+  const [voucherStatus, setVoucherStatus] = useState<VoucherStatus>({
+    status: "VALID"
+  });
 
   useEffect(() => {
     if (isFocused) {
@@ -85,35 +92,42 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     }
   }, [isFocused]);
 
+  const onCancel = (): void => {
+    setVoucherStatus({
+      status: "VALID"
+    });
+    setIsScanningEnabled(true);
+  };
+
   const onCheckVoucher = async (input: string): Promise<void> => {
     try {
       setIsScanningEnabled(false);
+      setVoucherStatus({ status: "CHECKING" });
       const serialArr = vouchers.map(voucher => voucher.serial);
       validateVoucherCode(input, serialArr);
       setVouchers([...vouchers, { serial: input, denomination: 2 }]);
       Vibration.vibrate(50);
-      setIsScanningEnabled(true);
+      //TODO: Send to API -> Valid, for now timeout
+      setTimeout(() => {
+        console.log("Sending to API");
+        setVoucherStatus({ status: "VALID" });
+        setIsScanningEnabled(true);
+      }, 1000);
     } catch (e) {
       setIsScanningEnabled(false);
-      Alert.alert(
-        "Error",
-        e.message || e,
-        [
-          {
-            text: "Dismiss",
-            onPress: () => setIsScanningEnabled(true)
-          }
-        ],
-        {
-          onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
-        }
-      );
+      setVoucherStatus({ status: "INVALID", errorMessage: e.message });
     }
   };
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (isFocused && isScanningEnabled && event.data) {
       onCheckVoucher(event.data);
+    } else {
+      setVoucherStatus({
+        status: "INVALID",
+        errorMessage: "Please try Scanning again or enter voucher manually",
+        errorTitle: "Error scanning"
+      });
     }
   };
 
@@ -214,6 +228,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
           onCancel={() => setShouldShowCamera(false)}
         />
       )}
+      <VoucherStatusModal voucherStatus={voucherStatus} onExit={onCancel} />
     </>
   );
 };
