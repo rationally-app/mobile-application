@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   counterWrapper: {
     marginBottom: size(2),
-    marginRight: "auto"
+    alignSelf: "flex-start"
   }
 });
 
