@@ -1,11 +1,5 @@
 import React, { FunctionComponent } from "react";
-import {
-  View,
-  StyleSheet,
-  Modal,
-  TouchableWithoutFeedback
-} from "react-native";
-import { LoadingCard } from "./LoadingCard";
+import { View, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import { InvalidCard } from "./InvalidCard";
 import { color, size } from "../../../common/styles";
 
@@ -53,7 +47,7 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
       />
     );
   } else {
-    card = <LoadingCard />;
+    card = <ActivityIndicator size="large" color={color("grey", 0)} />;
   }
 
   return (
@@ -63,9 +57,7 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
       animationType="fade"
       transparent={true}
     >
-      <TouchableWithoutFeedback onPress={onExit}>
-        <View style={styles.background} />
-      </TouchableWithoutFeedback>
+      <View style={styles.background} />
       <View style={styles.cardWrapper}>{card}</View>
     </Modal>
   );

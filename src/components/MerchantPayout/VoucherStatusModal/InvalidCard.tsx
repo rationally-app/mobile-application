@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 
 interface InvalidCard {
   title: string;
-  details?: string;
+  details: string;
   closeModal: () => void;
 }
 
