@@ -39,6 +39,7 @@ import {
   VoucherStatus,
   VoucherStatusModal
 } from "./VoucherStatusModal/VoucherStatusModal";
+import { AllValidVouchersModal } from "./AllValidVouchersModal";
 
 const styles = StyleSheet.create({
   content: {
@@ -85,6 +86,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const [voucherStatus, setVoucherStatus] = useState<VoucherStatus>({
     status: "VALID"
   });
+  const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
+    false
+  );
 
   useEffect(() => {
     if (isFocused) {
@@ -157,6 +161,10 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     }
   };
 
+  const onVoucherCodeRemove = (voucherCode: string): void => {
+    setVouchers(vouchers.filter(voucher => voucher.serial !== voucherCode));
+  };
+
   return (
     <>
       <ScrollView
@@ -182,6 +190,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 setMerchantCode={setMerchantCode}
                 redeemVouchers={redeemVouchers}
                 openCamera={() => setShouldShowCamera(true)}
+                openAllValidVouchersModal={() =>
+                  setShowAllValidVouchersModal(true)
+                }
               />
             </Card>
             {vouchers.length > 0 && (
@@ -229,6 +240,12 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <HelpButton onPress={showHelpModal} />
             </FeatureToggler>
           </View>
+          <AllValidVouchersModal
+            vouchers={vouchers}
+            isVisible={showAllValidVouchersModal}
+            onVoucherCodeRemove={onVoucherCodeRemove}
+            onExit={() => setShowAllValidVouchersModal(false)}
+          />
         </KeyboardAvoidingView>
       </ScrollView>
       <Credits style={{ bottom: size(3) }} />
