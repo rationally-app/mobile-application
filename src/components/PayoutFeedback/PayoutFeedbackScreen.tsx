@@ -19,6 +19,7 @@ import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
+import { Voucher } from "../MerchantPayout/MerchantPayoutScreen";
 
 const styles = StyleSheet.create({
   content: {
@@ -76,8 +77,8 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const vouchers = navigation.getParam("vouchers", []);
-  const merchantCode = navigation.getParam("merchantCode");
+  const vouchers: Voucher[] = navigation.getParam("vouchers", []);
+  const merchantCode: string = navigation.getParam("merchantCode");
 
   return (
     <ScrollView
