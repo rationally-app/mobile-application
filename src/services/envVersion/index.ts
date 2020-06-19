@@ -94,8 +94,8 @@ const mockGetEnvVersion = async (
         quantity: { period: 1, limit: 1, default: 1 },
         identifiers: [
           {
-            label: "Voucher code",
-            textInput: { visible: true, disabled: true, type: "STRING" },
+            label: "Voucher",
+            textInput: { visible: true, disabled: false, type: "STRING" },
             scanButton: {
               visible: true,
               disabled: false,
@@ -104,13 +104,21 @@ const mockGetEnvVersion = async (
             }
           },
           {
+            label: "Token",
+            textInput: { visible: true, disabled: true, type: "STRING" },
+            scanButton: {
+              visible: true,
+              disabled: false,
+              type: "QR",
+              text: "Scan"
+            }
+          },
+          {
             label: "Phone number",
             textInput: { visible: true, disabled: true, type: "PHONE_NUMBER" },
             scanButton: {
               visible: false,
-              disabled: false,
-              type: "BARCODE",
-              text: "Scan"
+              disabled: false
             }
           }
         ]
