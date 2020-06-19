@@ -132,12 +132,12 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   };
 
   const onVoucherCodeSubmit = (voucherCode: string): void => {
-    if (isFocused && voucherCode) {
+    if (voucherCode) {
       onCheckVoucher(voucherCode);
     } else {
       setVoucherStatus({
         status: "INVALID",
-        errorMessage: "Please log an appeal request",
+        errorMessage: "No voucher code entered",
         errorTitle: "Error during input"
       });
     }

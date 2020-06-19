@@ -69,8 +69,8 @@ export const ManualAddVoucherModal: FunctionComponent<ManualInputCard> = ({
             onPress={onExit}
             style={{
               position: "absolute",
-              right: size(2),
-              top: size(2),
+              right: size(1.5),
+              top: size(1.5),
               padding: size(1)
             }}
           >
