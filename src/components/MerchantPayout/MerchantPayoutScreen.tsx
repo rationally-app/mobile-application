@@ -162,9 +162,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   };
 
   const onVoucherCodeRemove = (voucherCode: string): void => {
-    if (vouchers.length === 1) {
-      setShowAllValidVouchersModal(false);
-    }
     setVouchers(vouchers.filter(voucher => voucher.serial !== voucherCode));
   };
 
@@ -243,14 +240,12 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <HelpButton onPress={showHelpModal} />
             </FeatureToggler>
           </View>
-          {vouchers.length > 0 && (
-            <AllValidVouchersModal
-              vouchers={vouchers}
-              isVisible={showAllValidVouchersModal}
-              onVoucherCodeRemove={onVoucherCodeRemove}
-              onExit={() => setShowAllValidVouchersModal(false)}
-            />
-          )}
+          <AllValidVouchersModal
+            vouchers={vouchers}
+            isVisible={showAllValidVouchersModal}
+            onVoucherCodeRemove={onVoucherCodeRemove}
+            onExit={() => setShowAllValidVouchersModal(false)}
+          />
         </KeyboardAvoidingView>
       </ScrollView>
       <Credits style={{ bottom: size(3) }} />

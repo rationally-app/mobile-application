@@ -1,10 +1,11 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import {
   StyleSheet,
   View,
   Modal,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import { size, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -28,21 +29,20 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 512,
-    maxHeight: 512,
+    maxHeight: "80%",
     maxWidth: "100%"
   },
   removeText: {
     fontFamily: "brand-italic"
   },
-  removeTextWrapper: {
-    marginLeft: "auto"
-  },
   voucherItemWrapper: {
     flexDirection: "row",
-    marginBottom: size(2)
+    marginBottom: size(2),
+    justifyContent: "space-between"
   },
   counterWrapper: {
-    marginBottom: size(2)
+    marginBottom: size(2),
+    marginRight: "auto"
   }
 });
 
@@ -59,6 +59,12 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
   onExit,
   onVoucherCodeRemove
 }) => {
+  useEffect(() => {
+    if (vouchers.length === 0) {
+      onExit();
+    }
+  }, [onExit, vouchers]);
+
   return (
     <Modal
       visible={isVisible}
@@ -84,7 +90,7 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
           </TouchableOpacity>
           <View style={styles.counterWrapper}>
             <ValidVoucherCount
-              denomination={vouchers[0].denomination}
+              denomination={vouchers.length > 0 ? vouchers[0].denomination : 0}
               numVouchers={vouchers.length}
             />
           </View>
@@ -93,8 +99,24 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
               <View key={voucher.serial} style={styles.voucherItemWrapper}>
                 <AppText>{voucher.serial}</AppText>
                 <TouchableOpacity
-                  onPress={() => onVoucherCodeRemove(voucher.serial)}
-                  style={styles.removeTextWrapper}
+                  onPress={() => {
+                    Alert.alert(
+                      "Warning",
+                      `Do you want to remove voucher(${voucher.serial})?`,
+                      [
+                        {
+                          text: "No"
+                        },
+                        {
+                          text: "Yes",
+                          onPress: () => {
+                            onVoucherCodeRemove(voucher.serial);
+                          },
+                          style: "destructive"
+                        }
+                      ]
+                    );
+                  }}
                 >
                   <AppText style={styles.removeText}>Remove</AppText>
                 </TouchableOpacity>
