@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     marginBottom: size(1.5)
   },
   buttonsWrapper: {
-    marginTop: size(2),
+    marginTop: size(5),
     flexDirection: "row",
     alignItems: "center"
   },
@@ -119,19 +119,16 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       }, 1000);
     } catch (e) {
       setIsScanningEnabled(false);
-      setVoucherStatus({ status: "INVALID", errorMessage: e.message });
+      setVoucherStatus({
+        status: "INVALID",
+        errorMessage: e.message
+      });
     }
   };
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (isFocused && isScanningEnabled && event.data) {
       onCheckVoucher(event.data);
-    } else {
-      setVoucherStatus({
-        status: "INVALID",
-        errorMessage: "Please try Scanning again or enter voucher manually",
-        errorTitle: "Error scanning"
-      });
     }
   };
 

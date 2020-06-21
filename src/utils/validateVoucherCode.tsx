@@ -18,6 +18,6 @@ export const validateVoucherCode = (
   const isValid = validate(voucherCode);
   if (!isValid) throw new Error("Invalid voucher code");
   const isDuplicate = checkDuplicate(voucherCode, voucherCodes);
-  if (isDuplicate) throw new Error("Duplicate voucher code");
+  if (isDuplicate) throw new Error("Please scan a different voucher code");
   return true;
 };

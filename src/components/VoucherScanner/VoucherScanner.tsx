@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity, SafeAreaView } from "react-native";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
 import { Camera } from "../IdScanner/IdScanner";
@@ -14,6 +14,7 @@ import { ManualAddVoucherModal } from "./ManualAddVoucherModal";
 
 const styles = StyleSheet.create({
   containerWrapper: {
+    flex: 1,
     position: "absolute",
     top: 0,
     left: 0,
@@ -68,7 +69,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   }, [onCancel]);
 
   return (
-    <View style={styles.containerWrapper}>
+    <SafeAreaView style={styles.containerWrapper}>
       <TouchableOpacity
         onPress={onCancel}
         style={{
@@ -121,6 +122,6 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
         onExit={() => setShowManualInput(false)}
         onVoucherCodeSubmit={onVoucherCodeSubmit}
       />
-    </View>
+    </SafeAreaView>
   );
 };

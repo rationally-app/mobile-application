@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   card: {
     width: 512,
     maxWidth: "100%",
-    borderTopWidth: size(1),
+    borderTopWidth: size(2),
     backgroundColor: color("red", 10),
     borderColor: color("red", 50)
   },
