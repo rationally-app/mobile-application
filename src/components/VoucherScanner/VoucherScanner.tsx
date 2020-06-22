@@ -33,6 +33,10 @@ const styles = StyleSheet.create({
     marginTop: size(2),
     marginBottom: size(2)
   },
+  validVoucherCountWrapper: {
+    alignSelf: "flex-start",
+    marginHorizontal: size(3)
+  },
   manualInputButtonWrapper: {
     marginRight: size(1)
   }
@@ -81,8 +85,8 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
       >
         <Feather name="x" size={size(3)} color={color("blue", 50)} />
       </TouchableOpacity>
-      <View style={styles.topSectionWrapper}>
-        {vouchers.length === 0 ? (
+      {vouchers.length === 0 ? (
+        <View style={styles.topSectionWrapper}>
           <AppText
             style={{
               fontFamily: "brand-bold",
@@ -91,13 +95,18 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
           >
             Scan to check validity
           </AppText>
-        ) : (
+        </View>
+      ) : (
+        <View
+          style={[styles.topSectionWrapper, styles.validVoucherCountWrapper]}
+        >
           <ValidVoucherCount
             denomination={vouchers[0].denomination}
             numVouchers={vouchers.length}
           />
-        )}
-      </View>
+        </View>
+      )}
+
       {hasCameraPermission ? (
         <Camera
           onBarCodeScanned={isScanningEnabled ? onBarCodeScanned : () => null}
