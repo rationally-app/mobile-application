@@ -9,6 +9,8 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { NavigationProps } from "../../types";
 import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP, requestOTP } from "../../services/auth";
+import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
+import { useProductContext } from "../../context/products";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -47,6 +49,8 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     RESEND_OTP_TIME_LIMIT
   );
   const { setAuthInfo } = useAuthenticationContext();
+  const { setFeatures, setProducts } = useProductContext();
+  const [error, setError] = useState<Error>();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -70,10 +74,31 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
       setIsLoading(false);
       setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
+
+      const versionResponse = await getEnvVersion(
+        response.sessionToken,
+        endpoint
+      );
+      setFeatures(versionResponse.features);
+      setProducts(versionResponse.policies);
+
+      // Toggle between different environments
+      // using the TOGGLE_ENV variable from features
+
+      // versionResponse.features.TOGGLE_ENV
+
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
-      setIsLoading(false);
-      alert(e);
+      if (e instanceof EnvVersionError) {
+        setError(
+          new Error(
+            "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+          )
+        );
+      } else {
+        setIsLoading(false);
+        alert(e);
+      }
     }
   };
 
