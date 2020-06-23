@@ -208,7 +208,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       >
         <KeyboardAvoidingView
           style={{ alignItems: "center" }}
-          behavior="padding"
+          behavior={Platform.select({ ios: "padding" })}
         >
           <TopBackground
             style={{ height: "50%", maxHeight: "auto" }}

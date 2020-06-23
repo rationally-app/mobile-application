@@ -8,7 +8,8 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   KeyboardAvoidingView,
-  Vibration
+  Vibration,
+  Platform
 } from "react-native";
 import { InputNricSection } from "../CustomerDetails/InputNricSection";
 import { IdScanner } from "../IdScanner/IdScanner";
@@ -156,7 +157,9 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             <View style={styles.background} />
           </TouchableWithoutFeedback>
           <View style={styles.cardWrapper}>
-            <KeyboardAvoidingView behavior="position">
+            <KeyboardAvoidingView
+              behavior={Platform.select({ ios: "position" })}
+            >
               <Card style={styles.card}>
                 <View style={styles.cardHeader}>
                   <AppText style={{ flex: 1 }}>

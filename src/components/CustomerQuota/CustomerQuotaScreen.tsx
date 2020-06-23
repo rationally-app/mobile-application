@@ -11,7 +11,8 @@ import {
   Alert,
   ScrollView,
   ActivityIndicator,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
@@ -140,7 +141,10 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       keyboardShouldPersistTaps="handled"
     >
       <TopBackground mode={config.appMode} />
-      <KeyboardAvoidingView behavior="position">
+      <KeyboardAvoidingView
+        behavior={Platform.select({ ios: "position" })}
+        keyboardVerticalOffset={Platform.select({ ios: -100 })}
+      >
         <View style={styles.content}>
           <View style={styles.headerText}>
             <AppHeader mode={config.appMode} />
