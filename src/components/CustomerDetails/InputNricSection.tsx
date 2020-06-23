@@ -77,6 +77,8 @@ export const InputNricSection: FunctionComponent<InputNricSection> = ({
             value={nricInput}
             onChange={({ nativeEvent: { text } }) => setNricInput(text)}
             onSubmitEditing={submitNric}
+            autoCompleteType="off"
+            autoCorrect={false}
           />
         </View>
         <SecondaryButton text="Check" onPress={submitNric} />
