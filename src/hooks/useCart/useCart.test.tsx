@@ -89,7 +89,8 @@ const defaultProducts: EnvVersion = {
   ],
   features: {
     REQUIRE_OTP: true,
-    TRANSACTION_GROUPING: true
+    TRANSACTION_GROUPING: true,
+    TOGGLE_ENV: "VOUCHER"
   }
 };
 
@@ -316,24 +317,6 @@ describe("useCart", () => {
       });
 
       expect(result.current.cartState).toBe("NOT_ELIGIBLE");
-    });
-
-    it("should fetch policies if there are no products in context", async () => {
-      expect.assertions(2);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
-
-      const ids = ["ID1"];
-      const NoProductsWrapper: FunctionComponent = ({ children }) => (
-        <Wrapper products={[]}>{children}</Wrapper>
-      );
-      const { result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
-        { wrapper: NoProductsWrapper }
-      );
-      expect(result.current.cartState).toBe("FETCHING_QUOTA");
-
-      await waitForNextUpdate();
-      expect(mockGetEnvVersion).toHaveBeenCalledTimes(1);
     });
   });
 
