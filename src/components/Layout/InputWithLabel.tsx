@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 
 interface InputWithLabel extends TextInputProps {
   label: string;
-  editable: boolean;
+  editable?: boolean;
 }
 
 export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
