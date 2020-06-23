@@ -9,6 +9,7 @@ import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Cart } from "../../hooks/useCart/useCart";
 import { useProductContext } from "../../context/products";
+import { getIdentifierInputDisplay } from "../../utils/getIdentifierInputDisplay";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -114,18 +115,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         const policy = getProduct(category);
         const categoryName = policy?.name ?? category;
         const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
-        const filteredIdentifierInputs = identifierInputs.filter(
-          identifierInput => identifierInput.value
-        );
         itemTransactions.push({
           itemHeader: `${categoryName} (${formattedDate})`,
-          itemDetail:
-            filteredIdentifierInputs.length > 0
-              ? `${filteredIdentifierInputs[0].value} — ${
-                  filteredIdentifierInputs[filteredIdentifierInputs.length - 1]
-                    .value
-                }`
-              : ""
+          itemDetail: getIdentifierInputDisplay(identifierInputs)
         });
       }
     }
