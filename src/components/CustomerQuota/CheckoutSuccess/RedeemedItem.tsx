@@ -6,6 +6,7 @@ import { ItemQuantities } from "../types";
 import { size } from "../../../common/styles";
 import { useProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
+import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 
 export const RedeemedItem: FunctionComponent<{
   itemQuantities: ItemQuantities;
@@ -14,16 +15,9 @@ export const RedeemedItem: FunctionComponent<{
   const { category, identifierInputs } = itemQuantities;
   const categoryName = getProduct(category)?.name ?? category;
 
-  let identifierInputDisplay = "";
-  if (identifierInputs) {
-    if (identifierInputs.length === 1) {
-      identifierInputDisplay = identifierInputs[0].value;
-    } else if (identifierInputs.length > 1) {
-      identifierInputDisplay = `${identifierInputs[0].value} — ${
-        identifierInputs[identifierInputs.length - 1].value
-      }`;
-    }
-  }
+  const identifierInputDisplay = identifierInputs
+    ? getIdentifierInputDisplay(identifierInputs)
+    : "";
 
   return (
     <View style={{ marginBottom: size(1.5) }}>
