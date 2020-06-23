@@ -50,7 +50,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   );
   const { setAuthInfo } = useAuthenticationContext();
   const { setFeatures, setProducts } = useProductContext();
-  const [error, setError] = useState<Error>();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -90,10 +89,8 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
       if (e instanceof EnvVersionError) {
-        setError(
-          new Error(
-            "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
-          )
+        alert(
+          "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
         );
       } else {
         setIsLoading(false);
