@@ -53,10 +53,10 @@ describe("getIdentifierInputDisplay", () => {
       }
     ];
     expect(getIdentifierInputDisplay([mockIdentifierInputs[0]])).toBe(
-      "****4567"
+      "*******4567"
     );
     expect(getIdentifierInputDisplay(mockIdentifierInputs)).toBe(
-      "****4567 — value3"
+      "*******4567 — value3"
     );
   });
 

@@ -1,10 +1,14 @@
 import { IdentifierInput } from "../types";
 
+const maskString = (str: string, numVisible: number): string => {
+  return str.slice(-4).padStart(str.length, "*");
+};
+
 const processIdentifierInputValue = (
   identifierInput: IdentifierInput
 ): string => {
   return identifierInput.textInputType === "PHONE_NUMBER"
-    ? `****${identifierInput.value.slice(identifierInput.value.length - 4)}`
+    ? maskString(identifierInput.value, 4)
     : identifierInput.value;
 };
 
