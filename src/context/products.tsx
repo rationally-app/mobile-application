@@ -20,7 +20,8 @@ export const ProductContext = createContext<ProductContextValue>({
   products: [],
   features: {
     REQUIRE_OTP: false,
-    TRANSACTION_GROUPING: false
+    TRANSACTION_GROUPING: false,
+    TOGGLE_ENV: ""
   },
   setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getProduct: () => undefined,
