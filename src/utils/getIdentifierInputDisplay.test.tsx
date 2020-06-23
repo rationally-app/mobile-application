@@ -65,7 +65,7 @@ describe("getIdentifierInputDisplay", () => {
     expect(getIdentifierInputDisplay([])).toBe("");
   });
 
-  it("should not display empty identifier values", () => {
+  it("should not return empty identifier values", () => {
     expect.assertions(3);
     const mockIdentifierInputs: IdentifierInput[] = [
       {
