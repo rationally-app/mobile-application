@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 });
 
 const showAlert = (message: string, onDismiss: () => void): void =>
-  Alert.alert("Error", message, [{ text: "Dimiss", onPress: onDismiss }], {
+  Alert.alert("Error", message, [{ text: "OK", onPress: onDismiss }], {
     onDismiss: onDismiss // for android outside alert clicks
   });
 
