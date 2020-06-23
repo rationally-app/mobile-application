@@ -39,6 +39,7 @@ import { VoucherStatusModal } from "./VoucherStatusModal/VoucherStatusModal";
 import { AllValidVouchersModal } from "./AllValidVouchersModal";
 import { useVoucher } from "../../hooks/useVoucher";
 import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity";
+import { useAuthenticationContext } from "../../context/auth";
 
 const styles = StyleSheet.create({
   content: {
@@ -66,11 +67,6 @@ const styles = StyleSheet.create({
   }
 });
 
-export type Voucher = {
-  serial: string;
-  denomination: number;
-};
-
 export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   navigation,
   isFocused
@@ -84,16 +80,19 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
     false
   );
+  const { token, endpoint } = useAuthenticationContext();
+
   const {
     voucherState,
     vouchers,
     addVoucher,
     removeVoucher,
     checkoutMerchantCode,
+    checkoutResult,
     error: merchantError,
     clearError,
     resetState
-  } = useVoucher();
+  } = useVoucher(token, endpoint);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -123,7 +122,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     validityResult,
     error: validityError,
     resetValidityState
-  } = useCheckVoucherValidity();
+  } = useCheckVoucherValidity(token, endpoint);
 
   const onCheckVoucher = async (input: string): Promise<void> => {
     setIsScanningEnabled(false);
@@ -160,7 +159,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
 
   // Detect submission of merchant code
   useEffect(() => {
-    if (voucherState === "RESULT_RETURNED" && !merchantError) {
+    if (voucherState === "RESULT_RETURNED" && checkoutResult) {
+      console.log(checkoutResult);
       Vibration.vibrate(50);
     } else if (merchantError) {
       Alert.alert("Error", merchantError.message, [
@@ -170,7 +170,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         }
       ]);
     }
-  }, [voucherState, merchantError, clearError]);
+  }, [voucherState, merchantError, clearError, checkoutResult]);
 
   return (
     <>

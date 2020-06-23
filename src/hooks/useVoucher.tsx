@@ -1,10 +1,7 @@
 import { useState, useCallback } from "react";
 import { validateMerchantCode } from "../utils/validateMerchantCode";
-
-export type Voucher = {
-  serial: string;
-  denomination: number;
-};
+import { Voucher, PostTransactionResult, Transaction } from "../types";
+import { postTransaction } from "../services/voucher";
 
 type VoucherState = "DEFAULT" | "CONSUMING_VOUCHER" | "RESULT_RETURNED";
 
@@ -14,18 +11,22 @@ export type VoucherHook = {
   addVoucher: (voucher: Voucher) => void;
   removeVoucher: (serial: string) => void;
   checkoutMerchantCode: (merchantCode: string) => void;
+  checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
   resetState: () => void;
 };
 
-export const useVoucher = (): VoucherHook => {
+export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [voucherState, setVoucherState] = useState<VoucherState>("DEFAULT");
+  const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
 
   const resetState = useCallback((): void => {
     setError(undefined);
+    setCheckoutResult(undefined);
+    setVoucherState("DEFAULT");
     setVouchers([]);
   }, []);
 
@@ -53,10 +54,31 @@ export const useVoucher = (): VoucherHook => {
           return;
         }
 
+        const transactions: Transaction[] = [
+          {
+            category: "voucher",
+            quantity: vouchers.length,
+            identifiers: [
+              {
+                label: "Merchant Code",
+                value: merchantCode
+              },
+              {
+                label: "Redeemed by",
+                value: merchantCode
+              }
+            ]
+          }
+        ];
+
         try {
-          ///TODO: Send to API -> Valid, for now timeout
-          await new Promise(res => setTimeout(res, 1000)); // delay 1s
-          console.log("Sending to API");
+          const transactionResponse = await postTransaction({
+            ids: vouchers.map(voucher => voucher.serial),
+            key: authKey,
+            transactions,
+            endpoint
+          });
+          setCheckoutResult(transactionResponse);
           setVoucherState("RESULT_RETURNED");
         } catch (e) {
           setError(e);
@@ -65,7 +87,7 @@ export const useVoucher = (): VoucherHook => {
 
       checkout();
     },
-    []
+    [authKey, endpoint, vouchers]
   );
 
   return {
@@ -74,6 +96,7 @@ export const useVoucher = (): VoucherHook => {
     addVoucher,
     removeVoucher,
     checkoutMerchantCode,
+    checkoutResult,
     error,
     clearError,
     resetState

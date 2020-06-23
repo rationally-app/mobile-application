@@ -94,5 +94,11 @@ export const PostTransactionResult = t.type({
   )
 });
 
+export const Voucher = t.type({
+  serial: t.string,
+  denomination: t.number
+});
+
 export type Transaction = t.TypeOf<typeof Transaction>;
 export type PostTransactionResult = t.TypeOf<typeof PostTransactionResult>;
+export type Voucher = t.TypeOf<typeof Voucher>;

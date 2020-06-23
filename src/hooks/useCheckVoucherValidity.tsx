@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { validateVoucherCode } from "../utils/validateVoucherCode";
-import { Voucher } from "./useVoucher";
+import { getVoucherValidation } from "../services/voucher";
+import { Voucher } from "../types";
 
 export class ScannerError extends Error {
   constructor(message: string) {
@@ -9,10 +10,7 @@ export class ScannerError extends Error {
   }
 }
 
-type CheckValidityState =
-  | "DEFAULT"
-  | "CHECKING_VALIDITY"
-  | "RESULT_RETURNED";
+type CheckValidityState = "DEFAULT" | "CHECKING_VALIDITY" | "RESULT_RETURNED";
 
 export type useCheckVoucherValidity = {
   checkValidityState: CheckValidityState;
@@ -22,7 +20,10 @@ export type useCheckVoucherValidity = {
   resetValidityState: () => void;
 };
 
-export const useCheckVoucherValidity = (): useCheckVoucherValidity => {
+export const useCheckVoucherValidity = (
+  authKey: string,
+  endpoint: string
+): useCheckVoucherValidity => {
   const [checkValidityState, setCheckValidityState] = useState<
     CheckValidityState
   >("DEFAULT");
@@ -52,10 +53,11 @@ export const useCheckVoucherValidity = (): useCheckVoucherValidity => {
         }
         //Send to backend to check if valid
         try {
-          //TODO: Send to API -> Valid, for now timeout
-          await new Promise(res => setTimeout(res, 1000)); // delay 1s
-          console.log("Sending to API");
-          const validityResponse: Voucher = { serial, denomination: 2 };
+          const validityResponse = await getVoucherValidation(
+            serial,
+            authKey,
+            endpoint
+          );
           setValidityResult(validityResponse);
           setCheckValidityState("RESULT_RETURNED");
         } catch (e) {
@@ -64,7 +66,7 @@ export const useCheckVoucherValidity = (): useCheckVoucherValidity => {
       };
       check();
     },
-    []
+    [authKey, endpoint]
   );
 
   return {
