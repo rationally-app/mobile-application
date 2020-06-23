@@ -12,7 +12,10 @@ type AlertProps = {
 
 interface LogoutHook {
   isLoggingOut: boolean;
-  logout: (navigationDispatch?: NavigationDispatch, alert?: AlertProps) => void;
+  logout: (
+    navigationDispatch: NavigationDispatch | undefined,
+    alert?: AlertProps
+  ) => void;
 }
 
 export const useLogout = (): LogoutHook => {
