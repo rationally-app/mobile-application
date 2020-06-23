@@ -2,6 +2,10 @@ import React, { FunctionComponent } from "react";
 import { View, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import { InvalidCard } from "./InvalidCard";
 import { color, size } from "../../../common/styles";
+import {
+  ScannerError,
+  useCheckVoucherValidity
+} from "../../../hooks/useCheckVoucherValidity";
 
 const styles = StyleSheet.create({
   background: {
@@ -17,35 +21,33 @@ const styles = StyleSheet.create({
   }
 });
 
-type VoucherStatuses = "CHECKING" | "INVALID" | "VALID";
-
-export interface VoucherStatus {
-  status: VoucherStatuses;
-  errorMessage?: string;
-  errorTitle?: string;
-}
-
 interface VoucherStatusModal {
-  voucherStatus: VoucherStatus;
+  checkValidityState: useCheckVoucherValidity["checkValidityState"];
+  error?: useCheckVoucherValidity["error"];
   onExit: () => void;
 }
 
 export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   onExit,
-  voucherStatus
+  checkValidityState,
+  error
 }) => {
-  const isVisible =
-    voucherStatus.status === "INVALID" || voucherStatus.status === "CHECKING";
+  const isVisible = checkValidityState === "CHECKING_VALIDITY";
 
   let card;
-  if (voucherStatus.status === "INVALID") {
+  if (error instanceof ScannerError) {
     card = (
       <InvalidCard
-        title={voucherStatus.errorTitle || "Error scanning"}
-        details={
-          voucherStatus.errorMessage ||
-          "Please try scanning again or enter manually"
-        }
+        title={error.name}
+        details={error.message}
+        closeModal={onExit}
+      />
+    );
+  } else if (error instanceof Error) {
+    card = (
+      <InvalidCard
+        title="Invalid"
+        details={error.message || "Please log an appeal request"}
         closeModal={onExit}
       />
     );
@@ -56,7 +58,7 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   return (
     <Modal
       visible={isVisible}
-      onRequestClose={onExit}
+      onRequestClose={error ? onExit : () => null}
       animationType="fade"
       transparent={true}
     >
