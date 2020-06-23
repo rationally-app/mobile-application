@@ -43,7 +43,8 @@ const mockGetEnvVersionValidResponse = {
   ],
   features: {
     REQUIRE_OTP: true,
-    TRANSACTION_GROUPING: true
+    TRANSACTION_GROUPING: true,
+    TOGGLE_ENV: "MERCHANT"
   }
 };
 
@@ -79,7 +80,8 @@ const mockGetEnvVersionInvalidResponse = {
   ],
   features: {
     REQUIRE_OTP: true,
-    TRANSACTION_GROUPING: true
+    TRANSACTION_GROUPING: true,
+    TOGGLE_ENV: "MERCHANT"
   }
 };
 
