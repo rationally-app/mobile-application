@@ -10,7 +10,8 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
@@ -139,42 +140,44 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       keyboardShouldPersistTaps="handled"
     >
       <TopBackground mode={config.appMode} />
-      <View style={styles.content}>
-        <View style={styles.headerText}>
-          <AppHeader mode={config.appMode} />
-        </View>
-
-        {messageContent && (
-          <View style={styles.bannerWrapper}>
-            <Banner {...messageContent} />
+      <KeyboardAvoidingView behavior="position">
+        <View style={styles.content}>
+          <View style={styles.headerText}>
+            <AppHeader mode={config.appMode} />
           </View>
-        )}
 
-        {cartState === "PURCHASED" ? (
-          <CheckoutSuccessCard
-            nrics={nrics}
-            onCancel={onCancel}
-            checkoutResult={checkoutResult}
-          />
-        ) : cartState === "NO_QUOTA" ? (
-          <NoQuotaCard nrics={nrics} cart={cart} onCancel={onCancel} />
-        ) : cartState === "NOT_ELIGIBLE" ? (
-          <NotEligibleCard nrics={nrics} onCancel={onCancel} />
-        ) : (
-          <ItemsSelectionCard
-            nrics={nrics}
-            addNric={addNric}
-            isLoading={cartState === "CHECKING_OUT"}
-            checkoutCart={checkoutCart}
-            onCancel={onCancel}
-            cart={cart}
-            updateCart={updateCart}
-          />
-        )}
-        <FeatureToggler feature="HELP_MODAL">
-          <HelpButton onPress={showHelpModal} />
-        </FeatureToggler>
-      </View>
+          {messageContent && (
+            <View style={styles.bannerWrapper}>
+              <Banner {...messageContent} />
+            </View>
+          )}
+
+          {cartState === "PURCHASED" ? (
+            <CheckoutSuccessCard
+              nrics={nrics}
+              onCancel={onCancel}
+              checkoutResult={checkoutResult}
+            />
+          ) : cartState === "NO_QUOTA" ? (
+            <NoQuotaCard nrics={nrics} cart={cart} onCancel={onCancel} />
+          ) : cartState === "NOT_ELIGIBLE" ? (
+            <NotEligibleCard nrics={nrics} onCancel={onCancel} />
+          ) : (
+            <ItemsSelectionCard
+              nrics={nrics}
+              addNric={addNric}
+              isLoading={cartState === "CHECKING_OUT"}
+              checkoutCart={checkoutCart}
+              onCancel={onCancel}
+              cart={cart}
+              updateCart={updateCart}
+            />
+          )}
+          <FeatureToggler feature="HELP_MODAL">
+            <HelpButton onPress={showHelpModal} />
+          </FeatureToggler>
+        </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
