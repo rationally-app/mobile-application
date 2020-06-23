@@ -138,11 +138,6 @@ export const useCart = (
     const fetchQuota = async (): Promise<void> => {
       setCartState("FETCHING_QUOTA");
       try {
-        if (products.length === 0) {
-          const response = await getEnvVersion(authKey, endpoint);
-          setProducts(response.policies);
-          setFeatures(response.features);
-        }
         const quotaResponse = await getQuota(ids, authKey, endpoint);
         if (hasNoQuota(quotaResponse)) {
           setCartState("NO_QUOTA");
