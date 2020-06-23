@@ -1,7 +1,7 @@
 import { IdentifierInput } from "../types";
 
 const maskString = (str: string, numVisible: number): string => {
-  return str.slice(-4).padStart(str.length, "*");
+  return str.slice(-numVisible).padStart(str.length, "*");
 };
 
 const processIdentifierInputValue = (
