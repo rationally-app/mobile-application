@@ -91,7 +91,8 @@ const Policy = t.intersection([
 
 const Feature = t.type({
   REQUIRE_OTP: t.boolean,
-  TRANSACTION_GROUPING: t.boolean
+  TRANSACTION_GROUPING: t.boolean,
+  TOGGLE_ENV: t.string
 });
 
 export const EnvVersion = t.type({
