@@ -6,7 +6,6 @@ import {
   NotEligibleError
 } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
-import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
@@ -153,12 +152,6 @@ export const useCart = (
         if (e instanceof NotEligibleError) {
           setCartState("NOT_ELIGIBLE");
           // Cart will remain in FETCHING_QUOTA state.
-        } else if (e instanceof EnvVersionError) {
-          setError(
-            new Error(
-              "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
-            )
-          );
         } else if (e instanceof QuotaError) {
           setError(
             new Error(
