@@ -13,7 +13,8 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Vibration,
-  BackHandler
+  BackHandler,
+  Platform
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
