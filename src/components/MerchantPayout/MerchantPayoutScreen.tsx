@@ -37,8 +37,8 @@ import { VoucherScanner } from "../VoucherScanner/VoucherScanner";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { VoucherStatusModal } from "./VoucherStatusModal/VoucherStatusModal";
 import { AllValidVouchersModal } from "./AllValidVouchersModal";
-import { useVoucher } from "../../hooks/useVoucher";
-import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity";
+import { useVoucher } from "../../hooks/useVoucher/useVoucher";
+import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { useAuthenticationContext } from "../../context/auth";
 
 const styles = StyleSheet.create({

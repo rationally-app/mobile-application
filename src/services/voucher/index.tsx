@@ -65,6 +65,8 @@ export const mockGetVoucherValidation = async (
   _key: string,
   _endpoint: string
 ): Promise<Voucher> => {
+  console.log(serial);
+  if (serial === "000000000") throw new InvalidVoucherError("Already redeemed");
   return {
     serial: serial,
     denomination: 2

@@ -5,7 +5,7 @@ import { color, size } from "../../../common/styles";
 import {
   ScannerError,
   useCheckVoucherValidity
-} from "../../../hooks/useCheckVoucherValidity";
+} from "../../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 
 const styles = StyleSheet.create({
   background: {

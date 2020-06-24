@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import { validateVoucherCode } from "../utils/validateVoucherCode";
-import { getVoucherValidation } from "../services/voucher";
-import { Voucher } from "../types";
+import { validateVoucherCode } from "../../utils/validateVoucherCode";
+import { getVoucherValidation } from "../../services/voucher";
+import { Voucher } from "../../types";
 
 export class ScannerError extends Error {
   constructor(message: string) {

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import { validateMerchantCode } from "../utils/validateMerchantCode";
-import { Voucher, PostTransactionResult, Transaction } from "../types";
-import { postTransaction } from "../services/voucher";
+import { validateMerchantCode } from "../../utils/validateMerchantCode";
+import { Voucher, PostTransactionResult, Transaction } from "../../types";
+import { postTransaction } from "../../services/voucher";
 
 type VoucherState = "DEFAULT" | "CONSUMING_VOUCHER" | "RESULT_RETURNED";
 
