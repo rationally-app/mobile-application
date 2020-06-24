@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent, useState, useEffect, useRef } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";

@@ -3,7 +3,8 @@ import React, {
   useContext,
   useState,
   useEffect,
-  useCallback
+  useCallback,
+  useRef
 } from "react";
 import {
   View,
@@ -124,6 +125,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     resetValidityState
   } = useCheckVoucherValidity(token, endpoint);
 
+  const currentBarcode = useRef<string>();
+
   const onCheckVoucher = async (input: string): Promise<void> => {
     setIsScanningEnabled(false);
     checkValidity(input, vouchers);
@@ -148,7 +151,13 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   }, [isFocused, checkValidityState, validityResult, onModalExit, addVoucher]);
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
-    if (isScanningEnabled && event.data) {
+    console.log(event.data);
+    if (
+      isScanningEnabled &&
+      event.data &&
+      currentBarcode.current !== event.data
+    ) {
+      currentBarcode.current = event.data;
       onCheckVoucher(event.data);
     }
   };
