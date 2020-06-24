@@ -90,7 +90,7 @@ const defaultProducts: EnvVersion = {
   features: {
     REQUIRE_OTP: true,
     TRANSACTION_GROUPING: true,
-    TOGGLE_ENV: "VOUCHER"
+    DIST_ENV: "VOUCHER"
   }
 };
 
@@ -679,7 +679,7 @@ describe("useCart", () => {
         <Wrapper
           products={[
             {
-              ...defaultProducts[0],
+              ...defaultProducts.policies[0],
               identifiers: [
                 {
                   ...defaultIdentifier,
@@ -891,7 +891,7 @@ describe("useCart", () => {
         <Wrapper
           products={[
             {
-              ...defaultProducts[0],
+              ...defaultProducts.policies[0],
               identifiers: [
                 {
                   label: "code",
