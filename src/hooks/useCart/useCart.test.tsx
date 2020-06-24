@@ -90,7 +90,7 @@ const defaultProducts: EnvVersion = {
   features: {
     REQUIRE_OTP: true,
     TRANSACTION_GROUPING: true,
-    TOGGLE_ENV: "VOUCHER"
+    DIST_ENV: "VOUCHER"
   }
 };
 
