@@ -11,7 +11,8 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Alert,
-  Vibration
+  Vibration,
+  BackHandler
 } from "react-native";
 import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -83,6 +84,23 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       checkUpdates();
     }
   }, [isFocused, checkUpdates]);
+
+  // Close camera when back action is triggered
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (shouldShowCamera) {
+          setShouldShowCamera(false);
+          return true;
+        }
+        return false;
+      }
+    );
+    return () => {
+      backHandler.remove();
+    };
+  }, [shouldShowCamera]);
 
   useEffect(() => {
     if (shouldShowCamera) {
