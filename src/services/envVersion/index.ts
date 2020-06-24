@@ -127,7 +127,7 @@ const mockGetEnvVersion = async (
     features: {
       REQUIRE_OTP: true,
       TRANSACTION_GROUPING: true,
-      TOGGLE_ENV: "CDC_VOUCHER"
+      DIST_ENV: "CDC_VOUCHER"
     }
   };
 };

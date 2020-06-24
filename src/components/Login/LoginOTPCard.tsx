@@ -82,9 +82,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       setProducts(versionResponse.policies);
 
       // Toggle between different environments
-      // using the TOGGLE_ENV variable from features
+      // using the DIST_ENV variable from features
 
-      // versionResponse.features.TOGGLE_ENV
+      // versionResponse.features.DIST_ENV
 
       navigation.navigate("CollectCustomerDetailsScreen");
     } catch (e) {
