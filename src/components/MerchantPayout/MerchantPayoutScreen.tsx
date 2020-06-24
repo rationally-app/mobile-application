@@ -10,7 +10,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Alert,
-  Vibration
+  Vibration,
+  BackHandler
 } from "react-native";
 import { size, color } from "../../common/styles";
 import {
@@ -89,6 +90,22 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
     false
   );
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (shouldShowCamera) {
+          setShouldShowCamera(false);
+          return true;
+        }
+        return false;
+      }
+    );
+    return () => {
+      backHandler.remove();
+    };
+  }, [shouldShowCamera]);
 
   useEffect(() => {
     if (isFocused) {
