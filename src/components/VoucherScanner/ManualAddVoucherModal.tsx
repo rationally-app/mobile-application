@@ -41,7 +41,7 @@ export const ManualAddVoucherModal: FunctionComponent<ManualInputCard> = ({
         />
       </View>
       <DarkButton
-        fullWidth
+        fullWidth={true}
         text="Add voucher"
         icon={
           <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />

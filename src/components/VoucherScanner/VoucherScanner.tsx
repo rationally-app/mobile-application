@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
   },
   validVoucherCountWrapper: {
     alignSelf: "flex-start",
-    marginHorizontal: size(3)
+    marginHorizontal: size(3),
+    marginBottom: size(2)
   },
   manualInputButtonWrapper: {
     marginRight: size(1)
@@ -59,7 +60,6 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
 }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showManualInput, setShowManualInput] = useState(false);
-
   useEffect(() => {
     const askForCameraPermission = async (): Promise<void> => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -97,9 +97,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
           </AppText>
         </View>
       ) : (
-        <View
-          style={[styles.topSectionWrapper, styles.validVoucherCountWrapper]}
-        >
+        <View style={styles.validVoucherCountWrapper}>
           <ValidVoucherCount
             denomination={vouchers[0].denomination}
             numVouchers={vouchers.length}

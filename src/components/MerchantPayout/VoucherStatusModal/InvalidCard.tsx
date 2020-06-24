@@ -44,7 +44,7 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
       <AppText style={styles.headerText}>{title}</AppText>
       <AppText style={{ marginBottom: size(5) }}>{details}</AppText>
       <DarkButton
-        fullWidth
+        fullWidth={true}
         text="Continue scanning"
         onPress={() => {
           closeModal();
