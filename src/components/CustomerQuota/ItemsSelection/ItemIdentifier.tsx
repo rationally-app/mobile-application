@@ -42,7 +42,7 @@ export const ItemIdentifier: FunctionComponent<{
       setShouldShowCamera(false);
       Alert.alert("Error", e.message || e, [
         {
-          text: "Dimiss"
+          text: "OK"
         }
       ]);
     }

@@ -108,7 +108,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
         e.message || e,
         [
           {
-            text: "Dimiss",
+            text: "OK",
             onPress: () => setIsScanningEnabled(true)
           }
         ],

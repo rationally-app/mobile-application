@@ -104,7 +104,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         e.message || e,
         [
           {
-            text: "Dimiss",
+            text: "OK",
             onPress: () => setIsScanningEnabled(true)
           }
         ],
