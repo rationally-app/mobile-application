@@ -1,13 +1,7 @@
 import React, { FunctionComponent, useContext } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { NavigationProps } from "../../types";
-import {
-  size,
-  color,
-  fontSize,
-  borderRadius,
-  shadow
-} from "../../common/styles";
+import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { useConfigContext } from "../../context/config";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
@@ -20,6 +14,7 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Voucher } from "../MerchantPayout/MerchantPayoutScreen";
+import { Card } from "../Layout/Card";
 
 const styles = StyleSheet.create({
   content: {
@@ -40,28 +35,36 @@ const styles = StyleSheet.create({
     marginBottom: size(1.5)
   },
   card: {
-    backgroundColor: color("green", 10),
-    borderRadius: borderRadius(3),
-    ...shadow(2)
+    backgroundColor: color("green", 10)
+  },
+  header: {
+    borderTopLeftRadius: borderRadius(3),
+    borderTopRightRadius: borderRadius(3),
+    paddingHorizontal: size(2),
+    paddingVertical: size(2),
+    backgroundColor: color("blue-green", 40),
+    flexDirection: "row",
+    alignItems: "center"
   },
   emoji: {
     fontSize: fontSize(3),
     marginBottom: size(2)
   },
-  cardHeaderText: {
-    color: color("grey", 0)
+  cardHeaderSubText: {
+    color: color("grey", 0),
+    fontSize: fontSize(-3),
+    marginBottom: 2
   },
-  cardHeaderWrapper: {
-    backgroundColor: color("blue-green", 40),
-    padding: size(3),
-    flexDirection: "row",
-    alignItems: "center",
-    borderTopLeftRadius: borderRadius(3),
-    borderTopRightRadius: borderRadius(3)
+  cardHeaderText: {
+    color: color("grey", 0),
+    fontFamily: "brand-bold"
   },
   cardContextWrapper: {
     paddingHorizontal: size(3),
-    paddingVertical: size(5)
+    paddingVertical: size(4),
+    overflow: "hidden",
+    borderBottomLeftRadius: borderRadius(4),
+    borderBottomRightRadius: borderRadius(4)
   },
   buttonsWrapper: {
     marginTop: size(5)
@@ -98,21 +101,23 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
           </View>
         )}
 
-        <View style={styles.card}>
-          <View style={styles.cardHeaderWrapper}>
+        <Card
+          style={{
+            paddingTop: 0,
+            paddingBottom: 0,
+            paddingHorizontal: 0
+          }}
+        >
+          <View style={styles.header}>
             <Feather
               name="user"
               size={size(3)}
               color={color("grey", 0)}
-              style={{ marginRight: size(1) }}
+              style={{ marginRight: size(2) }}
             />
             <View>
-              <AppText style={styles.cardHeaderText}>Merchant Code</AppText>
-              <AppText
-                style={[styles.cardHeaderText, { fontFamily: "brand-bold" }]}
-              >
-                {merchantCode}
-              </AppText>
+              <AppText style={styles.cardHeaderSubText}>Merchant Code</AppText>
+              <AppText style={styles.cardHeaderText}>{merchantCode}</AppText>
             </View>
           </View>
           <View style={styles.cardContextWrapper}>
@@ -125,12 +130,19 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
               <AppText style={{ fontFamily: "brand-bold" }}>
                 Voucher(s):
               </AppText>
-              <AppText style={styles.valueText}>
-                | ${vouchers.length * vouchers[0].denomination}
-              </AppText>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between"
+                }}
+              >
+                <AppText style={styles.valueText}>| {vouchers.length}</AppText>
+                <AppText>${vouchers.length * vouchers[0].denomination}</AppText>
+              </View>
             </View>
           </View>
-        </View>
+        </Card>
+
         <View style={styles.buttonsWrapper}>
           <DarkButton
             fullWidth
