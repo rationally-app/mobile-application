@@ -11,7 +11,8 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   ScrollView,
-  Vibration
+  Vibration,
+  BackHandler
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
@@ -111,6 +112,23 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setConfigValue("appMode", nextMode);
     alert(`SupplyAlly in ${nextMode.toUpperCase()} mode`);
   };
+
+  // Close camera when back action is triggered
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (shouldShowCamera) {
+          setShouldShowCamera(false);
+          return true;
+        }
+        return false;
+      }
+    );
+    return () => {
+      backHandler.remove();
+    };
+  }, [shouldShowCamera]);
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (!isLoading && event.data) {

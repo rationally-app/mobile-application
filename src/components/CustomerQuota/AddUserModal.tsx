@@ -128,7 +128,13 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   return (
     <Modal
       visible={isVisible}
-      onRequestClose={() => setIsVisible(false)}
+      onRequestClose={() => {
+        if (shouldShowCamera) {
+          setShouldShowCamera(false);
+        } else {
+          setIsVisible(false);
+        }
+      }}
       transparent={true}
       animationType="fade"
     >
