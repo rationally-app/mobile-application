@@ -15,6 +15,7 @@ import {
   IdentifierInput
 } from "../../types";
 import { validatePhoneNumbers } from "../../utils/validatePhoneNumbers";
+import { validateIdentifiers } from "../../utils/validateIdentifiers";
 
 export type CartItem = {
   category: string;
@@ -84,16 +85,15 @@ const mergeWithCart = (
         const product = getProduct(category);
         const defaultQuantity = product?.quantity.default || 0;
         const defaultIdentifierInputs =
-          product?.identifiers?.map(identifier => ({
-            label: identifier.label,
-            value: "",
-            ...(identifier.textInput.type
-              ? { textInputType: identifier.textInput.type }
-              : {}),
-            ...(identifier.scanButton.type
-              ? { scanButtonType: identifier.scanButton.type }
-              : {})
-          })) || [];
+          product?.identifiers?.map(
+            ({ label, textInput, scanButton, validationRegex }) => ({
+              label: label,
+              value: "",
+              ...(textInput.type ? { textInputType: textInput.type } : {}),
+              ...(scanButton.type ? { scanButtonType: scanButton.type } : {}),
+              ...(validationRegex ? { validationRegex } : {})
+            })
+          ) || [];
 
         return {
           category,
@@ -291,6 +291,12 @@ export const useCart = (
         )
       ) {
         setError(new Error("Invalid contact number"));
+        setCartState("DEFAULT");
+        return;
+      }
+
+      if (!validateIdentifiers(allIdentifierInputs)) {
+        setError(new Error("Invalid details"));
         setCartState("DEFAULT");
         return;
       }
