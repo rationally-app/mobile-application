@@ -1,10 +1,9 @@
 import React, { FunctionComponent } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { Card } from "../../Layout/Card";
 import { AppText } from "../../Layout/AppText";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color, fontSize } from "../../../common/styles";
-import { MaterialIcons } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   card: {
@@ -14,14 +13,17 @@ const styles = StyleSheet.create({
     backgroundColor: color("red", 10),
     borderColor: color("red", 50)
   },
-  iconWrapper: {
-    marginBottom: size(1.5),
-    marginTop: size(1)
+  emoji: {
+    fontSize: fontSize(3),
+    marginBottom: size(2)
   },
   headerText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
-    marginBottom: size(2.5)
+    marginBottom: size(2)
+  },
+  details: {
+    marginBottom: size(4)
   }
 });
 
@@ -38,11 +40,9 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
 }) => {
   return (
     <Card style={styles.card}>
-      <View style={styles.iconWrapper}>
-        <MaterialIcons name="close" size={size(4)} color={color("red", 60)} />
-      </View>
+      <Text style={styles.emoji}>❌</Text>
       <AppText style={styles.headerText}>{title}</AppText>
-      <AppText style={{ marginBottom: size(5) }}>{details}</AppText>
+      <AppText style={styles.details}>{details}</AppText>
       <DarkButton
         fullWidth={true}
         text="Continue scanning"
