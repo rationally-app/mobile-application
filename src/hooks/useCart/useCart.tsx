@@ -14,8 +14,7 @@ import {
   ItemQuota,
   IdentifierInput
 } from "../../types";
-import { validatePhoneNumbers } from "../../utils/validatePhoneNumbers";
-import { validateIdentifiers } from "../../utils/validateIdentifiers";
+import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 
 export type CartItem = {
   category: string;
@@ -263,6 +262,12 @@ export const useCart = (
           return { category, quantity, identifierInputs };
         });
 
+      if (transactions.length === 0) {
+        setError(new Error("Please select at least one item to checkout"));
+        setCartState("DEFAULT");
+        return;
+      }
+
       if (
         numUnverifiedTransactions > 0 ||
         !isUniqueList(
@@ -280,29 +285,10 @@ export const useCart = (
         return;
       }
 
-      if (
-        !validatePhoneNumbers(
-          allIdentifierInputs
-            .filter(
-              identifierInput =>
-                identifierInput.textInputType === "PHONE_NUMBER"
-            )
-            .map(identifierInput => identifierInput.value)
-        )
-      ) {
-        setError(new Error("Invalid contact number"));
-        setCartState("DEFAULT");
-        return;
-      }
-
-      if (!validateIdentifiers(allIdentifierInputs)) {
-        setError(new Error("Invalid details"));
-        setCartState("DEFAULT");
-        return;
-      }
-
-      if (transactions.length === 0) {
-        setError(new Error("Please select at least one item to checkout"));
+      try {
+        validateIdentifierInputs(allIdentifierInputs);
+      } catch (error) {
+        setError(error);
         setCartState("DEFAULT");
         return;
       }

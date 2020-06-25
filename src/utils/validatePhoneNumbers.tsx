@@ -32,12 +32,3 @@ export const countryCodeValidator = (code: string): boolean => {
   );
   return code[0] === "+" && countryCodesList.includes(code.substring(1));
 };
-
-export const validatePhoneNumbers = (phoneNumbers: string[]): boolean => {
-  for (const phoneNumber of phoneNumbers) {
-    if (!fullPhoneNumberValidator(phoneNumber)) {
-      return false;
-    }
-  }
-  return true;
-};

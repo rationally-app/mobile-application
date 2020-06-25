@@ -1,6 +1,5 @@
 import { IdentifierInput } from "../types";
-import { isValid } from "date-fns";
-import { isMatch } from "lodash";
+import { fullPhoneNumberValidator } from "./validatePhoneNumbers";
 
 const isMatchRegex = (text: string, regex?: string): boolean => {
   if (!regex) {
@@ -9,15 +8,18 @@ const isMatchRegex = (text: string, regex?: string): boolean => {
   return new RegExp(regex).test(text);
 };
 
-export const validateIdentifiers = (
+export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
-      return false;
+      throw new Error("Invalid details");
     }
     if (!isMatchRegex(value, validationRegex)) {
-      return false;
+      throw new Error("Invalid details");
+    }
+    if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
+      throw new Error("Invalid contact number");
     }
   }
   return true;
