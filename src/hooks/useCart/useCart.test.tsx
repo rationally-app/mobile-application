@@ -696,7 +696,7 @@ describe("useCart", () => {
         <Wrapper
           products={[
             {
-              ...defaultProducts[0],
+              ...defaultProducts.policies[0],
               identifiers: [
                 {
                   ...defaultIdentifier,
@@ -908,7 +908,7 @@ describe("useCart", () => {
         <Wrapper
           products={[
             {
-              ...defaultProducts[0],
+              ...defaultProducts.policies[0],
               identifiers: [
                 {
                   label: "code",
@@ -969,7 +969,7 @@ describe("useCart", () => {
         remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
       });
       const ids = ["ID1"];
-      const MobileNumberIdentifierProductWrapper: FunctionComponent = ({
+      const InvalidIdentifierProductWrapper: FunctionComponent = ({
         children
       }) => (
         <Wrapper
@@ -998,15 +998,15 @@ describe("useCart", () => {
         </Wrapper>
       );
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: MobileNumberIdentifierProductWrapper
+        wrapper: InvalidIdentifierProductWrapper
       });
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
           {
-            value: "+659",
+            value: "01234",
             label: "code",
-            textInputType: "PHONE_NUMBER",
+            textInputType: "STRING",
             validationRegex: "^[a-z]{5}$"
           }
         ]);
@@ -1020,9 +1020,9 @@ describe("useCart", () => {
           category: "toilet-paper",
           identifierInputs: [
             {
-              value: "+659",
+              value: "01234",
               label: "code",
-              textInputType: "PHONE_NUMBER",
+              textInputType: "STRING",
               validationRegex: "^[a-z]{5}$"
             }
           ],
