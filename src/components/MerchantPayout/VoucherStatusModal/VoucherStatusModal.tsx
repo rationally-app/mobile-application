@@ -41,8 +41,11 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   if (voucherStatus.status === "INVALID") {
     card = (
       <InvalidCard
-        title={voucherStatus.errorTitle || "Invalid"}
-        details={voucherStatus.errorMessage || "Please log an appeal request"}
+        title={voucherStatus.errorTitle || "Error scanning"}
+        details={
+          voucherStatus.errorMessage ||
+          "Please try scanning again or enter manually"
+        }
         closeModal={onExit}
       />
     );

@@ -15,25 +15,27 @@ const styles = StyleSheet.create({
   },
   horizontalRule: {
     borderBottomColor: color("grey", 30),
-    marginHorizontal: -size(0.5),
-    borderBottomWidth: 1
-  },
-
-  horizontalRuleWrapper: {
-    marginTop: size(4)
+    marginHorizontal: -size(3),
+    borderBottomWidth: 1,
+    marginTop: size(5)
   },
   inputWrapper: {
     marginTop: size(4),
     flex: 1
   },
+  voucherChipWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  seeAllButton: {
+    marginTop: -size(2),
+    marginRight: -size(2),
+    padding: size(2),
+    alignItems: "center",
+    justifyContent: "center"
+  },
   seeAllText: {
     fontFamily: "brand-italic"
-  },
-  seeAllTextWrapper: {
-    marginLeft: "auto"
-  },
-  voucherChipWrapper: {
-    flexDirection: "row"
   }
 });
 
@@ -62,11 +64,12 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
             denomination={vouchers[0].denomination}
             numVouchers={vouchers.length}
           />
-          <View style={styles.seeAllTextWrapper}>
-            <TouchableOpacity onPress={openAllValidVouchersModal}>
-              <AppText style={styles.seeAllText}>See all</AppText>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={openAllValidVouchersModal}
+            style={styles.seeAllButton}
+          >
+            <AppText style={styles.seeAllText}>See all</AppText>
+          </TouchableOpacity>
         </View>
       ) : (
         <AppText>Check the number of item(s) eligible for redemption</AppText>
@@ -83,9 +86,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
       </View>
       {vouchers.length > 0 && (
         <>
-          <View style={styles.horizontalRuleWrapper}>
-            <View style={styles.horizontalRule} />
-          </View>
+          <View style={styles.horizontalRule} />
           <View style={styles.inputWrapper}>
             <InputWithLabel
               label="Merchant Code"
