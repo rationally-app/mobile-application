@@ -56,13 +56,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
     setIsLoading(true);
     try {
       const fullNumber = createFullNumber(countryCode, mobileNumberValue);
-      const res: any = await requestOTP(fullNumber, codeKey, endpoint);
-      if (res && res.message && typeof res.message === "string") {
-        Alert.alert("Resend OTP?", res.message, [
-          { text: "RESEND" },
-          { text: "CANCEL" }
-        ]);
-      }
+      await requestOTP(fullNumber, codeKey, endpoint);
       setIsLoading(false);
       setMobileNumber(fullNumber);
       setLoginStage("OTP");
