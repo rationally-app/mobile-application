@@ -229,18 +229,16 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                   text="Cancel"
                   onPress={() => {
                     Alert.alert(
-                      "Warning",
-                      "Cancelling clears all vouchers. Are you sure?",
+                      "Discard transaction?",
+                      "This will clear all scanned items",
                       [
                         {
-                          text: "No",
-                          onPress: () => console.log("No Pressed")
+                          text: "Cancel"
                         },
                         {
-                          text: "Yes",
+                          text: "Discard",
                           onPress: () => {
                             setVouchers([]);
-                            console.log("Yes Pressed");
                           },
                           style: "destructive"
                         }

@@ -71,14 +71,14 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
             <TouchableOpacity
               onPress={() => {
                 Alert.alert(
-                  "Warning",
-                  `Do you want to remove voucher(${voucher.serial})?`,
+                  "Remove item?",
+                  `Do you want to remove this item: ${voucher.serial}?`,
                   [
                     {
-                      text: "No"
+                      text: "Cancel"
                     },
                     {
-                      text: "Yes",
+                      text: "Remove",
                       onPress: () => {
                         onVoucherCodeRemove(voucher.serial);
                       },
