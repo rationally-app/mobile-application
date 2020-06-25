@@ -1,11 +1,22 @@
-import React, { useState, useEffect, FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import React, {
+  useState,
+  useEffect,
+  FunctionComponent,
+  Dispatch,
+  SetStateAction
+} from "react";
+import { View, StyleSheet, Alert } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { size, fontSize } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
+<<<<<<< HEAD
+=======
+import { LoginStage } from "./types";
+import { NavigationProps } from "../../types";
+>>>>>>> feat: update display of message for otp
 import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP, requestOTP } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
@@ -32,6 +43,7 @@ const styles = StyleSheet.create({
 
 interface LoginOTPCard {
   resetStage: () => void;
+  setLoginStage: Dispatch<SetStateAction<LoginStage>>;
   mobileNumber: string;
   codeKey: string;
   endpoint: string;
@@ -39,6 +51,8 @@ interface LoginOTPCard {
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   resetStage,
+  navigation,
+  setLoginStage,
   mobileNumber,
   codeKey,
   endpoint
@@ -67,6 +81,15 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       }
     };
   }, [resendDisabledTime]);
+
+  const checkLockedOut = (e: any): void => {
+    if (e && typeof e === "string") {
+      if (e.indexOf("Please wait") !== -1) setLoginStage("MOBILE_NUMBER");
+    } else if (e && e.message && typeof e.message === "string") {
+      if (e.message.indexOf("Please wait") !== -1)
+        setLoginStage("MOBILE_NUMBER");
+    }
+  };
 
   const onValidateOTP = async (otp: string): Promise<void> => {
     setIsLoading(true);
@@ -116,12 +139,25 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const resendOTP = async (): Promise<void> => {
     setIsResending(true);
     try {
-      await requestOTP(mobileNumber, codeKey, endpoint);
+      const res: any = await requestOTP(mobileNumber, codeKey, endpoint);
+      if (res && res.message && typeof res.message === "string") {
+        Alert.alert("Resend OTP?", res.message, [
+          { text: "RESEND" },
+          { text: "CANCEL" }
+        ]);
+      }
       setIsResending(false);
       setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
     } catch (e) {
       setIsResending(false);
-      alert(e.message || e);
+      Alert.alert(
+        "Error",
+        e.message || e,
+        [{ text: "OK", onPress: () => checkLockedOut(e.message || e) }],
+        {
+          cancelable: false
+        }
+      );
     }
   };
 
