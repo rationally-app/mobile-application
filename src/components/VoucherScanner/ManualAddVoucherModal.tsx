@@ -8,7 +8,7 @@ import { ModalWithClose } from "../Layout/ModalwithClose";
 
 const styles = StyleSheet.create({
   inputWrapper: {
-    marginTop: size(4),
+    marginTop: size(1),
     marginBottom: size(2)
   }
 });

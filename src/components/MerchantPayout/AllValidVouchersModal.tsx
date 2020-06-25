@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
-import { size } from "../../common/styles";
+import { size, fontSize, color } from "../../common/styles";
 import { Voucher } from "./MerchantPayoutScreen";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { AppText } from "../Layout/AppText";
@@ -11,18 +11,31 @@ const styles = StyleSheet.create({
   card: {
     maxHeight: "80%"
   },
-  removeText: {
-    fontFamily: "brand-italic"
+  counterWrapper: {
+    alignSelf: "flex-start"
+  },
+  voucherList: {
+    marginHorizontal: -size(3),
+    paddingHorizontal: size(3),
+    marginTop: size(3)
   },
   voucherItemWrapper: {
     flexDirection: "row",
-    marginBottom: size(2),
-    justifyContent: "space-between"
+    marginBottom: size(1),
+    justifyContent: "space-between",
+    alignItems: "center"
   },
-  counterWrapper: {
-    marginBottom: size(2),
-    alignSelf: "flex-start"
-  }
+  guideline: {
+    flexGrow: 1,
+    marginHorizontal: size(1.5),
+    borderBottomColor: color("grey", 20),
+    borderBottomWidth: 1
+  },
+  serialNumber: {
+    fontFamily: "brand-bold",
+    fontSize: fontSize(1)
+  },
+  removeText: {}
 });
 
 interface ManualInputCard extends ModalWithClose {
@@ -50,10 +63,11 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
           numVouchers={vouchers.length}
         />
       </View>
-      <ScrollView>
+      <ScrollView style={styles.voucherList}>
         {vouchers.map(voucher => (
           <View key={voucher.serial} style={styles.voucherItemWrapper}>
-            <AppText>{voucher.serial}</AppText>
+            <AppText style={styles.serialNumber}>{voucher.serial}</AppText>
+            <View style={styles.guideline}></View>
             <TouchableOpacity
               onPress={() => {
                 Alert.alert(

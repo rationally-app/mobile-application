@@ -17,16 +17,23 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   numVouchers: {
+    color: color("grey", 0),
     fontFamily: "brand-bold",
     fontSize: fontSize(2),
-    color: color("grey", 0)
+    lineHeight: fontSize(3)
   },
   numVouchersWrapper: {
+    flexDirection: "row",
     marginTop: size(0.5),
     paddingHorizontal: size(1.5),
-    paddingVertical: size(0.5),
+    paddingVertical: size(1),
     borderRadius: borderRadius(2),
     backgroundColor: color("blue-green", 40)
+  },
+  divider: {
+    borderRightWidth: 1,
+    borderRightColor: color("grey", 30),
+    marginHorizontal: size(1.5)
   }
 });
 
@@ -52,8 +59,10 @@ export const ValidVoucherCount: FunctionComponent<ValidVoucherCount> = ({
         <AppText style={styles.validText}>Valid</AppText>
       </View>
       <View style={styles.numVouchersWrapper}>
+        <AppText style={styles.numVouchers}>{numVouchers}</AppText>
+        <View style={styles.divider}></View>
         <AppText style={styles.numVouchers}>
-          {`${numVouchers} | $${numVouchers * denomination}`}
+          ${numVouchers * denomination}
         </AppText>
       </View>
     </View>
