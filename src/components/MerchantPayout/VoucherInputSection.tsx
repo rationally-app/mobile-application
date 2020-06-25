@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
-import { size, color, fontSize } from "../../common/styles";
+import { size, color } from "../../common/styles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
