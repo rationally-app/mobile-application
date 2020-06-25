@@ -30,6 +30,7 @@ module.exports = {
       { extensions: [".js", ".jsx", ".ts", ".tsx"] }
     ],
     "react/prop-types": 0,
+    "react/jsx-boolean-value": [1, "always"],
     "import/prefer-default-export": 0,
     "@typescript-eslint/no-unused-vars": [2, { args: "none" }],
     "@typescript-eslint/no-explicit-any": 0,
