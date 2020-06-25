@@ -963,6 +963,76 @@ describe("useCart", () => {
       ]);
     });
 
+    it("should set error when there is an invalid identifier", async () => {
+      expect.assertions(3);
+      mockGetQuota.mockReturnValueOnce({
+        remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
+      });
+      const ids = ["ID1"];
+      const MobileNumberIdentifierProductWrapper: FunctionComponent = ({
+        children
+      }) => (
+        <Wrapper
+          products={[
+            {
+              ...defaultProducts.policies[0],
+              identifiers: [
+                {
+                  label: "code",
+                  validationRegex: "^[a-z]{5}$",
+                  textInput: {
+                    visible: true,
+                    disabled: false,
+                    type: "STRING"
+                  },
+                  scanButton: {
+                    visible: false,
+                    disabled: true
+                  }
+                }
+              ]
+            }
+          ]}
+        >
+          {children}
+        </Wrapper>
+      );
+      const { result } = renderHook(() => useCart(ids, key, endpoint), {
+        wrapper: MobileNumberIdentifierProductWrapper
+      });
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 1, [
+          {
+            value: "+659",
+            label: "code",
+            textInputType: "PHONE_NUMBER",
+            validationRegex: "^[a-z]{5}$"
+          }
+        ]);
+        result.current.checkoutCart();
+      });
+
+      expect(result.current.error?.message).toBe("Invalid details");
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          identifierInputs: [
+            {
+              value: "+659",
+              label: "code",
+              textInputType: "PHONE_NUMBER",
+              validationRegex: "^[a-z]{5}$"
+            }
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 1
+        }
+      ]);
+    });
+
     it("should set error when transaction does not succeed", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
