@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, SafeAreaView } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
 import { Camera } from "../IdScanner/IdScanner";
@@ -11,35 +11,40 @@ import { AppText } from "../Layout/AppText";
 import { ValidVoucherCount } from "../MerchantPayout/ValidVoucherCount";
 import { Feather } from "@expo/vector-icons";
 import { ManualAddVoucherModal } from "./ManualAddVoucherModal";
+import { SafeAreaView } from "react-navigation";
 
 const styles = StyleSheet.create({
-  containerWrapper: {
-    flex: 1,
+  wrapper: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    alignItems: "center",
-    justifyContent: "center",
     backgroundColor: color("grey", 0)
   },
-  cancelButtonWrapper: {
-    flexDirection: "row",
-    marginTop: size(4),
-    marginBottom: size(2.5)
+  content: {
+    flex: 1
   },
   topSectionWrapper: {
-    marginTop: size(2),
-    marginBottom: size(2)
+    marginTop: size(1),
+    marginBottom: size(3),
+    marginHorizontal: size(2),
+    alignItems: "flex-start"
   },
-  validVoucherCountWrapper: {
-    alignSelf: "flex-start",
-    marginHorizontal: size(3),
-    marginBottom: size(2)
+  closeButton: {
+    position: "absolute",
+    right: -size(1),
+    top: -size(1),
+    padding: size(1)
+  },
+  bottomSectionWrapper: {
+    flexDirection: "row",
+    marginVertical: size(3),
+    marginHorizontal: size(2)
   },
   manualInputButtonWrapper: {
-    marginRight: size(1)
+    marginRight: size(1),
+    flexGrow: 1
   }
 });
 
@@ -73,62 +78,54 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   }, [onCancel]);
 
   return (
-    <SafeAreaView style={styles.containerWrapper}>
-      <TouchableOpacity
-        onPress={onCancel}
-        style={{
-          position: "absolute",
-          right: size(2),
-          top: size(2),
-          padding: size(1)
-        }}
-      >
-        <Feather name="x" size={size(3)} color={color("blue", 50)} />
-      </TouchableOpacity>
-      {vouchers.length === 0 ? (
+    <View style={styles.wrapper}>
+      <SafeAreaView style={styles.content}>
         <View style={styles.topSectionWrapper}>
-          <AppText
-            style={{
-              fontFamily: "brand-bold",
-              paddingVertical: size(2.5)
-            }}
-          >
-            Scan to check validity
-          </AppText>
+          {vouchers.length === 0 ? (
+            <AppText
+              style={{
+                fontFamily: "brand-bold"
+              }}
+            >
+              Scan to check validity
+            </AppText>
+          ) : (
+            <ValidVoucherCount
+              denomination={vouchers[0].denomination}
+              numVouchers={vouchers.length}
+            />
+          )}
+          <TouchableOpacity onPress={onCancel} style={styles.closeButton}>
+            <Feather name="x" size={size(3)} color={color("blue", 50)} />
+          </TouchableOpacity>
         </View>
-      ) : (
-        <View style={styles.validVoucherCountWrapper}>
-          <ValidVoucherCount
-            denomination={vouchers[0].denomination}
-            numVouchers={vouchers.length}
-          />
-        </View>
-      )}
 
-      {hasCameraPermission ? (
-        <Camera
-          onBarCodeScanned={isScanningEnabled ? onBarCodeScanned : () => null}
-          barCodeTypes={barCodeTypes}
-        />
-      ) : (
-        <View style={{ flex: 1 }}>
-          <LoadingView />
-        </View>
-      )}
-      <View style={styles.cancelButtonWrapper}>
-        <View style={styles.manualInputButtonWrapper}>
-          <SecondaryButton
-            text="Enter manually"
-            onPress={() => setShowManualInput(true)}
+        {hasCameraPermission ? (
+          <Camera
+            onBarCodeScanned={isScanningEnabled ? onBarCodeScanned : () => null}
+            barCodeTypes={barCodeTypes}
           />
+        ) : (
+          <View style={{ flex: 1 }}>
+            <LoadingView />
+          </View>
+        )}
+        <View style={styles.bottomSectionWrapper}>
+          <View style={styles.manualInputButtonWrapper}>
+            <SecondaryButton
+              text="Enter manually"
+              onPress={() => setShowManualInput(true)}
+              fullWidth={true}
+            />
+          </View>
+          <DarkButton text="Complete" onPress={onCancel} />
         </View>
-        <DarkButton text="Complete" onPress={onCancel} />
-      </View>
-      <ManualAddVoucherModal
-        isVisible={showManualInput}
-        onExit={() => setShowManualInput(false)}
-        onVoucherCodeSubmit={onVoucherCodeSubmit}
-      />
-    </SafeAreaView>
+        <ManualAddVoucherModal
+          isVisible={showManualInput}
+          onExit={() => setShowManualInput(false)}
+          onVoucherCodeSubmit={onVoucherCodeSubmit}
+        />
+      </SafeAreaView>
+    </View>
   );
 };

@@ -14,8 +14,7 @@ const styles = StyleSheet.create({
   },
   validTextWrapper: {
     flexDirection: "row",
-    alignItems: "center",
-    marginTop: size(1)
+    alignItems: "center"
   },
   numVouchers: {
     fontFamily: "brand-bold",
