@@ -1,35 +1,40 @@
-import { validateIdentifiers } from "./validateIdentifiers";
+import { validateIdentifierInputs } from "./validateIdentifierInputs";
 
-describe("validateIdentifiers", () => {
+describe("validateIdentifierInputs", () => {
   it("should return true if all identifiers are valid", () => {
     expect.assertions(1);
     expect(
-      validateIdentifiers([
+      validateIdentifierInputs([
         {
-          label: "number identifier with regex",
+          label: "number with regex",
           value: "1234567",
           validationRegex: "^[0-9]{7}$",
           textInputType: "NUMBER"
         },
         {
-          label: "number identifier without regex",
+          label: "number without regex",
           value: "1234567",
           textInputType: "NUMBER"
         },
         {
-          label: "string identifier with regex",
+          label: "string with regex",
           value: "AA:BB",
           validationRegex: "^[a-zA-Z:]+$",
           textInputType: "STRING"
         },
         {
-          label: "string identifier without regex",
+          label: "string without regex",
           value: "AA:BB",
           textInputType: "STRING"
         },
         {
-          label: "phone number identifier",
+          label: "valid phone number",
           value: "+6591234567",
+          textInputType: "PHONE_NUMBER"
+        },
+        {
+          label: "another valid phone number",
+          value: "+13475679064",
           textInputType: "PHONE_NUMBER"
         }
       ])
@@ -38,8 +43,8 @@ describe("validateIdentifiers", () => {
 
   it("should return false if at least one of the identifiers does not match the given regex pattern", () => {
     expect.assertions(2);
-    expect(
-      validateIdentifiers([
+    expect(() =>
+      validateIdentifierInputs([
         {
           label: "number identifier with regex",
           value: "1234567",
@@ -47,9 +52,9 @@ describe("validateIdentifiers", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toBe(false);
-    expect(
-      validateIdentifiers([
+    ).toThrow("Invalid details");
+    expect(() =>
+      validateIdentifierInputs([
         {
           label: "string identifier with regex",
           value: "-HELLO-",
@@ -57,28 +62,50 @@ describe("validateIdentifiers", () => {
           textInputType: "STRING"
         }
       ])
-    ).toBe(false);
+    ).toThrow("Invalid details");
   });
 
   it("should return false if at least one of the identifiers is an invalid number", () => {
     expect.assertions(2);
-    expect(
-      validateIdentifiers([
+    expect(() =>
+      validateIdentifierInputs([
         {
           label: "number identifier",
           value: "this is not a number",
           textInputType: "NUMBER"
         }
       ])
-    ).toBe(false);
-    expect(
-      validateIdentifiers([
+    ).toThrow("Invalid details");
+    expect(() =>
+      validateIdentifierInputs([
         {
           label: "number identifier",
           value: "123string",
           textInputType: "NUMBER"
         }
       ])
-    ).toBe(false);
+    ).toThrow("Invalid details");
+  });
+
+  it("should return false if at least one of the identifiers is an invalid phone number", () => {
+    expect.assertions(2);
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "invalid phone number",
+          value: "+659",
+          textInputType: "PHONE_NUMBER"
+        }
+      ])
+    ).toThrow("Invalid contact number");
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "another invalid phone number",
+          value: "+191234567",
+          textInputType: "PHONE_NUMBER"
+        }
+      ])
+    ).toThrow("Invalid contact number");
   });
 });
