@@ -55,6 +55,11 @@ export const mockGetQuota = async (
           category: "chocolate",
           quantity: 30,
           transactionTime
+        },
+        {
+          category: "voucher",
+          quantity: 1,
+          transactionTime
         }
       ]
     };

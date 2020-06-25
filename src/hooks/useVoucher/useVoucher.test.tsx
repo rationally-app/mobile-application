@@ -1,9 +1,9 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { useVoucher } from "./useVoucher";
 import { wait } from "@testing-library/react-native";
-import { postTransaction } from "../../services/voucher";
+import { postTransaction } from "../../services/quota";
 
-jest.mock("../../services/voucher");
+jest.mock("../../services/quota");
 const mockPostTransaction = postTransaction as jest.Mock;
 
 const key = "KEY";

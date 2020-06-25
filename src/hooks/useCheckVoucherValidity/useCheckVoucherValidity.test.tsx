@@ -1,13 +1,37 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { useCheckVoucherValidity } from "./useCheckVoucherValidity";
 import { wait } from "@testing-library/react-native";
-import { getVoucherValidation } from "../../services/voucher";
+import { getQuota } from "../../services/quota";
 import { Voucher } from "../../types";
 
-jest.mock("../../services/voucher");
-const mockGetVoucherValidation = getVoucherValidation as jest.Mock;
+jest.mock("../../services/quota");
+const mockGetQuota = getQuota as jest.Mock;
 
-const mockGetVoucherValidationResult = {
+const transactionTime = new Date(2020, 3, 1);
+
+const mockValidQuotaRes = {
+  remainingQuota: [
+    {
+      category: "voucher",
+      identifiers: [],
+      quantity: 1,
+      transactionTime
+    }
+  ]
+};
+
+const mockInvalidQuotaRes = {
+  remainingQuota: [
+    {
+      category: "voucher",
+      identifiers: [],
+      quantity: 0,
+      transactionTime
+    }
+  ]
+};
+
+const mockVoucherResult = {
   serial: "123456789",
   denomination: 2
 };
@@ -28,9 +52,7 @@ describe("useCheckVoucherValidity", () => {
         useCheckVoucherValidity(key, endpoint)
       );
       const mockVouchersArr: Voucher[] = [];
-      mockGetVoucherValidation.mockReturnValueOnce(
-        mockGetVoucherValidationResult
-      );
+      mockGetQuota.mockReturnValueOnce(mockValidQuotaRes);
 
       await wait(() => {
         result.current.checkValidity("123456789", mockVouchersArr);
@@ -38,9 +60,7 @@ describe("useCheckVoucherValidity", () => {
       });
 
       expect(result.current.checkValidityState).toBe("RESULT_RETURNED");
-      expect(result.current.validityResult).toStrictEqual(
-        mockGetVoucherValidationResult
-      );
+      expect(result.current.validityResult).toStrictEqual(mockVoucherResult);
     });
 
     it("should set error when no voucher code is entered", async () => {
@@ -100,16 +120,14 @@ describe("useCheckVoucherValidity", () => {
         useCheckVoucherValidity(key, endpoint)
       );
       const mockVouchersArr: Voucher[] = [];
-      mockGetVoucherValidation.mockRejectedValueOnce(
-        new Error("Already redeemed")
-      );
+      mockGetQuota.mockResolvedValue(mockInvalidQuotaRes);
 
       await wait(() => {
         result.current.checkValidity("000000000", mockVouchersArr);
         expect(result.current.checkValidityState).toBe("CHECKING_VALIDITY");
       });
 
-      expect(result.current.error?.message).toBe("Already redeemed");
+      expect(result.current.error?.message).toBe("Item redeemed previously");
     });
   });
 });

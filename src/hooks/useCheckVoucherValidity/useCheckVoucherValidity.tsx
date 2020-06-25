@@ -1,12 +1,19 @@
 import { useState, useCallback } from "react";
 import { validateVoucherCode } from "../../utils/validateVoucherCode";
-import { getVoucherValidation } from "../../services/voucher";
-import { Voucher } from "../../types";
+import { getQuota } from "../../services/quota";
+import { Quota, Voucher } from "../../types";
 
 export class ScannerError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "Error Scanning";
+  }
+}
+
+export class InvalidVoucherError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "InvalidVocuherError";
   }
 }
 
@@ -35,6 +42,18 @@ export const useCheckVoucherValidity = (
     setCheckValidityState("DEFAULT");
   }, []);
 
+  const getVoucherValidity = (response: Quota, serial: string): Voucher => {
+    const voucherQuota = response.remainingQuota.filter(
+      quota => quota.category === "voucher"
+    )[0];
+    if (voucherQuota.quantity === 0)
+      throw new InvalidVoucherError("Item redeemed previously");
+    return {
+      serial,
+      denomination: 2
+    };
+  };
+
   const checkValidity: useCheckVoucherValidity["checkValidity"] = useCallback(
     async (serial, vouchers): Promise<void> => {
       setCheckValidityState("CHECKING_VALIDITY");
@@ -53,12 +72,9 @@ export const useCheckVoucherValidity = (
         }
         //Send to backend to check if valid
         try {
-          const validityResponse = await getVoucherValidation(
-            serial,
-            authKey,
-            endpoint
-          );
-          setValidityResult(validityResponse);
+          const validityResponse = await getQuota([serial], authKey, endpoint);
+          const voucher = getVoucherValidity(validityResponse, serial);
+          setValidityResult(voucher);
           setCheckValidityState("RESULT_RETURNED");
         } catch (e) {
           setError(e);
