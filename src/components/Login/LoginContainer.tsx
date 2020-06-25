@@ -342,14 +342,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           </FeatureToggler>
         </View>
       </KeyboardAvoidingScrollView>
-      {shouldShowCamera && (
-        <IdScanner
-          onBarCodeScanned={onBarCodeScanned}
-          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-          onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText="Cancel"
-        />
-      )}
     </>
   );
 };

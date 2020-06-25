@@ -5,7 +5,7 @@ import React, {
   SetStateAction,
   useContext
 } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -63,13 +63,21 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
     setIsLoading(true);
     try {
       const fullNumber = createFullNumber(countryCode, mobileNumberValue);
-      await requestOTP(fullNumber, codeKey, endpoint);
+      const res: any = await requestOTP(fullNumber, codeKey, endpoint);
+      if (res && res.message && typeof res.message === "string") {
+        Alert.alert("Resend OTP?", res.message, [
+          { text: "RESEND" },
+          { text: "CANCEL" }
+        ]);
+      }
       setIsLoading(false);
       setMobileNumber(fullNumber);
       setLoginStage("OTP");
     } catch (e) {
       setIsLoading(false);
-      alert(e);
+      Alert.alert("Error", e.message || e, [{ text: "OK" }], {
+        cancelable: false
+      });
     }
   };
 
