@@ -186,8 +186,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         scrollIndicatorInsets={{ right: 1 }}
         keyboardShouldPersistTaps="handled"
       >
+        <TopBackground mode={config.appMode} />
         <KeyboardAvoidingView behavior="position">
-          <TopBackground mode={config.appMode} />
           <View style={styles.content}>
             <View style={styles.headerText}>
               <AppHeader mode={config.appMode} />

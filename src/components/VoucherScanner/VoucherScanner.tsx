@@ -40,7 +40,9 @@ const styles = StyleSheet.create({
   bottomSectionWrapper: {
     flexDirection: "row",
     marginVertical: size(3),
-    marginHorizontal: size(2)
+    marginHorizontal: size(2),
+    maxWidth: 512,
+    alignSelf: "center"
   },
   manualInputButtonWrapper: {
     marginRight: size(1),
