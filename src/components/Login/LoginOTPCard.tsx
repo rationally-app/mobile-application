@@ -161,7 +161,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           <View style={styles.submitWrapper}>
             <DarkButton
               text="Submit"
-              fullWidth
+              fullWidth={true}
               onPress={onSubmitOTP}
               isLoading={isLoading}
               disabled={isResending}

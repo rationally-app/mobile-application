@@ -10,7 +10,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Alert,
-  Vibration
+  Vibration,
+  BackHandler
 } from "react-native";
 import { size, color } from "../../common/styles";
 import {
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     marginBottom: size(1.5)
   },
   buttonsWrapper: {
-    marginTop: size(2),
+    marginTop: size(5),
     flexDirection: "row",
     alignItems: "center"
   },
@@ -91,6 +92,22 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   );
 
   useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (shouldShowCamera) {
+          setShouldShowCamera(false);
+          return true;
+        }
+        return false;
+      }
+    );
+    return () => {
+      backHandler.remove();
+    };
+  }, [shouldShowCamera]);
+
+  useEffect(() => {
     if (isFocused) {
       setIsScanningEnabled(true);
     }
@@ -119,19 +136,16 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       }, 1000);
     } catch (e) {
       setIsScanningEnabled(false);
-      setVoucherStatus({ status: "INVALID", errorMessage: e.message });
+      setVoucherStatus({
+        status: "INVALID",
+        errorMessage: e.message
+      });
     }
   };
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (isFocused && isScanningEnabled && event.data) {
       onCheckVoucher(event.data);
-    } else {
-      setVoucherStatus({
-        status: "INVALID",
-        errorMessage: "Please try Scanning again or enter voucher manually",
-        errorTitle: "Error scanning"
-      });
     }
   };
 
@@ -172,8 +186,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         scrollIndicatorInsets={{ right: 1 }}
         keyboardShouldPersistTaps="handled"
       >
+        <TopBackground mode={config.appMode} />
         <KeyboardAvoidingView behavior="position">
-          <TopBackground mode={config.appMode} />
           <View style={styles.content}>
             <View style={styles.headerText}>
               <AppHeader mode={config.appMode} />
@@ -215,18 +229,16 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                   text="Cancel"
                   onPress={() => {
                     Alert.alert(
-                      "Warning",
-                      "Cancelling clears all vouchers. Are you sure?",
+                      "Discard transaction?",
+                      "This will clear all scanned items",
                       [
                         {
-                          text: "No",
-                          onPress: () => console.log("No Pressed")
+                          text: "Cancel"
                         },
                         {
-                          text: "Yes",
+                          text: "Discard",
                           onPress: () => {
                             setVouchers([]);
-                            console.log("Yes Pressed");
                           },
                           style: "destructive"
                         }
