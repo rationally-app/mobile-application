@@ -40,28 +40,31 @@ const TextInputType = t.union([
 
 const ScanButtonType = t.union([t.literal("QR"), t.literal("BARCODE")]);
 
-const PolicyIdentifier = t.type({
-  label: t.string,
-  textInput: t.intersection([
-    t.type({
-      visible: t.boolean,
-      disabled: t.boolean
-    }),
-    t.partial({
-      type: TextInputType
-    })
-  ]),
-  scanButton: t.intersection([
-    t.type({
-      visible: t.boolean,
-      disabled: t.boolean
-    }),
-    t.partial({
-      type: ScanButtonType,
-      text: t.string
-    })
-  ])
-});
+const PolicyIdentifier = t.intersection([
+  t.type({
+    label: t.string,
+    textInput: t.intersection([
+      t.type({
+        visible: t.boolean,
+        disabled: t.boolean
+      }),
+      t.partial({
+        type: TextInputType
+      })
+    ]),
+    scanButton: t.intersection([
+      t.type({
+        visible: t.boolean,
+        disabled: t.boolean
+      }),
+      t.partial({
+        type: ScanButtonType,
+        text: t.string
+      })
+    ])
+  }),
+  t.partial({ validationRegex: t.string })
+]);
 
 const IdentifierInput = t.intersection([
   t.type({
@@ -70,7 +73,8 @@ const IdentifierInput = t.intersection([
   }),
   t.partial({
     textInputType: TextInputType,
-    scanButtonType: ScanButtonType
+    scanButtonType: ScanButtonType,
+    validationRegex: t.string
   })
 ]);
 

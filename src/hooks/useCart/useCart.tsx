@@ -14,7 +14,7 @@ import {
   ItemQuota,
   IdentifierInput
 } from "../../types";
-import { validatePhoneNumbers } from "../../utils/validatePhoneNumbers";
+import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 
 export type CartItem = {
   category: string;
@@ -84,16 +84,15 @@ const mergeWithCart = (
         const product = getProduct(category);
         const defaultQuantity = product?.quantity.default || 0;
         const defaultIdentifierInputs =
-          product?.identifiers?.map(identifier => ({
-            label: identifier.label,
-            value: "",
-            ...(identifier.textInput.type
-              ? { textInputType: identifier.textInput.type }
-              : {}),
-            ...(identifier.scanButton.type
-              ? { scanButtonType: identifier.scanButton.type }
-              : {})
-          })) || [];
+          product?.identifiers?.map(
+            ({ label, textInput, scanButton, validationRegex }) => ({
+              label: label,
+              value: "",
+              ...(textInput.type ? { textInputType: textInput.type } : {}),
+              ...(scanButton.type ? { scanButtonType: scanButton.type } : {}),
+              ...(validationRegex ? { validationRegex } : {})
+            })
+          ) || [];
 
         return {
           category,
@@ -111,9 +110,6 @@ const mergeWithCart = (
 
 const hasNoQuota = (quota: Quota): boolean =>
   quota.remainingQuota.every(item => item.quantity === 0);
-
-const isUniqueList = (list: string[]): boolean =>
-  new Set(list).size === list.length;
 
 export const useCart = (
   ids: string[],
@@ -245,8 +241,6 @@ export const useCart = (
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
 
-      let numUnverifiedTransactions = 0;
-      let numIdentifiers = 0;
       const allIdentifierInputs: IdentifierInput[] = [];
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
@@ -255,48 +249,22 @@ export const useCart = (
             identifierInputs.length > 0 &&
             identifierInputs.some(identifierInput => !identifierInput.value)
           ) {
-            numUnverifiedTransactions += 1;
           }
           allIdentifierInputs.push(...identifierInputs);
 
-          numIdentifiers += identifierInputs.length;
           return { category, quantity, identifierInputs };
         });
 
-      if (
-        numUnverifiedTransactions > 0 ||
-        !isUniqueList(
-          allIdentifierInputs.map(identifierInput => identifierInput.value)
-        )
-      ) {
-        setError(
-          new Error(
-            `Please enter ${
-              numIdentifiers === 1 ? "" : "unique "
-            }details to checkout`
-          )
-        );
-        setCartState("DEFAULT");
-        return;
-      }
-
-      if (
-        !validatePhoneNumbers(
-          allIdentifierInputs
-            .filter(
-              identifierInput =>
-                identifierInput.textInputType === "PHONE_NUMBER"
-            )
-            .map(identifierInput => identifierInput.value)
-        )
-      ) {
-        setError(new Error("Invalid contact number"));
-        setCartState("DEFAULT");
-        return;
-      }
-
       if (transactions.length === 0) {
         setError(new Error("Please select at least one item to checkout"));
+        setCartState("DEFAULT");
+        return;
+      }
+
+      try {
+        validateIdentifierInputs(allIdentifierInputs);
+      } catch (error) {
+        setError(error);
         setCartState("DEFAULT");
         return;
       }
