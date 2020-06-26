@@ -4,9 +4,13 @@ import {
 } from "react-navigation-stack";
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerQuotaScreen from "./CustomerQuotaScreen";
+import InitialisationContainer from "./LoginScreen";
 
 const StackNavigator = createStackNavigator(
   {
+    loginStage: {
+      screen: InitialisationContainer
+    },
     CollectCustomerDetailsScreen: {
       screen: CollectCustomerDetailsScreen
     },
