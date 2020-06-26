@@ -3,7 +3,6 @@ import { Modal } from "react-native";
 import { IdScanner } from "../../../IdScanner/IdScanner";
 import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
 import { ScanButtonType } from "../../../../types";
-import { validateBarcode } from "./validateBarcode";
 
 export const IdentifierScanModal: FunctionComponent<{
   cancelButtonText: string;
@@ -20,12 +19,7 @@ export const IdentifierScanModal: FunctionComponent<{
 }) => {
   const onScan: BarCodeScannedCallback = event => {
     if (event.data) {
-      if (validateBarcode(event.data)) {
-        onScanInput(event.data);
-      } else {
-        alert("Invalid code");
-        setShouldShowCamera(false);
-      }
+      onScanInput(event.data);
     }
   };
 
