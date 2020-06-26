@@ -86,7 +86,12 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
       // versionResponse.features.DIST_ENV
 
-      navigation.navigate("CollectCustomerDetailsScreen");
+      if (versionResponse.features.DIST_ENV === "VOUCHER") {
+        navigation.navigate("CollectCustomerDetailsScreen");
+      } else {
+        alert("Navigation error");
+        navigation.navigate("loginStage");
+      }
     } catch (e) {
       if (e instanceof EnvVersionError) {
         alert(

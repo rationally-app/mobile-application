@@ -44,7 +44,7 @@ const mockGetEnvVersionValidResponse = {
   features: {
     REQUIRE_OTP: true,
     TRANSACTION_GROUPING: true,
-    DIST_ENV: "MERCHANT"
+    DIST_ENV: "VOUCHER"
   }
 };
 
@@ -81,7 +81,7 @@ const mockGetEnvVersionInvalidResponse = {
   features: {
     REQUIRE_OTP: true,
     TRANSACTION_GROUPING: true,
-    DIST_ENV: "MERCHANT"
+    DIST_ENV: "VOUCHER"
   }
 };
 
