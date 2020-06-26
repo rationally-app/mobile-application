@@ -59,6 +59,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const { logout } = useLogout();
 
   const handleLogout = useCallback((): void => {
+    console.log("handle logout");
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch]);
 
@@ -76,7 +77,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         clearTimeout(resendTimer);
       }
     };
-  }, [resendDisabledTime]);
+  }, []);
 
   const onValidateOTP = async (otp: string): Promise<void> => {
     setIsLoading(true);
@@ -89,8 +90,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         response.sessionToken,
         endpoint
       );
-      setFeatures(versionResponse.features);
-      setProducts(versionResponse.policies);
 
       // Toggle between different environments
       // using the DIST_ENV variable from features
@@ -99,6 +98,8 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
       if (versionResponse.features.DIST_ENV === "VOUCHER") {
         navigation.navigate("CollectCustomerDetailsScreen");
+        setFeatures(versionResponse.features);
+        setProducts(versionResponse.policies);
       } else {
         alert("Navigation error");
         handleLogout();
@@ -109,6 +110,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
         );
       } else {
+        console.log("here");
         setIsLoading(false);
         alert(e);
       }

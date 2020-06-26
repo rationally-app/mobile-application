@@ -18,19 +18,29 @@ interface LogoutHook {
 export const useLogout = (): LogoutHook => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
   const { clearAuthInfo } = useAuthenticationContext();
-  const { setProducts } = useProductContext();
+  const { setFeatures, setProducts } = useProductContext();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const logout: LogoutHook["logout"] = useCallback(
     async (navigationDispatch, alert) => {
+      console.log("logout hook");
       if (!navigationDispatch) {
         return;
       }
-      setIsLoggingOut(true);
+      // setIsLoggingOut(true);
       await clearAuthInfo();
-      setProducts([]);
-      setMessageContent(null);
-      setIsLoggingOut(false);
+      console.log("clear auth info");
+      // setFeatures({
+      //   REQUIRE_OTP: true,
+      //   TRANSACTION_GROUPING: true,
+      //   DIST_ENV: "VOUCHERS"
+      // });
+      // setProducts([]);
+      console.log("set features and products");
+      // setMessageContent(null);
+      console.log("set message content");
+      // setIsLoggingOut(false);
+      console.log("set is logging out");
       navigationDispatch?.(
         NavigationActions.navigate({
           routeName: "LoginScreen"
@@ -41,7 +51,8 @@ export const useLogout = (): LogoutHook => {
         Alert.alert(title, description);
       }
     },
-    [clearAuthInfo, setMessageContent, setProducts]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   return {
