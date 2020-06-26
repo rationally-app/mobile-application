@@ -1,4 +1,9 @@
-import React, { useState, useEffect, FunctionComponent } from "react";
+import React, {
+  useState,
+  useEffect,
+  FunctionComponent,
+  useCallback
+} from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -11,6 +16,7 @@ import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP, requestOTP } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
+import { useLogout } from "../../hooks/useLogout";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -50,6 +56,11 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   );
   const { setAuthInfo } = useAuthenticationContext();
   const { setFeatures, setProducts } = useProductContext();
+  const { logout } = useLogout();
+
+  const handleLogout = useCallback((): void => {
+    logout(navigation.dispatch);
+  }, [logout, navigation.dispatch]);
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -90,7 +101,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         navigation.navigate("CollectCustomerDetailsScreen");
       } else {
         alert("Navigation error");
-        navigation.navigate("loginStage");
+        handleLogout();
       }
     } catch (e) {
       if (e instanceof EnvVersionError) {
