@@ -171,7 +171,24 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     try {
       validateMerchantCode(merchantCode);
       Vibration.vibrate(50);
-      navigation.navigate("PayoutFeedbackScreen", { merchantCode, vouchers });
+      const transactionTime = new Date(2020, 3, 5);
+      navigation.navigate("PayoutFeedbackScreen", {
+        merchantCode,
+        checkoutResult: {
+          transactions: [
+            {
+              transaction: [
+                {
+                  category: "voucher",
+                  quantity: vouchers.length,
+                  transactionTime
+                }
+              ],
+              timestamp: new Date()
+            }
+          ]
+        }
+      });
       resetState();
     } catch (e) {
       Alert.alert("Error", e.message || e, [

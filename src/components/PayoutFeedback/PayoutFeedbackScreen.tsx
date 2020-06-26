@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { NavigationProps } from "../../types";
+import { NavigationProps, PostTransactionResult } from "../../types";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { useConfigContext } from "../../context/config";
@@ -13,8 +13,9 @@ import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
-import { Voucher } from "../MerchantPayout/MerchantPayoutScreen";
 import { Card } from "../Layout/Card";
+import { sharedStyles } from "../CustomerQuota/CheckoutSuccess/sharedStyles";
+import { sharedStyles as sharedCardStyles } from "../CustomerQuota/sharedStyles";
 
 const styles = StyleSheet.create({
   content: {
@@ -27,15 +28,10 @@ const styles = StyleSheet.create({
     maxWidth: "100%"
   },
   headerText: {
-    marginBottom: size(2),
-    fontFamily: "brand-bold",
-    fontSize: fontSize(3)
+    marginBottom: size(4)
   },
   bannerWrapper: {
     marginBottom: size(1.5)
-  },
-  card: {
-    backgroundColor: color("green", 10)
   },
   header: {
     borderTopLeftRadius: borderRadius(3),
@@ -46,31 +42,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center"
   },
-  emoji: {
-    fontSize: fontSize(3),
-    marginBottom: size(2)
+  cardHeaderTextWrapper: {
+    marginLeft: size(1.5),
+    flex: 1
   },
   cardHeaderSubText: {
     color: color("grey", 0),
-    fontSize: fontSize(-3),
+    fontSize: fontSize(-2),
     marginBottom: 2
   },
   cardHeaderText: {
     color: color("grey", 0),
+    fontSize: fontSize(1),
+    lineHeight: 1.2 * fontSize(1),
     fontFamily: "brand-bold"
   },
   cardContextWrapper: {
-    paddingHorizontal: size(3),
-    paddingVertical: size(4),
     overflow: "hidden",
-    borderBottomLeftRadius: borderRadius(4),
-    borderBottomRightRadius: borderRadius(4)
+    borderBottomLeftRadius: borderRadius(2),
+    borderBottomRightRadius: borderRadius(2)
+  },
+  resultWrapper: {
+    padding: size(3),
+    paddingBottom: size(4)
   },
   buttonsWrapper: {
     marginTop: size(5)
-  },
-  valueText: {
-    marginLeft: size(1)
   }
 });
 
@@ -80,7 +77,12 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const vouchers: Voucher[] = navigation.getParam("vouchers", []);
+  const checkoutResult: PostTransactionResult = navigation.getParam(
+    "checkoutResult"
+  );
+  const itemQuantities = checkoutResult.transactions[0].transaction.filter(
+    transaction => transaction.category === "voucher"
+  )[0].quantity;
   const merchantCode: string = navigation.getParam("merchantCode");
 
   return (
@@ -100,7 +102,6 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
             <Banner {...messageContent} />
           </View>
         )}
-
         <Card
           style={{
             paddingTop: 0,
@@ -109,35 +110,45 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
           }}
         >
           <View style={styles.header}>
-            <Feather
-              name="user"
-              size={size(3)}
-              color={color("grey", 0)}
-              style={{ marginRight: size(2) }}
-            />
-            <View>
+            <Feather name="user" size={size(3)} color={color("grey", 0)} />
+            <View style={styles.cardHeaderTextWrapper}>
               <AppText style={styles.cardHeaderSubText}>Merchant Code</AppText>
               <AppText style={styles.cardHeaderText}>{merchantCode}</AppText>
             </View>
           </View>
           <View style={styles.cardContextWrapper}>
-            <AppText style={styles.emoji}>✅</AppText>
-            <AppText style={styles.headerText}>Paid!</AppText>
-            <AppText style={{ marginBottom: size(2) }}>
-              Item(s) redeemed:
-            </AppText>
-            <View>
-              <AppText style={{ fontFamily: "brand-bold" }}>
-                Voucher(s):
+            <View
+              style={[
+                styles.resultWrapper,
+                sharedCardStyles.successfulResultWrapper
+              ]}
+            >
+              <AppText style={sharedCardStyles.emoji}>✅</AppText>
+              <View style={sharedCardStyles.statusTitleWrapper}>
+                <AppText style={sharedCardStyles.statusTitle}>Paid!</AppText>
+              </View>
+              <AppText style={{ marginBottom: size(2) }}>
+                Item(s) redeemed:
               </AppText>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between"
-                }}
-              >
-                <AppText style={styles.valueText}>| {vouchers.length}</AppText>
-                <AppText>${vouchers.length * vouchers[0].denomination}</AppText>
+              <View>
+                <View style={sharedStyles.itemRow}>
+                  <AppText style={sharedStyles.itemHeaderText}>
+                    Voucher(s):
+                  </AppText>
+                </View>
+                <View style={sharedStyles.quantitiesWrapper}>
+                  <View style={sharedStyles.quantitiesBorder} />
+                  <View style={{ flexGrow: 1 }}>
+                    <View style={sharedStyles.itemRow}>
+                      <AppText style={sharedStyles.quantityByIdText}>
+                        {itemQuantities}
+                      </AppText>
+                      <AppText style={sharedStyles.quantityByIdText}>
+                        ${itemQuantities * 2}
+                      </AppText>
+                    </View>
+                  </View>
+                </View>
               </View>
             </View>
           </View>
@@ -145,7 +156,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
 
         <View style={styles.buttonsWrapper}>
           <DarkButton
-            fullWidth
+            fullWidth={true}
             text="Next merchant"
             onPress={() => {
               navigation.navigate("MerchantPayoutScreen");
