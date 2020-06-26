@@ -8,10 +8,20 @@ const isMatchRegex = (text: string, regex?: string): boolean => {
   return new RegExp(regex).test(text);
 };
 
+const isUniqueList = (list: string[]): boolean =>
+  new Set(list).size === list.length;
+
 export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
+    if (!value) {
+      throw new Error(
+        `Please enter ${
+          identifierInputs.length === 1 ? "" : "unique "
+        }details to checkout`
+      );
+    }
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error("Invalid details");
     }
@@ -22,5 +32,18 @@ export const validateIdentifierInputs = (
       throw new Error("Invalid contact number");
     }
   }
+
+  if (
+    !isUniqueList(
+      identifierInputs.map(identifierInput => identifierInput.value)
+    )
+  ) {
+    throw new Error(
+      `Please enter ${
+        identifierInputs.length === 1 ? "" : "unique "
+      }details to checkout`
+    );
+  }
+
   return true;
 };

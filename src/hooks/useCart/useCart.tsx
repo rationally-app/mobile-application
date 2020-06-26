@@ -111,9 +111,6 @@ const mergeWithCart = (
 const hasNoQuota = (quota: Quota): boolean =>
   quota.remainingQuota.every(item => item.quantity === 0);
 
-const isUniqueList = (list: string[]): boolean =>
-  new Set(list).size === list.length;
-
 export const useCart = (
   ids: string[],
   authKey: string,
@@ -244,8 +241,6 @@ export const useCart = (
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
 
-      let numUnverifiedTransactions = 0;
-      let numIdentifiers = 0;
       const allIdentifierInputs: IdentifierInput[] = [];
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
@@ -254,33 +249,14 @@ export const useCart = (
             identifierInputs.length > 0 &&
             identifierInputs.some(identifierInput => !identifierInput.value)
           ) {
-            numUnverifiedTransactions += 1;
           }
           allIdentifierInputs.push(...identifierInputs);
 
-          numIdentifiers += identifierInputs.length;
           return { category, quantity, identifierInputs };
         });
 
       if (transactions.length === 0) {
         setError(new Error("Please select at least one item to checkout"));
-        setCartState("DEFAULT");
-        return;
-      }
-
-      if (
-        numUnverifiedTransactions > 0 ||
-        !isUniqueList(
-          allIdentifierInputs.map(identifierInput => identifierInput.value)
-        )
-      ) {
-        setError(
-          new Error(
-            `Please enter ${
-              numIdentifiers === 1 ? "" : "unique "
-            }details to checkout`
-          )
-        );
         setCartState("DEFAULT");
         return;
       }

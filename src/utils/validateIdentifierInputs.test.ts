@@ -13,12 +13,12 @@ describe("validateIdentifierInputs", () => {
         },
         {
           label: "number without regex",
-          value: "1234567",
+          value: "12345678",
           textInputType: "NUMBER"
         },
         {
           label: "string with regex",
-          value: "AA:BB",
+          value: "AA:BB:CC",
           validationRegex: "^[a-zA-Z:]+$",
           textInputType: "STRING"
         },
@@ -41,7 +41,7 @@ describe("validateIdentifierInputs", () => {
     ).toBe(true);
   });
 
-  it("should return false if at least one of the identifiers does not match the given regex pattern", () => {
+  it("should throw error if at least one of the identifiers does not match the given regex pattern", () => {
     expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([
@@ -65,7 +65,7 @@ describe("validateIdentifierInputs", () => {
     ).toThrow("Invalid details");
   });
 
-  it("should return false if at least one of the identifiers is an invalid number", () => {
+  it("should throw error if at least one of the identifiers is an invalid number", () => {
     expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([
@@ -87,7 +87,7 @@ describe("validateIdentifierInputs", () => {
     ).toThrow("Invalid details");
   });
 
-  it("should return false if at least one of the identifiers is an invalid phone number", () => {
+  it("should throw error if at least one of the identifiers is an invalid phone number", () => {
     expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([
@@ -107,5 +107,55 @@ describe("validateIdentifierInputs", () => {
         }
       ])
     ).toThrow("Invalid contact number");
+  });
+
+  it("should throw error if at least one of the identifiers has empty value", () => {
+    expect.assertions(2);
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "empty string",
+          value: "",
+          textInputType: "STRING"
+        }
+      ])
+    ).toThrow("Please enter details to checkout");
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "empty number",
+          value: "",
+          textInputType: "NUMBER"
+        },
+        {
+          label: "string identifier",
+          value: "random string",
+          textInputType: "STRING"
+        }
+      ])
+    ).toThrow("Please enter unique details to checkout");
+  });
+
+  it("should throw error if there are duplicate values", () => {
+    expect.assertions(1);
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "identifier 1",
+          value: "same value",
+          textInputType: "STRING"
+        },
+        {
+          label: "identifier 2",
+          value: "same value",
+          textInputType: "STRING"
+        },
+        {
+          label: "identifier 3",
+          value: "not same value",
+          textInputType: "STRING"
+        }
+      ])
+    ).toThrow("Please enter unique details to checkout");
   });
 });
