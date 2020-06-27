@@ -2,7 +2,8 @@ import React, {
   useState,
   useEffect,
   FunctionComponent,
-  useCallback
+  Dispatch,
+  SetStateAction
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -12,11 +13,11 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { NavigationProps } from "../../types";
+import { LoginStage } from "./types";
 import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP, requestOTP } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
-import { useLogout } from "../../hooks/useLogout";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -37,12 +38,14 @@ const styles = StyleSheet.create({
 });
 
 interface LoginOTPCard extends NavigationProps {
+  setLoginStage: Dispatch<SetStateAction<LoginStage>>;
   mobileNumber: string;
   codeKey: string;
   endpoint: string;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
+  setLoginStage,
   navigation,
   mobileNumber,
   codeKey,
@@ -56,14 +59,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   );
   const { setAuthInfo } = useAuthenticationContext();
   const { setFeatures, setProducts } = useProductContext();
-  const { logout } = useLogout();
-
-  const handleInvalidEnvLogout = useCallback((): void => {
-    logout(navigation.dispatch, {
-      title: "Invalid Environment",
-      description: "Please check if this is a valid QR Code"
-    });
-  }, [logout, navigation.dispatch]);
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -86,8 +81,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     try {
       const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
       setIsLoading(false);
-      setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
-
       const versionResponse = await getEnvVersion(
         response.sessionToken,
         endpoint
@@ -99,12 +92,17 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       // versionResponse.features.DIST_ENV
 
       if (versionResponse.features.DIST_ENV === "VOUCHER") {
+        setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
         setFeatures(versionResponse.features);
         setProducts(versionResponse.policies);
 
         navigation.navigate("CollectCustomerDetailsScreen");
       } else {
-        handleInvalidEnvLogout();
+        alert(
+          "Invalid Environment Error: Make sure you scanned a valid QR code"
+        );
+        // Reset to initial login state
+        setLoginStage("SCAN");
       }
     } catch (e) {
       if (e instanceof EnvVersionError) {
