@@ -49,7 +49,7 @@ export const useLogout = (): LogoutHook => {
         Alert.alert(title, description);
       }
     },
-    [clearAuthInfo, setMessageContent, setProducts]
+    [clearAuthInfo, setMessageContent, setProducts, setFeatures]
   );
 
   return {
