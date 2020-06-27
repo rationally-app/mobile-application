@@ -58,8 +58,11 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const { setFeatures, setProducts } = useProductContext();
   const { logout } = useLogout();
 
-  const handleLogout = useCallback((): void => {
-    logout(navigation.dispatch);
+  const handleInvalidEnvLogout = useCallback((): void => {
+    logout(navigation.dispatch, {
+      title: "Invalid Environment",
+      description: "Please check if this is a valid QR Code"
+    });
   }, [logout, navigation.dispatch]);
 
   useEffect(() => {
@@ -89,8 +92,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         response.sessionToken,
         endpoint
       );
-      setFeatures(versionResponse.features);
-      setProducts(versionResponse.policies);
 
       // Toggle between different environments
       // using the DIST_ENV variable from features
@@ -98,10 +99,12 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       // versionResponse.features.DIST_ENV
 
       if (versionResponse.features.DIST_ENV === "VOUCHER") {
+        setFeatures(versionResponse.features);
+        setProducts(versionResponse.policies);
+
         navigation.navigate("CollectCustomerDetailsScreen");
       } else {
-        alert("Navigation error");
-        handleLogout();
+        handleInvalidEnvLogout();
       }
     } catch (e) {
       if (e instanceof EnvVersionError) {
