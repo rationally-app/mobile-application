@@ -21,7 +21,7 @@ interface LogoutHook {
 export const useLogout = (): LogoutHook => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
   const { clearAuthInfo } = useAuthenticationContext();
-  const { setProducts } = useProductContext();
+  const { setProducts, setFeatures } = useProductContext();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const logout: LogoutHook["logout"] = useCallback(
@@ -32,6 +32,11 @@ export const useLogout = (): LogoutHook => {
       setIsLoggingOut(true);
       await clearAuthInfo();
       setProducts([]);
+      setFeatures({
+        REQUIRE_OTP: true,
+        TRANSACTION_GROUPING: true,
+        DIST_ENV: ""
+      });
       setMessageContent(null);
       setIsLoggingOut(false);
       navigationDispatch?.(
