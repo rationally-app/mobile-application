@@ -29,7 +29,6 @@ export const useLogout = (): LogoutHook => {
       if (!navigationDispatch) {
         return;
       }
-      console.log(alert?.title);
       if (alert?.description === "Invalid Environment") {
         await clearAuthInfo();
       } else {
