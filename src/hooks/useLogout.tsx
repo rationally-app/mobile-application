@@ -29,16 +29,11 @@ export const useLogout = (): LogoutHook => {
       if (!navigationDispatch) {
         return;
       }
-      if (alert?.description === "Invalid Environment") {
-        await clearAuthInfo();
-      } else {
-        setIsLoggingOut(true);
-        await clearAuthInfo();
-        setProducts([]);
-        setMessageContent(null);
-        setIsLoggingOut(false);
-      }
-
+      setIsLoggingOut(true);
+      await clearAuthInfo();
+      setProducts([]);
+      setMessageContent(null);
+      setIsLoggingOut(false);
       navigationDispatch?.(
         NavigationActions.navigate({
           routeName: "LoginScreen"
