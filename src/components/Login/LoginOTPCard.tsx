@@ -90,8 +90,11 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       // using the DIST_ENV variable from features
 
       // versionResponse.features.DIST_ENV
-
-      if (versionResponse.features.DIST_ENV === "VOUCHER") {
+      console.log(versionResponse.features.DIST_ENV);
+      if (
+        versionResponse.features.DIST_ENV === "VOUCHER" ||
+        versionResponse.features.DIST_ENV === "TOKEN"
+      ) {
         setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
         setFeatures(versionResponse.features);
         setProducts(versionResponse.policies);
