@@ -18,6 +18,7 @@ import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP, requestOTP } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
+import * as Sentry from "sentry-expo";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -109,6 +110,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       }
     } catch (e) {
       if (e instanceof EnvVersionError) {
+        Sentry.captureException(e);
         alert(
           "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
         );
