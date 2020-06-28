@@ -4,6 +4,7 @@ import { useAuthenticationContext } from "../context/auth";
 import { useProductContext } from "../context/products";
 import { Alert } from "react-native";
 import { NavigationDispatch, NavigationActions } from "react-navigation";
+import { Feature } from "../types";
 
 type AlertProps = {
   title: string;
@@ -32,11 +33,7 @@ export const useLogout = (): LogoutHook => {
       setIsLoggingOut(true);
       await clearAuthInfo();
       setProducts([]);
-      setFeatures({
-        REQUIRE_OTP: true,
-        TRANSACTION_GROUPING: true,
-        DIST_ENV: ""
-      });
+      setFeatures({} as Feature);
       setMessageContent(null);
       setIsLoggingOut(false);
       navigationDispatch?.(
