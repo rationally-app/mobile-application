@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  FunctionComponent,
-  Dispatch,
-  SetStateAction
-} from "react";
+import React, { useState, useEffect, FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -13,7 +7,6 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { NavigationProps } from "../../types";
-import { LoginStage } from "./types";
 import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP, requestOTP } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
@@ -90,22 +83,24 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       // Toggle between different environments
       // using the DIST_ENV variable from features
 
-      // versionResponse.features.DIST_ENV
-      if (
-        versionResponse.features.DIST_ENV === "VOUCHER" ||
-        versionResponse.features.DIST_ENV === "TOKEN"
-      ) {
-        setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
-        setFeatures(versionResponse.features);
-        setProducts(versionResponse.policies);
+      switch (versionResponse.features.DIST_ENV) {
+        case "VOUCHER":
+        case "TOKEN":
+          setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
+          setFeatures(versionResponse.features);
+          setProducts(versionResponse.policies);
+          navigation.navigate("CollectCustomerDetailsScreen");
+          break;
 
-        navigation.navigate("CollectCustomerDetailsScreen");
-      } else {
-        alert(
-          "Invalid Environment Error: Make sure you scanned a valid QR code"
-        );
-        // Reset to initial login state
-        resetStage();
+        // TODO: Integration with merchant flow
+        // case "MERCHANT":
+
+        default:
+          alert(
+            "Invalid Environment Error: Make sure you scanned a valid QR code"
+          );
+          // Reset to initial login state
+          resetStage();
       }
     } catch (e) {
       if (e instanceof EnvVersionError) {
