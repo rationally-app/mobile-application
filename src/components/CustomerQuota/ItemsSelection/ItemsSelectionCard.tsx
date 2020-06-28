@@ -31,14 +31,14 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
-  const { getFeature } = useProductContext();
+  const { getFeatures } = useProductContext();
 
   return (
     <View>
       <CustomerCard
         nrics={nrics}
         onAddNric={
-          getFeature()?.TRANSACTION_GROUPING
+          getFeatures()?.TRANSACTION_GROUPING
             ? () => setIsAddUserModalVisible(true)
             : undefined
         }

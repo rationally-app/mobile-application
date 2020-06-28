@@ -93,7 +93,7 @@ const Policy = t.intersection([
   })
 ]);
 
-const Feature = t.type({
+const Features = t.type({
   REQUIRE_OTP: t.boolean,
   TRANSACTION_GROUPING: t.boolean,
   DIST_ENV: t.string
@@ -101,7 +101,7 @@ const Feature = t.type({
 
 export const EnvVersion = t.type({
   policies: t.array(Policy),
-  features: Feature
+  features: Features
 });
 
 export type TextInputType = t.TypeOf<typeof TextInputType>;
@@ -110,7 +110,7 @@ export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;
 export type EnvVersion = t.TypeOf<typeof EnvVersion>;
-export type Feature = t.TypeOf<typeof Feature>;
+export type Features = t.TypeOf<typeof Features>;
 
 const ItemQuota = t.intersection([
   t.type({

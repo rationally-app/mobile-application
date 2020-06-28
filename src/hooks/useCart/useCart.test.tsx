@@ -6,7 +6,7 @@ import { ProductContext } from "../../context/products";
 import {
   Policy,
   EnvVersion,
-  Feature,
+  Features,
   Quota,
   PostTransactionResult,
   PolicyIdentifier
@@ -96,7 +96,7 @@ const defaultProducts: EnvVersion = {
 
 const Wrapper: FunctionComponent<{
   products?: Policy[];
-  features?: Feature | undefined;
+  features?: Features | undefined;
 }> = ({
   children,
   products = defaultProducts.policies,
@@ -104,7 +104,7 @@ const Wrapper: FunctionComponent<{
 }) => {
   const getProduct = (category: string): Policy | undefined =>
     products?.find(product => product.category === category) ?? undefined;
-  const getFeature = (): Feature | undefined => features;
+  const getFeatures = (): Features | undefined => features;
   return (
     <ProductContext.Provider
       value={{
@@ -112,7 +112,7 @@ const Wrapper: FunctionComponent<{
         features,
         getProduct,
         setProducts: jest.fn(),
-        getFeature,
+        getFeatures,
         setFeatures: jest.fn()
       }}
     >
