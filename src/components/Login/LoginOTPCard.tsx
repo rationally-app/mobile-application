@@ -39,14 +39,14 @@ const styles = StyleSheet.create({
 });
 
 interface LoginOTPCard extends NavigationProps {
-  setLoginStage: Dispatch<SetStateAction<LoginStage>>;
+  resetStage: () => void;
   mobileNumber: string;
   codeKey: string;
   endpoint: string;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
-  setLoginStage,
+  resetStage,
   navigation,
   mobileNumber,
   codeKey,
@@ -91,7 +91,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       // using the DIST_ENV variable from features
 
       // versionResponse.features.DIST_ENV
-      console.log(versionResponse.features.DIST_ENV);
       if (
         versionResponse.features.DIST_ENV === "VOUCHER" ||
         versionResponse.features.DIST_ENV === "TOKEN"
@@ -106,7 +105,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           "Invalid Environment Error: Make sure you scanned a valid QR code"
         );
         // Reset to initial login state
-        setLoginStage("SCAN");
+        resetStage();
       }
     } catch (e) {
       if (e instanceof EnvVersionError) {
