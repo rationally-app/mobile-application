@@ -11,7 +11,8 @@ import {
   ScrollView,
   Alert,
   Vibration,
-  BackHandler
+  BackHandler,
+  Platform
 } from "react-native";
 import { size, color } from "../../common/styles";
 import {
@@ -26,7 +27,6 @@ import { Banner } from "../Layout/Banner";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { Card } from "../Layout/Card";
-import { Credits } from "../Credits";
 import { HelpModalContext } from "../../context/help";
 import { VoucherInputSection } from "./VoucherInputSection";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -211,7 +211,10 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         keyboardShouldPersistTaps="handled"
       >
         <TopBackground mode={config.appMode} />
-        <KeyboardAvoidingView behavior="position">
+        <KeyboardAvoidingView
+          behavior={Platform.select({ ios: "position" })}
+          keyboardVerticalOffset={Platform.select({ ios: -80 })}
+        >
           <View style={styles.content}>
             <View style={styles.headerText}>
               <AppHeader mode={config.appMode} />
@@ -284,7 +287,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
           />
         </KeyboardAvoidingView>
       </ScrollView>
-      <Credits style={{ bottom: size(3) }} />
       {shouldShowCamera && (
         <VoucherScanner
           vouchers={vouchers}
