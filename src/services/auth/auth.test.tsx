@@ -26,7 +26,7 @@ describe("auth", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve()
+        json: () => Promise.resolve({})
       });
       await requestOTP(phone, code, endpoint);
       const payload = { code, phone };

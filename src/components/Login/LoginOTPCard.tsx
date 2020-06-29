@@ -12,7 +12,6 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { useAuthenticationContext } from "../../context/auth";
-import { validateOTP, requestOTP } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
@@ -89,12 +88,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     };
   }, [resendDisabledTime]);
 
-  const checkLockedOut = (e: any): void => {
-    if (e && typeof e === "string") {
-      if (e.indexOf("Please wait") !== -1) setLoginStage("MOBILE_NUMBER");
-    } else if (e && e.message && typeof e.message === "string") {
-      if (e.message.indexOf("Please wait") !== -1)
-        setLoginStage("MOBILE_NUMBER");
+  const checkIfLockedOut = (e: LoginError): void => {
+    if (e.message && typeof e.message === "string") {
+      if (e.message.includes("Please wait")) setLoginStage("MOBILE_NUMBER");
     }
   };
 
@@ -145,6 +141,21 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         });
       }
       setIsLoading(false);
+      Alert.alert(
+        "Error",
+        e.message || e,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              if (e instanceof LoginError) checkIfLockedOut(e);
+            }
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
     }
   };
 
@@ -155,14 +166,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const resendOTP = async (): Promise<void> => {
     setIsResending(true);
     try {
-      const res = await requestOTP(mobileNumber, codeKey, endpoint);
-      if (
-        typeof res === "object" &&
-        res !== null &&
-        hasOwnProperty(res, "warning") &&
-        typeof res.warning === "string"
-      ) {
-        setLastResendWarningMessage(res.warning);
+      const response = await requestOTP(mobileNumber, codeKey, endpoint);
+      if (typeof response.warning === "string") {
+        setLastResendWarningMessage(response.warning);
       }
       setIsResending(false);
       setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
@@ -171,7 +177,14 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       Alert.alert(
         "Error",
         e.message || e,
-        [{ text: "OK", onPress: () => checkLockedOut(e.message || e) }],
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              if (e instanceof LoginError) checkIfLockedOut(e);
+            }
+          }
+        ],
         {
           cancelable: false
         }
