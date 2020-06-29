@@ -14,7 +14,8 @@ import {
   Alert,
   Vibration,
   BackHandler,
-  Platform
+  Platform,
+  Keyboard
 } from "react-native";
 import { size, color } from "../../common/styles";
 import {
@@ -92,7 +93,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     checkoutResult,
     error: merchantError,
     clearError,
-    resetState
+    resetState: resetVoucherState
   } = useVoucher(token, endpoint);
 
   useEffect(() => {
@@ -151,7 +152,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   }, [isFocused, checkValidityState, validityResult, onModalExit, addVoucher]);
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
-    console.log(event.data);
     if (
       isScanningEnabled &&
       event.data &&
@@ -166,10 +166,21 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     checkoutVouchers(merchantCode);
   };
 
+  const resetState = useCallback((): void => {
+    setMerchantCode("");
+    setShouldShowCamera(false);
+    currentBarcode.current = undefined;
+    resetVoucherState();
+  }, [resetVoucherState]);
+
   // Detect submission of merchant code
   useEffect(() => {
     if (checkoutVouchersState === "RESULT_RETURNED" && checkoutResult) {
-      console.log(checkoutResult);
+      navigation.navigate("PayoutFeedbackScreen", {
+        merchantCode,
+        checkoutResult
+      });
+      resetState();
       Vibration.vibrate(50);
     } else if (merchantError) {
       Alert.alert("Error", merchantError.message, [
@@ -179,7 +190,15 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         }
       ]);
     }
-  }, [checkoutVouchersState, merchantError, clearError, checkoutResult]);
+  }, [
+    checkoutVouchersState,
+    merchantError,
+    clearError,
+    checkoutResult,
+    navigation,
+    merchantCode,
+    resetState
+  ]);
 
   return (
     <>
@@ -208,7 +227,10 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 merchantCode={merchantCode}
                 setMerchantCode={setMerchantCode}
                 redeemVouchers={redeemVouchers}
-                openCamera={() => setShouldShowCamera(true)}
+                openCamera={() => {
+                  Keyboard.dismiss();
+                  setShouldShowCamera(true);
+                }}
                 openAllValidVouchersModal={() =>
                   setShowAllValidVouchersModal(true)
                 }
