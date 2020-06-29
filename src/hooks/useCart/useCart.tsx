@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import * as Sentry from "sentry-expo";
 import {
   getQuota,
   postTransaction,
@@ -110,6 +111,15 @@ const mergeWithCart = (
 const hasNoQuota = (quota: Quota): boolean =>
   quota.remainingQuota.every(item => item.quantity === 0);
 
+<<<<<<< HEAD
+=======
+const hasNegativeQuota = (quota: Quota): boolean =>
+  quota.remainingQuota.some(item => item.quantity < 0);
+
+const isUniqueList = (list: string[]): boolean =>
+  new Set(list).size === list.length;
+
+>>>>>>> feat: show limit reached on receiving negative quota
 export const useCart = (
   ids: string[],
   authKey: string,
@@ -138,7 +148,10 @@ export const useCart = (
       setCartState("FETCHING_QUOTA");
       try {
         const quotaResponse = await getQuota(ids, authKey, endpoint);
-        if (hasNoQuota(quotaResponse)) {
+        if (hasNegativeQuota(quotaResponse)) {
+          Sentry.captureException(new Error("Negative Quota Received"));
+          setCartState("NO_QUOTA");
+        } else if (hasNoQuota(quotaResponse)) {
           setCartState("NO_QUOTA");
         } else {
           setCartState("DEFAULT");
