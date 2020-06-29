@@ -1,6 +1,5 @@
 import { IS_MOCK } from "../../config";
-import * as t from "io-ts";
-import { SessionCredentials } from "../../types";
+import { SessionCredentials, OPTResponse } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 
@@ -15,11 +14,11 @@ export const liveRequestOTP = async (
   mobileNumber: string,
   code: string,
   endpoint: string
-): Promise<unknown> => {
+): Promise<OPTResponse> => {
   const payload = { code, phone: mobileNumber };
   try {
     const response = await fetchWithValidator(
-      t.unknown,
+      OPTResponse,
       `${endpoint}/auth/register`,
       {
         method: "POST",
@@ -36,8 +35,8 @@ export const mockRequestOTP = async (
   _mobileNumber: string,
   _key: string,
   _endpoint: string
-): Promise<unknown> => {
-  return Promise.resolve();
+): Promise<OPTResponse> => {
+  return {};
 };
 
 export const liveValidateOTP = async (
