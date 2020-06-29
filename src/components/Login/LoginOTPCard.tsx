@@ -84,8 +84,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       // using the DIST_ENV variable from features
 
       switch (versionResponse.features.DIST_ENV) {
-        case "VOUCHER":
-        case "TOKEN":
+        case "DEFAULT":
           setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
           setFeatures(versionResponse.features);
           setProducts(versionResponse.policies);
