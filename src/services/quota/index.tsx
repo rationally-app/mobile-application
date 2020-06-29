@@ -133,6 +133,24 @@ export const mockPostTransaction = async ({
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
   const timestamp = new Date();
+  if (transactions[0].category === "voucher") {
+    const transactionArr = [];
+    for (let i = 0; i < transactions[0].quantity; i++) {
+      const transaction: Transaction[] = [
+        {
+          category: "voucher",
+          quantity: 1
+        }
+      ];
+      transactionArr.push({
+        timestamp: timestamp,
+        transaction
+      });
+    }
+    return {
+      transactions: transactionArr
+    };
+  }
   return {
     transactions: [
       {

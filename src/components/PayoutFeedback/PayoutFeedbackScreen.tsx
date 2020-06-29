@@ -80,9 +80,12 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
   const checkoutResult: PostTransactionResult = navigation.getParam(
     "checkoutResult"
   );
-  const itemQuantities = checkoutResult.transactions[0].transaction.filter(
-    transaction => transaction.category === "voucher"
-  )[0].quantity;
+  const voucherArr = checkoutResult.transactions.filter(
+    transaction =>
+      transaction.transaction.filter(obj => obj.category === "voucher").length >
+      0
+  );
+  const itemQuantities = voucherArr.length;
   const merchantCode: string = navigation.getParam("merchantCode");
 
   return (

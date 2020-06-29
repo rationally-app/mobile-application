@@ -6,6 +6,7 @@ import {
   ScannerError,
   useCheckVoucherValidity
 } from "../../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
+import { NotEligibleError } from "../../../services/quota";
 
 const styles = StyleSheet.create({
   background: {
@@ -40,6 +41,14 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
       <InvalidCard
         title={"Error Scanning"}
         details={error.message}
+        closeModal={onExit}
+      />
+    );
+  } else if (error instanceof NotEligibleError) {
+    card = (
+      <InvalidCard
+        title="Invalid"
+        details="Please log an appeal request"
         closeModal={onExit}
       />
     );
