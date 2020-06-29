@@ -144,8 +144,13 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const resendOTP = async (): Promise<void> => {
     setIsResending(true);
     try {
-      const res: any = await requestOTP(mobileNumber, codeKey, endpoint);
-      if (res && res.warning && typeof res.warning === "string") {
+      const res = await requestOTP(mobileNumber, codeKey, endpoint);
+      if (
+        typeof res === "object" &&
+        res !== null &&
+        hasOwnProperty(res, "warning") &&
+        typeof res.warning === "string"
+      ) {
         setLastResendWarningMessage(res.warning);
       }
       setIsResending(false);

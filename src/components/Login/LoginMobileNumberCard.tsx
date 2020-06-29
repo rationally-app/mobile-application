@@ -17,6 +17,7 @@ import {
   countryCodeValidator,
   mobileNumberValidator
 } from "../../utils/validatePhoneNumbers";
+import { hasOwnProperty } from "./utils";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -58,8 +59,13 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
     setIsLoading(true);
     try {
       const fullNumber = createFullNumber(countryCode, mobileNumberValue);
-      const res: any = await requestOTP(fullNumber, codeKey, endpoint);
-      if (res && res.warning && typeof res.warning === "string") {
+      const res = await requestOTP(fullNumber, codeKey, endpoint);
+      if (
+        typeof res === "object" &&
+        res !== null &&
+        hasOwnProperty(res, "warning") &&
+        typeof res.warning === "string"
+      ) {
         setLastResendWarningMessage(res.warning);
       }
       setIsLoading(false);
