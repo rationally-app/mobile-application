@@ -127,7 +127,7 @@ const mockGetEnvVersion = async (
     features: {
       REQUIRE_OTP: true,
       TRANSACTION_GROUPING: true,
-      DIST_ENV: "DEFAULT"
+      FLOW_TYPE: "DEFAULT"
     }
   };
 };

@@ -18,11 +18,7 @@ export interface ProductContextValue {
 
 export const ProductContext = createContext<ProductContextValue>({
   products: [],
-  features: {
-    REQUIRE_OTP: false,
-    TRANSACTION_GROUPING: false,
-    DIST_ENV: ""
-  },
+  features: {} as Features,
   setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getProduct: () => undefined,
   setFeatures: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
