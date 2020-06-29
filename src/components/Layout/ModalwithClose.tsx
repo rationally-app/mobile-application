@@ -44,7 +44,7 @@ export const ModalWithClose: FunctionComponent<ModalWithClose> = ({
     <Modal
       visible={isVisible}
       onRequestClose={onExit}
-      animationType="fade"
+      animationType="none" // Setting an animation causes issues when there are other modals in the DOM
       transparent={true}
     >
       <TouchableWithoutFeedback onPress={onExit}>

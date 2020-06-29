@@ -128,7 +128,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
 
   const currentBarcode = useRef<string>();
 
-  const onCheckVoucher = async (input: string): Promise<void> => {
+  const onCheckVoucher = (input: string): void => {
     setIsScanningEnabled(false);
     checkValidity(input, vouchers);
   };
