@@ -111,15 +111,9 @@ const mergeWithCart = (
 const hasNoQuota = (quota: Quota): boolean =>
   quota.remainingQuota.every(item => item.quantity === 0);
 
-<<<<<<< HEAD
-=======
 const hasNegativeQuota = (quota: Quota): boolean =>
   quota.remainingQuota.some(item => item.quantity < 0);
 
-const isUniqueList = (list: string[]): boolean =>
-  new Set(list).size === list.length;
-
->>>>>>> feat: show limit reached on receiving negative quota
 export const useCart = (
   ids: string[],
   authKey: string,
