@@ -249,6 +249,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                       />
                     }
                     onPress={redeemVouchers}
+                    isLoading={checkoutVouchersState !== "DEFAULT"}
                   />
                 </View>
                 <SecondaryButton
