@@ -38,7 +38,7 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   if (error instanceof ScannerError) {
     card = (
       <InvalidCard
-        title={error.name}
+        title={"Error Scanning"}
         details={error.message}
         closeModal={onExit}
       />

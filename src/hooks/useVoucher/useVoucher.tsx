@@ -3,14 +3,17 @@ import { validateMerchantCode } from "../../utils/validateMerchantCode";
 import { Voucher, PostTransactionResult, Transaction } from "../../types";
 import { postTransaction } from "../../services/quota";
 
-type VoucherState = "DEFAULT" | "CONSUMING_VOUCHER" | "RESULT_RETURNED";
+type CheckoutVouchersState =
+  | "DEFAULT"
+  | "CONSUMING_VOUCHER"
+  | "RESULT_RETURNED";
 
 export type VoucherHook = {
-  voucherState: VoucherState;
+  checkoutVouchersState: CheckoutVouchersState;
   vouchers: Voucher[];
   addVoucher: (voucher: Voucher) => void;
   removeVoucher: (serial: string) => void;
-  checkoutMerchantCode: (merchantCode: string) => void;
+  checkoutVouchers: (merchantCode: string) => void;
   checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
@@ -19,14 +22,16 @@ export type VoucherHook = {
 
 export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
-  const [voucherState, setVoucherState] = useState<VoucherState>("DEFAULT");
+  const [checkoutVouchersState, setCheckoutVouchersState] = useState<
+    CheckoutVouchersState
+  >("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
 
   const resetState = useCallback((): void => {
     setError(undefined);
     setCheckoutResult(undefined);
-    setVoucherState("DEFAULT");
+    setCheckoutVouchersState("DEFAULT");
     setVouchers([]);
   }, []);
 
@@ -43,9 +48,9 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
     [vouchers]
   );
 
-  const checkoutMerchantCode: VoucherHook["checkoutMerchantCode"] = useCallback(
+  const checkoutVouchers: VoucherHook["checkoutVouchers"] = useCallback(
     merchantCode => {
-      setVoucherState("CONSUMING_VOUCHER");
+      setCheckoutVouchersState("CONSUMING_VOUCHER");
       const checkout = async (): Promise<void> => {
         try {
           validateMerchantCode(merchantCode);
@@ -62,10 +67,6 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
               {
                 label: "Merchant Code",
                 value: merchantCode
-              },
-              {
-                label: "Redeemed by",
-                value: merchantCode
               }
             ]
           }
@@ -79,7 +80,7 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
             endpoint
           });
           setCheckoutResult(transactionResponse);
-          setVoucherState("RESULT_RETURNED");
+          setCheckoutVouchersState("RESULT_RETURNED");
         } catch (e) {
           setError(e);
         }
@@ -91,11 +92,11 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
   );
 
   return {
-    voucherState,
+    checkoutVouchersState,
     vouchers,
     addVoucher,
     removeVoucher,
-    checkoutMerchantCode,
+    checkoutVouchers,
     checkoutResult,
     error,
     clearError,

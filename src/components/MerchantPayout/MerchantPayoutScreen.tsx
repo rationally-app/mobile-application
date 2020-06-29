@@ -84,11 +84,11 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const { token, endpoint } = useAuthenticationContext();
 
   const {
-    voucherState,
+    checkoutVouchersState,
     vouchers,
     addVoucher,
     removeVoucher,
-    checkoutMerchantCode,
+    checkoutVouchers,
     checkoutResult,
     error: merchantError,
     clearError,
@@ -163,12 +163,12 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   };
 
   const redeemVouchers = (): void => {
-    checkoutMerchantCode(merchantCode);
+    checkoutVouchers(merchantCode);
   };
 
   // Detect submission of merchant code
   useEffect(() => {
-    if (voucherState === "RESULT_RETURNED" && checkoutResult) {
+    if (checkoutVouchersState === "RESULT_RETURNED" && checkoutResult) {
       console.log(checkoutResult);
       Vibration.vibrate(50);
     } else if (merchantError) {
@@ -179,7 +179,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         }
       ]);
     }
-  }, [voucherState, merchantError, clearError, checkoutResult]);
+  }, [checkoutVouchersState, merchantError, clearError, checkoutResult]);
 
   return (
     <>

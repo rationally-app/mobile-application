@@ -44,12 +44,16 @@ describe("useVoucher", () => {
 
   describe("update vouchers when removing voucher", () => {
     it("should update vouchers when voucher is removed", async () => {
-      expect.assertions(1);
+      expect.assertions(2);
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
       await wait(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
       });
+
+      expect(result.current.vouchers).toStrictEqual([
+        { serial: "123456789", denomination: 2 }
+      ]);
 
       await wait(() => {
         result.current.removeVoucher("123456789");
@@ -58,7 +62,7 @@ describe("useVoucher", () => {
       expect(result.current.vouchers).toStrictEqual([]);
     });
 
-    it("update vouchers correclty when voucher is removed", async () => {
+    it("update vouchers correctly when voucher is removed", async () => {
       expect.assertions(2);
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
@@ -80,7 +84,7 @@ describe("useVoucher", () => {
       ]);
     });
 
-    it("no update vouchers when invalid voucher is removed", async () => {
+    it("should not update vouchers when voucher to be removed does not exist", async () => {
       expect.assertions(2);
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
@@ -132,7 +136,7 @@ describe("useVoucher", () => {
   });
 
   describe("update vouchers when adding voucher", () => {
-    it("should update vouchers when new voucher are added", async () => {
+    it("should update vouchers when new voucher is added", async () => {
       expect.assertions(1);
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
@@ -163,8 +167,8 @@ describe("useVoucher", () => {
     });
   });
 
-  describe("checkout cart", () => {
-    it("should set the correct checkoutResult when checkoutCart is called", async () => {
+  describe("checkout voucher", () => {
+    it("should set the correct checkoutResult when checkoutVouchers is called", async () => {
       expect.assertions(4);
 
       const { result } = renderHook(() => useVoucher(key, endpoint));
@@ -178,11 +182,11 @@ describe("useVoucher", () => {
       mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
 
       await wait(() => {
-        result.current.checkoutMerchantCode(mockMerchantCode);
-        expect(result.current.voucherState).toBe("CONSUMING_VOUCHER");
+        result.current.checkoutVouchers(mockMerchantCode);
+        expect(result.current.checkoutVouchersState).toBe("CONSUMING_VOUCHER");
       });
 
-      expect(result.current.voucherState).toBe("RESULT_RETURNED");
+      expect(result.current.checkoutVouchersState).toBe("RESULT_RETURNED");
       expect(result.current.vouchers).toStrictEqual([
         {
           serial: "123456789",
@@ -198,7 +202,7 @@ describe("useVoucher", () => {
       );
     });
 
-    it("should set error when no merchant code is invalid", async () => {
+    it("should set error when merchant code is invalid", async () => {
       expect.assertions(3);
 
       const { result } = renderHook(() => useVoucher(key, endpoint));
@@ -206,11 +210,11 @@ describe("useVoucher", () => {
 
       await wait(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
-        result.current.checkoutMerchantCode(mockMerchantCode);
+        result.current.checkoutVouchers(mockMerchantCode);
       });
 
       expect(result.current.error?.message).toBe("Invalid merchant code");
-      expect(result.current.voucherState).toBe("CONSUMING_VOUCHER");
+      expect(result.current.checkoutVouchersState).toBe("CONSUMING_VOUCHER");
       expect(result.current.vouchers).toStrictEqual([
         {
           serial: "123456789",
@@ -234,13 +238,13 @@ describe("useVoucher", () => {
       );
 
       await wait(() => {
-        result.current.checkoutMerchantCode(mockMerchantCode);
+        result.current.checkoutVouchers(mockMerchantCode);
       });
 
       expect(result.current.error?.message).toBe(
         "Couldn't checkout, please try again later"
       );
-      expect(result.current.voucherState).toBe("CONSUMING_VOUCHER");
+      expect(result.current.checkoutVouchersState).toBe("CONSUMING_VOUCHER");
       expect(result.current.vouchers).toStrictEqual([
         {
           serial: "123456789",

@@ -6,14 +6,14 @@ import { Quota, Voucher } from "../../types";
 export class ScannerError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "Error Scanning";
+    this.name = "ScanningError";
   }
 }
 
 export class InvalidVoucherError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "InvalidVocuherError";
+    this.name = "InvalidVoucherError";
   }
 }
 
@@ -77,6 +77,7 @@ export const useCheckVoucherValidity = (
           setValidityResult(voucher);
           setCheckValidityState("RESULT_RETURNED");
         } catch (e) {
+          // TODO: Handle the case when the voucher isn't in the whitelist
           setError(e);
         }
       };
