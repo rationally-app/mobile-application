@@ -6,7 +6,7 @@ import { ProductContext } from "../../context/products";
 import {
   Policy,
   EnvVersion,
-  Feature,
+  Features,
   Quota,
   PostTransactionResult,
   PolicyIdentifier
@@ -89,13 +89,14 @@ const defaultProducts: EnvVersion = {
   ],
   features: {
     REQUIRE_OTP: true,
-    TRANSACTION_GROUPING: true
+    TRANSACTION_GROUPING: true,
+    FLOW_TYPE: "DEFAULT"
   }
 };
 
 const Wrapper: FunctionComponent<{
   products?: Policy[];
-  features?: Feature | undefined;
+  features?: Features | undefined;
 }> = ({
   children,
   products = defaultProducts.policies,
@@ -103,7 +104,7 @@ const Wrapper: FunctionComponent<{
 }) => {
   const getProduct = (category: string): Policy | undefined =>
     products?.find(product => product.category === category) ?? undefined;
-  const getFeature = (): Feature | undefined => features;
+  const getFeatures = (): Features | undefined => features;
   return (
     <ProductContext.Provider
       value={{
@@ -111,7 +112,7 @@ const Wrapper: FunctionComponent<{
         features,
         getProduct,
         setProducts: jest.fn(),
-        getFeature,
+        getFeatures,
         setFeatures: jest.fn()
       }}
     >
@@ -316,24 +317,6 @@ describe("useCart", () => {
       });
 
       expect(result.current.cartState).toBe("NOT_ELIGIBLE");
-    });
-
-    it("should fetch policies if there are no products in context", async () => {
-      expect.assertions(2);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
-
-      const ids = ["ID1"];
-      const NoProductsWrapper: FunctionComponent = ({ children }) => (
-        <Wrapper products={[]}>{children}</Wrapper>
-      );
-      const { result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
-        { wrapper: NoProductsWrapper }
-      );
-      expect(result.current.cartState).toBe("FETCHING_QUOTA");
-
-      await waitForNextUpdate();
-      expect(mockGetEnvVersion).toHaveBeenCalledTimes(1);
     });
   });
 

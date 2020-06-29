@@ -5,27 +5,24 @@ import React, {
   useState,
   useCallback
 } from "react";
-import { Policy, Feature } from "../types";
+import { Policy, Features } from "../types";
 
 export interface ProductContextValue {
   products: Policy[];
-  features: Feature | undefined;
+  features: Features | undefined;
   setProducts: (products: Policy[]) => void;
   getProduct: (category: string) => Policy | undefined;
-  setFeatures: (features: Feature) => void;
-  getFeature: () => Feature | undefined;
+  setFeatures: (features: Features) => void;
+  getFeatures: () => Features | undefined;
 }
 
 export const ProductContext = createContext<ProductContextValue>({
   products: [],
-  features: {
-    REQUIRE_OTP: false,
-    TRANSACTION_GROUPING: false
-  },
+  features: {} as Features,
   setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getProduct: () => undefined,
   setFeatures: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  getFeature: () => undefined
+  getFeatures: () => undefined
 });
 
 export const useProductContext = (): ProductContextValue =>
@@ -39,8 +36,8 @@ export const ProductContextProvider: FunctionComponent = ({ children }) => {
     [products]
   );
 
-  const [features, setFeatures] = useState<Feature>();
-  const getFeature = useCallback((): Feature | undefined => features, [
+  const [features, setFeatures] = useState<Features>();
+  const getFeatures = useCallback((): Features | undefined => features, [
     features
   ]);
 
@@ -52,7 +49,7 @@ export const ProductContextProvider: FunctionComponent = ({ children }) => {
         setProducts,
         getProduct,
         setFeatures,
-        getFeature
+        getFeatures
       }}
     >
       {children}

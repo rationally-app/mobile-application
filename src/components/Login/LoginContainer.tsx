@@ -205,6 +205,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             )}
             {loginStage === "OTP" && (
               <LoginOTPCard
+                resetStage={() => setLoginStage("SCAN")}
                 navigation={navigation}
                 mobileNumber={mobileNumber}
                 codeKey={codeKey}

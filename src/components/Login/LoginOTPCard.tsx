@@ -9,6 +9,9 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { NavigationProps } from "../../types";
 import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP, requestOTP } from "../../services/auth";
+import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
+import { useProductContext } from "../../context/products";
+import * as Sentry from "sentry-expo";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -29,12 +32,14 @@ const styles = StyleSheet.create({
 });
 
 interface LoginOTPCard extends NavigationProps {
+  resetStage: () => void;
   mobileNumber: string;
   codeKey: string;
   endpoint: string;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
+  resetStage,
   navigation,
   mobileNumber,
   codeKey,
@@ -47,6 +52,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     RESEND_OTP_TIME_LIMIT
   );
   const { setAuthInfo } = useAuthenticationContext();
+  const { setFeatures, setProducts } = useProductContext();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -69,11 +75,42 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     try {
       const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
       setIsLoading(false);
-      setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
-      navigation.navigate("CollectCustomerDetailsScreen");
+      const versionResponse = await getEnvVersion(
+        response.sessionToken,
+        endpoint
+      );
+
+      // Toggle between different environments
+      // using the FLOW_TYPE variable from features
+
+      switch (versionResponse.features.FLOW_TYPE) {
+        case "DEFAULT":
+          setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
+          setFeatures(versionResponse.features);
+          setProducts(versionResponse.policies);
+          navigation.navigate("CollectCustomerDetailsScreen");
+          break;
+
+        // TODO: Integration with merchant flow
+        // case "MERCHANT":
+
+        default:
+          alert(
+            "Invalid Environment Error: Make sure you scanned a valid QR code"
+          );
+          // Reset to initial login state
+          resetStage();
+      }
     } catch (e) {
-      setIsLoading(false);
-      alert(e);
+      if (e instanceof EnvVersionError) {
+        Sentry.captureException(e);
+        alert(
+          "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+        );
+      } else {
+        setIsLoading(false);
+        alert(e);
+      }
     }
   };
 
