@@ -81,9 +81,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       );
 
       // Toggle between different environments
-      // using the DIST_ENV variable from features
+      // using the FLOW_TYPE variable from features
 
-      switch (versionResponse.features.DIST_ENV) {
+      switch (versionResponse.features.FLOW_TYPE) {
         case "DEFAULT":
           setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
           setFeatures(versionResponse.features);
