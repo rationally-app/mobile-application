@@ -16,8 +16,7 @@ export type VoucherHook = {
   checkoutVouchers: (merchantCode: string) => void;
   checkoutResult?: PostTransactionResult;
   error?: Error;
-  clearError: () => void;
-  resetState: () => void;
+  resetState: (keepVouchers?: boolean) => void;
 };
 
 export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
@@ -28,14 +27,14 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
 
-  const resetState = useCallback((): void => {
+  const resetState = useCallback((keepVouchers = false): void => {
     setError(undefined);
     setCheckoutResult(undefined);
     setCheckoutVouchersState("DEFAULT");
-    setVouchers([]);
+    if (!keepVouchers) {
+      setVouchers([]);
+    }
   }, []);
-
-  const clearError = useCallback((): void => setError(undefined), []);
 
   const addVoucher: VoucherHook["addVoucher"] = voucher => {
     setVouchers([...vouchers, voucher]);
@@ -99,7 +98,6 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
     checkoutVouchers,
     checkoutResult,
     error,
-    clearError,
     resetState
   };
 };

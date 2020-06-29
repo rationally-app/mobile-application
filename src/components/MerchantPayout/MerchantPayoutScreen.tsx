@@ -92,7 +92,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     checkoutVouchers,
     checkoutResult,
     error: merchantError,
-    clearError,
     resetState: resetVoucherState
   } = useVoucher(token, endpoint);
 
@@ -186,18 +185,18 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       Alert.alert("Error", merchantError.message, [
         {
           text: "Dismiss",
-          onPress: () => clearError()
+          onPress: () => resetVoucherState(true)
         }
       ]);
     }
   }, [
     checkoutVouchersState,
     merchantError,
-    clearError,
     checkoutResult,
     navigation,
     merchantCode,
-    resetState
+    resetState,
+    resetVoucherState
   ]);
 
   return (
