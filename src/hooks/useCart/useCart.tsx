@@ -6,6 +6,7 @@ import {
   NotEligibleError
 } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
+import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
@@ -137,6 +138,11 @@ export const useCart = (
     const fetchQuota = async (): Promise<void> => {
       setCartState("FETCHING_QUOTA");
       try {
+        if (products.length === 0) {
+          const response = await getEnvVersion(authKey, endpoint);
+          setProducts(response.policies);
+          setFeatures(response.features);
+        }
         const quotaResponse = await getQuota(ids, authKey, endpoint);
         if (hasNoQuota(quotaResponse)) {
           setCartState("NO_QUOTA");
@@ -148,6 +154,12 @@ export const useCart = (
         if (e instanceof NotEligibleError) {
           setCartState("NOT_ELIGIBLE");
           // Cart will remain in FETCHING_QUOTA state.
+        } else if (e instanceof EnvVersionError) {
+          setError(
+            new Error(
+              "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+            )
+          );
         } else if (e instanceof QuotaError) {
           setError(
             new Error(
