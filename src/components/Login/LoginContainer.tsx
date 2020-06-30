@@ -81,7 +81,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [endpointTemp, setEndpointTemp] = useState("");
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const { getFeatures, setFeatures, setProducts } = useProductContext();
+  const { features, setFeatures, setProducts } = useProductContext();
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -105,12 +105,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         }
       }
     };
-    if (token && endpoint && !getFeatures()) setEnvVersion();
-  }, [endpoint, token, setFeatures, setProducts, getFeatures]);
+    if (token && endpoint && !features) setEnvVersion();
+  }, [endpoint, token, setFeatures, setProducts, features]);
 
   useLayoutEffect(() => {
-    if (token && endpoint && getFeatures()?.FLOW_TYPE) {
-      switch (getFeatures()?.FLOW_TYPE) {
+    if (token && endpoint && features?.FLOW_TYPE) {
+      switch (features?.FLOW_TYPE) {
         case "DEFAULT":
           navigation.navigate("CollectCustomerDetailsScreen");
           break;
@@ -125,7 +125,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           () => setLoginStage("SCAN");
       }
     }
-  }, [endpoint, navigation, token, getFeatures]);
+  }, [endpoint, navigation, token, features]);
 
   useEffect(() => {
     const navKey = navigation.getParam("key", "");
