@@ -128,7 +128,9 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
             >
               <AppText style={sharedCardStyles.emoji}>✅</AppText>
               <View style={sharedCardStyles.statusTitleWrapper}>
-                <AppText style={sharedCardStyles.statusTitle}>Paid!</AppText>
+                <AppText style={sharedCardStyles.statusTitle}>
+                  Redeemed!
+                </AppText>
               </View>
               <AppText style={{ marginBottom: size(2) }}>
                 Item(s) redeemed:

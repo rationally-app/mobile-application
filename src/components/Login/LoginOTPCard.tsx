@@ -74,11 +74,11 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     setIsLoading(true);
     try {
       const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
-      setIsLoading(false);
       const versionResponse = await getEnvVersion(
         response.sessionToken,
         endpoint
       );
+      setIsLoading(false);
 
       if (versionResponse.features.FLOW_TYPE) {
         setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
@@ -98,9 +98,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
         );
       } else {
-        setIsLoading(false);
         alert(e);
       }
+      setIsLoading(false);
     }
   };
 
