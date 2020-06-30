@@ -35,6 +35,7 @@ import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { Banner } from "../Layout/Banner";
+import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -79,6 +80,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [endpointTemp, setEndpointTemp] = useState("");
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
+  const [flowType, setFlowType] = useState("");
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -87,9 +89,39 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     });
   }, [loginStage]);
 
+  useEffect(() => {
+    const checkFlowTypeFeature = async () => {
+      try {
+        const versionResponse = await getEnvVersion(token, endpoint);
+        setFlowType(versionResponse.features.FLOW_TYPE);
+      } catch (e) {
+        if (e instanceof EnvVersionError) {
+          Sentry.captureException(e);
+          alert(
+            "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+          );
+        }
+      }
+    };
+    checkFlowTypeFeature();
+  }, []);
+
   useLayoutEffect(() => {
     if (token && endpoint) {
-      navigation.navigate("CollectCustomerDetailsScreen");
+      switch (flowType) {
+        case "DEFAULT":
+          navigation.navigate("CollectCustomerDetailsScreen");
+          break;
+        case "MERCHANT":
+          navigation.navigate("MerchantPayoutScreen");
+          break;
+        default:
+          alert(
+            "Invalid Environment Error: Make sure you scanned a valid QR code"
+          );
+          // Reset to initial login state
+          () => setLoginStage("SCAN");
+      }
     }
   }, [endpoint, navigation, token]);
 
