@@ -1,0 +1,27 @@
+name: Review PR
+
+on: [pull_request]
+
+jobs:
+  publish:
+    name: deploy_branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          expo-cache: true
+      - name: install
+        run: npm install
+      - name: expo_publish_channel
+        run: expo publish --non-interactive --release-channel=pr${{ github.event.pull_request.head.ref }}
+      - name: expo_publish_storybook_channel
+        run: expo publish --non-interactive --release-channel storybook-${{ github.event.pull_request.head.ref }}
+      - name: github_comment_published_link
+        run: ./scripts/commenter.sh
