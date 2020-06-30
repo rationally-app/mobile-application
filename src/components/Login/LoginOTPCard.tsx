@@ -74,33 +74,22 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     setIsLoading(true);
     try {
       const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
-      setIsLoading(false);
       const versionResponse = await getEnvVersion(
         response.sessionToken,
         endpoint
       );
+      setIsLoading(false);
 
-      // Toggle between different environments
-      // using the FLOW_TYPE variable from features
-      switch (versionResponse.features.FLOW_TYPE) {
-        case "MERCHANT":
-        case "DEFAULT":
-          setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
-          setFeatures(versionResponse.features);
-          setProducts(versionResponse.policies);
-        case "MERCHANT":
-          navigation.navigate("MerchantPayoutScreen");
-          break;
-        case "DEFAULT":
-          navigation.navigate("CollectCustomerDetailsScreen");
-          break;
-
-        default:
-          alert(
-            "Invalid Environment Error: Make sure you scanned a valid QR code"
-          );
-          // Reset to initial login state
-          resetStage();
+      if (versionResponse.features.FLOW_TYPE) {
+        setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
+        setFeatures(versionResponse.features);
+        setProducts(versionResponse.policies);
+      } else {
+        alert(
+          "Invalid Environment Error: Make sure you scanned a valid QR code"
+        );
+        // Reset to initial login state
+        resetStage();
       }
     } catch (e) {
       if (e instanceof EnvVersionError) {
@@ -109,9 +98,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
         );
       } else {
-        setIsLoading(false);
         alert(e);
       }
+      setIsLoading(false);
     }
   };
 
