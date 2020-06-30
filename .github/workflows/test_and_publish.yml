@@ -76,6 +76,7 @@ jobs:
 
           curl \
             -X POST \
-            https://$GITHUB_TOKEN@api.github.com/repos/$GITHUB_PROJECT/issues/$PULL_REQUEST_ID/comments \
+            https://api.github.com/repos/$GITHUB_PROJECT/issues/$PULL_REQUEST_ID/comments \
             -H "Content-Type: application/json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -d '{ "body": "## Application\n![Expo QR]('"$QR_CODE"')\n'"$PUBLISH_TEXT"'\n\n## Storybook\n![Expo QR]('"$QR_CODE_STORYBOOK"')\n'"$STORYBOOK_PUBLISH_TEXT"'" }'
