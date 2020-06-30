@@ -2,7 +2,9 @@ import React, {
   FunctionComponent,
   useContext,
   useState,
-  useEffect
+  useEffect,
+  useCallback,
+  useRef
 } from "react";
 import {
   View,
@@ -12,7 +14,8 @@ import {
   Alert,
   Vibration,
   BackHandler,
-  Platform
+  Platform,
+  Keyboard
 } from "react-native";
 import { size, color } from "../../common/styles";
 import {
@@ -32,15 +35,13 @@ import { VoucherInputSection } from "./VoucherInputSection";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { Feather } from "@expo/vector-icons";
-import { validateMerchantCode } from "../../utils/validateMerchantCode";
 import { VoucherScanner } from "../VoucherScanner/VoucherScanner";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
-import { validateVoucherCode } from "../../utils/validateVoucherCode";
-import {
-  VoucherStatus,
-  VoucherStatusModal
-} from "./VoucherStatusModal/VoucherStatusModal";
+import { VoucherStatusModal } from "./VoucherStatusModal/VoucherStatusModal";
 import { AllValidVouchersModal } from "./AllValidVouchersModal";
+import { useVoucher } from "../../hooks/useVoucher/useVoucher";
+import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
+import { useAuthenticationContext } from "../../context/auth";
 
 const styles = StyleSheet.create({
   content: {
@@ -68,11 +69,6 @@ const styles = StyleSheet.create({
   }
 });
 
-export type Voucher = {
-  serial: string;
-  denomination: number;
-};
-
 export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   navigation,
   isFocused
@@ -82,14 +78,22 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const showHelpModal = useContext(HelpModalContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
-  const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [merchantCode, setMerchantCode] = useState("");
-  const [voucherStatus, setVoucherStatus] = useState<VoucherStatus>({
-    status: "VALID"
-  });
   const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
     false
   );
+  const { token, endpoint } = useAuthenticationContext();
+
+  const {
+    checkoutVouchersState,
+    vouchers,
+    addVoucher,
+    removeVoucher,
+    checkoutVouchers,
+    checkoutResult,
+    error: merchantError,
+    resetState: resetVoucherState
+  } = useVoucher(token, endpoint);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -113,95 +117,87 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     }
   }, [isFocused]);
 
-  const onCancel = (): void => {
-    setVoucherStatus({
-      status: "VALID"
-    });
-    setIsScanningEnabled(true);
+  const {
+    checkValidityState,
+    checkValidity,
+    validityResult,
+    error: validityError,
+    resetValidityState
+  } = useCheckVoucherValidity(token, endpoint);
+
+  const currentBarcode = useRef<string>();
+
+  const onCheckVoucher = (input: string): void => {
+    setIsScanningEnabled(false);
+    checkValidity(input, vouchers);
   };
 
-  const onCheckVoucher = async (input: string): Promise<void> => {
-    try {
-      setIsScanningEnabled(false);
-      setVoucherStatus({ status: "CHECKING" });
-      const serialArr = vouchers.map(voucher => voucher.serial);
-      validateVoucherCode(input, serialArr);
-      setVouchers([...vouchers, { serial: input, denomination: 2 }]);
+  const onModalExit = useCallback((): void => {
+    resetValidityState();
+    setIsScanningEnabled(true);
+  }, [resetValidityState]);
+
+  // Detect if a voucher code has been validated
+  useEffect(() => {
+    if (
+      isFocused &&
+      checkValidityState === "RESULT_RETURNED" &&
+      validityResult
+    ) {
+      addVoucher(validityResult);
       Vibration.vibrate(50);
-      //TODO: Send to API -> Valid, for now timeout
-      setTimeout(() => {
-        console.log("Sending to API");
-        setVoucherStatus({ status: "VALID" });
-        setIsScanningEnabled(true);
-      }, 1000);
-    } catch (e) {
-      setIsScanningEnabled(false);
-      setVoucherStatus({
-        status: "INVALID",
-        errorMessage: e.message
-      });
+      onModalExit();
     }
-  };
+  }, [isFocused, checkValidityState, validityResult, onModalExit, addVoucher]);
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
-    if (isFocused && isScanningEnabled && event.data) {
+    if (
+      isScanningEnabled &&
+      event.data &&
+      currentBarcode.current !== event.data
+    ) {
+      currentBarcode.current = event.data;
       onCheckVoucher(event.data);
     }
   };
 
-  const onVoucherCodeSubmit = (voucherCode: string): void => {
-    if (voucherCode) {
-      onCheckVoucher(voucherCode);
-    } else {
-      setVoucherStatus({
-        status: "INVALID",
-        errorMessage: "No voucher code entered",
-        errorTitle: "Error during input"
-      });
-    }
+  const redeemVouchers = (): void => {
+    checkoutVouchers(merchantCode);
   };
 
-  const resetState = (): void => {
-    setVouchers([]);
+  const resetState = useCallback((): void => {
     setMerchantCode("");
     setShouldShowCamera(false);
-  };
+    currentBarcode.current = undefined;
+    resetVoucherState();
+  }, [resetVoucherState]);
 
-  const redeemVouchers = (): void => {
-    try {
-      validateMerchantCode(merchantCode);
-      Vibration.vibrate(50);
-      const transactionTime = new Date(2020, 3, 5);
+  // Detect submission of merchant code
+  useEffect(() => {
+    if (checkoutVouchersState === "RESULT_RETURNED" && checkoutResult) {
       navigation.navigate("PayoutFeedbackScreen", {
         merchantCode,
-        checkoutResult: {
-          transactions: [
-            {
-              transaction: [
-                {
-                  category: "voucher",
-                  quantity: vouchers.length,
-                  transactionTime
-                }
-              ],
-              timestamp: new Date()
-            }
-          ]
-        }
+        checkoutResult
       });
       resetState();
-    } catch (e) {
-      Alert.alert("Error", e.message || e, [
+      Vibration.vibrate(50);
+    } else if (merchantError) {
+      Alert.alert("Error", merchantError.message, [
         {
-          text: "Dismiss"
+          text: "Dismiss",
+          onPress: () => resetVoucherState(true)
         }
       ]);
     }
-  };
-
-  const onVoucherCodeRemove = (voucherCode: string): void => {
-    setVouchers(vouchers.filter(voucher => voucher.serial !== voucherCode));
-  };
+  }, [
+    checkoutVouchersState,
+    merchantError,
+    checkoutResult,
+    navigation,
+    merchantCode,
+    resetState,
+    resetVoucherState
+  ]);
 
   return (
     <>
@@ -230,7 +226,10 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 merchantCode={merchantCode}
                 setMerchantCode={setMerchantCode}
                 redeemVouchers={redeemVouchers}
-                openCamera={() => setShouldShowCamera(true)}
+                openCamera={() => {
+                  Keyboard.dismiss();
+                  setShouldShowCamera(true);
+                }}
                 openAllValidVouchersModal={() =>
                   setShowAllValidVouchersModal(true)
                 }
@@ -250,6 +249,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                       />
                     }
                     onPress={redeemVouchers}
+                    isLoading={checkoutVouchersState !== "DEFAULT"}
                   />
                 </View>
                 <SecondaryButton
@@ -265,7 +265,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                         {
                           text: "Discard",
                           onPress: () => {
-                            setVouchers([]);
+                            setMerchantCode("");
+                            resetState();
                           },
                           style: "destructive"
                         }
@@ -282,7 +283,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
           <AllValidVouchersModal
             vouchers={vouchers}
             isVisible={showAllValidVouchersModal}
-            onVoucherCodeRemove={onVoucherCodeRemove}
+            onVoucherCodeRemove={removeVoucher}
             onExit={() => setShowAllValidVouchersModal(false)}
           />
         </KeyboardAvoidingView>
@@ -292,11 +293,15 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
           vouchers={vouchers}
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
-          onVoucherCodeSubmit={onVoucherCodeSubmit}
+          onVoucherCodeSubmit={onCheckVoucher}
           onCancel={() => setShouldShowCamera(false)}
         />
       )}
-      <VoucherStatusModal voucherStatus={voucherStatus} onExit={onCancel} />
+      <VoucherStatusModal
+        checkValidityState={checkValidityState}
+        error={validityError}
+        onExit={onModalExit}
+      />
     </>
   );
 };

@@ -6,12 +6,12 @@ import { Camera } from "../IdScanner/IdScanner";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { LoadingView } from "../Loading";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
-import { Voucher } from "../MerchantPayout/MerchantPayoutScreen";
 import { AppText } from "../Layout/AppText";
 import { ValidVoucherCount } from "../MerchantPayout/ValidVoucherCount";
 import { Feather } from "@expo/vector-icons";
 import { ManualAddVoucherModal } from "./ManualAddVoucherModal";
 import { SafeAreaView } from "react-navigation";
+import { Voucher } from "../../types";
 
 const styles = StyleSheet.create({
   wrapper: {

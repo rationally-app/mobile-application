@@ -2,6 +2,17 @@ import React, { FunctionComponent } from "react";
 import { View, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import { InvalidCard } from "./InvalidCard";
 import { color, size } from "../../../common/styles";
+import {
+  ScannerError,
+  useCheckVoucherValidity,
+  InvalidVoucherError
+} from "../../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
+import { NotEligibleError } from "../../../services/quota";
+import { AppText } from "../../Layout/AppText";
+import { format, formatDistance } from "date-fns";
+import { sharedStyles } from "./sharedStyles";
+
+const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
 const styles = StyleSheet.create({
   background: {
@@ -17,35 +28,93 @@ const styles = StyleSheet.create({
   }
 });
 
-type VoucherStatuses = "CHECKING" | "INVALID" | "VALID";
+const DistantTransactionTitle: FunctionComponent<{
+  transactionTime: Date;
+}> = ({ transactionTime }) => (
+  <>
+    <AppText style={sharedStyles.statusTitle}>Redeemed on </AppText>
+    <AppText style={sharedStyles.statusTitle}>
+      {format(transactionTime, "hh:mm a, do MMMM")}
+    </AppText>
+  </>
+);
 
-export interface VoucherStatus {
-  status: VoucherStatuses;
-  errorMessage?: string;
-  errorTitle?: string;
-}
+const RecentTransactionTitle: FunctionComponent<{
+  now: Date;
+  transactionTime: Date;
+}> = ({ now, transactionTime }) => (
+  <>
+    <AppText style={sharedStyles.statusTitle}>Redeemed </AppText>
+    <AppText style={sharedStyles.statusTitle}>
+      {formatDistance(now, transactionTime)}
+    </AppText>
+    <AppText style={sharedStyles.statusTitle}> ago</AppText>
+  </>
+);
+
+const NoPreviousTransactionTitle: FunctionComponent = () => (
+  <AppText style={sharedStyles.statusTitle}>Previously redeemed</AppText>
+);
 
 interface VoucherStatusModal {
-  voucherStatus: VoucherStatus;
+  checkValidityState: useCheckVoucherValidity["checkValidityState"];
+  error?: useCheckVoucherValidity["error"];
   onExit: () => void;
 }
 
 export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   onExit,
-  voucherStatus
+  checkValidityState,
+  error
 }) => {
-  const isVisible =
-    voucherStatus.status === "INVALID" || voucherStatus.status === "CHECKING";
+  const isVisible = checkValidityState === "CHECKING_VALIDITY";
 
   let card;
-  if (voucherStatus.status === "INVALID") {
+  if (error instanceof ScannerError) {
     card = (
       <InvalidCard
-        title={voucherStatus.errorTitle || "Error scanning"}
-        details={
-          voucherStatus.errorMessage ||
-          "Please try scanning again or enter manually"
-        }
+        title={"Error scanning"}
+        details={error.message}
+        closeModal={onExit}
+      />
+    );
+  } else if (error instanceof NotEligibleError) {
+    card = (
+      <InvalidCard
+        title="Invalid"
+        details="Please log an appeal request"
+        closeModal={onExit}
+      />
+    );
+  } else if (error instanceof InvalidVoucherError) {
+    const secondsFromLatestTransaction = error.getSecondsFromLatestTransaction();
+    const title =
+      secondsFromLatestTransaction > 0 ? (
+        secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
+          <DistantTransactionTitle
+            transactionTime={error.latestTransactionTime!}
+          />
+        ) : (
+          <RecentTransactionTitle
+            now={new Date()}
+            transactionTime={error.latestTransactionTime!}
+          />
+        )
+      ) : (
+        <NoPreviousTransactionTitle />
+      );
+    card = (
+      <InvalidCard
+        title={title}
+        details="Please log an appeal request"
+        closeModal={onExit}
+      />
+    );
+  } else if (error instanceof Error) {
+    card = (
+      <InvalidCard
+        title="Invalid"
+        details={error.message || "Please log an appeal request"}
         closeModal={onExit}
       />
     );
@@ -56,7 +125,7 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   return (
     <Modal
       visible={isVisible}
-      onRequestClose={onExit}
+      onRequestClose={error ? onExit : () => null}
       animationType="fade"
       transparent={true}
     >
