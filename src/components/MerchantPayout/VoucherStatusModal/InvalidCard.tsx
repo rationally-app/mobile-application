@@ -1,9 +1,10 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, ReactElement } from "react";
 import { StyleSheet, Text } from "react-native";
 import { Card } from "../../Layout/Card";
 import { AppText } from "../../Layout/AppText";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color, fontSize } from "../../../common/styles";
+import { sharedStyles } from "./sharedStyles";
 
 const styles = StyleSheet.create({
   card: {
@@ -17,18 +18,13 @@ const styles = StyleSheet.create({
     fontSize: fontSize(3),
     marginBottom: size(2)
   },
-  headerText: {
-    fontFamily: "brand-bold",
-    fontSize: fontSize(3),
-    marginBottom: size(2)
-  },
   details: {
     marginBottom: size(4)
   }
 });
 
 interface InvalidCard {
-  title: string;
+  title: string | ReactElement;
   details: string;
   closeModal: () => void;
 }
@@ -41,7 +37,13 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
   return (
     <Card style={styles.card}>
       <Text style={styles.emoji}>❌</Text>
-      <AppText style={styles.headerText}>{title}</AppText>
+      <AppText style={sharedStyles.statusTitleWrapper}>
+        {typeof title === "string" ? (
+          <AppText style={sharedStyles.statusTitle}>{title}</AppText>
+        ) : (
+          title
+        )}
+      </AppText>
       <AppText style={styles.details}>{details}</AppText>
       <DarkButton
         fullWidth={true}
