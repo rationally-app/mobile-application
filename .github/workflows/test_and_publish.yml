@@ -62,7 +62,6 @@ jobs:
       - name: expo_publish_storybook_channel
         run: expo publish --non-interactive --release-channel storybook-${{ github.event.number }}
       - name: Add comment to PR
-        if: contains(github.event.comment.body, 'special string')
         env:
           URL: ${{ github.event.issue.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
