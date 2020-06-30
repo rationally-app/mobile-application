@@ -122,7 +122,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             "Invalid Environment Error: Make sure you scanned a valid QR code"
           );
           // Reset to initial login state
-          () => setLoginStage("SCAN");
+          resetStage();
       }
     }
   }, [endpoint, navigation, token, features]);
@@ -145,6 +145,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         : AppMode.production;
     setConfigValue("appMode", nextMode);
     alert(`SupplyAlly in ${nextMode.toUpperCase()} mode`);
+  };
+
+  const resetStage = (): void => {
+    setLoginStage("SCAN");
   };
 
   // Close camera when back action is triggered
@@ -239,7 +243,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             )}
             {loginStage === "OTP" && (
               <LoginOTPCard
-                resetStage={() => setLoginStage("SCAN")}
+                resetStage={resetStage}
                 navigation={navigation}
                 mobileNumber={mobileNumber}
                 codeKey={codeKey}
