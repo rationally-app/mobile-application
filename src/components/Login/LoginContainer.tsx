@@ -36,6 +36,7 @@ import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { Banner } from "../Layout/Banner";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
+import { useProductContext } from "../../context/products";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -80,7 +81,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [endpointTemp, setEndpointTemp] = useState("");
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const [flowType, setFlowType] = useState("");
+  const { getFeatures, setFeatures, setProducts } = useProductContext();
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -90,10 +91,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   }, [loginStage]);
 
   useEffect(() => {
-    const checkFlowTypeFeature = async (): Promise<void> => {
+    const setEnvVersion = async (): Promise<void> => {
       try {
         const versionResponse = await getEnvVersion(token, endpoint);
-        setFlowType(versionResponse.features.FLOW_TYPE);
+        setFeatures(versionResponse.features);
+        setProducts(versionResponse.policies);
       } catch (e) {
         if (e instanceof EnvVersionError) {
           Sentry.captureException(e);
@@ -103,14 +105,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         }
       }
     };
-    if (flowType === "") {
-      checkFlowTypeFeature();
-    }
-  }, [endpoint, token, flowType]);
+    if (token && endpoint && !getFeatures()) setEnvVersion();
+  }, [endpoint, token, setFeatures, setProducts, getFeatures]);
 
   useLayoutEffect(() => {
-    if (token && endpoint) {
-      switch (flowType) {
+    if (token && endpoint && getFeatures()?.FLOW_TYPE) {
+      switch (getFeatures()?.FLOW_TYPE) {
         case "DEFAULT":
           navigation.navigate("CollectCustomerDetailsScreen");
           break;
@@ -125,7 +125,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           () => setLoginStage("SCAN");
       }
     }
-  }, [endpoint, navigation, token, flowType]);
+  }, [endpoint, navigation, token, getFeatures]);
 
   useEffect(() => {
     const navKey = navigation.getParam("key", "");
