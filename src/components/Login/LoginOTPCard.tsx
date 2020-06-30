@@ -88,11 +88,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
           setFeatures(versionResponse.features);
           setProducts(versionResponse.policies);
-        case "MERCHANT":
-          navigation.navigate("MerchantPayoutScreen");
-          break;
-        case "DEFAULT":
-          navigation.navigate("CollectCustomerDetailsScreen");
           break;
 
         default:
