@@ -4,7 +4,7 @@ import { size, color } from "../../common/styles";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { MaterialIcons } from "@expo/vector-icons";
-import { ModalWithClose } from "../Layout/ModalwithClose";
+import { ModalWithClose } from "../Layout/ModalWithClose";
 
 const styles = StyleSheet.create({
   inputWrapper: {

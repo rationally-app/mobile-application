@@ -6,8 +6,8 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { ValidVoucherCount } from "./ValidVoucherCount";
-import { Voucher } from "./MerchantPayoutScreen";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Voucher } from "../../types";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
