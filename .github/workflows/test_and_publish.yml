@@ -31,6 +31,7 @@ jobs:
         run: npm run test -- --coverage
   publish:
     name: deploy_branch
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -63,7 +64,7 @@ jobs:
         run: expo publish --non-interactive --release-channel storybook-${{ github.event.number }}
       - name: Add comment to PR
         env:
-          URL: ${{ github.event.issue.comments_url }}
+          URL: ${{ github.event.issue.pull_request.url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_ID: ${{ github.event.number }}
           GITHUB_PROJECT: "justussoh/mobile-application"
