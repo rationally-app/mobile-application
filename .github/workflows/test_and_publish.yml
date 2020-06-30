@@ -20,8 +20,8 @@ jobs:
       - name: install
         run: npm install
       - name: expo_publish_channel
-        run: expo publish --non-interactive --release-channel=pr${{ github.ref }}
+        run: expo publish --non-interactive --release-channel pr${{ github.event.pull_request.head.ref }}
       - name: expo_publish_storybook_channel
-        run: expo publish --non-interactive --release-channel storybook-${{ github.ref }}
+        run: expo publish --non-interactive --release-channel storybook-${{ github.event.pull_request.head.ref }}
       - name: github_comment_published_link
         run: ./scripts/commenter.sh
