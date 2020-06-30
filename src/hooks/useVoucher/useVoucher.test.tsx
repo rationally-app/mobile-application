@@ -206,7 +206,7 @@ describe("useVoucher", () => {
       expect.assertions(3);
 
       const { result } = renderHook(() => useVoucher(key, endpoint));
-      const mockMerchantCode = "007";
+      const mockMerchantCode = "<script>";
 
       await wait(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
