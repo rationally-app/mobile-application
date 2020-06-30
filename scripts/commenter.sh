@@ -1,5 +1,5 @@
 #!/bin/bash
-PULL_REQUEST_ID=$(echo ${{ github.event.number }})
+PULL_REQUEST_ID=$(echo $GITHUB_REF)
 GITHUB_PROJECT="justussoh/mobile-application"
 EXPO_PROJECT="@justussoh/rationally"
 GITHUB_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }})
