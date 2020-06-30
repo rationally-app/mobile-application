@@ -90,7 +90,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   }, [loginStage]);
 
   useEffect(() => {
-    const checkFlowTypeFeature = async () => {
+    const checkFlowTypeFeature = async (): Promise<void> => {
       try {
         const versionResponse = await getEnvVersion(token, endpoint);
         setFlowType(versionResponse.features.FLOW_TYPE);
@@ -103,8 +103,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         }
       }
     };
-    checkFlowTypeFeature();
-  }, []);
+    if (flowType === "") {
+      checkFlowTypeFeature();
+    }
+  }, [endpoint, token, flowType]);
 
   useLayoutEffect(() => {
     if (token && endpoint) {
@@ -123,7 +125,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           () => setLoginStage("SCAN");
       }
     }
-  }, [endpoint, navigation, token]);
+  }, [endpoint, navigation, token, flowType]);
 
   useEffect(() => {
     const navKey = navigation.getParam("key", "");
