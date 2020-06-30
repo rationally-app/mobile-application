@@ -109,16 +109,16 @@ const mergeWithCart = (
 };
 
 const hasNoQuota = (quota: Quota): boolean => {
-  let result = true;
+  let [result, hasNegative] = [true, false];
   for (const item of quota.remainingQuota) {
     // The negative quantity case should never occur but if it does, we send an error to Sentry and set state to NO_QUOTA
     if (item.quantity < 0) {
       Sentry.captureException("Negative Quota Received");
       item.quantity = 0;
-      return true;
+      hasNegative = true;
     } else result = result && item.quantity === 0;
   }
-  return result;
+  return result || hasNegative;
 };
 
 export const useCart = (
