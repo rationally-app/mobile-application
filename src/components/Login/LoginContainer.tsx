@@ -35,6 +35,8 @@ import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { Banner } from "../Layout/Banner";
+import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
+import { useProductContext } from "../../context/products";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -79,6 +81,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [endpointTemp, setEndpointTemp] = useState("");
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
+  const { features, setFeatures, setProducts } = useProductContext();
+
+  const resetStage = (): void => {
+    setLoginStage("SCAN");
+  };
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -87,11 +94,47 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     });
   }, [loginStage]);
 
-  useLayoutEffect(() => {
-    if (token && endpoint) {
-      navigation.navigate("CollectCustomerDetailsScreen");
+  useEffect(() => {
+    const setEnvVersion = async (): Promise<void> => {
+      try {
+        setIsLoading(true);
+        const versionResponse = await getEnvVersion(token, endpoint);
+        setFeatures(versionResponse.features);
+        setProducts(versionResponse.policies);
+      } catch (e) {
+        if (e instanceof EnvVersionError) {
+          Sentry.captureException(e);
+          alert(
+            "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+          );
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (token && endpoint && !features) {
+      setEnvVersion();
     }
-  }, [endpoint, navigation, token]);
+  }, [endpoint, token, setFeatures, setProducts, features]);
+
+  useLayoutEffect(() => {
+    if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
+      switch (features?.FLOW_TYPE) {
+        case "DEFAULT":
+          navigation.navigate("CollectCustomerDetailsScreen");
+          break;
+        case "MERCHANT":
+          navigation.navigate("MerchantPayoutScreen");
+          break;
+        default:
+          alert(
+            "Invalid Environment Error: Make sure you scanned a valid QR code"
+          );
+          // Reset to initial login state
+          resetStage();
+      }
+    }
+  }, [isLoading, endpoint, navigation, token, features]);
 
   useEffect(() => {
     const navKey = navigation.getParam("key", "");
@@ -205,7 +248,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             )}
             {loginStage === "OTP" && (
               <LoginOTPCard
-                resetStage={() => setLoginStage("SCAN")}
+                resetStage={resetStage}
                 navigation={navigation}
                 mobileNumber={mobileNumber}
                 codeKey={codeKey}
