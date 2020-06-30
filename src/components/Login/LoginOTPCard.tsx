@@ -82,17 +82,18 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
       // Toggle between different environments
       // using the FLOW_TYPE variable from features
-
       switch (versionResponse.features.FLOW_TYPE) {
+        case "MERCHANT":
         case "DEFAULT":
           setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
           setFeatures(versionResponse.features);
           setProducts(versionResponse.policies);
+        case "MERCHANT":
+          navigation.navigate("MerchantPayoutScreen");
+          break;
+        case "DEFAULT":
           navigation.navigate("CollectCustomerDetailsScreen");
           break;
-
-        // TODO: Integration with merchant flow
-        // case "MERCHANT":
 
         default:
           alert(

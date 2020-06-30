@@ -35,7 +35,6 @@ import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { Banner } from "../Layout/Banner";
-import { DarkButton } from "../Layout/Buttons/DarkButton";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -213,13 +212,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
                 endpoint={endpointTemp}
               />
             )}
-            <View>
-              <DarkButton
-                fullWidth={true}
-                text="Merchant Payout"
-                onPress={() => navigation.navigate("MerchantPayoutStack")}
-              />
-            </View>
             <FeatureToggler feature="HELP_MODAL">
               <HelpButton onPress={showHelpModal} />
             </FeatureToggler>

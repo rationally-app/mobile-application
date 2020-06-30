@@ -62,7 +62,7 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
           {
             category: "voucher",
             quantity: vouchers.length,
-            identifiers: [
+            identifierInputs: [
               {
                 label: "Merchant Code",
                 value: merchantCode

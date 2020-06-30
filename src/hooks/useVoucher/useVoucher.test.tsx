@@ -15,14 +15,10 @@ const transactions = [
   {
     category: "voucher",
     quantity: 2,
-    identifiers: [
+    identifierInputs: [
       {
         label: "Merchant Code",
         value: "CDC-0001"
-      },
-      {
-        label: "Redeemed by",
-        value: "Vendor"
       }
     ]
   }
