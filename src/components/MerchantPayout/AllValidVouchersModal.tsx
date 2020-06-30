@@ -1,11 +1,11 @@
 import React, { FunctionComponent, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
 import { size, fontSize, color } from "../../common/styles";
-import { Voucher } from "./MerchantPayoutScreen";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { AppText } from "../Layout/AppText";
 import { ScrollView } from "react-native-gesture-handler";
-import { ModalWithClose } from "../Layout/ModalwithClose";
+import { ModalWithClose } from "../Layout/ModalWithClose";
+import { Voucher } from "../../types";
 
 const styles = StyleSheet.create({
   card: {
