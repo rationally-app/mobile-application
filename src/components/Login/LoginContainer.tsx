@@ -90,6 +90,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     });
   }, [loginStage]);
 
+  const resetStage = (): void => {
+    setLoginStage("SCAN");
+  };
+
   useEffect(() => {
     const setEnvVersion = async (): Promise<void> => {
       try {
@@ -145,10 +149,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         : AppMode.production;
     setConfigValue("appMode", nextMode);
     alert(`SupplyAlly in ${nextMode.toUpperCase()} mode`);
-  };
-
-  const resetStage = (): void => {
-    setLoginStage("SCAN");
   };
 
   // Close camera when back action is triggered
