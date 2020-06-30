@@ -83,6 +83,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const messageContent = useContext(ImportantMessageContentContext);
   const { features, setFeatures, setProducts } = useProductContext();
 
+  const resetStage = (): void => {
+    setLoginStage("SCAN");
+  };
+
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "loginStage",
@@ -93,6 +97,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   useEffect(() => {
     const setEnvVersion = async (): Promise<void> => {
       try {
+        setIsLoading(true);
         const versionResponse = await getEnvVersion(token, endpoint);
         setFeatures(versionResponse.features);
         setProducts(versionResponse.policies);
@@ -103,13 +108,17 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
           );
         }
+      } finally {
+        setIsLoading(false);
       }
     };
-    if (token && endpoint && !features) setEnvVersion();
+    if (token && endpoint && !features) {
+      setEnvVersion();
+    }
   }, [endpoint, token, setFeatures, setProducts, features]);
 
   useLayoutEffect(() => {
-    if (token && endpoint && features?.FLOW_TYPE) {
+    if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
       switch (features?.FLOW_TYPE) {
         case "DEFAULT":
           navigation.navigate("CollectCustomerDetailsScreen");
@@ -125,7 +134,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           resetStage();
       }
     }
-  }, [endpoint, navigation, token, features]);
+  }, [isLoading, endpoint, navigation, token, features]);
 
   useEffect(() => {
     const navKey = navigation.getParam("key", "");
@@ -145,10 +154,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         : AppMode.production;
     setConfigValue("appMode", nextMode);
     alert(`SupplyAlly in ${nextMode.toUpperCase()} mode`);
-  };
-
-  const resetStage = (): void => {
-    setLoginStage("SCAN");
   };
 
   // Close camera when back action is triggered
