@@ -80,22 +80,16 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         endpoint
       );
 
-      // Toggle between different environments
-      // using the FLOW_TYPE variable from features
-      switch (versionResponse.features.FLOW_TYPE) {
-        case "MERCHANT":
-        case "DEFAULT":
-          setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
-          setFeatures(versionResponse.features);
-          setProducts(versionResponse.policies);
-          break;
-
-        default:
-          alert(
-            "Invalid Environment Error: Make sure you scanned a valid QR code"
-          );
-          // Reset to initial login state
-          resetStage();
+      if (versionResponse.features.FLOW_TYPE) {
+        setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
+        setFeatures(versionResponse.features);
+        setProducts(versionResponse.policies);
+      } else {
+        alert(
+          "Invalid Environment Error: Make sure you scanned a valid QR code"
+        );
+        // Reset to initial login state
+        resetStage();
       }
     } catch (e) {
       if (e instanceof EnvVersionError) {
