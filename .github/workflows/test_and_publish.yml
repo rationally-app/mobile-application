@@ -64,7 +64,6 @@ jobs:
         run: expo publish --non-interactive --release-channel storybook-${{ github.event.number }}
       - name: Add comment to PR
         env:
-          URL: ${{ github.event.issue.pull_request.url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_ID: ${{ github.event.number }}
           GITHUB_PROJECT: "justussoh/mobile-application"
@@ -77,7 +76,6 @@ jobs:
 
           curl \
             -X POST \
-            $URL \
+            https://$GITHUB_TOKEN@api.github.com/repos/$GITHUB_PROJECT/issues/$PULL_REQUEST_ID/comments \
             -H "Content-Type: application/json" \
-            -H "Authorization: token $GITHUB_TOKEN" \
             -d '{ "body": "## Application\n![Expo QR]('"$QR_CODE"')\n'"$PUBLISH_TEXT"'\n\n## Storybook\n![Expo QR]('"$QR_CODE_STORYBOOK"')\n'"$STORYBOOK_PUBLISH_TEXT"'" }'
