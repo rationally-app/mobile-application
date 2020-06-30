@@ -94,10 +94,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     });
   }, [loginStage]);
 
-  const resetStage = (): void => {
-    setLoginStage("SCAN");
-  };
-
   useEffect(() => {
     const setEnvVersion = async (): Promise<void> => {
       try {
