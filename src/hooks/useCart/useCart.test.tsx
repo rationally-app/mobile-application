@@ -338,8 +338,8 @@ describe("useCart", () => {
           category: "toilet-paper",
           identifierInputs: [],
           lastTransactionTime: transactionTime,
-          maxQuantity: -1,
-          quantity: -1
+          maxQuantity: 0,
+          quantity: 0
         },
         {
           category: "chocolate",
