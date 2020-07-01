@@ -97,10 +97,10 @@ const mergeWithCart = (
         return {
           category,
           quantity: Math.min(
-            maxQuantity < 0 ? 0 : maxQuantity,
+            Math.max(maxQuantity, 0),
             existingItem?.quantity || defaultQuantity
           ),
-          maxQuantity: maxQuantity < 0 ? 0 : maxQuantity,
+          maxQuantity: Math.max(maxQuantity, 0),
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
         };
@@ -144,7 +144,11 @@ export const useCart = (
       try {
         const quotaResponse = await getQuota(ids, authKey, endpoint);
         if (hasInvalidQuota(quotaResponse)) {
-          Sentry.captureException("Negative Quota Received");
+          Sentry.captureException(
+            `Negative Quota Received: ${JSON.stringify(
+              quotaResponse.remainingQuota
+            )}`
+          );
           setCartState("NO_QUOTA");
         } else if (hasNoQuota(quotaResponse)) {
           setCartState("NO_QUOTA");
