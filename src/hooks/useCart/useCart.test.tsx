@@ -185,7 +185,7 @@ const mockQuotaResSingleIdNoQuota: Quota = {
   ]
 };
 
-const mockQuotaResSingleIdNegativeQuota: Quota = {
+const mockQuotaResSingleIdInvalidQuota: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
@@ -320,9 +320,9 @@ describe("useCart", () => {
         }
       ]);
     });
-    it("should have cart state be NO_QUOTA when negative quota is received", async () => {
+    it("should have cart state be NO_QUOTA when quota received is invalid", async () => {
       expect.assertions(3);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdNegativeQuota);
+      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdInvalidQuota);
 
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
