@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useState,
   FunctionComponent,
   useEffect,
@@ -37,6 +38,8 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { Banner } from "../Layout/Banner";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
+import { differenceInSeconds } from "date-fns";
+import { useLogout } from "../../hooks/useLogout";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -71,7 +74,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     Sentry.addBreadcrumb({ category: "navigation", message: "LoginContainer" });
   }, []);
 
-  const { token, endpoint } = useAuthenticationContext();
+  const { token, endpoint, expiry } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const { config, setConfigValue } = useConfigContext();
@@ -82,10 +85,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
   const { features, setFeatures, setProducts } = useProductContext();
+  const { logout } = useLogout();
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
   };
+
+  const handleLogout = useCallback((): void => {
+    logout(navigation.dispatch);
+  }, [logout, navigation.dispatch]);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -107,15 +115,25 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           alert(
             "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
           );
+          handleLogout();
         }
       } finally {
         setIsLoading(false);
       }
     };
-    if (token && endpoint && !features) {
+    const diffInSeconds = differenceInSeconds(Number(expiry), Date.now());
+    if (token && endpoint && diffInSeconds > 0 && !features) {
       setEnvVersion();
     }
-  }, [endpoint, token, setFeatures, setProducts, features]);
+  }, [
+    endpoint,
+    token,
+    setFeatures,
+    setProducts,
+    features,
+    handleLogout,
+    expiry
+  ]);
 
   useLayoutEffect(() => {
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
