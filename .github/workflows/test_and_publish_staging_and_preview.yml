@@ -1,8 +1,8 @@
 name: Test and Publish
 
 on:
-  push:
   pull_request:
+    push:
 
 jobs:
   build:
