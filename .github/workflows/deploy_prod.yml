@@ -34,10 +34,10 @@ jobs:
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
           expo-cache: true
+      - uses: rlespinasse/github-slug-action@v2.x
       - name: install
         run: npm install
       - name: expo_publish_channel
-      - uses: rlespinasse/github-slug-action@v2.x
         run: expo publish --non-interactive --release-channel=${{ env.GITHUB_REF_SLUG }}
       - name: expo_publish_storybook_channel
         run: expo publish --non-interactive --release-channel storybook-default
