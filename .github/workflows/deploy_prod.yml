@@ -3,7 +3,7 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-      - "prod-*" # Push events to matching prod-*, i.e. prod-1.0, prod-20.15.10
+      - "prod-[1-9]+.[0-9]+.[0-9]" # Push events to matching prod-*, i.e.prod-20.15.10
 jobs:
   build:
     name: build and test
@@ -37,7 +37,8 @@ jobs:
       - name: install
         run: npm install
       - name: expo_publish_channel
-        run: expo publish --non-interactive --release-channel default
+      - uses: rlespinasse/github-slug-action@v2.x
+        run: expo publish --non-interactive --release-channel=${{ env.GITHUB_REF_SLUG }}
       - name: expo_publish_storybook_channel
         run: expo publish --non-interactive --release-channel storybook-default
   create_release:
@@ -54,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: Release ${{ env.GITHUB_REF_SLUG }}
           body: |
             Changes in this Release:
           draft: false
