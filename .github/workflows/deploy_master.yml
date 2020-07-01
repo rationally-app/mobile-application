@@ -1,0 +1,61 @@
+name: Create Release
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - "prod-*" # Push events to matching prod-*, i.e. prod-1.0, prod-20.15.10
+jobs:
+  build:
+    name: build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: install
+        run: npm install
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm run test -- --coverage
+  deploy_prod:
+    name: deploy_prod
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          expo-cache: true
+      - name: install
+        run: npm install
+      - name: expo_publish_channel
+        run: expo publish --non-interactive --release-channel default
+      - name: expo_publish_storybook_channel
+        run: expo publish --non-interactive --release-channel storybook-default
+  create_release:
+    name: Create Release
+    needs: [build, deploy_prod]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release:
+          draft: false
+          prerelease: false
