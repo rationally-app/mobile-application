@@ -152,7 +152,9 @@ export const useCart = (
           setCartState("NO_QUOTA");
         } else if (hasNoQuota(quotaResponse)) {
           setCartState("NO_QUOTA");
-        } else setCartState("DEFAULT");
+        } else {
+          setCartState("DEFAULT");
+        }
         setQuotaResponse(quotaResponse);
       } catch (e) {
         if (e instanceof NotEligibleError) {
