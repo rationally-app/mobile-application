@@ -6,7 +6,7 @@ import {
 } from "react-navigation";
 import CustomerQuotaStack from "./CustomerQuotaStack";
 import MerchantPayoutStack from "./MerchantPayoutStack";
-import { StatusBar, View } from "react-native";
+import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
@@ -48,7 +48,9 @@ export const Content = (): ReactElement => {
       <StatusBar />
       <View
         style={{
-          flex: 1
+          flex: 1,
+          paddingTop:
+            Platform.OS === "android" && !__DEV__ ? StatusBar.currentHeight : 0 // padding is used to prevent content from going behind the status bar on Android production builds
         }}
       >
         <AppContainer ref={navigatorRef} uriPrefix={prefix} />
