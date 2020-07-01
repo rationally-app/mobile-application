@@ -1,10 +1,12 @@
 name: Test and Publish
 
-on: [push, pull_request]
+on:
+  push:
+    pull_request:
 
 jobs:
   build:
-    name: build and test
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,8 +27,8 @@ jobs:
             ${{ runner.os }}-
       - name: Install
         run: npm install
-      - name: Typecheck
-        run: npx --no-install tsc --noEmit
+      # - name: Typecheck
+      #   run: npx --no-install tsc --noEmit
       - name: Lint
         run: npm run lint
       - name: Test
