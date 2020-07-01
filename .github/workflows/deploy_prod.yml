@@ -38,7 +38,7 @@ jobs:
       - name: install
         run: npm install
       - name: expo_publish_channel
-        run: expo publish --non-interactive --release-channel=${{ env.GITHUB_REF_SLUG }}
+        run: expo publish --non-interactive --release-channel=${{ env.GITHUB_REF_SLUG%.* }}
       - name: expo_publish_storybook_channel
         run: expo publish --non-interactive --release-channel storybook-default
   create_release:
