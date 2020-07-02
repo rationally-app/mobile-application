@@ -17,19 +17,15 @@ describe("validate merchant code", () => {
   });
 
   it("should return false for invalid merchant code", () => {
-    expect.assertions(5);
-    expect(() => validateMerchantCode("")).toThrow("Invalid merchant code");
-    expect(() => validateMerchantCode("() => {}")).toThrow(
-      "Invalid merchant code"
-    );
+    expect.assertions(6);
+    const errorMessage = "Invalid merchant code";
+    expect(() => validateMerchantCode("")).toThrow(errorMessage);
+    expect(() => validateMerchantCode("() => {}")).toThrow(errorMessage);
     expect(() => validateMerchantCode("<script></script>")).toThrow(
-      "Invalid merchant code"
+      errorMessage
     );
-    expect(() => validateMerchantCode("å∫ç∂´ƒ©˙")).toThrow(
-      "Invalid merchant code"
-    );
-    expect(() => validateMerchantCode("ABCD12345678")).toThrow(
-      "Invalid merchant code"
-    );
+    expect(() => validateMerchantCode("å∫ç∂´ƒ©˙")).toThrow(errorMessage);
+    expect(() => validateMerchantCode("ABCD12345678")).toThrow(errorMessage);
+    expect(() => validateMerchantCode("ABCD12345")).toThrow(errorMessage);
   });
 });
