@@ -174,7 +174,7 @@ describe("useVoucher", () => {
         result.current.addVoucher({ serial: "123456788", denomination: 2 });
       });
 
-      const mockMerchantCode = "000000001";
+      const mockMerchantCode = "12345678";
       mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
 
       await wait(() => {
@@ -228,7 +228,7 @@ describe("useVoucher", () => {
         result.current.addVoucher({ serial: "123456788", denomination: 2 });
       });
 
-      const mockMerchantCode = "000000001";
+      const mockMerchantCode = "12345678";
       mockPostTransaction.mockRejectedValueOnce(
         new Error("Couldn't checkout, please try again later")
       );
