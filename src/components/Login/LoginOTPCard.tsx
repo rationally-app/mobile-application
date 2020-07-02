@@ -40,7 +40,6 @@ interface LoginOTPCard extends NavigationProps {
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   resetStage,
-  navigation,
   mobileNumber,
   codeKey,
   endpoint

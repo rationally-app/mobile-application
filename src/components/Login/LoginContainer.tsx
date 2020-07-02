@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useState,
   FunctionComponent,
   useEffect,
@@ -37,6 +38,7 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { Banner } from "../Layout/Banner";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
+import { useLogout } from "../../hooks/useLogout";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -82,10 +84,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
   const { features, setFeatures, setProducts } = useProductContext();
+  const { logout } = useLogout();
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
   };
+
+  const handleLogout = useCallback((): void => {
+    logout(navigation.dispatch);
+  }, [logout, navigation.dispatch]);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -107,6 +114,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           alert(
             "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
           );
+          handleLogout();
         }
       } finally {
         setIsLoading(false);
@@ -115,7 +123,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     if (token && endpoint && !features) {
       setEnvVersion();
     }
-  }, [endpoint, token, setFeatures, setProducts, features]);
+  }, [endpoint, token, setFeatures, setProducts, features, handleLogout]);
 
   useLayoutEffect(() => {
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
@@ -249,7 +257,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             {loginStage === "OTP" && (
               <LoginOTPCard
                 resetStage={resetStage}
-                navigation={navigation}
                 mobileNumber={mobileNumber}
                 codeKey={codeKey}
                 endpoint={endpointTemp}
