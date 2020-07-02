@@ -38,7 +38,6 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { Banner } from "../Layout/Banner";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
-import { isBefore } from "date-fns";
 import { useLogout } from "../../hooks/useLogout";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
