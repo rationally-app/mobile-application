@@ -135,16 +135,14 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       </Card>
     </View>
   ) : (
-    <ScrollView
-      contentContainerStyle={{ alignItems: "center" }}
-      scrollIndicatorInsets={{ right: 1 }}
-      keyboardShouldPersistTaps="handled"
-    >
-      <TopBackground mode={config.appMode} />
-      <KeyboardAvoidingView
-        behavior={Platform.select({ ios: "position" })}
-        keyboardVerticalOffset={Platform.select({ ios: -100 })}
+    <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
+      <ScrollView
+        contentContainerStyle={{ alignItems: "center" }}
+        scrollIndicatorInsets={{ right: 1 }}
+        keyboardShouldPersistTaps="handled"
       >
+        <TopBackground mode={config.appMode} />
+
         <View style={styles.content}>
           <View style={styles.headerText}>
             <AppHeader mode={config.appMode} />
@@ -181,7 +179,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             <HelpButton onPress={showHelpModal} />
           </FeatureToggler>
         </View>
-      </KeyboardAvoidingView>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };

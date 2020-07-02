@@ -201,16 +201,14 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
 
   return (
     <>
-      <ScrollView
-        contentContainerStyle={{ alignItems: "center" }}
-        scrollIndicatorInsets={{ right: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
-        <TopBackground mode={config.appMode} />
-        <KeyboardAvoidingView
-          behavior={Platform.select({ ios: "position" })}
-          keyboardVerticalOffset={Platform.select({ ios: -80 })}
+      <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
+        <ScrollView
+          contentContainerStyle={{ alignItems: "center" }}
+          scrollIndicatorInsets={{ right: 1 }}
+          keyboardShouldPersistTaps="handled"
         >
+          <TopBackground mode={config.appMode} />
+
           <View style={styles.content}>
             <View style={styles.headerText}>
               <AppHeader mode={config.appMode} />
@@ -286,8 +284,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
             onVoucherCodeRemove={removeVoucher}
             onExit={() => setShowAllValidVouchersModal(false)}
           />
-        </KeyboardAvoidingView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
       {shouldShowCamera && (
         <VoucherScanner
           vouchers={vouchers}

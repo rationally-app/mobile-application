@@ -148,18 +148,16 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
           />
         </View>
       ) : (
-        <ScrollView
-          contentContainerStyle={styles.scrollWrapper}
-          scrollIndicatorInsets={{ right: 1 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
-            <View style={styles.background} />
-          </TouchableWithoutFeedback>
-          <View style={styles.cardWrapper}>
-            <KeyboardAvoidingView
-              behavior={Platform.select({ ios: "position" })}
-            >
+        <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
+          <ScrollView
+            contentContainerStyle={styles.scrollWrapper}
+            scrollIndicatorInsets={{ right: 1 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
+              <View style={styles.background} />
+            </TouchableWithoutFeedback>
+            <View style={styles.cardWrapper}>
               <Card style={styles.card}>
                 <View style={styles.cardHeader}>
                   <AppText style={{ flex: 1 }}>
@@ -176,9 +174,9 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
                   submitNric={() => onCheck(nricInput)}
                 />
               </Card>
-            </KeyboardAvoidingView>
-          </View>
-        </ScrollView>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       )}
     </Modal>
   );

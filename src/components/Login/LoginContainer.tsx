@@ -48,7 +48,6 @@ const ALLOW_MODE_CHANGE = false;
 const styles = StyleSheet.create({
   content: {
     padding: size(2),
-    marginTop: -size(3),
     width: 512,
     maxWidth: "100%",
     height: "100%",
@@ -203,13 +202,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   return (
     <>
-      <ScrollView
-        contentContainerStyle={{ flex: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
-        <KeyboardAvoidingView
-          style={{ alignItems: "center" }}
-          behavior={Platform.select({ ios: "padding" })}
+      <Credits style={{ bottom: size(10) }} />
+      <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
+        <ScrollView
+          contentContainerStyle={{
+            minHeight: "100%",
+            alignItems: "center",
+            paddingBottom: size(8)
+          }}
+          scrollIndicatorInsets={{ right: 1 }}
+          keyboardShouldPersistTaps="handled"
         >
           <TopBackground
             style={{ height: "50%", maxHeight: "auto" }}
@@ -267,9 +269,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               <HelpButton onPress={showHelpModal} />
             </FeatureToggler>
           </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
-      <Credits style={{ bottom: size(3) }} />
+        </ScrollView>
+      </KeyboardAvoidingView>
       {shouldShowCamera && (
         <IdScanner
           onBarCodeScanned={onBarCodeScanned}

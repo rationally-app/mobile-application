@@ -12,7 +12,8 @@ import {
   KeyboardAvoidingView,
   Alert,
   Vibration,
-  BackHandler
+  BackHandler,
+  Platform
 } from "react-native";
 import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -141,13 +142,14 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   return (
     <>
-      <ScrollView
-        contentContainerStyle={{ alignItems: "center" }}
-        scrollIndicatorInsets={{ right: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
-        <TopBackground mode={config.appMode} />
-        <KeyboardAvoidingView behavior="position">
+      <Credits style={{ bottom: size(3) }} />
+      <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
+        <ScrollView
+          contentContainerStyle={{ alignItems: "center" }}
+          scrollIndicatorInsets={{ right: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <TopBackground mode={config.appMode} />
           <View style={styles.content}>
             <View style={styles.headerText}>
               <AppHeader mode={config.appMode} />
@@ -172,9 +174,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               <HelpButton onPress={showHelpModal} />
             </FeatureToggler>
           </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
-      <Credits style={{ bottom: size(3) }} />
+        </ScrollView>
+      </KeyboardAvoidingView>
       {shouldShowCamera && (
         <IdScanner
           isScanningEnabled={isScanningEnabled}
