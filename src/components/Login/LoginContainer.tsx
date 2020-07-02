@@ -73,7 +73,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     Sentry.addBreadcrumb({ category: "navigation", message: "LoginContainer" });
   }, []);
 
-  const { token, endpoint, expiry } = useAuthenticationContext();
+  const { token, endpoint } = useAuthenticationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const { config, setConfigValue } = useConfigContext();
@@ -257,7 +257,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             {loginStage === "OTP" && (
               <LoginOTPCard
                 resetStage={resetStage}
-                navigation={navigation}
                 mobileNumber={mobileNumber}
                 codeKey={codeKey}
                 endpoint={endpointTemp}
