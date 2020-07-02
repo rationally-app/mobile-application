@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import * as Sentry from "sentry-expo";
 import {
   getQuota,
   postTransaction,
@@ -96,10 +97,10 @@ const mergeWithCart = (
         return {
           category,
           quantity: Math.min(
-            maxQuantity,
+            Math.max(maxQuantity, 0),
             existingItem?.quantity || defaultQuantity
           ),
-          maxQuantity,
+          maxQuantity: Math.max(maxQuantity, 0),
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
         };
@@ -109,6 +110,10 @@ const mergeWithCart = (
 
 const hasNoQuota = (quota: Quota): boolean =>
   quota.remainingQuota.every(item => item.quantity === 0);
+
+const hasInvalidQuota = (quota: Quota): boolean =>
+  // Note: Invalid quota refers to negative quota received
+  quota.remainingQuota.some(item => item.quantity < 0);
 
 export const useCart = (
   ids: string[],
@@ -138,7 +143,14 @@ export const useCart = (
       setCartState("FETCHING_QUOTA");
       try {
         const quotaResponse = await getQuota(ids, authKey, endpoint);
-        if (hasNoQuota(quotaResponse)) {
+        if (hasInvalidQuota(quotaResponse)) {
+          Sentry.captureException(
+            `Negative Quota Received: ${JSON.stringify(
+              quotaResponse.remainingQuota
+            )}`
+          );
+          setCartState("NO_QUOTA");
+        } else if (hasNoQuota(quotaResponse)) {
           setCartState("NO_QUOTA");
         } else {
           setCartState("DEFAULT");

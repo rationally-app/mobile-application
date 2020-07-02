@@ -184,6 +184,24 @@ const mockQuotaResSingleIdNoQuota: Quota = {
     }
   ]
 };
+
+const mockQuotaResSingleIdInvalidQuota: Quota = {
+  remainingQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: -1,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: 15,
+      transactionTime
+    }
+  ]
+};
+
 const mockQuotaResMultipleIds: Quota = {
   remainingQuota: [
     {
@@ -302,7 +320,36 @@ describe("useCart", () => {
         }
       ]);
     });
+    it("should have cart state be NO_QUOTA when quota received is invalid", async () => {
+      expect.assertions(3);
+      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdInvalidQuota);
 
+      const ids = ["ID1"];
+      const { result, waitForNextUpdate } = renderHook(
+        () => useCart(ids, key, endpoint),
+        { wrapper: Wrapper }
+      );
+      expect(result.current.cartState).toBe("FETCHING_QUOTA");
+
+      await waitForNextUpdate();
+      expect(result.current.cartState).toBe("NO_QUOTA");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 0,
+          quantity: 0
+        },
+        {
+          category: "chocolate",
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0
+        }
+      ]);
+    });
     it("should set cart state to be NOT_ELIGIBLE when NotEligibleError is thrown, and would not continue with fetching quota", async () => {
       expect.assertions(1);
 
