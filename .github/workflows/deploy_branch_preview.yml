@@ -1,0 +1,60 @@
+name: Deploy Branch Preview
+
+on: [pull_request]
+
+jobs:
+  deploy_branch_preview:
+    name: Deploy Branch Preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for test to succeed
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        id: wait-for-test
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "build and test"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Exit if test fail
+        if: steps.wait-for-test.outputs.conclusion == 'failure'  ||  steps.wait-for-test.outputs.conclusion == 'timed_out'
+        run: exit 1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          expo-cache: true
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: install
+        run: npm install
+      - name: expo_publish_channel
+        run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
+      - name: expo_publish_storybook_channel
+        run: expo publish --non-interactive --release-channel storybook-${{ github.event.number }}
+      - name: Add comment to PR
+        uses: mshick/add-pr-comment@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          message: |
+            ## Application
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/$EXPO_PROJECT?release-channel=${{ github.event.number }})
+            Published to https://exp.host/$EXPO_PROJECT?release-channel=pr${{ github.event.number }}
+            ## Storybook
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/$EXPO_PROJECT?release-channel=storybook-${{ github.event.number }}))
+            Published to https://exp.host/$EXPO_PROJECT?release-channel=storybook-${{ github.event.number }}
+          allow-repeats: true
