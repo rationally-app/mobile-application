@@ -121,9 +121,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         setIsLoading(false);
       }
     };
-    token && endpoint && isBefore(Date.now(), Number(expiry)) && !features
-      ? setEnvVersion()
-      : handleLogout();
+    if (token && endpoint && !features) {
+      setEnvVersion();
+    }
   }, [
     endpoint,
     token,
