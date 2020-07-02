@@ -123,15 +123,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     if (token && endpoint && !features) {
       setEnvVersion();
     }
-  }, [
-    endpoint,
-    token,
-    setFeatures,
-    setProducts,
-    features,
-    handleLogout,
-    expiry
-  ]);
+  }, [endpoint, token, setFeatures, setProducts, features, handleLogout]);
 
   useLayoutEffect(() => {
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
