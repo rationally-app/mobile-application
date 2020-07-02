@@ -53,9 +53,9 @@ jobs:
         with:
           message: |
             ## Application
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${EXPO_PROJECT}?release-channel=${{ github.event.number }})
-            Published to https://exp.host/${EXPO_PROJECT}?release-channel=pr${{ github.event.number }}
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/"$EXPO_PROJECT"?release-channel=${{ github.event.number }})
+            Published to https://exp.host/'$EXPO_PROJECT'?release-channel=pr${{ github.event.number }}
             ## Storybook
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${EXPO_PROJECT}?release-channel=storybook-${{ github.event.number }}))
-            Published to https://exp.host/${EXPO_PROJECT}?release-channel=storybook-${{ github.event.number }}
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/"${EXPO_PROJECT}"?release-channel=storybook-${{ github.event.number }}))
+            Published to https://exp.host/'${EXPO_PROJECT}?release-channel=storybook-${{ github.event.number }}
           allow-repeats: true
