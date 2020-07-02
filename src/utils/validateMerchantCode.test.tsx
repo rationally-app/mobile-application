@@ -2,7 +2,7 @@ import { validateMerchantCode } from "./validateMerchantCode";
 
 describe("validate merchant code", () => {
   it("should return true for valid merchant code", () => {
-    expect.assertions(9);
+    expect.assertions(11);
     expect(validateMerchantCode("12345678")).toBe(true);
     expect(validateMerchantCode("123")).toBe(true);
     expect(validateMerchantCode("1")).toBe(true);
@@ -12,6 +12,8 @@ describe("validate merchant code", () => {
     expect(validateMerchantCode("ABCD1234")).toBe(true);
     expect(validateMerchantCode("A12")).toBe(true);
     expect(validateMerchantCode("123ABC")).toBe(true);
+    expect(validateMerchantCode("abc")).toBe(true);
+    expect(validateMerchantCode("123abcDE")).toBe(true);
   });
 
   it("should return false for invalid merchant code", () => {
