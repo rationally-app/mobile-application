@@ -41,10 +41,10 @@ jobs:
             ${{ runner.os }}-
       - name: install
         run: npm install
-      - name: expo_publish_channel
-        run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
-      - name: expo_publish_storybook_channel
-        run: expo publish --non-interactive --release-channel storybook-${{ github.event.number }}
+      # - name: expo_publish_channel
+      #   run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
+      # - name: expo_publish_storybook_channel
+      #   run: expo publish --non-interactive --release-channel storybook-${{ github.event.number }}
       - name: Add comment to PR
         uses: mshick/add-pr-comment@v1
         env:
@@ -53,9 +53,9 @@ jobs:
         with:
           message: |
             ## Application
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/$EXPO_PROJECT?release-channel=${{ github.event.number }})
-            Published to https://exp.host/$EXPO_PROJECT?release-channel=pr${{ github.event.number }}
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${EXPO_PROJECT}?release-channel=${{ github.event.number }})
+            Published to https://exp.host/${EXPO_PROJECT}?release-channel=pr${{ github.event.number }}
             ## Storybook
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/$EXPO_PROJECT?release-channel=storybook-${{ github.event.number }}))
-            Published to https://exp.host/$EXPO_PROJECT?release-channel=storybook-${{ github.event.number }}
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${EXPO_PROJECT}?release-channel=storybook-${{ github.event.number }}))
+            Published to https://exp.host/${EXPO_PROJECT}?release-channel=storybook-${{ github.event.number }}
           allow-repeats: true
