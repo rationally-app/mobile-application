@@ -38,7 +38,7 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { Banner } from "../Layout/Banner";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
-import { differenceInSeconds } from "date-fns";
+import { isBefore } from "date-fns";
 import { useLogout } from "../../hooks/useLogout";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
@@ -121,10 +121,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         setIsLoading(false);
       }
     };
-    const diffInSeconds = differenceInSeconds(Number(expiry), Date.now());
-    if (token && endpoint && diffInSeconds > 0 && !features) {
-      setEnvVersion();
-    }
+    token && endpoint && isBefore(Date.now(), Number(expiry)) && !features
+      ? setEnvVersion()
+      : handleLogout();
   }, [
     endpoint,
     token,
