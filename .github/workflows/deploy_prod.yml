@@ -41,7 +41,7 @@ jobs:
         run: npm install
       - name: expo_publish_channel
         run: MAJOR_RELEASE=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//'); expo publish --non-interactive --release-channel=$MAJOR_RELEASE
-      # - name: expo_publish_storybook_channel
+      # - name: expo_publish_storybook_channel g
       #   run: MAJOR_RELEASE=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//'); expo publish --non-interactive --release-channel storybook-$MAJOR_RELEASE
   create_release:
     name: Create Release
