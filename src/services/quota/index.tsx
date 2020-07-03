@@ -57,6 +57,11 @@ export const mockGetQuota = async (
           transactionTime
         },
         {
+          category: "vouchers",
+          quantity: 1,
+          transactionTime
+        },
+        {
           category: "voucher",
           quantity: 1,
           transactionTime
@@ -78,7 +83,8 @@ export const mockGetQuota = async (
           category: "chocolate",
           quantity: 60
         },
-        { category: "vouchers", quantity: 1 }
+        { category: "vouchers", quantity: 1 },
+        { category: "voucher", quantity: 1 }
       ]
     };
   }

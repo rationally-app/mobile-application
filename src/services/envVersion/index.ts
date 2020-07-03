@@ -88,7 +88,7 @@ const mockGetEnvVersion = async (
       },
       {
         category: "vouchers",
-        name: "Vouchers",
+        name: "Funfair Vouchers",
         order: 4,
         type: "REDEEM",
         quantity: { period: 1, limit: 1, default: 1 },
@@ -112,7 +112,16 @@ const mockGetEnvVersion = async (
               type: "QR",
               text: "Scan"
             }
-          },
+          }
+        ]
+      },
+      {
+        category: "voucher",
+        name: "🎟️ Golden Ticket",
+        order: 5,
+        type: "REDEEM",
+        quantity: { period: 1, limit: 1, default: 1 },
+        identifiers: [
           {
             label: "Phone number",
             textInput: { visible: true, disabled: true, type: "PHONE_NUMBER" },
