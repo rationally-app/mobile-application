@@ -56,6 +56,14 @@ jobs:
         uses: metcalfc/changelog-generator@v0.4.0
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate the artifacts
+        uses: skx/github-action-build@master
+      - name: Upload the artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "example-*"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
