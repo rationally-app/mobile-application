@@ -7,13 +7,10 @@ import React, {
 import {
   View,
   StyleSheet,
-  ScrollView,
   Keyboard,
-  KeyboardAvoidingView,
   Alert,
   Vibration,
-  BackHandler,
-  Platform
+  BackHandler
 } from "react-native";
 import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -37,6 +34,7 @@ import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
+import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 
 const styles = StyleSheet.create({
   content: {
@@ -143,39 +141,33 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   return (
     <>
       <Credits style={{ bottom: size(3) }} />
-      <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
-        <ScrollView
-          contentContainerStyle={{ alignItems: "center" }}
-          scrollIndicatorInsets={{ right: 1 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <TopBackground mode={config.appMode} />
-          <View style={styles.content}>
-            <View style={styles.headerText}>
-              <AppHeader mode={config.appMode} />
-            </View>
-            {messageContent && (
-              <View style={styles.bannerWrapper}>
-                <Banner {...messageContent} />
-              </View>
-            )}
-            <Card>
-              <AppText>
-                Check the number of item(s) eligible for redemption
-              </AppText>
-              <InputNricSection
-                openCamera={() => setShouldShowCamera(true)}
-                nricInput={nricInput}
-                setNricInput={setNricInput}
-                submitNric={() => onCheck(nricInput)}
-              />
-            </Card>
-            <FeatureToggler feature="HELP_MODAL">
-              <HelpButton onPress={showHelpModal} />
-            </FeatureToggler>
+      <KeyboardAvoidingScrollView>
+        <TopBackground mode={config.appMode} />
+        <View style={styles.content}>
+          <View style={styles.headerText}>
+            <AppHeader mode={config.appMode} />
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          {messageContent && (
+            <View style={styles.bannerWrapper}>
+              <Banner {...messageContent} />
+            </View>
+          )}
+          <Card>
+            <AppText>
+              Check the number of item(s) eligible for redemption
+            </AppText>
+            <InputNricSection
+              openCamera={() => setShouldShowCamera(true)}
+              nricInput={nricInput}
+              setNricInput={setNricInput}
+              submitNric={() => onCheck(nricInput)}
+            />
+          </Card>
+          <FeatureToggler feature="HELP_MODAL">
+            <HelpButton onPress={showHelpModal} />
+          </FeatureToggler>
+        </View>
+      </KeyboardAvoidingScrollView>
       {shouldShowCamera && (
         <IdScanner
           isScanningEnabled={isScanningEnabled}

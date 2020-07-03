@@ -5,15 +5,7 @@ import React, {
   useCallback,
   useContext
 } from "react";
-import {
-  View,
-  StyleSheet,
-  Alert,
-  ScrollView,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform
-} from "react-native";
+import { View, StyleSheet, Alert, ActivityIndicator } from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
@@ -34,6 +26,7 @@ import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
+import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -135,51 +128,45 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       </Card>
     </View>
   ) : (
-    <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
-      <ScrollView
-        contentContainerStyle={{ alignItems: "center" }}
-        scrollIndicatorInsets={{ right: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
-        <TopBackground mode={config.appMode} />
+    <KeyboardAvoidingScrollView>
+      <TopBackground mode={config.appMode} />
 
-        <View style={styles.content}>
-          <View style={styles.headerText}>
-            <AppHeader mode={config.appMode} />
-          </View>
-
-          {messageContent && (
-            <View style={styles.bannerWrapper}>
-              <Banner {...messageContent} />
-            </View>
-          )}
-
-          {cartState === "PURCHASED" ? (
-            <CheckoutSuccessCard
-              nrics={nrics}
-              onCancel={onCancel}
-              checkoutResult={checkoutResult}
-            />
-          ) : cartState === "NO_QUOTA" ? (
-            <NoQuotaCard nrics={nrics} cart={cart} onCancel={onCancel} />
-          ) : cartState === "NOT_ELIGIBLE" ? (
-            <NotEligibleCard nrics={nrics} onCancel={onCancel} />
-          ) : (
-            <ItemsSelectionCard
-              nrics={nrics}
-              addNric={addNric}
-              isLoading={cartState === "CHECKING_OUT"}
-              checkoutCart={checkoutCart}
-              onCancel={onCancel}
-              cart={cart}
-              updateCart={updateCart}
-            />
-          )}
-          <FeatureToggler feature="HELP_MODAL">
-            <HelpButton onPress={showHelpModal} />
-          </FeatureToggler>
+      <View style={styles.content}>
+        <View style={styles.headerText}>
+          <AppHeader mode={config.appMode} />
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+        {messageContent && (
+          <View style={styles.bannerWrapper}>
+            <Banner {...messageContent} />
+          </View>
+        )}
+
+        {cartState === "PURCHASED" ? (
+          <CheckoutSuccessCard
+            nrics={nrics}
+            onCancel={onCancel}
+            checkoutResult={checkoutResult}
+          />
+        ) : cartState === "NO_QUOTA" ? (
+          <NoQuotaCard nrics={nrics} cart={cart} onCancel={onCancel} />
+        ) : cartState === "NOT_ELIGIBLE" ? (
+          <NotEligibleCard nrics={nrics} onCancel={onCancel} />
+        ) : (
+          <ItemsSelectionCard
+            nrics={nrics}
+            addNric={addNric}
+            isLoading={cartState === "CHECKING_OUT"}
+            checkoutCart={checkoutCart}
+            onCancel={onCancel}
+            cart={cart}
+            updateCart={updateCart}
+          />
+        )}
+        <FeatureToggler feature="HELP_MODAL">
+          <HelpButton onPress={showHelpModal} />
+        </FeatureToggler>
+      </View>
+    </KeyboardAvoidingScrollView>
   );
 };

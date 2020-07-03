@@ -9,12 +9,9 @@ import React, {
 import {
   View,
   StyleSheet,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  ScrollView,
   Vibration,
-  BackHandler,
-  Platform
+  BackHandler
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
@@ -40,6 +37,7 @@ import { Banner } from "../Layout/Banner";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { useLogout } from "../../hooks/useLogout";
+import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -204,77 +202,71 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   return (
     <>
       <Credits style={{ bottom: size(10) }} />
-      <KeyboardAvoidingView
-        behavior={Platform.select({ ios: "padding" })}
-        style={{ flex: 1 }}
+      <KeyboardAvoidingScrollView
+        keyboardAvoidingViewStyle={{ flex: 1 }}
+        scrollViewContentContainerStyle={{
+          flexGrow: 1,
+          alignItems: "center",
+          paddingBottom: size(8)
+        }}
       >
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            alignItems: "center",
-            paddingBottom: size(8)
-          }}
-          scrollIndicatorInsets={{ right: 1 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <TopBackground
-            style={{ height: "50%", maxHeight: "auto" }}
-            mode={config.appMode}
-          />
-          <View style={styles.content}>
-            <TouchableWithoutFeedback
-              delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
-              onLongPress={onToggleAppMode}
-            >
-              <View style={styles.headerText}>
-                <AppName mode={config.appMode} />
-              </View>
-            </TouchableWithoutFeedback>
-            {config.appMode !== AppMode.production && (
-              <View style={{ marginVertical: size(2.5) }}>
-                <DangerButton
-                  text="Exit Testing Mode"
-                  onPress={onToggleAppMode}
-                  fullWidth={true}
-                  isLoading={isLoading}
-                />
-              </View>
-            )}
-
-            {messageContent && (
-              <View style={styles.bannerWrapper}>
-                <Banner {...messageContent} />
-              </View>
-            )}
-
-            {loginStage === "SCAN" && (
-              <LoginScanCard
-                onToggleScanner={() => setShouldShowCamera(true)}
+        <TopBackground
+          style={{ height: "50%", maxHeight: "auto" }}
+          mode={config.appMode}
+        />
+        <View style={styles.content}>
+          <TouchableWithoutFeedback
+            delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
+            onLongPress={onToggleAppMode}
+          >
+            <View style={styles.headerText}>
+              <AppName mode={config.appMode} />
+            </View>
+          </TouchableWithoutFeedback>
+          {config.appMode !== AppMode.production && (
+            <View style={{ marginVertical: size(2.5) }}>
+              <DangerButton
+                text="Exit Testing Mode"
+                onPress={onToggleAppMode}
+                fullWidth={true}
                 isLoading={isLoading}
               />
-            )}
-            {loginStage === "MOBILE_NUMBER" && (
-              <LoginMobileNumberCard
-                setLoginStage={setLoginStage}
-                setMobileNumber={setMobileNumber}
-                codeKey={codeKey}
-                endpoint={endpointTemp}
-              />
-            )}
-            {loginStage === "OTP" && (
-              <LoginOTPCard
-                resetStage={resetStage}
-                mobileNumber={mobileNumber}
-                codeKey={codeKey}
-                endpoint={endpointTemp}
-              />
-            )}
-            <FeatureToggler feature="HELP_MODAL">
-              <HelpButton onPress={showHelpModal} />
-            </FeatureToggler>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            </View>
+          )}
+
+          {messageContent && (
+            <View style={styles.bannerWrapper}>
+              <Banner {...messageContent} />
+            </View>
+          )}
+
+          {loginStage === "SCAN" && (
+            <LoginScanCard
+              onToggleScanner={() => setShouldShowCamera(true)}
+              isLoading={isLoading}
+            />
+          )}
+          {loginStage === "MOBILE_NUMBER" && (
+            <LoginMobileNumberCard
+              setLoginStage={setLoginStage}
+              setMobileNumber={setMobileNumber}
+              codeKey={codeKey}
+              endpoint={endpointTemp}
+            />
+          )}
+          {loginStage === "OTP" && (
+            <LoginOTPCard
+              resetStage={resetStage}
+              mobileNumber={mobileNumber}
+              codeKey={codeKey}
+              endpoint={endpointTemp}
+            />
+          )}
+          <FeatureToggler feature="HELP_MODAL">
+            <HelpButton onPress={showHelpModal} />
+          </FeatureToggler>
+        </View>
+      </KeyboardAvoidingScrollView>
       {shouldShowCamera && (
         <IdScanner
           onBarCodeScanned={onBarCodeScanned}
