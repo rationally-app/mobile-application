@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   headerText: {
+    marginTop: size(3),
     marginBottom: size(4),
     textAlign: "center",
     alignSelf: "center"
@@ -203,10 +204,13 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   return (
     <>
       <Credits style={{ bottom: size(10) }} />
-      <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
+      <KeyboardAvoidingView
+        behavior={Platform.select({ ios: "padding" })}
+        style={{ flex: 1 }}
+      >
         <ScrollView
           contentContainerStyle={{
-            minHeight: "100%",
+            flexGrow: 1,
             alignItems: "center",
             paddingBottom: size(8)
           }}
