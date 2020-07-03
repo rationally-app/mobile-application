@@ -92,7 +92,9 @@ describe("useCheckVoucherValidity", () => {
         expect(result.current.checkValidityState).toBe("CHECKING_VALIDITY");
       });
 
-      expect(result.current.error?.message).toBe("Invalid voucher code");
+      expect(result.current.error?.message).toBe(
+        "Please check that the voucher code is in the correct format"
+      );
     });
 
     it("should set error when voucher code is duplicated", async () => {
