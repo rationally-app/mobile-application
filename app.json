@@ -5,7 +5,7 @@
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "3.3.0",
+    "version": "3.6.1",
     "orientation": "portrait",
     "scheme": "supplyally",
     "icon": "./assets/icon.png",
@@ -19,6 +19,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "buildNumber": "1",
       "supportsTablet": true,
       "bundleIdentifier": "sg.gov.tech.musket",
       "splash": {
@@ -42,7 +43,7 @@
       }
     },
     "android": {
-      "versionCode": 33,
+      "versionCode": 38,
       "package": "sg.gov.tech.musket"
     },
     "packagerOpts": {
