@@ -6,8 +6,6 @@ import {
   Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  ScrollView,
-  KeyboardAvoidingView,
   Vibration
 } from "react-native";
 import { InputNricSection } from "../CustomerDetails/InputNricSection";
@@ -18,6 +16,7 @@ import { color, size } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
+import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 
 const styles = StyleSheet.create({
   background: {
@@ -147,35 +146,31 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
           />
         </View>
       ) : (
-        <ScrollView
-          contentContainerStyle={styles.scrollWrapper}
-          scrollIndicatorInsets={{ right: 1 }}
-          keyboardShouldPersistTaps="handled"
+        <KeyboardAvoidingScrollView
+          scrollViewContentContainerStyle={styles.scrollWrapper}
         >
           <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
             <View style={styles.background} />
           </TouchableWithoutFeedback>
           <View style={styles.cardWrapper}>
-            <KeyboardAvoidingView behavior="position">
-              <Card style={styles.card}>
-                <View style={styles.cardHeader}>
-                  <AppText style={{ flex: 1 }}>
-                    Add another NRIC to combine customer quotas
-                  </AppText>
-                  <View style={{ marginLeft: size(1) }}>
-                    <CloseButton onPress={() => setIsVisible(false)} />
-                  </View>
+            <Card style={styles.card}>
+              <View style={styles.cardHeader}>
+                <AppText style={{ flex: 1 }}>
+                  Add another NRIC to combine customer quotas
+                </AppText>
+                <View style={{ marginLeft: size(1) }}>
+                  <CloseButton onPress={() => setIsVisible(false)} />
                 </View>
-                <InputNricSection
-                  openCamera={() => setShouldShowCamera(true)}
-                  nricInput={nricInput}
-                  setNricInput={setNricInput}
-                  submitNric={() => onCheck(nricInput)}
-                />
-              </Card>
-            </KeyboardAvoidingView>
+              </View>
+              <InputNricSection
+                openCamera={() => setShouldShowCamera(true)}
+                nricInput={nricInput}
+                setNricInput={setNricInput}
+                submitNric={() => onCheck(nricInput)}
+              />
+            </Card>
           </View>
-        </ScrollView>
+        </KeyboardAvoidingScrollView>
       )}
     </Modal>
   );

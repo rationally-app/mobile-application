@@ -5,13 +5,7 @@ import React, {
   useCallback,
   useContext
 } from "react";
-import {
-  View,
-  StyleSheet,
-  Alert,
-  ScrollView,
-  ActivityIndicator
-} from "react-native";
+import { View, StyleSheet, Alert, ActivityIndicator } from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
@@ -32,6 +26,7 @@ import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
+import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -133,12 +128,9 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       </Card>
     </View>
   ) : (
-    <ScrollView
-      contentContainerStyle={{ alignItems: "center" }}
-      scrollIndicatorInsets={{ right: 1 }}
-      keyboardShouldPersistTaps="handled"
-    >
+    <KeyboardAvoidingScrollView>
       <TopBackground mode={config.appMode} />
+
       <View style={styles.content}>
         <View style={styles.headerText}>
           <AppHeader mode={config.appMode} />
@@ -175,6 +167,6 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
           <HelpButton onPress={showHelpModal} />
         </FeatureToggler>
       </View>
-    </ScrollView>
+    </KeyboardAvoidingScrollView>
   );
 };

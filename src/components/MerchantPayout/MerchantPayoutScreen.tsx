@@ -9,12 +9,9 @@ import React, {
 import {
   View,
   StyleSheet,
-  KeyboardAvoidingView,
-  ScrollView,
   Alert,
   Vibration,
   BackHandler,
-  Platform,
   Keyboard
 } from "react-native";
 import { size, color } from "../../common/styles";
@@ -42,6 +39,7 @@ import { AllValidVouchersModal } from "./AllValidVouchersModal";
 import { useVoucher } from "../../hooks/useVoucher/useVoucher";
 import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { useAuthenticationContext } from "../../context/auth";
+import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 
 const styles = StyleSheet.create({
   content: {
@@ -201,93 +199,86 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
 
   return (
     <>
-      <ScrollView
-        contentContainerStyle={{ alignItems: "center" }}
-        scrollIndicatorInsets={{ right: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
+      <KeyboardAvoidingScrollView>
         <TopBackground mode={config.appMode} />
-        <KeyboardAvoidingView
-          behavior={Platform.select({ ios: "position" })}
-          keyboardVerticalOffset={Platform.select({ ios: -80 })}
-        >
-          <View style={styles.content}>
-            <View style={styles.headerText}>
-              <AppHeader mode={config.appMode} />
+
+        <View style={styles.content}>
+          <View style={styles.headerText}>
+            <AppHeader mode={config.appMode} />
+          </View>
+          {messageContent && (
+            <View style={styles.bannerWrapper}>
+              <Banner {...messageContent} />
             </View>
-            {messageContent && (
-              <View style={styles.bannerWrapper}>
-                <Banner {...messageContent} />
-              </View>
-            )}
-            <Card>
-              <VoucherInputSection
-                vouchers={vouchers}
-                merchantCode={merchantCode}
-                setMerchantCode={setMerchantCode}
-                redeemVouchers={redeemVouchers}
-                openCamera={() => {
-                  Keyboard.dismiss();
-                  setShouldShowCamera(true);
-                }}
-                openAllValidVouchersModal={() =>
-                  setShowAllValidVouchersModal(true)
-                }
-              />
-            </Card>
-            {vouchers.length > 0 && (
-              <View style={styles.buttonsWrapper}>
-                <View style={styles.submitWrapper}>
-                  <DarkButton
-                    fullWidth={true}
-                    text="Checkout"
-                    icon={
-                      <Feather
-                        name="shopping-cart"
-                        size={size(2)}
-                        color={color("grey", 0)}
-                      />
-                    }
-                    onPress={redeemVouchers}
-                    isLoading={checkoutVouchersState !== "DEFAULT"}
-                  />
-                </View>
-                <SecondaryButton
-                  text="Cancel"
-                  onPress={() => {
-                    Alert.alert(
-                      "Discard transaction?",
-                      "This will clear all scanned items",
-                      [
-                        {
-                          text: "Cancel"
-                        },
-                        {
-                          text: "Discard",
-                          onPress: () => {
-                            setMerchantCode("");
-                            resetState();
-                          },
-                          style: "destructive"
-                        }
-                      ]
-                    );
-                  }}
+          )}
+          <Card>
+            <VoucherInputSection
+              vouchers={vouchers}
+              merchantCode={merchantCode}
+              setMerchantCode={setMerchantCode}
+              redeemVouchers={redeemVouchers}
+              openCamera={() => {
+                Keyboard.dismiss();
+                setShouldShowCamera(true);
+              }}
+              openAllValidVouchersModal={() =>
+                setShowAllValidVouchersModal(true)
+              }
+            />
+          </Card>
+          {vouchers.length > 0 && (
+            <View style={styles.buttonsWrapper}>
+              <View style={styles.submitWrapper}>
+                <DarkButton
+                  fullWidth={true}
+                  text="Checkout"
+                  icon={
+                    <Feather
+                      name="shopping-cart"
+                      size={size(2)}
+                      color={color("grey", 0)}
+                    />
+                  }
+                  onPress={redeemVouchers}
+                  isLoading={checkoutVouchersState !== "DEFAULT"}
                 />
               </View>
-            )}
-            <FeatureToggler feature="HELP_MODAL">
-              <HelpButton onPress={showHelpModal} />
-            </FeatureToggler>
-          </View>
-          <AllValidVouchersModal
-            vouchers={vouchers}
-            isVisible={showAllValidVouchersModal}
-            onVoucherCodeRemove={removeVoucher}
-            onExit={() => setShowAllValidVouchersModal(false)}
-          />
-        </KeyboardAvoidingView>
-      </ScrollView>
+              <SecondaryButton
+                text="Cancel"
+                onPress={() => {
+                  Alert.alert(
+                    "Discard transaction?",
+                    "This will clear all scanned items",
+                    [
+                      {
+                        text: "Cancel"
+                      },
+                      {
+                        text: "Discard",
+                        onPress: () => {
+                          setMerchantCode("");
+                          resetState();
+                        },
+                        style: "destructive"
+                      }
+                    ]
+                  );
+                }}
+              />
+            </View>
+          )}
+          <FeatureToggler feature="HELP_MODAL">
+            <HelpButton onPress={showHelpModal} />
+          </FeatureToggler>
+        </View>
+        <AllValidVouchersModal
+          vouchers={vouchers}
+          isVisible={showAllValidVouchersModal}
+          onVoucherCodeRemove={removeVoucher}
+          onExit={() => setShowAllValidVouchersModal(false)}
+        />
+      </KeyboardAvoidingScrollView>
+
       {shouldShowCamera && (
         <VoucherScanner
           vouchers={vouchers}
