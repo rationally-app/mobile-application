@@ -71,7 +71,6 @@
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "jest": "^26.1.0",
-    "jest-expo": "^38.0.0",
     "prettier": "^1.19.1",
     "react-dom": "16.11.0",
     "react-native-svg-transformer": "^0.14.3",
