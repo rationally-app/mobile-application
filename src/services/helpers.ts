@@ -17,6 +17,36 @@ export async function fetchWithValidator<T, O, I>(
   const response = await fetch(requestInfo, init);
 
   const json = await response.json();
+
+  if (!response.ok) {
+    throw new Error(json.message ?? "Fetch failed");
+  }
+
+  const decoded = validator.decode(json);
+  return fold(
+    () => {
+      throw new ValidationError(reporter(decoded).join(" "));
+    },
+    (value: T) => value
+  )(decoded);
+}
+
+async function timeout<Response>(ms: number, promise: any): Promise<Response> {
+  return new Promise<Response>(async (resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error("Request timed out. Please try again."));
+    }, ms);
+    resolve(await promise);
+  });
+}
+
+export async function fetchWithValidatorWithTimeOut<T, O, I>(
+  validator: Type<T, O, I>,
+  requestInfo: RequestInfo,
+  init?: RequestInit
+): Promise<T> {
+  const response = await timeout<Response>(5000, fetch(requestInfo, init));
+  const json = await response.json();
   if (!response.ok) {
     throw new Error(json.message ?? "Fetch failed");
   }

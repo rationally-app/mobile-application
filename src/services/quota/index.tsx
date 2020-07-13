@@ -1,6 +1,6 @@
 import { IS_MOCK } from "../../config";
 import { Transaction, Quota, PostTransactionResult } from "../../types";
-import { fetchWithValidator, ValidationError } from "../helpers";
+import { fetchWithValidatorWithTimeOut, ValidationError } from "../helpers";
 import * as Sentry from "sentry-expo";
 
 export class NotEligibleError extends Error {
@@ -101,7 +101,7 @@ export const liveGetQuota = async (
   }
   try {
     if (ids.length === 1) {
-      response = await fetchWithValidator(
+      response = await fetchWithValidatorWithTimeOut(
         Quota,
         `${endpoint}/quota/${ids[0]}`,
         {
@@ -112,21 +112,26 @@ export const liveGetQuota = async (
         }
       );
     } else {
-      response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
-        method: "POST",
-        headers: {
-          Authorization: key
-        },
-        body: JSON.stringify({
-          ids
-        })
-      });
+      response = await fetchWithValidatorWithTimeOut(
+        Quota,
+        `${endpoint}/quota`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: key
+          },
+          body: JSON.stringify({
+            ids
+          })
+        }
+      );
     }
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
+
     if (e.message === "User is not eligible") {
       throw new NotEligibleError(e.message);
     }
@@ -178,7 +183,7 @@ export const livePostTransaction = async ({
     throw new PostTransactionError("No ID was provided");
   }
   try {
-    const response = await fetchWithValidator(
+    const response = await fetchWithValidatorWithTimeOut(
       PostTransactionResult,
       `${endpoint}/transactions`,
       {
