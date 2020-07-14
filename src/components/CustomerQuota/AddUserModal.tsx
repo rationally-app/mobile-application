@@ -11,12 +11,16 @@ import {
 import { InputNricSection } from "../CustomerDetails/InputNricSection";
 import { IdScanner } from "../IdScanner/IdScanner";
 import { validateAndCleanNric } from "../../utils/validateNric";
-import { BarCodeScannedCallback } from "expo-barcode-scanner";
+import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { color, size } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
+<<<<<<< HEAD
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+=======
+import { useProductContext } from "../../context/products";
+>>>>>>> c622c14... feat: add condition to toggle scanner typebetween code39 and qr
 
 const styles = StyleSheet.create({
   background: {
@@ -80,6 +84,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [nricInput, setNricInput] = useState("");
+  const { features } = useProductContext();
 
   useEffect(() => {
     if (isVisible) {
@@ -143,6 +148,11 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
             cancelButtonText="Enter ID manually"
+            barCodeTypes={
+              features?.SCANNER.TYPE === "CODE39"
+                ? [BarCodeScanner.Constants.BarCodeType.code39]
+                : [BarCodeScanner.Constants.BarCodeType.qr]
+            }
           />
         </View>
       ) : (

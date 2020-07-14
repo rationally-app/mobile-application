@@ -23,7 +23,7 @@ import {
   NavigationFocusInjectedProps
 } from "react-navigation";
 import { IdScanner } from "../IdScanner/IdScanner";
-import { BarCodeScannedCallback } from "expo-barcode-scanner";
+import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { validateAndCleanNric } from "../../utils/validateNric";
 import { InputNricSection } from "./InputNricSection";
 import { AppHeader } from "../Layout/AppHeader";
@@ -34,7 +34,11 @@ import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
+<<<<<<< HEAD
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+=======
+import { useProductContext } from "../../context/products";
+>>>>>>> c622c14... feat: add condition to toggle scanner typebetween code39 and qr
 
 const styles = StyleSheet.create({
   content: {
@@ -71,6 +75,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
+  const { features } = useProductContext();
 
   useEffect(() => {
     if (isFocused) {
@@ -174,6 +179,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
           cancelButtonText="Enter ID manually"
+          barCodeTypes={
+            features?.SCANNER.TYPE === "CODE39"
+              ? [BarCodeScanner.Constants.BarCodeType.code39]
+              : [BarCodeScanner.Constants.BarCodeType.qr]
+          }
         />
       )}
     </>
