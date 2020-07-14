@@ -9,6 +9,13 @@ export class ValidationError extends Error {
   }
 }
 
+export class TimeoutError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "TimeoutError";
+  }
+}
+
 export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
@@ -31,10 +38,14 @@ export async function fetchWithValidator<T, O, I>(
   )(decoded);
 }
 
-async function timeout<Response>(ms: number, promise: any): Promise<Response> {
-  return new Promise<Response>(async (resolve, reject) => {
+async function timeout<T>(
+  ms: number,
+  promise: Promise<T>,
+  errorMessage?: string
+): Promise<T> {
+  return new Promise<T>(async (resolve, reject) => {
     setTimeout(() => {
-      reject(new Error("Request timed out. Please try again."));
+      reject(new TimeoutError(errorMessage || "Request timed out"));
     }, ms);
     resolve(await promise);
   });
@@ -45,7 +56,11 @@ export async function fetchWithValidatorWithTimeOut<T, O, I>(
   requestInfo: RequestInfo,
   init?: RequestInit
 ): Promise<T> {
-  const response = await timeout<Response>(60000, fetch(requestInfo, init));
+  const response = await timeout<Response>(
+    process.env.API_CALL_TIMEOUT,
+    fetch(requestInfo, init),
+    "Request timed out. Please check your internet connection and try again later."
+  );
   const json = await response.json();
   if (!response.ok) {
     throw new Error(json.message ?? "Fetch failed");
