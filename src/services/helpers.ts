@@ -45,7 +45,7 @@ export async function fetchWithValidatorWithTimeOut<T, O, I>(
   requestInfo: RequestInfo,
   init?: RequestInit
 ): Promise<T> {
-  const response = await timeout<Response>(5000, fetch(requestInfo, init));
+  const response = await timeout<Response>(60000, fetch(requestInfo, init));
   const json = await response.json();
   if (!response.ok) {
     throw new Error(json.message ?? "Fetch failed");
