@@ -136,7 +136,11 @@ const mockGetEnvVersion = async (
     features: {
       REQUIRE_OTP: true,
       TRANSACTION_GROUPING: true,
-      FLOW_TYPE: "DEFAULT"
+      FLOW_TYPE: "DEFAULT",
+      SCANNER: {
+        TYPE: "CODE39",
+        VALIDATION: "NRIC"
+      }
     }
   };
 };
