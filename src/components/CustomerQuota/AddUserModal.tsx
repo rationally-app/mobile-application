@@ -16,11 +16,8 @@ import { color, size } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
-<<<<<<< HEAD
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-=======
 import { useProductContext } from "../../context/products";
->>>>>>> c622c14... feat: add condition to toggle scanner typebetween code39 and qr
 
 const styles = StyleSheet.create({
   background: {

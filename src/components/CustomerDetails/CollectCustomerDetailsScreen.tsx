@@ -34,11 +34,8 @@ import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
-<<<<<<< HEAD
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-=======
 import { useProductContext } from "../../context/products";
->>>>>>> c622c14... feat: add condition to toggle scanner typebetween code39 and qr
 
 const styles = StyleSheet.create({
   content: {
