@@ -18,7 +18,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButtons } from "../../context/drawer";
 import Constants from "expo-constants";
-
+import version from "../../../version.json";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -91,7 +91,6 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const { logout } = useLogout();
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
-  const version = Constants.manifest.version;
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch]);
@@ -187,7 +186,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </BottomNavigationLink>
         <View style={{ marginTop: size(3), ...styles.bottomNavContainerLink }}>
           <AppText style={{ color: color("blue", 50), fontSize: fontSize(-4) }}>
-            {"Version: " + version}
+            {`Version: ${Constants.manifest.version}/ ${version.jsBuildNumber}`}
           </AppText>
         </View>
       </View>
