@@ -17,6 +17,7 @@ import { size, color, fontSize } from "../../common/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButtons } from "../../context/drawer";
+import Constants from "expo-constants";
 
 const styles = StyleSheet.create({
   container: {
@@ -90,7 +91,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const { logout } = useLogout();
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
-
+  const version = Constants.manifest.version;
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch]);
@@ -127,19 +128,19 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         style={{
           position: "absolute",
           right: size(3),
-          top: size(3),
+          top: size(5),
           padding: size(1)
         }}
       >
         <MaterialCommunityIcons
           name="close"
           size={size(3)}
-          color={color("grey", 80)}
+          color={color("blue", 50)}
         />
       </TouchableOpacity>
       <View
         style={{
-          marginTop: size(8),
+          marginTop: size(9),
           borderTopColor: color("grey", 20),
           borderTopWidth: 1
         }}
@@ -152,7 +153,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
             <MaterialCommunityIcons
               name="logout"
               size={size(2.5)}
-              color={color("grey", 80)}
+              color={color("blue", 50)}
               style={{ marginRight: size(2) }}
             />
             <AppText style={styles.navLinkText}>Logout</AppText>
@@ -165,18 +166,14 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
-            Linking.openURL(
-              "https://www.safeentry.gov.sg/checkin/terms_of_use"
-            );
+            Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
           }}
         >
           Terms of use
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
-            Linking.openURL(
-              "https://www.safeentry.gov.sg/checkin/privacy_statement"
-            );
+            Linking.openURL("https://www.supplyally.gov.sg/privacy");
           }}
         >
           Privacy Statement
@@ -189,8 +186,8 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
           Report vulnerability
         </BottomNavigationLink>
         <View style={{ marginTop: size(3), ...styles.bottomNavContainerLink }}>
-          <AppText style={{ color: color("grey", 80), fontSize: fontSize(-4) }}>
-            {"version"}
+          <AppText style={{ color: color("blue", 50), fontSize: fontSize(-4) }}>
+            {"Version: " + version}
           </AppText>
         </View>
       </View>
