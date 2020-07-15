@@ -1,13 +1,11 @@
-import React, { FunctionComponent, useCallback } from "react";
+import React, { FunctionComponent } from "react";
 import { color, size } from "../../common/styles";
-import { View, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { withNavigation } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppName } from "./AppName";
-import { AppText } from "./AppText";
-import { useLogout } from "../../hooks/useLogout";
 
 interface AppHeader extends NavigationProps {
   mode?: AppMode;
@@ -26,46 +24,23 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   mode = AppMode.production,
   navigation
 }) => {
-  const { logout } = useLogout();
-
-  const handleLogout = useCallback((): void => {
-    logout(navigation.dispatch);
-  }, [logout, navigation.dispatch]);
-
-  const onPressLogout = (): void => {
-    Alert.alert(
-      "You are about to logout",
-      "Are you sure?",
-      [
-        {
-          text: "Cancel"
-        },
-        {
-          text: "Logout",
-          onPress: handleLogout,
-          style: "destructive"
-        }
-      ],
-      { cancelable: false }
-    );
+  const onPressOpenDrawer = (): void => {
+    Keyboard.dismiss();
+    navigation.openDrawer();
   };
 
   return (
     <View style={styles.appHeaderWrapper}>
       <AppName mode={mode} />
-      <TouchableOpacity onPress={onPressLogout}>
+      <TouchableOpacity onPress={onPressOpenDrawer}>
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center"
+            flexDirection: "row"
           }}
         >
-          <AppText style={{ color: color("grey", 0), marginRight: size(1) }}>
-            Logout
-          </AppText>
           <MaterialCommunityIcons
-            name="logout"
-            size={size(3)}
+            name="menu"
+            size={size(4)}
             color={color("grey", 0)}
           />
         </View>

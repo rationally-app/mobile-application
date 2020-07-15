@@ -17,8 +17,6 @@ import { size, color, fontSize } from "../../common/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButtons } from "../../context/drawer";
-import { Analytics } from "../../utils/analytics";
-import * as Updates from "expo-updates";
 
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +32,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   navLinkText: {
-    color: color("grey", 70),
+    color: color("blue", 50),
     fontFamily: "brand-bold"
   },
   bottomNavContainerLink: {
@@ -44,7 +42,7 @@ const styles = StyleSheet.create({
     paddingVertical: size(1)
   },
   bottomNavContainerText: {
-    color: color("grey", 70),
+    color: color("blue", 50),
     fontSize: fontSize(-1)
   }
 });
@@ -77,7 +75,7 @@ export const DrawerButton: FunctionComponent<DrawerButtons> = ({
         <MaterialCommunityIcons
           name={icon}
           size={size(2.5)}
-          color={color("grey", 70)}
+          color={color("blue", 50)}
           style={{ marginRight: size(2) }}
         />
         <AppText style={styles.navLinkText}>{label}</AppText>
@@ -119,16 +117,6 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
     navigation.dispatch(DrawerActions.closeDrawer());
   };
 
-  const releaseChannel = Updates.releaseChannel;
-  const updateId = Updates.updateId;
-  let version = "";
-  if (releaseChannel) {
-    version += `ver ${releaseChannel === "default" ? "0.11" : releaseChannel}`;
-    if (updateId) {
-      version += ` (${updateId.slice(-5)})`;
-    }
-  }
-
   return (
     <SafeAreaView
       style={styles.container}
@@ -146,7 +134,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         <MaterialCommunityIcons
           name="close"
           size={size(3)}
-          color={color("grey", 70)}
+          color={color("grey", 80)}
         />
       </TouchableOpacity>
       <View
@@ -164,7 +152,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
             <MaterialCommunityIcons
               name="logout"
               size={size(2.5)}
-              color={color("grey", 70)}
+              color={color("grey", 80)}
               style={{ marginRight: size(2) }}
             />
             <AppText style={styles.navLinkText}>Logout</AppText>
@@ -177,7 +165,6 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
-            Analytics.logEvent("click_terms_of_use_drawer_navigation");
             Linking.openURL(
               "https://www.safeentry.gov.sg/checkin/terms_of_use"
             );
@@ -187,7 +174,6 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
-            Analytics.logEvent("click_privacy_statement_drawer_navigation");
             Linking.openURL(
               "https://www.safeentry.gov.sg/checkin/privacy_statement"
             );
@@ -197,15 +183,14 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
-            Analytics.logEvent("click_report_vulnerability_drawer_navigation");
             Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
           }}
         >
           Report vulnerability
         </BottomNavigationLink>
         <View style={{ marginTop: size(3), ...styles.bottomNavContainerLink }}>
-          <AppText style={{ color: color("grey", 70), fontSize: fontSize(-4) }}>
-            {version}
+          <AppText style={{ color: color("grey", 80), fontSize: fontSize(-4) }}>
+            {"version"}
           </AppText>
         </View>
       </View>
