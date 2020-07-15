@@ -7,7 +7,7 @@ on:
 jobs:
   test:
     name: Lint & Test
-    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -25,7 +25,7 @@ jobs:
   deploy_prod:
     name: Deploy To Production
     needs: test
-    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ubuntu-latest
     outputs:
       majorVersion: ${{ steps.get_major_version.outputs.majorVersion }}
     steps:
@@ -52,7 +52,7 @@ jobs:
   create_release:
     name: Create Release
     needs: deploy_prod
-    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -74,7 +74,7 @@ jobs:
           allowUpdates: true
   build_android:
     needs: [deploy_prod, create_release]
-    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v2.x
@@ -102,7 +102,7 @@ jobs:
           tag: ${{ github.ref }}
   build_ios:
     needs: [deploy_prod, create_release]
-    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v2.x
