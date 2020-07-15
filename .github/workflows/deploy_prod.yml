@@ -48,7 +48,7 @@ jobs:
       - name: Install Packages
         run: npm install
       - name: Expo Publish Channel
-        run: expo publish --non-interactive --release-channel=${{ steps.get_major_version.outputs.majorVersion }}
+        run: expo publish --non-interactive --release-channel=${{ steps.majorVersion.outputs.majorVersion }}
   create_release:
     name: Create Release
     needs: deploy_prod
