@@ -4,14 +4,14 @@ on: [pull_request]
 
 jobs:
   test:
-    name: build and test
-    runs-on: ubuntu-latest
+    name: Lint & Test
+    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Cache node modules
+      - name: Cache Node Modules
         uses: actions/cache@v2
         env:
           cache-name: cache-node-modules
@@ -23,30 +23,34 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-	
             ${{ runner.os }}-build-	
             ${{ runner.os }}-
-      - name: install
+      - name: Install Packages
         run: npm install
       # - name: Typecheck
       #   run: npx --no-install tsc --noEmit
-      - name: Lint
+      - name: Check Lint
         run: npm run lint
       - name: Test
         run: npm run test -- --coverage
   deploy_branch_preview:
     name: Deploy Branch Preview
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        node: [10, 12, 13]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: ${{ matrix.node }}
       - uses: expo/expo-github-action@v5
         with:
-          expo-version: 3.x
+          expo-packager: npm
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
           expo-cache: true
-      - name: Cache node modules
+      - name: Cache Node Modules
         uses: actions/cache@v2
         env:
           cache-name: cache-node-modules
@@ -58,13 +62,13 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - name: install
+      - name: Install Packages
         run: npm install
-      - name: expo_publish_channel
+      - name: Expo Publish Channel
         run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
-      - name: expo_publish_storybook_channel
-        run: expo publish --non-interactive --release-channel storybook-${{ github.event.number }}
-      - name: Add comment to PR
+      - name: Expo Publish Storybook Channel
+        run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
+      - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,9 +76,8 @@ jobs:
         with:
           message: |
             ## Application
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=${{ github.event.number }})
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }})
             Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }}
             ## Storybook
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-${{ github.event.number }})
-            Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-${{ github.event.number }}
-          allow-repeats: true
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }})
+            Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }}

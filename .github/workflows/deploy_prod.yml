@@ -6,26 +6,26 @@ on:
 
 jobs:
   test:
-    name: build and test
-    runs-on: ubuntu-latest
+    name: Lint & Test
+    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: install
+      - name: Install Packages
         run: npm install
       # Commented out as type checks are failing
       # - name: Typecheck
       #   run: npx --no-install tsc --noEmit
-      - name: Lint
+      - name: Check Lint
         run: npm run lint
       - name: Test
         run: npm run test -- --coverage
   deploy_prod:
-    name: deploy_prod
+    name: Deploy To Production
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
     outputs:
       majorVersion: ${{ steps.get_major_version.outputs.majorVersion }}
     steps:
@@ -35,34 +35,34 @@ jobs:
           node-version: 12.x
       - uses: expo/expo-github-action@v5
         with:
-          expo-version: 3.x
+          expo-packager: npm
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v2.x
-      - name: Parse major Version
+      - name: Parse Major Version
         id: get_major_version
         run: |
-          MAJOR_RELEASE=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
-          echo "::set-output name=majorVersion::$MAJOR_RELEASE"
-      - name: Install
+          MAJOR_VERSION=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
+          echo "::set-output name=majorVersion::$MAJOR_VERSION"
+      - name: Install Packages
         run: npm install
-      - name: Publish application
+      - name: Expo Publish Channel
         run: expo publish --non-interactive --release-channel=${{ steps.get_major_version.outputs.majorVersion }}
   create_release:
     name: Create Release
     needs: deploy_prod
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v2.x
-      - name: Generate changelog
+      - name: Generate Changelog
         id: changelog
         uses: metcalfc/changelog-generator@v0.4.0
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
-          base-ref: "base-ref" #need a tag "base-ref for setup, please remove after setup"
+          base-ref: "prod-0" #need a tag "prod-0 for setup, please remove after setup"
       - name: Creating Release
         uses: ncipollo/release-action@v1
         with:
@@ -74,57 +74,57 @@ jobs:
           allowUpdates: true
   build_android:
     needs: [deploy_prod, create_release]
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
+      - uses: rlespinasse/github-slug-action@v2.x
       - uses: expo/expo-github-action@v5
         with:
-          expo-version: 3.x
+          expo-packager: npm
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
           expo-cache: true
-      - name: Install npm dependencies
-        run: |
-          npm install
+      - name: Install Packages
+        run: npm install
       - name: Build Android Release
         id: android
         run: |
-          OUTPUT="$(echo $(expo build:android) | tail | egrep -o 'https?://expo\.io/artifacts/[^ ]+')"
+          OUTPUT="$(echo $(expo build:android) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
           echo "::set-output name=assetUrl::$OUTPUT"
-      - name: Download apk asset
-        run: wget -O android.apk ${{ steps.android.outputs.assetURL }}
+      - name: Download APK Asset
+        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.android.outputs.assetURL }}
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./android.apk
-          asset_name: rationally-${{ needs.deploy_prod.outputs.majorVersion }}.apk
+          file: ./supplyally-${{ env.GITHUB_REF_SLUG }}.apk
+          asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.apk
           tag: ${{ github.ref }}
   build_ios:
     needs: [deploy_prod, create_release]
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
+      - uses: rlespinasse/github-slug-action@v2.x
       - uses: expo/expo-github-action@v5
         with:
-          expo-version: 3.x
+          expo-packager: npm
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
           expo-cache: true
-      - name: Install npm dependencies
-        run: |
-          npm install
+      - name: Install Packages
+        run: npm install
       - name: Build IOS Release
         id: ios
         run: |
-          OUTPUT="$(echo $(expo build:ios) | tail | egrep -o 'https?://expo\.io/artifacts/[^ ]+')"
+          OUTPUT="$(echo $(expo build:ios) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
           echo "::set-output name=assetUrl::$OUTPUT"
-      - name: Download ipa asset
-        run: wget -O rationally.ipa ${{ steps.ios.outputs.assetURL }}
+      - name: Download IPA Asset
+        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.ios.outputs.assetURL }}
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ././rationally.ipa
-          asset_name: rationally-${{ needs.deploy_prod.outputs.majorVersion }}.ipa
+          file: ./supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
+          asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
           tag: ${{ github.ref }}
