@@ -1,5 +1,5 @@
 import { fold } from "fp-ts/lib/Either";
-import { Type } from "io-ts";
+import { Type, number } from "io-ts";
 import { reporter } from "io-ts-reporters";
 
 export class ValidationError extends Error {
@@ -16,29 +16,7 @@ export class TimeoutError extends Error {
   }
 }
 
-export async function fetchWithValidator<T, O, I>(
-  validator: Type<T, O, I>,
-  requestInfo: RequestInfo,
-  init?: RequestInit
-): Promise<T> {
-  const response = await fetch(requestInfo, init);
-
-  const json = await response.json();
-
-  if (!response.ok) {
-    throw new Error(json.message ?? "Fetch failed");
-  }
-
-  const decoded = validator.decode(json);
-  return fold(
-    () => {
-      throw new ValidationError(reporter(decoded).join(" "));
-    },
-    (value: T) => value
-  )(decoded);
-}
-
-async function timeout<T>(
+async function processTimeout<T>(
   ms: number,
   promise: Promise<T>,
   errorMessage?: string
@@ -51,17 +29,27 @@ async function timeout<T>(
   });
 }
 
-export async function fetchWithValidatorWithTimeOut<T, O, I>(
+export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
-  init?: RequestInit
+  init?: RequestInit,
+  timeout: boolean | number = false
 ): Promise<T> {
-  const response = await timeout<Response>(
-    process.env.API_CALL_TIMEOUT,
-    fetch(requestInfo, init),
-    "Request timed out. Please check your internet connection and try again later."
-  );
+  let response;
+  if (timeout) {
+    const timeoutVal =
+      typeof timeout === "number" ? timeout : process.env.API_CALL_TIMEOUT;
+    response = await processTimeout<Response>(
+      timeoutVal,
+      fetch(requestInfo, init),
+      "Request timed out. Please check your internet connection and try again later."
+    );
+  } else {
+    response = await fetch(requestInfo, init);
+  }
+
   const json = await response.json();
+
   if (!response.ok) {
     throw new Error(json.message ?? "Fetch failed");
   }
