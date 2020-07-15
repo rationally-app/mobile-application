@@ -1,4 +1,4 @@
-name: Deploy Branch Preview
+name: Test Different Development Environments
 
 on: [pull_request]
 
