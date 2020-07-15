@@ -90,9 +90,15 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   }, [isVisible]);
 
   const onCheck = async (input: string): Promise<void> => {
+    let nric: string;
     try {
       setIsScanningEnabled(false);
-      const nric = validateAndCleanNric(input);
+      if (features?.SCANNER.VALIDATION === "NRIC") {
+        nric = validateAndCleanNric(input);
+      } else {
+        // Remove validation
+        nric = input;
+      }
       Vibration.vibrate(50);
       if (nrics.indexOf(nric) > -1) {
         throw new Error(
