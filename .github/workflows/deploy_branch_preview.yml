@@ -38,16 +38,12 @@ jobs:
   deploy_branch_preview:
     name: Deploy Branch Preview
     needs: test
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
-        node: [10, 12, 13]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 12.x
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: npm
