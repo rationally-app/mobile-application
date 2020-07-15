@@ -5,16 +5,12 @@ on: [pull_request]
 jobs:
   test:
     name: Lint & Test
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
-        node: [10, 12, 13]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 12.x
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
