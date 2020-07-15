@@ -27,7 +27,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      majorVersion: ${{ steps.get_major_version.outputs.majorVersion }}
+      majorVersion: ${{ steps.majorVersion.outputs.majorVersion }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -41,7 +41,7 @@ jobs:
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v2.x
       - name: Parse Major Version
-        id: get_major_version
+        id: majorVersion
         run: |
           MAJOR_VERSION=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
           echo "::set-output name=majorVersion::$MAJOR_VERSION"
@@ -54,8 +54,7 @@ jobs:
     needs: deploy_prod
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v2.x
       - name: Generate Changelog
         id: changelog
