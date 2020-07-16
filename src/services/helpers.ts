@@ -29,6 +29,7 @@ async function processTimeout<T>(
     resolve(await promise);
   });
 }
+
 // If timeout
 // true => timeout duration for fetch request will be set as env var.
 // false => usual fetch request is done.
