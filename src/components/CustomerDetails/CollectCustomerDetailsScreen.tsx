@@ -113,7 +113,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     let nric: string;
     try {
       setIsScanningEnabled(false);
-      if (features?.SCANNER.VALIDATION === "NRIC") {
+      if (features?.id.validation === "NRIC") {
         nric = validateAndCleanNric(input);
       } else {
         // Remove validation
@@ -183,7 +183,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           onCancel={() => setShouldShowCamera(false)}
           cancelButtonText="Enter ID manually"
           barCodeTypes={
-            features?.SCANNER.TYPE === "CODE39"
+            features?.id.scannerType === "CODE_39"
               ? [BarCodeScanner.Constants.BarCodeType.code39]
               : [BarCodeScanner.Constants.BarCodeType.qr]
           }

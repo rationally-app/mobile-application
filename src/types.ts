@@ -93,13 +93,14 @@ const Policy = t.intersection([
   })
 ]);
 
-const ScannerFeatureFlag = t.intersection([
+const IdentificationFlag = t.intersection([
   t.type({
-    TYPE: t.string
+    type: t.string,
+    scannerType: t.string,
+    validation: t.string
   }),
   t.partial({
-    VALIDATION: t.string,
-    VALIDATION_REGEX: t.string
+    validationRegex: t.string
   })
 ]);
 
@@ -107,7 +108,7 @@ const Features = t.type({
   REQUIRE_OTP: t.boolean,
   TRANSACTION_GROUPING: t.boolean,
   FLOW_TYPE: t.string,
-  SCANNER: ScannerFeatureFlag
+  id: IdentificationFlag
 });
 
 export const EnvVersion = t.type({

@@ -91,9 +91,10 @@ const defaultProducts: EnvVersion = {
     REQUIRE_OTP: true,
     TRANSACTION_GROUPING: true,
     FLOW_TYPE: "DEFAULT",
-    SCANNER: {
-      TYPE: "CODE39",
-      VALIDATION: "NRIC"
+    id: {
+      type: "STRING",
+      scannerType: "CODE_39",
+      validation: "NRIC"
     }
   }
 };
