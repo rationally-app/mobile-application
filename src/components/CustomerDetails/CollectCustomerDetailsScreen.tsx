@@ -25,6 +25,7 @@ import {
 import { IdScanner } from "../IdScanner/IdScanner";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { validateAndCleanNric } from "../../utils/validateNric";
+import { validateAndCleanId } from "../../utils/validateInputWithRegex";
 import { InputNricSection } from "./InputNricSection";
 import { AppHeader } from "../Layout/AppHeader";
 import * as Sentry from "sentry-expo";
@@ -36,6 +37,7 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
+import { EnvVersionError } from "../../services/envVersion";
 
 const styles = StyleSheet.create({
   content: {
@@ -115,6 +117,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIsScanningEnabled(false);
       if (features?.id.validation === "NRIC") {
         nric = validateAndCleanNric(input);
+      } else if (features?.id.validation === "REGEX") {
+        const idRegex = features?.id.validationRegex;
+        nric = validateAndCleanId(input, idRegex);
       } else {
         // Remove validation
         nric = input;
@@ -124,6 +129,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setNricInput("");
     } catch (e) {
       setIsScanningEnabled(false);
+      if (e instanceof EnvVersionError) {
+        Sentry.captureException(e);
+      }
       Alert.alert(
         "Error",
         e.message || e,
