@@ -1,10 +1,5 @@
 import { validate, validateAndCleanId } from "./validateInputWithRegex";
 import { EnvVersionError } from "../services/envVersion";
-import * as Sentry from "sentry-expo";
-
-jest.mock("sentry-expo");
-const mockCaptureException = jest.fn();
-(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 describe("validate", () => {
   const alphanumericRegex = "^[a-zA-Z0-9-_ ]+$";
