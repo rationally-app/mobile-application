@@ -11,6 +11,7 @@ import {
 import { InputNricSection } from "../CustomerDetails/InputNricSection";
 import { IdScanner } from "../IdScanner/IdScanner";
 import { validateAndCleanNric } from "../../utils/validateNric";
+import { validateAndCleanId } from "../../utils/validateInputWithRegex";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { color, size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -93,11 +94,17 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
     let nric: string;
     try {
       setIsScanningEnabled(false);
-      if (features?.id.validation === "NRIC") {
-        nric = validateAndCleanNric(input);
-      } else {
-        // Remove validation
-        nric = input;
+      switch (features?.id.validation) {
+        case "NRIC":
+          nric = validateAndCleanNric(input);
+          break;
+        case "REGEX":
+          const idRegex = features?.id.validationRegex;
+          nric = validateAndCleanId(input, idRegex);
+          break;
+        default:
+          // Remove validation
+          nric = input;
       }
       Vibration.vibrate(50);
       if (nrics.indexOf(nric) > -1) {
