@@ -46,8 +46,8 @@ jobs:
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          expo-username: ${{ secrets.EXPO_CLI_TEST_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_TEST_PASSWORD }}
           expo-cache: true
       - name: Install Packages
         run: npm install
