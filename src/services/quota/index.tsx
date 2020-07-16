@@ -1,6 +1,6 @@
 import { IS_MOCK } from "../../config";
 import { Transaction, Quota, PostTransactionResult } from "../../types";
-import { fetchWithValidatorWithTimeOut, ValidationError } from "../helpers";
+import { fetchWithValidator, ValidationError } from "../helpers";
 import * as Sentry from "sentry-expo";
 
 export class NotEligibleError extends Error {
@@ -101,7 +101,7 @@ export const liveGetQuota = async (
   }
   try {
     if (ids.length === 1) {
-      response = await fetchWithValidatorWithTimeOut(
+      response = await fetchWithValidator(
         Quota,
         `${endpoint}/quota/${ids[0]}`,
         {
@@ -112,19 +112,15 @@ export const liveGetQuota = async (
         }
       );
     } else {
-      response = await fetchWithValidatorWithTimeOut(
-        Quota,
-        `${endpoint}/quota`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: key
-          },
-          body: JSON.stringify({
-            ids
-          })
-        }
-      );
+      response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
+        method: "POST",
+        headers: {
+          Authorization: key
+        },
+        body: JSON.stringify({
+          ids
+        })
+      });
     }
     return response;
   } catch (e) {
@@ -183,7 +179,7 @@ export const livePostTransaction = async ({
     throw new PostTransactionError("No ID was provided");
   }
   try {
-    const response = await fetchWithValidatorWithTimeOut(
+    const response = await fetchWithValidator(
       PostTransactionResult,
       `${endpoint}/transactions`,
       {

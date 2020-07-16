@@ -1,6 +1,7 @@
 import { fold } from "fp-ts/lib/Either";
-import { Type, number } from "io-ts";
+import { Type } from "io-ts";
 import { reporter } from "io-ts-reporters";
+import { TimeoutMS } from "../types";
 
 export class ValidationError extends Error {
   constructor(message: string) {
@@ -17,7 +18,7 @@ export class TimeoutError extends Error {
 }
 
 async function processTimeout<T>(
-  ms: number,
+  ms: TimeoutMS,
   promise: Promise<T>,
   errorMessage?: string
 ): Promise<T> {
@@ -28,12 +29,15 @@ async function processTimeout<T>(
     resolve(await promise);
   });
 }
-
+// If timeout
+// true => timeout duration for fetch request will be set as env var.
+// false => usual fetch request is done.
+// TimeoutMS (eg. 10) => timeout duration for fetch request will be set as given val in milliseconds.
 export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
   init?: RequestInit,
-  timeout: boolean | number = false
+  timeout: boolean | TimeoutMS = false
 ): Promise<T> {
   let response;
   if (timeout) {
