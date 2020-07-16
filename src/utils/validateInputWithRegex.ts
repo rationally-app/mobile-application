@@ -8,7 +8,6 @@ export const validateAndCleanId = (
   inputId: string,
   idRegex: string | undefined
 ): string => {
-  console.log("regex:", idRegex);
   if (!idRegex)
     throw new EnvVersionError(
       "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
