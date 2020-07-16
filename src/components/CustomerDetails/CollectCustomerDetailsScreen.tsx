@@ -115,14 +115,17 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     let nric: string;
     try {
       setIsScanningEnabled(false);
-      if (features?.id.validation === "NRIC") {
-        nric = validateAndCleanNric(input);
-      } else if (features?.id.validation === "REGEX") {
-        const idRegex = features?.id.validationRegex;
-        nric = validateAndCleanId(input, idRegex);
-      } else {
-        // Remove validation
-        nric = input;
+      switch (features?.id.validation) {
+        case "NRIC":
+          nric = validateAndCleanNric(input);
+          break;
+        case "REGEX":
+          const idRegex = features?.id.validationRegex;
+          nric = validateAndCleanId(input, idRegex);
+          break;
+        default:
+          // Remove validation
+          nric = input;
       }
       Vibration.vibrate(50);
       navigation.navigate("CustomerQuotaScreen", { nric });
