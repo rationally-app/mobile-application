@@ -1,7 +1,9 @@
-import jsonfile from "jsonfile";
-const file = "version.json";
+"use strict";
 
-const data = jsonfile.readFileSync(file);
+const fs = require("fs");
+const file = "package.json";
+
+const data = JSON.parse(fs.readFileSync(file));
 data.jsBuildNumber = data.jsBuildNumber + 1;
 
-jsonfile.writeFileSync(file, data, { spaces: 2, EOL: "\r\n" });
+fs.writeFileSync(file, JSON.stringify(data, null, 2));

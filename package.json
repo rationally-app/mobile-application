@@ -14,11 +14,7 @@
     "lint:fix": "npm run lint -- --fix",
     "hooks:pre-merge-commit": "node ./scripts/incrementBuildVersion.js"
   },
-  "husky": {
-    "hooks": {
-      "pre-merge-commit": "npm run hooks:pre-merge-commit"
-    }
-  },
+  "jsBuildNumber": 1,
   "dependencies": {
     "@types/lodash": "^4.14.158",
     "date-fns": "^2.11.1",
@@ -34,7 +30,6 @@
     "io-ts": "^2.2.1",
     "io-ts-reporters": "^1.0.0",
     "io-ts-types": "^0.5.6",
-    "jsonfile": "^6.0.1",
     "lodash": "^4.17.15",
     "react": "16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",

@@ -18,7 +18,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButtons } from "../../context/drawer";
 import Constants from "expo-constants";
-import version from "../../../version.json";
+import packageJson from "../../../package.json";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -186,7 +186,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </BottomNavigationLink>
         <View style={{ marginTop: size(3), ...styles.bottomNavContainerLink }}>
           <AppText style={{ color: color("blue", 50), fontSize: fontSize(-4) }}>
-            {`Version: ${Constants.manifest.version}/ ${version.jsBuildNumber}`}
+            {`Version: ${Constants.manifest.version}/ ${packageJson.jsBuildNumber}`}
           </AppText>
         </View>
       </View>
