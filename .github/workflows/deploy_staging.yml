@@ -28,8 +28,8 @@ jobs:
             ${{ runner.os }}-
       - name: Install Packages
         run: npm install
-      # - name: Typecheck
-      #   run: npx --no-install tsc --noEmit
+      - name: Typecheck
+        run: npx --no-install tsc --noEmit
       - name: Check Lint
         run: npm run lint
       - name: Test
