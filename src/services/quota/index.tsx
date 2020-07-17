@@ -127,7 +127,6 @@ export const liveGetQuota = async (
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
-
     if (e.message === "User is not eligible") {
       throw new NotEligibleError(e.message);
     }

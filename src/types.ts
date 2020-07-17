@@ -154,4 +154,3 @@ export type Voucher = {
   serial: string;
   denomination: number;
 };
-export type TimeoutMS = number;
