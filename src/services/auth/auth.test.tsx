@@ -5,9 +5,8 @@ jest.mock("sentry-expo");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
-const anyGlobal: any = global;
 const mockFetch = jest.fn();
-anyGlobal.fetch = mockFetch;
+jest.spyOn(global, "fetch").mockImplementation(mockFetch);
 
 const code = "ABC-123";
 const phone = "+6591234567";

@@ -18,6 +18,3 @@ NativeModules.RNCNetInfo = {
   addListener: jest.fn(),
   removeListeners: jest.fn()
 };
-
-const globalAny: any = global;
-globalAny.alert = jest.fn(); // eslint-disable-line jest/prefer-spy-on

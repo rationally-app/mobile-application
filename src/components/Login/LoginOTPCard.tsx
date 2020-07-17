@@ -6,7 +6,6 @@ import { size, fontSize } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
-import { NavigationProps } from "../../types";
 import { useAuthenticationContext } from "../../context/auth";
 import { validateOTP, requestOTP } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
   }
 });
 
-interface LoginOTPCard extends NavigationProps {
+interface LoginOTPCard {
   resetStage: () => void;
   mobileNumber: string;
   codeKey: string;
