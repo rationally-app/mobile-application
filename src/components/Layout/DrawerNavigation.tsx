@@ -186,7 +186,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </BottomNavigationLink>
         <View style={{ marginTop: size(3), ...styles.bottomNavContainerLink }}>
           <AppText style={{ color: color("blue", 50), fontSize: fontSize(-4) }}>
-            {`Version: ${Constants.manifest.version}/ ${packageJson.jsBuildNumber}`}
+            {`Version: ${Constants.manifest.version}/ ${packageJson.appBuildVersion}`}
           </AppText>
         </View>
       </View>

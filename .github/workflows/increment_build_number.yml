@@ -33,12 +33,12 @@ jobs:
       - name: Edit Build Number
         run: npm run hooks:pre-merge-commit
       - name: Retreive Build Number
-        id: jsBuildNumber
+        id: appBuildVersion
         run: |
-          OUTPUT=$(jq -r .jsBuildNumber package.json)
-          echo "::set-output name=jsBuildNumber::$OUTPUT"
+          OUTPUT=$(jq -r .appBuildVersion package.json)
+          echo "::set-output name=appBuildVersion::$OUTPUT"
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "ci: increment build number to ${{ steps.jsBuildNumber.outputs.jsBuildNumber }}"
+          commit_message: "ci: increment AppBuildVersion to ${{ steps.appBuildVersion.outputs.appBuildVersion }}"
           branch: ${{ github.event.pull_request.head.ref }}

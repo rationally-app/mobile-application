@@ -12,9 +12,9 @@
     "eject": "expo eject",
     "lint": "eslint . --ext .ts,.tsx,.mdx --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
-    "hooks:pre-merge-commit": "node ./scripts/incrementBuildVersion.js"
+    "hooks:pre-merge-commit": "npx ts-node ./scripts/incrementAppBuildVersion.ts package.json"
   },
-  "jsBuildNumber": 1,
+  "appBuildVersion": 1,
   "dependencies": {
     "@types/lodash": "^4.14.158",
     "date-fns": "^2.11.1",
