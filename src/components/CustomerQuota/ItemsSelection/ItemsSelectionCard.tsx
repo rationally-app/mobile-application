@@ -12,8 +12,8 @@ import { Item } from "./Item";
 import { useProductContext } from "../../../context/products";
 
 interface ItemsSelectionCard {
-  nrics: string[];
-  addNric: (nric: string) => void;
+  ids: string[];
+  addId: (id: string) => void;
   isLoading: boolean;
   checkoutCart: () => void;
   onCancel: () => void;
@@ -22,8 +22,8 @@ interface ItemsSelectionCard {
 }
 
 export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
-  nrics,
-  addNric,
+  ids,
+  addId,
   isLoading,
   checkoutCart,
   onCancel,
@@ -36,8 +36,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   return (
     <View>
       <CustomerCard
-        nrics={nrics}
-        onAddNric={
+        ids={ids}
+        onAddId={
           getFeatures()?.TRANSACTION_GROUPING
             ? () => setIsAddUserModalVisible(true)
             : undefined
@@ -96,8 +96,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <AddUserModal
         isVisible={isAddUserModalVisible}
         setIsVisible={setIsAddUserModalVisible}
-        nrics={nrics}
-        addNric={addNric}
+        ids={ids}
+        addId={addId}
       />
     </View>
   );

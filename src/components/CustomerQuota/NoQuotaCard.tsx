@@ -85,7 +85,7 @@ const NoPreviousTransactionTitle: FunctionComponent = () => (
 );
 
 interface NoQuotaCard {
-  nrics: string[];
+  ids: string[];
   cart: Cart;
   onCancel: () => void;
 }
@@ -96,7 +96,7 @@ interface NoQuotaCard {
  * Precondition: Only rendered when all items in cart have max quantity of 0
  */
 export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
-  nrics,
+  ids,
   cart,
   onCancel
 }) => {
@@ -131,7 +131,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   return (
     <View>
-      <CustomerCard nrics={nrics} headerBackgroundColor={color("red", 60)}>
+      <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
         <View
           style={[
             sharedStyles.resultWrapper,

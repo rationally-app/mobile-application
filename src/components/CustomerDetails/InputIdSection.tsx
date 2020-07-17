@@ -39,18 +39,18 @@ const styles = StyleSheet.create({
   }
 });
 
-interface InputNricSection {
+interface InputIdSection {
   openCamera: () => void;
-  nricInput: string;
-  setNricInput: (nric: string) => void;
-  submitNric: () => void;
+  idInput: string;
+  setIdInput: (id: string) => void;
+  submitId: () => void;
 }
 
-export const InputNricSection: FunctionComponent<InputNricSection> = ({
+export const InputIdSection: FunctionComponent<InputIdSection> = ({
   openCamera,
-  nricInput,
-  setNricInput,
-  submitNric
+  idInput,
+  setIdInput,
+  submitId
 }) => {
   return (
     <>
@@ -74,14 +74,14 @@ export const InputNricSection: FunctionComponent<InputNricSection> = ({
         <View style={styles.inputWrapper}>
           <InputWithLabel
             label="Enter ID number"
-            value={nricInput}
-            onChange={({ nativeEvent: { text } }) => setNricInput(text)}
-            onSubmitEditing={submitNric}
+            value={idInput}
+            onChange={({ nativeEvent: { text } }) => setIdInput(text)}
+            onSubmitEditing={submitId}
             autoCompleteType="off"
             autoCorrect={false}
           />
         </View>
-        <SecondaryButton text="Check" onPress={submitNric} />
+        <SecondaryButton text="Check" onPress={submitId} />
       </View>
     </>
   );

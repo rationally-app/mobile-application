@@ -26,7 +26,7 @@ import { IdScanner } from "../IdScanner/IdScanner";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { validateAndCleanNric } from "../../utils/validateNric";
 import { validateAndCleanId } from "../../utils/validateInputWithRegex";
-import { InputNricSection } from "./InputNricSection";
+import { InputIdSection } from "./InputIdSection";
 import { AppHeader } from "../Layout/AppHeader";
 import * as Sentry from "sentry-expo";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
@@ -70,7 +70,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
-  const [nricInput, setNricInput] = useState("");
+  const [idInput, setIdInput] = useState("");
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
@@ -112,24 +112,24 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   }, [shouldShowCamera]);
 
   const onCheck = async (input: string): Promise<void> => {
-    let nric: string;
+    let id: string;
     try {
       setIsScanningEnabled(false);
       switch (features?.id.validation) {
         case "NRIC":
-          nric = validateAndCleanNric(input);
+          id = validateAndCleanNric(input);
           break;
         case "REGEX":
           const idRegex = features?.id.validationRegex;
-          nric = validateAndCleanId(input, idRegex);
+          id = validateAndCleanId(input, idRegex);
           break;
         default:
           // Remove validation
-          nric = input;
+          id = input;
       }
       Vibration.vibrate(50);
-      navigation.navigate("CustomerQuotaScreen", { nric });
-      setNricInput("");
+      navigation.navigate("CustomerQuotaScreen", { id });
+      setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
       if (e instanceof EnvVersionError) {
@@ -175,11 +175,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             <AppText>
               Check the number of item(s) eligible for redemption
             </AppText>
-            <InputNricSection
+            <InputIdSection
               openCamera={() => setShouldShowCamera(true)}
-              nricInput={nricInput}
-              setNricInput={setNricInput}
-              submitNric={() => onCheck(nricInput)}
+              idInput={idInput}
+              setIdInput={setIdInput}
+              submitId={() => onCheck(idInput)}
             />
           </Card>
           <FeatureToggler feature="HELP_MODAL">
