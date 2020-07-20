@@ -46,8 +46,10 @@ jobs:
           echo "::set-output name=releaseChannel::$RELEASE_CHANNEL"
       - name: Install Packages
         run: npm install
+      - name: Echo Build Number
+        run: echo Build number is $GITHUB_RUN_NUMBER
       - name: Expo Publish Channel
-        run: expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
+        run: APP_BUILD_VERSION=$GITHUB_RUN_NUMBER expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
   create_release:
     name: Create Release
     needs: deploy_prod
