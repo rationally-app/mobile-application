@@ -27,12 +27,14 @@ interface InvalidCard {
   title: string | ReactElement;
   details: string;
   closeModal: () => void;
+  ctaButtonText?: string;
 }
 
 export const InvalidCard: FunctionComponent<InvalidCard> = ({
   title,
   details,
-  closeModal
+  closeModal,
+  ctaButtonText = "Continue scanning"
 }) => {
   return (
     <Card style={styles.card}>
@@ -47,7 +49,7 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
       <AppText style={styles.details}>{details}</AppText>
       <DarkButton
         fullWidth={true}
-        text="Continue scanning"
+        text={ctaButtonText}
         onPress={() => {
           closeModal();
         }}

@@ -17,6 +17,7 @@ import { NotEligibleError } from "../../../services/quota";
 import { AppText } from "../../Layout/AppText";
 import { format, formatDistance } from "date-fns";
 import { sharedStyles } from "./sharedStyles";
+import { LimitReachedError } from "../../../utils/validateVoucherCode";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -95,6 +96,15 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
       });
     });
     return null;
+  } else if (error instanceof LimitReachedError) {
+    card = (
+      <InvalidCard
+        title="Scan limit reached"
+        details={error.message}
+        ctaButtonText="OK"
+        closeModal={onExit}
+      />
+    );
   } else if (error instanceof NotEligibleError) {
     card = (
       <InvalidCard

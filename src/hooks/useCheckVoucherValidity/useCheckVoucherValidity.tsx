@@ -1,5 +1,8 @@
 import { useState, useCallback } from "react";
-import { validateVoucherCode } from "../../utils/validateVoucherCode";
+import {
+  validateVoucherCode,
+  LimitReachedError
+} from "../../utils/validateVoucherCode";
 import { getQuota } from "../../services/quota";
 import { Quota, Voucher } from "../../types";
 import { differenceInSeconds, compareDesc } from "date-fns";
@@ -93,7 +96,11 @@ export const useCheckVoucherValidity = (
           const serialArr = vouchers.map(voucher => voucher.serial);
           validateVoucherCode(serial, serialArr);
         } catch (e) {
-          setError(new ScannerError(e.message));
+          if (e instanceof LimitReachedError) {
+            setError(e);
+          } else {
+            setError(new ScannerError(e.message));
+          }
           return;
         }
         // Send to backend to check if valid
