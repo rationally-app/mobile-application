@@ -45,7 +45,11 @@ export async function fetchWithValidator<T, O, I>(
   let response;
   if (timeout) {
     const timeoutVal =
-      typeof timeout === "number" ? timeout : process.env.API_CALL_TIMEOUT;
+      typeof timeout === "number"
+        ? timeout
+        : process.env.API_CALL_TIMEOUT
+        ? parseInt(process.env.API_CALL_TIMEOUT)
+        : 60000;
     response = await processTimeout<Response>(
       timeoutVal,
       fetch(requestInfo, init),
