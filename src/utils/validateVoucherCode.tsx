@@ -1,8 +1,8 @@
-export const voucherCodeRegex = /^\d{9}$/;
-const maxNumVouchersPerTransaction = 200;
+const VOUCHER_CODE_REGEX = /^\d{9}$/;
+const MAX_NUM_VOUCHERS_PER_TRANSACTION = 200;
 
 export const validate = (voucherCode: string): boolean => {
-  return voucherCode.match(voucherCodeRegex) !== null;
+  return voucherCode.match(VOUCHER_CODE_REGEX) !== null;
 };
 
 export const checkDuplicate = (
@@ -21,7 +21,7 @@ export class LimitReachedError extends Error {
 
 export const checkLimitReached = (
   lengthOfVoucherCodes: number,
-  limit = maxNumVouchersPerTransaction
+  limit = MAX_NUM_VOUCHERS_PER_TRANSACTION
 ): boolean => {
   return lengthOfVoucherCodes > limit;
 };

@@ -1,6 +1,6 @@
 // Thanks to https://gist.github.com/kyrene-chew/6f275325335ab27895beb7a9a7b4c1cb
 
-export const nricRegex = /^(\D)(\d{7})(\D)$/;
+const NRIC_REGEX = /^(\D)(\d{7})(\D)$/;
 
 export const validate = (nricInput: string): boolean => {
   // validation rules
@@ -13,12 +13,12 @@ export const validate = (nricInput: string): boolean => {
   const nric = nricInput.toUpperCase();
 
   // returns false if it false basic validation
-  if (!nricRegex.exec(nric)) {
+  if (!NRIC_REGEX.exec(nric)) {
     return false;
   }
 
   // get nric type
-  const nricArr = nric.match(nricRegex);
+  const nricArr = nric.match(NRIC_REGEX);
   if (!nricArr) return false;
   const nricType = nricArr[1];
 
@@ -53,7 +53,7 @@ export const validate = (nricInput: string): boolean => {
 export const validateAndCleanNric = (inputNric: string): string => {
   const isNricValid = validate(inputNric);
   if (!isNricValid) throw new Error("Invalid ID number");
-  const cleanedNric = inputNric.match(nricRegex)?.[0].toUpperCase();
+  const cleanedNric = inputNric.match(NRIC_REGEX)?.[0].toUpperCase();
   if (!cleanedNric) throw new Error("Invalid ID number");
   return cleanedNric;
 };
