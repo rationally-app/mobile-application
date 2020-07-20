@@ -11,7 +11,7 @@ import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { LoginStage } from "./types";
-import { requestOTP } from "../../services/auth";
+import { requestOTP, LoginError } from "../../services/auth";
 import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 import {
   createFullNumber,
@@ -73,10 +73,14 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       setMobileNumber(fullNumber);
       setLoginStage("OTP");
     } catch (e) {
+      if (e instanceof LoginError) {
+        Alert.alert("Error", e.message, [{ text: "OK" }], {
+          cancelable: false
+        });
+      } else {
+        alert(e);
+      }
       setIsLoading(false);
-      Alert.alert("Error", e.message || e, [{ text: "OK" }], {
-        cancelable: false
-      });
     }
   };
 
