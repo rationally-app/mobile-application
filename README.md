@@ -38,6 +38,6 @@ SENTRY_ORG
 SENTRY_PROJECT
 ```
 
-## Deployed Application
+## Deployed Staging Application
 
-![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/@musket/rationally)
+![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/@supplyallytest/rationally?release-channel=staging)

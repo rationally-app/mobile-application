@@ -7,7 +7,7 @@ import { useLogout } from "./useLogout";
 
 const ABOUT_TO_EXPIRE_SECONDS = 30 * 60;
 const MAX_INTERVAL_SECONDS = 60; // refreshes countdown at most every minute
-let timeout = 0;
+let timeout: NodeJS.Timeout;
 
 export const useValidateExpiry = (
   navigationDispatch: NavigationDispatch | undefined

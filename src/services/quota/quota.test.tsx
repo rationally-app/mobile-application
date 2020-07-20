@@ -10,9 +10,8 @@ jest.mock("sentry-expo");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
-const anyGlobal: any = global;
 const mockFetch = jest.fn();
-anyGlobal.fetch = mockFetch;
+jest.spyOn(global, "fetch").mockImplementation(mockFetch);
 
 const key = "KEY";
 const endpoint = "https://myendpoint.com";

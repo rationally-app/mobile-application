@@ -79,7 +79,14 @@ const getProduct = (category: string): Policy | undefined =>
 
 storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
   <ProductContext.Provider
-    value={{ products, getProduct, setProducts: () => null }}
+    value={{
+      products,
+      getProduct,
+      setProducts: () => null,
+      features: undefined,
+      getFeatures: () => undefined,
+      setFeatures: () => null
+    }}
   >
     <View style={{ margin: size(3) }}>
       <CheckoutSuccessCard
