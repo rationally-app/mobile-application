@@ -97,14 +97,20 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
     });
     return null;
   } else if (error instanceof LimitReachedError) {
-    card = (
-      <InvalidCard
-        title="Scan limit reached"
-        details={error.message}
-        ctaButtonText="OK"
-        closeModal={onExit}
-      />
+    Alert.alert(
+      "Scan limit reached",
+      error.message,
+      [
+        {
+          text: "OK",
+          onPress: onExit
+        }
+      ],
+      {
+        onDismiss: onExit // for android outside alert clicks
+      }
     );
+    card = null;
   } else if (error instanceof NotEligibleError) {
     card = (
       <InvalidCard
