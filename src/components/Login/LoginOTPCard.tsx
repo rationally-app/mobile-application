@@ -37,22 +37,19 @@ const styles = StyleSheet.create({
 
 interface LoginOTPCard {
   resetStage: () => void;
-  setLoginStage: Dispatch<SetStateAction<LoginStage>>;
-  setLastResendWarningMessage: Dispatch<SetStateAction<string>>;
   mobileNumber: string;
   codeKey: string;
   endpoint: string;
+  setLastResendWarningMessage: Dispatch<SetStateAction<string>>;
   lastResendWarningMessage: string;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   resetStage,
-  navigation,
-  setLoginStage,
-  setLastResendWarningMessage,
   mobileNumber,
   codeKey,
   endpoint,
+  setLastResendWarningMessage,
   lastResendWarningMessage
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +80,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   const checkIfLockedOut = (e: LoginError): void => {
     if (e.message && typeof e.message === "string") {
-      if (e.message.includes("Please wait")) setLoginStage("MOBILE_NUMBER");
+      if (e.message.includes("Please wait")) resetStage();
     }
   };
 
@@ -121,25 +118,26 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         alert(
           "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
         );
+      } else if (e instanceof LoginError) {
+        Alert.alert(
+          "Error",
+          e.message,
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                if (e instanceof LoginError) checkIfLockedOut(e);
+              }
+            }
+          ],
+          {
+            cancelable: false
+          }
+        );
       } else {
         alert(e);
       }
       setIsLoading(false);
-      Alert.alert(
-        "Error",
-        e.message || e,
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              if (e instanceof LoginError) checkIfLockedOut(e);
-            }
-          }
-        ],
-        {
-          cancelable: false
-        }
-      );
     }
   };
 

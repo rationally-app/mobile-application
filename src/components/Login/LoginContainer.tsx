@@ -310,7 +310,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           </FeatureToggler>
         </View>
       </KeyboardAvoidingScrollView>
-      <Credits style={{ bottom: size(3) }} />
       {shouldShowCamera && (
         <IdScanner
           onBarCodeScanned={onBarCodeScanned}
