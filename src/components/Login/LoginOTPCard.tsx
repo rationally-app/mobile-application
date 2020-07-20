@@ -79,9 +79,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   }, [resendDisabledTime]);
 
   const checkIfLockedOut = (e: LoginError): void => {
-    if (e.message && typeof e.message === "string") {
-      if (e.message.includes("Please wait")) resetStage();
-    }
+    if (e.message.includes("Please wait")) resetStage();
   };
 
   const onValidateOTP = async (otp: string): Promise<void> => {
@@ -126,7 +124,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
             {
               text: "OK",
               onPress: () => {
-                if (e instanceof LoginError) checkIfLockedOut(e);
+                checkIfLockedOut(e);
               }
             }
           ],
@@ -155,22 +153,26 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       setIsResending(false);
       setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
     } catch (e) {
-      setIsResending(false);
-      Alert.alert(
-        "Error",
-        e.message || e,
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              if (e instanceof LoginError) checkIfLockedOut(e);
+      if (e instanceof LoginError) {
+        Alert.alert(
+          "Error",
+          e.message,
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                checkIfLockedOut(e);
+              }
             }
+          ],
+          {
+            cancelable: false
           }
-        ],
-        {
-          cancelable: false
-        }
-      );
+        );
+      } else {
+        alert(e);
+      }
+      setIsResending(false);
     }
   };
 
