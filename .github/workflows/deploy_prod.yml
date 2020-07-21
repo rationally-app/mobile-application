@@ -39,7 +39,7 @@ jobs:
           expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v2.x
-      - name: Generate Release Channel
+      - name: Generate Release Channel # Release Channels are named prod-<Major Release>, i.e. prod-1, prod-3
         id: releaseChannel
         run: |
           RELEASE_CHANNEL=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
@@ -60,7 +60,7 @@ jobs:
         uses: metcalfc/changelog-generator@v0.4.0
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
-          base-ref: "prod-0" #need a tag "prod-0 for setup, please remove after setup"
+          # base-ref: "prod-0" #need a tag "prod-0 for setup, please remove after setup"
       - name: Creating Release
         uses: ncipollo/release-action@v1
         with:
@@ -90,7 +90,7 @@ jobs:
           OUTPUT="$(echo $(expo build:android) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
           echo "::set-output name=assetUrl::$OUTPUT"
       - name: Download APK Asset
-        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.android.outputs.assetURL }}
+        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.android.outputs.assetUrl }}
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
@@ -118,7 +118,7 @@ jobs:
           OUTPUT="$(echo $(expo build:ios) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
           echo "::set-output name=assetUrl::$OUTPUT"
       - name: Download IPA Asset
-        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.ios.outputs.assetURL }}
+        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.ios.outputs.assetUrl }}
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
