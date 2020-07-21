@@ -4,10 +4,14 @@ import { EnvVersionError } from "../services/envVersion";
 
 export const validateAndCleanId = (
   inputId: string,
-  idValidation?: string | undefined,
+  idValidation: string | undefined,
   idRegex?: string | undefined
 ): string => {
   let id: string;
+  if (!idValidation)
+    throw new EnvVersionError(
+      "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+    );
   switch (idValidation) {
     case "NRIC":
       if (idRegex)
