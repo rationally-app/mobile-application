@@ -3,9 +3,9 @@ import { EnvVersionError } from "../services/envVersion";
 
 describe("throw EnvVersionError", () => {
   it("should throw EnvVersionError if validation is REGEX but validationRegex is missing", () => {
+    expect.assertions(1);
     const idRegexValidation = "REGEX";
     const undefinedRegex = undefined;
-    expect.assertions(1);
     expect(() =>
       validateAndCleanId("100000001", idRegexValidation, undefinedRegex)
     ).toThrow(
@@ -16,9 +16,9 @@ describe("throw EnvVersionError", () => {
   });
 
   it("should throw EnvVersionError if validation is NRIC, but validationRegex exists", () => {
+    expect.assertions(1);
     const idNRICValidation = "NRIC";
     const validRegex = "^[a-zA-Z0-9-_ ]+$";
-    expect.assertions(1);
     expect(() =>
       validateAndCleanId("100000001", idNRICValidation, validRegex)
     ).toThrow(
