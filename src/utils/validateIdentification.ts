@@ -4,7 +4,7 @@ import { EnvVersionError } from "../services/envVersion";
 
 export const validateAndCleanId = (
   inputId: string,
-  idValidation: string | undefined,
+  idValidation?: string | undefined,
   idRegex?: string | undefined
 ): string => {
   let id: string;
