@@ -178,6 +178,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
                 idInput={idInput}
                 setIdInput={setIdInput}
                 submitId={() => onCheck(idInput)}
+                idType={features?.id.type}
               />
             </Card>
           </View>

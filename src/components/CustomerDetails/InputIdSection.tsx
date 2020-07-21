@@ -44,13 +44,15 @@ interface InputIdSection {
   idInput: string;
   setIdInput: (id: string) => void;
   submitId: () => void;
+  idType: "STRING" | "NUMBER" | undefined;
 }
 
 export const InputIdSection: FunctionComponent<InputIdSection> = ({
   openCamera,
   idInput,
   setIdInput,
-  submitId
+  submitId,
+  idType
 }) => {
   return (
     <>
@@ -79,6 +81,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
             onSubmitEditing={submitId}
             autoCompleteType="off"
             autoCorrect={false}
+            keyboardType={idType === "NUMBER" ? "numeric" : "default"}
           />
         </View>
         <SecondaryButton text="Check" onPress={submitId} />
