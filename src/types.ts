@@ -175,3 +175,7 @@ export const CampaignConfig = t.type({
 
 export type CampaignFeatures = t.TypeOf<typeof NewFeatures>;
 export type CampaignConfig = t.TypeOf<typeof CampaignConfig>;
+
+export type ConfigHashes = {
+  [config in keyof CampaignConfig]?: string;
+};
