@@ -4,16 +4,18 @@ import { EnvVersionError } from "../services/envVersion";
 describe("validate", () => {
   const alphanumericRegex = "^[a-zA-Z0-9-_ ]+$";
   it("should return true for alphanumeric regex", () => {
-    expect.assertions(2);
+    expect.assertions(4);
     expect(validate("100000001", alphanumericRegex)).toBe(true);
-    expect(validate("202006171", alphanumericRegex)).toBe(true);
+    expect(validate("1234-ABCD", alphanumericRegex)).toBe(true);
+    expect(validate("ABCD_1234", alphanumericRegex)).toBe(true);
+    expect(validate("ABCD 1234", alphanumericRegex)).toBe(true);
   });
 
   it("should return false for invalid alphanumeric regex", () => {
     expect.assertions(3);
     expect(validate("", alphanumericRegex)).toBe(false);
-    expect(validate("123123/", alphanumericRegex)).toBe(false);
-    expect(validate("abc/", alphanumericRegex)).toBe(false);
+    expect(validate("123abc/", alphanumericRegex)).toBe(false);
+    expect(validate("123abc!", alphanumericRegex)).toBe(false);
   });
 });
 
