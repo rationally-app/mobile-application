@@ -173,4 +173,5 @@ export const CampaignConfig = t.type({
   features: t.union([NewFeatures, t.null])
 });
 
+export type CampaignFeatures = t.TypeOf<typeof NewFeatures>;
 export type CampaignConfig = t.TypeOf<typeof CampaignConfig>;

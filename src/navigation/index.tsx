@@ -9,6 +9,7 @@ import { ImportantMessageContextProvider } from "../context/importantMessage";
 import { Content } from "./Content";
 import { Providers } from "../context/composeProviders";
 import { DrawerContextProvider } from "../context/drawer";
+import { CampaignConfigContextProvider } from "../context/campaignConfig";
 
 const App = (): ReactElement => {
   return (
@@ -17,6 +18,7 @@ const App = (): ReactElement => {
         <Providers
           providers={[
             ConfigContextProvider,
+            CampaignConfigContextProvider,
             ProductContextProvider,
             AuthenticationContextProvider,
             HelpModalContextProvider,
