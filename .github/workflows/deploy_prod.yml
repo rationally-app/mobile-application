@@ -85,12 +85,21 @@ jobs:
       - name: Install Packages
         run: npm install
       - name: Build Android Release
-        id: android
+        id: androidOutput
         run: |
-          OUTPUT="$(echo $(expo build:android) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
-          echo "::set-output name=assetUrl::$OUTPUT"
+          BUILD_OUTPUT=$(echo $(expo build:android --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }}))
+          echo The build log: $BUILD_OUTPUT
+          echo "::set-output name=buildOutput::$BUILD_OUTPUT"
+      - name: Parse Asset URL
+        id: androidUrl
+        env:
+          BUILD_OUTPUT: ${{ steps.androidOutput.outputs.buildOutput }}
+        run: |
+          ASSET_URL=$(echo $BUILD_OUTPUT | tail | egrep -o 'https?://expo\.io/artifacts/[^ ]+')
+          echo The android url is $ASSET_URL
+          echo "::set-output name=assetUrl::$ASSET_URL"
       - name: Download APK Asset
-        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.android.outputs.assetUrl }}
+        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.androidUrl.outputs.assetUrl }}
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
@@ -113,12 +122,21 @@ jobs:
       - name: Install Packages
         run: npm install
       - name: Build IOS Release
-        id: ios
+        id: iosOutput
         run: |
-          OUTPUT="$(echo $(expo build:ios) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
-          echo "::set-output name=assetUrl::$OUTPUT"
+          BUILD_OUTPUT=$(echo $(expo build:ios --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }}))
+          echo The build log: $BUILD_OUTPUT
+          echo "::set-output name=buildOutput::$BUILD_OUTPUT"
+      - name: Parse Asset URL
+        id: iosUrl
+        env:
+          BUILD_OUTPUT: ${{ steps.iosOutput.outputs.buildOutput }}
+        run: |
+          ASSET_URL=$(echo $BUILD_OUTPUT | tail | egrep -o 'https?://expo\.io/artifacts/[^ ]+')
+          echo The IOS url is $ASSET_URL
+          echo "::set-output name=assetUrl::$ASSET_URL"
       - name: Download IPA Asset
-        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.ios.outputs.assetUrl }}
+        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.iosUrl.outputs.assetUrl }}
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
