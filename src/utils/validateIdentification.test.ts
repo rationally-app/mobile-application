@@ -16,14 +16,21 @@ describe("validate and clean IDs", () => {
       validateAndCleanId("abcd_1234", idRegexValidation, alphanumericRegex)
     ).toBe("ABCD_1234");
   });
-
-  it("should return existing input as ID if validation is missing", () => {
-    expect.assertions(1);
-    expect(validateAndCleanId("abcd_1234")).toBe("abcd_1234");
-  });
 });
 
 describe("throw EnvVersionError", () => {
+  it("should throw EnvVersionError if idValidation is missing or undefined", () => {
+    expect.assertions(1);
+    const undefinedIdValidation = undefined;
+    expect(() =>
+      validateAndCleanId("100000001", undefinedIdValidation)
+    ).toThrow(
+      new EnvVersionError(
+        "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+      )
+    );
+  });
+
   it("should throw EnvVersionError if validation is REGEX but validationRegex is missing", () => {
     expect.assertions(1);
     const idRegexValidation = "REGEX";
