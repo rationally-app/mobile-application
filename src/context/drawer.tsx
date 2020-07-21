@@ -6,19 +6,19 @@ import React, {
   useCallback
 } from "react";
 
-export interface DrawerButtons {
+export interface DrawerButton {
   icon: string;
   label: string;
   onPress: () => void;
 }
 
 interface DrawerContext {
-  drawerButtons: DrawerButtons[]; // context consumers should never get an undefined config
-  setDrawerButtons: (buttons: DrawerButtons[]) => void;
+  drawerButtons: DrawerButton[]; // context consumers should never get an undefined config
+  setDrawerButtons: (buttons: DrawerButton[]) => void;
   clearDrawerButtons: () => void;
 }
 
-const DEFAULT_BUTTONS: DrawerButtons[] = [];
+const DEFAULT_BUTTONS: DrawerButton[] = [];
 
 const DrawerContext = createContext<DrawerContext>({
   drawerButtons: DEFAULT_BUTTONS,
@@ -30,7 +30,7 @@ export const useDrawerContext = (): DrawerContext =>
   useContext<DrawerContext>(DrawerContext);
 
 export const DrawerContextProvider: FunctionComponent = ({ children }) => {
-  const [drawerButtons, setDrawerButtons] = useState<DrawerButtons[]>(
+  const [drawerButtons, setDrawerButtons] = useState<DrawerButton[]>(
     DEFAULT_BUTTONS
   );
 

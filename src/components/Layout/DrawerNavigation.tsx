@@ -16,7 +16,7 @@ import { AppText } from "./AppText";
 import { size, color, fontSize } from "../../common/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
-import { useDrawerContext, DrawerButtons } from "../../context/drawer";
+import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { APP_BUILD_VERSION } from "../../config";
 
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   navLinkText: {
-    color: color("blue", 50),
     fontFamily: "brand-bold"
   },
   bottomNavContainerLink: {
@@ -42,6 +41,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: size(4),
     paddingVertical: size(1)
+  },
+  bottomVersionText: {
+    paddingHorizontal: size(4),
+    marginTop: size(3),
+    paddingVertical: size(1),
+    fontSize: fontSize(-4)
   },
   bottomNavContainerText: {
     color: color("blue", 50),
@@ -66,7 +71,7 @@ export const BottomNavigationLink: FunctionComponent<BottomNavigationLink> = ({
   );
 };
 
-export const DrawerButton: FunctionComponent<DrawerButtons> = ({
+export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
   icon,
   label,
   onPress
@@ -98,8 +103,8 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
 
   const onPressLogout = (): void => {
     Alert.alert(
+      "Confirm Logout",
       "Are you sure you want to log out?",
-      "Stay logged in to change your scanning location.",
       [
         {
           text: "Cancel"
@@ -119,46 +124,42 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   };
 
   return (
-    <SafeAreaView
-      style={styles.container}
-      forceInset={{ top: "always", horizontal: "never" }}
-    >
-      <TouchableOpacity
-        onPress={onPressCloseDrawer}
-        style={{
-          position: "absolute",
-          right: size(3),
-          top: size(5),
-          padding: size(1)
-        }}
-      >
-        <MaterialCommunityIcons
-          name="close"
-          size={size(3)}
-          color={color("blue", 50)}
-        />
-      </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
       <View
         style={{
-          marginTop: size(9),
+          marginTop: size(4),
+          paddingRight: size(3),
+          flexDirection: "row-reverse"
+        }}
+      >
+        <TouchableOpacity
+          onPress={onPressCloseDrawer}
+          style={{
+            padding: size(1)
+          }}
+        >
+          <MaterialCommunityIcons
+            name="close"
+            size={size(3)}
+            color={color("blue", 50)}
+          />
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          marginTop: size(3),
           borderTopColor: color("grey", 20),
           borderTopWidth: 1
         }}
       >
         {drawerButtons.map(button => (
-          <DrawerButton {...button} key={button.label} />
+          <DrawerButtonComponent {...button} key={button.label} />
         ))}
-        <TouchableOpacity onPress={onPressLogout}>
-          <View style={styles.navLink}>
-            <MaterialCommunityIcons
-              name="logout"
-              size={size(2.5)}
-              color={color("blue", 50)}
-              style={{ marginRight: size(2) }}
-            />
-            <AppText style={styles.navLinkText}>Logout</AppText>
-          </View>
-        </TouchableOpacity>
+        <DrawerButtonComponent
+          icon="logout"
+          label="Logout"
+          onPress={onPressLogout}
+        />
       </View>
       <View style={{ marginTop: "auto", marginBottom: size(4) }}>
         <BottomNavigationLink onPress={showHelpModal}>
@@ -185,11 +186,9 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         >
           Report vulnerability
         </BottomNavigationLink>
-        <View style={{ marginTop: size(3), ...styles.bottomNavContainerLink }}>
-          <AppText style={{ color: color("blue", 50), fontSize: fontSize(-4) }}>
-            {`Version: ${Constants.manifest.version}/ ${APP_BUILD_VERSION}`}
-          </AppText>
-        </View>
+        <AppText style={styles.bottomVersionText}>
+          {`Version: ${Constants.manifest.version} / ${APP_BUILD_VERSION}`}
+        </AppText>
       </View>
     </SafeAreaView>
   );

@@ -33,17 +33,11 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
     <View style={styles.appHeaderWrapper}>
       <AppName mode={mode} />
       <TouchableOpacity onPress={onPressOpenDrawer}>
-        <View
-          style={{
-            flexDirection: "row"
-          }}
-        >
-          <MaterialCommunityIcons
-            name="menu"
-            size={size(4)}
-            color={color("grey", 0)}
-          />
-        </View>
+        <MaterialCommunityIcons
+          name="menu"
+          size={size(4)}
+          color={color("grey", 0)}
+        />
       </TouchableOpacity>
     </View>
   );
