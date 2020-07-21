@@ -24,8 +24,7 @@ import {
 } from "react-navigation";
 import { IdScanner } from "../IdScanner/IdScanner";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
-import { validateAndCleanNric } from "../../utils/validateNric";
-import { validateAndCleanId } from "../../utils/validateInputWithRegex";
+import { validateAndCleanId } from "../../utils/validateIdentification";
 import { InputIdSection } from "./InputIdSection";
 import { AppHeader } from "../Layout/AppHeader";
 import * as Sentry from "sentry-expo";
@@ -112,21 +111,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   }, [shouldShowCamera]);
 
   const onCheck = async (input: string): Promise<void> => {
-    let id: string;
     try {
       setIsScanningEnabled(false);
-      switch (features?.id.validation) {
-        case "NRIC":
-          id = validateAndCleanNric(input);
-          break;
-        case "REGEX":
-          const idRegex = features?.id.validationRegex;
-          id = validateAndCleanId(input, idRegex);
-          break;
-        default:
-          // Remove validation
-          id = input;
-      }
+      const id = validateAndCleanId(
+        input,
+        features?.id.validation,
+        features?.id.validationRegex
+      );
       Vibration.vibrate(50);
       navigation.navigate("CustomerQuotaScreen", { id });
       setIdInput("");

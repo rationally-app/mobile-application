@@ -10,8 +10,7 @@ import {
 } from "react-native";
 import { InputIdSection } from "../CustomerDetails/InputIdSection";
 import { IdScanner } from "../IdScanner/IdScanner";
-import { validateAndCleanNric } from "../../utils/validateNric";
-import { validateAndCleanId } from "../../utils/validateInputWithRegex";
+import { validateAndCleanId } from "../../utils/validateIdentification";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { color, size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -91,21 +90,13 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   }, [isVisible]);
 
   const onCheck = async (input: string): Promise<void> => {
-    let id: string;
     try {
       setIsScanningEnabled(false);
-      switch (features?.id.validation) {
-        case "NRIC":
-          id = validateAndCleanNric(input);
-          break;
-        case "REGEX":
-          const idRegex = features?.id.validationRegex;
-          id = validateAndCleanId(input, idRegex);
-          break;
-        default:
-          // Remove validation
-          id = input;
-      }
+      const id = validateAndCleanId(
+        input,
+        features?.id.validation,
+        features?.id.validationRegex
+      );
       Vibration.vibrate(50);
       if (ids.indexOf(id) > -1) {
         throw new Error(

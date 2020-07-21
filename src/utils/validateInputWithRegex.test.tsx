@@ -1,4 +1,4 @@
-import { validate, validateAndCleanId } from "./validateInputWithRegex";
+import { validate, validateAndCleanRegexInput } from "./validateInputWithRegex";
 import { EnvVersionError } from "../services/envVersion";
 
 describe("validate", () => {
@@ -21,7 +21,9 @@ describe("throw EnvVersionError", () => {
   const undefinedRegex = undefined;
   it("should throw EnvVersionError if validationRegex is missing", () => {
     expect.assertions(1);
-    expect(() => validateAndCleanId("100000001", undefinedRegex)).toThrow(
+    expect(() =>
+      validateAndCleanRegexInput("100000001", undefinedRegex)
+    ).toThrow(
       new EnvVersionError(
         "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
       )

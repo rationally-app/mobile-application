@@ -4,7 +4,7 @@ export const validate = (id: string, idRegex: string): boolean => {
   return id.match(idRegex) !== null;
 };
 
-export const validateAndCleanId = (
+export const validateAndCleanRegexInput = (
   inputId: string,
   idRegex: string | undefined
 ): string => {
