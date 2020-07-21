@@ -94,7 +94,10 @@ jobs:
       - name: Build Android Release
         id: android
         run: |
-          OUTPUT="$(echo $(expo build:android --release-channel=${{ steps.majorVersion.outputs.majorVersion }}) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
+          BUILD_OUTPUT=$(echo $(expo build:android --release-channel=${{ steps.majorVersion.outputs.majorVersion }})
+          echo "::set-output name=buildOutput::$BUILD_OUTPUT"
+          echo 'The build output is' $buildOutput
+          OUTPUT="$buildOutput | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
           echo "::set-output name=assetUrl::$OUTPUT"
           echo 'The android url is' $assetUrl
       - name: Download APK Asset
