@@ -14,13 +14,9 @@ export const validateAndCleanRegexInput = (
     );
   const isValid = validate(inputId, idRegex);
   if (!isValid)
-    throw new Error(
-      "Please check that the identification is in the correct format"
-    );
+    throw new Error("Please check that the ID is in the correct format");
   const cleanedId = inputId.match(idRegex)?.[0].toUpperCase();
   if (!cleanedId)
-    throw new Error(
-      "Please check that the identification is in the correct format"
-    );
+    throw new Error("Please check that the ID is in the correct format");
   return cleanedId;
 };
