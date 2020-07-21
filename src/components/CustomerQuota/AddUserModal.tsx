@@ -150,9 +150,9 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             onCancel={() => setShouldShowCamera(false)}
             cancelButtonText="Enter ID manually"
             barCodeTypes={
-              features?.id.scannerType === "CODE_39"
-                ? [BarCodeScanner.Constants.BarCodeType.code39]
-                : [BarCodeScanner.Constants.BarCodeType.qr]
+              features?.id.scannerType === "QR"
+                ? [BarCodeScanner.Constants.BarCodeType.qr]
+                : [BarCodeScanner.Constants.BarCodeType.code39]
             }
           />
         </View>
