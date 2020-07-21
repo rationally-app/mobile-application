@@ -166,3 +166,16 @@ export type Voucher = {
   serial: string;
   denomination: number;
 };
+
+const NewFeatures = t.type({
+  minAppBuildVersion: t.number,
+  minAppBundleVersion: t.string,
+  flowType: t.string,
+  transactionGrouping: t.boolean
+});
+
+export const CampaignConfig = t.type({
+  features: t.union([NewFeatures, t.null])
+});
+
+export type CampaignConfig = t.TypeOf<typeof CampaignConfig>;
