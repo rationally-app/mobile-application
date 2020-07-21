@@ -16,6 +16,11 @@ describe("validate and clean IDs", () => {
       validateAndCleanId("abcd_1234", idRegexValidation, alphanumericRegex)
     ).toBe("ABCD_1234");
   });
+
+  it("should return existing input as ID if validation is missing", () => {
+    expect.assertions(1);
+    expect(validateAndCleanId("abcd_1234")).toBe("abcd_1234");
+  });
 });
 
 describe("throw EnvVersionError", () => {
