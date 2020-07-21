@@ -6,17 +6,20 @@ import React, {
   useCallback
 } from "react";
 import { AsyncStorage } from "react-native";
-import { CampaignFeatures, CampaignConfig } from "../types";
+import { CampaignFeatures, CampaignConfig, ConfigHashes } from "../types";
+import { hashString } from "../utils/hash";
 
 export const FEATURES_KEY = "FEATURES";
 
 interface CampaignConfigContext {
   features: CampaignFeatures | null;
+  configHashes: ConfigHashes;
   setCampaignConfig: (config: CampaignConfig) => void;
   clearCampaignConfig: () => void;
 }
 export const CampaignConfigContext = createContext<CampaignConfigContext>({
   features: null,
+  configHashes: {},
   setCampaignConfig: () => null,
   clearCampaignConfig: () => null
 });
@@ -28,10 +31,20 @@ export const CampaignConfigContextProvider: FunctionComponent = ({
     null
   );
 
+  // Recalculated whenever the campaign config is set or loaded from the store
+  const [configHashes, setConfigHashes] = useState<
+    CampaignConfigContext["configHashes"]
+  >({});
+
   const setCampaignConfig: CampaignConfigContext["setCampaignConfig"] = useCallback(
     async ({ features }): Promise<void> => {
+      const featuresString = JSON.stringify(features);
+      const configHashes = {
+        features: await hashString(featuresString)
+      };
+      await AsyncStorage.multiSet([[FEATURES_KEY, featuresString]]);
       setFeatures(features);
-      await AsyncStorage.multiSet([[FEATURES_KEY, JSON.stringify(features)]]);
+      setConfigHashes(configHashes);
     },
     []
   );
@@ -40,13 +53,21 @@ export const CampaignConfigContextProvider: FunctionComponent = ({
     void
   > => {
     setFeatures(null);
+    setConfigHashes({});
     await AsyncStorage.multiRemove([FEATURES_KEY]);
   }, []);
 
   const loadCampaignConfigFromStore = async (): Promise<void> => {
     const values = await AsyncStorage.multiGet([FEATURES_KEY]);
-    const [features] = values.map(value => value[1]);
-    setFeatures(JSON.parse(features));
+    const [featuresString] = values.map(value => value[1]);
+    if (featuresString) {
+      setFeatures(JSON.parse(featuresString));
+    }
+
+    const configHashes = {
+      features: featuresString ? await hashString(featuresString) : undefined
+    };
+    setConfigHashes(configHashes);
   };
 
   useEffect(() => {
@@ -57,6 +78,7 @@ export const CampaignConfigContextProvider: FunctionComponent = ({
     <CampaignConfigContext.Provider
       value={{
         features,
+        configHashes,
         setCampaignConfig,
         clearCampaignConfig
       }}

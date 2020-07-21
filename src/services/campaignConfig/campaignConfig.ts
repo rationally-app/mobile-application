@@ -1,5 +1,5 @@
 import { IS_MOCK } from "../../config";
-import { CampaignConfig } from "../../types";
+import { CampaignConfig, ConfigHashes } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import * as Sentry from "sentry-expo";
 
@@ -9,10 +9,6 @@ export class CampaignConfigError extends Error {
     this.name = "CampaignConfigError";
   }
 }
-
-type ConfigHashes = {
-  [config in keyof CampaignConfig]?: string;
-};
 
 const liveGetCampaignConfig = async (
   token: string,
