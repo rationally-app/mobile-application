@@ -95,9 +95,9 @@ const Policy = t.intersection([
 
 const IdentificationFlag = t.intersection([
   t.type({
-    type: t.string,
-    scannerType: t.string,
-    validation: t.string
+    type: t.union([t.literal("STRING"), t.literal("NUMBER")]),
+    scannerType: t.union([t.literal("CODE_39"), t.literal("QR")]),
+    validation: t.union([t.literal("NRIC"), t.literal("REGEX")])
   }),
   t.partial({
     validationRegex: t.string
