@@ -44,6 +44,7 @@ jobs:
         run: |
           MAJOR_VERSION=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
           echo "::set-output name=majorVersion::$MAJOR_VERSION"
+          echo 'The major version is' $majorVersion
       - name: Install Packages
         run: npm install
       - name: Expo Publish Channel
@@ -82,13 +83,20 @@ jobs:
           expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
           expo-cache: true
+      - name: Parse Major Version
+        id: majorVersion
+        run: |
+          MAJOR_VERSION=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
+          echo "::set-output name=majorVersion::$MAJOR_VERSION"
+          echo 'The major version is' $majorVersion
       - name: Install Packages
         run: npm install
       - name: Build Android Release
         id: android
         run: |
-          OUTPUT="$(echo $(expo build:android) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
+          OUTPUT="$(echo $(expo build:android --release-channel=${{ steps.majorVersion.outputs.majorVersion }}) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
           echo "::set-output name=assetUrl::$OUTPUT"
+          echo 'The android url is' $assetUrl
       - name: Download APK Asset
         run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.android.outputs.assetURL }}
       - name: Upload Release Asset
@@ -110,13 +118,20 @@ jobs:
           expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
           expo-cache: true
+      - name: Parse Major Version
+        id: majorVersion
+        run: |
+          MAJOR_VERSION=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
+          echo "::set-output name=majorVersion::$MAJOR_VERSION"
+          echo 'The major version is' $majorVersion
       - name: Install Packages
         run: npm install
       - name: Build IOS Release
         id: ios
         run: |
-          OUTPUT="$(echo $(expo build:ios) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
+          OUTPUT="$(echo $(expo build:ios --release-channel=${{ steps.majorVersion.outputs.majorVersion }}) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
           echo "::set-output name=assetUrl::$OUTPUT"
+          echo 'The ios url is' $assetUrl
       - name: Download IPA Asset
         run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.ios.outputs.assetURL }}
       - name: Upload Release Asset
