@@ -26,7 +26,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      majorVersion: ${{ steps.majorVersion.outputs.majorVersion }}
+      releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -39,15 +39,15 @@ jobs:
           expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v2.x
-      - name: Parse Major Version
-        id: majorVersion
+      - name: Generate Release Channel
+        id: releaseChannel
         run: |
-          MAJOR_VERSION=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
-          echo "::set-output name=majorVersion::$MAJOR_VERSION"
+          RELEASE_CHANNEL=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
+          echo "::set-output name=releaseChannel::$RELEASE_CHANNEL"
       - name: Install Packages
         run: npm install
       - name: Expo Publish Channel
-        run: expo publish --non-interactive --release-channel=${{ steps.majorVersion.outputs.majorVersion }}
+        run: expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
   create_release:
     name: Create Release
     needs: deploy_prod
