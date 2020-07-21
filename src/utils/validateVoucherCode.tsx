@@ -20,17 +20,17 @@ export class LimitReachedError extends Error {
 }
 
 export const checkLimitReached = (
-  lengthOfVoucherCodes: number,
+  voucherCodes: string[],
   limit = MAX_NUM_VOUCHERS_PER_TRANSACTION
 ): boolean => {
-  return lengthOfVoucherCodes > limit;
+  return voucherCodes.length >= limit;
 };
 
 export const validateVoucherCode = (
   voucherCode: string,
   voucherCodes: string[]
 ): boolean => {
-  const hasReachedLimit = checkLimitReached(voucherCodes.length + 1);
+  const hasReachedLimit = checkLimitReached(voucherCodes);
   if (hasReachedLimit)
     throw new LimitReachedError(
       "Please checkout this batch of vouchers and resume in the next scan"

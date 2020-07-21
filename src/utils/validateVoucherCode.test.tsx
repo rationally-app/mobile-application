@@ -32,15 +32,16 @@ describe("check duplicate", () => {
 });
 
 describe("check limit reached", () => {
-  it("should return true when number of voucher codes is above the limit", () => {
-    expect.assertions(2);
-    expect(checkLimitReached(3, 2)).toBe(true);
-    expect(checkLimitReached(4, 2)).toBe(true);
+  it("should return true when number of voucher codes is above or equal to the limit", () => {
+    expect.assertions(3);
+    expect(checkLimitReached(["1", "2"], 2)).toBe(true);
+    expect(checkLimitReached(["1", "2", "3"], 2)).toBe(true);
+    expect(checkLimitReached(["1", "2", "3", "4"], 2)).toBe(true);
   });
 
   it("should return false when number of voucher codes is below the limit", () => {
     expect.assertions(2);
-    expect(checkLimitReached(0, 2)).toBe(false);
-    expect(checkLimitReached(2, 2)).toBe(false);
+    expect(checkLimitReached([], 2)).toBe(false);
+    expect(checkLimitReached(["1"], 2)).toBe(false);
   });
 });
