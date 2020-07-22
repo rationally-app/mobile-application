@@ -26,7 +26,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      majorVersion: ${{ steps.majorVersion.outputs.majorVersion }}
+      releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -39,15 +39,15 @@ jobs:
           expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v2.x
-      - name: Parse Major Version
-        id: majorVersion
+      - name: Generate Release Channel # Release Channels are named prod-<Major Release>, i.e. prod-1, prod-3
+        id: releaseChannel
         run: |
-          MAJOR_VERSION=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
-          echo "::set-output name=majorVersion::$MAJOR_VERSION"
+          RELEASE_CHANNEL=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
+          echo "::set-output name=releaseChannel::$RELEASE_CHANNEL"
       - name: Install Packages
         run: npm install
       - name: Expo Publish Channel
-        run: expo publish --non-interactive --release-channel=${{ steps.majorVersion.outputs.majorVersion }}
+        run: expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
   create_release:
     name: Create Release
     needs: deploy_prod
@@ -60,7 +60,6 @@ jobs:
         uses: metcalfc/changelog-generator@v0.4.0
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
-          base-ref: "prod-0" #need a tag "prod-0 for setup, please remove after setup"
       - name: Creating Release
         uses: ncipollo/release-action@v1
         with:
@@ -85,12 +84,17 @@ jobs:
       - name: Install Packages
         run: npm install
       - name: Build Android Release
-        id: android
         run: |
-          OUTPUT="$(echo $(expo build:android) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
-          echo "::set-output name=assetUrl::$OUTPUT"
+          expo build:android --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogAndroid.txt
+          cat buildLogAndroid.txt
+      - name: Parse Asset URL
+        id: androidUrl
+        run: |
+          ASSET_URL=$(cat buildLogAndroid.txt | tail | egrep -o 'https?://expo\.io/artifacts/[^ ]+')
+          echo The android url is $ASSET_URL
+          echo "::set-output name=assetUrl::$ASSET_URL"
       - name: Download APK Asset
-        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.android.outputs.assetURL }}
+        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.androidUrl.outputs.assetUrl }}
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
@@ -113,12 +117,17 @@ jobs:
       - name: Install Packages
         run: npm install
       - name: Build IOS Release
-        id: ios
         run: |
-          OUTPUT="$(echo $(expo build:ios) | tail | grep -o 'https?://expo\.io/artifacts/[^ ]+')"
-          echo "::set-output name=assetUrl::$OUTPUT"
+          expo build:ios --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogIOS.txt
+          cat buildLogIOS.txt
+      - name: Parse Asset URL
+        id: iosUrl
+        run: |
+          ASSET_URL=$(cat buildLogIOS.txt | tail | egrep -o 'https?://expo\.io/artifacts/[^ ]+')
+          echo The IOS url is $ASSET_URL
+          echo "::set-output name=assetUrl::$ASSET_URL"
       - name: Download IPA Asset
-        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.ios.outputs.assetURL }}
+        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.iosUrl.outputs.assetUrl }}
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
