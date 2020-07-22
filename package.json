@@ -14,6 +14,7 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.158",
     "date-fns": "^2.11.1",
     "expo": "^38.0.0",
     "expo-barcode-scanner": "~8.2.1",
