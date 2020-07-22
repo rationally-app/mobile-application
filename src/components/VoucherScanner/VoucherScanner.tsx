@@ -2,9 +2,11 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useCallback
+  useCallback,
+  useRef
 } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
 import { Camera } from "../IdScanner/IdScanner";
@@ -55,20 +57,20 @@ const styles = StyleSheet.create({
   }
 });
 
-interface VoucherScanner extends Camera {
-  onCancel: () => void;
-  onVoucherCodeSubmit: (input: string) => void;
-  isScanningEnabled?: boolean;
+interface VoucherScanner {
   vouchers: Voucher[];
+  onCheckVoucher: (input: string) => void;
+  onCancel: () => void;
+  isScanningEnabled?: boolean;
+  barCodeTypes?: Camera["barCodeTypes"];
 }
 
 export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   vouchers,
-  onBarCodeScanned,
-  onVoucherCodeSubmit,
-  barCodeTypes,
+  onCheckVoucher,
   onCancel,
-  isScanningEnabled = true
+  isScanningEnabled = true,
+  barCodeTypes
 }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showManualInput, setShowManualInput] = useState(false);
@@ -86,6 +88,20 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
 
   const closeInputModal = useCallback(() => setShowManualInput(false), []);
   const openInputModal = useCallback(() => setShowManualInput(true), []);
+
+  const currentBarcode = useRef<string>();
+  const onBarCodeScanned: BarCodeScannedCallback = event => {
+    if (
+      isScanningEnabled &&
+      !showManualInput &&
+      event.data &&
+      currentBarcode.current !== event.data
+    ) {
+      currentBarcode.current = event.data;
+      onCheckVoucher(event.data);
+    }
+  };
+
   return (
     <View style={styles.wrapper}>
       <SafeAreaView style={styles.content}>
@@ -111,7 +127,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
 
         {hasCameraPermission ? (
           <Camera
-            onBarCodeScanned={isScanningEnabled ? onBarCodeScanned : () => null}
+            onBarCodeScanned={onBarCodeScanned}
             barCodeTypes={barCodeTypes}
           />
         ) : (
@@ -131,7 +147,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
         </View>
         <ManualAddVoucherModal
           isVisible={showManualInput}
-          onVoucherCodeSubmit={onVoucherCodeSubmit}
+          onVoucherCodeSubmit={onCheckVoucher}
           onExit={closeInputModal}
         />
       </SafeAreaView>

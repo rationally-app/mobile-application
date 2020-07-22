@@ -3,8 +3,7 @@ import React, {
   useContext,
   useState,
   useEffect,
-  useCallback,
-  useRef
+  useCallback
 } from "react";
 import {
   View,
@@ -33,7 +32,6 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { Feather } from "@expo/vector-icons";
 import { VoucherScanner } from "../VoucherScanner/VoucherScanner";
-import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { VoucherStatusModal } from "./VoucherStatusModal/VoucherStatusModal";
 import { AllValidVouchersModal } from "./AllValidVouchersModal";
 import { useVoucher } from "../../hooks/useVoucher/useVoucher";
@@ -123,8 +121,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     resetValidityState
   } = useCheckVoucherValidity(token, endpoint);
 
-  const currentBarcode = useRef<string>();
-
   const onCheckVoucher = (input: string): void => {
     setIsScanningEnabled(false);
     checkValidity(input, vouchers);
@@ -148,17 +144,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     }
   }, [isFocused, checkValidityState, validityResult, onModalExit, addVoucher]);
 
-  const onBarCodeScanned: BarCodeScannedCallback = event => {
-    if (
-      isScanningEnabled &&
-      event.data &&
-      currentBarcode.current !== event.data
-    ) {
-      currentBarcode.current = event.data;
-      onCheckVoucher(event.data);
-    }
-  };
-
   const redeemVouchers = (): void => {
     checkoutVouchers(merchantCode);
   };
@@ -166,7 +151,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const resetState = useCallback((): void => {
     setMerchantCode("");
     setShouldShowCamera(false);
-    currentBarcode.current = undefined;
     resetVoucherState();
   }, [resetVoucherState]);
 
@@ -286,8 +270,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         <VoucherScanner
           vouchers={vouchers}
           isScanningEnabled={isScanningEnabled}
-          onBarCodeScanned={onBarCodeScanned}
-          onVoucherCodeSubmit={onCheckVoucher}
+          onCheckVoucher={onCheckVoucher}
           onCancel={closeCamera}
         />
       )}
