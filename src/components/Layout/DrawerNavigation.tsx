@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize(-4)
   },
   bottomNavContainerText: {
-    color: color("blue", 50),
     fontSize: fontSize(-1)
   }
 });
