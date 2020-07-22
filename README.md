@@ -26,16 +26,26 @@ npm run test:watch // If you'd like to test specific files
 
 ## CI/CD
 
-We use CircleCI and have supplied the `config.yml` for setting it up. You will need to add the following environment variables to CircleCI:
+We use Github Actions and have supplied the `.gihthub/workflows` for setting it up. You will need to add the following secrets to the Github Repo:
 
 ```
-EXPO_CLI_PASSWORD
-EXPO_USERNAME
-GITHUB_ACCESS_TOKEN_COMMENTER
+EXPO_CLI_PROD_USERNAME
+EXPO_CLI_PROD_PASSWORD
+EXPO_CLI_TEST_USERNAME
+EXPO_CLI_TEST_PASSWORD
 SENTRY_AUTH_TOKEN
 SENTRY_DSN
 SENTRY_ORG
 SENTRY_PROJECT
+```
+
+For first time release, a base-ref tag will need to be input into the changelog generator within the `with` parameter and needs to be removed after initial setup.
+
+```
+uses: metcalfc/changelog-generator@v0.4.0
+with:
+   myToken: ${{ secrets.GITHUB_TOKEN }}
+   base-ref: <base-tag>
 ```
 
 ## Deployed Staging Application
