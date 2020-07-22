@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -75,21 +75,29 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
 }) => {
   const isVisible = checkValidityState === "CHECKING_VALIDITY";
 
+  useEffect(() => {
+    if (error instanceof ScannerError) {
+      // Alert is called within a useEffect because having it called directly
+      // in the render body causes issues where the alert is hidden underneath
+      // other modals.
+      Alert.alert(
+        "Error scanning",
+        error.message,
+        [
+          {
+            text: "Continue scanning",
+            onPress: onExit
+          }
+        ],
+        {
+          onDismiss: onExit // for android outside alert clicks
+        }
+      );
+    }
+  }, [error, onExit]);
+
   let card;
   if (error instanceof ScannerError) {
-    Alert.alert(
-      "Error scanning",
-      error.message,
-      [
-        {
-          text: "Continue scanning",
-          onPress: onExit
-        }
-      ],
-      {
-        onDismiss: onExit // for android outside alert clicks
-      }
-    );
     card = null;
   } else if (error instanceof NotEligibleError) {
     card = (
