@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useCallback
+} from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
@@ -79,6 +84,8 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
     askForCameraPermission();
   }, [onCancel]);
 
+  const closeInputModal = useCallback(() => setShowManualInput(false), []);
+  const openInputModal = useCallback(() => setShowManualInput(true), []);
   return (
     <View style={styles.wrapper}>
       <SafeAreaView style={styles.content}>
@@ -116,7 +123,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
           <View style={styles.manualInputButtonWrapper}>
             <SecondaryButton
               text="Enter manually"
-              onPress={() => setShowManualInput(true)}
+              onPress={openInputModal}
               fullWidth={true}
             />
           </View>
@@ -124,8 +131,8 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
         </View>
         <ManualAddVoucherModal
           isVisible={showManualInput}
-          onExit={() => setShowManualInput(false)}
           onVoucherCodeSubmit={onVoucherCodeSubmit}
+          onExit={closeInputModal}
         />
       </SafeAreaView>
     </View>

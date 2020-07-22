@@ -197,6 +197,12 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     resetVoucherState
   ]);
 
+  const closeCamera = useCallback(() => setShouldShowCamera(false), []);
+  const openCamera = useCallback(() => {
+    Keyboard.dismiss();
+    setShouldShowCamera(true);
+  }, []);
+
   return (
     <>
       <KeyboardAvoidingScrollView>
@@ -217,10 +223,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               merchantCode={merchantCode}
               setMerchantCode={setMerchantCode}
               redeemVouchers={redeemVouchers}
-              openCamera={() => {
-                Keyboard.dismiss();
-                setShouldShowCamera(true);
-              }}
+              openCamera={openCamera}
               openAllValidVouchersModal={() =>
                 setShowAllValidVouchersModal(true)
               }
@@ -285,7 +288,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onVoucherCodeSubmit={onCheckVoucher}
-          onCancel={() => setShouldShowCamera(false)}
+          onCancel={closeCamera}
         />
       )}
       <VoucherStatusModal
