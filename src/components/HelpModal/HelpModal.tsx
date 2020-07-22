@@ -1,12 +1,6 @@
 import React, { FunctionComponent, useRef, useState } from "react";
-import { WebView } from "react-native-webview";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  WebViewProps
-} from "react-native";
+import { WebView, WebViewProps } from "react-native-webview";
+import { View, StyleSheet, TouchableOpacity, Modal } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color, borderRadius, fontSize } from "../../common/styles";

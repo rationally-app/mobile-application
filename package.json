@@ -36,7 +36,7 @@
     "react-native-reanimated": "~1.9.0",
     "react-native-screens": "~2.9.0",
     "react-native-svg": "12.1.0",
-    "react-native-webview": "9.4.0",
+    "react-native-webview": "^9.4.0",
     "react-navigation": "^4.1.0",
     "react-navigation-stack": "^1.10.3",
     "sentry-expo": "^2.0.3"
