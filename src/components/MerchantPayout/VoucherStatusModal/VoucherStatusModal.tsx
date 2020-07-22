@@ -63,6 +63,16 @@ const NoPreviousTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>Previously redeemed</AppText>
 );
 
+const showAlert = (
+  title: string,
+  message: string,
+  ctaText: string,
+  onDismiss: () => void
+): void =>
+  Alert.alert(title, message, [{ text: ctaText, onPress: onDismiss }], {
+    onDismiss: onDismiss // for android outside alert clicks
+  });
+
 interface VoucherStatusModal {
   checkValidityState: useCheckVoucherValidity["checkValidityState"];
   error?: useCheckVoucherValidity["error"];
@@ -80,37 +90,16 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   if (error instanceof ScannerError) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        Alert.alert(
-          "Error scanning",
-          error.message,
-          [
-            {
-              text: "Continue scanning",
-              onPress: onExit
-            }
-          ],
-          {
-            onDismiss: onExit // for android outside alert clicks
-          }
-        );
+        showAlert("Error scanning", error.message, "Continue scanning", onExit);
       });
     });
     return null;
   } else if (error instanceof LimitReachedError) {
-    Alert.alert(
-      "Scan limit reached",
-      error.message,
-      [
-        {
-          text: "OK",
-          onPress: onExit
-        }
-      ],
-      {
-        onDismiss: onExit // for android outside alert clicks
-      }
-    );
-    card = null;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        showAlert("Scan limit reached", error.message, "OK", onExit);
+      });
+    });
   } else if (error instanceof NotEligibleError) {
     card = (
       <InvalidCard
