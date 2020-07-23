@@ -11,8 +11,8 @@ jest.spyOn(global, "fetch").mockImplementation(mockFetch);
 
 const mockValidResponse = {
   features: {
+    minAppBinaryVersion: "3.0.0",
     minAppBuildVersion: 0,
-    minAppBundleVersion: "3.0.0",
     flowType: "DEFAULT",
     transactionGrouping: true
   }
@@ -20,12 +20,16 @@ const mockValidResponse = {
 
 const mockValidResponseNewFeature = {
   features: {
+    minAppBinaryVersion: "3.0.0",
     minAppBuildVersion: 10,
-    minAppBundleVersion: "3.0.0",
     flowType: "DEFAULT",
     transactionGrouping: true,
     newFeature: true
   }
+};
+
+const mockValidResponseNoUpdates = {
+  features: null
 };
 
 const mockInvalidResponseIncorrectType = {
@@ -69,18 +73,15 @@ describe("campaignConfig", () => {
 
     it("should return null campaign configs when the current ones are the latest", async () => {
       expect.assertions(1);
-      const returnValue = {
-        features: null
-      };
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(returnValue)
+        json: () => Promise.resolve(mockValidResponseNoUpdates)
       });
 
       const config = await getCampaignConfig(key, endpoint, {
         features: "latest-hash"
       });
-      expect(config).toStrictEqual(returnValue);
+      expect(config).toStrictEqual(mockValidResponseNoUpdates);
     });
 
     it.each([mockInvalidResponseIncorrectType, mockInvalidResponseNewConfig])(

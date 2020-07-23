@@ -47,8 +47,8 @@ const mockGetCampaignConfig = async (
 ): Promise<CampaignConfig> => {
   return {
     features: {
+      minAppBinaryVersion: "3.0.0",
       minAppBuildVersion: 0,
-      minAppBundleVersion: "3.0.0",
       flowType: "DEFAULT",
       transactionGrouping: true
     }
