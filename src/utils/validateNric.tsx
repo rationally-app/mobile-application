@@ -1,6 +1,6 @@
 // Thanks to https://gist.github.com/kyrene-chew/6f275325335ab27895beb7a9a7b4c1cb
 
-export const nricRegex = /(\D)(\d{7})(\D)/;
+export const nricRegex = /(\D)(\d{7})(\D)$/;
 
 export const validate = (nricInput: string): boolean => {
   // validation rules
