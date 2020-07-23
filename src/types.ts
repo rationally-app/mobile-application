@@ -168,8 +168,8 @@ export type Voucher = {
 };
 
 const NewFeatures = t.type({
+  minAppBinaryVersion: t.string,
   minAppBuildVersion: t.number,
-  minAppBundleVersion: t.string,
   flowType: t.string,
   transactionGrouping: t.boolean
 });
