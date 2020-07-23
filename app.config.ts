@@ -3,6 +3,7 @@
 export default ({ config }: any): any => {
   return {
     ...config,
+    version: process.env.VERSION,
     extra: {
       appBuildVersion: process.env.APP_BUILD_VERSION
     }

@@ -3,11 +3,7 @@
     "name": "SupplyAlly",
     "slug": "rationally",
     "privacy": "public",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "4.0.0",
     "orientation": "portrait",
     "scheme": "supplyally",
@@ -20,9 +16,7 @@
     "updates": {
       "fallbackToCacheTimeout": 10000
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "buildNumber": "40",
       "supportsTablet": true,
@@ -53,13 +47,7 @@
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": [
-        "js",
-        "jsx",
-        "ts",
-        "tsx",
-        "svg"
-      ]
+      "sourceExts": ["js", "jsx", "ts", "tsx", "svg"]
     },
     "hooks": {
       "postPublish": [

@@ -122,6 +122,21 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
     navigation.dispatch(DrawerActions.closeDrawer());
   };
 
+  const releaseChannel: string | undefined = Constants.manifest.releaseChannell;
+  let version = "";
+  if (releaseChannel) {
+    version += `ver ${Constants.manifest.version}`;
+    // version += `ver ${releaseChannel === "default" ? "0.11" : releaseChannel}`;
+    if (APP_BUILD_VERSION) {
+      version += ` / (${APP_BUILD_VERSION})`;
+    }
+    if (releaseChannel === "staging" || releaseChannel.match(/pr\d+/g)) {
+      version += ` / (${releaseChannel})`;
+    }
+  } else if (__DEV__) {
+    version += "Dev version";
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -185,9 +200,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         >
           Report vulnerability
         </BottomNavigationLink>
-        <AppText style={styles.bottomVersionText}>
-          {`Version: ${Constants.manifest.version} / ${APP_BUILD_VERSION}`}
-        </AppText>
+        <AppText style={styles.bottomVersionText}>{version}</AppText>
       </View>
     </SafeAreaView>
   );
