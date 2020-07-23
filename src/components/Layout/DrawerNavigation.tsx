@@ -19,8 +19,6 @@ import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { APP_BUILD_VERSION } from "../../config";
-import { Updates } from "expo";
-import { constants } from "buffer";
 
 const styles = StyleSheet.create({
   container: {
