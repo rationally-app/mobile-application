@@ -90,7 +90,7 @@ storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
   >
     <View style={{ margin: size(3) }}>
       <CheckoutSuccessCard
-        nrics={["S0000001I", "S0000002G"]}
+        ids={["S0000001I", "S0000002G"]}
         onCancel={() => null}
         checkoutResult={checkoutResult}
       />

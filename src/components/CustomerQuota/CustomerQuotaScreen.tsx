@@ -79,7 +79,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
   const showHelpModal = useContext(HelpModalContext);
-  const [nrics, setNrics] = useState([navigation.getParam("nric")]);
+  const [ids, setIds] = useState([navigation.getParam("id")]);
 
   const {
     cartState,
@@ -89,7 +89,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     checkoutResult,
     error,
     clearError
-  } = useCart(nrics, token, endpoint);
+  } = useCart(ids, token, endpoint);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -102,8 +102,8 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     navigation.goBack();
   }, [navigation]);
 
-  const addNric = useCallback((nric: string): void => {
-    setNrics(nrics => [...nrics, nric]);
+  const addId = useCallback((id: string): void => {
+    setIds(ids => [...ids, id]);
   }, []);
 
   useEffect(() => {
@@ -144,18 +144,18 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
         {cartState === "PURCHASED" ? (
           <CheckoutSuccessCard
-            nrics={nrics}
+            ids={ids}
             onCancel={onCancel}
             checkoutResult={checkoutResult}
           />
         ) : cartState === "NO_QUOTA" ? (
-          <NoQuotaCard nrics={nrics} cart={cart} onCancel={onCancel} />
+          <NoQuotaCard ids={ids} cart={cart} onCancel={onCancel} />
         ) : cartState === "NOT_ELIGIBLE" ? (
-          <NotEligibleCard nrics={nrics} onCancel={onCancel} />
+          <NotEligibleCard ids={ids} onCancel={onCancel} />
         ) : (
           <ItemsSelectionCard
-            nrics={nrics}
-            addNric={addNric}
+            ids={ids}
+            addId={addId}
             isLoading={cartState === "CHECKING_OUT"}
             checkoutCart={checkoutCart}
             onCancel={onCancel}

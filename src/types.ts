@@ -93,10 +93,22 @@ const Policy = t.intersection([
   })
 ]);
 
+const IdentificationFlag = t.intersection([
+  t.type({
+    type: t.union([t.literal("STRING"), t.literal("NUMBER")]),
+    scannerType: t.union([t.literal("CODE_39"), t.literal("QR")]),
+    validation: t.union([t.literal("NRIC"), t.literal("REGEX")])
+  }),
+  t.partial({
+    validationRegex: t.string
+  })
+]);
+
 const Features = t.type({
   REQUIRE_OTP: t.boolean,
   TRANSACTION_GROUPING: t.boolean,
-  FLOW_TYPE: t.string
+  FLOW_TYPE: t.string,
+  id: IdentificationFlag
 });
 
 export const EnvVersion = t.type({

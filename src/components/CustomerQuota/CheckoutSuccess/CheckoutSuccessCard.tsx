@@ -19,20 +19,17 @@ const styles = StyleSheet.create({
 });
 
 interface CheckoutSuccessCard {
-  nrics: string[];
+  ids: string[];
   onCancel: () => void;
   checkoutResult: CartHook["checkoutResult"];
 }
 
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
-  nrics,
+  ids,
   onCancel,
   checkoutResult
 }) => {
-  const checkoutQuantities = getPurchasedQuantitiesByItem(
-    nrics,
-    checkoutResult!
-  );
+  const checkoutQuantities = getPurchasedQuantitiesByItem(ids, checkoutResult!);
   const { getProduct } = useProductContext();
   const productType = getProduct(checkoutQuantities[0].category)?.type;
   const { title, description, ctaButtonText } = getCheckoutMessages(
@@ -41,7 +38,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   return (
     <View>
-      <CustomerCard nrics={nrics}>
+      <CustomerCard ids={ids}>
         <View
           style={[
             sharedStyles.resultWrapper,
