@@ -17,7 +17,7 @@ const NotEligibleTransactionDescription: FunctionComponent = () => (
 );
 
 interface NotEligibleCard {
-  nrics: string[];
+  ids: string[];
   onCancel: () => void;
 }
 
@@ -25,12 +25,12 @@ interface NotEligibleCard {
  * Shows when the user cannot is not eligible for redemption/purchase
  */
 export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
-  nrics,
+  ids,
   onCancel
 }) => {
   return (
     <View>
-      <CustomerCard nrics={nrics} headerBackgroundColor={color("red", 60)}>
+      <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
         <View
           style={[
             sharedStyles.resultWrapper,

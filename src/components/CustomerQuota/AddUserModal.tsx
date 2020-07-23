@@ -8,15 +8,16 @@ import {
   TouchableWithoutFeedback,
   Vibration
 } from "react-native";
-import { InputNricSection } from "../CustomerDetails/InputNricSection";
+import { InputIdSection } from "../CustomerDetails/InputIdSection";
 import { IdScanner } from "../IdScanner/IdScanner";
-import { validateAndCleanNric } from "../../utils/validateNric";
-import { BarCodeScannedCallback } from "expo-barcode-scanner";
+import { validateAndCleanId } from "../../utils/validateIdentification";
+import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { color, size } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+import { useProductContext } from "../../context/products";
 
 const styles = StyleSheet.create({
   background: {
@@ -67,19 +68,20 @@ const CloseButton: FunctionComponent<{ onPress: () => void }> = ({
 interface AddUserModal {
   isVisible: boolean;
   setIsVisible: (visible: boolean) => void;
-  nrics: string[];
-  addNric: (nric: string) => void;
+  ids: string[];
+  addId: (id: string) => void;
 }
 
 export const AddUserModal: FunctionComponent<AddUserModal> = ({
   isVisible,
   setIsVisible,
-  nrics,
-  addNric
+  ids,
+  addId
 }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
-  const [nricInput, setNricInput] = useState("");
+  const [idInput, setIdInput] = useState("");
+  const { features } = useProductContext();
 
   useEffect(() => {
     if (isVisible) {
@@ -90,16 +92,20 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   const onCheck = async (input: string): Promise<void> => {
     try {
       setIsScanningEnabled(false);
-      const nric = validateAndCleanNric(input);
+      const id = validateAndCleanId(
+        input,
+        features?.id.validation,
+        features?.id.validationRegex
+      );
       Vibration.vibrate(50);
-      if (nrics.indexOf(nric) > -1) {
+      if (ids.indexOf(id) > -1) {
         throw new Error(
-          "You've added this NRIC before, please scan a different NRIC."
+          "You've added this ID before, please scan a different ID."
         );
       }
-      addNric(nric);
+      addId(id);
       setIsVisible(false);
-      setNricInput("");
+      setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
       Alert.alert(
@@ -143,6 +149,11 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
             cancelButtonText="Enter ID manually"
+            barCodeTypes={
+              features?.id.scannerType === "QR"
+                ? [BarCodeScanner.Constants.BarCodeType.qr]
+                : [BarCodeScanner.Constants.BarCodeType.code39]
+            }
           />
         </View>
       ) : (
@@ -156,17 +167,18 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             <Card style={styles.card}>
               <View style={styles.cardHeader}>
                 <AppText style={{ flex: 1 }}>
-                  Add another NRIC to combine customer quotas
+                  Add another ID to combine customer quotas
                 </AppText>
                 <View style={{ marginLeft: size(1) }}>
                   <CloseButton onPress={() => setIsVisible(false)} />
                 </View>
               </View>
-              <InputNricSection
+              <InputIdSection
                 openCamera={() => setShouldShowCamera(true)}
-                nricInput={nricInput}
-                setNricInput={setNricInput}
-                submitNric={() => onCheck(nricInput)}
+                idInput={idInput}
+                setIdInput={setIdInput}
+                submitId={() => onCheck(idInput)}
+                idType={features?.id.type}
               />
             </Card>
           </View>

@@ -90,7 +90,12 @@ const defaultProducts: EnvVersion = {
   features: {
     REQUIRE_OTP: true,
     TRANSACTION_GROUPING: true,
-    FLOW_TYPE: "DEFAULT"
+    FLOW_TYPE: "DEFAULT",
+    id: {
+      type: "STRING",
+      scannerType: "CODE_39",
+      validation: "NRIC"
+    }
   }
 };
 

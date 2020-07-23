@@ -25,12 +25,12 @@ const styles = StyleSheet.create({
     marginLeft: size(1.5),
     flex: 1
   },
-  nricLabel: {
+  idLabel: {
     color: color("grey", 0),
     fontSize: fontSize(-2),
     marginBottom: 2
   },
-  nricText: {
+  idText: {
     color: color("grey", 0),
     fontSize: fontSize(1),
     lineHeight: 1.2 * fontSize(1),
@@ -78,10 +78,10 @@ export const AddButton: FunctionComponent<AddButton> = ({ text, onPress }) => {
 };
 
 export const CustomerCard: FunctionComponent<{
-  nrics: string[];
-  onAddNric?: () => void;
+  ids: string[];
+  onAddId?: () => void;
   headerBackgroundColor?: ViewStyle["backgroundColor"];
-}> = ({ nrics, onAddNric, headerBackgroundColor, children }) => (
+}> = ({ ids, onAddId, headerBackgroundColor, children }) => (
   <Card
     style={{
       paddingTop: 0,
@@ -97,16 +97,16 @@ export const CustomerCard: FunctionComponent<{
     >
       <Feather name="user" size={size(3)} color={color("grey", 0)} />
       <View style={styles.headerText}>
-        <AppText style={styles.nricLabel}>
-          Identification number{nrics.length > 1 ? "s" : ""}
+        <AppText style={styles.idLabel}>
+          Identification number{ids.length > 1 ? "s" : ""}
         </AppText>
-        {nrics.map(nric => (
-          <AppText key={nric} style={styles.nricText}>
-            {nric}
+        {ids.map(id => (
+          <AppText key={id} style={styles.idText}>
+            {id}
           </AppText>
         ))}
       </View>
-      {onAddNric && <AddButton onPress={onAddNric} text="+ Add"></AddButton>}
+      {onAddId && <AddButton onPress={onAddId} text="+ Add"></AddButton>}
     </View>
     <View style={styles.childrenWrapper}>{children}</View>
   </Card>
