@@ -19,6 +19,8 @@ import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { APP_BUILD_VERSION } from "../../config";
+import { Updates } from "expo";
+import { constants } from "buffer";
 
 const styles = StyleSheet.create({
   container: {
@@ -122,11 +124,10 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
     navigation.dispatch(DrawerActions.closeDrawer());
   };
 
-  const releaseChannel: string | undefined = Constants.manifest.releaseChannell;
+  const releaseChannel: string | undefined = Constants.manifest.releaseChannel;
   let version = "";
   if (releaseChannel) {
     version += `ver ${Constants.manifest.version}`;
-    // version += `ver ${releaseChannel === "default" ? "0.11" : releaseChannel}`;
     if (APP_BUILD_VERSION) {
       version += ` / (${APP_BUILD_VERSION})`;
     }
