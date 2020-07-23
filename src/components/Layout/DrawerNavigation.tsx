@@ -141,9 +141,9 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          marginTop: size(4),
-          paddingRight: size(3),
-          flexDirection: "row-reverse"
+          marginTop: size(5),
+          marginRight: size(2),
+          alignItems: "flex-end"
         }}
       >
         <TouchableOpacity
