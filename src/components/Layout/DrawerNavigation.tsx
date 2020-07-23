@@ -127,10 +127,10 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   if (releaseChannel) {
     version += `ver ${Constants.manifest.version}`;
     if (APP_BUILD_VERSION) {
-      version += ` / (${APP_BUILD_VERSION})`;
+      version += ` / ${APP_BUILD_VERSION}`;
     }
     if (releaseChannel === "staging" || releaseChannel.match(/pr\d+/g)) {
-      version += ` / (${releaseChannel})`;
+      version += ` / ${releaseChannel}`;
     }
   } else if (__DEV__) {
     version += "Dev version";
