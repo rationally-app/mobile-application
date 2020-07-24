@@ -4,7 +4,6 @@
     "slug": "rationally",
     "privacy": "public",
     "platforms": ["ios", "android", "web"],
-    "version": "4.0.0",
     "orientation": "portrait",
     "scheme": "supplyally",
     "icon": "./assets/icon.png",
@@ -18,7 +17,6 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "buildNumber": "40",
       "supportsTablet": true,
       "bundleIdentifier": "sg.gov.tech.musket",
       "splash": {
@@ -42,7 +40,6 @@
       }
     },
     "android": {
-      "versionCode": 40,
       "package": "sg.gov.tech.musket"
     },
     "packagerOpts": {
