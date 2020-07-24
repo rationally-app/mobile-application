@@ -85,7 +85,7 @@ export const useCheckVoucherValidity = (
       setCheckValidityState("CHECKING_VALIDITY");
       const check = async (): Promise<void> => {
         if (serial.length === 0) {
-          setError(new Error("No voucher code entered"));
+          setError(new ScannerError("No voucher code entered"));
           return;
         }
 

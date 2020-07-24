@@ -1,5 +1,11 @@
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet, Modal, ActivityIndicator } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Modal,
+  ActivityIndicator,
+  Alert
+} from "react-native";
 import { InvalidCard } from "./InvalidCard";
 import { color, size } from "../../../common/styles";
 import {
@@ -71,13 +77,24 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
 
   let card;
   if (error instanceof ScannerError) {
-    card = (
-      <InvalidCard
-        title={"Error scanning"}
-        details={error.message}
-        closeModal={onExit}
-      />
-    );
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        Alert.alert(
+          "Error scanning",
+          error.message,
+          [
+            {
+              text: "Continue scanning",
+              onPress: onExit
+            }
+          ],
+          {
+            onDismiss: onExit // for android outside alert clicks
+          }
+        );
+      });
+    });
+    return null;
   } else if (error instanceof NotEligibleError) {
     card = (
       <InvalidCard
@@ -122,7 +139,7 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
     card = <ActivityIndicator size="large" color={color("grey", 0)} />;
   }
 
-  return (
+  return card ? (
     <Modal
       visible={isVisible}
       onRequestClose={error ? onExit : () => null}
@@ -132,5 +149,5 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
       <View style={styles.background} />
       <View style={styles.cardWrapper}>{card}</View>
     </Modal>
-  );
+  ) : null;
 };
