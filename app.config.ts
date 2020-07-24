@@ -7,6 +7,8 @@ export default ({ config }: any): any => {
     android: {
       ...config.android,
       versionCode: process.env.APP_BINARY_VERSION
+        ? parseInt(process.env.APP_BINARY_VERSION)
+        : 38
     },
     ios: {
       ...config.ios,
