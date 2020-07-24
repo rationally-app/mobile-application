@@ -11,14 +11,16 @@ import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
 import { useValidateExpiry } from "../hooks/useValidateExpiry";
-import * as Linking from "expo-linking";
+import { Linking } from "expo";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation";
 import { StackViewTransitionConfigs } from "react-navigation-stack";
+import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
 
 const SwitchNavigator = createSwitchNavigator(
   {
     LoginScreen: { screen: LoginScreen, path: "login" },
+    CampaignInitialisationScreen,
     DrawerNavigator: createDrawerNavigator(
       {
         CustomerQuotaStack: {
