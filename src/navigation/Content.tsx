@@ -12,10 +12,12 @@ import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
 import { useValidateExpiry } from "../hooks/useValidateExpiry";
 import { Linking } from "expo";
+import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
 
 const SwitchNavigator = createSwitchNavigator(
   {
     LoginScreen: { screen: LoginScreen, path: "login" },
+    CampaignInitialisationScreen,
     CustomerQuotaStack,
     MerchantPayoutStack
   },
