@@ -12,11 +12,12 @@ export const validateAndCleanRegexInput = (
     throw new EnvVersionError(
       "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
     );
-  const isValid = validate(inputId, idRegex);
+  // set ID to all uppercase to remove case sensitivity
+  const id = inputId.toUpperCase();
+
+  const isValid = validate(id, idRegex);
   if (!isValid)
     throw new Error("Please check that the ID is in the correct format");
-  const cleanedId = inputId.match(idRegex)?.[0].toUpperCase();
-  if (!cleanedId)
-    throw new Error("Please check that the ID is in the correct format");
-  return cleanedId;
+
+  return id;
 };
