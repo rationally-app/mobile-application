@@ -38,7 +38,7 @@ import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { useLogout } from "../../hooks/useLogout";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { Linking } from "expo";
+import * as Linking from "expo-linking";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -147,7 +147,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   useEffect(() => {
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
       const { queryParams } = await Linking.parseInitialURLAsync();
-      if (queryParams.key && queryParams.endpoint) {
+      if (queryParams?.key && queryParams?.endpoint) {
         setCodeKey(queryParams.key);
         setEndpointTemp(queryParams.endpoint);
         setLoginStage("MOBILE_NUMBER");
