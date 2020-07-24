@@ -18,7 +18,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
-import { APP_BUILD_VERSION } from "../../config";
 
 const styles = StyleSheet.create({
   container: {
@@ -125,9 +124,9 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const releaseChannel: string | undefined = Constants.manifest.releaseChannel;
   let version = "";
   if (releaseChannel) {
-    version += `ver ${Constants.manifest.version}`;
-    if (APP_BUILD_VERSION) {
-      version += ` / ${APP_BUILD_VERSION}`;
+    version += `ver ${Constants.manifest.nativeAppVersion}`;
+    if (Constants.manifest.nativeBuildVersion) {
+      version += ` / ${Constants.manifest.nativeBuildVersion}`;
     }
     if (releaseChannel === "staging" || releaseChannel.match(/pr\d+/g)) {
       version += ` / ${releaseChannel}`;

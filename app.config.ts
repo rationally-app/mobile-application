@@ -4,8 +4,13 @@ export default ({ config }: any): any => {
   return {
     ...config,
     version: process.env.VERSION,
-    extra: {
-      appBuildVersion: process.env.APP_BUILD_VERSION
+    andriod: {
+      ...config.andriod,
+      versionCode: process.env.APP_BINARY_VERSION
+    },
+    ios: {
+      ...config.ios,
+      buildNumber: process.env.APP_BINARY_VERSION
     }
   };
 };

@@ -37,6 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Fetch Tags
+        run: |
+          git fetch --prune --unshallow --tags
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
@@ -62,19 +67,19 @@ jobs:
         run: npm install
       - name: Get Latest Release
         id: latestRelease
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: ${{ github.repository }}
+        run: |
+          RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
+          echo "::set-output name=release::$RELEASE_TAG"
       - name: Echo Version Details
         env:
           LATEST_RELEASE: ${{steps.latestRelease.outputs.release}}
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
-          echo Build number is ${LATEST_RELEASE#*-}
+          echo Latest release is ${LATEST_RELEASE#*-}
       - name: Expo Publish Channel
         env:
           LATEST_RELEASE: ${{steps.latestRelease.outputs.release}}
-        run: APP_BUILD_VERSION=$GITHUB_RUN_NUMBER VERSION=${LATEST_RELEASE#*-} expo publish --non-interactive --release-channel pr${{ github.event.number }}
+        run: APP_BINARY_VERSION=$GITHUB_RUN_NUMBER VERSION=${LATEST_RELEASE#*-} expo publish --non-interactive --release-channel pr${{ github.event.number }}
       - name: Expo Publish Storybook Channel
         run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
       - name: Add Comment To PR
