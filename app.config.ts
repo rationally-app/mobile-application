@@ -4,8 +4,8 @@ export default ({ config }: any): any => {
   return {
     ...config,
     version: process.env.VERSION,
-    andriod: {
-      ...config.andriod,
+    android: {
+      ...config.android,
       versionCode: process.env.APP_BINARY_VERSION
     },
     ios: {
