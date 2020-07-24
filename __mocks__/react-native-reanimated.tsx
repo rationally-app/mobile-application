@@ -8,7 +8,7 @@
  * ```
  */
 
-import React from "react";
+import React, { Component } from "react";
 import { View, Text, Image, Animated } from "react-native";
 
 const NOOP = (): null => null;
@@ -18,17 +18,17 @@ export const Easing = {
   ease: NOOP,
   quad: NOOP,
   cubic: NOOP,
-  poly: () => NOOP,
+  poly: (): any => NOOP,
   sin: NOOP,
   circle: NOOP,
   exp: NOOP,
-  elastic: () => NOOP,
-  back: () => NOOP,
-  bounce: () => NOOP,
-  bezier: () => NOOP,
-  in: () => NOOP,
-  out: () => NOOP,
-  inOut: () => NOOP
+  elastic: (): any => NOOP,
+  back: (): any => NOOP,
+  bounce: (): any => NOOP,
+  bezier: (): any => NOOP,
+  in: (): any => NOOP,
+  out: (): any => NOOP,
+  inOut: (): any => NOOP
 };
 
 export default {
@@ -41,13 +41,13 @@ export default {
   Text,
   Image,
   ScrollView: Animated.ScrollView,
-  Code: () => ({
+  Code: (): any => ({
     render: NOOP
   }),
 
   Clock: NOOP,
   Node: NOOP,
-  Value: () => ({
+  Value: (): any => ({
     setValue: NOOP
   }),
 
@@ -109,8 +109,8 @@ export default {
   timing: NOOP,
   spring: NOOP,
 
-  proc: () => NOOP,
+  proc: (): any => NOOP,
 
   useCode: NOOP,
-  createAnimatedComponent: (component: React.Component) => React.Component
+  createAnimatedComponent: (component: React.Component): any => React.Component
 };
