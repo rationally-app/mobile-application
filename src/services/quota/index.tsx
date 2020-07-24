@@ -1,6 +1,6 @@
 import { IS_MOCK } from "../../config";
 import { Transaction, Quota, PostTransactionResult } from "../../types";
-import { fetchWithValidator, ValidationError } from "../helpers";
+import { fetchWithValidator, ResponseError, ValidationError } from "../helpers";
 import * as Sentry from "sentry-expo";
 
 export class NotEligibleError extends Error {
@@ -194,10 +194,16 @@ export const livePostTransaction = async ({
     );
     return response;
   } catch (e) {
-    if (e instanceof ValidationError) {
-      Sentry.captureException(e);
+    switch (e.constructor) {
+      case ValidationError:
+        Sentry.captureException(e);
+        throw new PostTransactionError(e.message);
+      case ResponseError:
+        Sentry.captureException(e);
+        throw e;
+      default:
+        throw new PostTransactionError(e.message);
     }
-    throw new PostTransactionError(e.message);
   }
 };
 

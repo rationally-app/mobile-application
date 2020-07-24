@@ -150,6 +150,13 @@ export const PostTransactionResult = t.type({
 export type Transaction = t.TypeOf<typeof Transaction>;
 export type PostTransactionResult = t.TypeOf<typeof PostTransactionResult>;
 
+export const ErrorResponse = t.type({
+  description: t.string,
+  code: t.number
+});
+
+export type ErrorResponse = t.TypeOf<typeof ErrorResponse>;
+
 export type Voucher = {
   serial: string;
   denomination: number;

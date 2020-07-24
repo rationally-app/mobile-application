@@ -26,6 +26,7 @@ import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
+import { ErrorCard } from "./ErrorCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 
 const styles = StyleSheet.create({
@@ -88,7 +89,8 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     checkoutCart,
     checkoutResult,
     error,
-    clearError
+    clearError,
+    errorResponse
   } = useCart(nrics, token, endpoint);
 
   useEffect(() => {
@@ -152,6 +154,12 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
           <NoQuotaCard nrics={nrics} cart={cart} onCancel={onCancel} />
         ) : cartState === "NOT_ELIGIBLE" ? (
           <NotEligibleCard nrics={nrics} onCancel={onCancel} />
+        ) : cartState === "ERROR" ? (
+          <ErrorCard
+            nrics={nrics}
+            description={errorResponse?.description ?? "Error"}
+            onCancel={onCancel}
+          />
         ) : (
           <ItemsSelectionCard
             nrics={nrics}

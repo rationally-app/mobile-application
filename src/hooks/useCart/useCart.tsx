@@ -12,9 +12,10 @@ import {
   PostTransactionResult,
   Quota,
   ItemQuota,
-  IdentifierInput
+  IdentifierInput, ErrorResponse
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
+import { ResponseError } from "../../services/helpers";
 
 export type CartItem = {
   category: string;
@@ -36,7 +37,8 @@ type CartState =
   | "DEFAULT"
   | "CHECKING_OUT"
   | "PURCHASED"
-  | "NOT_ELIGIBLE";
+  | "NOT_ELIGIBLE"
+  | "ERROR";
 
 export type CartHook = {
   cartState: CartState;
@@ -50,6 +52,7 @@ export type CartHook = {
   checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
+  errorResponse?: ErrorResponse;
 };
 
 const getItem = (
@@ -131,6 +134,7 @@ export const useCart = (
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
+  const [errorResponse, setErrorResponse] = useState<ErrorResponse>();
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
 
   const clearError = useCallback((): void => setError(undefined), []);
@@ -279,8 +283,13 @@ export const useCart = (
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
       } catch (e) {
-        setError(new Error("Couldn't checkout, please try again later"));
-        setCartState("DEFAULT");
+        if (e instanceof ResponseError) {
+          setCartState("ERROR");
+          setErrorResponse({ description: e.message, code: e.code });
+        } else {
+          setError(new Error("Couldn't checkout, please try again later"));
+          setCartState("DEFAULT");
+        }
       }
     };
 
@@ -294,6 +303,7 @@ export const useCart = (
     checkoutCart,
     checkoutResult,
     error,
-    clearError
+    clearError,
+    errorResponse
   };
 };

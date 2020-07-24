@@ -9,6 +9,15 @@ export class ValidationError extends Error {
   }
 }
 
+export class ResponseError extends Error {
+  code: number;
+  constructor(message: string, code: number) {
+    super(message);
+    this.name = "ResponseError";
+    this.code = code;
+  }
+}
+
 export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
@@ -18,7 +27,11 @@ export async function fetchWithValidator<T, O, I>(
 
   const json = await response.json();
   if (!response.ok) {
-    throw new Error(json.message ?? "Fetch failed");
+    if (json.code) {
+      throw new ResponseError(json.message, json.code);
+    } else {
+      throw new Error(json.message ?? "Fetch failed");
+    }
   }
 
   const decoded = validator.decode(json);
