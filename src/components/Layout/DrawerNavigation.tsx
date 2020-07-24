@@ -124,7 +124,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const releaseChannel: string | undefined = Constants.manifest.releaseChannel;
   let version = "";
   if (releaseChannel) {
-    version += `ver ${Constants.nativeAppVersion}`;
+    version += `ver ${Constants.manifest.version}`;
     if (Constants.nativeBuildVersion) {
       version += ` / ${Constants.nativeBuildVersion}`;
     }
