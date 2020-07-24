@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 
 type State = { hasError: boolean; errorMessage?: string };
 
-export class ErrorBoundary extends Component<{}, State> {
+export class ErrorBoundary extends Component<unknown, State> {
   state: State = { hasError: false };
 
   static getDerivedStateFromError(error: Error): State {

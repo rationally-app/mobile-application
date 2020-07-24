@@ -18,6 +18,6 @@ export const resetNavigation = (): void => {
   params = {};
 };
 
-export const setParam = (key: string, value: any): void => {
+export const setParam = (key: string, value: unknown): void => {
   params[key] = value;
 };

@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { View, ViewStyle, SafeAreaView } from "react-native";
 
 const styles = {
@@ -6,14 +6,14 @@ const styles = {
   justifyContent: "center"
 } as ViewStyle;
 
-export const CenterDecorator = (storyFn: Function): ReactElement => (
+export const CenterDecorator = (storyFn: () => ReactNode): ReactElement => (
   <View style={{ ...styles, alignItems: "center" }}>{storyFn()}</View>
 );
 
-export const CenterVerticalDecorator = (storyFn: Function): ReactElement => (
-  <View style={styles}>{storyFn()}</View>
-);
+export const CenterVerticalDecorator = (
+  storyFn: () => ReactNode
+): ReactElement => <View style={styles}>{storyFn()}</View>;
 
-export const SafeAreaDecorator = (storyFn: Function): ReactElement => (
+export const SafeAreaDecorator = (storyFn: () => ReactNode): ReactElement => (
   <SafeAreaView style={{ flex: 1 }}>{storyFn()}</SafeAreaView>
 );
