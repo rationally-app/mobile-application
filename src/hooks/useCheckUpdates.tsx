@@ -15,7 +15,7 @@ type CheckUpdatesResult =
   | "UPDATE_ERROR";
 
 export const useCheckUpdates = (): ((
-  forceCheck: boolean
+  forceCheck?: boolean
 ) => Promise<CheckUpdatesResult>) => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
 
