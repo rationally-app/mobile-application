@@ -79,7 +79,7 @@ jobs:
       - name: Expo Publish Channel
         env:
           LATEST_RELEASE: ${{steps.latestRelease.outputs.release}}
-        run: APP_BINARY_VERSION=$GITHUB_RUN_NUMBER VERSION=${LATEST_RELEASE#*-} expo publish --non-interactive --release-channel pr${{ github.event.number }}
+        run: APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${LATEST_RELEASE#*-} expo publish --non-interactive --release-channel pr${{ github.event.number }}
       - name: Expo Publish Storybook Channel
         run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
       - name: Add Comment To PR

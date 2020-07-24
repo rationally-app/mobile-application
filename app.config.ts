@@ -3,16 +3,16 @@
 export default ({ config }: any): any => {
   return {
     ...config,
-    version: process.env.VERSION,
+    version: process.env.APP_BINARY_VERSION,
     android: {
       ...config.android,
-      versionCode: process.env.APP_BINARY_VERSION
-        ? parseInt(process.env.APP_BINARY_VERSION)
+      versionCode: process.env.APP_BUILD_VERSION
+        ? parseInt(process.env.APP_BUILD_VERSION)
         : 38
     },
     ios: {
       ...config.ios,
-      buildNumber: process.env.APP_BINARY_VERSION
+      buildNumber: process.env.APP_BUILD_VERSION
     }
   };
 };

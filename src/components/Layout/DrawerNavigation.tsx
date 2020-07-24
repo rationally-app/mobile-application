@@ -124,9 +124,9 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const releaseChannel: string | undefined = Constants.manifest.releaseChannel;
   let version = "";
   if (releaseChannel) {
-    version += `ver ${Constants.manifest.nativeAppVersion}`;
-    if (Constants.manifest.nativeBuildVersion) {
-      version += ` / ${Constants.manifest.nativeBuildVersion}`;
+    version += `ver ${Constants.nativeAppVersion}`;
+    if (Constants.nativeBuildVersion) {
+      version += ` / ${Constants.nativeBuildVersion}`;
     }
     if (releaseChannel === "staging" || releaseChannel.match(/pr\d+/g)) {
       version += ` / ${releaseChannel}`;
