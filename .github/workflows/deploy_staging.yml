@@ -40,6 +40,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Fetch Tags
+        run: |
+          git fetch --prune --unshallow --tags
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
@@ -51,20 +54,16 @@ jobs:
           expo-cache: true
       - name: Install Packages
         run: npm install
-      - name: Get Latest Release
-        id: latestRelease
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: ${{ github.repository }}
+      - name: Get Latest Binary Version #Binary Version will be x.x.x based on the latest tag
+        id: latestBinaryVersion
+        run: |
+          RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
+          echo "::set-output name=version::${RELEASE_TAG#*-}"
       - name: Echo Version Details
-        env:
-          LATEST_RELEASE: ${{steps.latestRelease.outputs.release}}
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
-          echo Latest release is ${LATEST_RELEASE#*-}
+          echo Latest release is ${{steps.latestBinaryVersion.outputs.version}}
       - name: Expo Publish Channel
-        env:
-          LATEST_RELEASE: ${{steps.latestRelease.outputs.release}}
-        run: APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${LATEST_RELEASE#*-} expo publish --non-interactive --release-channel staging
+        run: APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${{steps.latestBinaryVersion.outputs.version}} expo publish --non-interactive --release-channel staging
       - name: Expo Publish Storybook Channel
         run: expo publish --non-interactive --release-channel storybook-staging
