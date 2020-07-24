@@ -38,6 +38,7 @@ import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { useLogout } from "../../hooks/useLogout";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+import * as Linking from "expo-linking";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -144,14 +145,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   }, [isLoading, endpoint, navigation, token, features]);
 
   useEffect(() => {
-    const navKey = navigation.getParam("key", "");
-    const navEndpoint = navigation.getParam("endpoint", "");
-    if (navKey && navEndpoint) {
-      setCodeKey(navKey);
-      setEndpointTemp(navEndpoint);
-      setLoginStage("MOBILE_NUMBER");
-    }
-  }, [navigation]);
+    const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
+      const { queryParams } = await Linking.parseInitialURLAsync();
+      if (queryParams?.key && queryParams?.endpoint) {
+        setCodeKey(queryParams.key);
+        setEndpointTemp(queryParams.endpoint);
+        setLoginStage("MOBILE_NUMBER");
+      }
+    };
+    skipScanningIfParamsInDeepLink();
+  }, []);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
