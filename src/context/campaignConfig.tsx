@@ -38,13 +38,15 @@ export const CampaignConfigContextProvider: FunctionComponent = ({
 
   const setCampaignConfig: CampaignConfigContext["setCampaignConfig"] = useCallback(
     async ({ features }): Promise<void> => {
-      const featuresString = JSON.stringify(features);
-      const configHashes = {
-        features: await hashString(featuresString)
-      };
-      await AsyncStorage.multiSet([[FEATURES_KEY, featuresString]]);
-      setFeatures(features);
-      setConfigHashes(configHashes);
+      if (features) {
+        const featuresString = JSON.stringify(features);
+        const configHashes = {
+          features: await hashString(featuresString)
+        };
+        await AsyncStorage.multiSet([[FEATURES_KEY, featuresString]]);
+        setFeatures(features);
+        setConfigHashes(configHashes);
+      }
     },
     []
   );
