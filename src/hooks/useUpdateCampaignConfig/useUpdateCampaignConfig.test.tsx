@@ -54,7 +54,7 @@ describe("useUpdateCampaignConfig", () => {
       expect(result.current.fetchingState).toBe("FETCHING_CONFIG");
     });
     expect(setCampaignConfigSpy).toHaveBeenCalledTimes(1);
-    expect(result.current.fetchingState).toBe("RESULT_RETURNED_NEW_UPDATES");
+    expect(result.current.fetchingState).toBe("RETURNED_NEW_UPDATES");
     expect(result.current.result).toStrictEqual({
       features: {
         minAppBinaryVersion: "3.0.0",
@@ -81,7 +81,7 @@ describe("useUpdateCampaignConfig", () => {
       expect(result.current.fetchingState).toBe("FETCHING_CONFIG");
     });
     expect(setCampaignConfigSpy).toHaveBeenCalledTimes(0);
-    expect(result.current.fetchingState).toBe("RESULT_RETURNED_NO_UPDATES");
+    expect(result.current.fetchingState).toBe("RETURNED_NO_UPDATES");
     expect(result.current.result).toBeUndefined();
   });
 
@@ -206,7 +206,7 @@ describe("useUpdateCampaignConfig", () => {
     );
 
     await wait(() => result.current.updateCampaignConfig());
-    expect(result.current.fetchingState).toBe("RESULT_RETURNED_NEW_UPDATES");
+    expect(result.current.fetchingState).toBe("RETURNED_NEW_UPDATES");
     expect(result.current.result).not.toBeUndefined();
 
     await wait(() => {

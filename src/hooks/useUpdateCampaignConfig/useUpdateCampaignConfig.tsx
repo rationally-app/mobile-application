@@ -6,8 +6,8 @@ import { getCampaignConfig } from "../../services/campaignConfig";
 type FetchingState =
   | "DEFAULT"
   | "FETCHING_CONFIG"
-  | "RESULT_RETURNED_NEW_UPDATES"
-  | "RESULT_RETURNED_NO_UPDATES";
+  | "RETURNED_NEW_UPDATES"
+  | "RETURNED_NO_UPDATES";
 
 type UpdateCampaignConfigHook = {
   fetchingState: FetchingState;
@@ -41,10 +41,10 @@ export const useUpdateCampaignConfig = (
         const configs = Object.values(campaignConfigResponse);
         if (configs.some(c => !!c)) {
           await setCampaignConfig(campaignConfigResponse);
-          setFetchingState("RESULT_RETURNED_NEW_UPDATES");
           setResult(campaignConfigResponse);
+          setFetchingState("RETURNED_NEW_UPDATES");
         } else {
-          setFetchingState("RESULT_RETURNED_NO_UPDATES");
+          setFetchingState("RETURNED_NO_UPDATES");
         }
       } catch (e) {
         setError(e);
