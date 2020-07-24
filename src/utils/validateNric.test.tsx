@@ -11,8 +11,10 @@ describe("validate", () => {
   });
 
   it("should return false for invalid NRIC", () => {
-    expect.assertions(5);
+    expect.assertions(7);
     expect(validate("S0000001A")).toBe(false);
+    expect(validate("123AS0000001A")).toBe(false);
+    expect(validate("S0000001A123A")).toBe(false);
     expect(validate("S0000002B")).toBe(false);
     expect(validate("S0000003C")).toBe(false);
     expect(validate("S0000004D")).toBe(false);
