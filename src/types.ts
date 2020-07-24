@@ -166,9 +166,7 @@ export type Voucher = {
 
 const NewFeatures = t.type({
   minAppBinaryVersion: t.string,
-  minAppBuildVersion: t.number,
-  flowType: t.string,
-  transactionGrouping: t.boolean
+  minAppBuildVersion: t.number
 });
 
 export const CampaignConfig = t.type({
