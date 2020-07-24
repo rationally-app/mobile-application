@@ -8,7 +8,7 @@
       "android",
       "web"
     ],
-    "version": "3.6.1",
+    "version": "4.0.0",
     "orientation": "portrait",
     "scheme": "supplyally",
     "icon": "./assets/icon.png",
@@ -24,7 +24,7 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "1",
+      "buildNumber": "40",
       "supportsTablet": true,
       "bundleIdentifier": "sg.gov.tech.musket",
       "splash": {
@@ -48,7 +48,7 @@
       }
     },
     "android": {
-      "versionCode": 38,
+      "versionCode": 40,
       "package": "sg.gov.tech.musket"
     },
     "packagerOpts": {
