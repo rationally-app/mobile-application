@@ -81,6 +81,7 @@
   "private": true,
   "prettier": {
     "trailingComma": "none",
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "endOfLine": "auto"
   }
 }
