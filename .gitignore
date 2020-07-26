@@ -11,6 +11,7 @@ web-build/
 web-report/
 .cert
 .env
+.idea
 
 # macOS
 .DS_Store

@@ -8,7 +8,6 @@ import {
   View,
   StyleSheet,
   Keyboard,
-  Alert,
   Vibration,
   BackHandler
 } from "react-native";
@@ -37,6 +36,7 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
+import { AlertModalContext } from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -72,6 +72,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const [idInput, setIdInput] = useState("");
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
+  const showAlertModal = useContext(AlertModalContext);
   const checkUpdates = useCheckUpdates();
   const { features } = useProductContext();
 
@@ -126,19 +127,31 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
       }
-      Alert.alert(
-        "Error",
-        e.message || e,
-        [
-          {
-            text: "OK",
-            onPress: () => setIsScanningEnabled(true)
-          }
-        ],
-        {
-          onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
+      // Alert.alert(
+      //   "Error",
+      //   e.message || e,
+      //   [
+      //     {
+      //       text: "OK",
+      //       onPress: () => setIsScanningEnabled(true)
+      //     }
+      //   ],
+      //   {
+      //     onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
+      //   }
+      // );
+      showAlertModal({
+        alertType: "unknownType",
+        title: "customer ID wrong",
+        description: "invalid format",
+        visible: true,
+        onOk: () => {
+          console.warn("ok press");
+        },
+        onCancel: () => {
+          console.warn("cancel press");
         }
-      );
+      });
     }
   };
 

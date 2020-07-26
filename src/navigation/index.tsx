@@ -5,6 +5,7 @@ import { ProductContextProvider } from "../context/products";
 import { FontLoader } from "../components/FontLoader";
 import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
 import { HelpModalContextProvider } from "../context/help";
+import { AlertModalContextProvider } from "../context/alert";
 import { ImportantMessageContextProvider } from "../context/importantMessage";
 import { Content } from "./Content";
 import { Providers } from "../context/composeProviders";
@@ -19,6 +20,7 @@ const App = (): ReactElement => {
             ProductContextProvider,
             AuthenticationContextProvider,
             HelpModalContextProvider,
+            AlertModalContextProvider,
             ImportantMessageContextProvider
           ]}
         >
