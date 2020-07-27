@@ -6,7 +6,7 @@ import { useContext, useCallback } from "react";
 import { ImportantMessageSetterContext } from "../context/importantMessage";
 
 const LAST_UPDATE_KEY = "LAST_UPDATE";
-const CHECK_UPDATE_INTERVAL_MINUTES = 60;
+const CHECK_UPDATE_INTERVAL_MINUTES = 30;
 
 type CheckUpdatesResult =
   | "TOO_RECENT_CHECK"
