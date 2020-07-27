@@ -44,7 +44,7 @@ interface InputIdSection {
   idInput: string;
   setIdInput: (id: string) => void;
   submitId: () => void;
-  idType: KeyboardType;
+  keyboardType: KeyboardType;
 }
 
 export const InputIdSection: FunctionComponent<InputIdSection> = ({
@@ -52,7 +52,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
   idInput,
   setIdInput,
   submitId,
-  idType
+  keyboardType
 }) => {
   return (
     <>
@@ -81,7 +81,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
             onSubmitEditing={submitId}
             autoCompleteType="off"
             autoCorrect={false}
-            keyboardType={idType}
+            keyboardType={keyboardType}
           />
         </View>
         <SecondaryButton text="Check" onPress={submitId} />
