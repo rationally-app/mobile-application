@@ -178,7 +178,9 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
                 idInput={idInput}
                 setIdInput={setIdInput}
                 submitId={() => onCheck(idInput)}
-                idType={features?.id.type}
+                keyboardType={
+                  features?.id.type === "NUMBER" ? "numeric" : "default"
+                }
               />
             </Card>
           </View>
