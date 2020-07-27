@@ -1,6 +1,4 @@
-![Deploy Staging](https://github.com/rationally-app/mobile-application/workflows/Deploy%20Staging/badge.svg)
-
-![Create Release](https://github.com/rationally-app/mobile-application/workflows/Create%20Release/badge.svg)
+![Deploy Staging](https://github.com/rationally-app/mobile-application/workflows/Deploy%20Staging/badge.svg) ![Create Release](https://github.com/rationally-app/mobile-application/workflows/Create%20Release/badge.svg)
 
 # SupplyAlly
 
