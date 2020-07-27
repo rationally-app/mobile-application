@@ -171,7 +171,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               idInput={idInput}
               setIdInput={setIdInput}
               submitId={() => onCheck(idInput)}
-              idType={features?.id.type}
+              idType={features?.id.type === "NUMBER" ? "numeric" : "default"}
             />
           </Card>
           <FeatureToggler feature="HELP_MODAL">

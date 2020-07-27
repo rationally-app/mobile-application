@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, KeyboardType } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { InputWithLabel } from "../Layout/InputWithLabel";
@@ -44,7 +44,7 @@ interface InputIdSection {
   idInput: string;
   setIdInput: (id: string) => void;
   submitId: () => void;
-  idType: "STRING" | "NUMBER" | undefined;
+  idType: KeyboardType;
 }
 
 export const InputIdSection: FunctionComponent<InputIdSection> = ({
@@ -81,7 +81,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
             onSubmitEditing={submitId}
             autoCompleteType="off"
             autoCorrect={false}
-            keyboardType={idType === "NUMBER" ? "numeric" : "default"}
+            keyboardType={idType}
           />
         </View>
         <SecondaryButton text="Check" onPress={submitId} />
