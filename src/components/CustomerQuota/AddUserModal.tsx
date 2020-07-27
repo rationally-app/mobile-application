@@ -94,8 +94,8 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
       setIsScanningEnabled(false);
       const id = validateAndCleanId(
         input,
-        features?.id.validation,
-        features?.id.validationRegex
+        features?.id?.validation,
+        features?.id?.validationRegex
       );
       Vibration.vibrate(50);
       if (ids.indexOf(id) > -1) {
@@ -150,7 +150,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             onCancel={() => setShouldShowCamera(false)}
             cancelButtonText="Enter ID manually"
             barCodeTypes={
-              features?.id.scannerType === "QR"
+              features?.id?.scannerType === "QR"
                 ? [BarCodeScanner.Constants.BarCodeType.qr]
                 : [BarCodeScanner.Constants.BarCodeType.code39]
             }
@@ -179,7 +179,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
                 setIdInput={setIdInput}
                 submitId={() => onCheck(idInput)}
                 keyboardType={
-                  features?.id.type === "NUMBER" ? "numeric" : "default"
+                  features?.id?.type === "NUMBER" ? "numeric" : "default"
                 }
               />
             </Card>
