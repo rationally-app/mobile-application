@@ -2,7 +2,7 @@ import { IS_MOCK } from "../../config";
 import * as t from "io-ts";
 import { SessionCredentials } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 
 export class LoginError extends Error {
   constructor(message: string) {
