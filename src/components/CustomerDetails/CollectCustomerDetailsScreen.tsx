@@ -115,8 +115,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIsScanningEnabled(false);
       const id = validateAndCleanId(
         input,
-        features?.id.validation,
-        features?.id.validationRegex
+        features?.id?.validation,
+        features?.id?.validationRegex
       );
       Vibration.vibrate(50);
       navigation.navigate("CustomerQuotaScreen", { id });
@@ -172,7 +172,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               setIdInput={setIdInput}
               submitId={() => onCheck(idInput)}
               keyboardType={
-                features?.id.type === "NUMBER" ? "numeric" : "default"
+                features?.id?.type === "NUMBER" ? "numeric" : "default"
               }
             />
           </Card>
@@ -188,7 +188,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           onCancel={() => setShouldShowCamera(false)}
           cancelButtonText="Enter ID manually"
           barCodeTypes={
-            features?.id.scannerType === "QR"
+            features?.id?.scannerType === "QR"
               ? [BarCodeScanner.Constants.BarCodeType.qr]
               : [BarCodeScanner.Constants.BarCodeType.code39]
           }
