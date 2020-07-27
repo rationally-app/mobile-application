@@ -1,8 +1,14 @@
-[![CircleCI](https://circleci.com/gh/rationally-app/mobile-application.svg?style=svg)](https://circleci.com/gh/rationally-app/mobile-application)
+![Deploy Staging](https://github.com/rationally-app/mobile-application/workflows/Deploy%20Staging/badge.svg)
+
+![Create Release](https://github.com/rationally-app/mobile-application/workflows/Create%20Release/badge.svg)
 
 # SupplyAlly
 
 SupplyAlly helps ensure that everyone can get their fair share of items. By scanning a person's ID, you'll be able to track whether his allocated quota has been used up.
+
+## Deployed Staging Application
+
+![Expo Staging QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/@supplyallytest/rationally?release-channel=staging)
 
 ## Development
 
@@ -39,15 +45,11 @@ SENTRY_ORG
 SENTRY_PROJECT
 ```
 
-For first time release, a base-ref tag will need to be input into the changelog generator within the `with` parameter and needs to be removed after initial setup.
+If you're releasing this for the first time, you need to create a tag to specify the initial version of the app. This allows the changelog generator to generate the correct set of changes. A `base-ref` property will then need to be created in the changelog generator's `with` parameter. Once released, this property can be removed.
 
 ```
 uses: metcalfc/changelog-generator@v0.4.0
 with:
    myToken: ${{ secrets.GITHUB_TOKEN }}
-   base-ref: <base-tag>
+   base-ref: <base-tag> # e.g. prod-0
 ```
-
-## Deployed Staging Application
-
-![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/@supplyallytest/rationally?release-channel=staging)
