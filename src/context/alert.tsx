@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, FunctionComponent, useState } from "react";
+import React, {createContext, FunctionComponent, useState} from "react";
 import {
   AlertModal,
-  AlertModalProp
+  AlertModalProp,
+  AlertType
 } from "../components/AlertModal/AlertModal";
 
 const defaultAlertProp: AlertModalProp = {
-  alertType: "unknownType",
+  alertType: AlertType.ERROR,
   title: "unknownTitle",
   description: "unknownDes",
   visible: false,

@@ -6,18 +6,36 @@ import {
   TouchableHighlight,
   View
 } from "react-native";
+import AlertLogo from "../../../assets/icons/alert.svg";
 
 const styles = StyleSheet.create({
+  alertIcon: {
+    marginTop: 24,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center"
+  },
+  primaryBtnText: {
+    color: "blue"
+  },
+  primaryBtnTextDes: {
+    color: "red"
+  },
+  primaryBtnTextInfo: {
+    color: "black"
+  },
   centeredView: {
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    alignSelf: "center"
   },
   modalView: {
     marginBottom: 0,
     padding: 0,
-    width: 200,
+    width: 280,
     backgroundColor: "white",
     borderRadius: 20,
     shadowColor: "#000",
@@ -51,28 +69,46 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around"
   },
-  modalCancelButton: {
-    borderWidth: 1,
-    borderColor: "red",
+  modalButton: {
     marginVertical: 20,
     color: "black",
     textAlign: "center"
   }
 });
 
+export enum AlertType {
+  ERROR,
+  WARN,
+  CONFIRM,
+  INFO
+}
+
 export interface AlertModalProp {
-  alertType: string;
+  alertType: AlertType;
   title: string;
   description: string;
   visible: boolean;
   onOk: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
   onExit?: any;
 }
 
 export const AlertModal: FunctionComponent<AlertModalProp> = (
   props: AlertModalProp
 ) => {
+  const getPrimaryBtnTextColor = (alertType: AlertType): { color: string } => {
+    switch (alertType) {
+      case AlertType.ERROR:
+        return styles.primaryBtnText;
+      case AlertType.WARN:
+        return styles.primaryBtnTextDes;
+      case AlertType.CONFIRM:
+        return styles.primaryBtnText;
+      default:
+        return styles.primaryBtnTextInfo;
+    }
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -84,27 +120,40 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
+          {props.alertType == AlertType.ERROR && (
+            <AlertLogo
+              style={styles.alertIcon}
+              width={48}
+              height={48}
+              viewBox="0 0 300 300"
+            />
+          )}
           <Text style={styles.modalTitle}>{props.title}</Text>
           <Text style={styles.modalText}>{props.description}</Text>
           <View style={styles.modalSeparator} />
           <View style={styles.modalGroupButton}>
+            {props.alertType != AlertType.ERROR &&
+              props.alertType != AlertType.INFO && (
+                <TouchableHighlight
+                  style={styles.modalButton}
+                  onPress={() => {
+                    props.onExit();
+                    props.onCancel && props.onCancel();
+                  }}
+                >
+                  <Text>CTA</Text>
+                </TouchableHighlight>
+              )}
             <TouchableHighlight
-              style={styles.modalCancelButton}
-              onPress={() => {
-                props.onExit();
-                props.onCancel();
-              }}
-            >
-              <Text>CTA</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.modalCancelButton}
+              style={styles.modalButton}
               onPress={() => {
                 props.onExit();
                 props.onOk();
               }}
             >
-              <Text>Prefer CTA</Text>
+              <Text style={getPrimaryBtnTextColor(props.alertType)}>
+                Prefer CTA
+              </Text>
             </TouchableHighlight>
           </View>
         </View>
