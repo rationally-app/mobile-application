@@ -139,7 +139,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          marginTop: size(5),
+          marginTop: size(8),
           marginRight: size(2),
           alignItems: "flex-end"
         }}
