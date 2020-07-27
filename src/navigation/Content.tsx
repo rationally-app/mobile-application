@@ -12,12 +12,34 @@ import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
 import { useValidateExpiry } from "../hooks/useValidateExpiry";
 import * as Linking from "expo-linking";
+import { createDrawerNavigator } from "react-navigation-drawer";
+import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation";
+import { StackViewTransitionConfigs } from "react-navigation-stack";
 
 const SwitchNavigator = createSwitchNavigator(
   {
     LoginScreen: { screen: LoginScreen, path: "login" },
-    CustomerQuotaStack,
-    MerchantPayoutStack
+    DrawerNavigator: createDrawerNavigator(
+      {
+        CustomerQuotaStack: {
+          screen: CustomerQuotaStack
+        },
+        MerchantPayoutStack: {
+          screen: MerchantPayoutStack
+        }
+      },
+      {
+        drawerPosition: "right",
+        drawerType: "slide",
+        contentComponent: DrawerNavigationComponent,
+        navigationOptions: {
+          transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
+          navigationOptions: {
+            gesturesEnabled: true
+          }
+        }
+      }
+    )
   },
   { initialRouteName: "LoginScreen" }
 );

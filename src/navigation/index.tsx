@@ -8,6 +8,7 @@ import { HelpModalContextProvider } from "../context/help";
 import { ImportantMessageContextProvider } from "../context/importantMessage";
 import { Content } from "./Content";
 import { Providers } from "../context/composeProviders";
+import { DrawerContextProvider } from "../context/drawer";
 
 const App = (): ReactElement => {
   return (
@@ -19,7 +20,8 @@ const App = (): ReactElement => {
             ProductContextProvider,
             AuthenticationContextProvider,
             HelpModalContextProvider,
-            ImportantMessageContextProvider
+            ImportantMessageContextProvider,
+            DrawerContextProvider
           ]}
         >
           <Content />

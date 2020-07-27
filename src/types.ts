@@ -1,13 +1,10 @@
 import * as t from "io-ts";
 import { DateFromNumber } from "io-ts-types/lib/DateFromNumber";
-import {
-  NavigationParams,
-  NavigationScreenProp,
-  NavigationRoute
-} from "react-navigation";
+import { NavigationParams, NavigationRoute } from "react-navigation";
+import { NavigationDrawerProp } from "react-navigation-drawer";
 
 export interface NavigationProps {
-  navigation: NavigationScreenProp<NavigationRoute, NavigationParams>;
+  navigation: NavigationDrawerProp<NavigationRoute, NavigationParams>;
 }
 
 export const SessionCredentials = t.type({

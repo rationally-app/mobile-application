@@ -3,12 +3,7 @@
     "name": "SupplyAlly",
     "slug": "rationally",
     "privacy": "public",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "4.0.0",
+    "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "scheme": "supplyally",
     "icon": "./assets/icon.png",
@@ -20,11 +15,8 @@
     "updates": {
       "fallbackToCacheTimeout": 10000
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "buildNumber": "40",
       "supportsTablet": true,
       "bundleIdentifier": "sg.gov.tech.musket",
       "splash": {
@@ -48,18 +40,11 @@
       }
     },
     "android": {
-      "versionCode": 40,
       "package": "sg.gov.tech.musket"
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": [
-        "js",
-        "jsx",
-        "ts",
-        "tsx",
-        "svg"
-      ]
+      "sourceExts": ["js", "jsx", "ts", "tsx", "svg"]
     },
     "hooks": {
       "postPublish": [

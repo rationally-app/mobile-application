@@ -27,8 +27,14 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
+      latestBinaryVersion: ${{steps.latestBinaryVersion.outputs.version}}
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Fetch Tags
+        run: |
+          git fetch --prune --unshallow --tags
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
@@ -46,8 +52,19 @@ jobs:
           echo "::set-output name=releaseChannel::$RELEASE_CHANNEL"
       - name: Install Packages
         run: npm install
+      - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
+        id: latestBinaryVersion
+        run: |
+          # Release tag finds the lastest tag in the tree branch - i.e. prod-x.x.x
+          RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
+          # Using param substitution, we output x.x.x instead
+          echo "::set-output name=version::${RELEASE_TAG#*-}"
+      - name: Echo Version Details
+        run: |
+          echo Build number is $GITHUB_RUN_NUMBER
+          echo Latest release is ${{steps.latestBinaryVersion.outputs.version}}
       - name: Expo Publish Channel
-        run: expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
+        run: APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${{steps.latestBinaryVersion.outputs.version}} expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
   create_release:
     name: Create Release
     needs: deploy_prod
@@ -85,7 +102,7 @@ jobs:
         run: npm install
       - name: Build Android Release
         run: |
-          expo build:android --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogAndroid.txt
+          APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${{ needs.deploy_prod.outputs.latestBinaryVersion }} expo build:android --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogAndroid.txt
           cat buildLogAndroid.txt
       - name: Parse Asset URL
         id: androidUrl
@@ -118,7 +135,7 @@ jobs:
         run: npm install
       - name: Build IOS Release
         run: |
-          expo build:ios --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogIOS.txt
+          APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${{ needs.deploy_prod.outputs.latestBinaryVersion }} expo build:ios --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogIOS.txt
           cat buildLogIOS.txt
       - name: Parse Asset URL
         id: iosUrl
