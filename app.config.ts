@@ -11,7 +11,7 @@ const buildNumber: string = getValue(
   process.env.APP_BUILD_VERSION,
   "Please provide a Build Version with APP_BUILD_VERSION env variable"
 );
-// The APP_BUILD_VERSION number is 38 behind the actual deploy, adding synchronize the version
+// The APP_BUILD_VERSION number is 38 behind the actual deploy, adding 38 synchronises the build number
 const androidVersionCode = parseInt(buildNumber) + 38;
 const iosVersionCode = androidVersionCode.toString();
 
