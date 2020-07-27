@@ -70,7 +70,7 @@ jobs:
         run: |
           # Release tag finds the lastest tag in the tree branch - i.e. prod-x.x.x
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
-          # Using param subsition, we output x.x.x instead
+          # Using param substitution, we output x.x.x instead
           echo "::set-output name=version::${RELEASE_TAG#*-}"
       - name: Echo Version Details
         run: |
