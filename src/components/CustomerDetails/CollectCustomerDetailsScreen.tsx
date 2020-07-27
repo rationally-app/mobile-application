@@ -1,29 +1,43 @@
-import React, {FunctionComponent, useContext, useEffect, useState} from "react";
-import {BackHandler, Keyboard, StyleSheet, Vibration, View} from "react-native";
-import {size} from "../../common/styles";
-import {Card} from "../Layout/Card";
-import {AppText} from "../Layout/AppText";
-import {TopBackground} from "../Layout/TopBackground";
-import {Credits} from "../Credits";
-import {useConfigContext} from "../../context/config";
-import {NavigationFocusInjectedProps, withNavigationFocus} from "react-navigation";
-import {IdScanner} from "../IdScanner/IdScanner";
-import {BarCodeScannedCallback, BarCodeScanner} from "expo-barcode-scanner";
-import {validateAndCleanId} from "../../utils/validateIdentification";
-import {InputIdSection} from "./InputIdSection";
-import {AppHeader} from "../Layout/AppHeader";
+import React, {
+  FunctionComponent,
+  useContext,
+  useEffect,
+  useState
+} from "react";
+import {
+  BackHandler,
+  Keyboard,
+  StyleSheet,
+  Vibration,
+  View
+} from "react-native";
+import { size } from "../../common/styles";
+import { Card } from "../Layout/Card";
+import { AppText } from "../Layout/AppText";
+import { TopBackground } from "../Layout/TopBackground";
+import { Credits } from "../Credits";
+import { useConfigContext } from "../../context/config";
+import {
+  NavigationFocusInjectedProps,
+  withNavigationFocus
+} from "react-navigation";
+import { IdScanner } from "../IdScanner/IdScanner";
+import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
+import { validateAndCleanId } from "../../utils/validateIdentification";
+import { InputIdSection } from "./InputIdSection";
+import { AppHeader } from "../Layout/AppHeader";
 import * as Sentry from "sentry-expo";
-import {HelpButton} from "../Layout/Buttons/HelpButton";
-import {HelpModalContext} from "../../context/help";
-import {FeatureToggler} from "../FeatureToggler/FeatureToggler";
-import {Banner} from "../Layout/Banner";
-import {ImportantMessageContentContext} from "../../context/importantMessage";
-import {useCheckUpdates} from "../../hooks/useCheckUpdates";
-import {KeyboardAvoidingScrollView} from "../Layout/KeyboardAvoidingScrollView";
-import {useProductContext} from "../../context/products";
-import {EnvVersionError} from "../../services/envVersion";
-import {AlertModalContext} from "../../context/alert";
-import {AlertType} from "../AlertModal/AlertModal";
+import { HelpButton } from "../Layout/Buttons/HelpButton";
+import { HelpModalContext } from "../../context/help";
+import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
+import { Banner } from "../Layout/Banner";
+import { ImportantMessageContentContext } from "../../context/importantMessage";
+import { useCheckUpdates } from "../../hooks/useCheckUpdates";
+import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+import { useProductContext } from "../../context/products";
+import { EnvVersionError } from "../../services/envVersion";
+import { AlertModalContext } from "../../context/alert";
+import { AlertType } from "../AlertModal/AlertModal";
 
 const styles = StyleSheet.create({
   content: {
