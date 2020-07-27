@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { SafeAreaView } from "react-navigation";
 import {
   DrawerContentComponentProps,
   DrawerActions
