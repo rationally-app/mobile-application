@@ -2,10 +2,10 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev expo start",
-    "start:mock": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev EXPO_MOCK=true expo start",
+    "start:mock": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev MOCK=true expo start",
     "test": "jest",
     "test:watch": "jest --watch",
-    "storybook": "EXPO_START_STORYBOOK=true expo start",
+    "storybook": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev START_STORYBOOK=true expo start",
     "android": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev expo start --android",
     "ios": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev expo start --ios",
     "web": "expo start --web",

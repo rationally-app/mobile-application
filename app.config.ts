@@ -27,6 +27,10 @@ export default ({ config }: any): any => {
     ios: {
       ...config.ios,
       buildNumber
+    },
+    extra: {
+      mock: process.env.MOCK === "true",
+      storybook: process.env.START_STORYBOOK === "true"
     }
   };
 };
