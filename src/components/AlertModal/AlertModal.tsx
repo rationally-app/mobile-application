@@ -1,40 +1,22 @@
-import React, { FunctionComponent } from "react";
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} from "react-native";
+import React, { FunctionComponent, ReactElement } from "react";
+import { Modal, StyleSheet, Text, View } from "react-native";
 import AlertLogo from "../../../assets/icons/alert.svg";
+import { DarkButton } from "../Layout/Buttons/DarkButton";
+import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
+import { DangerButton } from "../Layout/Buttons/DangerButton";
 
 const styles = StyleSheet.create({
-  alertIcon: {
-    marginTop: 24,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center"
-  },
-  primaryBtnText: {
-    color: "blue"
-  },
-  primaryBtnTextDes: {
-    color: "red"
-  },
-  primaryBtnTextInfo: {
-    color: "black"
-  },
   centeredView: {
     flex: 1,
-    flexDirection: "column",
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center"
+    alignSelf: "center",
+    backgroundColor: "rgba(0,0,0,0.6)"
   },
   modalView: {
     marginBottom: 0,
-    padding: 0,
+    paddingTop: 24,
     width: 280,
     backgroundColor: "white",
     borderRadius: 20,
@@ -47,32 +29,40 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5
   },
+  alertIcon: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    marginBottom: 9
+  },
   modalTitle: {
-    marginTop: 20,
     fontWeight: "bold",
-    fontSize: 18,
-    textAlign: "center"
+    fontFamily: "brand-bold",
+    fontSize: 20,
+    color: "#305367",
+    textAlign: "center",
+    marginHorizontal: 28,
+    marginBottom: 4
   },
   modalText: {
-    marginTop: 20,
-    marginHorizontal: 5,
+    marginHorizontal: 32.5,
+    marginBottom: 32,
     textAlign: "center",
-    color: "gray"
-  },
-  modalSeparator: {
-    marginTop: 20,
-    borderBottomColor: "gray",
-    borderBottomWidth: 1,
-    alignSelf: "stretch"
+    fontSize: 16,
+    color: "#305367"
   },
   modalGroupButton: {
     flexDirection: "row",
-    justifyContent: "space-around"
+    marginHorizontal: 16,
+    marginBottom: 24
   },
-  modalButton: {
-    marginVertical: 20,
-    color: "black",
-    textAlign: "center"
+  modalSecondaryBtm: {
+    flex: 2,
+    marginRight: 8
+  },
+  modalPrimaryButton: {
+    flex: 3
   }
 });
 type AlertType = "ERROR" | "WARN" | "CONFIRM" | "INFO";
@@ -90,22 +80,36 @@ export interface AlertModalProp {
 export const AlertModal: FunctionComponent<AlertModalProp> = (
   props: AlertModalProp
 ) => {
-  const getPrimaryBtnTextColor = (alertType: AlertType): { color: string } => {
+  const getPrimaryButton = (alertType: AlertType): ReactElement => {
     switch (alertType) {
-      case "ERROR":
-        return styles.primaryBtnText;
       case "WARN":
-        return styles.primaryBtnTextDes;
-      case "CONFIRM":
-        return styles.primaryBtnText;
+        return (
+          <DangerButton
+            text={"PREF. CTA"}
+            fullWidth={true}
+            onPress={() => {
+              props.onExit();
+              props.onCancel && props.onCancel();
+            }}
+          />
+        );
       default:
-        return styles.primaryBtnTextInfo;
+        return (
+          <DarkButton
+            text={"PREF. CTA"}
+            fullWidth={true}
+            onPress={() => {
+              props.onExit();
+              props.onCancel && props.onCancel();
+            }}
+          />
+        );
     }
   };
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={props.visible}
       onRequestClose={() => {
@@ -115,39 +119,26 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           {props.alertType === "ERROR" && (
-            <AlertLogo
-              style={styles.alertIcon}
-              width={48}
-              height={48}
-              viewBox="0 0 300 300"
-            />
+            <AlertLogo style={styles.alertIcon} />
           )}
           <Text style={styles.modalTitle}>{props.title}</Text>
           <Text style={styles.modalText}>{props.description}</Text>
-          <View style={styles.modalSeparator} />
           <View style={styles.modalGroupButton}>
             {props.alertType !== "ERROR" && props.alertType !== "INFO" && (
-              <TouchableHighlight
-                style={styles.modalButton}
-                onPress={() => {
-                  props.onExit();
-                  props.onCancel && props.onCancel();
-                }}
-              >
-                <Text>CTA</Text>
-              </TouchableHighlight>
+              <View style={styles.modalSecondaryBtm}>
+                <SecondaryButton
+                  text={"CTA"}
+                  fullWidth={true}
+                  onPress={() => {
+                    props.onExit();
+                    props.onCancel && props.onCancel();
+                  }}
+                />
+              </View>
             )}
-            <TouchableHighlight
-              style={styles.modalButton}
-              onPress={() => {
-                props.onExit();
-                props.onOk();
-              }}
-            >
-              <Text style={getPrimaryBtnTextColor(props.alertType)}>
-                Prefer CTA
-              </Text>
-            </TouchableHighlight>
+            <View style={styles.modalPrimaryButton}>
+              {getPrimaryButton(props.alertType)}
+            </View>
           </View>
         </View>
       </View>

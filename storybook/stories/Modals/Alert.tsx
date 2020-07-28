@@ -39,23 +39,23 @@ storiesOf("Modals", module).add("Alerts", () => (
   <View style={{ flex: 1, alignItems: "center", marginTop: size(6) }}>
     <AlertModalItem
       alertType={"ERROR"}
-      title={"Error Title"}
-      description={"Error Description"}
+      title={"Title"}
+      description={"Description and how to recover"}
     />
     <AlertModalItem
       alertType={"WARN"}
       title={"Warn Title"}
-      description={"Warn Description"}
+      description={"Confirm a destructive choice"}
     />
     <AlertModalItem
       alertType={"CONFIRM"}
       title={"Confirm Title"}
-      description={"Confirm Description"}
+      description={"Confirm a choice"}
     />
     <AlertModalItem
       alertType={"INFO"}
       title={"Info Title"}
-      description={"Info Description"}
+      description={"Communicate important info"}
     />
   </View>
 ));
