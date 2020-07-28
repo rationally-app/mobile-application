@@ -23,6 +23,7 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
 }) => (
   <BaseButton
     onPress={onPress}
+    borderColor={color("blue", disabled ? 20 : 50)}
     backgroundColor={color("blue", disabled ? 20 : 50)}
     fullWidth={fullWidth}
     disabled={disabled || isLoading}
