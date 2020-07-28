@@ -37,7 +37,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
 import { AlertModalContext } from "../../context/alert";
-import { AlertType } from "../AlertModal/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 const styles = StyleSheet.create({
   content: {
@@ -74,6 +74,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const showAlertModal = useContext(AlertModalContext);
+  const { showAlert } = useAlert();
   const checkUpdates = useCheckUpdates();
   const { features } = useProductContext();
 
@@ -141,8 +142,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       //     onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
       //   }
       // );
-      showAlertModal({
-        alertType: AlertType.ERROR,
+      showAlert({
+        alertType: "ERROR",
         title: "customer ID wrong1",
         description: "invalid format",
         visible: true,

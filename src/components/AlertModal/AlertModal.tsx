@@ -75,13 +75,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   }
 });
-
-export enum AlertType {
-  ERROR,
-  WARN,
-  CONFIRM,
-  INFO
-}
+type AlertType = "ERROR" | "WARN" | "CONFIRM" | "INFO";
 
 export interface AlertModalProp {
   alertType: AlertType;
@@ -98,11 +92,11 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
 ) => {
   const getPrimaryBtnTextColor = (alertType: AlertType): { color: string } => {
     switch (alertType) {
-      case AlertType.ERROR:
+      case "ERROR":
         return styles.primaryBtnText;
-      case AlertType.WARN:
+      case "WARN":
         return styles.primaryBtnTextDes;
-      case AlertType.CONFIRM:
+      case "CONFIRM":
         return styles.primaryBtnText;
       default:
         return styles.primaryBtnTextInfo;
@@ -120,7 +114,7 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          {props.alertType == AlertType.ERROR && (
+          {props.alertType === "ERROR" && (
             <AlertLogo
               style={styles.alertIcon}
               width={48}
@@ -132,8 +126,8 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
           <Text style={styles.modalText}>{props.description}</Text>
           <View style={styles.modalSeparator} />
           <View style={styles.modalGroupButton}>
-            {props.alertType != AlertType.ERROR &&
-              props.alertType != AlertType.INFO && (
+            {props.alertType !== "ERROR" &&
+              props.alertType !== "INFO" && (
                 <TouchableHighlight
                   style={styles.modalButton}
                   onPress={() => {

@@ -2,12 +2,11 @@
 import React, { createContext, FunctionComponent, useState } from "react";
 import {
   AlertModal,
-  AlertModalProp,
-  AlertType
+  AlertModalProp
 } from "../components/AlertModal/AlertModal";
 
 const defaultAlertProp: AlertModalProp = {
-  alertType: AlertType.ERROR,
+  alertType: "ERROR",
   title: "unknownTitle",
   description: "unknownDes",
   visible: false,
@@ -16,34 +15,48 @@ const defaultAlertProp: AlertModalProp = {
   onExit: () => {}
 };
 
-// TODO: fix up the constant and enum later
-export const AlertModalContext = createContext(
-  (incomingState: AlertModalProp) => {}
-);
+interface AlertModalContext {
+  alertProps: AlertModalProp;
+  setAlert: (props: AlertModalProp) => void;
+  clearAlert: () => void;
+}
+
+export const AlertModalContext = createContext<AlertModalContext>({
+  alertProps: defaultAlertProp,
+  setAlert: () => null,
+  clearAlert: () => null
+});
 
 export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
-  const [alertState, setAlertState] = useState<AlertModalProp>(
+  const [alertProps, setAlertProps] = useState<AlertModalContext["alertProps"]>(
     defaultAlertProp
   );
 
-  const showAlertModal = (incomingState: AlertModalProp): void =>
-    setAlertState(incomingState);
+  const setAlert: AlertModalContext["setAlert"] = (props: AlertModalProp) => {
+    setAlertProps(props);
+  };
+
+  const clearAlert: AlertModalContext["clearAlert"] = () => {
+    setAlertProps(defaultAlertProp);
+  };
 
   return (
-    <AlertModalContext.Provider value={showAlertModal}>
+    <AlertModalContext.Provider
+      value={{
+        alertProps,
+        setAlert,
+        clearAlert
+      }}
+    >
       {children}
       <AlertModal
-        alertType={alertState.alertType}
-        title={alertState.title}
-        description={alertState.description}
-        visible={alertState.visible}
-        onOk={alertState.onOk}
-        onCancel={alertState.onCancel}
-        onExit={() =>
-          setAlertState(prev => {
-            return { ...prev, visible: false };
-          })
-        }
+        alertType={alertProps.alertType}
+        title={alertProps.title}
+        description={alertProps.description}
+        visible={alertProps.visible}
+        onOk={alertProps.onOk}
+        onCancel={alertProps.onCancel}
+        onExit={clearAlert}
       />
     </AlertModalContext.Provider>
   );
