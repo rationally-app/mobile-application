@@ -30,7 +30,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     defaultAlertProp
   );
 
-  const setAlert: AlertModalContext["showAlert"] = (props: AlertModalProp) => {
+  const showAlert: AlertModalContext["showAlert"] = (props: AlertModalProp) => {
     setAlertProps(props);
   };
 
@@ -41,7 +41,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
   return (
     <AlertModalContext.Provider
       value={{
-        showAlert: setAlert,
+        showAlert,
         clearAlert
       }}
     >
