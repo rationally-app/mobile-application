@@ -1,15 +1,16 @@
 import React, {
   FunctionComponent,
-  useContext,
+  useState,
   useEffect,
-  useState
+  useContext
 } from "react";
 import {
-  BackHandler,
-  Keyboard,
+  View,
   StyleSheet,
+  Keyboard,
+  Alert,
   Vibration,
-  View
+  BackHandler
 } from "react-native";
 import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -18,15 +19,15 @@ import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
 import {
-  NavigationFocusInjectedProps,
-  withNavigationFocus
+  withNavigationFocus,
+  NavigationFocusInjectedProps
 } from "react-navigation";
 import { IdScanner } from "../IdScanner/IdScanner";
-import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
+import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { validateAndCleanId } from "../../utils/validateIdentification";
 import { InputIdSection } from "./InputIdSection";
 import { AppHeader } from "../Layout/AppHeader";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { HelpModalContext } from "../../context/help";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
@@ -36,7 +37,6 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
-import { AlertModalContext } from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -72,7 +72,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const [idInput, setIdInput] = useState("");
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const { showAlert } = useContext(AlertModalContext);
   const checkUpdates = useCheckUpdates();
   const { features } = useProductContext();
 
@@ -116,8 +115,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIsScanningEnabled(false);
       const id = validateAndCleanId(
         input,
-        features?.id.validation,
-        features?.id.validationRegex
+        features?.id?.validation,
+        features?.id?.validationRegex
       );
       Vibration.vibrate(50);
       navigation.navigate("CustomerQuotaScreen", { id });
@@ -127,31 +126,19 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
       }
-      // Alert.alert(
-      //   "Error",
-      //   e.message || e,
-      //   [
-      //     {
-      //       text: "OK",
-      //       onPress: () => setIsScanningEnabled(true)
-      //     }
-      //   ],
-      //   {
-      //     onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
-      //   }
-      // );
-      showAlert({
-        alertType: "ERROR",
-        title: "customer ID wrong",
-        description: "invalid format",
-        visible: true,
-        onOk: () => {
-          console.warn("ok press");
+      Alert.alert(
+        "Error",
+        e.message || e,
+        [
+          {
+            text: "OK",
+            onPress: () => setIsScanningEnabled(true)
+          }
+        ],
+        {
+          onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
         }
-        // onCancel: () => {
-        //   console.warn("cancel press");
-        // }
-      });
+      );
     }
   };
 
@@ -184,7 +171,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               idInput={idInput}
               setIdInput={setIdInput}
               submitId={() => onCheck(idInput)}
-              idType={features?.id.type}
+              keyboardType={
+                features?.id?.type === "NUMBER" ? "numeric" : "default"
+              }
             />
           </Card>
           <FeatureToggler feature="HELP_MODAL">
@@ -199,7 +188,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           onCancel={() => setShouldShowCamera(false)}
           cancelButtonText="Enter ID manually"
           barCodeTypes={
-            features?.id.scannerType === "QR"
+            features?.id?.scannerType === "QR"
               ? [BarCodeScanner.Constants.BarCodeType.qr]
               : [BarCodeScanner.Constants.BarCodeType.code39]
           }
