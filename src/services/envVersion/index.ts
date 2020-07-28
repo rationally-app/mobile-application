@@ -1,7 +1,7 @@
 import { IS_MOCK } from "../../config";
 import { EnvVersion } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 
 export class EnvVersionError extends Error {
   constructor(message: string) {

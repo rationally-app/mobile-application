@@ -1,6 +1,6 @@
 import { Updates } from "expo";
 import { AsyncStorage } from "react-native";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../utils/errorTracking";
 import { differenceInMinutes } from "date-fns";
 import { useContext, useCallback } from "react";
 import { ImportantMessageSetterContext } from "../context/importantMessage";

@@ -37,6 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Fetch Tags
+        run: |
+          git fetch --prune --unshallow --tags
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
@@ -60,8 +65,19 @@ jobs:
             ${{ runner.os }}-
       - name: Install Packages
         run: npm install
+      - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
+        id: latestBinaryVersion
+        run: |
+          # Release tag finds the lastest tag in the tree branch - i.e. prod-x.x.x
+          RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
+          # Using param substitution, we output x.x.x instead
+          echo "::set-output name=version::${RELEASE_TAG#*-}"
+      - name: Echo Version Details
+        run: |
+          echo Build number is $GITHUB_RUN_NUMBER
+          echo Latest release is ${{steps.latestBinaryVersion.outputs.version}}
       - name: Expo Publish Channel
-        run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
+        run: APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${{steps.latestBinaryVersion.outputs.version}} expo publish --non-interactive --release-channel pr${{ github.event.number }}
       - name: Expo Publish Storybook Channel
         run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
       - name: Add Comment To PR

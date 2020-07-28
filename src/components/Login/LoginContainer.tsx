@@ -27,7 +27,7 @@ import { LoginMobileNumberCard } from "./LoginMobileNumberCard";
 import { LoginOTPCard } from "./LoginOTPCard";
 import { AppName } from "../Layout/AppName";
 import { IdScanner } from "../IdScanner/IdScanner";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 import { LoginStage } from "./types";
 import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";

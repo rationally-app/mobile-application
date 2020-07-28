@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from "react";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 import { Updates } from "expo";
 import { AppText } from "../Layout/AppText";
 import { StyleSheet, View, Linking } from "react-native";
