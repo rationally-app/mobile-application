@@ -125,10 +125,8 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   let version = "";
   if (releaseChannel) {
     version += `ver ${Constants.manifest.version}`;
-    if (Constants.platform?.ios) {
-      version += ` / ${Constants.manifest.ios.buildNumber}`;
-    } else if (Constants.platform?.android) {
-      version += ` / ${Constants.manifest.android.versionCode}`;
+    if (Constants.manifest.extra.appBuildVersion) {
+      version += ` / ${Constants.manifest.extra.appBuildVersion}`;
     }
     if (releaseChannel === "staging" || releaseChannel.match(/pr\d+/g)) {
       version += ` / ${releaseChannel}`;
