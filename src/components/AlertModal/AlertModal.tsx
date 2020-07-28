@@ -126,18 +126,17 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
           <Text style={styles.modalText}>{props.description}</Text>
           <View style={styles.modalSeparator} />
           <View style={styles.modalGroupButton}>
-            {props.alertType !== "ERROR" &&
-              props.alertType !== "INFO" && (
-                <TouchableHighlight
-                  style={styles.modalButton}
-                  onPress={() => {
-                    props.onExit();
-                    props.onCancel && props.onCancel();
-                  }}
-                >
-                  <Text>CTA</Text>
-                </TouchableHighlight>
-              )}
+            {props.alertType !== "ERROR" && props.alertType !== "INFO" && (
+              <TouchableHighlight
+                style={styles.modalButton}
+                onPress={() => {
+                  props.onExit();
+                  props.onCancel && props.onCancel();
+                }}
+              >
+                <Text>CTA</Text>
+              </TouchableHighlight>
+            )}
             <TouchableHighlight
               style={styles.modalButton}
               onPress={() => {

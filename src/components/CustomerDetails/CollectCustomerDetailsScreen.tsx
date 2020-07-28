@@ -37,7 +37,6 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
 import { AlertModalContext } from "../../context/alert";
-import { useAlert } from "../../hooks/useAlert";
 
 const styles = StyleSheet.create({
   content: {
@@ -73,8 +72,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const [idInput, setIdInput] = useState("");
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const showAlertModal = useContext(AlertModalContext);
-  const { showAlert } = useAlert();
+  const { showAlert } = useContext(AlertModalContext);
   const checkUpdates = useCheckUpdates();
   const { features } = useProductContext();
 
@@ -144,7 +142,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       // );
       showAlert({
         alertType: "ERROR",
-        title: "customer ID wrong1",
+        title: "customer ID wrong",
         description: "invalid format",
         visible: true,
         onOk: () => {

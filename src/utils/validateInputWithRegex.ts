@@ -1,8 +1,6 @@
 import { EnvVersionError } from "../services/envVersion";
 
 export const validate = (id: string, idRegex: string): boolean => {
-  const result = id.match(/^CFP-[A-Z0-9]{8,16}$/);
-  console.warn("Result", result);
   return id.match(idRegex) !== null;
 };
 

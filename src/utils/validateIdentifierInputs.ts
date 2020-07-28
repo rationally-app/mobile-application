@@ -26,7 +26,7 @@ export const validateIdentifierInputs = (
       throw new Error("Invalid details");
     }
     if (!isMatchRegex(value, validationRegex)) {
-      throw new Error("Invalid detailsss");
+      throw new Error("Invalid details");
     }
     if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
       throw new Error("Invalid contact number");
