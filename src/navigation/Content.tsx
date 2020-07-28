@@ -15,9 +15,11 @@ import * as Linking from "expo-linking";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation";
 import { StackViewTransitionConfigs } from "react-navigation-stack";
+import { DisputeReasonScreen } from "../components/Dispute/DisputeReasonScreen";
 
 const SwitchNavigator = createSwitchNavigator(
   {
+    DisputeReasonScreen: { screen: DisputeReasonScreen, path: "dispute" },
     LoginScreen: { screen: LoginScreen, path: "login" },
     DrawerNavigator: createDrawerNavigator(
       {
@@ -41,7 +43,8 @@ const SwitchNavigator = createSwitchNavigator(
       }
     )
   },
-  { initialRouteName: "LoginScreen" }
+  // { initialRouteName: "LoginScreen" }
+  { initialRouteName: "DisputeReasonScreen" }
 );
 
 const AppContainer = createAppContainer(SwitchNavigator);
