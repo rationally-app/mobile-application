@@ -11,7 +11,8 @@ const buildNumber: string = getValue(
   process.env.APP_BUILD_VERSION,
   "Please provide a Build Version with APP_BUILD_VERSION env variable"
 );
-const androidVersionCode: number = parseInt(buildNumber);
+// The APP_BUILD_VERSION number is 38 behind the actual deploy, adding 38 synchronises the build number
+const appBuildVersion = parseInt(buildNumber) + 38;
 
 export default ({ config }: any): any => {
   return {
@@ -22,15 +23,16 @@ export default ({ config }: any): any => {
     ),
     android: {
       ...config.android,
-      versionCode: androidVersionCode
+      versionCode: appBuildVersion
     },
     ios: {
       ...config.ios,
-      buildNumber
+      buildNumber: appBuildVersion.toString()
     },
     extra: {
       mock: process.env.MOCK === "true",
-      storybook: process.env.START_STORYBOOK === "true"
+      storybook: process.env.START_STORYBOOK === "true",
+      appBuildVersion
     }
   };
 };

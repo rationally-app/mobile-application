@@ -1,7 +1,7 @@
 import { requestOTP, LoginError, validateOTP } from "./index";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 
-jest.mock("sentry-expo");
+jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 

@@ -27,7 +27,7 @@ import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { validateAndCleanId } from "../../utils/validateIdentification";
 import { InputIdSection } from "./InputIdSection";
 import { AppHeader } from "../Layout/AppHeader";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { HelpModalContext } from "../../context/help";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
