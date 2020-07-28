@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
   postTransaction,
