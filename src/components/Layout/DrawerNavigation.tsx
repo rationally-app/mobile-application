@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { SafeAreaView } from "react-navigation";
 import {
   DrawerContentComponentProps,
   DrawerActions
@@ -136,7 +135,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={{ flex: 1, marginBottom: size(2) }}>
       <View
         style={{
           marginTop: size(8),
@@ -200,6 +199,6 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </BottomNavigationLink>
         <AppText style={styles.bottomVersionText}>{version}</AppText>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
