@@ -11,7 +11,7 @@ import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
 import { useValidateExpiry } from "../hooks/useValidateExpiry";
-import { Linking } from "expo";
+import * as Linking from "expo-linking";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation";
 import { StackViewTransitionConfigs } from "react-navigation-stack";
