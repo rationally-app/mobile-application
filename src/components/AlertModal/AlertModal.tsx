@@ -4,6 +4,7 @@ import AlertLogo from "../../../assets/icons/alert.svg";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
+import { size } from "../../common/styles";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     width: 280,
     backgroundColor: "white",
-    borderRadius: 20,
+    borderRadius: size(1),
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
