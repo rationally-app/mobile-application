@@ -23,12 +23,14 @@ interface ReasonSelectionCard {
   ids: string[];
   reasonSelectionHeader: string;
   reasons: string[];
+  onCancel: () => void;
 }
 
 export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   ids,
   reasonSelectionHeader,
-  reasons
+  reasons,
+  onCancel
 }) => {
   return (
     <View>
@@ -51,7 +53,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
       <View style={styles.backbuttonComponent}>
         <SecondaryButton
           text="Back"
-          onPress={() => console.warn("onpress")}
+          onPress={() => onCancel()}
           fullWidth={true}
         />
       </View>

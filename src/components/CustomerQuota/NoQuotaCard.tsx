@@ -112,6 +112,7 @@ interface NoQuotaCard {
   ids: string[];
   cart: Cart;
   onCancel: () => void;
+  onAppeal: () => void;
 }
 
 /**

@@ -6,7 +6,7 @@ import React, {
   useContext
 } from "react";
 import { View, StyleSheet, Alert, ActivityIndicator } from "react-native";
-import { NavigationProps } from "../../types";
+import { NavigationProps, Appeal } from "../../types";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -17,6 +17,7 @@ import { Card } from "../Layout/Card";
 import { useCart } from "../../hooks/useCart/useCart";
 import * as Sentry from "sentry-expo";
 import { HelpModalContext } from "../../context/help";
+import { useProductContext } from "../../context/products";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { useValidateExpiry } from "../../hooks/useValidateExpiry";
@@ -57,10 +58,16 @@ const showAlert = (message: string, onDismiss: () => void): void =>
     onDismiss: onDismiss // for android outside alert clicks
   });
 
+const getReasons = (appeal: Appeal[]): string[] => {
+  return appeal.map(appealEntry => appealEntry.reason);
+};
+
 export const AppealReasonScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
+
+  const { getAppeal } = useProductContext();
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -73,6 +80,10 @@ export const AppealReasonScreen: FunctionComponent<NavigationProps> = ({
   useEffect(() => {
     validateTokenExpiry();
   }, [validateTokenExpiry]);
+
+  const onCancel = useCallback((): void => {
+    navigation.goBack();
+  }, [navigation]);
 
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
@@ -95,7 +106,8 @@ export const AppealReasonScreen: FunctionComponent<NavigationProps> = ({
         <ReasonSelectionCard
           ids={ids}
           reasonSelectionHeader={"Indicate reason for dispute"}
-          reasons={["Lost/stolen token", "Dead battery", "Damaged token"]}
+          reasons={getReasons(getAppeal() ?? [])}
+          onCancel={onCancel}
         />
         <FeatureToggler feature="HELP_MODAL">
           <HelpButton onPress={showHelpModal} />
