@@ -101,6 +101,22 @@ const IdentificationFlag = t.intersection([
   })
 ]);
 
+const Appeal = t.intersection([
+  t.type({
+    reason: t.string,
+    order: t.number,
+    quantity: PolicyQuantity
+  }),
+  t.partial({
+    description: t.string,
+    image: t.string,
+    thresholdValue: t.number,
+    thresholdAlert: t.string,
+    identifiers: t.array(PolicyIdentifier),
+    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")])
+  })
+]);
+
 const Features = t.type({
   REQUIRE_OTP: t.boolean,
   TRANSACTION_GROUPING: t.boolean,
@@ -108,10 +124,15 @@ const Features = t.type({
   id: IdentificationFlag
 });
 
-export const EnvVersion = t.type({
-  policies: t.array(Policy),
-  features: Features
-});
+export const EnvVersion = t.intersection([
+  t.type({
+    policies: t.array(Policy),
+    features: Features
+  }),
+  t.partial({
+    appeal: t.array(Appeal)
+  })
+]);
 
 export type TextInputType = t.TypeOf<typeof TextInputType>;
 export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
@@ -120,6 +141,7 @@ export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;
 export type EnvVersion = t.TypeOf<typeof EnvVersion>;
 export type Features = t.TypeOf<typeof Features>;
+export type Appeal = t.TypeOf<typeof Appeal>;
 
 const ItemQuota = t.intersection([
   t.type({

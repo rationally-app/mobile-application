@@ -4,6 +4,7 @@ import {
 } from "react-navigation-stack";
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerQuotaScreen from "./CustomerQuotaScreen";
+import AppealReasonScreen from "./AppealReasonScreen";
 
 const CustomerQuotaStack = createStackNavigator(
   {
@@ -12,6 +13,9 @@ const CustomerQuotaStack = createStackNavigator(
     },
     CustomerQuotaScreen: {
       screen: CustomerQuotaScreen
+    },
+    AppealReasonScreen: {
+      screen: AppealReasonScreen
     }
   },
   {

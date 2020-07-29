@@ -106,6 +106,10 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     setIds(ids => [...ids, id]);
   }, []);
 
+  const onAppeal = useCallback((): void => {
+    navigation.navigate("AppealReasonScreen", { ids });
+  }, [ids, navigation]);
+
   useEffect(() => {
     if (!error) {
       return;
@@ -149,7 +153,12 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             checkoutResult={checkoutResult}
           />
         ) : cartState === "NO_QUOTA" ? (
-          <NoQuotaCard ids={ids} cart={cart} onCancel={onCancel} />
+          <NoQuotaCard
+            ids={ids}
+            cart={cart}
+            onCancel={onCancel}
+            onAppeal={onAppeal}
+          />
         ) : cartState === "NOT_ELIGIBLE" ? (
           <NotEligibleCard ids={ids} onCancel={onCancel} />
         ) : (

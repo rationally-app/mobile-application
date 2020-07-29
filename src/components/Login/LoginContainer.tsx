@@ -83,7 +83,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [endpointTemp, setEndpointTemp] = useState("");
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const { features, setFeatures, setProducts } = useProductContext();
+  const { features, setFeatures, setProducts, setAppeal } = useProductContext();
   const { logout } = useLogout();
 
   const resetStage = (): void => {
@@ -108,6 +108,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const versionResponse = await getEnvVersion(token, endpoint);
         setFeatures(versionResponse.features);
         setProducts(versionResponse.policies);
+        setAppeal(versionResponse.appeal);
       } catch (e) {
         if (e instanceof EnvVersionError) {
           Sentry.captureException(e);
@@ -123,7 +124,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     if (token && endpoint && !features) {
       setEnvVersion();
     }
-  }, [endpoint, token, setFeatures, setProducts, features, handleLogout]);
+  }, [
+    endpoint,
+    token,
+    setFeatures,
+    setProducts,
+    setAppeal,
+    features,
+    handleLogout
+  ]);
 
   useLayoutEffect(() => {
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {

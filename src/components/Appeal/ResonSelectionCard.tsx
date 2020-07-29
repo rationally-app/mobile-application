@@ -20,17 +20,19 @@ const styles = StyleSheet.create({
 });
 
 interface ReasonSelectionCard {
+  ids: string[];
   reasonSelectionHeader: string;
   reasons: string[];
 }
 
 export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
+  ids,
   reasonSelectionHeader,
   reasons
 }) => {
   return (
     <View>
-      <CustomerCard ids={["S1234567G"]}>
+      <CustomerCard ids={ids}>
         <Card>
           <View style={styles.common}>
             <ReasonSelectionHeader title={reasonSelectionHeader} />

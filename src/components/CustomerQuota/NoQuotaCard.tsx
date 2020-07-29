@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { compareDesc } from "date-fns";
 import { differenceInSeconds, format, formatDistance } from "date-fns";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { CustomerCard } from "./CustomerCard";
 import { AppText } from "../Layout/AppText";
 import { color, size, fontSize } from "../../common/styles";
@@ -36,6 +36,12 @@ const styles = StyleSheet.create({
   },
   itemDetail: {
     fontSize: fontSize(-1)
+  },
+  appealButton: {
+    marginTop: size(1),
+    marginBottom: 0,
+    fontWeight: "bold",
+    fontSize: size(2)
   }
 });
 
@@ -84,6 +90,24 @@ const NoPreviousTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>Limit reached.</AppText>
 );
 
+const AppealButton: FunctionComponent<AppealButton> = ({ onAppeal }) => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        onAppeal();
+      }}
+    >
+      <View style={{ alignItems: "center" }}>
+        <AppText style={styles.appealButton}>{"Raise dispute"}</AppText>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+interface AppealButton {
+  onAppeal: () => void;
+}
+
 interface NoQuotaCard {
   ids: string[];
   cart: Cart;
@@ -98,9 +122,10 @@ interface NoQuotaCard {
 export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   ids,
   cart,
-  onCancel
+  onCancel,
+  onAppeal
 }) => {
-  const { getProduct } = useProductContext();
+  const { getProduct, getAppeal } = useProductContext();
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
@@ -174,8 +199,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
+        <DarkButton text="Next identitys" onPress={onCancel} fullWidth={true} />
       </View>
+      {getAppeal() ? <AppealButton onAppeal={onAppeal} /> : undefined}
     </View>
   );
 };

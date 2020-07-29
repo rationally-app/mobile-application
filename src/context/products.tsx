@@ -5,15 +5,18 @@ import React, {
   useState,
   useCallback
 } from "react";
-import { Policy, Features } from "../types";
+import { Policy, Features, Appeal } from "../types";
 
 export interface ProductContextValue {
   products: Policy[];
   features: Features | undefined;
+  appeal?: Appeal[];
   setProducts: (products: Policy[]) => void;
   getProduct: (category: string) => Policy | undefined;
   setFeatures: (features: Features) => void;
   getFeatures: () => Features | undefined;
+  setAppeal: (appeal: Appeal[] | undefined) => void;
+  getAppeal: () => Appeal[] | undefined;
 }
 
 export const ProductContext = createContext<ProductContextValue>({
@@ -22,7 +25,9 @@ export const ProductContext = createContext<ProductContextValue>({
   setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getProduct: () => undefined,
   setFeatures: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  getFeatures: () => undefined
+  getFeatures: () => undefined,
+  setAppeal: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  getAppeal: () => undefined
 });
 
 export const useProductContext = (): ProductContextValue =>
@@ -41,6 +46,9 @@ export const ProductContextProvider: FunctionComponent = ({ children }) => {
     features
   ]);
 
+  const [appeal, setAppeal] = useState<Appeal[]>();
+  const getAppeal = useCallback((): Appeal[] | undefined => appeal, [appeal]);
+
   return (
     <ProductContext.Provider
       value={{
@@ -49,7 +57,9 @@ export const ProductContextProvider: FunctionComponent = ({ children }) => {
         setProducts,
         getProduct,
         setFeatures,
-        getFeatures
+        getFeatures,
+        setAppeal,
+        getAppeal
       }}
     >
       {children}

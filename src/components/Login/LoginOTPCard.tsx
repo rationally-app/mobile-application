@@ -50,7 +50,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     RESEND_OTP_TIME_LIMIT
   );
   const { setAuthInfo } = useAuthenticationContext();
-  const { setFeatures, setProducts } = useProductContext();
+  const { setFeatures, setProducts, setAppeal } = useProductContext();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -82,6 +82,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
         setFeatures(versionResponse.features);
         setProducts(versionResponse.policies);
+        setAppeal(versionResponse.appeal);
       } else {
         alert(
           "Invalid Environment Error: Make sure you scanned a valid QR code"

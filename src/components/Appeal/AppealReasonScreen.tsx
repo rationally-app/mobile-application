@@ -57,13 +57,15 @@ const showAlert = (message: string, onDismiss: () => void): void =>
     onDismiss: onDismiss // for android outside alert clicks
   });
 
-export const DisputeReasonScreen: FunctionComponent<NavigationProps> = ({
+export const AppealReasonScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  const [ids, setIds] = useState([navigation.getParam("ids")]);
+
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "CustomerQuotaScreen"
+      message: "AppealReasonScreen"
     });
   }, []);
 
@@ -91,6 +93,7 @@ export const DisputeReasonScreen: FunctionComponent<NavigationProps> = ({
           </View>
         )}
         <ReasonSelectionCard
+          ids={ids}
           reasonSelectionHeader={"Indicate reason for dispute"}
           reasons={["Lost/stolen token", "Dead battery", "Damaged token"]}
         />
