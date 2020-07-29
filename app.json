@@ -40,7 +40,8 @@
       }
     },
     "android": {
-      "package": "sg.gov.tech.musket"
+      "package": "sg.gov.tech.musket",
+      "permissions": ["CAMERA", "VIBRATE"]
     },
     "packagerOpts": {
       "config": "metro.config.js",
