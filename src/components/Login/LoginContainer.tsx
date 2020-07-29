@@ -191,6 +191,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       try {
         const { key, endpoint } = decodeQr(qrCode);
         Vibration.vibrate(50);
+        const endpointCheck = process.env.DOMAIN_CHECK as string;
+        if (!RegExp(endpointCheck).test(endpoint))
+          throw Error("Invalid endpoint");
         setCodeKey(key);
         setEndpointTemp(endpoint);
         setIsLoading(false);
