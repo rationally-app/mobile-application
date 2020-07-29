@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useState
 } from "react";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 import { StyleSheet, View } from "react-native";
 import { size } from "../../common/styles";
 import { NavigationProps } from "../../types";

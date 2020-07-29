@@ -1,7 +1,7 @@
 import { IS_MOCK } from "../../config";
 import { CampaignConfig, ConfigHashes } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 
 export class CampaignConfigError extends Error {
   constructor(message: string) {

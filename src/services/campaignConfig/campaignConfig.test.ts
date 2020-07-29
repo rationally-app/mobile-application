@@ -1,8 +1,8 @@
 import { getCampaignConfig, CampaignConfigError } from "./campaignConfig";
-import * as Sentry from "sentry-expo";
 import { boolean } from "io-ts";
+import { Sentry } from "../../utils/errorTracking";
 
-jest.mock("sentry-expo");
+jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
