@@ -9,6 +9,7 @@ const defaultAlertProp: AlertModalProp = {
   alertType: "ERROR",
   title: "",
   description: "",
+  buttonTextType: "OK_CANCEL",
   visible: false,
   onOk: () => {},
   onCancel: () => {},
@@ -50,6 +51,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
         alertType={alertProps.alertType}
         title={alertProps.title}
         description={alertProps.description}
+        buttonTextType={alertProps.buttonTextType}
         visible={alertProps.visible}
         onOk={alertProps.onOk}
         onCancel={alertProps.onCancel}
