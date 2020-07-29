@@ -135,14 +135,7 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
   }, [callToAction.primaryActionText, props]);
 
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={props.visible}
-      onRequestClose={() => {
-        console.warn("Modal has been closed.");
-      }}
-    >
+    <Modal animationType="fade" transparent={true} visible={props.visible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           {props.alertType === "ERROR" && (
