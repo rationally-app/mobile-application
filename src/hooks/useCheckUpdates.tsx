@@ -1,4 +1,4 @@
-import { Updates } from "expo";
+import * as Updates from "expo-updates";
 import { AsyncStorage } from "react-native";
 import { Sentry } from "../utils/errorTracking";
 import { differenceInMinutes } from "date-fns";
@@ -51,7 +51,7 @@ export const useCheckUpdates = (): ((
                       "Simply tap on update to apply the latest updates!",
                     action: {
                       label: "Update",
-                      callback: () => Updates.reloadFromCache()
+                      callback: () => Updates.reloadAsync()
                     },
                     featherIconName: "gift"
                   }
