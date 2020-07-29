@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement, useMemo } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 import { Modal, StyleSheet, Text, View } from "react-native";
 import AlertLogo from "../../../assets/icons/alert.svg";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -101,18 +101,18 @@ export interface AlertModalProp {
 export const AlertModal: FunctionComponent<AlertModalProp> = (
   props: AlertModalProp
 ) => {
-  const getCtaButton = useMemo(
+  const callToAction = useMemo(
     () =>
       callToActionCollection[props.buttonTextType] as CallToActionButtonTexts,
     [props.buttonTextType]
   );
 
-  const getPrimaryButton = (alertType: AlertType): ReactElement => {
-    switch (alertType) {
+  const primaryButton = useMemo(() => {
+    switch (props.alertType) {
       case "WARN":
         return (
           <DangerButton
-            text={getCtaButton.primaryActionText}
+            text={callToAction.primaryActionText}
             fullWidth={true}
             onPress={() => {
               props.onExit();
@@ -123,7 +123,7 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
       default:
         return (
           <DarkButton
-            text={getCtaButton.primaryActionText}
+            text={callToAction.primaryActionText}
             fullWidth={true}
             onPress={() => {
               props.onExit();
@@ -132,7 +132,7 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
           />
         );
     }
-  };
+  }, [callToAction.primaryActionText, props]);
 
   return (
     <Modal
@@ -154,7 +154,7 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
             {props.alertType !== "ERROR" && props.alertType !== "INFO" && (
               <View style={styles.modalSecondaryBtm}>
                 <SecondaryButton
-                  text={getCtaButton.secondaryActionText || ""}
+                  text={callToAction.secondaryActionText || ""}
                   fullWidth={true}
                   onPress={() => {
                     props.onExit();
@@ -163,9 +163,7 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
                 />
               </View>
             )}
-            <View style={styles.modalPrimaryButton}>
-              {getPrimaryButton(props.alertType)}
-            </View>
+            <View style={styles.modalPrimaryButton}>{primaryButton}</View>
           </View>
         </View>
       </View>
