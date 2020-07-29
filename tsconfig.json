@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "noImplicitAny": true,
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+    "target": "esnext"
   },
   "includes": ["src"]
 }
