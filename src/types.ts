@@ -163,3 +163,19 @@ export type Voucher = {
   serial: string;
   denomination: number;
 };
+
+const NewFeatures = t.type({
+  minAppBinaryVersion: t.string,
+  minAppBuildVersion: t.number
+});
+
+export const CampaignConfig = t.type({
+  features: t.union([NewFeatures, t.null])
+});
+
+export type CampaignFeatures = t.TypeOf<typeof NewFeatures>;
+export type CampaignConfig = t.TypeOf<typeof CampaignConfig>;
+
+export type ConfigHashes = {
+  [config in keyof CampaignConfig]?: string;
+};
