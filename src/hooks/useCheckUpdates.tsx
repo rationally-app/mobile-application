@@ -31,7 +31,7 @@ export const useCheckUpdates = (): ((
           forceCheck ||
           !lastUpdate ||
           differenceInMinutes(new Date(), Number(lastUpdate)) >
-          CHECK_UPDATE_INTERVAL_MINUTES
+            CHECK_UPDATE_INTERVAL_MINUTES
         ) {
           const update = await Updates.checkForUpdateAsync();
           if (update.isAvailable) {
@@ -46,15 +46,15 @@ export const useCheckUpdates = (): ((
               msg
                 ? msg
                 : {
-                  title: "Update available",
-                  description:
-                    "Simply tap on update to apply the latest updates!",
-                  action: {
-                    label: "Update",
-                    callback: () => Updates.reloadAsync()
-                  },
-                  featherIconName: "gift"
-                }
+                    title: "Update available",
+                    description:
+                      "Simply tap on update to apply the latest updates!",
+                    action: {
+                      label: "Update",
+                      callback: () => Updates.reloadAsync()
+                    },
+                    featherIconName: "gift"
+                  }
             );
             return "UPDATE_READY";
           } else {
