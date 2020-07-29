@@ -35,6 +35,13 @@ const RETRY_UPDATE_TIMES = 3;
 export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  useEffect(() => {
+    Sentry.addBreadcrumb({
+      category: "navigation",
+      message: "CampaignInitialisationScreen"
+    });
+  }, []);
+
   const { token, endpoint } = useAuthenticationContext();
   const { fetchingState, updateCampaignConfig } = useUpdateCampaignConfig(
     token,
