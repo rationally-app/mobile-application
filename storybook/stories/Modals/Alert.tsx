@@ -2,7 +2,8 @@ import React, { FunctionComponent, useState } from "react";
 import { storiesOf } from "@storybook/react-native";
 import {
   AlertModal,
-  AlertModalProp
+  AlertModalProp,
+  CallToActionKey
 } from "../../../src/components/AlertModal/AlertModal";
 import { size } from "../../../src/common/styles";
 import { View } from "react-native";
@@ -12,6 +13,7 @@ const AlertModalItem: FunctionComponent<{
   alertType: AlertModalProp["alertType"];
   title: AlertModalProp["title"];
   description: AlertModalProp["description"];
+  buttonActionText: CallToActionKey;
 }> = props => {
   const [visible, setVisible] = useState(false);
   const close = (): void => setVisible(false);
@@ -27,6 +29,7 @@ const AlertModalItem: FunctionComponent<{
         alertType={props.alertType}
         title={props.title}
         description={props.description}
+        buttonTextType={props.buttonActionText}
         visible={visible}
         onOk={close}
         onExit={close}
@@ -41,21 +44,25 @@ storiesOf("Modals", module).add("Alerts", () => (
       alertType={"ERROR"}
       title={"Title"}
       description={"Description and how to recover"}
+      buttonActionText={"OK_CANCEL"}
     />
     <AlertModalItem
       alertType={"WARN"}
       title={"Warn Title"}
       description={"Confirm a destructive choice"}
+      buttonActionText={"YES_NO"}
     />
     <AlertModalItem
       alertType={"CONFIRM"}
       title={"Confirm Title"}
       description={"Confirm a choice"}
+      buttonActionText={"CONFIRM_CANCEL"}
     />
     <AlertModalItem
       alertType={"INFO"}
       title={"Info Title"}
       description={"Communicate important info"}
+      buttonActionText={"OK_CANCEL"}
     />
   </View>
 ));
