@@ -7,8 +7,10 @@ import { ReasonSelectionCard } from "../../../src/components/Appeal/ResonSelecti
 storiesOf("Dispute", module).add("ReasonDispute", () => (
   <View style={{ margin: size(3) }}>
     <ReasonSelectionCard
+      ids={["S1234567G"]}
       reasonSelectionHeader={"Indicate reason for dispute"}
       reasons={["Lost/stolen token", "Dead battery", "Damaged token"]}
+      onCancel={() => undefined}
     />
   </View>
 ));
