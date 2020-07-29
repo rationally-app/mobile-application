@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import React, { FunctionComponent } from "react";
-import { size } from "../../common/styles";
-import { AppText } from "../Layout/AppText";
+import { size } from "../../../common/styles";
+import { AppText } from "../../Layout/AppText";
 
 const styles = StyleSheet.create({
   reasonSelectionComponent: {

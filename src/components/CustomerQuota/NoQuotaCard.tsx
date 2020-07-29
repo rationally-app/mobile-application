@@ -200,7 +200,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text="Next identitys" onPress={onCancel} fullWidth={true} />
+        <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
       </View>
       {getAppeal() ? <AppealButton onAppeal={onAppeal} /> : undefined}
     </View>

@@ -107,7 +107,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   }, []);
 
   const onAppeal = useCallback((): void => {
-    navigation.navigate("AppealReasonScreen", { ids });
+    navigation.navigate("CustomerAppealScreen", { ids });
   }, [ids, navigation]);
 
   useEffect(() => {

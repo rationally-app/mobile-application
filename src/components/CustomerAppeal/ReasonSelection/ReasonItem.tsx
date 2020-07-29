@@ -1,8 +1,7 @@
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import React, { FunctionComponent } from "react";
-import { size, color } from "../../common/styles";
-import { AppText } from "../Layout/AppText";
-import { reduce } from "lodash";
+import { size, color } from "../../../common/styles";
+import { AppText } from "../../Layout/AppText";
 
 const styles = StyleSheet.create({
   reasonComponent: {
@@ -24,7 +23,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export const Reason: FunctionComponent<{
+export const ReasonItem: FunctionComponent<{
   description: string;
   alert?: string;
   isLast: boolean;

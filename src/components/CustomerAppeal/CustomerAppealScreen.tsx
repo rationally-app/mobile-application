@@ -1,21 +1,17 @@
 import React, {
   FunctionComponent,
-  useState,
-  useEffect,
   useCallback,
-  useContext
+  useContext,
+  useEffect,
+  useState
 } from "react";
-import { View, StyleSheet, Alert, ActivityIndicator } from "react-native";
-import { NavigationProps, Appeal } from "../../types";
-import { color, size } from "../../common/styles";
-import { useAuthenticationContext } from "../../context/auth";
+import { Alert, StyleSheet, View } from "react-native";
+import { Appeal, NavigationProps } from "../../types";
+import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
-import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
-import { Card } from "../Layout/Card";
-import { useCart } from "../../hooks/useCart/useCart";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 import { HelpModalContext } from "../../context/help";
 import { useProductContext } from "../../context/products";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
@@ -24,7 +20,7 @@ import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { ReasonSelectionCard } from "./ResonSelectionCard";
+import { ReasonSelectionCard } from "./ReasonSelection/ReasonSelectionCard";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -62,7 +58,7 @@ const getReasons = (appeal: Appeal[]): string[] => {
   return appeal.map(appealEntry => appealEntry.reason);
 };
 
-export const AppealReasonScreen: FunctionComponent<NavigationProps> = ({
+export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
@@ -72,7 +68,7 @@ export const AppealReasonScreen: FunctionComponent<NavigationProps> = ({
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "AppealReasonScreen"
+      message: "CustomerAppealScreen"
     });
   }, []);
 

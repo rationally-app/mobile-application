@@ -1,13 +1,11 @@
-import React, { FunctionComponent, useState } from "react";
-import { View, Alert, StyleSheet } from "react-native";
-import { CustomerCard } from "../CustomerQuota/CustomerCard";
-import { size, color } from "../../common/styles";
-import { Feather } from "@expo/vector-icons";
-import { AppText } from "../Layout/AppText";
-import { Card } from "../Layout/Card";
+import React, { FunctionComponent } from "react";
+import { StyleSheet, View } from "react-native";
+import { CustomerCard } from "../../CustomerQuota/CustomerCard";
+import { size } from "../../../common/styles";
+import { Card } from "../../Layout/Card";
 import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
-import { Reason } from "./Reason";
-import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
+import { ReasonItem } from "./ReasonItem";
+import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
 
 const styles = StyleSheet.create({
   common: {
@@ -41,7 +39,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
           </View>
           <View style={styles.common}>
             {reasons.map(reason => (
-              <Reason
+              <ReasonItem
                 key={reason}
                 description={reason}
                 isLast={reasons[reasons.length - 1] === reason}
