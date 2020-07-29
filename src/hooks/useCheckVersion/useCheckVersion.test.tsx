@@ -21,9 +21,7 @@ const wrapper = (
     value={{
       features: {
         minAppBinaryVersion: minAppBinaryVersion,
-        minAppBuildVersion: minAppBuildVersion,
-        flowType: "DEFAULT",
-        transactionGrouping: true
+        minAppBuildVersion: minAppBuildVersion
       },
       setCampaignConfig: () => null,
       clearCampaignConfig: () => null,
