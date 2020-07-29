@@ -103,7 +103,8 @@ const IdentificationFlag = t.intersection([
 
 const Appeal = t.intersection([
   t.type({
-    reason: t.string,
+    category: t.string,
+    name: t.string,
     order: t.number,
     quantity: PolicyQuantity
   }),
@@ -130,7 +131,7 @@ export const EnvVersion = t.intersection([
     features: Features
   }),
   t.partial({
-    appeal: t.array(Appeal)
+    appeals: t.array(Appeal)
   })
 ]);
 

@@ -83,7 +83,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [endpointTemp, setEndpointTemp] = useState("");
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const { features, setFeatures, setProducts, setAppeal } = useProductContext();
+  const {
+    features,
+    setFeatures,
+    setProducts,
+    setAppeals
+  } = useProductContext();
   const { logout } = useLogout();
 
   const resetStage = (): void => {
@@ -108,7 +113,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const versionResponse = await getEnvVersion(token, endpoint);
         setFeatures(versionResponse.features);
         setProducts(versionResponse.policies);
-        setAppeal(versionResponse.appeal);
+        setAppeals(versionResponse.appeals ?? []);
       } catch (e) {
         if (e instanceof EnvVersionError) {
           Sentry.captureException(e);
@@ -129,7 +134,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     token,
     setFeatures,
     setProducts,
-    setAppeal,
+    setAppeals,
     features,
     handleLogout
   ]);

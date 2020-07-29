@@ -55,7 +55,7 @@ const showAlert = (message: string, onDismiss: () => void): void =>
   });
 
 const getReasons = (appeal: Appeal[]): string[] => {
-  return appeal.map(appealEntry => appealEntry.reason);
+  return appeal.map(appealEntry => appealEntry.name);
 };
 
 export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
@@ -63,7 +63,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
 
-  const { getAppeal } = useProductContext();
+  const { appeals } = useProductContext();
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -102,7 +102,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         <ReasonSelectionCard
           ids={ids}
           reasonSelectionHeader={"Indicate reason for dispute"}
-          reasons={getReasons(getAppeal() ?? [])}
+          reasons={getReasons(appeals)}
           onCancel={onCancel}
         />
         <FeatureToggler feature="HELP_MODAL">

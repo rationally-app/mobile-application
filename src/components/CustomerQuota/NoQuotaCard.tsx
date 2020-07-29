@@ -112,7 +112,7 @@ interface NoQuotaCard {
   ids: string[];
   cart: Cart;
   onCancel: () => void;
-  onAppeal: () => void;
+  onAppeal?: () => void;
 }
 
 /**
@@ -126,7 +126,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   onCancel,
   onAppeal
 }) => {
-  const { getProduct, getAppeal } = useProductContext();
+  const { getProduct, appeals } = useProductContext();
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
@@ -202,7 +202,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
       </View>
-      {getAppeal() ? <AppealButton onAppeal={onAppeal} /> : undefined}
+      {onAppeal && appeals.length > 0 ? (
+        <AppealButton onAppeal={onAppeal} />
+      ) : undefined}
     </View>
   );
 };
