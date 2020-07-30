@@ -22,6 +22,7 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { ReasonSelectionCard } from "./ReasonSelection/ReasonSelectionCard";
+import { StackActions } from "react-navigation";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -60,14 +61,11 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
 
-  const { setProducts, allProducts } = useProductContext();
+  const { setProducts, allProducts, products } = useProductContext();
 
   useEffect(() => {
-    const focusListender = navigation.addListener("didFocus", () => {
-      console.warn("set appeal product here");
-    });
+    const focusListender = navigation.addListener("didFocus", () => {});
     return () => {
-      console.warn("remove customerAppeal listener");
       focusListender.remove();
     };
   }, [navigation]);
@@ -101,8 +99,17 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     );
     if (policy === undefined) return false;
 
-    console.warn(`${productName} has been swapped`);
     setProducts([policy]);
+    // navigation.goBack();
+    const pushAction = StackActions.push({
+      routeName: "CustomerQuotaScreen",
+      params: {
+        id: ids
+      }
+    });
+
+    navigation.dispatch(pushAction);
+    // navigation.navigate("CustomerQuotaScreen", { id: ids, policy: policy });
     return true;
   };
 
