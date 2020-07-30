@@ -71,6 +71,8 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        run: APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${{steps.latestBinaryVersion.outputs.version}} expo publish --non-interactive --release-channel staging
+          APP_BUILD_VERSION: $GITHUB_RUN_NUMBER
+          APP_BINARY_VERSION: ${{steps.latestBinaryVersion.outputs.version}}
+        run: expo publish --non-interactive --release-channel staging
       - name: Expo Publish Storybook Channel
         run: expo publish --non-interactive --release-channel storybook-staging
