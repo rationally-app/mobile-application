@@ -126,7 +126,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   onCancel,
   onAppeal
 }) => {
-  const { getProduct, appeals } = useProductContext();
+  const { getProduct, allProducts } = useProductContext();
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
@@ -154,6 +154,10 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const secondsFromLatestTransaction = latestTransactionTime
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
+
+  const hasAppealProduct = (): boolean => {
+    return allProducts.some(policy => policy.categoryType === "APPEAL");
+  };
 
   return (
     <View>
@@ -202,7 +206,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
       </View>
-      {onAppeal && appeals.length > 0 ? (
+      {onAppeal && hasAppealProduct() ? (
         <AppealButton onAppeal={onAppeal} />
       ) : undefined}
     </View>

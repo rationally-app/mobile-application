@@ -5,30 +5,28 @@ import React, {
   useState,
   useCallback
 } from "react";
-import { Policy, Features, Appeal } from "../types";
+import { Policy, Features } from "../types";
 
 export interface ProductContextValue {
   products: Policy[];
   features: Features | undefined;
-  appeals: Appeal[];
+  allProducts: Policy[];
   setProducts: (products: Policy[]) => void;
   getProduct: (category: string) => Policy | undefined;
   setFeatures: (features: Features) => void;
   getFeatures: () => Features | undefined;
-  setAppeals: (appeal: Appeal[]) => void;
-  getAppeal: (category: string) => Appeal | undefined;
+  setAllProducts: (allProducts: Policy[]) => void;
 }
 
 export const ProductContext = createContext<ProductContextValue>({
   products: [],
   features: {} as Features,
-  appeals: [],
+  allProducts: [],
   setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getProduct: () => undefined,
   setFeatures: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getFeatures: () => undefined,
-  setAppeals: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  getAppeal: () => undefined
+  setAllProducts: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
 export const useProductContext = (): ProductContextValue =>
@@ -47,25 +45,19 @@ export const ProductContextProvider: FunctionComponent = ({ children }) => {
     features
   ]);
 
-  const [appeals, setAppeals] = useState<Appeal[]>([]);
-  const getAppeal = useCallback(
-    (category: string): Appeal | undefined =>
-      appeals.find(appeal => appeal.category === category),
-    [appeals]
-  );
+  const [allProducts, setAllProducts] = useState<Policy[]>([]);
 
   return (
     <ProductContext.Provider
       value={{
         products,
         features,
-        appeals,
+        allProducts,
         setProducts,
         getProduct,
         setFeatures,
         getFeatures,
-        setAppeals,
-        getAppeal
+        setAllProducts
       }}
     >
       {children}

@@ -75,6 +75,8 @@ const IdentifierInput = t.intersection([
   })
 ]);
 
+const CategoryType = t.union([t.literal("DEFAULT"), t.literal("APPEAL")]);
+
 const Policy = t.intersection([
   t.type({
     category: t.string,
@@ -83,6 +85,7 @@ const Policy = t.intersection([
     quantity: PolicyQuantity
   }),
   t.partial({
+    categoryType: CategoryType,
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
@@ -101,23 +104,6 @@ const IdentificationFlag = t.intersection([
   })
 ]);
 
-const Appeal = t.intersection([
-  t.type({
-    category: t.string,
-    name: t.string,
-    order: t.number,
-    quantity: PolicyQuantity
-  }),
-  t.partial({
-    description: t.string,
-    image: t.string,
-    thresholdValue: t.number,
-    thresholdAlert: t.string,
-    identifiers: t.array(PolicyIdentifier),
-    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")])
-  })
-]);
-
 const Features = t.type({
   REQUIRE_OTP: t.boolean,
   TRANSACTION_GROUPING: t.boolean,
@@ -125,24 +111,19 @@ const Features = t.type({
   id: IdentificationFlag
 });
 
-export const EnvVersion = t.intersection([
-  t.type({
-    policies: t.array(Policy),
-    features: Features
-  }),
-  t.partial({
-    appeals: t.array(Appeal)
-  })
-]);
+export const EnvVersion = t.type({
+  policies: t.array(Policy),
+  features: Features
+});
 
 export type TextInputType = t.TypeOf<typeof TextInputType>;
 export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
+export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;
 export type EnvVersion = t.TypeOf<typeof EnvVersion>;
 export type Features = t.TypeOf<typeof Features>;
-export type Appeal = t.TypeOf<typeof Appeal>;
 
 const ItemQuota = t.intersection([
   t.type({

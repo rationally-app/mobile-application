@@ -5,8 +5,9 @@ import React, {
   useEffect,
   useState
 } from "react";
+import { transform } from "lodash";
 import { Alert, StyleSheet, View } from "react-native";
-import { Appeal, NavigationProps } from "../../types";
+import { NavigationProps, Policy } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
@@ -54,8 +55,14 @@ const showAlert = (message: string, onDismiss: () => void): void =>
     onDismiss: onDismiss // for android outside alert clicks
   });
 
-const getReasons = (appeal: Appeal[]): string[] => {
-  return appeal.map(appealEntry => appealEntry.name);
+const getReasons = (allProducts: Policy[]): string[] => {
+  return transform(
+    allProducts,
+    (result: Array<string>, policy) => {
+      if (policy.categoryType === "APPEAL") result.push(policy.name);
+    },
+    []
+  );
 };
 
 export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
@@ -63,7 +70,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
 
-  const { appeals } = useProductContext();
+  const { allProducts } = useProductContext();
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -71,6 +78,16 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
       message: "CustomerAppealScreen"
     });
   }, []);
+
+  useEffect(() => {
+    const focusListender = navigation.addListener("didFocus", () => {
+      console.warn("set appeal product here");
+    });
+    return () => {
+      console.warn("remove customerAppeal listener");
+      focusListender.remove();
+    };
+  }, [navigation]);
 
   const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
   useEffect(() => {
@@ -102,7 +119,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         <ReasonSelectionCard
           ids={ids}
           reasonSelectionHeader={"Indicate reason for dispute"}
-          reasons={getReasons(appeals)}
+          reasons={getReasons(allProducts)}
           onCancel={onCancel}
         />
         <FeatureToggler feature="HELP_MODAL">

@@ -87,7 +87,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     features,
     setFeatures,
     setProducts,
-    setAppeals
+    setAllProducts
   } = useProductContext();
   const { logout } = useLogout();
 
@@ -112,8 +112,14 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         setIsLoading(true);
         const versionResponse = await getEnvVersion(token, endpoint);
         setFeatures(versionResponse.features);
-        setProducts(versionResponse.policies);
-        setAppeals(versionResponse.appeals ?? []);
+        setProducts(
+          versionResponse.policies.filter(
+            policy =>
+              policy.categoryType === undefined ||
+              policy.categoryType === "DEFAULT"
+          )
+        );
+        setAllProducts(versionResponse.policies);
       } catch (e) {
         if (e instanceof EnvVersionError) {
           Sentry.captureException(e);
@@ -134,7 +140,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     token,
     setFeatures,
     setProducts,
-    setAppeals,
+    setAllProducts,
     features,
     handleLogout
   ]);
