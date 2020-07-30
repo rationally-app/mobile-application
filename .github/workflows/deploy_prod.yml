@@ -69,7 +69,7 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: $GITHUB_RUN_NUMBER
+          APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{steps.latestBinaryVersion.outputs.version}}
         run: expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
   create_release:
@@ -113,7 +113,7 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: $GITHUB_RUN_NUMBER
+          APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
         run: |
           expo build:android --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogAndroid.txt
@@ -153,7 +153,7 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: $GITHUB_RUN_NUMBER
+          APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
         run: |
           expo build:ios --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogIOS.txt
