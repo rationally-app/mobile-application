@@ -33,6 +33,27 @@ export default ({ config }: any): any => {
       mock: process.env.MOCK === "true",
       storybook: process.env.START_STORYBOOK === "true",
       appBuildVersion
+    },
+    hooks: {
+      postPublish: [
+        {
+          file: "sentry-expo/upload-sourcemaps",
+          config: {
+            organization: getValue(
+              process.env.SENTRY_ORG,
+              "Please specify a SENTRY_ORG env variable"
+            ),
+            project: getValue(
+              process.env.SENTRY_PROJECT,
+              "Please specify a SENTRY_PROJECT env variable"
+            ),
+            authToken: getValue(
+              process.env.SENTRY_AUTH_TOKEN,
+              "Please specify a SENTRY_AUTH_TOKEN env variable"
+            )
+          }
+        }
+      ]
     }
   };
 };
