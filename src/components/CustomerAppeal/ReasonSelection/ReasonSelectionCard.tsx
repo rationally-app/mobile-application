@@ -22,13 +22,15 @@ interface ReasonSelectionCard {
   reasonSelectionHeader: string;
   reasons: string[];
   onCancel: () => void;
+  onReasonSelection: (productName: string) => boolean;
 }
 
 export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   ids,
   reasonSelectionHeader,
   reasons,
-  onCancel
+  onCancel,
+  onReasonSelection
 }) => {
   return (
     <View>
@@ -43,6 +45,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
                 key={reason}
                 description={reason}
                 isLast={reasons[reasons.length - 1] === reason}
+                onReasonSelection={onReasonSelection}
               />
             ))}
           </View>

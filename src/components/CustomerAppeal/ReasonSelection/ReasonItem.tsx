@@ -27,12 +27,15 @@ export const ReasonItem: FunctionComponent<{
   description: string;
   alert?: string;
   isLast: boolean;
-}> = ({ description, alert, isLast }) => {
+  onReasonSelection: (productName: string) => boolean;
+}> = ({ description, alert, isLast, onReasonSelection }) => {
   return (
     <TouchableOpacity
       style={[styles.reasonComponent, isLast ? { marginBottom: 0 } : {}]}
       onPress={() => {
-        console.warn(`${description}`);
+        onReasonSelection(description)
+          ? console.warn(`${description} navigate to next screen`)
+          : console.warn(`${description} throw alert`);
       }}
     >
       <View style={styles.reasonLayout}>

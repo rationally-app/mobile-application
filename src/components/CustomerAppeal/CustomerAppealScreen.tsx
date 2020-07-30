@@ -55,29 +55,12 @@ const showAlert = (message: string, onDismiss: () => void): void =>
     onDismiss: onDismiss // for android outside alert clicks
   });
 
-const getReasons = (allProducts: Policy[]): string[] => {
-  return transform(
-    allProducts,
-    (result: Array<string>, policy) => {
-      if (policy.categoryType === "APPEAL") result.push(policy.name);
-    },
-    []
-  );
-};
-
 export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
 
-  const { allProducts } = useProductContext();
-
-  useEffect(() => {
-    Sentry.addBreadcrumb({
-      category: "navigation",
-      message: "CustomerAppealScreen"
-    });
-  }, []);
+  const { setProducts, allProducts } = useProductContext();
 
   useEffect(() => {
     const focusListender = navigation.addListener("didFocus", () => {
@@ -102,6 +85,27 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
 
+  const getReasons = (): string[] => {
+    return transform(
+      allProducts,
+      (result: Array<string>, policy) => {
+        if (policy.categoryType === "APPEAL") result.push(policy.name);
+      },
+      []
+    );
+  };
+
+  const onReasonSelection = (productName: string): boolean => {
+    const policy = allProducts.find(
+      policy => policy.categoryType === "APPEAL" && policy.name === productName
+    );
+    if (policy === undefined) return false;
+
+    console.warn(`${productName} has been swapped`);
+    setProducts([policy]);
+    return true;
+  };
+
   return (
     <KeyboardAvoidingScrollView>
       <TopBackground mode={config.appMode} />
@@ -119,8 +123,9 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         <ReasonSelectionCard
           ids={ids}
           reasonSelectionHeader={"Indicate reason for dispute"}
-          reasons={getReasons(allProducts)}
+          reasons={getReasons()}
           onCancel={onCancel}
+          onReasonSelection={onReasonSelection}
         />
         <FeatureToggler feature="HELP_MODAL">
           <HelpButton onPress={showHelpModal} />
