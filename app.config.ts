@@ -32,7 +32,11 @@ export default ({ config }: any): any => {
     extra: {
       mock: process.env.MOCK === "true",
       storybook: process.env.START_STORYBOOK === "true",
-      appBuildVersion
+      appBuildVersion,
+      sentryDsn: getValue(
+        process.env.SENTRY_DSN,
+        "Please specify a SENTRY_DSN env variable"
+      )
     },
     hooks: {
       postPublish: [
