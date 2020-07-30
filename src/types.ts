@@ -86,6 +86,8 @@ const Policy = t.intersection([
   }),
   t.partial({
     categoryType: CategoryType,
+    thresholdValue: t.number,
+    thresholdAlert: t.string,
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
