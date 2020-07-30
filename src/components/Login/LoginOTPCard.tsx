@@ -13,6 +13,7 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { useAuthenticationContext } from "../../context/auth";
+import { validateOTP, requestOTP, LoginError } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
