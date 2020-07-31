@@ -27,6 +27,7 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+import { navigateHome } from "../../common/navigation";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -121,7 +122,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   }, [ids, navigation]);
 
   const onNext = useCallback((): void => {
-    navigation.navigate("CollectCustomerDetailsScreen");
+    navigateHome(navigation);
   }, [navigation]);
 
   useEffect(() => {

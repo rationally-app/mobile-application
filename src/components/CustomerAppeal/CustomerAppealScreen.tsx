@@ -7,12 +7,11 @@ import React, {
 } from "react";
 import { transform } from "lodash";
 import { Alert, StyleSheet, View } from "react-native";
-import { NavigationProps, Policy } from "../../types";
+import { NavigationProps } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
-import { Sentry } from "../../utils/errorTracking";
 import { HelpModalContext } from "../../context/help";
 import { useProductContext } from "../../context/products";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
@@ -22,7 +21,7 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { ReasonSelectionCard } from "./ReasonSelection/ReasonSelectionCard";
-import { StackActions } from "react-navigation";
+import { pushRoute } from "../../common/navigation";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -61,7 +60,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
 
-  const { setProducts, allProducts, products } = useProductContext();
+  const { setProducts, allProducts } = useProductContext();
 
   useEffect(() => {
     const focusListender = navigation.addListener("didFocus", () => {});
@@ -100,16 +99,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     if (policy === undefined) return false;
 
     setProducts([policy]);
-    // navigation.goBack();
-    const pushAction = StackActions.push({
-      routeName: "CustomerQuotaScreen",
-      params: {
-        id: ids
-      }
-    });
-
-    navigation.dispatch(pushAction);
-    // navigation.navigate("CustomerQuotaScreen", { id: ids, policy: policy });
+    pushRoute(navigation, "CustomerQuotaScreen", { id: ids });
     return true;
   };
 

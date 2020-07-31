@@ -30,6 +30,18 @@ export const resetRouteFn = (
   return navigation.dispatch(action);
 };
 
+export const pushRoute = (
+  navigation: NavigationProps["navigation"],
+  routeName: string,
+  params?: NavigationReplaceActionPayload["params"]
+): boolean => {
+  const action = StackActions.push({
+    routeName: routeName,
+    params: params
+  });
+  return navigation.dispatch(action);
+};
+
 export const navigateHome = (
   navigation: NavigationProps["navigation"]
 ): boolean => {
