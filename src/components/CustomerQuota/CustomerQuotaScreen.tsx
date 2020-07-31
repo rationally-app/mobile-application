@@ -121,7 +121,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     navigation.navigate("CustomerAppealScreen", { ids });
   }, [ids, navigation]);
 
-  const onNext = useCallback((): void => {
+  const onNextId = useCallback((): void => {
     navigateHome(navigation);
   }, [navigation]);
 
@@ -164,7 +164,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         {cartState === "PURCHASED" ? (
           <CheckoutSuccessCard
             ids={ids}
-            onCancel={onNext}
+            onCancel={onNextId}
             checkoutResult={checkoutResult}
           />
         ) : cartState === "NO_QUOTA" ? (
