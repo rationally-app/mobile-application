@@ -59,12 +59,31 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   navigation,
   isFocused
 }) => {
+  const { allProducts, setProducts } = useProductContext();
+
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
       message: "CollectCustomerDetailsScreen"
     });
   }, []);
+
+  useEffect(() => {
+    const focusListender = navigation.addListener("didFocus", () => {
+      console.warn("NRIC: set original product here");
+      setProducts(
+        allProducts.filter(
+          policy =>
+            policy.categoryType === undefined ||
+            policy.categoryType === "DEFAULT"
+        )
+      );
+    });
+    return () => {
+      console.warn("NRIC: remove listener");
+      focusListender.remove();
+    };
+  }, [allProducts, navigation, setProducts]);
 
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);

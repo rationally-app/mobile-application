@@ -6,13 +6,15 @@ import {
   QuotaError,
   NotEligibleError
 } from "../../services/quota";
+import { transform } from "lodash";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
   Quota,
   ItemQuota,
-  IdentifierInput
+  IdentifierInput,
+  Policy
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 
@@ -108,6 +110,21 @@ const mergeWithCart = (
     );
 };
 
+const filterQuotaWithAvailableProducts = (
+  quota: Quota,
+  products: Policy[]
+): Quota => {
+  const filteredQuota: Quota = { remainingQuota: [] };
+  return transform(
+    quota.remainingQuota,
+    (result: Quota, itemQuota) => {
+      if (products.some(policy => policy.category === itemQuota.category))
+        result.remainingQuota.push(itemQuota);
+    },
+    filteredQuota
+  );
+};
+
 const hasNoQuota = (quota: Quota): boolean =>
   quota.remainingQuota.every(item => item.quantity === 0);
 
@@ -142,7 +159,11 @@ export const useCart = (
     const fetchQuota = async (): Promise<void> => {
       setCartState("FETCHING_QUOTA");
       try {
-        const quotaResponse = await getQuota(ids, authKey, endpoint);
+        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        const quotaResponse = filterQuotaWithAvailableProducts(
+          allQuotaResponse,
+          products
+        );
         if (hasInvalidQuota(quotaResponse)) {
           Sentry.captureException(
             `Negative Quota Received: ${JSON.stringify(
