@@ -24,6 +24,7 @@ import { ReasonSelectionCard } from "./ReasonSelection/ReasonSelectionCard";
 import { pushRoute } from "../../common/navigation";
 import { useAuthenticationContext } from "../../context/auth";
 import { getQuota } from "../../services/quota";
+import { useCart } from "../../hooks/useCart/useCart";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -79,10 +80,16 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const showHelpModal = useContext(HelpModalContext);
 
   // TODO: refactor the type once the implementation is reasonable
-  const getReasons = (): { description: string; alert: string }[] => {
+  const getReasons = (): {
+    description: string;
+    alert: string | undefined;
+  }[] => {
     return transform(
       allProducts,
-      (result: Array<{ description: string; alert: string }>, policy) => {
+      (
+        result: Array<{ description: string; alert: string | undefined }>,
+        policy
+      ) => {
         if (policy.categoryType === "APPEAL") {
           const maxLimit = policy.quantity.limit;
           const matchedQuota =
@@ -90,29 +97,18 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
               itemQuota => itemQuota.category === policy.category
             )?.quantity ?? maxLimit;
           const expandedQuota = maxLimit - matchedQuota;
-          let alertString = "";
+          let alertString: string | undefined = undefined;
           if (policy.thresholdValue && policy.thresholdAlert) {
             alertString =
               expandedQuota > policy.thresholdValue
                 ? policy.thresholdAlert
-                : "";
+                : undefined;
           }
           result.push({ description: policy.name, alert: alertString });
         }
       },
       []
     );
-  };
-
-  const onReasonSelection = (productName: string): boolean => {
-    const policy = allProducts.find(
-      policy => policy.categoryType === "APPEAL" && policy.name === productName
-    );
-    if (policy === undefined) return false;
-
-    setProducts([policy]);
-    pushRoute(navigation, "CustomerQuotaScreen", { id: ids });
-    return true;
   };
 
   // TODO: to check for reason alert string
@@ -129,6 +125,28 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     };
     fetchQuota();
   }, [endpoint, ids, token]);
+
+  // TODO: the useEffect in useCart will cause it to fire to check for quota again....
+  const { emptyCart } = useCart(ids, token, endpoint);
+
+  const onReasonSelection = (
+    productName: string,
+    descriptionAlert?: string
+  ): boolean => {
+    const policy = allProducts.find(
+      policy => policy.categoryType === "APPEAL" && policy.name === productName
+    );
+    if (policy === undefined) return false;
+
+    // TODO: do we need to empty the cart?
+    // TODO: if we dont empty the cart.. it will contain the original tt-token ItemQuota response
+    emptyCart();
+    setProducts([
+      { ...policy, auxiliaryData: { descriptionAlert: descriptionAlert } }
+    ]);
+    pushRoute(navigation, "CustomerQuotaScreen", { id: ids });
+    return true;
+  };
 
   return (
     <KeyboardAvoidingScrollView>

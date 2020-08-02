@@ -44,6 +44,7 @@ type CartState =
 export type CartHook = {
   cartState: CartState;
   cart: Cart;
+  emptyCart: () => void;
   updateCart: (
     category: string,
     quantity: number,
@@ -104,7 +105,7 @@ const mergeWithCart = (
             existingItem?.quantity || defaultQuantity
           ),
           maxQuantity: Math.max(maxQuantity, 0),
-          checkoutLimit: product?.checkoutLimit,
+          checkoutLimit: existingItem?.checkoutLimit || product?.checkoutLimit,
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
         };
@@ -222,6 +223,10 @@ export const useCart = (
     }
   }, [quotaResponse, products, getProduct]);
 
+  const emptyCart: CartHook["emptyCart"] = useCallback(() => {
+    setCart([]);
+    setQuotaResponse(null);
+  }, []);
   /**
    * Update quantity of an item in the cart.
    */
@@ -313,6 +318,7 @@ export const useCart = (
   return {
     cartState,
     cart,
+    emptyCart,
     updateCart,
     checkoutCart,
     checkoutResult,

@@ -10,8 +10,12 @@ export const ItemCheckbox: FunctionComponent<{
 }> = ({ cartItem, updateCart }) => {
   const { category, quantity, maxQuantity } = cartItem;
   const { getProduct } = useProductContext();
-  const { name = category, description, quantity: productQuantity } =
-    getProduct(category) || {};
+  const {
+    name = category,
+    description,
+    quantity: productQuantity,
+    auxiliaryData
+  } = getProduct(category) || {};
 
   return (
     <Checkbox
@@ -19,6 +23,7 @@ export const ItemCheckbox: FunctionComponent<{
         <ItemContent
           name={name}
           description={description}
+          descriptionAlert={auxiliaryData?.descriptionAlert}
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
         />
