@@ -22,6 +22,7 @@ export type CartItem = {
   category: string;
   quantity: number;
   maxQuantity: number;
+  checkoutLimit?: number;
   /**
    * Indicates the previous time quota was used.
    * It will be undefined for batch quotas.
@@ -102,9 +103,8 @@ const mergeWithCart = (
             Math.max(maxQuantity, 0),
             existingItem?.quantity || defaultQuantity
           ),
-          maxQuantity: product?.checkoutLimit
-            ? product.checkoutLimit
-            : Math.max(maxQuantity, 0),
+          maxQuantity: Math.max(maxQuantity, 0),
+          checkoutLimit: product?.checkoutLimit,
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
         };

@@ -33,9 +33,7 @@ export const ReasonItem: FunctionComponent<{
     <TouchableOpacity
       style={[styles.reasonComponent, isLast ? { marginBottom: 0 } : {}]}
       onPress={() => {
-        onReasonSelection(description)
-          ? console.warn(`${description} navigate to next screen`)
-          : console.warn(`${description} throw alert`);
+        onReasonSelection(description);
       }}
     >
       <View style={styles.reasonLayout}>
