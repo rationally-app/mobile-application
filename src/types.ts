@@ -88,6 +88,7 @@ const Policy = t.intersection([
     categoryType: CategoryType,
     thresholdValue: t.number,
     thresholdAlert: t.string,
+    checkoutLimit: t.number,
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),

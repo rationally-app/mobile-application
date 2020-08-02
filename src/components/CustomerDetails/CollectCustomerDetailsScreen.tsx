@@ -69,8 +69,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   }, []);
 
   useEffect(() => {
-    const focusListender = navigation.addListener("didFocus", () => {
-      console.warn("NRIC: set original product here");
+    const resetToDefaultProducts = (): void => {
       setProducts(
         allProducts.filter(
           policy =>
@@ -78,9 +77,12 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             policy.categoryType === "DEFAULT"
         )
       );
+    };
+    resetToDefaultProducts(); // for newly created screen or after end of appeal process
+    const focusListender = navigation.addListener("didFocus", () => {
+      resetToDefaultProducts(); // in case user press "back" all the way from appeal screen after reason selection
     });
     return () => {
-      console.warn("NRIC: remove listener");
       focusListender.remove();
     };
   }, [allProducts, navigation, setProducts]);

@@ -62,13 +62,6 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 
   const { setProducts, allProducts } = useProductContext();
 
-  useEffect(() => {
-    const focusListender = navigation.addListener("didFocus", () => {});
-    return () => {
-      focusListender.remove();
-    };
-  }, [navigation]);
-
   const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
   useEffect(() => {
     validateTokenExpiry();

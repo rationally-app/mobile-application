@@ -102,7 +102,9 @@ const mergeWithCart = (
             Math.max(maxQuantity, 0),
             existingItem?.quantity || defaultQuantity
           ),
-          maxQuantity: Math.max(maxQuantity, 0),
+          maxQuantity: product?.checkoutLimit
+            ? product.checkoutLimit
+            : Math.max(maxQuantity, 0),
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
         };
@@ -202,7 +204,7 @@ export const useCart = (
     getProduct,
     ids,
     prevIds,
-    products.length,
+    products, // TODO: check with team any reason for using products.length instead of products
     setProducts,
     setFeatures
   ]);
