@@ -4,7 +4,8 @@ import React, {
   FunctionComponent,
   useEffect,
   useLayoutEffect,
-  useContext
+  useContext,
+  useRef
 } from "react";
 import {
   View,
@@ -91,11 +92,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setAllProducts
   } = useProductContext();
   const { logout } = useLogout();
-
+  const lastResendWarningMessageRef = useRef<string>("")
   const resetStage = (): void => {
     setLoginStage("SCAN");
   };
-  const [lastResendWarningMessage, setLastResendWarningMessage] = useState("");
+  // const [lastResendWarningMessage, setLastResendWarningMessage] = useState("");
 
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
@@ -292,7 +293,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               setMobileNumber={setMobileNumber}
               codeKey={codeKey}
               endpoint={endpointTemp}
-              setLastResendWarningMessage={setLastResendWarningMessage}
+              lastResendWarningMessage={lastResendWarningMessageRef}
             />
           )}
           {loginStage === "OTP" && (
@@ -301,8 +302,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               mobileNumber={mobileNumber}
               codeKey={codeKey}
               endpoint={endpointTemp}
-              setLastResendWarningMessage={setLastResendWarningMessage}
-              lastResendWarningMessage={lastResendWarningMessage}
+              lastResendWarningMessage={lastResendWarningMessageRef}
             />
           )}
           <FeatureToggler feature="HELP_MODAL">
