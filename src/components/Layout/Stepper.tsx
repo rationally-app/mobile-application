@@ -80,8 +80,8 @@ const clampAndRound = (
 ): number => {
   const num = parseNumber(value);
   const clampedNum = clamp(num, min, max);
-  const roundedNum = Math.floor(clampedNum / step) * step;
-  return roundedNum;
+  const flooredNum = Math.floor(clampedNum / step) * step;
+  return isNaN(flooredNum) ? 0 : flooredNum;
 };
 
 interface StepperButton {
