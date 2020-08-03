@@ -157,6 +157,7 @@ export const useCart = (
     setProducts,
     setFeatures
   } = useProductContext();
+  const prevProducts = usePrevious(products);
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
@@ -206,7 +207,7 @@ export const useCart = (
       }
     };
 
-    if (prevIds !== ids) {
+    if (prevIds !== ids || prevProducts !== products) {
       fetchQuota();
     }
   }, [
@@ -215,6 +216,7 @@ export const useCart = (
     getProduct,
     ids,
     prevIds,
+    prevProducts,
     products, // TODO: check with team any reason for using products.length instead of products
     setProducts,
     setFeatures

@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { transform } from "lodash";
 import { Alert, StyleSheet, View } from "react-native";
-import { NavigationProps, Quota } from "../../types";
+import { NavigationProps } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
@@ -23,7 +23,6 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { ReasonSelectionCard } from "./ReasonSelection/ReasonSelectionCard";
 import { pushRoute } from "../../common/navigation";
 import { useAuthenticationContext } from "../../context/auth";
-import { getQuota } from "../../services/quota";
 import { useCart } from "../../hooks/useCart/useCart";
 
 const styles = StyleSheet.create({
@@ -62,13 +61,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
-  const {
-    getProduct,
-    setProducts,
-    allProducts,
-    products
-  } = useProductContext();
-  console.log("products", products);
+  const { getProduct, setProducts, allProducts } = useProductContext();
   // set the product list to appeal products whenever
   // 1. screen newly created
   // 2. user navigate "back" to this screen
