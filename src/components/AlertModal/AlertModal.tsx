@@ -4,7 +4,8 @@ import AlertLogo from "../../../assets/icons/alert.svg";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
-import { size } from "../../common/styles";
+import { color, fontSize, size } from "../../common/styles";
+import { AppText } from "../Layout/AppText";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -40,8 +41,8 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontWeight: "bold",
     fontFamily: "brand-bold",
-    fontSize: 20,
-    color: "#305367",
+    fontSize: fontSize(2),
+    color: color("blue", 50),
     textAlign: "center",
     marginHorizontal: 28,
     marginBottom: 4
@@ -49,9 +50,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginHorizontal: 32.5,
     marginBottom: 32,
-    textAlign: "center",
-    fontSize: 16,
-    color: "#305367"
+    textAlign: "center"
   },
   modalGroupButton: {
     flexDirection: "row",
@@ -142,7 +141,7 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
             <AlertLogo style={styles.alertIcon} />
           )}
           <Text style={styles.modalTitle}>{props.title}</Text>
-          <Text style={styles.modalText}>{props.description}</Text>
+          <AppText style={styles.modalText}>{props.description}</AppText>
           <View style={styles.modalGroupButton}>
             {props.alertType !== "ERROR" && props.alertType !== "INFO" && (
               <View style={styles.modalSecondaryBtm}>
