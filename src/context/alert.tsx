@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, {
-  createContext,
-  FunctionComponent,
-  useCallback,
-  useState
-} from "react";
+import React, { createContext, FunctionComponent, useState } from "react";
 import {
   AlertModal,
   AlertModalProps

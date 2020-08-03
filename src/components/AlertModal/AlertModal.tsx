@@ -1,10 +1,16 @@
 import React, { FunctionComponent, useMemo } from "react";
 import { Modal, StyleSheet, Text, View } from "react-native";
-import AlertLogo from "../../../assets/icons/alert.svg";
+import AlertIcon from "../../../assets/icons/alert.svg";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
-import { color, fontSize, size } from "../../common/styles";
+import {
+  borderRadius,
+  color,
+  fontSize,
+  shadow,
+  size
+} from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 
 const styles = StyleSheet.create({
@@ -17,24 +23,15 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.6)"
   },
   modalView: {
+    alignItems: "center",
     marginBottom: 0,
-    paddingTop: 24,
+    paddingTop: size(3),
     width: 280,
     backgroundColor: "white",
-    borderRadius: size(1),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
+    borderRadius: borderRadius(3),
+    ...shadow(1)
   },
   alertIcon: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
     marginBottom: 9
   },
   modalTitle: {
@@ -44,20 +41,20 @@ const styles = StyleSheet.create({
     color: color("blue", 50),
     textAlign: "center",
     marginHorizontal: 28,
-    marginBottom: 4
+    marginBottom: size(0.5)
   },
   modalText: {
     marginHorizontal: 32.5,
-    marginBottom: 32,
+    marginBottom: size(4),
     textAlign: "center"
   },
   modalGroupButton: {
     flexDirection: "row",
-    marginHorizontal: 16,
-    marginBottom: 24
+    marginHorizontal: size(2),
+    marginBottom: size(3)
   },
-  modalSecondaryBtm: {
-    marginRight: 8,
+  modalSecondaryButton: {
+    marginRight: size(1),
     flexShrink: 1
   },
   modalPrimaryButton: {
@@ -93,7 +90,7 @@ export interface AlertModalProps {
   visible: boolean;
   onOk: () => void;
   onCancel?: () => void;
-  onExit?: any;
+  onExit?: () => void;
 }
 
 export const AlertModal: FunctionComponent<AlertModalProps> = ({
@@ -119,7 +116,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
             text={callToAction.primaryActionText}
             fullWidth={true}
             onPress={() => {
-              onExit();
+              onExit?.();
               onOk();
             }}
           />
@@ -130,7 +127,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
             text={callToAction.primaryActionText}
             fullWidth={true}
             onPress={() => {
-              onExit();
+              onExit?.();
               onOk();
             }}
           />
@@ -142,18 +139,18 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          {alertType === "ERROR" && <AlertLogo style={styles.alertIcon} />}
+          {alertType === "ERROR" && <AlertIcon style={styles.alertIcon} />}
           <Text style={styles.modalTitle}>{title}</Text>
           <AppText style={styles.modalText}>{description}</AppText>
           <View style={styles.modalGroupButton}>
             {alertType !== "ERROR" && alertType !== "INFO" && (
-              <View style={styles.modalSecondaryBtm}>
+              <View style={styles.modalSecondaryButton}>
                 <SecondaryButton
                   text={callToAction.secondaryActionText || ""}
                   fullWidth={true}
                   onPress={() => {
-                    onExit();
-                    onCancel && onCancel();
+                    onExit?.();
+                    onCancel?.();
                   }}
                 />
               </View>
