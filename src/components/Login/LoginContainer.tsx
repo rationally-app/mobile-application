@@ -92,7 +92,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setAllProducts
   } = useProductContext();
   const { logout } = useLogout();
-  const lastResendWarningMessageRef = useRef<string>("")
+  const lastResendWarningMessageRef = useRef<string>("");
   const resetStage = (): void => {
     setLoginStage("SCAN");
   };

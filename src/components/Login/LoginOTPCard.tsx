@@ -216,7 +216,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
             <SecondaryButton
               text="Resend"
               onPress={
-                lastResendWarningMessage.current === "" ? resendOTP : alertBeforeResend
+                lastResendWarningMessage.current === ""
+                  ? resendOTP
+                  : alertBeforeResend
               }
               isLoading={isResending}
               disabled={isLoading}

@@ -2,7 +2,7 @@ import React, {
   useState,
   FunctionComponent,
   Dispatch,
-  SetStateAction, 
+  SetStateAction,
   MutableRefObject
 } from "react";
 import { View, StyleSheet, Alert } from "react-native";
