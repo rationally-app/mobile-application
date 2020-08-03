@@ -146,11 +146,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   }, [isLoading, endpoint, navigation, token, features]);
 
   useEffect(() => {
-    const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
+    const skipScanningIfParamsInDeepLink = async (): Promise<any> => {
       const { queryParams } = await Linking.parseInitialURLAsync();
       const queryEndpoint = queryParams?.endpoint;
       if (queryEndpoint && !RegExp(DOMAIN_CHECK).test(queryEndpoint))
-        throw Error("Invalid endpoint");
+        throw new Error("Invalid endpoint");
       if (queryParams?.key && queryParams?.endpoint) {
         setCodeKey(queryParams.key);
         setEndpointTemp(queryParams.endpoint);
@@ -196,7 +196,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const { key, endpoint } = decodeQr(qrCode);
         Vibration.vibrate(50);
         if (!RegExp(DOMAIN_CHECK).test(endpoint))
-          throw Error("Invalid endpoint");
+          throw new Error("Invalid endpoint");
         setCodeKey(key);
         setEndpointTemp(endpoint);
         setIsLoading(false);
