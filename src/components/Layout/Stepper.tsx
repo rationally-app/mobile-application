@@ -180,18 +180,10 @@ export const Stepper: FunctionComponent<Stepper> = ({
       const num = clampAndRound(...props);
       if (isMounted.current) {
         setInternalValue(`${num}`);
-        setValue(num);
       }
       return num;
     }, 800)
   );
-
-  // Sync internal and external values
-  useEffect(() => {
-    setInternalValue(internalValue =>
-      internalValue !== `${value}` ? `${value}` : internalValue
-    );
-  }, [value]);
 
   useEffect(() => {
     delayedClampAndRound.current(internalValue, bounds.min, bounds.max, step);
@@ -224,14 +216,19 @@ export const Stepper: FunctionComponent<Stepper> = ({
       setInternalValue(value);
     } else if (isNumber(value)) {
       setInternalValue(`${parseNumber(value)}`);
+    } else {
+      // e.g. "-1"
+      return;
     }
+
+    const num = clampAndRound(value, bounds.min, bounds.max, step);
+    setValue(num);
   };
 
   // When input is blurred, immediately clamp and round
   const onBlur = (): void => {
     const num = clampAndRound(internalValue, bounds.min, bounds.max, step);
     setInternalValue(`${num}`);
-    setValue(num);
   };
 
   return (
