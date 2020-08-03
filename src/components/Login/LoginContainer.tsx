@@ -96,7 +96,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const resetStage = (): void => {
     setLoginStage("SCAN");
   };
-  // const [lastResendWarningMessage, setLastResendWarningMessage] = useState("");
 
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
