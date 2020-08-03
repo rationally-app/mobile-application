@@ -39,6 +39,7 @@ import { useProductContext } from "../../context/products";
 import { useLogout } from "../../hooks/useLogout";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
+import { DOMAIN_CHECK } from "../../config";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -191,8 +192,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       try {
         const { key, endpoint } = decodeQr(qrCode);
         Vibration.vibrate(50);
-        const endpointCheck = process.env.DOMAIN_CHECK as string;
-        if (!RegExp(endpointCheck).test(endpoint))
+        if (!RegExp(DOMAIN_CHECK).test(endpoint))
           throw Error("Invalid endpoint");
         setCodeKey(key);
         setEndpointTemp(endpoint);

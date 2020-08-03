@@ -36,6 +36,10 @@ export default ({ config }: any): any => {
       sentryDsn: getValue(
         process.env.SENTRY_DSN,
         "Please specify a SENTRY_DSN env variable"
+      ),
+      domainCheck: getValue(
+        process.env.DOMAIN_CHECK,
+        "Please specify a DOMAIN_CHECK env variable"
       )
     },
     hooks: {

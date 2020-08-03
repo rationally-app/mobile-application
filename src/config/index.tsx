@@ -8,3 +8,4 @@ export const IS_MOCK = Constants.manifest?.extra?.mock;
 export const APP_BINARY_VERSION = Constants.manifest?.version;
 export const APP_BUILD_VERSION: number =
   Constants.manifest?.extra?.appBuildVersion;
+export const DOMAIN_CHECK: string = Constants.manifest?.extra?.domainCheck;
