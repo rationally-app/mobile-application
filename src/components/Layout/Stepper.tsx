@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
 
 const parseNumber = (value: string): number => Number(value.replace(/\s/g, ""));
 const isNumber = (value: string): boolean => !isNaN(parseNumber(value));
-const clampAndRound = (
+const clampAndRoundDown = (
   value: string,
   min: number,
   max: number,
@@ -175,9 +175,9 @@ export const Stepper: FunctionComponent<Stepper> = ({
   const isMounted = useIsMounted();
   const [internalValue, setInternalValue] = useState<string>(`${value}`);
 
-  const delayedClampAndRound = useRef(
-    debounce<typeof clampAndRound>((...props) => {
-      const num = clampAndRound(...props);
+  const delayedClampAndRoundDown = useRef(
+    debounce<typeof clampAndRoundDown>((...props) => {
+      const num = clampAndRoundDown(...props);
       if (isMounted.current) {
         setInternalValue(`${num}`);
       }
@@ -186,7 +186,12 @@ export const Stepper: FunctionComponent<Stepper> = ({
   );
 
   useEffect(() => {
-    delayedClampAndRound.current(internalValue, bounds.min, bounds.max, step);
+    delayedClampAndRoundDown.current(
+      internalValue,
+      bounds.min,
+      bounds.max,
+      step
+    );
   }, [internalValue, bounds.min, bounds.max, step]);
 
   const decrement = (): void => {
@@ -221,13 +226,13 @@ export const Stepper: FunctionComponent<Stepper> = ({
       return;
     }
 
-    const num = clampAndRound(value, bounds.min, bounds.max, step);
+    const num = clampAndRoundDown(value, bounds.min, bounds.max, step);
     setValue(num);
   };
 
   // When input is blurred, immediately clamp and round
   const onBlur = (): void => {
-    const num = clampAndRound(internalValue, bounds.min, bounds.max, step);
+    const num = clampAndRoundDown(internalValue, bounds.min, bounds.max, step);
     setInternalValue(`${num}`);
   };
 
