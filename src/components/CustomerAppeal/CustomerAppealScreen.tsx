@@ -62,8 +62,13 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
-  const { getProduct, setProducts, allProducts } = useProductContext();
-
+  const {
+    getProduct,
+    setProducts,
+    allProducts,
+    products
+  } = useProductContext();
+  console.log("products", products);
   // set the product list to appeal products whenever
   // 1. screen newly created
   // 2. user navigate "back" to this screen

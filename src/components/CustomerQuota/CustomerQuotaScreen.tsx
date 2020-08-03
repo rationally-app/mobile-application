@@ -5,7 +5,13 @@ import React, {
   useCallback,
   useContext
 } from "react";
-import { View, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  BackHandler
+} from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
@@ -27,7 +33,7 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { navigateHome } from "../../common/navigation";
+import { navigateHome, resetRoute } from "../../common/navigation";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -120,12 +126,26 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
   const onAppeal = useCallback((): void => {
     emptyCart();
-    navigation.navigate("CustomerAppealScreen", { ids });
+    resetRoute(navigation, "CustomerAppealScreen", { ids });
   }, [emptyCart, ids, navigation]);
 
   const onNextId = useCallback((): void => {
     navigateHome(navigation);
   }, [navigation]);
+
+  useEffect(() => {
+    if (cartState !== "PURCHASED") return;
+
+    const onBackPress = (): boolean => {
+      navigateHome(navigation);
+      return true;
+    };
+
+    BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    };
+  }, [cartState, ids, navigation]);
 
   useEffect(() => {
     if (!error) {

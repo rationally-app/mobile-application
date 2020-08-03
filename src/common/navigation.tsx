@@ -15,11 +15,11 @@ export const replaceRouteFn = (
 };
 
 // This resets the entire stack and puts the navigated route right on top of the home page
-export const resetRouteFn = (
+export const resetRoute = (
   navigation: NavigationProps["navigation"],
   routeName: string,
   params?: NavigationReplaceActionPayload["params"]
-): (() => boolean) => (): boolean => {
+): boolean => {
   const action = StackActions.reset({
     index: 1,
     actions: [
