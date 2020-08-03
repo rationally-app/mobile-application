@@ -86,7 +86,7 @@ interface CallToActionButtonTexts {
 
 export type CallToActionKey = keyof typeof callToActionCollection;
 
-export interface AlertModalProp {
+export interface AlertModalProps {
   alertType: AlertType;
   title: string;
   description: string;
@@ -97,7 +97,7 @@ export interface AlertModalProp {
   onExit?: any;
 }
 
-export const AlertModal: FunctionComponent<AlertModalProp> = ({
+export const AlertModal: FunctionComponent<AlertModalProps> = ({
   alertType,
   title,
   description,

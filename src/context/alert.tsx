@@ -2,10 +2,10 @@
 import React, { createContext, FunctionComponent, useState } from "react";
 import {
   AlertModal,
-  AlertModalProp
+  AlertModalProps
 } from "../components/AlertModal/AlertModal";
 
-const defaultAlertProp: AlertModalProp = {
+const defaultAlertProp: AlertModalProps = {
   alertType: "ERROR",
   title: "",
   description: "",
@@ -17,7 +17,7 @@ const defaultAlertProp: AlertModalProp = {
 };
 
 interface AlertModalContext {
-  showAlert: (props: AlertModalProp) => void;
+  showAlert: (props: AlertModalProps) => void;
   clearAlert: () => void;
 }
 
@@ -27,11 +27,13 @@ export const AlertModalContext = createContext<AlertModalContext>({
 });
 
 export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
-  const [alertProps, setAlertProps] = useState<AlertModalProp>(
+  const [alertProps, setAlertProps] = useState<AlertModalProps>(
     defaultAlertProp
   );
 
-  const showAlert: AlertModalContext["showAlert"] = (props: AlertModalProp) => {
+  const showAlert: AlertModalContext["showAlert"] = (
+    props: AlertModalProps
+  ) => {
     setAlertProps(props);
   };
 

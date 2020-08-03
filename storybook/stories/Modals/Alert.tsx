@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState } from "react";
 import { storiesOf } from "@storybook/react-native";
 import {
   AlertModal,
-  AlertModalProp,
+  AlertModalProps,
   CallToActionKey
 } from "../../../src/components/AlertModal/AlertModal";
 import { size } from "../../../src/common/styles";
@@ -10,9 +10,9 @@ import { View } from "react-native";
 import { DarkButton } from "../../../src/components/Layout/Buttons/DarkButton";
 
 const AlertModalItem: FunctionComponent<{
-  alertType: AlertModalProp["alertType"];
-  title: AlertModalProp["title"];
-  description: AlertModalProp["description"];
+  alertType: AlertModalProps["alertType"];
+  title: AlertModalProps["title"];
+  description: AlertModalProps["description"];
   buttonActionText: CallToActionKey;
 }> = props => {
   const [visible, setVisible] = useState(false);
