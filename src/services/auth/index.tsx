@@ -1,5 +1,5 @@
 import { IS_MOCK } from "../../config";
-import { SessionCredentials, OPTResponse } from "../../types";
+import { SessionCredentials, OTPResponse } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 
@@ -14,11 +14,11 @@ export const liveRequestOTP = async (
   mobileNumber: string,
   code: string,
   endpoint: string
-): Promise<OPTResponse> => {
+): Promise<OTPResponse> => {
   const payload = { code, phone: mobileNumber };
   try {
     const response = await fetchWithValidator(
-      OPTResponse,
+      OTPResponse,
       `${endpoint}/auth/register`,
       {
         method: "POST",
@@ -35,7 +35,7 @@ export const mockRequestOTP = async (
   _mobileNumber: string,
   _key: string,
   _endpoint: string
-): Promise<OPTResponse> => {
+): Promise<OTPResponse> => {
   return {};
 };
 

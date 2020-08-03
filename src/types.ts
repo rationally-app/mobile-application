@@ -12,13 +12,13 @@ export const SessionCredentials = t.type({
   ttl: DateFromNumber
 });
 
-export const OPTResponse = t.partial({
+export const OTPResponse = t.partial({
   status: t.string,
   warning: t.string
 });
 
 export type SessionCredentials = t.TypeOf<typeof SessionCredentials>;
-export type OPTResponse = t.TypeOf<typeof OPTResponse>;
+export type OTPResponse = t.TypeOf<typeof OTPResponse>;
 
 const PolicyAlert = t.type({
   threshold: t.number,
