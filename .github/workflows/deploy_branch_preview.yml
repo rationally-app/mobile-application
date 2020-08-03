@@ -75,7 +75,7 @@ jobs:
       - name: Echo Version Details
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
-          echo Latest release is ${{steps.latestBinaryVersion.outputs.version}}
+          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
       - name: Expo Publish Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
