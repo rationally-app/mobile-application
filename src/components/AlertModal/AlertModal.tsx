@@ -97,25 +97,31 @@ export interface AlertModalProp {
   onExit?: any;
 }
 
-export const AlertModal: FunctionComponent<AlertModalProp> = (
-  props: AlertModalProp
-) => {
+export const AlertModal: FunctionComponent<AlertModalProp> = ({
+  alertType,
+  title,
+  description,
+  buttonTextType,
+  visible,
+  onOk,
+  onCancel,
+  onExit
+}) => {
   const callToAction = useMemo(
-    () =>
-      callToActionCollection[props.buttonTextType] as CallToActionButtonTexts,
-    [props.buttonTextType]
+    () => callToActionCollection[buttonTextType] as CallToActionButtonTexts,
+    [buttonTextType]
   );
 
   const primaryButton = useMemo(() => {
-    switch (props.alertType) {
+    switch (alertType) {
       case "WARN":
         return (
           <DangerButton
             text={callToAction.primaryActionText}
             fullWidth={true}
             onPress={() => {
-              props.onExit();
-              props.onCancel && props.onCancel();
+              onExit();
+              onOk();
             }}
           />
         );
@@ -125,32 +131,30 @@ export const AlertModal: FunctionComponent<AlertModalProp> = (
             text={callToAction.primaryActionText}
             fullWidth={true}
             onPress={() => {
-              props.onExit();
-              props.onCancel && props.onCancel();
+              onExit();
+              onOk();
             }}
           />
         );
     }
-  }, [callToAction.primaryActionText, props]);
+  }, [alertType, callToAction.primaryActionText, onExit, onOk]);
 
   return (
-    <Modal animationType="fade" transparent={true} visible={props.visible}>
+    <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          {props.alertType === "ERROR" && (
-            <AlertLogo style={styles.alertIcon} />
-          )}
-          <Text style={styles.modalTitle}>{props.title}</Text>
-          <AppText style={styles.modalText}>{props.description}</AppText>
+          {alertType === "ERROR" && <AlertLogo style={styles.alertIcon} />}
+          <Text style={styles.modalTitle}>{title}</Text>
+          <AppText style={styles.modalText}>{description}</AppText>
           <View style={styles.modalGroupButton}>
-            {props.alertType !== "ERROR" && props.alertType !== "INFO" && (
+            {alertType !== "ERROR" && alertType !== "INFO" && (
               <View style={styles.modalSecondaryBtm}>
                 <SecondaryButton
                   text={callToAction.secondaryActionText || ""}
                   fullWidth={true}
                   onPress={() => {
-                    props.onExit();
-                    props.onCancel && props.onCancel();
+                    onExit();
+                    onCancel && onCancel();
                   }}
                 />
               </View>
