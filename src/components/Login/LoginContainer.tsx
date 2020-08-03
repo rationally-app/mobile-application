@@ -148,6 +148,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   useEffect(() => {
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
       const { queryParams } = await Linking.parseInitialURLAsync();
+      const queryEndpoint = queryParams?.endpoint;
+      if (queryEndpoint && !RegExp(DOMAIN_CHECK).test(queryEndpoint))
+        throw Error("Invalid endpoint");
       if (queryParams?.key && queryParams?.endpoint) {
         setCodeKey(queryParams.key);
         setEndpointTemp(queryParams.endpoint);
