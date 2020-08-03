@@ -95,6 +95,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const {
     cartState,
     cart,
+    emptyCart,
     updateCart,
     checkoutCart,
     checkoutResult,
@@ -118,8 +119,9 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   }, []);
 
   const onAppeal = useCallback((): void => {
+    emptyCart();
     navigation.navigate("CustomerAppealScreen", { ids });
-  }, [ids, navigation]);
+  }, [emptyCart, ids, navigation]);
 
   const onNextId = useCallback((): void => {
     navigateHome(navigation);

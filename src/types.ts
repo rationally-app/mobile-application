@@ -77,11 +77,6 @@ const IdentifierInput = t.intersection([
 
 const CategoryType = t.union([t.literal("DEFAULT"), t.literal("APPEAL")]);
 
-// to store derived data
-const AuxiliaryData = t.partial({
-  descriptionAlert: t.string
-});
-
 const Policy = t.intersection([
   t.type({
     category: t.string,
@@ -97,8 +92,7 @@ const Policy = t.intersection([
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
-    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")]),
-    auxiliaryData: AuxiliaryData
+    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")])
   })
 ]);
 
@@ -130,7 +124,6 @@ export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
 export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
-export type AuxiliaryData = t.TypeOf<typeof AuxiliaryData>;
 export type Policy = t.TypeOf<typeof Policy>;
 export type EnvVersion = t.TypeOf<typeof EnvVersion>;
 export type Features = t.TypeOf<typeof Features>;

@@ -62,9 +62,25 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
   const [ids, setIds] = useState([navigation.getParam("ids")]);
-  const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
+  const { getProduct, setProducts, allProducts } = useProductContext();
 
-  const { setProducts, allProducts } = useProductContext();
+  // set the product list to appeal products whenever
+  // 1. screen newly created
+  // 2. user navigate "back" to this screen
+  useEffect(() => {
+    const resetToAppealProducts = (): void => {
+      setProducts(
+        allProducts.filter(policy => policy.categoryType === "APPEAL")
+      );
+    };
+    resetToAppealProducts(); // for newly created screen or after end of appeal process
+    const focusListender = navigation.addListener("didFocus", () => {
+      resetToAppealProducts(); // in case user press "back" all the way from appeal screen after reason selection
+    });
+    return () => {
+      focusListender.remove();
+    };
+  }, [allProducts, navigation, setProducts]);
 
   const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
   useEffect(() => {
@@ -79,55 +95,36 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
 
+  // TODO: the useEffect in useCart will cause it to fire to check for quota again....
+  const { token, endpoint } = useAuthenticationContext();
+  const { cart, emptyCart } = useCart(ids, token, endpoint);
+
   // TODO: refactor the type once the implementation is reasonable
   const getReasons = (): {
     description: string;
-    alert: string | undefined;
+    descriptionAlert: string | undefined;
   }[] => {
     return transform(
-      allProducts,
+      cart,
       (
-        result: Array<{ description: string; alert: string | undefined }>,
-        policy
+        result: Array<{
+          description: string;
+          descriptionAlert: string | undefined;
+        }>,
+        cartItem
       ) => {
-        if (policy.categoryType === "APPEAL") {
-          const maxLimit = policy.quantity.limit;
-          const matchedQuota =
-            allQuotaResponse?.remainingQuota.find(
-              itemQuota => itemQuota.category === policy.category
-            )?.quantity ?? maxLimit;
-          const expandedQuota = maxLimit - matchedQuota;
-          let alertString: string | undefined = undefined;
-          if (policy.thresholdValue && policy.thresholdAlert) {
-            alertString =
-              expandedQuota > policy.thresholdValue
-                ? policy.thresholdAlert
-                : undefined;
-          }
-          result.push({ description: policy.name, alert: alertString });
+        const cat = cartItem.category;
+        const policy = getProduct(cat);
+        if (policy) {
+          result.push({
+            description: policy.name,
+            descriptionAlert: cartItem.descriptionAlert
+          });
         }
       },
       []
     );
   };
-
-  // TODO: to check for reason alert string
-  const { token, endpoint } = useAuthenticationContext();
-  useEffect(() => {
-    const fetchQuota = async (): Promise<void> => {
-      // TODO: add in error handling once implementation is reasonable
-      try {
-        const allQuotaResponse = await getQuota(ids, token, endpoint);
-        setAllQuotaResponse(allQuotaResponse);
-      } catch (e) {
-        console.warn(e);
-      }
-    };
-    fetchQuota();
-  }, [endpoint, ids, token]);
-
-  // TODO: the useEffect in useCart will cause it to fire to check for quota again....
-  const { emptyCart } = useCart(ids, token, endpoint);
 
   const onReasonSelection = (
     productName: string,
@@ -141,9 +138,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     // TODO: do we need to empty the cart?
     // TODO: if we dont empty the cart.. it will contain the original tt-token ItemQuota response
     emptyCart();
-    setProducts([
-      { ...policy, auxiliaryData: { descriptionAlert: descriptionAlert } }
-    ]);
+    setProducts([policy]);
     pushRoute(navigation, "CustomerQuotaScreen", { id: ids });
     return true;
   };

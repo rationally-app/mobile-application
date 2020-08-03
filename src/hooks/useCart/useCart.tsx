@@ -23,6 +23,7 @@ export type CartItem = {
   quantity: number;
   maxQuantity: number;
   checkoutLimit?: number;
+  descriptionAlert?: string;
   /**
    * Indicates the previous time quota was used.
    * It will be undefined for batch quotas.
@@ -98,6 +99,14 @@ const mergeWithCart = (
             })
           ) || [];
 
+        let descriptionAlert: string | undefined = undefined;
+        if (product && product?.thresholdValue && product?.thresholdAlert) {
+          const expandedQuota = product.quantity.limit - maxQuantity;
+          descriptionAlert =
+            expandedQuota > product.thresholdValue
+              ? product.thresholdAlert
+              : undefined;
+        }
         return {
           category,
           quantity: Math.min(
@@ -106,6 +115,7 @@ const mergeWithCart = (
           ),
           maxQuantity: Math.max(maxQuantity, 0),
           checkoutLimit: existingItem?.checkoutLimit || product?.checkoutLimit,
+          descriptionAlert,
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
         };
@@ -225,8 +235,8 @@ export const useCart = (
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
     setCart([]);
-    setQuotaResponse(null);
   }, []);
+
   /**
    * Update quantity of an item in the cart.
    */

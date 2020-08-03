@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 interface ReasonSelectionCard {
   ids: string[];
   reasonSelectionHeader: string;
-  reasons: { description: string; alert: string | undefined }[];
+  reasons: { description: string; descriptionAlert: string | undefined }[];
   onCancel: () => void;
   onReasonSelection: (
     productName: string,
@@ -47,7 +47,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
               <ReasonItem
                 key={reason.description}
                 description={reason.description}
-                alert={reason.alert}
+                descriptionAlert={reason.descriptionAlert}
                 isLast={reasons[reasons.length - 1] === reason}
                 onReasonSelection={onReasonSelection}
               />
