@@ -153,9 +153,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
         Sentry.captureException(error);
         alert("Invalid QR code");
-        resetStage();
-      }
-      if (queryParams?.key && queryParams?.endpoint) {
+        setLoginStage("SCAN");
+      } else if (queryParams?.key && queryParams?.endpoint) {
         setCodeKey(queryParams.key);
         setEndpointTemp(queryParams.endpoint);
         setLoginStage("MOBILE_NUMBER");
