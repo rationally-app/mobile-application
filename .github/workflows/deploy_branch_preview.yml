@@ -75,7 +75,7 @@ jobs:
       - name: Echo Version Details
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
-          echo Latest release is ${{steps.latestBinaryVersion.outputs.version}}
+          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
       - name: Expo Publish Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -83,7 +83,8 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{steps.latestBinaryVersion.outputs.version}}
+          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
         run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
       - name: Expo Publish Storybook Channel
         run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}

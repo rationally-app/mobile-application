@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
-      latestBinaryVersion: ${{steps.latestBinaryVersion.outputs.version}}
+      latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -62,7 +62,7 @@ jobs:
       - name: Echo Version Details
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
-          echo Latest release is ${{steps.latestBinaryVersion.outputs.version}}
+          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
       - name: Expo Publish Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -70,7 +70,8 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{steps.latestBinaryVersion.outputs.version}}
+          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
   create_release:
     name: Create Release
@@ -115,6 +116,7 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
+          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
           expo build:android --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogAndroid.txt
           cat buildLogAndroid.txt
@@ -155,6 +157,7 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
+          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
           expo build:ios --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogIOS.txt
           cat buildLogIOS.txt

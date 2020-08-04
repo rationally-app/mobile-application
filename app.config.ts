@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // Typing for @expo/config is currently experimental(https://docs.expo.io/workflow/configuration/#using-typescript-for-configuration-appconfigts-instead-of)
 // Install when on stable release (https://www.npmjs.com/package/@expo/config)
@@ -36,6 +39,10 @@ export default ({ config }: any): any => {
       sentryDsn: getValue(
         process.env.SENTRY_DSN,
         "Please specify a SENTRY_DSN env variable"
+      ),
+      domainFormat: getValue(
+        process.env.DOMAIN_FORMAT,
+        "Please specify a DOMAIN_FORMAT env variable"
       )
     },
     hooks: {
