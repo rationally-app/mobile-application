@@ -152,6 +152,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       const queryEndpoint = queryParams?.endpoint;
       if (queryEndpoint && !RegExp(DOMAIN_CHECK).test(queryEndpoint)) {
         const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
+        resetStage();
         setState(() => {
           throw error;
         });
