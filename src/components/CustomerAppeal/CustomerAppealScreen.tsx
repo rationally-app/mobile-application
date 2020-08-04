@@ -24,6 +24,7 @@ import { ReasonSelectionCard } from "./ReasonSelection/ReasonSelectionCard";
 import { pushRoute } from "../../common/navigation";
 import { useAuthenticationContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
+import { Sentry } from "../../utils/errorTracking";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -60,6 +61,13 @@ const showAlert = (message: string, onDismiss: () => void): void =>
 export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
+  useEffect(() => {
+    Sentry.addBreadcrumb({
+      category: "navigation",
+      message: "CustomerAppealScreen"
+    });
+  }, []);
+
   const [ids, setIds] = useState([navigation.getParam("ids")]);
   const { getProduct, setProducts, allProducts } = useProductContext();
   // set the product list to appeal products whenever

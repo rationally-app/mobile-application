@@ -5,11 +5,11 @@ import {
   NavigationReplaceActionPayload
 } from "react-navigation";
 
-export const replaceRouteFn = (
+export const replaceRoute = (
   navigation: NavigationProps["navigation"],
   routeName: string,
   params?: NavigationReplaceActionPayload["params"]
-): (() => boolean) => (): boolean => {
+): boolean => {
   const action = StackActions.replace({ routeName, params });
   return navigation.dispatch(action);
 };

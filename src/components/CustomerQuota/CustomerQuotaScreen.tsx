@@ -33,7 +33,7 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { navigateHome, resetRoute } from "../../common/navigation";
+import { navigateHome, replaceRoute } from "../../common/navigation";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -126,7 +126,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
 
   const onAppeal = useCallback((): void => {
     emptyCart();
-    resetRoute(navigation, "CustomerAppealScreen", { ids });
+    replaceRoute(navigation, "CustomerAppealScreen", { ids });
   }, [emptyCart, ids, navigation]);
 
   const onNextId = useCallback((): void => {
