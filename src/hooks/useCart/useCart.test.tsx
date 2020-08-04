@@ -102,10 +102,12 @@ const defaultProducts: EnvVersion = {
 const Wrapper: FunctionComponent<{
   products?: Policy[];
   features?: Features | undefined;
+  allProducts?: Policy[];
 }> = ({
   children,
   products = defaultProducts.policies,
-  features = defaultProducts.features
+  features = defaultProducts.features,
+  allProducts = defaultProducts.policies
 }) => {
   const getProduct = (category: string): Policy | undefined =>
     products?.find(product => product.category === category) ?? undefined;
@@ -115,10 +117,12 @@ const Wrapper: FunctionComponent<{
       value={{
         products,
         features,
+        allProducts,
         getProduct,
         setProducts: jest.fn(),
         getFeatures,
-        setFeatures: jest.fn()
+        setFeatures: jest.fn(),
+        setAllProducts: jest.fn()
       }}
     >
       {children}
