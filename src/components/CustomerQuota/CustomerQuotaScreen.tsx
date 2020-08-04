@@ -77,16 +77,6 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
-  useEffect(() => {
-    const focusListender = navigation.addListener("didFocus", () => {
-      // console.warn("set original product here");
-    });
-    return () => {
-      // console.warn("remove customerQuota listener");
-      focusListender.remove();
-    };
-  }, [navigation]);
-
   const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
   useEffect(() => {
     validateTokenExpiry();
