@@ -293,7 +293,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               setMobileNumber={setMobileNumber}
               codeKey={codeKey}
               endpoint={endpointTemp}
-              lastResendWarningMessage={lastResendWarningMessageRef}
+              lastResendWarningMessageRef={lastResendWarningMessageRef}
             />
           )}
           {loginStage === "OTP" && (
@@ -302,7 +302,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               mobileNumber={mobileNumber}
               codeKey={codeKey}
               endpoint={endpointTemp}
-              lastResendWarningMessage={lastResendWarningMessageRef}
+              lastResendWarningMessageRef={lastResendWarningMessageRef}
             />
           )}
           <FeatureToggler feature="HELP_MODAL">

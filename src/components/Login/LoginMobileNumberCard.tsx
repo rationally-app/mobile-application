@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 interface LoginMobileNumberCard {
   setLoginStage: Dispatch<SetStateAction<LoginStage>>;
   setMobileNumber: Dispatch<SetStateAction<string>>;
-  lastResendWarningMessage: MutableRefObject<string>;
+  lastResendWarningMessageRef: MutableRefObject<string>;
   codeKey: string;
   endpoint: string;
 }
@@ -36,7 +36,7 @@ interface LoginMobileNumberCard {
 export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
   setLoginStage,
   setMobileNumber,
-  lastResendWarningMessage,
+  lastResendWarningMessageRef,
   codeKey,
   endpoint
 }) => {
@@ -61,7 +61,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       const fullNumber = createFullNumber(countryCode, mobileNumberValue);
       const response = await requestOTP(fullNumber, codeKey, endpoint);
       if (typeof response.warning === "string") {
-        lastResendWarningMessage.current = response.warning;
+        lastResendWarningMessageRef.current = response.warning;
       }
       setIsLoading(false);
       setMobileNumber(fullNumber);
