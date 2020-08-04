@@ -63,7 +63,11 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
-  const [ids] = useState([navigation.getParam("ids")]);
+  const [ids] = useState(
+    Array.isArray(navigation.getParam("ids"))
+      ? navigation.getParam("ids")
+      : [navigation.getParam("ids")]
+  );
   const { setProducts, allProducts } = useProductContext();
 
   const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
