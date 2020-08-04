@@ -98,25 +98,53 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const { cart, emptyCart } = useCart(ids, token, endpoint);
 
   // TODO: refactor the type once the implementation is reasonable
+  // TODO: Huawei phone not able to work with this implementation
+  // const getReasons = (): {
+  //   description: string;
+  //   descriptionAlert: string | undefined;
+  // }[] => {
+  //   return transform(
+  //     cart,
+  //     (
+  //       result: Array<{
+  //         description: string;
+  //         descriptionAlert: string | undefined;
+  //       }>,
+  //       cartItem
+  //     ) => {
+  //       const cat = cartItem.category;
+  //       const policy = getProduct(cat);
+  //       if (policy) {
+  //         result.push({
+  //           description: policy.name,
+  //           descriptionAlert: cartItem.descriptionAlert
+  //         });
+  //       }
+  //     },
+  //     []
+  //   );
+  // };
+
   const getReasons = (): {
     description: string;
     descriptionAlert: string | undefined;
   }[] => {
     return transform(
-      cart,
+      allProducts,
       (
         result: Array<{
           description: string;
           descriptionAlert: string | undefined;
         }>,
-        cartItem
+        policy
       ) => {
-        const cat = cartItem.category;
-        const policy = getProduct(cat);
-        if (policy) {
+        if (policy.categoryType === "APPEAL") {
+          const cartItem = cart.find(
+            cartItem => cartItem.category === policy.category
+          );
           result.push({
             description: policy.name,
-            descriptionAlert: cartItem.descriptionAlert
+            descriptionAlert: cartItem?.descriptionAlert
           });
         }
       },
