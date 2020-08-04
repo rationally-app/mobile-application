@@ -39,7 +39,7 @@ import { useProductContext } from "../../context/products";
 import { useLogout } from "../../hooks/useLogout";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
-import { DOMAIN_CHECK } from "../../config";
+import { DOMAIN_FORMAT } from "../../config";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -149,7 +149,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
       const { queryParams } = await Linking.parseInitialURLAsync();
       const queryEndpoint = queryParams?.endpoint;
-      if (queryEndpoint && !RegExp(DOMAIN_CHECK).test(queryEndpoint)) {
+      if (queryEndpoint && !RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
         const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
         Sentry.captureException(error);
         alert("Invalid QR code");
@@ -198,7 +198,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       try {
         const { key, endpoint } = decodeQr(qrCode);
         Vibration.vibrate(50);
-        if (!RegExp(DOMAIN_CHECK).test(endpoint)) throw new Error();
+        if (!RegExp(DOMAIN_FORMAT).test(endpoint)) throw new Error();
         setCodeKey(key);
         setEndpointTemp(endpoint);
         setIsLoading(false);

@@ -84,7 +84,7 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
-          DOMAIN_CHECK: ${{ secrets.TEST_DOMAIN_CHECK }}
+          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
         run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
       - name: Expo Publish Storybook Channel
         run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
