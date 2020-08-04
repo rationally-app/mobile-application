@@ -103,13 +103,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 
   // TODO: the useEffect in useCart will cause it to fire to check for quota again....
   const { token, endpoint } = useAuthenticationContext();
-  const { cart, cartState, emptyCart } = useCart(ids, token, endpoint);
-  const [reasons, setReasons] = useState<
-    {
-      description: string;
-      descriptionAlert: string | undefined;
-    }[]
-  >([]);
+  const { allQuotaResponse, cart, emptyCart } = useCart(ids, token, endpoint);
 
   // TODO: refactor the type once the implementation is reasonable
   // TODO: Huawei phone not able to work with this implementation
@@ -139,33 +133,6 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   //   );
   // };
 
-  useEffect(() => {
-    console.log("Set reasons");
-    setReasons(
-      transform(
-        allProducts,
-        (
-          result: Array<{
-            description: string;
-            descriptionAlert: string | undefined;
-          }>,
-          policy
-        ) => {
-          if (policy.categoryType === "APPEAL") {
-            const cartItem = cart.find(
-              cartItem => cartItem.category === policy.category
-            );
-            result.push({
-              description: policy.name,
-              descriptionAlert: cartItem?.descriptionAlert
-            });
-          }
-        },
-        []
-      )
-    );
-  }, [allProducts, cartState, cart]);
-
   const getReasons = (): {
     description: string;
     descriptionAlert: string | undefined;
@@ -180,12 +147,22 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         policy
       ) => {
         if (policy.categoryType === "APPEAL") {
-          const cartItem = cart.find(
-            cartItem => cartItem.category === policy.category
+          const policyLimt = policy.quantity.limit;
+          const quotaResponse = allQuotaResponse?.remainingQuota.find(
+            quota => quota.category === policy.category
           );
+          let descriptionAlert: string | undefined = undefined;
+          if (
+            quotaResponse &&
+            policy.thresholdValue &&
+            policy.thresholdAlert &&
+            policyLimt - quotaResponse.quantity > policy.thresholdValue
+          ) {
+            descriptionAlert = policy.thresholdAlert;
+          }
           result.push({
             description: policy.name,
-            descriptionAlert: cartItem?.descriptionAlert
+            descriptionAlert: descriptionAlert
           });
         }
       },
@@ -227,7 +204,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         <ReasonSelectionCard
           ids={ids}
           reasonSelectionHeader={"Indicate reason for dispute"}
-          reasons={reasons}
+          reasons={getReasons()}
           onCancel={onCancel}
           onReasonSelection={onReasonSelection}
         />

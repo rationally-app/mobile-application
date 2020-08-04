@@ -125,9 +125,8 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   }, []);
 
   const onAppeal = useCallback((): void => {
-    emptyCart();
     replaceRoute(navigation, "CustomerAppealScreen", { ids });
-  }, [emptyCart, ids, navigation]);
+  }, [ids, navigation]);
 
   const onNextId = useCallback((): void => {
     navigateHome(navigation);

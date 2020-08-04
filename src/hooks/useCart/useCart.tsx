@@ -55,6 +55,7 @@ export type CartHook = {
   checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
+  allQuotaResponse: Quota | null;
 };
 
 const getItem = (
@@ -163,6 +164,7 @@ export const useCart = (
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
+  const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
 
   const clearError = useCallback((): void => setError(undefined), []);
 
@@ -175,6 +177,7 @@ export const useCart = (
       setCartState("FETCHING_QUOTA");
       try {
         const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        setAllQuotaResponse(allQuotaResponse);
         const quotaResponse = filterQuotaWithAvailableProducts(
           allQuotaResponse,
           products
@@ -336,6 +339,7 @@ export const useCart = (
     checkoutCart,
     checkoutResult,
     error,
-    clearError
+    clearError,
+    allQuotaResponse
   };
 };
