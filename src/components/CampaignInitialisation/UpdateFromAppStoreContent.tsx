@@ -18,7 +18,7 @@ export const UpdateFromAppStoreContent: FunctionComponent = () => {
 
     case "android":
     default:
-      // figure out a better way to handle default
+      // TODO: figure out a better way to handle default if somehow the device is not ios nor android
       storeName = "Play Store";
       storeLink =
         "https://play.google.com/store/apps/details?id=sg.gov.tech.musket";
