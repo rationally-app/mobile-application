@@ -161,7 +161,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       }
     };
     skipScanningIfParamsInDeepLink();
-  });
+  }, []);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
