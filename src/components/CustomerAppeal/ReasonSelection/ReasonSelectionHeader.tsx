@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -size(2)
   },
   reasonSelectionDescription: {
-    fontWeight: "bold",
+    fontFamily: "brand-bold",
     fontSize: 18
   }
 });

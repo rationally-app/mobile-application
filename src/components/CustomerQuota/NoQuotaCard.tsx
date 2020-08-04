@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   appealButton: {
     marginTop: size(1),
     marginBottom: 0,
-    fontWeight: "bold",
+    fontFamily: "brand-bold",
     fontSize: size(2)
   }
 });
