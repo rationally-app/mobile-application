@@ -145,17 +145,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     }
   }, [isLoading, endpoint, navigation, token, features]);
 
-  const setState = useState()[1];
   useEffect(() => {
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
       const { queryParams } = await Linking.parseInitialURLAsync();
       const queryEndpoint = queryParams?.endpoint;
       if (queryEndpoint && !RegExp(DOMAIN_CHECK).test(queryEndpoint)) {
         const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
+        Sentry.captureException(error);
+        alert("Invalid QR code");
         resetStage();
-        setState(() => {
-          throw error;
-        });
       }
       if (queryParams?.key && queryParams?.endpoint) {
         setCodeKey(queryParams.key);
@@ -164,7 +162,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       }
     };
     skipScanningIfParamsInDeepLink();
-  }, [, setState]);
+  });
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
