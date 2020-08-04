@@ -57,7 +57,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
       </CustomerCard>
       <View style={styles.backbuttonComponent}>
         <SecondaryButton
-          text="Back"
+          text="Cancel"
           onPress={() => onCancel()}
           fullWidth={true}
         />
