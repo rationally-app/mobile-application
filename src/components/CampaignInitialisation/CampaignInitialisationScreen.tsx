@@ -43,10 +43,11 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   }, []);
 
   const { token, endpoint } = useAuthenticationContext();
-  const { fetchingState, updateCampaignConfig } = useUpdateCampaignConfig(
-    token,
-    endpoint
-  );
+  const {
+    fetchingState,
+    updateCampaignConfig,
+    error: fetchCampaignConfigError
+  } = useUpdateCampaignConfig(token, endpoint);
   const checkVersion = useCheckVersion();
   const checkUpdates = useCheckUpdates();
 
@@ -55,6 +56,12 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     // updating the campaign config should only happen once when this screen is loaded
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (fetchCampaignConfigError) {
+      throw fetchCampaignConfigError; // Let ErrorBoundary handle
+    }
+  }, [fetchCampaignConfigError]);
 
   const continueToNormalFlow = useCallback(() => {
     const flowType = navigation.getParam("flowType", "DEFAULT");
@@ -99,10 +106,9 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     const error = new Error(
       `Error while trying to check for updates: ${lastUpdateResult}`
     );
-    Sentry.captureException(error);
     // https://github.com/facebook/react/issues/14981#issuecomment-468460187
     setState(() => {
-      throw error;
+      throw error; // Let ErrorBoundary handle
     });
   }, [checkUpdates, setState]);
 
@@ -129,8 +135,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
           break;
       }
     } catch (e) {
-      Sentry.captureException(e);
-      throw e;
+      throw e; // Let ErrorBoundary handle
     }
   }, [checkVersion, continueToNormalFlow, getNewBuildIfAny]);
 
