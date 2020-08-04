@@ -52,7 +52,9 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
 
   useEffect(() => {
     updateCampaignConfig();
-  }, [updateCampaignConfig]);
+    // updating the campaign config should only happen once when this screen is loaded
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const continueToNormalFlow = useCallback(() => {
     const flowType = navigation.getParam("flowType", "DEFAULT");
