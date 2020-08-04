@@ -9,8 +9,15 @@ storiesOf("CustomerAppeal", module).add("ReasonSelectionCard", () => (
     <ReasonSelectionCard
       ids={["S1234567G"]}
       reasonSelectionHeader={"Indicate reason for dispute"}
-      reasons={["Lost/stolen token", "Dead battery", "Damaged token"]}
+      reasons={[
+        { description: "Lost/stolen token", descriptionAlert: "*chargeable" },
+        { description: "Dead battery", descriptionAlert: undefined },
+        { description: "Damaged token", descriptionAlert: undefined }
+      ]}
       onCancel={() => undefined}
+      onReasonSelection={(productName: string, descriptionAlert?: string) =>
+        true
+      }
     />
   </View>
 ));
