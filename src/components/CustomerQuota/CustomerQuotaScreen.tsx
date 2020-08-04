@@ -86,7 +86,12 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
   const showHelpModal = useContext(HelpModalContext);
-  const [ids, setIds] = useState([navigation.getParam("id")]);
+  // const [ids, setIds] = useState([navigation.getParam("id")]);
+  const [ids, setIds] = useState<Array<string>>(
+    Array.isArray(navigation.getParam("id"))
+      ? navigation.getParam("id")
+      : [navigation.getParam("id")]
+  );
 
   const {
     cartState,
