@@ -149,6 +149,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   useLayoutEffect(() => {
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
+      lastResendWarningMessageRef.current = "";
       switch (features?.FLOW_TYPE) {
         case "DEFAULT":
         case "MERCHANT":
