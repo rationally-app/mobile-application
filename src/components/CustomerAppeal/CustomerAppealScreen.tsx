@@ -69,24 +69,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   }, []);
 
   const [ids, setIds] = useState([navigation.getParam("ids")]);
-  const { getProduct, setProducts, allProducts } = useProductContext();
-  // set the product list to appeal products whenever
-  // 1. screen newly created
-  // 2. user navigate "back" to this screen
-  useEffect(() => {
-    const resetToAppealProducts = (): void => {
-      setProducts(
-        allProducts.filter(policy => policy.categoryType === "APPEAL")
-      );
-    };
-    resetToAppealProducts(); // for newly created screen or after end of appeal process
-    const focusListender = navigation.addListener("didFocus", () => {
-      resetToAppealProducts(); // in case user press "back" all the way from appeal screen after reason selection
-    });
-    return () => {
-      focusListender.remove();
-    };
-  }, [allProducts, navigation, setProducts]);
+  const { setProducts, allProducts } = useProductContext();
 
   const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
   useEffect(() => {
@@ -103,35 +86,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 
   // TODO: the useEffect in useCart will cause it to fire to check for quota again....
   const { token, endpoint } = useAuthenticationContext();
-  const { allQuotaResponse, cart, emptyCart } = useCart(ids, token, endpoint);
-
-  // TODO: refactor the type once the implementation is reasonable
-  // TODO: Huawei phone not able to work with this implementation
-  // const getReasons = (): {
-  //   description: string;
-  //   descriptionAlert: string | undefined;
-  // }[] => {
-  //   return transform(
-  //     cart,
-  //     (
-  //       result: Array<{
-  //         description: string;
-  //         descriptionAlert: string | undefined;
-  //       }>,
-  //       cartItem
-  //     ) => {
-  //       const cat = cartItem.category;
-  //       const policy = getProduct(cat);
-  //       if (policy) {
-  //         result.push({
-  //           description: policy.name,
-  //           descriptionAlert: cartItem.descriptionAlert
-  //         });
-  //       }
-  //     },
-  //     []
-  //   );
-  // };
+  const { allQuotaResponse, emptyCart } = useCart(ids, token, endpoint);
 
   const getReasons = (): {
     description: string;
