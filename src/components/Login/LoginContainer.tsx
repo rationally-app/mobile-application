@@ -147,12 +147,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   const setState = useState()[1];
   useEffect(() => {
-    const skipScanningIfParamsInDeepLink = async (): Promise<any> => {
+    const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
       const { queryParams } = await Linking.parseInitialURLAsync();
       const queryEndpoint = queryParams?.endpoint;
       if (queryEndpoint && !RegExp(DOMAIN_CHECK).test(queryEndpoint)) {
         const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
-        Sentry.captureException(error);
         setState(() => {
           throw error;
         });
@@ -201,8 +200,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       try {
         const { key, endpoint } = decodeQr(qrCode);
         Vibration.vibrate(50);
-        if (!RegExp(DOMAIN_CHECK).test(endpoint))
-          throw new Error("Invalid endpoint");
+        if (!RegExp(DOMAIN_CHECK).test(endpoint)) throw new Error();
         setCodeKey(key);
         setEndpointTemp(endpoint);
         setIsLoading(false);
