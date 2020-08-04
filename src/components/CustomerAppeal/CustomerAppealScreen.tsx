@@ -6,7 +6,7 @@ import React, {
   useState
 } from "react";
 import { transform } from "lodash";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NavigationProps } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
@@ -53,11 +53,6 @@ const styles = StyleSheet.create({
   }
 });
 
-const showAlert = (message: string, onDismiss: () => void): void =>
-  Alert.alert("Error", message, [{ text: "OK", onPress: onDismiss }], {
-    onDismiss: onDismiss // for android outside alert clicks
-  });
-
 export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
@@ -68,7 +63,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
-  const [ids, setIds] = useState([navigation.getParam("ids")]);
+  const [ids] = useState([navigation.getParam("ids")]);
   const { setProducts, allProducts } = useProductContext();
 
   const validateTokenExpiry = useValidateExpiry(navigation.dispatch);

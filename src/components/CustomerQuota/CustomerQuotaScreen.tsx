@@ -91,7 +91,6 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const {
     cartState,
     cart,
-    emptyCart,
     updateCart,
     checkoutCart,
     checkoutResult,
