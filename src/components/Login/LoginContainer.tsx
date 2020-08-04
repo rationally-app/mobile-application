@@ -149,15 +149,19 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
       const { queryParams } = await Linking.parseInitialURLAsync();
       const queryEndpoint = queryParams?.endpoint;
-      if (queryEndpoint && !RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
-        const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
-        Sentry.captureException(error);
-        alert("Invalid QR code");
-        setLoginStage("SCAN");
-      } else if (queryParams?.key && queryParams?.endpoint) {
-        setCodeKey(queryParams.key);
-        setEndpointTemp(queryParams.endpoint);
-        setLoginStage("MOBILE_NUMBER");
+      const queryKey = queryParams?.key;
+
+      if (queryEndpoint && queryKey) {
+        if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
+          const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
+          Sentry.captureException(error);
+          alert("Invalid QR code");
+          setLoginStage("SCAN");
+        } else {
+          setCodeKey(queryKey);
+          setEndpointTemp(queryEndpoint);
+          setLoginStage("MOBILE_NUMBER");
+        }
       }
     };
     skipScanningIfParamsInDeepLink();
