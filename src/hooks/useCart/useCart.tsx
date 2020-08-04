@@ -171,6 +171,7 @@ export const useCart = (
    */
   useEffect(() => {
     const fetchQuota = async (): Promise<void> => {
+      console.log("Fetching quota");
       setCartState("FETCHING_QUOTA");
       try {
         const allQuotaResponse = await getQuota(ids, authKey, endpoint);

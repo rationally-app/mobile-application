@@ -103,7 +103,13 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 
   // TODO: the useEffect in useCart will cause it to fire to check for quota again....
   const { token, endpoint } = useAuthenticationContext();
-  const { cart, emptyCart } = useCart(ids, token, endpoint);
+  const { cart, cartState, emptyCart } = useCart(ids, token, endpoint);
+  const [reasons, setReasons] = useState<
+    {
+      description: string;
+      descriptionAlert: string | undefined;
+    }[]
+  >([]);
 
   // TODO: refactor the type once the implementation is reasonable
   // TODO: Huawei phone not able to work with this implementation
@@ -132,6 +138,33 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   //     []
   //   );
   // };
+
+  useEffect(() => {
+    console.log("Set reasons");
+    setReasons(
+      transform(
+        allProducts,
+        (
+          result: Array<{
+            description: string;
+            descriptionAlert: string | undefined;
+          }>,
+          policy
+        ) => {
+          if (policy.categoryType === "APPEAL") {
+            const cartItem = cart.find(
+              cartItem => cartItem.category === policy.category
+            );
+            result.push({
+              description: policy.name,
+              descriptionAlert: cartItem?.descriptionAlert
+            });
+          }
+        },
+        []
+      )
+    );
+  }, [allProducts, cartState, cart]);
 
   const getReasons = (): {
     description: string;
@@ -194,7 +227,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         <ReasonSelectionCard
           ids={ids}
           reasonSelectionHeader={"Indicate reason for dispute"}
-          reasons={getReasons()}
+          reasons={reasons}
           onCancel={onCancel}
           onReasonSelection={onReasonSelection}
         />
