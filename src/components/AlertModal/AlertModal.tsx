@@ -100,32 +100,33 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
   onCancel,
   onExit
 }) => {
-  const primaryButton = (): JSX.Element => {
-    switch (alertType) {
-      case "WARN":
-        return (
-          <DangerButton
-            text={callToActionCollection[buttonTextType].primaryActionText}
-            fullWidth={true}
-            onPress={() => {
-              onExit?.();
-              onOk();
-            }}
-          />
-        );
-      default:
-        return (
-          <DarkButton
-            text={callToActionCollection[buttonTextType].primaryActionText}
-            fullWidth={true}
-            onPress={() => {
-              onExit?.();
-              onOk();
-            }}
-          />
-        );
-    }
-  };
+  let primaryButton: JSX.Element;
+  switch (alertType) {
+    case "WARN":
+      primaryButton = (
+        <DangerButton
+          text={callToActionCollection[buttonTextType].primaryActionText}
+          fullWidth={true}
+          onPress={() => {
+            onExit?.();
+            onOk();
+          }}
+        />
+      );
+      break;
+    default:
+      primaryButton = (
+        <DarkButton
+          text={callToActionCollection[buttonTextType].primaryActionText}
+          fullWidth={true}
+          onPress={() => {
+            onExit?.();
+            onOk();
+          }}
+        />
+      );
+      break;
+  }
 
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
@@ -150,7 +151,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
                 />
               </View>
             )}
-            <View style={styles.modalPrimaryButton}>{primaryButton()}</View>
+            <View style={styles.modalPrimaryButton}>{primaryButton}</View>
           </View>
         </View>
       </View>
