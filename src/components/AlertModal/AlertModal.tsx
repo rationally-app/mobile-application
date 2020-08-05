@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FunctionComponent } from "react";
 import { Modal, StyleSheet, Text, View } from "react-native";
 import AlertIcon from "../../../assets/icons/alert.svg";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -62,31 +62,28 @@ const styles = StyleSheet.create({
   }
 });
 type AlertType = "ERROR" | "WARN" | "CONFIRM" | "INFO";
+type CallToActionKeyType = "YES_NO" | "OK_CANCEL" | "CONFIRM_CANCEL";
+type CallToActionButtonTexts = {
+  primaryActionText: string;
+  secondaryActionText?: string;
+};
 
-// Add on the collection of action button texts
-// try to declare object as { [key:string]: CallToActionButtonTexts }
-// but somehow CallToActionKey unable to determine the keys on compile time
-const callToActionCollection = Object.freeze({
+const callToActionCollection: {
+  [key in CallToActionKeyType]: CallToActionButtonTexts;
+} = {
   YES_NO: { primaryActionText: "YES", secondaryActionText: "NO" },
   OK_CANCEL: { primaryActionText: "OK", secondaryActionText: "CANCEL" },
   CONFIRM_CANCEL: {
     primaryActionText: "CONFIRM",
     secondaryActionText: "CANCEL"
   }
-});
-
-interface CallToActionButtonTexts {
-  primaryActionText: string;
-  secondaryActionText?: string;
-}
-
-export type CallToActionKey = keyof typeof callToActionCollection;
+};
 
 export interface AlertModalProps {
   alertType: AlertType;
   title: string;
   description: string;
-  buttonTextType: CallToActionKey;
+  buttonTextType: CallToActionKeyType;
   visible: boolean;
   onOk: () => void;
   onCancel?: () => void;
@@ -103,17 +100,12 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
   onCancel,
   onExit
 }) => {
-  const callToAction = useMemo(
-    () => callToActionCollection[buttonTextType] as CallToActionButtonTexts,
-    [buttonTextType]
-  );
-
-  const primaryButton = useMemo(() => {
+  const primaryButton = (): JSX.Element => {
     switch (alertType) {
       case "WARN":
         return (
           <DangerButton
-            text={callToAction.primaryActionText}
+            text={callToActionCollection[buttonTextType].primaryActionText}
             fullWidth={true}
             onPress={() => {
               onExit?.();
@@ -124,7 +116,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
       default:
         return (
           <DarkButton
-            text={callToAction.primaryActionText}
+            text={callToActionCollection[buttonTextType].primaryActionText}
             fullWidth={true}
             onPress={() => {
               onExit?.();
@@ -133,7 +125,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
           />
         );
     }
-  }, [alertType, callToAction.primaryActionText, onExit, onOk]);
+  };
 
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
@@ -146,7 +138,10 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
             {alertType !== "ERROR" && alertType !== "INFO" && (
               <View style={styles.modalSecondaryButton}>
                 <SecondaryButton
-                  text={callToAction.secondaryActionText || ""}
+                  text={
+                    callToActionCollection[buttonTextType]
+                      .secondaryActionText || ""
+                  }
                   fullWidth={true}
                   onPress={() => {
                     onExit?.();
@@ -155,7 +150,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
                 />
               </View>
             )}
-            <View style={styles.modalPrimaryButton}>{primaryButton}</View>
+            <View style={styles.modalPrimaryButton}>{primaryButton()}</View>
           </View>
         </View>
       </View>
