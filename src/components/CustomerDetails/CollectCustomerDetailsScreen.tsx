@@ -37,7 +37,6 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
-import { AlertModalContext } from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -73,7 +72,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const [idInput, setIdInput] = useState("");
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const { showAlert } = useContext(AlertModalContext);
   const checkUpdates = useCheckUpdates();
   const { features } = useProductContext();
 
@@ -128,27 +126,19 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
       }
-      showAlert({
-        alertType: "ERROR",
-        title: "Error",
-        description: e.message || e,
-        visible: true,
-        buttonTextType: "OK_CANCEL",
-        onOk: () => setIsScanningEnabled(true)
-      });
-      // Alert.alert(
-      //   "Error",
-      //   e.message || e,
-      //   [
-      //     {
-      //       text: "OK",
-      //       onPress: () => setIsScanningEnabled(true)
-      //     }
-      //   ],
-      //   {
-      //     onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
-      //   }
-      // );
+      Alert.alert(
+        "Error",
+        e.message || e,
+        [
+          {
+            text: "OK",
+            onPress: () => setIsScanningEnabled(true)
+          }
+        ],
+        {
+          onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
+        }
+      );
     }
   };
 
