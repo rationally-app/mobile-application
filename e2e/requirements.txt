@@ -1,0 +1,9 @@
+Appium-Python-Client==1.0.2
+decorator==4.4.2
+docutils==0.16
+kitchen==1.2.6
+robotframework==3.2.1
+robotframework-appiumlibrary==1.5.0.6
+selenium==3.141.0
+six==1.15.0
+urllib3==1.25.9

@@ -1,0 +1,97 @@
+name: Pre-Commit E2E Tests in Android
+
+# For now leaving as PR so that we can test the functionality without pushing to master branch
+on: [pull_request]
+
+jobs:
+  e2e:
+    name: E2E Test
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: Clean Packages
+        run: |
+          rm -rf node_modules
+          npm cache clean --force
+          rm -rf package-lock.json
+      - name: Use specific Java version for sdkmanager
+        uses: joschi/setup-jdk@v1
+        with:
+          java-version: "openjdk8"
+          architecture: "x64"
+      - name: Download Android Emulator Image
+        run: |
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "system-images;android-29;google_apis;x86"
+          echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd --force --name emu --device "Nexus 5X" -k 'system-images;android-29;google_apis;x86'
+          $ANDROID_HOME/emulator/emulator -list-avds
+      - name: Android Emulator
+        continue-on-error: true
+        run: |
+          echo "Starting emulator"
+          nohup $ANDROID_HOME/emulator/emulator -avd emu -no-audio -no-snapshot -no-window &
+          $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+          $ANDROID_HOME/platform-tools/adb devices
+          echo "Emulator started"
+      - name: Retrieve Device Name
+        id: deviceName
+        run: |
+          DEVICE_NAME=$(echo $($ANDROID_HOME/platform-tools/adb devices | egrep -o 'emulator-[0-9]*'))
+          echo Emulator UUID is $DEVICE_NAME
+          echo "::set-output name=deviceName::$DEVICE_NAME"
+      - name: Retrieve Emulator Version
+        id: platformVersion
+        run: |
+          PLATFORM_VERSION=$(echo $($ANDROID_HOME/platform-tools/adb shell getprop ro.build.version.release))
+          echo Emulator platform version is $PLATFORM_VERSION
+          echo "::set-output name=platformVersion::$PLATFORM_VERSION"
+      - name: Install Application
+        run: npm install
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-packager: npm
+          expo-username: ${{ secrets.EXPO_CLI_TEST_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_TEST_PASSWORD }}
+          expo-cache: true
+      - name: Expo Publish Channel
+        env:
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          APP_BUILD_VERSION: ${{ github.run_number }}
+          APP_BINARY_VERSION: 1.0.0
+          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
+        run: expo publish --non-interactive --release-channel e2e
+      - name: Setup Appium
+        run: npm install appium -g
+      - name: Setup E2E Environment
+        run: |
+          cd e2e
+          wget -O Exponent-2.16.1.apk https://d1ahtucjixef4r.cloudfront.net/Exponent-2.16.1.apk
+          pip3 install -r requirements.txt
+      - name: Install Expo App
+        run: |
+          echo "Emulator starting to install apk"
+          $ANDROID_HOME/platform-tools/adb -s emulator-5554 install ./e2e/Exponent-2.16.1.apk
+          echo "Emulator done"
+      - name: Run E2E Tests
+        run: |
+          cd e2e
+          robot --variable TOKEN:${{ secrets.E2E_TOKEN }} --variable ENDPOINT_URL:${{ secrets.E2E_ENDPOINT }} --variable DEVICE_NAME:${{steps.deviceName.outputs.deviceName}} --variable PLATFORM_VERSION:${{steps.platformVersion.outputs.platformVersion}} test.txt
+      - name: Upload Appium Logs
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: |
+            ./e2e/log.html
+            ./e2e/report.html
+            ./e2e/output.xml
+            ./e2e/appium_kill_stdout.txt
+            ./e2e/appium-screenshot-1.png
