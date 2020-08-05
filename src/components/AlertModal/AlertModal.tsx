@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   }
 });
 type AlertType = "ERROR" | "WARN" | "CONFIRM" | "INFO";
-type CallToActionKeyType = "YES_NO" | "OK_CANCEL" | "CONFIRM_CANCEL";
+export type CallToActionKeyType = "YES_NO" | "OK_CANCEL" | "CONFIRM_CANCEL";
 type CallToActionButtonTexts = {
   primaryActionText: string;
   secondaryActionText?: string;
