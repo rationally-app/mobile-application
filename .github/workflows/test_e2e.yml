@@ -3,12 +3,19 @@ name: Pre-Commit E2E Tests in Android
 # For now leaving as PR so that we can test the functionality without pushing to master branch
 on: [pull_request]
 
+# on:
+#   pull_request_review:
+#     types: [submitted]
+
 jobs:
   e2e:
     name: E2E Test
+    # if: github.event.review.state == 'approved'
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v2
+        # with:
+        # ref: ${{ github.event.pull_request.head.ref }}
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
