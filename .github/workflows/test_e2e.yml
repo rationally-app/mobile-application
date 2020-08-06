@@ -1,4 +1,4 @@
-name: Pre-Commit E2E Tests in Android
+name: Pre-Commit E2E Tests
 
 # For now leaving as PR so that we can test the functionality without pushing to master branch
 on: [pull_request]
@@ -106,8 +106,61 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: output
+          name: output_android
           path: |
+            ./e2e/log.html
+            ./e2e/report.html
+            ./e2e/output.xml
+            ./e2e/appium_kill_stdout.txt
+            ./e2e/appium-screenshot-1.png
+  e2e_ios:
+    name: E2E iOS Test
+    needs: publish
+    runs-on: macOS-latest
+    env:
+      DEVICE_NAME: iphone11
+    steps:
+      - uses: actions/checkout@v2
+      # with:
+      # ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: iOS emulator
+        run: |
+          echo "Starting emulator"
+          UUID=$(xcrun simctl create ${{env.DEVICE_NAME}} "iPhone 11 Pro Max" "com.apple.CoreSimulator.SimRuntime.iOS-13-6")
+          echo Emulator UUID is $UUID
+          xcrun simctl boot $UUID
+          echo "Emulator started"
+      - name: Setup Appium
+        run: npm install appium -g
+      - name: Setup E2E Environment
+        run: |
+          cd e2e
+          pip3 install -r requirements.txt
+          wget -O Exponent.tar.gz http://expo.io/--/api/v2/versions/download-ios-simulator-build
+          mkdir expo_client
+          tar  -C ./expo_client -zvxf Exponent.tar.gz
+      - name: Install Expo App
+        run: |
+          echo "Emulator starting to install ipa"
+          xcrun simctl install booted ./e2e/expo_client
+          echo "Emulator done"
+      - name: Run E2E Tests
+        run: |
+          cd e2e
+          robot --variable TOKEN:${{ secrets.E2E_TOKEN }} --variable ENDPOINT_URL:${{ secrets.E2E_ENDPOINT }} --variable DEVICE_NAME:${{env.DEVICE_NAME}} test_ios.txt
+      - name: Upload Appium Logs
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: output_ios
+          path: |
+            ./e2e/screen.png
             ./e2e/log.html
             ./e2e/report.html
             ./e2e/output.xml
