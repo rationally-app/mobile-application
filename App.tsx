@@ -2,10 +2,10 @@ import AppNavigation from "./src/navigation";
 import { Sentry } from "./src/utils/errorTracking";
 import Constants from "expo-constants";
 import Storybook from "./storybook";
-import { IS_STORYBOOK_VIEW } from "./src/config";
+import { IS_STORYBOOK_VIEW, SENTRY_DSN } from "./src/config";
 
 Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: SENTRY_DSN,
   // enableInExpoDevelopment: true,
   debug: __DEV__
 });

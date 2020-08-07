@@ -39,6 +39,7 @@ import { useProductContext } from "../../context/products";
 import { useLogout } from "../../hooks/useLogout";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
+import { DOMAIN_FORMAT } from "../../config";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -167,10 +168,20 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   useEffect(() => {
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
       const { queryParams } = await Linking.parseInitialURLAsync();
-      if (queryParams?.key && queryParams?.endpoint) {
-        setCodeKey(queryParams.key);
-        setEndpointTemp(queryParams.endpoint);
-        setLoginStage("MOBILE_NUMBER");
+      const queryEndpoint = queryParams?.endpoint;
+      const queryKey = queryParams?.key;
+
+      if (queryEndpoint && queryKey) {
+        if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
+          const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
+          Sentry.captureException(error);
+          alert("Invalid QR code");
+          setLoginStage("SCAN");
+        } else {
+          setCodeKey(queryKey);
+          setEndpointTemp(queryEndpoint);
+          setLoginStage("MOBILE_NUMBER");
+        }
       }
     };
     skipScanningIfParamsInDeepLink();
@@ -211,11 +222,14 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       try {
         const { key, endpoint } = decodeQr(qrCode);
         Vibration.vibrate(50);
+        if (!RegExp(DOMAIN_FORMAT).test(endpoint)) throw new Error();
         setCodeKey(key);
         setEndpointTemp(endpoint);
         setIsLoading(false);
         setLoginStage("MOBILE_NUMBER");
       } catch (e) {
+        const error = new Error(`onBarCodeScanned ${e}`);
+        Sentry.captureException(error);
         alert("Invalid QR code");
         setIsLoading(false);
       }

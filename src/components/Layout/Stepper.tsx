@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
 
 const parseNumber = (value: string): number => Number(value.replace(/\s/g, ""));
 const isNumber = (value: string): boolean => !isNaN(parseNumber(value));
-const clampAndRound = (
+const clampAndRoundDown = (
   value: string,
   min: number,
   max: number,
@@ -80,8 +80,8 @@ const clampAndRound = (
 ): number => {
   const num = parseNumber(value);
   const clampedNum = clamp(num, min, max);
-  const roundedNum = Math.floor(clampedNum / step) * step;
-  return roundedNum;
+  const flooredNum = Math.floor(clampedNum / step) * step;
+  return isNaN(flooredNum) ? 0 : flooredNum;
 };
 
 interface StepperButton {
@@ -175,26 +175,23 @@ export const Stepper: FunctionComponent<Stepper> = ({
   const isMounted = useIsMounted();
   const [internalValue, setInternalValue] = useState<string>(`${value}`);
 
-  const delayedClampAndRound = useRef(
-    debounce<typeof clampAndRound>((...props) => {
-      const num = clampAndRound(...props);
+  const delayedClampAndRoundDown = useRef(
+    debounce<typeof clampAndRoundDown>((...props) => {
+      const num = clampAndRoundDown(...props);
       if (isMounted.current) {
         setInternalValue(`${num}`);
-        setValue(num);
       }
       return num;
     }, 800)
   );
 
-  // Sync internal and external values
   useEffect(() => {
-    setInternalValue(internalValue =>
-      internalValue !== `${value}` ? `${value}` : internalValue
+    delayedClampAndRoundDown.current(
+      internalValue,
+      bounds.min,
+      bounds.max,
+      step
     );
-  }, [value]);
-
-  useEffect(() => {
-    delayedClampAndRound.current(internalValue, bounds.min, bounds.max, step);
   }, [internalValue, bounds.min, bounds.max, step]);
 
   const decrement = (): void => {
@@ -224,14 +221,19 @@ export const Stepper: FunctionComponent<Stepper> = ({
       setInternalValue(value);
     } else if (isNumber(value)) {
       setInternalValue(`${parseNumber(value)}`);
+    } else {
+      // e.g. "-1"
+      return;
     }
+
+    const num = clampAndRoundDown(value, bounds.min, bounds.max, step);
+    setValue(num);
   };
 
   // When input is blurred, immediately clamp and round
   const onBlur = (): void => {
-    const num = clampAndRound(internalValue, bounds.min, bounds.max, step);
+    const num = clampAndRoundDown(internalValue, bounds.min, bounds.max, step);
     setInternalValue(`${num}`);
-    setValue(num);
   };
 
   return (

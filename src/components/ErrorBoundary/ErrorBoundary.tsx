@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
 import { Sentry } from "../../utils/errorTracking";
-import { Updates } from "expo";
+import * as Updates from "expo-updates";
 import { AppText } from "../Layout/AppText";
 import { StyleSheet, View, Linking } from "react-native";
 import { size, fontSize, color } from "../../common/styles";
@@ -99,7 +99,7 @@ export class ErrorBoundary extends Component<unknown, State> {
           <View style={styles.restartButton}>
             <DarkButton
               text="Restart app"
-              onPress={() => Updates.reload()}
+              onPress={() => Updates.reloadAsync()}
               icon={
                 <Feather
                   name="refresh-cw"
