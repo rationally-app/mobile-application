@@ -19,7 +19,8 @@ export const DangerButton: FunctionComponent<DangerButton> = ({
 }) => (
   <BaseButton
     onPress={onPress}
-    backgroundColor={color("red", 40)}
+    borderColor={color("red", 60)}
+    backgroundColor={color("red", 60)}
     fullWidth={fullWidth}
     disabled={isLoading}
   >

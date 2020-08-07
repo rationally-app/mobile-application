@@ -322,8 +322,8 @@ export const useCart = (
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
       } catch (e) {
-        setError(new Error("Couldn't checkout, please try again later"));
         setCartState("DEFAULT");
+        setError(new Error("Couldn't checkout, please try again later"));
       }
     };
 

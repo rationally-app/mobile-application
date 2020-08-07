@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
-      latestBinaryVersion: ${{steps.latestBinaryVersion.outputs.version}}
+      latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -62,9 +62,17 @@ jobs:
       - name: Echo Version Details
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
-          echo Latest release is ${{steps.latestBinaryVersion.outputs.version}}
+          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
       - name: Expo Publish Channel
-        run: APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${{steps.latestBinaryVersion.outputs.version}} expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
+        env:
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          APP_BUILD_VERSION: ${{ github.run_number }}
+          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
+        run: expo publish --non-interactive --release-channel=${{ steps.releaseChannel.outputs.releaseChannel }}
   create_release:
     name: Create Release
     needs: deploy_prod
@@ -101,8 +109,16 @@ jobs:
       - name: Install Packages
         run: npm install
       - name: Build Android Release
+        env:
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          APP_BUILD_VERSION: ${{ github.run_number }}
+          APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
+          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
-          APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${{ needs.deploy_prod.outputs.latestBinaryVersion }} expo build:android --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogAndroid.txt
+          expo build:android --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogAndroid.txt
           cat buildLogAndroid.txt
       - name: Parse Asset URL
         id: androidUrl
@@ -134,8 +150,16 @@ jobs:
       - name: Install Packages
         run: npm install
       - name: Build IOS Release
+        env:
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          APP_BUILD_VERSION: ${{ github.run_number }}
+          APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
+          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
-          APP_BUILD_VERSION=$GITHUB_RUN_NUMBER APP_BINARY_VERSION=${{ needs.deploy_prod.outputs.latestBinaryVersion }} expo build:ios --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogIOS.txt
+          expo build:ios --release-channel=${{ needs.deploy_prod.outputs.releaseChannel }} > buildLogIOS.txt
           cat buildLogIOS.txt
       - name: Parse Asset URL
         id: iosUrl

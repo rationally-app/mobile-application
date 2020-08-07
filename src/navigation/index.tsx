@@ -5,10 +5,12 @@ import { ProductContextProvider } from "../context/products";
 import { FontLoader } from "../components/FontLoader";
 import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
 import { HelpModalContextProvider } from "../context/help";
+import { AlertModalContextProvider } from "../context/alert";
 import { ImportantMessageContextProvider } from "../context/importantMessage";
 import { Content } from "./Content";
 import { Providers } from "../context/composeProviders";
 import { DrawerContextProvider } from "../context/drawer";
+import { CampaignConfigContextProvider } from "../context/campaignConfig";
 
 const App = (): ReactElement => {
   return (
@@ -17,9 +19,11 @@ const App = (): ReactElement => {
         <Providers
           providers={[
             ConfigContextProvider,
+            CampaignConfigContextProvider,
             ProductContextProvider,
             AuthenticationContextProvider,
             HelpModalContextProvider,
+            AlertModalContextProvider,
             ImportantMessageContextProvider,
             DrawerContextProvider
           ]}
