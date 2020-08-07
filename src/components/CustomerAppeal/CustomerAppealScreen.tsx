@@ -20,7 +20,10 @@ import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { ReasonSelectionCard, Reason } from "./ReasonSelection/ReasonSelectionCard";
+import {
+  ReasonSelectionCard,
+  Reason
+} from "./ReasonSelection/ReasonSelectionCard";
 import { pushRoute } from "../../common/navigation";
 import { useAuthenticationContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
