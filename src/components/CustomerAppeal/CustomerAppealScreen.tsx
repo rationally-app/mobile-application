@@ -20,7 +20,7 @@ import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { ReasonSelectionCard } from "./ReasonSelection/ReasonSelectionCard";
+import { ReasonSelectionCard, Reason } from "./ReasonSelection/ReasonSelectionCard";
 import { pushRoute } from "../../common/navigation";
 import { useAuthenticationContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
@@ -63,11 +63,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
-  const [ids] = useState(
-    Array.isArray(navigation.getParam("ids"))
-      ? navigation.getParam("ids")
-      : [navigation.getParam("ids")]
-  );
+  const [ids] = useState(navigation.getParam("ids"));
   const { setProducts, allProducts } = useProductContext();
 
   const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
@@ -83,23 +79,13 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
 
-  // TODO: the useEffect in useCart will cause it to fire to check for quota again....
   const { token, endpoint } = useAuthenticationContext();
   const { allQuotaResponse, emptyCart } = useCart(ids, token, endpoint);
 
-  const getReasons = (): {
-    description: string;
-    descriptionAlert: string | undefined;
-  }[] => {
+  const getReasons = (): Reason[] => {
     return transform(
       allProducts,
-      (
-        result: Array<{
-          description: string;
-          descriptionAlert: string | undefined;
-        }>,
-        policy
-      ) => {
+      (result: Array<Reason>, policy) => {
         if (policy.categoryType === "APPEAL") {
           const policyLimt = policy.quantity.limit;
           const quotaResponse = allQuotaResponse?.remainingQuota.find(
@@ -110,7 +96,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
             quotaResponse &&
             policy.thresholdValue &&
             policy.thresholdAlert &&
-            policyLimt - quotaResponse.quantity > policy.thresholdValue
+            policyLimt - quotaResponse.quantity >= policy.thresholdValue
           ) {
             descriptionAlert = policy.thresholdAlert;
           }
@@ -124,17 +110,12 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     );
   };
 
-  const onReasonSelection = (
-    productName: string,
-    descriptionAlert?: string
-  ): boolean => {
+  const onReasonSelection = (productName: string): boolean => {
     const policy = allProducts.find(
       policy => policy.categoryType === "APPEAL" && policy.name === productName
     );
     if (policy === undefined) return false;
 
-    // TODO: do we need to empty the cart?
-    // TODO: if we dont empty the cart.. it will contain the original tt-token ItemQuota response
     emptyCart();
     setProducts([policy]);
     pushRoute(navigation, "CustomerQuotaScreen", { id: ids });

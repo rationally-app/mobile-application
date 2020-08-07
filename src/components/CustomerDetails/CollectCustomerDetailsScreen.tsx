@@ -79,7 +79,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       );
     };
     resetToDefaultProducts(); // for newly created screen or after end of appeal process
-    const focusListender = navigation.addListener("didFocus", () => {
+    // there is an issue with react-navigation where didFocus will not always get triggered
+    // https://github.com/react-navigation/stack/pull/27
+    // https://github.com/react-navigation/react-navigation/issues/4867
+    const focusListender = navigation.addListener("willFocus", () => {
       resetToDefaultProducts(); // in case user press "back" all the way from appeal screen after reason selection
     });
     return () => {

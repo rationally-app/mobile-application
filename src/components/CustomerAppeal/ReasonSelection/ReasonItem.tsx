@@ -27,16 +27,13 @@ export const ReasonItem: FunctionComponent<{
   description: string;
   descriptionAlert?: string;
   isLast: boolean;
-  onReasonSelection: (
-    productName: string,
-    descriptionAlert?: string
-  ) => boolean;
+  onReasonSelection: (productName: string) => boolean;
 }> = ({ description, descriptionAlert, isLast, onReasonSelection }) => {
   return (
     <TouchableOpacity
       style={[styles.reasonComponent, isLast ? { marginBottom: 0 } : {}]}
       onPress={() => {
-        onReasonSelection(description, descriptionAlert);
+        onReasonSelection(description);
       }}
     >
       <View style={styles.reasonLayout}>

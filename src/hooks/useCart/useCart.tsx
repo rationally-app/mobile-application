@@ -104,7 +104,7 @@ const mergeWithCart = (
         if (product && product?.thresholdValue && product?.thresholdAlert) {
           const expandedQuota = product.quantity.limit - maxQuantity;
           descriptionAlert =
-            expandedQuota > product.thresholdValue
+            expandedQuota >= product.thresholdValue
               ? product.thresholdAlert
               : undefined;
         }

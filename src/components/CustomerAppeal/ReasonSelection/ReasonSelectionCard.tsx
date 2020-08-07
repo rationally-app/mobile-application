@@ -17,15 +17,17 @@ const styles = StyleSheet.create({
   }
 });
 
+export type Reason = {
+  description: string;
+  descriptionAlert: string | undefined;
+};
+
 interface ReasonSelectionCard {
   ids: string[];
   reasonSelectionHeader: string;
-  reasons: { description: string; descriptionAlert: string | undefined }[];
+  reasons: Reason[];
   onCancel: () => void;
-  onReasonSelection: (
-    productName: string,
-    descriptionAlert?: string
-  ) => boolean;
+  onReasonSelection: (productName: string) => boolean;
 }
 
 export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({

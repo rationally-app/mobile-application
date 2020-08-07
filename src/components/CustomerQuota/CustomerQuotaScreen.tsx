@@ -87,10 +87,11 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const { token, endpoint } = useAuthenticationContext();
   const showHelpModal = useContext(HelpModalContext);
   // const [ids, setIds] = useState([navigation.getParam("id")]);
+  // coming from NRIC screen, it will be a string
+  // coming from appeal, it can be an array if group appeal is supported
+  const navId = navigation.getParam("id");
   const [ids, setIds] = useState<Array<string>>(
-    Array.isArray(navigation.getParam("id"))
-      ? navigation.getParam("id")
-      : [navigation.getParam("id")]
+    Array.isArray(navId) ? navId : [navId]
   );
 
   const {
