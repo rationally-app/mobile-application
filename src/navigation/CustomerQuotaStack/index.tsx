@@ -3,16 +3,16 @@ import {
   StackViewTransitionConfigs
 } from "react-navigation-stack";
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
-import CustomerQuotaScreen from "./CustomerQuotaScreen";
 import CustomerAppealScreen from "./CustomerAppealScreen";
+import { CustomerQuotaProxy } from "../../components/CustomerQuota/CustomerQuotaProxy";
 
 const CustomerQuotaStack = createStackNavigator(
   {
     CollectCustomerDetailsScreen: {
       screen: CollectCustomerDetailsScreen
     },
-    CustomerQuotaScreen: {
-      screen: CustomerQuotaScreen
+    CustomerQuotaProxy: {
+      screen: CustomerQuotaProxy
     },
     CustomerAppealScreen: {
       screen: CustomerAppealScreen

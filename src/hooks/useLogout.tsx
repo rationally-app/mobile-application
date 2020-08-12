@@ -22,7 +22,7 @@ interface LogoutHook {
 export const useLogout = (): LogoutHook => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
   const { clearAuthInfo } = useAuthenticationContext();
-  const { setProducts, setFeatures } = useProductContext();
+  const { setProducts, setFeatures, setAllProducts } = useProductContext();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const logout: LogoutHook["logout"] = useCallback(
@@ -34,6 +34,7 @@ export const useLogout = (): LogoutHook => {
       await clearAuthInfo();
       setProducts([]);
       setFeatures({} as Features);
+      setAllProducts([]);
       setMessageContent(null);
       setIsLoggingOut(false);
       navigationDispatch?.(
@@ -46,7 +47,7 @@ export const useLogout = (): LogoutHook => {
         Alert.alert(title, description);
       }
     },
-    [clearAuthInfo, setMessageContent, setProducts, setFeatures]
+    [clearAuthInfo, setMessageContent, setProducts, setFeatures, setAllProducts]
   );
 
   return {

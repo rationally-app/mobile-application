@@ -12,7 +12,6 @@ import {
   ActivityIndicator,
   BackHandler
 } from "react-native";
-import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -34,6 +33,13 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { navigateHome, replaceRoute } from "../../common/navigation";
+import { NavigationParams, NavigationRoute } from "react-navigation";
+import { NavigationDrawerProp } from "react-navigation-drawer";
+
+type CustomerQuotaProps = {
+  navigation: NavigationDrawerProp<NavigationRoute, NavigationParams>;
+  navIds: Array<string>;
+};
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -67,8 +73,9 @@ const showAlert = (message: string, onDismiss: () => void): void =>
     onDismiss: onDismiss // for android outside alert clicks
   });
 
-export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
+  navigation,
+  navIds
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -86,13 +93,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
   const showHelpModal = useContext(HelpModalContext);
-  // const [ids, setIds] = useState([navigation.getParam("id")]);
-  // coming from NRIC screen, it will be a string
-  // coming from appeal, it can be an array if group appeal is supported
-  const navId = navigation.getParam("id");
-  const [ids, setIds] = useState<Array<string>>(
-    Array.isArray(navId) ? navId : [navId]
-  );
+  const [ids, setIds] = useState<Array<string>>(navIds);
 
   const {
     cartState,

@@ -67,7 +67,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   }, []);
 
   const [ids] = useState(navigation.getParam("ids"));
-  const { setProducts, allProducts } = useProductContext();
+  const { allProducts } = useProductContext();
 
   const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
   useEffect(() => {
@@ -114,14 +114,18 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   };
 
   const onReasonSelection = (productName: string): boolean => {
-    const policy = allProducts.find(
+    emptyCart();
+    const appealProducts = allProducts.find(
       policy => policy.categoryType === "APPEAL" && policy.name === productName
     );
-    if (policy === undefined) return false;
-
-    emptyCart();
-    setProducts([policy]);
-    pushRoute(navigation, "CustomerQuotaScreen", { id: ids });
+    if (appealProducts === undefined) {
+      Sentry.captureException(`Unable to find appeal product: ${productName}}`);
+      return false;
+    }
+    pushRoute(navigation, "CustomerQuotaProxy", {
+      id: ids,
+      products: [appealProducts]
+    });
     return true;
   };
 

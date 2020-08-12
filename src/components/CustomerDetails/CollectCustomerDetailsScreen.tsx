@@ -59,36 +59,12 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   navigation,
   isFocused
 }) => {
-  const { allProducts, setProducts } = useProductContext();
-
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
       message: "CollectCustomerDetailsScreen"
     });
   }, []);
-
-  useEffect(() => {
-    const resetToDefaultProducts = (): void => {
-      setProducts(
-        allProducts.filter(
-          policy =>
-            policy.categoryType === undefined ||
-            policy.categoryType === "DEFAULT"
-        )
-      );
-    };
-    resetToDefaultProducts(); // for newly created screen or after end of appeal process
-    // there is an issue with react-navigation where didFocus will not always get triggered
-    // https://github.com/react-navigation/stack/pull/27
-    // https://github.com/react-navigation/react-navigation/issues/4867
-    const focusListender = navigation.addListener("willFocus", () => {
-      resetToDefaultProducts(); // in case user press "back" all the way from appeal screen after reason selection
-    });
-    return () => {
-      focusListender.remove();
-    };
-  }, [allProducts, navigation, setProducts]);
 
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
@@ -97,7 +73,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
-  const { features } = useProductContext();
+  const { features, allProducts } = useProductContext();
 
   useEffect(() => {
     if (isFocused) {
@@ -143,7 +119,15 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         features?.id?.validationRegex
       );
       Vibration.vibrate(50);
-      navigation.navigate("CustomerQuotaScreen", { id });
+      const defaultProducts = allProducts.filter(
+        policy =>
+          policy.categoryType === undefined || policy.categoryType === "DEFAULT"
+      );
+
+      navigation.navigate("CustomerQuotaProxy", {
+        id,
+        products: defaultProducts
+      });
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
