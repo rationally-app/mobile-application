@@ -33,6 +33,10 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { getFeatures, products } = useProductContext();
 
+  // TODO:
+  // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
+  // To be further discuss
+  const isAppeal = products.some(product => product.categoryType === "APPEAL");
   return (
     <View>
       <CustomerCard
@@ -57,23 +61,23 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         {!isLoading && (
           <SecondaryButton
-            text={
-              products.some(product => product.categoryType === "APPEAL")
-                ? "Back"
-                : "Cancel"
+            text={isAppeal ? "Back" : "Cancel"}
+            onPress={
+              isAppeal
+                ? onCancel
+                : () => {
+                    Alert.alert("Cancel transaction?", undefined, [
+                      {
+                        text: "No"
+                      },
+                      {
+                        text: "Yes",
+                        onPress: onCancel,
+                        style: "destructive"
+                      }
+                    ]);
+                  }
             }
-            onPress={() => {
-              Alert.alert("Cancel transaction?", undefined, [
-                {
-                  text: "No"
-                },
-                {
-                  text: "Yes",
-                  onPress: onCancel,
-                  style: "destructive"
-                }
-              ]);
-            }}
           />
         )}
         <View
