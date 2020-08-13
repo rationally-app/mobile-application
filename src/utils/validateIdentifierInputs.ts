@@ -16,6 +16,9 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
+    if (!value && textInputType === "PHONE_NUMBER") {
+      throw new Error(ERROR_MESSAGE.MISSING_POD_INPUT);
+    }
     if (!value) {
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
