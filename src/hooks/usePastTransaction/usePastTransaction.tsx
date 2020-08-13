@@ -20,7 +20,6 @@ export const usePastTransaction = (
 
   useEffect(() => {
     const fetchPastTransactions = async (): Promise<void> => {
-      console.warn("fetching...");
       try {
         const pastTransactionsResponse = await getPastTransactions(
           id,

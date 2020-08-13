@@ -100,7 +100,7 @@ const AppealButton: FunctionComponent<AppealButton> = ({ onAppeal }) => {
       }}
     >
       <View style={{ alignItems: "center" }}>
-        <AppText style={styles.appealButton}>{"Appeal"}</AppText>
+        <AppText style={styles.appealButton}>{"Raise an appeal"}</AppText>
       </View>
     </TouchableOpacity>
   );

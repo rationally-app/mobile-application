@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 export const ItemContent: FunctionComponent<{
   name: Policy["name"];
   description: Policy["description"];
-  descriptionAlert?: Policy["thresholdAlert"];
+  descriptionAlert?: string;
   unit: Policy["quantity"]["unit"];
   maxQuantity: number;
 }> = ({ name, description, descriptionAlert, unit, maxQuantity }) => (

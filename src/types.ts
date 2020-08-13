@@ -14,6 +14,11 @@ export const SessionCredentials = t.type({
 
 export type SessionCredentials = t.TypeOf<typeof SessionCredentials>;
 
+const PolicyAlert = t.type({
+  threshold: t.number,
+  label: t.string
+});
+
 const PolicyQuantity = t.intersection([
   t.type({
     period: t.number,
@@ -25,7 +30,8 @@ const PolicyQuantity = t.intersection([
     unit: t.type({
       type: t.union([t.literal("PREFIX"), t.literal("POSTFIX")]),
       label: t.string
-    })
+    }),
+    checkoutLimit: t.number
   })
 ]);
 
@@ -86,13 +92,11 @@ const Policy = t.intersection([
   }),
   t.partial({
     categoryType: CategoryType,
-    thresholdValue: t.number,
-    thresholdAlert: t.string,
-    checkoutLimit: t.number,
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
-    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")])
+    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")]),
+    alert: PolicyAlert
   })
 ]);
 

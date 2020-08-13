@@ -97,11 +97,10 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
           let descriptionAlert: string | undefined = undefined;
           if (
             quotaResponse &&
-            policy.thresholdValue &&
-            policy.thresholdAlert &&
-            policyLimt - quotaResponse.quantity >= policy.thresholdValue
+            policy.alert &&
+            policyLimt - quotaResponse.quantity >= policy.alert.threshold
           ) {
-            descriptionAlert = policy.thresholdAlert;
+            descriptionAlert = policy.alert.label;
           }
           result.push({
             description: policy.name,

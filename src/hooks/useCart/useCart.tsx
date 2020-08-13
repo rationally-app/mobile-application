@@ -101,11 +101,11 @@ const mergeWithCart = (
           ) || [];
 
         let descriptionAlert: string | undefined = undefined;
-        if (product && product?.thresholdValue && product?.thresholdAlert) {
+        if (product && product.alert) {
           const expandedQuota = product.quantity.limit - maxQuantity;
           descriptionAlert =
-            expandedQuota >= product.thresholdValue
-              ? product.thresholdAlert
+            expandedQuota >= product.alert.threshold
+              ? product.alert.label
               : undefined;
         }
         return {
@@ -115,7 +115,8 @@ const mergeWithCart = (
             existingItem?.quantity || defaultQuantity
           ),
           maxQuantity: Math.max(maxQuantity, 0),
-          checkoutLimit: existingItem?.checkoutLimit || product?.checkoutLimit,
+          checkoutLimit:
+            existingItem?.checkoutLimit || product?.quantity.checkoutLimit,
           descriptionAlert,
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
