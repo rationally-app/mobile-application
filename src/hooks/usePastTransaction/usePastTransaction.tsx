@@ -4,7 +4,7 @@ import { usePrevious } from "../usePrevious";
 import { getPastTransactions } from "../../services/quota";
 
 export type PastTransactionHook = {
-  pastTransactions: PastTransactionsResult | null;
+  pastTransactionsResult: PastTransactionsResult | null;
 };
 
 export const usePastTransaction = (
@@ -13,8 +13,8 @@ export const usePastTransaction = (
   endpoint: string
 ): PastTransactionHook => {
   const [
-    pastTransactions,
-    setPastTransactions
+    pastTransactionsResult,
+    setPastTransactionsResult
   ] = useState<PastTransactionsResult | null>(null);
   const prevId = usePrevious(id);
 
@@ -26,7 +26,7 @@ export const usePastTransaction = (
           authKey,
           endpoint
         );
-        setPastTransactions(pastTransactionsResponse);
+        setPastTransactionsResult(pastTransactionsResponse);
       } catch (e) {
         // if (e instanceof PastTransactionError)
         // Still figuring how to throw error
@@ -37,6 +37,6 @@ export const usePastTransaction = (
   }, [authKey, endpoint, id, prevId]);
 
   return {
-    pastTransactions
+    pastTransactionsResult
   };
 };
