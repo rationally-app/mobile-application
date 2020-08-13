@@ -15,6 +15,12 @@ export const ERROR_MESSAGE = {
   MISSING_POD_INPUT: "Scan your device code",
   INVALID_PHONE_NUMBER: "Enter your contact number again",
   MISSING_SELECTION: "Select at least one item to checkout",
+  AUTH_FAILURE_INVALID_TOKEN:
+    "Scan QR code again or get a new QR code from your in-charge",
+  AUTH_FAILURE_EXPIRED_TOKEN:
+    "We could not find a validity period. Get a new QR code from your in-charge",
+  ENV_VERSION_ERROR:
+    "Encountered an issue obtaining environment information. We've noted this down and are looking into it!",
   SERVER_ERROR:
     "We are currently facing server issues. Contact your in-charge if the problem persists."
 };
