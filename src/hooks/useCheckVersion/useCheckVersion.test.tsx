@@ -21,7 +21,8 @@ const wrapper = (
     value={{
       features: {
         minAppBinaryVersion: minAppBinaryVersion,
-        minAppBuildVersion: minAppBuildVersion
+        minAppBuildVersion: minAppBuildVersion,
+        campaignName: "Test campaign"
       },
       setCampaignConfig: () => null,
       clearCampaignConfig: () => null,

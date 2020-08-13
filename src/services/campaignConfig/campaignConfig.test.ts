@@ -13,6 +13,7 @@ const mockValidResponse = {
   features: {
     minAppBinaryVersion: "3.0.0",
     minAppBuildVersion: 0,
+    campaignName: "Test campaign",
     flowType: "DEFAULT",
     transactionGrouping: true
   }
@@ -22,6 +23,7 @@ const mockValidResponseNewFeature = {
   features: {
     minAppBinaryVersion: "3.0.0",
     minAppBuildVersion: 10,
+    campaignName: "Test campaign",
     flowType: "DEFAULT",
     transactionGrouping: true,
     newFeature: true
