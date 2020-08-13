@@ -17,7 +17,14 @@ import {
   Policy
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import { ERROR_MESSAGE } from "../../context/alert";
+import {
+  AlertModalContext,
+  incompleteEntryAlertProps,
+  wrongFormatAlertProps,
+  duplicateAlertProps,
+  systemAlertProps,
+  ERROR_MESSAGE
+} from "../../context/alert";
 
 export type CartItem = {
   category: string;
@@ -65,19 +72,6 @@ const getItem = (
 ): [CartItem | undefined, number] => {
   const idx = cart.findIndex(item => item.category === category);
   return [cart[idx], idx];
-};
-
-export const ERROR_MESSAGE = {
-  DUPLICATE_IDENTIFIER_INPUT: "Scan item again",
-  DUPLICATE_POD_INPUT:
-    "Scan another item that is not tagged to any contact number",
-  INVALID_IDENTIFIER_INPUT: "Enter your voucher code again",
-  MISSING_IDENTIFIER_INPUT: "Enter your voucher code",
-  INVALID_POD_INPUT: "Scan your device code again",
-  MISSING_POD_INPUT: "Scan your device code",
-  INVALID_PHONE_NUMBER: "Enter your contact number again",
-  SERVER_ERROR:
-    "We are currently facing server issues. Contact your in-charge if the problem persists."
 };
 
 const mergeWithCart = (
@@ -180,7 +174,7 @@ export const useCart = (
   const [error, setError] = useState<Error>();
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
-
+  const { showAlert } = useContext(AlertModalContext);
   const clearError = useCallback((): void => setError(undefined), []);
 
   /**
@@ -220,7 +214,7 @@ export const useCart = (
             )
           );
         } else {
-          showAlert(defaultSystemAlertProp);
+          showAlert(systemAlertProps);
           setError(e);
         }
       }
@@ -323,8 +317,10 @@ export const useCart = (
       try {
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
-        defaultWrongFormatAlertProp.description = error.message;
-        showAlert(defaultWrongFormatAlertProp);
+        showAlert({
+          ...wrongFormatAlertProps,
+          description: error.message
+        });
         setError(error);
         setCartState("DEFAULT");
         return;
@@ -341,12 +337,12 @@ export const useCart = (
         setCartState("PURCHASED");
       } catch (e) {
         if (e.message === ERROR_MESSAGE.DUPLICATE_POD_INPUT) {
-          defaultDuplicateAlertProp.description = e.message;
-          showAlert(defaultDuplicateAlertProp);
+          showAlert({ ...duplicateAlertProps, description: e.message });
         } else {
-          defaultSystemAlertProp.description =
-            "We are currently facing server issues. Try again later or contact your in-charge if the problem persists";
-          showAlert(defaultSystemAlertProp);
+          showAlert({
+            ...systemAlertProps,
+            description: ERROR_MESSAGE.SERVER_ERROR
+          });
         }
         setError(e);
         setCartState("DEFAULT");
