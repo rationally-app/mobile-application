@@ -146,7 +146,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
    */
 
   // This hook is only used in single ID transaction
-  const { pastTransactions } = usePastTransaction(ids[0], token, endpoint);
+  const { pastTransactionsResult } = usePastTransaction(
+    ids[0],
+    token,
+    endpoint
+  );
 
   if (
     ids.length > 1 ||
@@ -167,7 +171,10 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         if (lastTransactionTime) {
           const policy = getProduct(category);
           const categoryName = policy?.name ?? category;
-          const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
+          const formattedDate = format(
+            lastTransactionTime,
+            "h:mma, d MMM yyyy"
+          );
           itemTransactions.push({
             itemHeader: `${categoryName} (${formattedDate})`,
             itemDetail: getIdentifierInputDisplay(identifierInputs)
@@ -179,7 +186,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   } else {
     // For second scenario, transactions with identifiers would require to show details transactions
     // hence, data will fetch from transactions endpoint
-    const sortedTransactions = pastTransactions?.pastTransactions.sort(
+    const sortedTransactions = pastTransactionsResult?.pastTransactions.sort(
       (item1, item2) =>
         compareDesc(item1.transactionTime ?? 0, item2.transactionTime ?? 0)
     );
