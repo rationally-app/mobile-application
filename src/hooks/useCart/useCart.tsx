@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
@@ -15,6 +15,13 @@ import {
   IdentifierInput
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
+import {
+  AlertModalContext,
+  defaultIncompleteEntryAlertProp,
+  defaultWrongFormatAlertProp,
+  defaultDuplicateAlertProp,
+  defaultSystemAlertProp
+} from "../../context/alert";
 
 export type CartItem = {
   category: string;
@@ -58,6 +65,19 @@ const getItem = (
 ): [CartItem | undefined, number] => {
   const idx = cart.findIndex(item => item.category === category);
   return [cart[idx], idx];
+};
+
+export const ERROR_MESSAGE = {
+  DUPLICATE_IDENTIFIER_INPUT: "Scan item again",
+  DUPLICATE_POD_INPUT:
+    "Scan another item that is not tagged to any contact number",
+  INVALID_IDENTIFIER_INPUT: "Enter your voucher code again",
+  MISSING_IDENTIFIER_INPUT: "Enter your voucher code",
+  INVALID_POD_INPUT: "Scan your device code again",
+  MISSING_POD_INPUT: "Scan your device code",
+  INVALID_PHONE_NUMBER: "Enter your contact number again",
+  SERVER_ERROR:
+    "We are currently facing server issues. Contact your in-charge if the problem persists."
 };
 
 const mergeWithCart = (
@@ -132,7 +152,7 @@ export const useCart = (
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
-
+  const { showAlert } = useContext(AlertModalContext);
   const clearError = useCallback((): void => setError(undefined), []);
 
   /**
@@ -167,6 +187,7 @@ export const useCart = (
             )
           );
         } else {
+          showAlert(defaultSystemAlertProp);
           setError(e);
         }
       }
@@ -183,7 +204,8 @@ export const useCart = (
     prevIds,
     products.length,
     setProducts,
-    setFeatures
+    setFeatures,
+    showAlert
   ]);
 
   /**
@@ -251,12 +273,14 @@ export const useCart = (
           ) {
           }
           allIdentifierInputs.push(...identifierInputs);
-
           return { category, quantity, identifierInputs };
         });
 
       if (transactions.length === 0) {
-        setError(new Error("Please select at least one item to checkout"));
+        defaultIncompleteEntryAlertProp.description =
+          "Select at least one item to checkout";
+        showAlert(defaultIncompleteEntryAlertProp);
+        setError(new Error("Select at least one item to checkout"));
         setCartState("DEFAULT");
         return;
       }
@@ -264,6 +288,8 @@ export const useCart = (
       try {
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
+        defaultWrongFormatAlertProp.description = error.message;
+        showAlert(defaultWrongFormatAlertProp);
         setError(error);
         setCartState("DEFAULT");
         return;
@@ -279,13 +305,21 @@ export const useCart = (
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
       } catch (e) {
+        if (e.message === ERROR_MESSAGE.DUPLICATE_POD_INPUT) {
+          defaultDuplicateAlertProp.description = e.message;
+          showAlert(defaultDuplicateAlertProp);
+        } else {
+          defaultSystemAlertProp.description =
+            "We are currently facing server issues. Try again later or contact your in-charge if the problem persists";
+          showAlert(defaultSystemAlertProp);
+        }
+        setError(e);
         setCartState("DEFAULT");
-        setError(new Error("Couldn't checkout, please try again later"));
       }
     };
 
     checkout();
-  }, [authKey, cart, endpoint, ids]);
+  }, [authKey, cart, endpoint, ids, showAlert]);
 
   return {
     cartState,
