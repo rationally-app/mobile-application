@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
@@ -65,6 +65,19 @@ const getItem = (
 ): [CartItem | undefined, number] => {
   const idx = cart.findIndex(item => item.category === category);
   return [cart[idx], idx];
+};
+
+export const ERROR_MESSAGE = {
+  DUPLICATE_IDENTIFIER_INPUT: "Scan item again",
+  DUPLICATE_POD_INPUT:
+    "Scan another item that is not tagged to any contact number",
+  INVALID_IDENTIFIER_INPUT: "Enter your voucher code again",
+  MISSING_IDENTIFIER_INPUT: "Enter your voucher code",
+  INVALID_POD_INPUT: "Scan your device code again",
+  MISSING_POD_INPUT: "Scan your device code",
+  INVALID_PHONE_NUMBER: "Enter your contact number again",
+  SERVER_ERROR:
+    "We are currently facing server issues. Contact your in-charge if the problem persists."
 };
 
 const mergeWithCart = (
@@ -207,6 +220,7 @@ export const useCart = (
             )
           );
         } else {
+          showAlert(defaultSystemAlertProp);
           setError(e);
         }
       }
@@ -224,7 +238,8 @@ export const useCart = (
     prevProducts,
     products,
     setProducts,
-    setFeatures
+    setFeatures,
+    showAlert
   ]);
 
   /**
@@ -296,7 +311,6 @@ export const useCart = (
           ) {
           }
           allIdentifierInputs.push(...identifierInputs);
-
           return { category, quantity, identifierInputs };
         });
 
@@ -309,6 +323,8 @@ export const useCart = (
       try {
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
+        defaultWrongFormatAlertProp.description = error.message;
+        showAlert(defaultWrongFormatAlertProp);
         setError(error);
         setCartState("DEFAULT");
         return;
@@ -324,6 +340,15 @@ export const useCart = (
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
       } catch (e) {
+        if (e.message === ERROR_MESSAGE.DUPLICATE_POD_INPUT) {
+          defaultDuplicateAlertProp.description = e.message;
+          showAlert(defaultDuplicateAlertProp);
+        } else {
+          defaultSystemAlertProp.description =
+            "We are currently facing server issues. Try again later or contact your in-charge if the problem persists";
+          showAlert(defaultSystemAlertProp);
+        }
+        setError(e);
         setCartState("DEFAULT");
         // backend will throw general duplicate identifier message
         if (
@@ -337,7 +362,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [authKey, cart, endpoint, ids]);
+  }, [authKey, cart, endpoint, ids, showAlert]);
 
   return {
     cartState,
