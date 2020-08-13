@@ -10,6 +10,8 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Cart } from "../../hooks/useCart/useCart";
 import { useProductContext } from "../../context/products";
 import { getIdentifierInputDisplay } from "../../utils/getIdentifierInputDisplay";
+import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransaction";
+import { useAuthenticationContext } from "../../context/auth";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -51,7 +53,7 @@ const DistantTransactionTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>Limit reached on </AppText>
     <AppText style={sharedStyles.statusTitle}>
-      {format(transactionTime, "hh:mm a, do MMMM")}.
+      {format(transactionTime, "h:mma, d MMM yyyy")}.
     </AppText>
   </>
 );
@@ -127,30 +129,38 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   onAppeal
 }) => {
   const { getProduct, allProducts } = useProductContext();
-
+  const { token, endpoint } = useAuthenticationContext();
+  const { pastTransactions } = usePastTransaction(ids[0], token, endpoint);
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const sortedCart = cart.sort((item1, item2) =>
-    compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
+  const sortedTransactions = pastTransactions?.pastTransactions.sort(
+    (item1, item2) =>
+      compareDesc(item1.transactionTime ?? 0, item2.transactionTime ?? 0)
   );
 
   const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
-  sortedCart.forEach(
-    ({ category, lastTransactionTime, identifierInputs = [] }) => {
-      if (lastTransactionTime) {
-        const policy = getProduct(category);
-        const categoryName = policy?.name ?? category;
-        const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
-        itemTransactions.push({
-          itemHeader: `${categoryName} (${formattedDate})`,
-          itemDetail: getIdentifierInputDisplay(identifierInputs)
-        });
-      }
-    }
-  );
+
+  /*
+    To consider the following limit reached screens
+    1. list of categories with latest transacted time; no identifiers and quantity
+    2. list of past transactions with identifiers and transacted time
+   */
+
+  sortedTransactions?.forEach(item => {
+    const policy = allProducts.find(
+      policy => policy.category === item.category
+    );
+    const categoryName = policy?.name ?? item.category;
+    const formattedDate = format(item.transactionTime, "h:mma, d MMM yyyy");
+    itemTransactions.push({
+      itemHeader: `${categoryName} (${formattedDate})`,
+      itemDetail: getIdentifierInputDisplay(item.identifierInputs ?? [])
+    });
+  });
 
   const now = new Date();
-  const latestTransactionTime = sortedCart[0]?.lastTransactionTime ?? undefined;
+  const latestTransactionTime =
+    sortedTransactions?.[0].transactionTime ?? undefined;
   const secondsFromLatestTransaction = latestTransactionTime
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;

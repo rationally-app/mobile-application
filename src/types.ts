@@ -166,6 +166,20 @@ export const PostTransactionResult = t.type({
 export type Transaction = t.TypeOf<typeof Transaction>;
 export type PostTransactionResult = t.TypeOf<typeof PostTransactionResult>;
 
+const PastTransaction = t.intersection([
+  t.type({
+    category: t.string,
+    quantity: t.number,
+    transactionTime: DateFromNumber
+  }),
+  t.partial({ identifierInputs: t.array(IdentifierInput) })
+]);
+export const PastTransactionsResult = t.type({
+  pastTransactions: t.array(PastTransaction)
+});
+
+export type PastTransactionsResult = t.TypeOf<typeof PastTransactionsResult>;
+
 export type Voucher = {
   serial: string;
   denomination: number;
