@@ -1058,7 +1058,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when transaction does not succeed", async () => {
+    it("should set general error when transaction does not succeed", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
