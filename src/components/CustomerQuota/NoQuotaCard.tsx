@@ -9,7 +9,10 @@ import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Cart } from "../../hooks/useCart/useCart";
 import { useProductContext } from "../../context/products";
-import { getIdentifierInputDisplay } from "../../utils/getIdentifierInputDisplay";
+import {
+  getIdentifierInputDisplay,
+  getAllIdentifierInputDisplay
+} from "../../utils/getIdentifierInputDisplay";
 import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransaction";
 import { useAuthenticationContext } from "../../context/auth";
 
@@ -189,7 +192,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       const formattedDate = format(item.transactionTime, "h:mma, d MMM yyyy");
       itemTransactions.push({
         itemHeader: `${categoryName} (${formattedDate})`,
-        itemDetail: getIdentifierInputDisplay(item.identifierInputs ?? [])
+        itemDetail: getAllIdentifierInputDisplay(item.identifierInputs ?? [])
       });
     });
 
