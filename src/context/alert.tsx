@@ -18,6 +18,58 @@ const defaultAlertProp: AlertModalProps = {
   onExit: () => {}
 };
 
+export const defaultIncompleteEntryAlertProp: AlertModalProps = {
+  alertType: "ERROR",
+  title: "Incomplete Entry",
+  description: "",
+  buttonTexts: {
+    primaryActionText: "OK"
+  },
+  visible: true,
+  onOk: () => {},
+  onCancel: () => {},
+  onExit: () => {}
+};
+
+export const defaultWrongFormatAlertProp: AlertModalProps = {
+  alertType: "ERROR",
+  title: "Wrong format",
+  description: "",
+  buttonTexts: {
+    primaryActionText: "OK"
+  },
+  visible: true,
+  onOk: () => {},
+  onCancel: () => {},
+  onExit: () => {}
+};
+
+export const defaultDuplicateAlertProp: AlertModalProps = {
+  alertType: "ERROR",
+  title: "Already Used",
+  description: "",
+  buttonTexts: {
+    primaryActionText: "OK"
+  },
+  visible: true,
+  onOk: () => {},
+  onCancel: () => {},
+  onExit: () => {}
+};
+
+export const defaultSystemAlertProp: AlertModalProps = {
+  alertType: "ERROR",
+  title: "System Error",
+  description: "",
+  buttonTexts: {
+    primaryActionText: "OK"
+  },
+  visible: true,
+  onOk: () => {},
+  onCancel: () => {},
+  onExit: () => {}
+};
+
 interface AlertModalContext {
   showAlert: (props: AlertModalProps) => void;
   clearAlert: () => void;
