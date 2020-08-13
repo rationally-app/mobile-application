@@ -637,7 +637,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Please select at least one item to checkout"
+        "Select at least one item to checkout"
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -658,7 +658,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter unique details to checkout' when there are multiple identifiers and at least one is empty", async () => {
+    it("should set error with message 'Enter your voucher code again' when there are multiple identifiers and at least one is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -684,9 +684,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
-        "Please enter unique details to checkout"
-      );
+      expect(result.current.error?.message).toBe("Enter your voucher code");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -719,7 +717,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter details to checkout' when there is one identifier and it is empty", async () => {
+    it("should set error with message 'Enter your voucher code' when there is one identifier and it is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce({
         remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
@@ -760,9 +758,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
-        "Please enter details to checkout"
-      );
+      expect(result.current.error?.message).toBe("Enter your voucher code");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -979,7 +975,9 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Invalid contact number");
+      expect(result.current.error?.message).toBe(
+        "Enter your contact number again"
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -1048,7 +1046,9 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Invalid details");
+      expect(result.current.error?.message).toBe(
+        "Enter your voucher code again"
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -1068,7 +1068,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when transaction does not succeed", async () => {
+    it("should set general error when transaction does not succeed", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -1082,7 +1082,9 @@ describe("useCart", () => {
       });
 
       mockPostTransaction.mockRejectedValueOnce(
-        new Error("error when checking out")
+        new Error(
+          "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
+        )
       );
 
       await wait(() => {
@@ -1090,7 +1092,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Couldn't checkout, please try again later"
+        "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
