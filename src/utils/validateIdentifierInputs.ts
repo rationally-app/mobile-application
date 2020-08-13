@@ -1,6 +1,7 @@
 import { IdentifierInput } from "../types";
 import { fullPhoneNumberValidator } from "./validatePhoneNumbers";
-import { ERROR_MESSAGE } from "../hooks/useCart/useCart";
+import { ERROR_MESSAGE } from "../context/alert";
+
 const isMatchRegex = (text: string, regex?: string): boolean => {
   if (!regex) {
     return true;

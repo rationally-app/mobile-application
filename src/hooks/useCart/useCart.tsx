@@ -17,10 +17,11 @@ import {
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import {
   AlertModalContext,
-  defaultIncompleteEntryAlertProp,
-  defaultWrongFormatAlertProp,
-  defaultDuplicateAlertProp,
-  defaultSystemAlertProp
+  incompleteEntryAlertProp,
+  wrongFormatAlertProp,
+  duplicateAlertProp,
+  systemAlertProp,
+  ERROR_MESSAGE
 } from "../../context/alert";
 
 export type CartItem = {
@@ -65,19 +66,6 @@ const getItem = (
 ): [CartItem | undefined, number] => {
   const idx = cart.findIndex(item => item.category === category);
   return [cart[idx], idx];
-};
-
-export const ERROR_MESSAGE = {
-  DUPLICATE_IDENTIFIER_INPUT: "Scan item again",
-  DUPLICATE_POD_INPUT:
-    "Scan another item that is not tagged to any contact number",
-  INVALID_IDENTIFIER_INPUT: "Enter your voucher code again",
-  MISSING_IDENTIFIER_INPUT: "Enter your voucher code",
-  INVALID_POD_INPUT: "Scan your device code again",
-  MISSING_POD_INPUT: "Scan your device code",
-  INVALID_PHONE_NUMBER: "Enter your contact number again",
-  SERVER_ERROR:
-    "We are currently facing server issues. Contact your in-charge if the problem persists."
 };
 
 const mergeWithCart = (
@@ -187,7 +175,7 @@ export const useCart = (
             )
           );
         } else {
-          showAlert(defaultSystemAlertProp);
+          showAlert(systemAlertProp);
           setError(e);
         }
       }
@@ -277,10 +265,11 @@ export const useCart = (
         });
 
       if (transactions.length === 0) {
-        defaultIncompleteEntryAlertProp.description =
-          "Select at least one item to checkout";
-        showAlert(defaultIncompleteEntryAlertProp);
-        setError(new Error("Select at least one item to checkout"));
+        showAlert({
+          ...incompleteEntryAlertProp,
+          description: ERROR_MESSAGE.MISSING_SELECTION
+        });
+        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         setCartState("DEFAULT");
         return;
       }
@@ -288,8 +277,10 @@ export const useCart = (
       try {
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
-        defaultWrongFormatAlertProp.description = error.message;
-        showAlert(defaultWrongFormatAlertProp);
+        showAlert({
+          ...wrongFormatAlertProp,
+          description: error.message
+        });
         setError(error);
         setCartState("DEFAULT");
         return;
@@ -306,12 +297,12 @@ export const useCart = (
         setCartState("PURCHASED");
       } catch (e) {
         if (e.message === ERROR_MESSAGE.DUPLICATE_POD_INPUT) {
-          defaultDuplicateAlertProp.description = e.message;
-          showAlert(defaultDuplicateAlertProp);
+          showAlert({ ...duplicateAlertProp, description: e.message });
         } else {
-          defaultSystemAlertProp.description =
-            "We are currently facing server issues. Try again later or contact your in-charge if the problem persists";
-          showAlert(defaultSystemAlertProp);
+          showAlert({
+            ...systemAlertProp,
+            description: ERROR_MESSAGE.SERVER_ERROR
+          });
         }
         setError(e);
         setCartState("DEFAULT");

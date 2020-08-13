@@ -5,6 +5,20 @@ import {
   AlertModalProps
 } from "../components/AlertModal/AlertModal";
 
+export const ERROR_MESSAGE = {
+  DUPLICATE_IDENTIFIER_INPUT: "Scan item again",
+  DUPLICATE_POD_INPUT:
+    "Scan another item that is not tagged to any contact number",
+  INVALID_IDENTIFIER_INPUT: "Enter your voucher code again",
+  MISSING_IDENTIFIER_INPUT: "Enter your voucher code",
+  INVALID_POD_INPUT: "Scan your device code again",
+  MISSING_POD_INPUT: "Scan your device code",
+  INVALID_PHONE_NUMBER: "Enter your contact number again",
+  MISSING_SELECTION: "Select at least one item to checkout",
+  SERVER_ERROR:
+    "We are currently facing server issues. Contact your in-charge if the problem persists."
+};
+
 const defaultAlertProp: AlertModalProps = {
   alertType: "ERROR",
   title: "",
@@ -18,56 +32,28 @@ const defaultAlertProp: AlertModalProps = {
   onExit: () => {}
 };
 
-export const defaultIncompleteEntryAlertProp: AlertModalProps = {
-  alertType: "ERROR",
+export const incompleteEntryAlertProp: AlertModalProps = {
+  ...defaultAlertProp,
   title: "Incomplete Entry",
-  description: "",
-  buttonTexts: {
-    primaryActionText: "OK"
-  },
-  visible: true,
-  onOk: () => {},
-  onCancel: () => {},
-  onExit: () => {}
+  visible: true
 };
 
-export const defaultWrongFormatAlertProp: AlertModalProps = {
-  alertType: "ERROR",
+export const wrongFormatAlertProp: AlertModalProps = {
+  ...defaultAlertProp,
   title: "Wrong format",
-  description: "",
-  buttonTexts: {
-    primaryActionText: "OK"
-  },
-  visible: true,
-  onOk: () => {},
-  onCancel: () => {},
-  onExit: () => {}
+  visible: true
 };
 
-export const defaultDuplicateAlertProp: AlertModalProps = {
-  alertType: "ERROR",
+export const duplicateAlertProp: AlertModalProps = {
+  ...defaultAlertProp,
   title: "Already Used",
-  description: "",
-  buttonTexts: {
-    primaryActionText: "OK"
-  },
-  visible: true,
-  onOk: () => {},
-  onCancel: () => {},
-  onExit: () => {}
+  visible: true
 };
 
-export const defaultSystemAlertProp: AlertModalProps = {
-  alertType: "ERROR",
+export const systemAlertProp: AlertModalProps = {
+  ...defaultAlertProp,
   title: "System Error",
-  description: "",
-  buttonTexts: {
-    primaryActionText: "OK"
-  },
-  visible: true,
-  onOk: () => {},
-  onCancel: () => {},
-  onExit: () => {}
+  visible: true
 };
 
 interface AlertModalContext {
