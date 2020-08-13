@@ -8,7 +8,6 @@ import {
   View,
   StyleSheet,
   Keyboard,
-  Alert,
   Vibration,
   BackHandler
 } from "react-native";
@@ -37,6 +36,7 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
+import { AlertModalContext, wrongFormatAlertProp } from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -74,6 +74,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
   const { features } = useProductContext();
+  const { showAlert } = useContext(AlertModalContext);
 
   useEffect(() => {
     if (isFocused) {
@@ -125,20 +126,22 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIsScanningEnabled(false);
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
+        // todo: alert for envversionerrors
       }
-      Alert.alert(
-        "Error",
-        e.message || e,
-        [
-          {
-            text: "OK",
-            onPress: () => setIsScanningEnabled(true)
-          }
-        ],
-        {
-          onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
-        }
-      );
+      showAlert({ ...wrongFormatAlertProp, description: e.message });
+      // Alert.alert(
+      //   "Error",
+      //   e.message || e,
+      //   [
+      //     {
+      //       text: "OK",
+      //       onPress: () => setIsScanningEnabled(true)
+      //     }
+      //   ],
+      //   {
+      //     onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
+      //   }
+      // );
     }
   };
 

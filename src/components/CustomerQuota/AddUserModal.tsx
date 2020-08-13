@@ -1,8 +1,12 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useContext
+} from "react";
 import {
   View,
   StyleSheet,
-  Alert,
   Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -18,6 +22,11 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
+import { EnvVersionError } from "../../services/envVersion";
+import {
+  AlertModalContext,
+  wrongFormatAlertTemplate
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   background: {
@@ -82,6 +91,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [idInput, setIdInput] = useState("");
   const { features } = useProductContext();
+  const { showAlert } = useContext(AlertModalContext);
 
   useEffect(() => {
     if (isVisible) {
@@ -99,28 +109,17 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
       );
       Vibration.vibrate(50);
       if (ids.indexOf(id) > -1) {
-        throw new Error(
-          "You've added this ID before, please scan a different ID."
-        );
+        throw new Error("Enter or scan a different ID number.");
       }
       addId(id);
       setIsVisible(false);
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
-      Alert.alert(
-        "Error",
-        e.message || e,
-        [
-          {
-            text: "OK",
-            onPress: () => setIsScanningEnabled(true)
-          }
-        ],
-        {
-          onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
-        }
-      );
+      if (e instanceof EnvVersionError) {
+        // todo: alert for env version errors
+      }
+      showAlert({ ...wrongFormatAlertTemplate, description: e.message });
     }
   };
 
