@@ -52,7 +52,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toThrow("Invalid details");
+    ).toThrow("Enter your voucher code again");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -62,7 +62,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING"
         }
       ])
-    ).toThrow("Invalid details");
+    ).toThrow("Enter your voucher code again");
   });
 
   it("should throw error if at least one of the identifiers is an invalid number", () => {
@@ -75,7 +75,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toThrow("Invalid details");
+    ).toThrow("Enter your voucher code again");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -84,7 +84,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toThrow("Invalid details");
+    ).toThrow("Enter your voucher code again");
   });
 
   it("should throw error if at least one of the identifiers is an invalid phone number", () => {
@@ -97,7 +97,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER"
         }
       ])
-    ).toThrow("Invalid contact number");
+    ).toThrow("Enter your contact number again");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -106,20 +106,20 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER"
         }
       ])
-    ).toThrow("Invalid contact number");
+    ).toThrow("Enter your contact number again");
   });
 
   it("should throw error if at least one of the identifiers has empty value", () => {
-    expect.assertions(2);
-    expect(() =>
-      validateIdentifierInputs([
-        {
-          label: "empty string",
-          value: "",
-          textInputType: "STRING"
-        }
-      ])
-    ).toThrow("Please enter details to checkout");
+    expect.assertions(1);
+    // expect(() =>
+    //   validateIdentifierInputs([
+    //     {
+    //       label: "empty string",
+    //       value: "",
+    //       textInputType: "STRING"
+    //     }
+    //   ])
+    // ).toThrow("Please enter details to checkout");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -133,7 +133,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING"
         }
       ])
-    ).toThrow("Please enter unique details to checkout");
+    ).toThrow("Enter your voucher code");
   });
 
   it("should throw error if there are duplicate values", () => {
