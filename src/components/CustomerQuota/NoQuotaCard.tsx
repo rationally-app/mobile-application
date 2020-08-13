@@ -130,37 +130,74 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 }) => {
   const { getProduct, allProducts } = useProductContext();
   const { token, endpoint } = useAuthenticationContext();
-  const { pastTransactions } = usePastTransaction(ids[0], token, endpoint);
+
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const sortedTransactions = pastTransactions?.pastTransactions.sort(
-    (item1, item2) =>
-      compareDesc(item1.transactionTime ?? 0, item2.transactionTime ?? 0)
-  );
-
   const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
-
-  /*
-    To consider the following limit reached screens
-    1. list of categories with latest transacted time; no identifiers and quantity
-    2. list of past transactions with identifiers and transacted time
+  let latestTransactionTime: Date | undefined = new Date();
+  /**
+   * Refactoring of Limit Reached Screen TBD
+   * Current Limit Reached Screen caters for the following scenarios
+   * 1. Listing of categories with latest transacted time; no identifiers and/or group transactions
+   * 2. Listing of past transactions with identifiers and transacted time; identifier and single ID transactions
    */
 
-  sortedTransactions?.forEach(item => {
-    const policy = allProducts.find(
-      policy => policy.category === item.category
+  // This hook is only used in single ID transaction
+  const { pastTransactions } = usePastTransaction(ids[0], token, endpoint);
+
+  if (
+    ids.length > 1 ||
+    allProducts.some(product => product.identifiers === undefined)
+  ) {
+    // For first scenario, cart provides an aggregated summary of the transacted categories
+    // since it fetch data from quota endpoint
+    // current distributions don't allow group transactions with identifiers
+    // if it does, default to aggregated summary
+    const sortedCart = cart.sort((item1, item2) =>
+      compareDesc(
+        item1.lastTransactionTime ?? 0,
+        item2.lastTransactionTime ?? 0
+      )
     );
-    const categoryName = policy?.name ?? item.category;
-    const formattedDate = format(item.transactionTime, "h:mma, d MMM yyyy");
-    itemTransactions.push({
-      itemHeader: `${categoryName} (${formattedDate})`,
-      itemDetail: getIdentifierInputDisplay(item.identifierInputs ?? [])
+    sortedCart.forEach(
+      ({ category, lastTransactionTime, identifierInputs = [] }) => {
+        if (lastTransactionTime) {
+          const policy = getProduct(category);
+          const categoryName = policy?.name ?? category;
+          const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
+          itemTransactions.push({
+            itemHeader: `${categoryName} (${formattedDate})`,
+            itemDetail: getIdentifierInputDisplay(identifierInputs)
+          });
+        }
+      }
+    );
+    latestTransactionTime = sortedCart[0]?.lastTransactionTime ?? undefined;
+  } else {
+    // For second scenario, transactions with identifiers would require to show details transactions
+    // hence, data will fetch from transactions endpoint
+    const sortedTransactions = pastTransactions?.pastTransactions.sort(
+      (item1, item2) =>
+        compareDesc(item1.transactionTime ?? 0, item2.transactionTime ?? 0)
+    );
+
+    sortedTransactions?.forEach(item => {
+      const policy = allProducts.find(
+        policy => policy.category === item.category
+      );
+      const categoryName = policy?.name ?? item.category;
+      const formattedDate = format(item.transactionTime, "h:mma, d MMM yyyy");
+      itemTransactions.push({
+        itemHeader: `${categoryName} (${formattedDate})`,
+        itemDetail: getIdentifierInputDisplay(item.identifierInputs ?? [])
+      });
     });
-  });
+
+    latestTransactionTime =
+      sortedTransactions?.[0].transactionTime ?? undefined;
+  }
 
   const now = new Date();
-  const latestTransactionTime =
-    sortedTransactions?.[0].transactionTime ?? undefined;
   const secondsFromLatestTransaction = latestTransactionTime
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
