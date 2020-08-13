@@ -8,8 +8,8 @@ import { Sentry } from "../../utils/errorTracking";
 import { StyleSheet, View } from "react-native";
 import { size } from "../../common/styles";
 import { NavigationProps } from "../../types";
-import { UpdateByRestartingContent } from "./UpdateByRestartingContent";
-import { UpdateFromAppStoreContent } from "./UpdateFromAppStoreContent";
+import { UpdateByRestartingAlert } from "./UpdateByRestartingAlert";
+import { UpdateFromAppStoreAlert } from "./UpdateFromAppStoreAlert";
 import { LoadingView } from "../Loading";
 import { useUpdateCampaignConfig } from "../../hooks/useUpdateCampaignConfig/useUpdateCampaignConfig";
 import { useAuthenticationContext } from "../../context/auth";
@@ -31,6 +31,13 @@ const styles = StyleSheet.create({
 });
 
 const RETRY_UPDATE_TIMES = 3;
+
+export class UpdateError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UpdateError";
+  }
+}
 
 export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = ({
   navigation
@@ -103,7 +110,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     // In the case that there's NO_UPDATE, then we probably set the
     // minimum build version too early, before the app updates have
     // been released.
-    const error = new Error(
+    const error = new UpdateError(
       `Error while trying to check for updates: ${lastUpdateResult}`
     );
     // https://github.com/facebook/react/issues/14981#issuecomment-468460187
@@ -155,9 +162,9 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     <View style={styles.wrapper}>
       <View style={styles.content}>
         {outdatedType === "BINARY" ? (
-          <UpdateFromAppStoreContent />
+          <UpdateFromAppStoreAlert />
         ) : outdatedType === "BUILD" ? (
-          <UpdateByRestartingContent />
+          <UpdateByRestartingAlert />
         ) : (
           <LoadingView />
         )}
