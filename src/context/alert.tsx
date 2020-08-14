@@ -121,11 +121,6 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     },
     []
   );
-  // const showAlert: AlertModalContext["showAlert"] = (
-  //   props: AlertModalProps
-  // ) => {
-  //   setAlertProps(props);
-  // };
   const clearAlert: AlertModalContext["clearAlert"] = () => {
     setAlertProps(defaultAlertProp);
   };
