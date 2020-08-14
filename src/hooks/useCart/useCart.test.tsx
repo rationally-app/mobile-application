@@ -1198,7 +1198,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("shoudl set not set alert description on cart item when threshold not reach", async () => {
+    it("should not set alert description on cart item when threshold not reach", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdAlert);
 
