@@ -10,7 +10,7 @@ import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
 import { useProductContext } from "../../../context/products";
-import { AlertModalContext } from "../../../context/alert";
+import { AlertModalContext, defaultWarningProp } from "../../../context/alert";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -82,9 +82,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             text="Cancel"
             onPress={() => {
               showAlert({
-                alertType: "WARN",
+                ...defaultWarningProp,
                 title: "Cancel entry and scan another ID number?",
-                description: "",
                 buttonTexts: {
                   primaryActionText: "Cancel entry",
                   secondaryActionText: "Keep"
