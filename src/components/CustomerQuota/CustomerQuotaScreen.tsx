@@ -123,17 +123,36 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
       });
     } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
       // TODO: switch case between different types of errors, warnings etc.
-      if (error.message === ERROR_MESSAGE.MISSING_SELECTION) {
-        showAlert({
-          ...incompleteEntryAlertProp,
-          description: ERROR_MESSAGE.MISSING_SELECTION
-        });
+      switch (error.message) {
+        case ERROR_MESSAGE.MISSING_SELECTION:
+          showAlert({
+            ...incompleteEntryAlertProp,
+            description: ERROR_MESSAGE.MISSING_SELECTION
+          });
+          break;
+        case ERROR_MESSAGE.SERVER_ERROR:
+          showAlert({
+            ...systemAlertProp,
+            description: error.message,
+            onOk: () => clearError()
+          });
+          break;
+
+        case ERROR_MESSAGE.DUPLICATE_POD_INPUT:
+          showAlert({
+            ...systemAlertProp,
+            title: "Already Used",
+            description: error.message,
+            onOk: () => clearError()
+          });
+          break;
+        default:
+          showAlert({
+            ...wrongFormatAlertProp,
+            description: error.message,
+            onOk: () => clearError()
+          });
       }
-      showAlert({
-        ...wrongFormatAlertProp,
-        description: error.message,
-        onOk: () => clearError()
-      });
     }
   }, [cartState, clearError, error, onCancel, showAlert]);
 
