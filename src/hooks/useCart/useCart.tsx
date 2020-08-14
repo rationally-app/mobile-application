@@ -321,7 +321,6 @@ export const useCart = (
           ...wrongFormatAlertProps,
           description: error.message
         });
-        setError(error);
         setCartState("DEFAULT");
         return;
       }
@@ -344,7 +343,6 @@ export const useCart = (
             description: ERROR_MESSAGE.SERVER_ERROR
           });
         }
-        setError(e);
         setCartState("DEFAULT");
         // backend will throw general duplicate identifier message
         if (
