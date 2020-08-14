@@ -43,6 +43,7 @@ import { DOMAIN_FORMAT } from "../../config";
 import {
   AlertModalContext,
   systemAlertProps,
+  wrongFormatAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
 
