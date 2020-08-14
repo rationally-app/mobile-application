@@ -28,6 +28,7 @@ export const usePastTransaction = (
         );
         setPastTransactionsResult(pastTransactionsResponse);
       } catch (e) {
+        throw new Error(e.message);
         // if (e instanceof PastTransactionError)
         // Still figuring how to throw error
       }

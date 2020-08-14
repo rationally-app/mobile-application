@@ -25,6 +25,8 @@ const PolicyQuantity = t.intersection([
     limit: t.number
   }),
   t.partial({
+    periodType: t.union([t.literal("ROLLING"), t.literal("CRON")]),
+    periodExpression: t.union([t.number, t.string]),
     default: t.number,
     step: t.number,
     unit: t.type({
