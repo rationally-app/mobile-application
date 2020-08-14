@@ -222,20 +222,16 @@ describe("usePastTransaction", () => {
       });
     });
 
-    // it("should catch error when thrown", async () => {
-    //   expect.assertions(1);
-    //   mockGetPastTransactions.mockImplementation(() => {
-    //     mockSomeUnknownError();
-    //   });
-    //
-    //   const { result } = renderHook(
-    //     () => usePastTransaction(id, key, endpoint),
-    //     { wrapper }
-    //   );
-    //
-    //   expect(result.current.pastTransactionsResult).toStrictEqual({
-    //     pastTransactions: []
-    //   });
-    // });
+    it("should catch error when thrown", async () => {
+      expect.assertions(1);
+      mockGetPastTransactions.mockImplementation(mockSomeUnknownError);
+
+      const { result } = renderHook(
+        () => usePastTransaction(id, key, endpoint),
+        { wrapper }
+      );
+
+      expect(result.current.pastTransactionsResult).toBeNull();
+    });
   });
 });
