@@ -129,19 +129,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         // todo: alert for envversionerrors
       }
       showAlert({ ...wrongFormatAlertProp, description: e.message });
-      // Alert.alert(
-      //   "Error",
-      //   e.message || e,
-      //   [
-      //     {
-      //       text: "OK",
-      //       onPress: () => setIsScanningEnabled(true)
-      //     }
-      //   ],
-      //   {
-      //     onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
-      //   }
-      // );
     }
   };
 

@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState } from "react";
-import { View, Alert } from "react-native";
+import React, { FunctionComponent, useState, useContext } from "react";
+import { View } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { size, color } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
@@ -10,6 +10,7 @@ import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
 import { useProductContext } from "../../../context/products";
+import { AlertModalContext } from "../../../context/alert";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -32,6 +33,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { getFeatures } = useProductContext();
+  const { showAlert } = useContext(AlertModalContext);
 
   return (
     <View>
@@ -79,16 +81,17 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           <SecondaryButton
             text="Cancel"
             onPress={() => {
-              Alert.alert("Cancel transaction?", undefined, [
-                {
-                  text: "No"
+              showAlert({
+                alertType: "WARN",
+                title: "Cancel entry and scan another ID number?",
+                description: "",
+                buttonTexts: {
+                  primaryActionText: "Cancel entry",
+                  secondaryActionText: "Keep entry"
                 },
-                {
-                  text: "Yes",
-                  onPress: onCancel,
-                  style: "destructive"
-                }
-              ]);
+                visible: true,
+                onOk: onCancel
+              });
             }}
           />
         )}
