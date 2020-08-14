@@ -20,7 +20,7 @@ export const ERROR_MESSAGE = {
   MISSING_VOUCHER_INPUT: "Enter voucher details code",
   INVALID_POD_INPUT: "Scan your device code again",
   MISSING_POD_INPUT: "Scan your device code",
-  INVALID_PHONE_NUMBER: "Enter your contact number again",
+  INVALID_PHONE_NUMBER: "Enter valid contact number",
   MISSING_SELECTION: "Select at least one item to checkout",
   AUTH_FAILURE_INVALID_TOKEN:
     "Scan QR code again or get a new QR code from your in-charge",
