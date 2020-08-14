@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { PastTransactionsResult } from "../../types";
 import { usePrevious } from "../usePrevious";
 import { getPastTransactions } from "../../services/quota";
+import { Sentry } from "../../utils/errorTracking";
 
 export type PastTransactionHook = {
   pastTransactionsResult: PastTransactionsResult | null;
@@ -20,21 +21,19 @@ export const usePastTransaction = (
 
   useEffect(() => {
     const fetchPastTransactions = async (): Promise<void> => {
-      try {
-        const pastTransactionsResponse = await getPastTransactions(
-          id,
-          authKey,
-          endpoint
-        );
-        setPastTransactionsResult(pastTransactionsResponse);
-      } catch (e) {
-        throw new Error(e.message);
-        // if (e instanceof PastTransactionError)
-        // Still figuring how to throw error
-      }
+      const pastTransactionsResponse = await getPastTransactions(
+        id,
+        authKey,
+        endpoint
+      );
+
+      setPastTransactionsResult(pastTransactionsResponse);
     };
 
-    if (prevId != id) fetchPastTransactions();
+    if (prevId != id)
+      fetchPastTransactions().catch(() => {
+        Sentry.captureException(`Unable to fetch past transactions: ${id}`);
+      });
   }, [authKey, endpoint, id, prevId]);
 
   return {
