@@ -269,7 +269,6 @@ export const useCart = (
           ...incompleteEntryAlertProp,
           description: ERROR_MESSAGE.MISSING_SELECTION
         });
-        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         setCartState("DEFAULT");
         return;
       }
@@ -281,7 +280,6 @@ export const useCart = (
           ...wrongFormatAlertProp,
           description: error.message
         });
-        setError(error);
         setCartState("DEFAULT");
         return;
       }
@@ -304,7 +302,6 @@ export const useCart = (
             description: ERROR_MESSAGE.SERVER_ERROR
           });
         }
-        setError(e);
         setCartState("DEFAULT");
       }
     };
