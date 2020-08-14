@@ -236,6 +236,11 @@ export const useCart = (
     showAlert
   ]);
 
+  useEffect(() => {
+    if (error) {
+      console.log(error.message);
+    }
+  });
   /**
    * Merge quota response with current cart whenever quota response or products change.
    */
@@ -356,7 +361,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [authKey, cart, endpoint, ids, showAlert]);
+  }, [authKey, cart, endpoint, ids]);
 
   return {
     cartState,

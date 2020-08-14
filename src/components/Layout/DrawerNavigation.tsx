@@ -1,11 +1,5 @@
 import React, { FunctionComponent, useCallback, useContext } from "react";
-import {
-  Linking,
-  StyleSheet,
-  Alert,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   DrawerContentComponentProps,
   DrawerActions
@@ -19,8 +13,7 @@ import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import {
   AlertModalContext,
-  defaultConfirmationProp,
-  ERROR_MESSAGE
+  defaultConfirmationProp
 } from "../../context/alert";
 
 const styles = StyleSheet.create({
