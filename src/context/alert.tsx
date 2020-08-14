@@ -38,6 +38,34 @@ const defaultAlertProp: AlertModalProps = {
   onExit: () => {}
 };
 
+export const defaultWarningProp: AlertModalProps = {
+  alertType: "WARN",
+  title: "",
+  description: "",
+  buttonTexts: {
+    primaryActionText: "Back",
+    secondaryActionText: "Confirm"
+  },
+  visible: false,
+  onOk: () => {},
+  onCancel: () => {},
+  onExit: () => {}
+};
+
+export const defaultConfirmationProp: AlertModalProps = {
+  alertType: "CONFIRM",
+  title: "",
+  description: "",
+  buttonTexts: {
+    primaryActionText: "Back",
+    secondaryActionText: "Confirm"
+  },
+  visible: false,
+  onOk: () => {},
+  onCancel: () => {},
+  onExit: () => {}
+};
+
 export const incompleteEntryAlertProp: AlertModalProps = {
   ...defaultAlertProp,
   title: "Incomplete Entry",

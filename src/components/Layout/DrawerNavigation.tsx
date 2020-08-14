@@ -17,6 +17,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
+import {
+  AlertModalContext,
+  defaultConfirmationProp,
+  ERROR_MESSAGE
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   container: {
@@ -92,6 +97,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   navigation
 }) => {
   const { logout } = useLogout();
+  const { showAlert } = useContext(AlertModalContext);
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
   const handleLogout = useCallback((): void => {
@@ -99,21 +105,31 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   }, [logout, navigation.dispatch]);
 
   const onPressLogout = (): void => {
-    Alert.alert(
-      "Confirm Logout",
-      "Are you sure you want to log out?",
-      [
-        {
-          text: "Cancel"
-        },
-        {
-          text: "Logout",
-          onPress: handleLogout,
-          style: "destructive"
-        }
-      ],
-      { cancelable: false }
-    );
+    showAlert({
+      ...defaultConfirmationProp,
+      title: "Confirm Logout?",
+      buttonTexts: {
+        primaryActionText: "Logout",
+        secondaryActionText: "Cancel"
+      },
+      visible: true,
+      onOk: handleLogout
+    });
+    // Alert.alert(
+    //   "Confirm Logout",
+    //   "Are you sure you want to log out?",
+    //   [
+    //     {
+    //       text: "Cancel"
+    //     },
+    //     {
+    //       text: "Logout",
+    //       onPress: handleLogout,
+    //       style: "destructive"
+    //     }
+    //   ],
+    //   { cancelable: false }
+    // );
   };
 
   const onPressCloseDrawer = (): void => {

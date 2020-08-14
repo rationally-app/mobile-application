@@ -16,10 +16,14 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
+    console.log("value", value);
+    console.log("regex", validationRegex);
+    console.log("textinputtype:", textInputType);
     if (!value && textInputType === "PHONE_NUMBER") {
       throw new Error(ERROR_MESSAGE.MISSING_POD_INPUT);
     }
     if (!value) {
+      console.log("one");
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
