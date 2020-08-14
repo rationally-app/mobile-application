@@ -87,7 +87,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 description: "",
                 buttonTexts: {
                   primaryActionText: "Cancel entry",
-                  secondaryActionText: "Keep entry"
+                  secondaryActionText: "Keep"
                 },
                 visible: true,
                 onOk: onCancel

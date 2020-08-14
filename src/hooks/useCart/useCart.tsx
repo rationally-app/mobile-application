@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
@@ -15,7 +15,7 @@ import {
   IdentifierInput
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import { ERROR_MESSAGE } from "../../context/alert";
 
 export type CartItem = {
   category: string;
@@ -133,7 +133,7 @@ export const useCart = (
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
-  const { showAlert } = useContext(AlertModalContext);
+  // const { showAlert } = useContext(AlertModalContext);
   const clearError = useCallback((): void => setError(undefined), []);
 
   /**
@@ -185,8 +185,7 @@ export const useCart = (
     prevIds,
     products.length,
     setProducts,
-    setFeatures,
-    showAlert
+    setFeatures
   ]);
 
   /**
