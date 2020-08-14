@@ -2,13 +2,13 @@ import React, { FunctionComponent } from "react";
 import { EnvVersion, Features, Policy, PolicyIdentifier } from "../../types";
 import { ProductContext } from "../../context/products";
 
-const defaultIdentifier: PolicyIdentifier = {
+export const defaultIdentifier: PolicyIdentifier = {
   label: "identifier",
   textInput: { visible: true, disabled: false, type: "STRING" },
   scanButton: { visible: true, disabled: false, type: "BARCODE" }
 };
 
-const defaultProducts: EnvVersion = {
+export const defaultProducts: EnvVersion = {
   policies: [
     {
       category: "toilet-paper",
