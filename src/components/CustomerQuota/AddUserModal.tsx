@@ -23,10 +23,7 @@ import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
-import {
-  AlertModalContext,
-  wrongFormatAlertTemplate
-} from "../../context/alert";
+import { AlertModalContext, wrongFormatAlertProp } from "../../context/alert";
 
 const styles = StyleSheet.create({
   background: {
@@ -119,7 +116,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
       if (e instanceof EnvVersionError) {
         // todo: alert for env version errors
       }
-      showAlert({ ...wrongFormatAlertTemplate, description: e.message });
+      showAlert({ ...wrongFormatAlertProp, description: e.message });
     }
   };
 
