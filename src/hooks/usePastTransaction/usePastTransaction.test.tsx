@@ -5,12 +5,8 @@ import {
   getPastTransactions,
   PastTransactionError
 } from "../../services/quota";
-import {
-  EnvVersion,
-  PastTransactionsResult,
-  PolicyIdentifier
-} from "../../types";
-import { Wrapper } from "../../test/helpers/wrapper";
+import { EnvVersion, PastTransactionsResult } from "../../types";
+import { Wrapper, defaultIdentifier } from "../../test/helpers/wrapper";
 import { toDate } from "date-fns";
 
 jest.mock("../../services/quota");
@@ -21,12 +17,6 @@ jest.mock("../../services/envVersion");
 const id = "ID1";
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
-
-const defaultIdentifier: PolicyIdentifier = {
-  label: "identifier",
-  textInput: { visible: true, disabled: false, type: "STRING" },
-  scanButton: { visible: true, disabled: false, type: "BARCODE" }
-};
 
 const customProducts: EnvVersion = {
   policies: [
