@@ -282,7 +282,7 @@ export const useCart = (
         setCartState("PURCHASED");
       } catch (e) {
         if (e.message === ERROR_MESSAGE.DUPLICATE_POD_INPUT) {
-          setError(e.message);
+          setError(e);
         } else {
           setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }

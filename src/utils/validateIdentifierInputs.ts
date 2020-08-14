@@ -16,9 +16,7 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
-    if (!value && textInputType === "PHONE_NUMBER") {
-      throw new Error(ERROR_MESSAGE.MISSING_POD_INPUT);
-    }
+    //TODO: switch between different specific errors
     if (!value) {
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
@@ -26,11 +24,7 @@ export const validateIdentifierInputs = (
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
     if (!isMatchRegex(value, validationRegex)) {
-      if (textInputType === "PHONE_NUMBER") {
-        throw new Error(ERROR_MESSAGE.INVALID_POD_INPUT);
-      } else {
-        throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
-      }
+      throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
     if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_NUMBER);
@@ -42,11 +36,7 @@ export const validateIdentifierInputs = (
       identifierInputs.map(identifierInput => identifierInput.value)
     )
   ) {
-    throw new Error(
-      `Please enter ${
-        identifierInputs.length === 1 ? "" : "unique "
-      }details to checkout`
-    );
+    throw new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT);
   }
 
   return true;
