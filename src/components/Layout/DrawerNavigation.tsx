@@ -115,21 +115,6 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
       visible: true,
       onOk: handleLogout
     });
-    // Alert.alert(
-    //   "Confirm Logout",
-    //   "Are you sure you want to log out?",
-    //   [
-    //     {
-    //       text: "Cancel"
-    //     },
-    //     {
-    //       text: "Logout",
-    //       onPress: handleLogout,
-    //       style: "destructive"
-    //     }
-    //   ],
-    //   { cancelable: false }
-    // );
   };
 
   const onPressCloseDrawer = (): void => {
