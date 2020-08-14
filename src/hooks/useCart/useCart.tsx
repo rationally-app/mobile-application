@@ -15,14 +15,7 @@ import {
   IdentifierInput
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import {
-  AlertModalContext,
-  incompleteEntryAlertProp,
-  wrongFormatAlertProp,
-  duplicateAlertProp,
-  systemAlertProp,
-  ERROR_MESSAGE
-} from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 
 export type CartItem = {
   category: string;
@@ -175,7 +168,7 @@ export const useCart = (
             )
           );
         } else {
-          showAlert({ ...systemAlertProp, description: e.message });
+          setError(new Error(e.message));
           setError(e);
         }
       }
@@ -196,6 +189,11 @@ export const useCart = (
     showAlert
   ]);
 
+  useEffect(() => {
+    if (error) {
+      console.log(error.message);
+    }
+  });
   /**
    * Merge quota response with current cart whenever quota response or products change.
    */
@@ -215,10 +213,7 @@ export const useCart = (
   const updateCart: CartHook["updateCart"] = useCallback(
     (category, quantity, identifierInputs) => {
       if (quantity < 0) {
-        showAlert({
-          ...wrongFormatAlertProp,
-          description: ERROR_MESSAGE.INVALID_QUANTITY
-        });
+        setError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
         return;
       }
       const [item, itemIdx] = getItem(cart, category);
@@ -235,17 +230,11 @@ export const useCart = (
             ...cart.slice(itemIdx + 1)
           ]);
         } else {
-          showAlert({
-            ...wrongFormatAlertProp,
-            description: ERROR_MESSAGE.INSUFFICIENT_QUOTA
-          });
+          setError(new Error(ERROR_MESSAGE.INSUFFICIENT_QUOTA));
           return;
         }
       } else {
-        showAlert({
-          ...wrongFormatAlertProp,
-          description: ERROR_MESSAGE.INVALID_CATEGORY
-        });
+        setError(new Error(ERROR_MESSAGE.INVALID_CATEGORY));
         return;
       }
     },
@@ -274,10 +263,7 @@ export const useCart = (
         });
 
       if (transactions.length === 0) {
-        showAlert({
-          ...incompleteEntryAlertProp,
-          description: ERROR_MESSAGE.MISSING_SELECTION
-        });
+        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         setCartState("DEFAULT");
         return;
       }
@@ -285,10 +271,7 @@ export const useCart = (
       try {
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
-        showAlert({
-          ...wrongFormatAlertProp,
-          description: error.message
-        });
+        setError(error);
         setCartState("DEFAULT");
         return;
       }
@@ -304,19 +287,16 @@ export const useCart = (
         setCartState("PURCHASED");
       } catch (e) {
         if (e.message === ERROR_MESSAGE.DUPLICATE_POD_INPUT) {
-          showAlert({ ...duplicateAlertProp, description: e.message });
+          setError(e.message);
         } else {
-          showAlert({
-            ...systemAlertProp,
-            description: ERROR_MESSAGE.SERVER_ERROR
-          });
+          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
         setCartState("DEFAULT");
       }
     };
 
     checkout();
-  }, [authKey, cart, endpoint, ids, showAlert]);
+  }, [authKey, cart, endpoint, ids]);
 
   return {
     cartState,

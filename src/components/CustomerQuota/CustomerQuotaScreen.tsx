@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext
 } from "react";
-import { View, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
@@ -27,6 +27,13 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+import {
+  AlertModalContext,
+  wrongFormatAlertProp,
+  incompleteEntryAlertProp,
+  systemAlertProp,
+  ERROR_MESSAGE
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -55,11 +62,6 @@ const styles = StyleSheet.create({
   }
 });
 
-const showAlert = (message: string, onDismiss: () => void): void =>
-  Alert.alert("Error", message, [{ text: "OK", onPress: onDismiss }], {
-    onDismiss: onDismiss // for android outside alert clicks
-  });
-
 export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   navigation
 }) => {
@@ -80,6 +82,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const { token, endpoint } = useAuthenticationContext();
   const showHelpModal = useContext(HelpModalContext);
   const [ids, setIds] = useState([navigation.getParam("id")]);
+  const { showAlert } = useContext(AlertModalContext);
 
   const {
     cartState,
@@ -113,11 +116,26 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
     if (cartState === "FETCHING_QUOTA") {
       const message =
         error.message ?? "Encounted an error while fetching quota";
-      showAlert(message, onCancel);
+      showAlert({
+        ...systemAlertProp,
+        description: message,
+        onOk: () => clearError()
+      });
     } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
-      showAlert(error.message, () => clearError());
+      // TODO: switch case between different types of errors, warnings etc.
+      if (error.message === ERROR_MESSAGE.MISSING_SELECTION) {
+        showAlert({
+          ...incompleteEntryAlertProp,
+          description: ERROR_MESSAGE.MISSING_SELECTION
+        });
+      }
+      showAlert({
+        ...wrongFormatAlertProp,
+        description: error.message,
+        onOk: () => clearError()
+      });
     }
-  }, [cartState, clearError, error, onCancel]);
+  }, [cartState, clearError, error, onCancel, showAlert]);
 
   return cartState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>

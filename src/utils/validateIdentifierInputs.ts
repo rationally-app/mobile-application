@@ -20,7 +20,6 @@ export const validateIdentifierInputs = (
       throw new Error(ERROR_MESSAGE.MISSING_POD_INPUT);
     }
     if (!value) {
-      console.log("one");
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
