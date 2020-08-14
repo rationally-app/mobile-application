@@ -119,7 +119,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING"
         }
       ])
-    ).toThrow("Enter your voucher code");
+    ).toThrow("Enter code details");
   });
 
   it("should throw error if at least one of the identifiers has empty value", () => {
