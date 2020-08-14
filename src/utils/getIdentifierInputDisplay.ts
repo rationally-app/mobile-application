@@ -41,10 +41,7 @@ export const getAllIdentifierInputDisplay = (
     identifierInput => !!identifierInput.value
   );
 
-  let identifierInputDisplay = "";
-
-  filteredInputs.forEach(input => {
-    identifierInputDisplay += processIdentifierInputValue(input) + "\n";
-  });
-  return identifierInputDisplay.substring(0, identifierInputDisplay.length - 1);
+  return filteredInputs
+    .map(input => processIdentifierInputValue(input))
+    .join("\n");
 };
