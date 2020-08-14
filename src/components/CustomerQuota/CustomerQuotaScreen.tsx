@@ -130,6 +130,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
             description: ERROR_MESSAGE.MISSING_SELECTION
           });
           break;
+
         case ERROR_MESSAGE.SERVER_ERROR:
           showAlert({
             ...systemAlertProp,

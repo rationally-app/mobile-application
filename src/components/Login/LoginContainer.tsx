@@ -43,6 +43,7 @@ import { DOMAIN_FORMAT } from "../../config";
 import {
   AlertModalContext,
   systemAlertProp,
+  wrongFormatAlertProp,
   ERROR_MESSAGE
 } from "../../context/alert";
 
@@ -230,10 +231,18 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
-        showAlert({
-          ...systemAlertProp,
-          description: e.message
-        });
+
+        if (e.message.includes("issues")) {
+          showAlert({
+            ...systemAlertProp,
+            description: e.message
+          });
+        } else {
+          showAlert({
+            ...wrongFormatAlertProp,
+            description: e.message
+          });
+        }
         setIsLoading(false);
       }
     }
