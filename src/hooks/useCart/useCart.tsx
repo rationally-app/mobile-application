@@ -214,7 +214,7 @@ export const useCart = (
             )
           );
         } else {
-          showAlert(systemAlertProps);
+          showAlert({ ...systemAlertProps, description: e.message });
           setError(e);
         }
       }
