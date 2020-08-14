@@ -21,6 +21,9 @@ export const ERROR_MESSAGE = {
     "We could not find a validity period. Get a new QR code from your in-charge",
   ENV_VERSION_ERROR:
     "Encountered an issue obtaining environment information. We've noted this down and are looking into it!",
+  INSUFFICIENT_QUOTA: "Insufficient Quota",
+  INVALID_QUANTITY: "Invalid quantity",
+  INVALID_CATEGORY: "Category does not exist",
   SERVER_ERROR:
     "We are currently facing server issues. Contact your in-charge if the problem persists."
 };

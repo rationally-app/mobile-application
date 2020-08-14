@@ -215,7 +215,10 @@ export const useCart = (
   const updateCart: CartHook["updateCart"] = useCallback(
     (category, quantity, identifierInputs) => {
       if (quantity < 0) {
-        setError(new Error("Invalid quantity"));
+        showAlert({
+          ...wrongFormatAlertProp,
+          description: ERROR_MESSAGE.INVALID_QUANTITY
+        });
         return;
       }
       const [item, itemIdx] = getItem(cart, category);
@@ -232,11 +235,17 @@ export const useCart = (
             ...cart.slice(itemIdx + 1)
           ]);
         } else {
-          setError(new Error("Insufficient quota"));
+          showAlert({
+            ...wrongFormatAlertProp,
+            description: ERROR_MESSAGE.INSUFFICIENT_QUOTA
+          });
           return;
         }
       } else {
-        setError(new Error("Category does not exist"));
+        showAlert({
+          ...wrongFormatAlertProp,
+          description: ERROR_MESSAGE.INVALID_CATEGORY
+        });
         return;
       }
     },
