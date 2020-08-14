@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, FunctionComponent, useState } from "react";
+import React, {
+  createContext,
+  FunctionComponent,
+  useState,
+  useCallback
+} from "react";
 import {
   AlertModal,
   AlertModalProps
@@ -108,11 +113,12 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     defaultAlertProp
   );
 
-  const showAlert: AlertModalContext["showAlert"] = (
-    props: AlertModalProps
-  ) => {
-    setAlertProps(props);
-  };
+  const showAlert: AlertModalContext["showAlert"] = useCallback(
+    (props: AlertModalProps) => {
+      setAlertProps(props);
+    },
+    []
+  );
 
   const clearAlert: AlertModalContext["clearAlert"] = () => {
     setAlertProps(defaultAlertProp);
