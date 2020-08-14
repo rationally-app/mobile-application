@@ -163,7 +163,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           showAlert({
             ...incompleteEntryAlertProps,
             description:
-              campaignFeatures?.campaignName === "TT Token"
+              campaignFeatures?.campaignName === "TT Tokens"
                 ? ERROR_MESSAGE.MISSING_POD_INPUT
                 : campaignFeatures?.campaignName.includes("Vouchers")
                 ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
