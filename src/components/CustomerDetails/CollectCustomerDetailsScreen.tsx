@@ -128,7 +128,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         Sentry.captureException(e);
         // todo: alert for envversionerrors
       }
-      showAlert({ ...wrongFormatAlertProp, description: e.message });
+      showAlert({
+        ...wrongFormatAlertProp,
+        description: e.message,
+        onOk: () => setIsScanningEnabled(true)
+      });
     }
   };
 
