@@ -24,6 +24,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
 import { AlertModalContext, wrongFormatAlertProp } from "../../context/alert";
+import { Sentry } from "../../utils/errorTracking";
 
 const styles = StyleSheet.create({
   background: {
@@ -114,9 +115,14 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
     } catch (e) {
       setIsScanningEnabled(false);
       if (e instanceof EnvVersionError) {
+        Sentry.captureException(e);
         // todo: alert for env version errors
       }
-      showAlert({ ...wrongFormatAlertProp, description: e.message });
+      showAlert({
+        ...wrongFormatAlertProp,
+        description: e.message,
+        onOk: () => setIsScanningEnabled(true)
+      });
     }
   };
 
