@@ -12,7 +12,8 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Vibration,
-  BackHandler
+  BackHandler,
+  Alert
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
@@ -47,10 +48,14 @@ import {
   wrongFormatAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
+import { requestOTP, LoginError } from "../../services/auth";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
 const ALLOW_MODE_CHANGE = false;
+
+// let shouldShowLastResendWarning = false;
+let lastResendWarningMessage = "";
 
 const styles = StyleSheet.create({
   content: {
@@ -102,6 +107,48 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const lastResendWarningMessageRef = useRef<string>("");
   const resetStage = (): void => {
     setLoginStage("SCAN");
+  };
+
+  const checkIfLockedOut = (e: LoginError): void => {
+    if (e.message.includes("Please wait")) resetStage();
+  };
+
+  const handleRequestOTP = async (fullNumber?: string): Promise<boolean> => {
+    setIsLoading(true);
+    try {
+      fullNumber = fullNumber ?? mobileNumber;
+      const response = await requestOTP(fullNumber, codeKey, endpointTemp);
+      if (lastResendWarningMessage) lastResendWarningMessage = "";
+      if (typeof response.warning === "string") {
+        console.log("here");
+        // lastResendWarningMessageRef.current = response.warning;
+        lastResendWarningMessage = response.warning;
+      }
+      return true;
+    } catch (e) {
+      if (e instanceof LoginError) {
+        Alert.alert(
+          "Error",
+          e.message,
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                checkIfLockedOut(e);
+              }
+            }
+          ],
+          {
+            cancelable: false
+          }
+        );
+      } else {
+        alert(e);
+      }
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleLogout = useCallback((): void => {
@@ -327,9 +374,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             <LoginMobileNumberCard
               setLoginStage={setLoginStage}
               setMobileNumber={setMobileNumber}
-              codeKey={codeKey}
-              endpoint={endpointTemp}
-              lastResendWarningMessageRef={lastResendWarningMessageRef}
+              handleRequestOTP={handleRequestOTP}
             />
           )}
           {loginStage === "OTP" && (
@@ -338,7 +383,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               mobileNumber={mobileNumber}
               codeKey={codeKey}
               endpoint={endpointTemp}
-              lastResendWarningMessageRef={lastResendWarningMessageRef}
+              lastResendWarningMessage={lastResendWarningMessage}
+              handleRequestOTP={handleRequestOTP}
+              checkIfLockedOut={checkIfLockedOut}
             />
           )}
           <FeatureToggler feature="HELP_MODAL">

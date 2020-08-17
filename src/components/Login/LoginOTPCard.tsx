@@ -12,7 +12,7 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { useAuthenticationContext } from "../../context/auth";
-import { validateOTP, requestOTP, LoginError } from "../../services/auth";
+import { validateOTP, LoginError } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
@@ -47,7 +47,9 @@ interface LoginOTPCard {
   mobileNumber: string;
   codeKey: string;
   endpoint: string;
-  lastResendWarningMessageRef: MutableRefObject<string>;
+  lastResendWarningMessage: string;
+  handleRequestOTP: () => Promise<boolean>;
+  checkIfLockedOut: (e: LoginError) => void;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
@@ -55,7 +57,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   mobileNumber,
   codeKey,
   endpoint,
-  lastResendWarningMessageRef
+  lastResendWarningMessage,
+  handleRequestOTP,
+  checkIfLockedOut
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -83,10 +87,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       }
     };
   }, [resendDisabledTime]);
-
-  const checkIfLockedOut = (e: LoginError): void => {
-    if (e.message.includes("Please wait")) resetStage();
-  };
 
   const onValidateOTP = async (otp: string): Promise<void> => {
     setIsLoading(true);
@@ -144,47 +144,21 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   const resendOTP = async (): Promise<void> => {
     setIsResending(true);
-    try {
-      const response = await requestOTP(mobileNumber, codeKey, endpoint);
-      if (typeof response.warning === "string") {
-        lastResendWarningMessageRef.current = response.warning;
-      }
-      setIsResending(false);
-      setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
-    } catch (e) {
-      if (e instanceof LoginError) {
-        Alert.alert(
-          "Error",
-          e.message,
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                checkIfLockedOut(e);
-              }
-            }
-          ],
-          {
-            cancelable: false
-          }
-        );
-      } else {
-        alert(e);
-      }
-      setIsResending(false);
-    }
+    const isRequestSuccessful = await handleRequestOTP();
+    setIsResending(false);
+    if (isRequestSuccessful) setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
   };
 
   const alertBeforeResend = (): void => {
+    console.log(lastResendWarningMessage);
     Alert.alert(
       "Resend OTP?",
-      lastResendWarningMessageRef.current,
+      lastResendWarningMessage,
       [
         {
           text: "RESEND",
           onPress: async () => {
             await resendOTP();
-            lastResendWarningMessageRef.current = "";
           }
         },
         { text: "CANCEL" }
@@ -217,9 +191,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
             <SecondaryButton
               text="Resend"
               onPress={
-                lastResendWarningMessageRef.current === ""
-                  ? resendOTP
-                  : alertBeforeResend
+                lastResendWarningMessage === "" ? resendOTP : alertBeforeResend
               }
               isLoading={isResending}
               disabled={isLoading}
