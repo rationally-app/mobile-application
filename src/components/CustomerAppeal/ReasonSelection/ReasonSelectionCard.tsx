@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import { CustomerCard } from "../../CustomerQuota/CustomerCard";
 import { size } from "../../../common/styles";
 import { Card } from "../../Layout/Card";
@@ -60,7 +60,18 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
       <View style={styles.backbuttonComponent}>
         <SecondaryButton
           text="Cancel"
-          onPress={() => onCancel()}
+          onPress={() => {
+            Alert.alert("Cancel appeal?", undefined, [
+              {
+                text: "No"
+              },
+              {
+                text: "Yes",
+                onPress: onCancel,
+                style: "destructive"
+              }
+            ]);
+          }}
           fullWidth={true}
         />
       </View>

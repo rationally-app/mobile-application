@@ -144,7 +144,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         )}
         <ReasonSelectionCard
           ids={ids}
-          reasonSelectionHeader={"Indicate reason for dispute"}
+          reasonSelectionHeader={"Indicate reason for appeal"}
           reasons={getReasons()}
           onCancel={onCancel}
           onReasonSelection={onReasonSelection}

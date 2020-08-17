@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
   reasonAlert: {
     marginLeft: 10,
-    fontStyle: "italic",
+    fontFamily: "brand-italic",
     color: color("red", 50)
   }
 });

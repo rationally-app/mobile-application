@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize(0)
   },
   descriptionAlert: {
-    fontStyle: "italic",
+    fontFamily: "brand-italic",
     color: color("red", 50)
   }
 });

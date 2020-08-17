@@ -8,7 +8,7 @@ storiesOf("CustomerAppeal", module).add("ReasonSelectionCard", () => (
   <View style={{ margin: size(3) }}>
     <ReasonSelectionCard
       ids={["S1234567G"]}
-      reasonSelectionHeader={"Indicate reason for dispute"}
+      reasonSelectionHeader={"Indicate reason for appeal"}
       reasons={[
         { description: "Lost/stolen token", descriptionAlert: "*chargeable" },
         { description: "Dead battery", descriptionAlert: undefined },
