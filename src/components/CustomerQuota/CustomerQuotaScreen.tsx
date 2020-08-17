@@ -127,7 +127,8 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         case ERROR_MESSAGE.MISSING_SELECTION:
           showAlert({
             ...incompleteEntryAlertProp,
-            description: ERROR_MESSAGE.MISSING_SELECTION
+            description: ERROR_MESSAGE.MISSING_SELECTION,
+            onOk: () => clearError()
           });
           break;
 
