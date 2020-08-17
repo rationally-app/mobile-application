@@ -44,7 +44,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
 
   const { features } = useProductContext();
 
-  const onCheckIdModal = async (input: string): Promise<void> => {
+  const onModalCheck = async (input: string): Promise<void> => {
     try {
       const id = validateAndCleanId(
         input,
@@ -133,7 +133,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <AddUserModal
         isVisible={isAddUserModalVisible}
         setIsVisible={setIsAddUserModalVisible}
-        onCheckId={onCheckIdModal}
+        validateAndUpdateIds={onModalCheck}
       />
     </View>
   );

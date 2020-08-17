@@ -1,20 +1,13 @@
-import React, {
-  FunctionComponent,
-  useState,
-  useEffect
-  // useContext
-} from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
   Modal,
   TouchableOpacity,
   TouchableWithoutFeedback
-  // Vibration
 } from "react-native";
 import { InputIdSection } from "../CustomerDetails/InputIdSection";
 import { IdScanner } from "../IdScanner/IdScanner";
-// import { validateAndCleanId } from "../../utils/validateIdentification";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { color, size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -22,9 +15,6 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
-// import { EnvVersionError } from "../../services/envVersion";
-// import { AlertModalContext, wrongFormatAlertProp } from "../../context/alert";
-// import { Sentry } from "../../utils/errorTracking";
 
 const styles = StyleSheet.create({
   background: {
@@ -75,13 +65,13 @@ const CloseButton: FunctionComponent<{ onPress: () => void }> = ({
 interface AddUserModal {
   isVisible: boolean;
   setIsVisible: (visible: boolean) => void;
-  onCheckId: (input: string) => Promise<void>;
+  validateAndUpdateIds: (input: string) => Promise<void>;
 }
 
 export const AddUserModal: FunctionComponent<AddUserModal> = ({
   isVisible,
   setIsVisible,
-  onCheckId
+  validateAndUpdateIds
 }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
@@ -96,7 +86,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
 
   const onCheck = async (input: string): Promise<void> => {
     setIsScanningEnabled(false);
-    await onCheckId(input);
+    await validateAndUpdateIds(input);
     setIdInput("");
   };
 
