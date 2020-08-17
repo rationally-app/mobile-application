@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useContext } from "react";
-import { View } from "react-native";
+import { View, Vibration } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { size, color } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
@@ -10,7 +10,14 @@ import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
 import { useProductContext } from "../../../context/products";
-import { AlertModalContext, defaultWarningProp } from "../../../context/alert";
+import {
+  AlertModalContext,
+  defaultWarningProp,
+  wrongFormatAlertProp
+} from "../../../context/alert";
+import { validateAndCleanId } from "../../../utils/validateIdentification";
+import { EnvVersionError } from "../../../services/envVersion";
+import { Sentry } from "../../../utils/errorTracking";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -34,6 +41,37 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { getFeatures } = useProductContext();
   const { showAlert } = useContext(AlertModalContext);
+
+  const { features } = useProductContext();
+
+  const modalOnCheck = async (input: string): Promise<void> => {
+    try {
+      // setIsScanningEnabled(false);
+      const id = validateAndCleanId(
+        input,
+        features?.id?.validation,
+        features?.id?.validationRegex
+      );
+      Vibration.vibrate(50);
+      setIsAddUserModalVisible(false);
+      if (ids.indexOf(id) > -1) {
+        throw new Error("Enter or scan a different ID number.");
+      }
+      addId(id);
+      // setIdInput("");
+    } catch (e) {
+      // setIsScanningEnabled(false);
+      if (e instanceof EnvVersionError) {
+        Sentry.captureException(e);
+        // todo: alert for env version errors
+      }
+      showAlert({
+        ...wrongFormatAlertProp,
+        description: e.message,
+        onOk: () => setIsAddUserModalVisible(true)
+      });
+    }
+  };
 
   return (
     <View>
@@ -100,6 +138,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         setIsVisible={setIsAddUserModalVisible}
         ids={ids}
         addId={addId}
+        onCheck={modalOnCheck}
       />
     </View>
   );

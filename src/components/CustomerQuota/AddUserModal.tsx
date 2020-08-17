@@ -1,20 +1,20 @@
 import React, {
   FunctionComponent,
   useState,
-  useEffect,
-  useContext
+  useEffect
+  // useContext
 } from "react";
 import {
   View,
   StyleSheet,
   Modal,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  Vibration
+  TouchableWithoutFeedback
+  // Vibration
 } from "react-native";
 import { InputIdSection } from "../CustomerDetails/InputIdSection";
 import { IdScanner } from "../IdScanner/IdScanner";
-import { validateAndCleanId } from "../../utils/validateIdentification";
+// import { validateAndCleanId } from "../../utils/validateIdentification";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { color, size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -22,9 +22,9 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
-import { EnvVersionError } from "../../services/envVersion";
-import { AlertModalContext, wrongFormatAlertProp } from "../../context/alert";
-import { Sentry } from "../../utils/errorTracking";
+// import { EnvVersionError } from "../../services/envVersion";
+// import { AlertModalContext, wrongFormatAlertProp } from "../../context/alert";
+// import { Sentry } from "../../utils/errorTracking";
 
 const styles = StyleSheet.create({
   background: {
@@ -77,19 +77,21 @@ interface AddUserModal {
   setIsVisible: (visible: boolean) => void;
   ids: string[];
   addId: (id: string) => void;
+  onCheck: (input: string) => Promise<void>;
 }
 
 export const AddUserModal: FunctionComponent<AddUserModal> = ({
   isVisible,
   setIsVisible,
   ids,
-  addId
+  addId,
+  onCheck
 }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [idInput, setIdInput] = useState("");
   const { features } = useProductContext();
-  const { showAlert } = useContext(AlertModalContext);
+  // const { showAlert } = useContext(AlertModalContext);
 
   useEffect(() => {
     if (isVisible) {
@@ -97,33 +99,10 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
     }
   }, [isVisible]);
 
-  const onCheck = async (input: string): Promise<void> => {
-    try {
-      setIsScanningEnabled(false);
-      const id = validateAndCleanId(
-        input,
-        features?.id?.validation,
-        features?.id?.validationRegex
-      );
-      Vibration.vibrate(50);
-      setIsVisible(false);
-      if (ids.indexOf(id) > -1) {
-        throw new Error("Enter or scan a different ID number.");
-      }
-      addId(id);
-      setIdInput("");
-    } catch (e) {
-      setIsScanningEnabled(false);
-      if (e instanceof EnvVersionError) {
-        Sentry.captureException(e);
-        // todo: alert for env version errors
-      }
-      showAlert({
-        ...wrongFormatAlertProp,
-        description: e.message,
-        onOk: () => setIsScanningEnabled(true)
-      });
-    }
+  const onCheckNew = async (input: string): Promise<void> => {
+    setIsScanningEnabled(false);
+    await onCheck(input);
+    setIdInput("");
   };
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
@@ -179,7 +158,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
                 openCamera={() => setShouldShowCamera(true)}
                 idInput={idInput}
                 setIdInput={setIdInput}
-                submitId={() => onCheck(idInput)}
+                submitId={() => onCheckNew(idInput)}
                 keyboardType={
                   features?.id?.type === "NUMBER" ? "numeric" : "default"
                 }
