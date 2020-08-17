@@ -75,23 +75,18 @@ const CloseButton: FunctionComponent<{ onPress: () => void }> = ({
 interface AddUserModal {
   isVisible: boolean;
   setIsVisible: (visible: boolean) => void;
-  ids: string[];
-  addId: (id: string) => void;
-  onCheck: (input: string) => Promise<void>;
+  onCheckId: (input: string) => Promise<void>;
 }
 
 export const AddUserModal: FunctionComponent<AddUserModal> = ({
   isVisible,
   setIsVisible,
-  ids,
-  addId,
-  onCheck
+  onCheckId
 }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [idInput, setIdInput] = useState("");
   const { features } = useProductContext();
-  // const { showAlert } = useContext(AlertModalContext);
 
   useEffect(() => {
     if (isVisible) {
@@ -99,9 +94,9 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
     }
   }, [isVisible]);
 
-  const onCheckNew = async (input: string): Promise<void> => {
+  const onCheck = async (input: string): Promise<void> => {
     setIsScanningEnabled(false);
-    await onCheck(input);
+    await onCheckId(input);
     setIdInput("");
   };
 
@@ -158,7 +153,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
                 openCamera={() => setShouldShowCamera(true)}
                 idInput={idInput}
                 setIdInput={setIdInput}
-                submitId={() => onCheckNew(idInput)}
+                submitId={() => onCheck(idInput)}
                 keyboardType={
                   features?.id?.type === "NUMBER" ? "numeric" : "default"
                 }

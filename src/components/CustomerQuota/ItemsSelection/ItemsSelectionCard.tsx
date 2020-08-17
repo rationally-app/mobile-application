@@ -44,9 +44,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
 
   const { features } = useProductContext();
 
-  const modalOnCheck = async (input: string): Promise<void> => {
+  const onCheckIdModal = async (input: string): Promise<void> => {
     try {
-      // setIsScanningEnabled(false);
       const id = validateAndCleanId(
         input,
         features?.id?.validation,
@@ -58,9 +57,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         throw new Error("Enter or scan a different ID number.");
       }
       addId(id);
-      // setIdInput("");
     } catch (e) {
-      // setIsScanningEnabled(false);
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
         // todo: alert for env version errors
@@ -136,9 +133,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <AddUserModal
         isVisible={isAddUserModalVisible}
         setIsVisible={setIsAddUserModalVisible}
-        ids={ids}
-        addId={addId}
-        onCheck={modalOnCheck}
+        onCheckId={onCheckIdModal}
       />
     </View>
   );
