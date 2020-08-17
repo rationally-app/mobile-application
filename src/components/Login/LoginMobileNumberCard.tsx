@@ -2,16 +2,14 @@ import React, {
   useState,
   FunctionComponent,
   Dispatch,
-  SetStateAction,
-  MutableRefObject
+  SetStateAction
 } from "react";
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { LoginStage } from "./types";
-import { requestOTP, LoginError } from "../../services/auth";
 import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 import {
   createFullNumber,
@@ -28,17 +26,13 @@ const styles = StyleSheet.create({
 interface LoginMobileNumberCard {
   setLoginStage: Dispatch<SetStateAction<LoginStage>>;
   setMobileNumber: Dispatch<SetStateAction<string>>;
-  lastResendWarningMessageRef: MutableRefObject<string>;
-  codeKey: string;
-  endpoint: string;
+  handleRequestOTP: (fullNumber?: string) => Promise<boolean>;
 }
 
 export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
   setLoginStage,
   setMobileNumber,
-  lastResendWarningMessageRef,
-  codeKey,
-  endpoint
+  handleRequestOTP
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("+65");
@@ -57,25 +51,11 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   const onRequestOTP = async (): Promise<void> => {
     setIsLoading(true);
-    try {
-      const fullNumber = createFullNumber(countryCode, mobileNumberValue);
-      const response = await requestOTP(fullNumber, codeKey, endpoint);
-      if (typeof response.warning === "string") {
-        lastResendWarningMessageRef.current = response.warning;
-      }
-      setIsLoading(false);
-      setMobileNumber(fullNumber);
-      setLoginStage("OTP");
-    } catch (e) {
-      if (e instanceof LoginError) {
-        Alert.alert("Error", e.message, [{ text: "OK" }], {
-          cancelable: false
-        });
-      } else {
-        alert(e);
-      }
-      setIsLoading(false);
-    }
+    const fullNumber = createFullNumber(countryCode, mobileNumberValue);
+    const isRequestSuccessful = await handleRequestOTP(fullNumber);
+    setMobileNumber(fullNumber);
+    setIsLoading(false);
+    if (isRequestSuccessful) setLoginStage("OTP");
   };
 
   const onSubmitMobileNumber = (): void => {
