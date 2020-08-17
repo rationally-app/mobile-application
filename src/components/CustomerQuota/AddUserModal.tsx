@@ -106,11 +106,11 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
         features?.id?.validationRegex
       );
       Vibration.vibrate(50);
+      setIsVisible(false);
       if (ids.indexOf(id) > -1) {
         throw new Error("Enter or scan a different ID number.");
       }
       addId(id);
-      setIsVisible(false);
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
