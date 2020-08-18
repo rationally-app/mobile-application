@@ -6,13 +6,15 @@ import {
   QuotaError,
   NotEligibleError
 } from "../../services/quota";
+import { transform } from "lodash";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
   Quota,
   ItemQuota,
-  IdentifierInput
+  IdentifierInput,
+  Policy
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
@@ -21,6 +23,8 @@ export type CartItem = {
   category: string;
   quantity: number;
   maxQuantity: number;
+  checkoutLimit?: number;
+  descriptionAlert?: string;
   /**
    * Indicates the previous time quota was used.
    * It will be undefined for batch quotas.
@@ -42,6 +46,7 @@ type CartState =
 export type CartHook = {
   cartState: CartState;
   cart: Cart;
+  emptyCart: () => void;
   updateCart: (
     category: string,
     quantity: number,
@@ -51,6 +56,7 @@ export type CartHook = {
   checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
+  allQuotaResponse: Quota | null;
 };
 
 const getItem = (
@@ -95,6 +101,14 @@ const mergeWithCart = (
             })
           ) || [];
 
+        let descriptionAlert: string | undefined = undefined;
+        if (product && product.alert) {
+          const expandedQuota = product.quantity.limit - maxQuantity;
+          descriptionAlert =
+            expandedQuota >= product.alert.threshold
+              ? product.alert.label
+              : undefined;
+        }
         return {
           category,
           quantity: Math.min(
@@ -102,11 +116,29 @@ const mergeWithCart = (
             existingItem?.quantity || defaultQuantity
           ),
           maxQuantity: Math.max(maxQuantity, 0),
+          checkoutLimit:
+            existingItem?.checkoutLimit || product?.quantity.checkoutLimit,
+          descriptionAlert,
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
         };
       }
     );
+};
+
+const filterQuotaWithAvailableProducts = (
+  quota: Quota,
+  products: Policy[]
+): Quota => {
+  const filteredQuota: Quota = { remainingQuota: [] };
+  return transform(
+    quota.remainingQuota,
+    (result: Quota, itemQuota) => {
+      if (products.some(policy => policy.category === itemQuota.category))
+        result.remainingQuota.push(itemQuota);
+    },
+    filteredQuota
+  );
 };
 
 const hasNoQuota = (quota: Quota): boolean =>
@@ -128,11 +160,13 @@ export const useCart = (
     setProducts,
     setFeatures
   } = useProductContext();
+  const prevProducts = usePrevious(products);
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
+  const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
   const clearError = useCallback((): void => setError(undefined), []);
 
   /**
@@ -142,7 +176,12 @@ export const useCart = (
     const fetchQuota = async (): Promise<void> => {
       setCartState("FETCHING_QUOTA");
       try {
-        const quotaResponse = await getQuota(ids, authKey, endpoint);
+        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        setAllQuotaResponse(allQuotaResponse);
+        const quotaResponse = filterQuotaWithAvailableProducts(
+          allQuotaResponse,
+          products
+        );
         if (hasInvalidQuota(quotaResponse)) {
           Sentry.captureException(
             `Negative Quota Received: ${JSON.stringify(
@@ -173,7 +212,7 @@ export const useCart = (
       }
     };
 
-    if (prevIds !== ids) {
+    if (prevIds !== ids || prevProducts !== products) {
       fetchQuota();
     }
   }, [
@@ -182,7 +221,8 @@ export const useCart = (
     getProduct,
     ids,
     prevIds,
-    products.length,
+    prevProducts,
+    products,
     setProducts,
     setFeatures
   ]);
@@ -199,6 +239,10 @@ export const useCart = (
       );
     }
   }, [quotaResponse, products, getProduct]);
+
+  const emptyCart: CartHook["emptyCart"] = useCallback(() => {
+    setCart([]);
+  }, []);
 
   /**
    * Update quantity of an item in the cart.
@@ -294,10 +338,12 @@ export const useCart = (
   return {
     cartState,
     cart,
+    emptyCart,
     updateCart,
     checkoutCart,
     checkoutResult,
     error,
-    clearError
+    clearError,
+    allQuotaResponse
   };
 };

@@ -13,6 +13,6 @@ export const sharedStyles = StyleSheet.create({
     flex: 2
   },
   buttonWrapper: {
-    flex: 1
+    flexShrink: 1
   }
 });

@@ -19,6 +19,7 @@ export const ItemCheckbox: FunctionComponent<{
         <ItemContent
           name={name}
           description={description}
+          descriptionAlert={cartItem.descriptionAlert}
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
         />

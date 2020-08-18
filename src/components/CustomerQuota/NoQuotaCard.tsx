@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { compareDesc } from "date-fns";
 import { differenceInSeconds, format, formatDistance } from "date-fns";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { CustomerCard } from "./CustomerCard";
 import { AppText } from "../Layout/AppText";
 import { color, size, fontSize } from "../../common/styles";
@@ -9,7 +9,12 @@ import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Cart } from "../../hooks/useCart/useCart";
 import { useProductContext } from "../../context/products";
-import { getIdentifierInputDisplay } from "../../utils/getIdentifierInputDisplay";
+import {
+  getIdentifierInputDisplay,
+  getAllIdentifierInputDisplay
+} from "../../utils/getIdentifierInputDisplay";
+import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransaction";
+import { useAuthenticationContext } from "../../context/auth";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -36,6 +41,12 @@ const styles = StyleSheet.create({
   },
   itemDetail: {
     fontSize: fontSize(-1)
+  },
+  appealButtonText: {
+    marginTop: size(1),
+    marginBottom: 0,
+    fontFamily: "brand-bold",
+    fontSize: size(2)
   }
 });
 
@@ -45,7 +56,7 @@ const DistantTransactionTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>Limit reached on </AppText>
     <AppText style={sharedStyles.statusTitle}>
-      {format(transactionTime, "hh:mm a, do MMMM")}.
+      {format(transactionTime, "h:mma, d MMM yyyy")}.
     </AppText>
   </>
 );
@@ -84,10 +95,25 @@ const NoPreviousTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>Limit reached.</AppText>
 );
 
+const AppealButton: FunctionComponent<AppealButton> = ({ onAppeal }) => {
+  return (
+    <TouchableOpacity onPress={onAppeal}>
+      <View style={{ alignItems: "center" }}>
+        <AppText style={styles.appealButtonText}>Raise an appeal</AppText>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+interface AppealButton {
+  onAppeal: () => void;
+}
+
 interface NoQuotaCard {
   ids: string[];
   cart: Cart;
   onCancel: () => void;
+  onAppeal?: () => void;
 }
 
 /**
@@ -98,36 +124,93 @@ interface NoQuotaCard {
 export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   ids,
   cart,
-  onCancel
+  onCancel,
+  onAppeal
 }) => {
-  const { getProduct } = useProductContext();
+  const { getProduct, allProducts } = useProductContext();
+  const { token, endpoint } = useAuthenticationContext();
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const sortedCart = cart.sort((item1, item2) =>
-    compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
+  const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
+  let latestTransactionTime: Date | undefined = new Date();
+  /**
+   * Refactoring of Limit Reached Screen TBD
+   * Current Limit Reached Screen caters for the following scenarios
+   * 1. Listing of categories with latest transacted time; no identifiers and/or group transactions
+   * 2. Listing of past transactions with identifiers and transacted time; identifier and single ID transactions
+   */
+
+  // This hook is only used in single ID transaction
+  const { pastTransactionsResult } = usePastTransaction(
+    ids[0],
+    token,
+    endpoint
   );
 
-  const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
-  sortedCart.forEach(
-    ({ category, lastTransactionTime, identifierInputs = [] }) => {
-      if (lastTransactionTime) {
-        const policy = getProduct(category);
-        const categoryName = policy?.name ?? category;
-        const formattedDate = format(lastTransactionTime, "hh:mm a, do MMMM");
-        itemTransactions.push({
-          itemHeader: `${categoryName} (${formattedDate})`,
-          itemDetail: getIdentifierInputDisplay(identifierInputs)
-        });
+  if (
+    ids.length > 1 ||
+    allProducts.some(product => product.identifiers === undefined)
+  ) {
+    // For first scenario, cart provides an aggregated summary of the transacted categories
+    // since it fetch data from quota endpoint
+    // current distributions don't allow group transactions with identifiers
+    // if it does, default to aggregated summary
+    const sortedCart = cart.sort((item1, item2) =>
+      compareDesc(
+        item1.lastTransactionTime ?? 0,
+        item2.lastTransactionTime ?? 0
+      )
+    );
+    sortedCart.forEach(
+      ({ category, lastTransactionTime, identifierInputs = [] }) => {
+        if (lastTransactionTime) {
+          const policy = getProduct(category);
+          const categoryName = policy?.name ?? category;
+          const formattedDate = format(
+            lastTransactionTime,
+            "h:mma, d MMM yyyy"
+          );
+          itemTransactions.push({
+            itemHeader: `${categoryName} (${formattedDate})`,
+            itemDetail: getIdentifierInputDisplay(identifierInputs)
+          });
+        }
       }
-    }
-  );
+    );
+    latestTransactionTime = sortedCart[0]?.lastTransactionTime ?? undefined;
+  } else {
+    // For second scenario, transactions with identifiers would require to show details transactions
+    // hence, data will fetch from transactions endpoint
+    const sortedTransactions = pastTransactionsResult?.pastTransactions.sort(
+      (item1, item2) =>
+        compareDesc(item1.transactionTime ?? 0, item2.transactionTime ?? 0)
+    );
+
+    sortedTransactions?.forEach(item => {
+      const policy = allProducts.find(
+        policy => policy.category === item.category
+      );
+      const categoryName = policy?.name ?? item.category;
+      const formattedDate = format(item.transactionTime, "h:mma, d MMM yyyy");
+      itemTransactions.push({
+        itemHeader: `${categoryName} (${formattedDate})`,
+        itemDetail: getAllIdentifierInputDisplay(item.identifierInputs ?? [])
+      });
+    });
+
+    latestTransactionTime =
+      sortedTransactions?.[0].transactionTime ?? undefined;
+  }
 
   const now = new Date();
-  const latestTransactionTime = sortedCart[0]?.lastTransactionTime ?? undefined;
   const secondsFromLatestTransaction = latestTransactionTime
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
+
+  const hasAppealProduct = (): boolean => {
+    return allProducts.some(policy => policy.categoryType === "APPEAL");
+  };
 
   return (
     <View>
@@ -176,6 +259,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
       </View>
+      {onAppeal && hasAppealProduct() ? (
+        <AppealButton onAppeal={onAppeal} />
+      ) : undefined}
     </View>
   );
 };

@@ -83,7 +83,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
-  const { features } = useProductContext();
+  const { features, allProducts } = useProductContext();
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
   const { showAlert } = useContext(AlertModalContext);
 
@@ -131,7 +131,15 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         features?.id?.validationRegex
       );
       Vibration.vibrate(50);
-      navigation.navigate("CustomerQuotaScreen", { id });
+      const defaultProducts = allProducts.filter(
+        policy =>
+          policy.categoryType === undefined || policy.categoryType === "DEFAULT"
+      );
+
+      navigation.navigate("CustomerQuotaProxy", {
+        id,
+        products: defaultProducts
+      });
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);

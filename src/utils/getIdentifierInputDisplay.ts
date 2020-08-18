@@ -30,6 +30,18 @@ export const getIdentifierInputDisplay = (
       filteredInputs[filteredInputs.length - 1]
     )}`;
   }
-
   return identifierInputDisplay;
+};
+
+// TODO: this is just an interim solution for the 24th deadline.
+export const getAllIdentifierInputDisplay = (
+  identifierInputs: IdentifierInput[]
+): string => {
+  const filteredInputs = identifierInputs.filter(
+    identifierInput => !!identifierInput.value
+  );
+
+  return filteredInputs
+    .map(input => processIdentifierInputValue(input))
+    .join("\n");
 };

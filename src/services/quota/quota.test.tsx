@@ -2,7 +2,9 @@ import {
   getQuota,
   postTransaction,
   QuotaError,
-  PostTransactionError
+  PostTransactionError,
+  getPastTransactions,
+  PastTransactionError
 } from "./index";
 import { Sentry } from "../../utils/errorTracking";
 
@@ -28,6 +30,49 @@ const transactions = [
     identifiers: []
   }
 ];
+
+const pastTransactions = [
+  {
+    category: "product-1",
+    quantity: 1,
+    identifierInputs: [
+      {
+        label: "first",
+        scanButtonType: "QR",
+        validationRegex: "^[A-F0-9]{9}$",
+        value: "123456789",
+        textInputType: "STRING"
+      }
+    ]
+  },
+  {
+    category: "product-1",
+    quantity: 1,
+    identifierInputs: [
+      {
+        label: "first",
+        scanButtonType: "QR",
+        validationRegex: "^[A-F0-9]{9}$",
+        value: "123456789",
+        textInputType: "STRING"
+      }
+    ]
+  },
+  {
+    category: "product-2",
+    quantity: 1,
+    identifierInputs: [
+      {
+        label: "first",
+        scanButtonType: "QR",
+        validationRegex: "^[A-F0-9]{9}$",
+        value: "123456789",
+        textInputType: "STRING"
+      }
+    ]
+  }
+];
+
 const timestamp = new Date(2020, 3, 1);
 
 const mockGetQuotaResponseSingleId = {
@@ -71,6 +116,20 @@ const mockPostTransactionResult = {
       timestamp
     }
   ]
+};
+
+const mockPastTransactionsResponse = {
+  pastTransactions: pastTransactions.map(t => ({
+    ...t,
+    transactionTime: timestamp.getTime()
+  }))
+};
+
+const mockPastTransactionsResult = {
+  pastTransactions: pastTransactions.map(t => ({
+    ...t,
+    transactionTime: timestamp
+  }))
 };
 
 describe("quota", () => {
@@ -236,6 +295,49 @@ describe("quota", () => {
       await expect(postTransaction(postTransactionParams)).rejects.toThrow(
         "Network error"
       );
+    });
+  });
+
+  describe("getPastTransaction", () => {
+    it("should return past transactions based on ID", async () => {
+      expect.assertions(1);
+      mockFetch.mockReturnValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockPastTransactionsResponse)
+      });
+      const pastTransactionsResult = await getPastTransactions(
+        "S0000000J",
+        key,
+        endpoint
+      );
+      expect(pastTransactionsResult).toEqual(mockPastTransactionsResult);
+    });
+
+    it("should throw error if no ID was provided", async () => {
+      expect.assertions(1);
+      mockFetch.mockReturnValueOnce({
+        ok: false,
+        json: () => Promise.resolve({ message: "No ID was provided" })
+      });
+
+      await expect(getPastTransactions("", key, endpoint)).rejects.toThrow(
+        PastTransactionError
+      );
+    });
+
+    it("should throw error if past transactions are malformed", async () => {
+      expect.assertions(1);
+      mockFetch.mockReturnValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            transactions: mockPastTransactionsResponse.pastTransactions
+          })
+      });
+
+      await expect(
+        getPastTransactions("S0000000J", key, endpoint)
+      ).rejects.toThrow(PastTransactionError);
     });
   });
 });
