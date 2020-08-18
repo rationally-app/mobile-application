@@ -167,6 +167,7 @@ export const useCart = (
   const [error, setError] = useState<Error>();
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
+
   const clearError = useCallback((): void => setError(undefined), []);
 
   /**

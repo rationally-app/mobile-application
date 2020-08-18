@@ -40,6 +40,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
+
   const { getFeatures, products, features } = useProductContext();
   const { showAlert } = useContext(AlertModalContext);
 
