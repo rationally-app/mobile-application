@@ -99,6 +99,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setAllProducts
   } = useProductContext();
   const { logout } = useLogout();
+
   const resetStage = (): void => {
     setLoginStage("SCAN");
   };
