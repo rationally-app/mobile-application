@@ -24,9 +24,9 @@ export const UpdateFromAppStoreAlert: FunctionComponent = () => {
     <AlertModal
       alertType="INFO"
       title="Outdated app"
-      description={`Please update the app through the ${storeName}.`}
+      description={`Update your app through the ${storeName}.`}
       visible={true}
-      buttonTexts={{ primaryActionText: "Update" }}
+      buttonTexts={{ primaryActionText: "Update app" }}
       onOk={() => Linking.openURL(storeLink)}
     />
   );

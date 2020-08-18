@@ -7,7 +7,7 @@ export const UpdateByRestartingAlert: FunctionComponent = () => {
     <AlertModal
       alertType="INFO"
       title="Outdated app"
-      description={`Please restart the app to receive the latest updates.`}
+      description={`Restart your app to get the latest app version.`}
       visible={true}
       buttonTexts={{ primaryActionText: "Restart app" }}
       onOk={() => Updates.reloadAsync()}

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { Modal, StyleSheet, Text, View } from "react-native";
+import { Modal, StyleSheet, View } from "react-native";
 import AlertIcon from "../../../assets/icons/alert.svg";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     marginBottom: size(1.5)
   },
   modalTitle: {
-    fontWeight: "bold",
     fontFamily: "brand-bold",
     fontSize: fontSize(2),
     color: color("blue", 50),
@@ -95,7 +94,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           {alertType === "ERROR" && <AlertIcon style={styles.alertIcon} />}
-          <Text style={styles.modalTitle}>{title}</Text>
+          <AppText style={styles.modalTitle}>{title}</AppText>
           <AppText style={styles.modalText}>{description}</AppText>
           <View style={styles.modalGroupButton}>
             {buttonTexts.secondaryActionText && (
