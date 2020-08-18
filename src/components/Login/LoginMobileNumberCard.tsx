@@ -2,7 +2,8 @@ import React, {
   useState,
   FunctionComponent,
   Dispatch,
-  SetStateAction
+  SetStateAction,
+  useContext
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -17,6 +18,7 @@ import {
   countryCodeValidator,
   mobileNumberValidator
 } from "../../utils/validatePhoneNumbers";
+import { AlertModalContext, wrongFormatAlertProp } from "../../context/alert";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -40,6 +42,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("+65");
   const [mobileNumberValue, setMobileNumberValue] = useState("");
+  const { showAlert } = useContext(AlertModalContext);
 
   const onChangeCountryCode = (value: string): void => {
     if (value.length <= 4) {
@@ -68,9 +71,15 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   const onSubmitMobileNumber = (): void => {
     if (!countryCodeValidator(countryCode)) {
-      alert("Invalid country code");
+      showAlert({
+        ...wrongFormatAlertProp,
+        description: "Invalid country code"
+      });
     } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
-      alert("Invalid mobile phone number");
+      showAlert({
+        ...wrongFormatAlertProp,
+        description: "Invalid mobile phone number"
+      });
     } else {
       onRequestOTP();
     }
