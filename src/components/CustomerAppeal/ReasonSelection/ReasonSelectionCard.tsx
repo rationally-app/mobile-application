@@ -27,7 +27,7 @@ interface ReasonSelectionCard {
   reasonSelectionHeader: string;
   reasons: Reason[];
   onCancel: () => void;
-  onReasonSelection: (productName: string) => boolean;
+  onReasonSelection: (productName: string) => void;
 }
 
 export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({

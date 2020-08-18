@@ -27,7 +27,7 @@ export const ReasonItem: FunctionComponent<{
   description: string;
   descriptionAlert?: string;
   isLast: boolean;
-  onReasonSelection: (productName: string) => boolean;
+  onReasonSelection: (productName: string) => void;
 }> = ({ description, descriptionAlert, isLast, onReasonSelection }) => {
   return (
     <TouchableOpacity
