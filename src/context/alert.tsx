@@ -78,7 +78,7 @@ export const defaultConfirmationProp: AlertModalProps = {
 
 export const incompleteEntryAlertProp: AlertModalProps = {
   ...defaultAlertProp,
-  title: "Incomplete Entry",
+  title: "Incomplete entry",
   visible: true
 };
 
@@ -90,13 +90,13 @@ export const wrongFormatAlertProp: AlertModalProps = {
 
 export const duplicateAlertProp: AlertModalProps = {
   ...defaultAlertProp,
-  title: "Already Used",
+  title: "Already used",
   visible: true
 };
 
 export const systemAlertProp: AlertModalProps = {
   ...defaultAlertProp,
-  title: "System Error",
+  title: "System error",
   visible: true
 };
 

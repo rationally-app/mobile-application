@@ -233,8 +233,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
-
-        if (e.message.includes("issues")) {
+        if (e.message === ERROR_MESSAGE.SERVER_ERROR) {
           showAlert({
             ...systemAlertProp,
             description: e.message
