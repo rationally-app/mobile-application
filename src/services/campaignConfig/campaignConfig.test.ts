@@ -1,8 +1,8 @@
 import { getCampaignConfig, CampaignConfigError } from "./campaignConfig";
-import * as Sentry from "sentry-expo";
 import { boolean } from "io-ts";
+import { Sentry } from "../../utils/errorTracking";
 
-jest.mock("sentry-expo");
+jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
@@ -13,6 +13,7 @@ const mockValidResponse = {
   features: {
     minAppBinaryVersion: "3.0.0",
     minAppBuildVersion: 0,
+    campaignName: "Test campaign",
     flowType: "DEFAULT",
     transactionGrouping: true
   }
@@ -22,6 +23,7 @@ const mockValidResponseNewFeature = {
   features: {
     minAppBinaryVersion: "3.0.0",
     minAppBuildVersion: 10,
+    campaignName: "Test campaign",
     flowType: "DEFAULT",
     transactionGrouping: true,
     newFeature: true

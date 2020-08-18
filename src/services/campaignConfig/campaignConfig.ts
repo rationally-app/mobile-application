@@ -1,7 +1,7 @@
 import { IS_MOCK } from "../../config";
 import { CampaignConfig, ConfigHashes } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
-import * as Sentry from "sentry-expo";
+import { Sentry } from "../../utils/errorTracking";
 
 export class CampaignConfigError extends Error {
   constructor(message: string) {
@@ -44,7 +44,8 @@ const mockGetCampaignConfig = async (
   return {
     features: {
       minAppBinaryVersion: "3.0.0",
-      minAppBuildVersion: 0
+      minAppBuildVersion: 0,
+      campaignName: "Test campaign"
     }
   };
 };

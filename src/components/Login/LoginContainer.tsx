@@ -150,10 +150,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
       switch (features?.FLOW_TYPE) {
         case "DEFAULT":
-          navigation.navigate("CollectCustomerDetailsScreen");
-          break;
         case "MERCHANT":
-          navigation.navigate("MerchantPayoutScreen");
+          // TODO: Navigate directly to CampaignInitialisationScreen on successful login.
+          // CampaignInitialisationScreen will handle the retrieval of the campaign config + version checks
+          navigation.navigate("CampaignInitialisationScreen", {
+            flowType: features.FLOW_TYPE
+          });
           break;
         default:
           alert(

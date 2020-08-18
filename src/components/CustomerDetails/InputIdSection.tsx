@@ -9,7 +9,7 @@ import { size, color, fontSize } from "../../common/styles";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
-    marginTop: size(4),
+    marginTop: size(3),
     marginBottom: size(6)
   },
   horizontalRule: {
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold"
   },
   inputAndButtonWrapper: {
-    marginTop: size(6),
+    marginTop: size(5),
     flexDirection: "row",
     alignItems: "flex-end"
   },

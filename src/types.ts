@@ -193,7 +193,8 @@ export type Voucher = {
 
 const NewFeatures = t.type({
   minAppBinaryVersion: t.string,
-  minAppBuildVersion: t.number
+  minAppBuildVersion: t.number,
+  campaignName: t.string
 });
 
 export const CampaignConfig = t.type({

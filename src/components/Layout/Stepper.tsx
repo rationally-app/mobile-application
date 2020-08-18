@@ -255,6 +255,7 @@ export const Stepper: FunctionComponent<Stepper> = ({
         <TextInput
           style={styles.input}
           value={internalValue}
+          selectTextOnFocus={true}
           onChangeText={onChangeTextValue}
           onBlur={onBlur}
           keyboardType="number-pad"

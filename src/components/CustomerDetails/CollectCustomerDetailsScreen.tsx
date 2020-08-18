@@ -12,7 +12,7 @@ import {
   Vibration,
   BackHandler
 } from "react-native";
-import { size } from "../../common/styles";
+import { size, fontSize } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -37,6 +37,7 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
+import { CampaignConfigContext } from "../../context/campaignConfig";
 
 const styles = StyleSheet.create({
   content: {
@@ -52,6 +53,11 @@ const styles = StyleSheet.create({
   },
   bannerWrapper: {
     marginBottom: size(1.5)
+  },
+  campaignName: {
+    fontFamily: "brand-bold",
+    fontSize: fontSize(3),
+    marginBottom: size(3)
   }
 });
 
@@ -74,6 +80,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
   const { features, allProducts } = useProductContext();
+  const { features: campaignFeatures } = useContext(CampaignConfigContext);
 
   useEffect(() => {
     if (isFocused) {
@@ -171,6 +178,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             </View>
           )}
           <Card>
+            {campaignFeatures?.campaignName && (
+              <AppText style={styles.campaignName}>
+                {campaignFeatures.campaignName}
+              </AppText>
+            )}
             <AppText>
               Check the number of item(s) eligible for redemption
             </AppText>

@@ -9,7 +9,9 @@ const defaultAlertProp: AlertModalProps = {
   alertType: "ERROR",
   title: "",
   description: "",
-  buttonTextType: "OK_CANCEL",
+  buttonTexts: {
+    primaryActionText: "OK"
+  },
   visible: false,
   onOk: () => {},
   onCancel: () => {},

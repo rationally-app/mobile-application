@@ -15,10 +15,12 @@ import * as Linking from "expo-linking";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation";
 import { StackViewTransitionConfigs } from "react-navigation-stack";
+import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
 
 const SwitchNavigator = createSwitchNavigator(
   {
     LoginScreen: { screen: LoginScreen, path: "login" },
+    CampaignInitialisationScreen,
     DrawerNavigator: createDrawerNavigator(
       {
         CustomerQuotaStack: {

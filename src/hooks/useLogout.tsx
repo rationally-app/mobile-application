@@ -5,6 +5,7 @@ import { useProductContext } from "../context/products";
 import { Alert } from "react-native";
 import { NavigationDispatch, NavigationActions } from "react-navigation";
 import { Features } from "../types";
+import { CampaignConfigContext } from "../context/campaignConfig";
 
 type AlertProps = {
   title: string;
@@ -23,6 +24,7 @@ export const useLogout = (): LogoutHook => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
   const { clearAuthInfo } = useAuthenticationContext();
   const { setProducts, setFeatures, setAllProducts } = useProductContext();
+  const { clearCampaignConfig } = useContext(CampaignConfigContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const logout: LogoutHook["logout"] = useCallback(
@@ -32,6 +34,7 @@ export const useLogout = (): LogoutHook => {
       }
       setIsLoggingOut(true);
       await clearAuthInfo();
+      await clearCampaignConfig();
       setProducts([]);
       setFeatures({} as Features);
       setAllProducts([]);
@@ -47,7 +50,14 @@ export const useLogout = (): LogoutHook => {
         Alert.alert(title, description);
       }
     },
-    [clearAuthInfo, setMessageContent, setProducts, setFeatures, setAllProducts]
+    [
+      clearAuthInfo,
+      clearCampaignConfig,
+      setProducts,
+      setFeatures,
+      setAllProducts,
+      setMessageContent
+    ]
   );
 
   return {
