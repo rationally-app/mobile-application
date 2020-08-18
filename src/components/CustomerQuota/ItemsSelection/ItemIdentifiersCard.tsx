@@ -9,8 +9,7 @@ const styles = StyleSheet.create({
   content: {
     position: "relative",
     padding: size(2),
-    // width: 512,
-    width: "100%",
+    width: 512,
     maxWidth: "100%"
   }
 });

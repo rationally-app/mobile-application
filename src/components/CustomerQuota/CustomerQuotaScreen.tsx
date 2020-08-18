@@ -136,7 +136,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     return () => {
       BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     };
-  }, [cartState, ids, navigation]);
+  }, [cartState, navigation]);
 
   useEffect(() => {
     if (!error) {
