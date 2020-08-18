@@ -44,7 +44,8 @@ const mockGetCampaignConfig = async (
   return {
     features: {
       minAppBinaryVersion: "3.0.0",
-      minAppBuildVersion: 0
+      minAppBuildVersion: 0,
+      campaignName: "Test campaign"
     }
   };
 };
