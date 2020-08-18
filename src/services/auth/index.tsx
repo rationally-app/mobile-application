@@ -10,6 +10,13 @@ export class LoginError extends Error {
   }
 }
 
+export class LoginLockedOutError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "LoginLockedOutError";
+  }
+}
+
 export const liveRequestOTP = async (
   mobileNumber: string,
   code: string,
@@ -27,7 +34,11 @@ export const liveRequestOTP = async (
     );
     return response;
   } catch (e) {
-    throw new LoginError(e.message);
+    if (e.message.includes("Please wait")) {
+      throw new LoginLockedOutError(e.message);
+    } else {
+      throw new LoginError(e.message);
+    }
   }
 };
 
@@ -60,7 +71,11 @@ export const liveValidateOTP = async (
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
-    throw new LoginError(e.message);
+    if (e.message.includes("Please wait")) {
+      throw new LoginLockedOutError(e.message);
+    } else {
+      throw new LoginError(e.message);
+    }
   }
 };
 
