@@ -16,7 +16,13 @@ import { validateOTP, requestOTP } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
-import { AlertModalContext, systemAlertProps } from "../../context/alert";
+import {
+  AlertModalContext,
+  systemAlertProps,
+  invalidEntryAlertProps,
+  ERROR_MESSAGE
+} from "../../context/alert";
+import { LoginError } from "../../services/auth";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -104,15 +110,22 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         resetStage();
       }
     } catch (e) {
+      Sentry.captureException(e);
       if (e instanceof EnvVersionError) {
-        Sentry.captureException(e);
         showAlert({
           ...systemAlertProps,
           description: e.message
         });
+      } else if (e instanceof LoginError) {
+        showAlert({
+          ...invalidEntryAlertProps,
+          description: e.message
+        });
       } else {
-        //TODO: investigate this
-        alert(e);
+        showAlert({
+          ...systemAlertProps,
+          description: ERROR_MESSAGE.SERVER_ERROR
+        });
       }
       setIsLoading(false);
     }

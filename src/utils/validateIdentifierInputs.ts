@@ -16,7 +16,7 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
-    //TODO: switch between different specific errors
+    //TODO: switch between different errors based on campaign config
     if (!value) {
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
