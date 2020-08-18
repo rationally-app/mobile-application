@@ -110,15 +110,34 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setLoginStage("SCAN");
   };
 
+  const shouldResendAlert = async (): Promise<boolean> => {
+    return new Promise(resolve => {
+      Alert.alert(
+        "Resend OTP?",
+        lastResendWarningMessage,
+        [
+          {
+            text: "CANCEL",
+            onPress: () => resolve(false)
+          },
+          {
+            text: "RESEND",
+            onPress: () => resolve(true)
+          }
+        ],
+        { cancelable: false }
+      );
+    });
+  };
+
   const handleRequestOTP = async (fullNumber?: string): Promise<boolean> => {
-    setIsLoading(true);
     try {
       fullNumber = fullNumber ?? mobileNumber;
-      const response = await requestOTP(fullNumber, codeKey, endpointTemp);
-      if (lastResendWarningMessage) lastResendWarningMessage = "";
-      if (typeof response.warning === "string") {
-        lastResendWarningMessage = response.warning;
+      if (lastResendWarningMessage) {
+        if (!(await shouldResendAlert())) return false;
       }
+      const response = await requestOTP(fullNumber, codeKey, endpointTemp);
+      lastResendWarningMessage = response.warning ?? "";
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
@@ -141,8 +160,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         alert(e);
       }
       return false;
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -378,7 +395,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               mobileNumber={mobileNumber}
               codeKey={codeKey}
               endpoint={endpointTemp}
-              lastResendWarningMessage={lastResendWarningMessage}
               handleRequestOTP={handleRequestOTP}
             />
           )}

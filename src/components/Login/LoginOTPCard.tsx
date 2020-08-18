@@ -51,7 +51,6 @@ interface LoginOTPCard {
   mobileNumber: string;
   codeKey: string;
   endpoint: string;
-  lastResendWarningMessage: string;
   handleRequestOTP: () => Promise<boolean>;
 }
 
@@ -60,7 +59,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   mobileNumber,
   codeKey,
   endpoint,
-  lastResendWarningMessage,
   handleRequestOTP
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -151,23 +149,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     if (isRequestSuccessful) setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
   };
 
-  const alertBeforeResend = (): void => {
-    Alert.alert(
-      "Resend OTP?",
-      lastResendWarningMessage,
-      [
-        { text: "CANCEL" },
-        {
-          text: "RESEND",
-          onPress: async () => {
-            await resendOTP();
-          }
-        }
-      ],
-      { cancelable: false }
-    );
-  };
-
   const handleChange = (text: string): void => {
     /^\d*$/.test(text) && setOTPValue(text);
   };
@@ -191,9 +172,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           ) : (
             <SecondaryButton
               text="Resend"
-              onPress={
-                lastResendWarningMessage === "" ? resendOTP : alertBeforeResend
-              }
+              onPress={resendOTP}
               isLoading={isResending}
               disabled={isLoading}
             />
