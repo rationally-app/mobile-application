@@ -122,7 +122,6 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         onOk: () => clearError()
       });
     } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
-      // TODO: switch case between different types of errors, warnings etc.
       switch (error.message) {
         case ERROR_MESSAGE.MISSING_SELECTION:
           showAlert({
@@ -140,14 +139,16 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
           });
           break;
 
+        // currently, backend is throwing error when pod has been redeemed
         case ERROR_MESSAGE.DUPLICATE_POD_INPUT:
           showAlert({
             ...systemAlertProp,
-            title: "Already Used",
+            title: "Already used",
             description: error.message,
             onOk: () => clearError()
           });
           break;
+
         default:
           showAlert({
             ...wrongFormatAlertProp,

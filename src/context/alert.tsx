@@ -82,6 +82,12 @@ export const incompleteEntryAlertProp: AlertModalProps = {
   visible: true
 };
 
+export const invalidEntryAlertProp: AlertModalProps = {
+  ...defaultAlertProp,
+  title: "Wrong entry",
+  visible: true
+};
+
 export const wrongFormatAlertProp: AlertModalProps = {
   ...defaultAlertProp,
   title: "Wrong format",
