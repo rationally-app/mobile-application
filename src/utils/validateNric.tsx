@@ -52,8 +52,8 @@ export const validate = (nricInput: string): boolean => {
 
 export const validateAndCleanNric = (inputNric: string): string => {
   const isNricValid = validate(inputNric);
-  if (!isNricValid) throw new Error("Invalid ID number");
+  if (!isNricValid) throw new Error("Enter or scan ID number again.");
   const cleanedNric = inputNric.match(NRIC_REGEX)?.[0].toUpperCase();
-  if (!cleanedNric) throw new Error("Invalid ID number");
+  if (!cleanedNric) throw new Error("Enter or scan ID number again.");
   return cleanedNric;
 };

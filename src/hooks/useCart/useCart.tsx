@@ -232,8 +232,7 @@ export const useCart = (
     prevProducts,
     products,
     setProducts,
-    setFeatures,
-    showAlert
+    setFeatures
   ]);
 
   /**

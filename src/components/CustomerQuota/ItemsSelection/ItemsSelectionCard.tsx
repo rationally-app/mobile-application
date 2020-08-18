@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState } from "react";
-import { View, Alert } from "react-native";
+import React, { FunctionComponent, useState, useContext } from "react";
+import { Alert, View, Vibration } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { size, color } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
@@ -10,6 +10,14 @@ import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
 import { useProductContext } from "../../../context/products";
+import {
+  AlertModalContext,
+  defaultWarningProps,
+  wrongFormatAlertProps
+} from "../../../context/alert";
+import { validateAndCleanId } from "../../../utils/validateIdentification";
+import { EnvVersionError } from "../../../services/envVersion";
+import { Sentry } from "../../../utils/errorTracking";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -32,6 +40,35 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { getFeatures, products } = useProductContext();
+  const { showAlert } = useContext(AlertModalContext);
+
+  const { features } = useProductContext();
+
+  const onModalCheck = async (input: string): Promise<void> => {
+    try {
+      const id = validateAndCleanId(
+        input,
+        features?.id?.validation,
+        features?.id?.validationRegex
+      );
+      Vibration.vibrate(50);
+      setIsAddUserModalVisible(false);
+      if (ids.indexOf(id) > -1) {
+        throw new Error("Enter or scan a different ID number.");
+      }
+      addId(id);
+    } catch (e) {
+      if (e instanceof EnvVersionError) {
+        Sentry.captureException(e);
+        // todo: alert for env version errors
+      }
+      showAlert({
+        ...wrongFormatAlertProps,
+        description: e.message,
+        onOk: () => setIsAddUserModalVisible(true)
+      });
+    }
+  };
 
   // TODO:
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
@@ -104,8 +141,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <AddUserModal
         isVisible={isAddUserModalVisible}
         setIsVisible={setIsAddUserModalVisible}
-        ids={ids}
-        addId={addId}
+        validateAndUpdateIds={onModalCheck}
       />
     </View>
   );

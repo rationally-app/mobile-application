@@ -99,6 +99,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     } catch (e) {
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
+        // todo: alert for env version errors
         alert(
           "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
         );
