@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import React, { FunctionComponent } from "react";
-import { size } from "../../../common/styles";
+import { size, fontSize } from "../../../common/styles";
 import { AppText } from "../../Layout/AppText";
 
 const styles = StyleSheet.create({
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   },
   reasonSelectionDescription: {
     fontFamily: "brand-bold",
-    fontSize: 18
+    fontSize: fontSize(1)
   }
 });
 

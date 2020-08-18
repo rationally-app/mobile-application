@@ -33,13 +33,9 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { navigateHome, replaceRoute } from "../../common/navigation";
-import { NavigationParams, NavigationRoute } from "react-navigation";
-import { NavigationDrawerProp } from "react-navigation-drawer";
+import { NavigationProps } from "../../types";
 
-type CustomerQuotaProps = {
-  navigation: NavigationDrawerProp<NavigationRoute, NavigationParams>;
-  navIds: Array<string>;
-};
+type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -93,7 +89,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
   const showHelpModal = useContext(HelpModalContext);
-  const [ids, setIds] = useState<Array<string>>(navIds);
+  const [ids, setIds] = useState<string[]>(navIds);
 
   const {
     cartState,
