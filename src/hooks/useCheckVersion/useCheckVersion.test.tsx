@@ -51,7 +51,7 @@ describe("useCheckVersion", () => {
       (current, minimum) => {
         expect.assertions(1);
 
-        appBinaryVersionSpy.mockReturnValueOnce(current);
+        appBinaryVersionSpy.mockReturnValue(current);
         const { result } = renderHook(() => useCheckVersion(), {
           wrapper: wrapper(minimum, 0)
         });
@@ -68,7 +68,7 @@ describe("useCheckVersion", () => {
       (current, minimum) => {
         expect.assertions(1);
 
-        appBinaryVersionSpy.mockReturnValueOnce(current);
+        appBinaryVersionSpy.mockReturnValue(current);
         const { result } = renderHook(() => useCheckVersion(), {
           wrapper: wrapper(minimum, 0)
         });
@@ -85,13 +85,13 @@ describe("useCheckVersion", () => {
     });
 
     beforeEach(() => {
-      appBinaryVersionSpy.mockReturnValueOnce(fixedBinaryVersion);
+      appBinaryVersionSpy.mockReturnValue(fixedBinaryVersion);
     });
 
     it("should return OK when binary and build version are the same as the minimum binary and build version", () => {
       expect.assertions(1);
 
-      appBuildVersionSpy.mockReturnValueOnce(2);
+      appBuildVersionSpy.mockReturnValue(2);
       const { result } = renderHook(() => useCheckVersion(), {
         wrapper: wrapper(fixedBinaryVersion, 2)
       });
@@ -107,7 +107,7 @@ describe("useCheckVersion", () => {
       (current, minimum) => {
         expect.assertions(1);
 
-        appBuildVersionSpy.mockReturnValueOnce(current);
+        appBuildVersionSpy.mockReturnValue(current);
         const { result } = renderHook(() => useCheckVersion(), {
           wrapper: wrapper(fixedBinaryVersion, minimum)
         });
@@ -124,7 +124,7 @@ describe("useCheckVersion", () => {
       (current, minimum) => {
         expect.assertions(1);
 
-        appBuildVersionSpy.mockReturnValueOnce(current);
+        appBuildVersionSpy.mockReturnValue(current);
         const { result } = renderHook(() => useCheckVersion(), {
           wrapper: wrapper(fixedBinaryVersion, minimum)
         });
@@ -136,7 +136,7 @@ describe("useCheckVersion", () => {
     it("should throw an error when app binary version is undefined", () => {
       expect.assertions(1);
 
-      appBinaryVersionSpy.mockReturnValueOnce(undefined);
+      appBinaryVersionSpy.mockReturnValue(undefined);
       const { result } = renderHook(() => useCheckVersion(), {
         wrapper: wrapper("1.0.0", 0)
       });
@@ -148,7 +148,8 @@ describe("useCheckVersion", () => {
     it("should throw an error when app build version is undefined", () => {
       expect.assertions(1);
 
-      appBuildVersionSpy.mockReturnValueOnce(undefined);
+      appBinaryVersionSpy.mockReturnValue("1.0.0");
+      appBuildVersionSpy.mockReturnValue(undefined);
       const { result } = renderHook(() => useCheckVersion(), {
         wrapper: wrapper("1.0.0", 0)
       });
@@ -160,6 +161,8 @@ describe("useCheckVersion", () => {
     it("should throw an error when min binary version is undefined", () => {
       expect.assertions(1);
 
+      appBinaryVersionSpy.mockReturnValue("1.0.0");
+      appBuildVersionSpy.mockReturnValue(0);
       const { result } = renderHook(() => useCheckVersion(), {
         wrapper: wrapper(undefined as any, 0)
       });
@@ -169,6 +172,8 @@ describe("useCheckVersion", () => {
     it("should throw an error when min build version is undefined", () => {
       expect.assertions(1);
 
+      appBinaryVersionSpy.mockReturnValue("1.0.0");
+      appBuildVersionSpy.mockReturnValue(0);
       const { result } = renderHook(() => useCheckVersion(), {
         wrapper: wrapper("1.0.0", undefined as any)
       });

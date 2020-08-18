@@ -47,6 +47,9 @@ export const useCheckVersion = (): (() => CheckVersionResult) => {
   };
 
   const check = (): CheckVersionResult => {
+    if (config.APP_BINARY_VERSION === "dev") {
+      return "OK";
+    }
     if (!isBinaryVersionOK()) {
       return "OUTDATED_BINARY";
     }
