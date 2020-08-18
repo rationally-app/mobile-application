@@ -144,18 +144,17 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   };
 
   const alertBeforeResend = (): void => {
-    console.log(lastResendWarningMessage);
     Alert.alert(
       "Resend OTP?",
       lastResendWarningMessage,
       [
+        { text: "CANCEL" },
         {
           text: "RESEND",
           onPress: async () => {
             await resendOTP();
           }
-        },
-        { text: "CANCEL" }
+        }
       ],
       { cancelable: false }
     );

@@ -14,6 +14,8 @@ const otp = "123456";
 const endpoint = "https://myendpoint.com";
 const ttl = new Date(2030, 0, 1);
 const sessionToken = "0000-11111-22222-33333-44444";
+const warning = "warn!";
+const status = "status";
 
 describe("auth", () => {
   beforeEach(() => {
@@ -37,6 +39,16 @@ describe("auth", () => {
           body: JSON.stringify(payload)
         }
       ]);
+    });
+
+    it("should return an object with warning and status keys if the response contains these properties", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ warning, status })
+      });
+      const response = await requestOTP(phone, code, endpoint);
+      expect(response).toEqual({ warning, status });
     });
 
     it("should throw error if OTP could not be retrieved", async () => {

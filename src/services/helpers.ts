@@ -15,6 +15,7 @@ export async function fetchWithValidator<T, O, I>(
   init?: RequestInit
 ): Promise<T> {
   const response = await fetch(requestInfo, init);
+
   const json = await response.json();
   if (!response.ok) {
     throw new Error(json.message ?? "Fetch failed");
