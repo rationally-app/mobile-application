@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { StyleSheet, View, Alert } from "react-native";
 import { CustomerCard } from "../../CustomerQuota/CustomerCard";
 import { size } from "../../../common/styles";
@@ -6,6 +6,7 @@ import { Card } from "../../Layout/Card";
 import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
+import { AlertModalContext, defaultWarningProps } from "../../../context/alert";
 
 const styles = StyleSheet.create({
   commonPadding: {
@@ -37,6 +38,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   onCancel,
   onReasonSelection
 }) => {
+  const { showAlert } = useContext(AlertModalContext);
   return (
     <View>
       <CustomerCard ids={ids}>
@@ -61,16 +63,17 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
         <SecondaryButton
           text="Cancel"
           onPress={() => {
-            Alert.alert("Cancel appeal?", undefined, [
-              {
-                text: "No"
+            showAlert({
+              ...defaultWarningProps,
+              // TBD with UX
+              title: "Cancel?",
+              buttonTexts: {
+                primaryActionText: "Cancel",
+                secondaryActionText: "Keep"
               },
-              {
-                text: "Yes",
-                onPress: onCancel,
-                style: "destructive"
-              }
-            ]);
+              visible: true,
+              onOk: onCancel
+            });
           }}
           fullWidth={true}
         />

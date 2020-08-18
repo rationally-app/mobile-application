@@ -40,10 +40,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
-  const { getFeatures, products } = useProductContext();
+  const { getFeatures, products, features } = useProductContext();
   const { showAlert } = useContext(AlertModalContext);
-
-  const { features } = useProductContext();
 
   const onModalCheck = async (input: string): Promise<void> => {
     try {
@@ -105,7 +103,6 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           ))}
         </View>
       </CustomerCard>
-
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         {!isLoading && (
           <SecondaryButton
@@ -114,16 +111,16 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               isAppeal
                 ? onCancel
                 : () => {
-                    Alert.alert("Cancel transaction?", undefined, [
-                      {
-                        text: "No"
+                    showAlert({
+                      ...defaultWarningProps,
+                      title: "Cancel entry and scan another ID number?",
+                      buttonTexts: {
+                        primaryActionText: "Cancel entry",
+                        secondaryActionText: "Keep"
                       },
-                      {
-                        text: "Yes",
-                        onPress: onCancel,
-                        style: "destructive"
-                      }
-                    ]);
+                      visible: true,
+                      onOk: onCancel
+                    });
                   }
             }
           />
