@@ -1,4 +1,9 @@
-import React, { useState, useEffect, FunctionComponent } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  FunctionComponent
+} from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -11,6 +16,7 @@ import { validateOTP, requestOTP } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
+import { AlertModalContext, systemAlertProp } from "../../context/alert";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -51,6 +57,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   );
   const { setAuthInfo } = useAuthenticationContext();
   const { setFeatures, setProducts } = useProductContext();
+  const { showAlert } = useContext(AlertModalContext);
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -92,11 +99,12 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     } catch (e) {
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
-        // todo: alert for env version errors
-        alert(
-          "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
-        );
+        showAlert({
+          ...systemAlertProp,
+          description: e.message
+        });
       } else {
+        //TODO: investigate this
         alert(e);
       }
       setIsLoading(false);

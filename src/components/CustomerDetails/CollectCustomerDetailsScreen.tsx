@@ -37,7 +37,11 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { useProductContext } from "../../context/products";
 import { EnvVersionError } from "../../services/envVersion";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { AlertModalContext, wrongFormatAlertProp } from "../../context/alert";
+import {
+  AlertModalContext,
+  wrongFormatAlertProp,
+  systemAlertProp
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -133,13 +137,18 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIsScanningEnabled(false);
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
-        // todo: alert for envversionerrors
+        showAlert({
+          ...systemAlertProp,
+          description: e.message,
+          onOk: () => setIsScanningEnabled(true)
+        });
+      } else {
+        showAlert({
+          ...wrongFormatAlertProp,
+          description: e.message,
+          onOk: () => setIsScanningEnabled(true)
+        });
       }
-      showAlert({
-        ...wrongFormatAlertProp,
-        description: e.message,
-        onOk: () => setIsScanningEnabled(true)
-      });
     }
   };
 
