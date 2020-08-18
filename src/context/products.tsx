@@ -10,19 +10,23 @@ import { Policy, Features } from "../types";
 export interface ProductContextValue {
   products: Policy[];
   features: Features | undefined;
+  allProducts: Policy[];
   setProducts: (products: Policy[]) => void;
   getProduct: (category: string) => Policy | undefined;
   setFeatures: (features: Features) => void;
   getFeatures: () => Features | undefined;
+  setAllProducts: (allProducts: Policy[]) => void;
 }
 
 export const ProductContext = createContext<ProductContextValue>({
   products: [],
   features: {} as Features,
+  allProducts: [],
   setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   getProduct: () => undefined,
   setFeatures: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  getFeatures: () => undefined
+  getFeatures: () => undefined,
+  setAllProducts: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
 export const useProductContext = (): ProductContextValue =>
@@ -41,15 +45,19 @@ export const ProductContextProvider: FunctionComponent = ({ children }) => {
     features
   ]);
 
+  const [allProducts, setAllProducts] = useState<Policy[]>([]);
+
   return (
     <ProductContext.Provider
       value={{
         products,
         features,
+        allProducts,
         setProducts,
         getProduct,
         setFeatures,
-        getFeatures
+        getFeatures,
+        setAllProducts
       }}
     >
       {children}

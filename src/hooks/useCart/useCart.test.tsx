@@ -2,21 +2,18 @@ import React, { FunctionComponent } from "react";
 import { renderHook } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
 import { wait } from "@testing-library/react-native";
-import { ProductContext } from "../../context/products";
-import {
-  Policy,
-  EnvVersion,
-  Features,
-  Quota,
-  PostTransactionResult,
-  PolicyIdentifier
-} from "../../types";
+import { Quota, PostTransactionResult } from "../../types";
 import {
   getQuota,
   postTransaction,
   NotEligibleError
 } from "../../services/quota";
 import { getEnvVersion } from "../../services/envVersion";
+import {
+  Wrapper,
+  defaultProducts,
+  defaultIdentifier
+} from "../../test/helpers/wrapper";
 
 jest.mock("../../services/quota");
 const mockGetQuota = getQuota as jest.Mock;
@@ -28,103 +25,6 @@ const mockGetEnvVersion = getEnvVersion as jest.Mock;
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
 const eligibleIds = ["ID1", "ID2"];
-
-const defaultIdentifier: PolicyIdentifier = {
-  label: "identifier",
-  textInput: { visible: true, disabled: false, type: "STRING" },
-  scanButton: { visible: true, disabled: false, type: "BARCODE" }
-};
-
-const defaultProducts: EnvVersion = {
-  policies: [
-    {
-      category: "toilet-paper",
-      name: "Toilet Paper",
-      description: "",
-      order: 1,
-      quantity: {
-        period: 7,
-        limit: 2,
-        default: 1,
-        unit: {
-          type: "POSTFIX",
-          label: " roll"
-        }
-      },
-      identifiers: [
-        {
-          ...defaultIdentifier,
-          label: "first"
-        },
-        {
-          ...defaultIdentifier,
-          label: "last"
-        }
-      ]
-    },
-    {
-      category: "chocolate",
-      name: "Chocolate",
-      order: 2,
-      quantity: {
-        period: 7,
-        limit: 15,
-        default: 0,
-        unit: {
-          type: "POSTFIX",
-          label: "bar"
-        }
-      },
-      identifiers: [
-        {
-          ...defaultIdentifier,
-          label: "first"
-        },
-        {
-          ...defaultIdentifier,
-          label: "last"
-        }
-      ]
-    }
-  ],
-  features: {
-    REQUIRE_OTP: true,
-    TRANSACTION_GROUPING: true,
-    FLOW_TYPE: "DEFAULT",
-    id: {
-      type: "STRING",
-      scannerType: "CODE_39",
-      validation: "NRIC"
-    }
-  }
-};
-
-const Wrapper: FunctionComponent<{
-  products?: Policy[];
-  features?: Features | undefined;
-}> = ({
-  children,
-  products = defaultProducts.policies,
-  features = defaultProducts.features
-}) => {
-  const getProduct = (category: string): Policy | undefined =>
-    products?.find(product => product.category === category) ?? undefined;
-  const getFeatures = (): Features | undefined => features;
-  return (
-    <ProductContext.Provider
-      value={{
-        products,
-        features,
-        getProduct,
-        setProducts: jest.fn(),
-        getFeatures,
-        setFeatures: jest.fn()
-      }}
-    >
-      {children}
-    </ProductContext.Provider>
-  );
-};
 
 const transactionTime = new Date(2020, 3, 1);
 
@@ -245,6 +145,36 @@ const mockIdNotEligible: any = (id: string) => {
   }
 };
 
+const mockQuotaResSingleIdAlert: Quota = {
+  remainingQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [
+        {
+          label: "first",
+          value: "first identifier",
+          textInputType: "STRING",
+          scanButtonType: "BARCODE"
+        },
+        {
+          label: "last",
+          value: "last identifier",
+          textInputType: "STRING",
+          scanButtonType: "BARCODE"
+        }
+      ],
+      quantity: 8,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: 15,
+      transactionTime
+    }
+  ]
+};
+
 describe("useCart", () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -267,6 +197,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [
             {
               label: "first",
@@ -287,6 +219,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -311,6 +245,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 0,
@@ -318,6 +254,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 0,
@@ -341,6 +279,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 0,
@@ -348,6 +288,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -393,6 +335,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 4,
@@ -400,6 +344,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 30,
@@ -423,6 +369,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -430,6 +378,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -452,6 +402,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -459,6 +411,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -473,6 +427,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 4,
@@ -480,6 +436,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 30,
@@ -504,6 +462,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -511,6 +471,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -534,6 +496,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -541,6 +505,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -564,6 +530,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -571,6 +539,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -605,6 +575,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -612,6 +584,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -643,6 +617,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -650,6 +626,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -691,6 +669,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [
             {
               value: "",
@@ -711,6 +691,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -767,6 +749,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [
             {
               value: "",
@@ -815,6 +799,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [
             {
               value: "identical",
@@ -835,6 +821,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -890,6 +878,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [
             {
               value: "identical",
@@ -910,6 +900,8 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [
             {
               value: "also not identical",
@@ -984,6 +976,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [
             {
               value: "+659",
@@ -1053,6 +1047,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [
             {
               value: "01234",
@@ -1096,6 +1092,8 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -1103,10 +1101,169 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 5
+        }
+      ]);
+    });
+
+    it("should clear cart items when emptyCart is invoked", async () => {
+      expect.assertions(1);
+      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
+      const ids = ["ID1"];
+      const { result } = renderHook(() => useCart(ids, key, endpoint), {
+        wrapper: Wrapper
+      });
+
+      await wait(() => {
+        result.current.emptyCart();
+      });
+
+      expect(result.current.cart).toStrictEqual([]);
+    });
+  });
+
+  describe("cart with alert items", () => {
+    it("should set alert description on cart item when threshold reach", async () => {
+      expect.assertions(3);
+      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdAlert);
+
+      const ids = ["ID1"];
+      const AlertProductWrapper: FunctionComponent = ({ children }) => (
+        <Wrapper
+          products={[
+            {
+              ...defaultProducts.policies[0],
+              alert: {
+                threshold: 1,
+                label: "*chargeable"
+              },
+              quantity: {
+                period: 7,
+                limit: 10,
+                default: 0,
+                checkoutLimit: 1
+              }
+            },
+            { ...defaultProducts.policies[1] }
+          ]}
+        >
+          {children}
+        </Wrapper>
+      );
+      const { result, waitForNextUpdate } = renderHook(
+        () => useCart(ids, key, endpoint),
+        { wrapper: AlertProductWrapper }
+      );
+      expect(result.current.cartState).toBe("FETCHING_QUOTA");
+
+      await waitForNextUpdate();
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          checkoutLimit: 1,
+          descriptionAlert: "*chargeable",
+          identifierInputs: [
+            {
+              label: "first",
+              value: "first identifier",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            },
+            {
+              label: "last",
+              value: "last identifier",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            }
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 8,
+          quantity: 0
+        },
+        {
+          category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0
+        }
+      ]);
+    });
+
+    it("should not set alert description on cart item when threshold not reach", async () => {
+      expect.assertions(3);
+      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdAlert);
+
+      const ids = ["ID1"];
+      const AlertProductWrapper: FunctionComponent = ({ children }) => (
+        <Wrapper
+          products={[
+            {
+              ...defaultProducts.policies[0],
+              alert: {
+                threshold: 1,
+                label: "*chargeable"
+              },
+              quantity: {
+                period: 7,
+                limit: 9,
+                default: 0,
+                checkoutLimit: 1
+              }
+            },
+            { ...defaultProducts.policies[1] }
+          ]}
+        >
+          {children}
+        </Wrapper>
+      );
+      const { result, waitForNextUpdate } = renderHook(
+        () => useCart(ids, key, endpoint),
+        { wrapper: AlertProductWrapper }
+      );
+      expect(result.current.cartState).toBe("FETCHING_QUOTA");
+
+      await waitForNextUpdate();
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          checkoutLimit: 1,
+          descriptionAlert: "*chargeable",
+          identifierInputs: [
+            {
+              label: "first",
+              value: "first identifier",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            },
+            {
+              label: "last",
+              value: "last identifier",
+              textInputType: "STRING",
+              scanButtonType: "BARCODE"
+            }
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 8,
+          quantity: 0
+        },
+        {
+          category: "chocolate",
+          checkoutLimit: undefined,
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0
         }
       ]);
     });

@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { Policy } from "../../../types";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
-import { fontSize } from "../../../common/styles";
+import { fontSize, color } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 
 const styles = StyleSheet.create({
@@ -13,17 +13,25 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: fontSize(0)
+  },
+  descriptionAlert: {
+    fontFamily: "brand-italic",
+    color: color("red", 50)
   }
 });
 
 export const ItemContent: FunctionComponent<{
   name: Policy["name"];
   description: Policy["description"];
+  descriptionAlert?: string;
   unit: Policy["quantity"]["unit"];
   maxQuantity: number;
-}> = ({ name, description, unit, maxQuantity }) => (
+}> = ({ name, description, descriptionAlert, unit, maxQuantity }) => (
   <View>
     <AppText style={styles.name}>{name}</AppText>
+    {descriptionAlert && descriptionAlert.length > 0 && (
+      <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
+    )}
     {(description ?? "").length > 0 && (
       <AppText style={styles.description}>{description}</AppText>
     )}

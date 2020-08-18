@@ -81,11 +81,13 @@ storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
   <ProductContext.Provider
     value={{
       products,
+      allProducts: products,
       getProduct,
       setProducts: () => null,
       features: undefined,
       getFeatures: () => undefined,
-      setFeatures: () => null
+      setFeatures: () => null,
+      setAllProducts: () => null
     }}
   >
     <View style={{ margin: size(3) }}>

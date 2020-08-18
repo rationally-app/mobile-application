@@ -1,5 +1,11 @@
 import { IS_MOCK } from "../../config";
-import { Transaction, Quota, PostTransactionResult } from "../../types";
+import {
+  Transaction,
+  Quota,
+  PostTransactionResult,
+  PastTransactionsResult
+} from "../../types";
+import _ from "lodash";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 
@@ -21,6 +27,13 @@ export class PostTransactionError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "PostTransactionError";
+  }
+}
+
+export class PastTransactionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PastTransactionError";
   }
 }
 
@@ -201,7 +214,72 @@ export const livePostTransaction = async ({
   }
 };
 
+export const mockPastTransactions = async (
+  id: string,
+  _key: string,
+  _endpoint: string
+): Promise<PastTransactionsResult> => {
+  if (id === "S0000000J") throw new Error("Something broke");
+  const transactionTime = new Date(2020, 3, 5);
+  return {
+    pastTransactions: [
+      {
+        category: "toilet-paper",
+        quantity: 1,
+        transactionTime
+      },
+      {
+        category: "instant-noodles",
+        quantity: 1,
+        transactionTime
+      },
+      {
+        category: "chocolate",
+        quantity: 30,
+        transactionTime
+      },
+      {
+        category: "vouchers",
+        quantity: 5,
+        transactionTime
+      }
+    ]
+  };
+};
+
+export const livePastTransactions = async (
+  id: string,
+  key: string,
+  endpoint: string
+): Promise<PastTransactionsResult> => {
+  let response;
+  if (_.isEmpty(id)) {
+    throw new PastTransactionError("No ID was provided");
+  }
+  try {
+    response = await fetchWithValidator(
+      PastTransactionsResult,
+      `${endpoint}/transactions/${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: key
+        }
+      }
+    );
+    return response;
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    }
+    throw new PastTransactionError(e.message);
+  }
+};
+
 export const getQuota = IS_MOCK ? mockGetQuota : liveGetQuota;
 export const postTransaction = IS_MOCK
   ? mockPostTransaction
   : livePostTransaction;
+export const getPastTransactions = IS_MOCK
+  ? mockPastTransactions
+  : livePastTransactions;

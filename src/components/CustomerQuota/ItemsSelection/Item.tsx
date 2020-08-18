@@ -26,7 +26,7 @@ export const Item: FunctionComponent<{
     <View style={styles.cartItemComponent}>
       {cartItem.maxQuantity === 0 ? (
         <ItemNoQuota cartItem={cartItem} />
-      ) : cartItem.maxQuantity === 1 ? (
+      ) : cartItem.maxQuantity === 1 || cartItem.checkoutLimit === 1 ? (
         <ItemCheckbox cartItem={cartItem} updateCart={updateCart} />
       ) : (
         <ItemStepper cartItem={cartItem} updateCart={updateCart} />

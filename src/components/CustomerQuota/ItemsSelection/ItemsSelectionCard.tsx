@@ -31,8 +31,12 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
-  const { getFeatures } = useProductContext();
+  const { getFeatures, products } = useProductContext();
 
+  // TODO:
+  // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
+  // To be further discuss
+  const isAppeal = products.some(product => product.categoryType === "APPEAL");
   return (
     <View>
       <CustomerCard
@@ -55,10 +59,31 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       </CustomerCard>
 
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
+        {!isLoading && (
+          <SecondaryButton
+            text={isAppeal ? "Back" : "Cancel"}
+            onPress={
+              isAppeal
+                ? onCancel
+                : () => {
+                    Alert.alert("Cancel transaction?", undefined, [
+                      {
+                        text: "No"
+                      },
+                      {
+                        text: "Yes",
+                        onPress: onCancel,
+                        style: "destructive"
+                      }
+                    ]);
+                  }
+            }
+          />
+        )}
         <View
           style={[
             sharedStyles.submitButton,
-            !isLoading && { marginRight: size(2) }
+            !isLoading && { marginLeft: size(2) }
           ]}
         >
           <DarkButton
@@ -75,23 +100,6 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             fullWidth={true}
           />
         </View>
-        {!isLoading && (
-          <SecondaryButton
-            text="Cancel"
-            onPress={() => {
-              Alert.alert("Cancel transaction?", undefined, [
-                {
-                  text: "No"
-                },
-                {
-                  text: "Yes",
-                  onPress: onCancel,
-                  style: "destructive"
-                }
-              ]);
-            }}
-          />
-        )}
       </View>
       <AddUserModal
         isVisible={isAddUserModalVisible}

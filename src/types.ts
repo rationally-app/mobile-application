@@ -14,18 +14,26 @@ export const SessionCredentials = t.type({
 
 export type SessionCredentials = t.TypeOf<typeof SessionCredentials>;
 
+const PolicyAlert = t.type({
+  threshold: t.number,
+  label: t.string
+});
+
 const PolicyQuantity = t.intersection([
   t.type({
     period: t.number,
     limit: t.number
   }),
   t.partial({
+    periodType: t.union([t.literal("ROLLING"), t.literal("CRON")]),
+    periodExpression: t.union([t.number, t.string]),
     default: t.number,
     step: t.number,
     unit: t.type({
       type: t.union([t.literal("PREFIX"), t.literal("POSTFIX")]),
       label: t.string
-    })
+    }),
+    checkoutLimit: t.number
   })
 ]);
 
@@ -75,6 +83,8 @@ const IdentifierInput = t.intersection([
   })
 ]);
 
+const CategoryType = t.union([t.literal("DEFAULT"), t.literal("APPEAL")]);
+
 const Policy = t.intersection([
   t.type({
     category: t.string,
@@ -83,10 +93,12 @@ const Policy = t.intersection([
     quantity: PolicyQuantity
   }),
   t.partial({
+    categoryType: CategoryType,
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
-    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")])
+    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")]),
+    alert: PolicyAlert
   })
 ]);
 
@@ -115,6 +127,7 @@ export const EnvVersion = t.type({
 
 export type TextInputType = t.TypeOf<typeof TextInputType>;
 export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
+export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type Policy = t.TypeOf<typeof Policy>;
@@ -158,6 +171,20 @@ export const PostTransactionResult = t.type({
 
 export type Transaction = t.TypeOf<typeof Transaction>;
 export type PostTransactionResult = t.TypeOf<typeof PostTransactionResult>;
+
+const PastTransaction = t.intersection([
+  t.type({
+    category: t.string,
+    quantity: t.number,
+    transactionTime: DateFromNumber
+  }),
+  t.partial({ identifierInputs: t.array(IdentifierInput) })
+]);
+export const PastTransactionsResult = t.type({
+  pastTransactions: t.array(PastTransaction)
+});
+
+export type PastTransactionsResult = t.TypeOf<typeof PastTransactionsResult>;
 
 export type Voucher = {
   serial: string;

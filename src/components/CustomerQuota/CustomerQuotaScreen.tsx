@@ -5,8 +5,13 @@ import React, {
   useCallback,
   useContext
 } from "react";
-import { View, StyleSheet, Alert, ActivityIndicator } from "react-native";
-import { NavigationProps } from "../../types";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  BackHandler
+} from "react-native";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -27,6 +32,10 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+import { navigateHome, replaceRoute } from "../../common/navigation";
+import { NavigationProps } from "../../types";
+
+type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -60,8 +69,9 @@ const showAlert = (message: string, onDismiss: () => void): void =>
     onDismiss: onDismiss // for android outside alert clicks
   });
 
-export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
+  navigation,
+  navIds
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -79,7 +89,7 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
   const showHelpModal = useContext(HelpModalContext);
-  const [ids, setIds] = useState([navigation.getParam("id")]);
+  const [ids, setIds] = useState<string[]>(navIds);
 
   const {
     cartState,
@@ -105,6 +115,28 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
   const addId = useCallback((id: string): void => {
     setIds(ids => [...ids, id]);
   }, []);
+
+  const onAppeal = useCallback((): void => {
+    replaceRoute(navigation, "CustomerAppealScreen", { ids });
+  }, [ids, navigation]);
+
+  const onNextId = useCallback((): void => {
+    navigateHome(navigation);
+  }, [navigation]);
+
+  useEffect(() => {
+    if (cartState !== "PURCHASED") return;
+
+    const onBackPress = (): boolean => {
+      navigateHome(navigation);
+      return true;
+    };
+
+    BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    };
+  }, [cartState, navigation]);
 
   useEffect(() => {
     if (!error) {
@@ -145,11 +177,16 @@ export const CustomerQuotaScreen: FunctionComponent<NavigationProps> = ({
         {cartState === "PURCHASED" ? (
           <CheckoutSuccessCard
             ids={ids}
-            onCancel={onCancel}
+            onCancel={onNextId}
             checkoutResult={checkoutResult}
           />
         ) : cartState === "NO_QUOTA" ? (
-          <NoQuotaCard ids={ids} cart={cart} onCancel={onCancel} />
+          <NoQuotaCard
+            ids={ids}
+            cart={cart}
+            onCancel={onCancel}
+            onAppeal={onAppeal}
+          />
         ) : cartState === "NOT_ELIGIBLE" ? (
           <NotEligibleCard ids={ids} onCancel={onCancel} />
         ) : (

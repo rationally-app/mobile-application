@@ -23,8 +23,8 @@ interface LogoutHook {
 export const useLogout = (): LogoutHook => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
   const { clearAuthInfo } = useAuthenticationContext();
+  const { setProducts, setFeatures, setAllProducts } = useProductContext();
   const { clearCampaignConfig } = useContext(CampaignConfigContext);
-  const { setProducts, setFeatures } = useProductContext();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const logout: LogoutHook["logout"] = useCallback(
@@ -37,6 +37,7 @@ export const useLogout = (): LogoutHook => {
       await clearCampaignConfig();
       setProducts([]);
       setFeatures({} as Features);
+      setAllProducts([]);
       setMessageContent(null);
       setIsLoggingOut(false);
       navigationDispatch?.(
@@ -52,9 +53,10 @@ export const useLogout = (): LogoutHook => {
     [
       clearAuthInfo,
       clearCampaignConfig,
-      setMessageContent,
       setProducts,
-      setFeatures
+      setFeatures,
+      setAllProducts,
+      setMessageContent
     ]
   );
 
