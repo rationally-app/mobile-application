@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   itemDetail: {
     fontSize: fontSize(-1)
   },
-  appealButton: {
+  appealButtonText: {
     marginTop: size(1),
     marginBottom: 0,
     fontFamily: "brand-bold",
@@ -97,13 +97,9 @@ const NoPreviousTransactionTitle: FunctionComponent = () => (
 
 const AppealButton: FunctionComponent<AppealButton> = ({ onAppeal }) => {
   return (
-    <TouchableOpacity
-      onPress={() => {
-        onAppeal();
-      }}
-    >
+    <TouchableOpacity onPress={onAppeal}>
       <View style={{ alignItems: "center" }}>
-        <AppText style={styles.appealButton}>{"Raise an appeal"}</AppText>
+        <AppText style={styles.appealButtonText}>Raise an appeal</AppText>
       </View>
     </TouchableOpacity>
   );

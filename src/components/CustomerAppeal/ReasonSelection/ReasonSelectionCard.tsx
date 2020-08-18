@@ -8,7 +8,7 @@ import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
 
 const styles = StyleSheet.create({
-  common: {
+  commonPadding: {
     padding: size(2),
     paddingTop: size(0.5)
   },
@@ -41,10 +41,10 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
     <View>
       <CustomerCard ids={ids}>
         <Card>
-          <View style={styles.common}>
+          <View style={styles.commonPadding}>
             <ReasonSelectionHeader title={reasonSelectionHeader} />
           </View>
-          <View style={styles.common}>
+          <View style={styles.commonPadding}>
             {reasons.map(reason => (
               <ReasonItem
                 key={reason.description}

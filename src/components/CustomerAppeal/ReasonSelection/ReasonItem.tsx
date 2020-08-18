@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     margin: 0,
     marginBottom: size(2),
     marginHorizontal: -size(2),
-    paddingVertical: 21,
+    paddingVertical: size(2.5),
     backgroundColor: color("grey", 10)
   },
   reasonLayout: {
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     marginBottom: 0
   },
   reasonAlert: {
-    marginLeft: 10,
+    marginLeft: size(1.5),
     fontFamily: "brand-italic",
     color: color("red", 50)
   }

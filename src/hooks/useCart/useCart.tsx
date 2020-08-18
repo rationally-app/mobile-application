@@ -221,7 +221,7 @@ export const useCart = (
     ids,
     prevIds,
     prevProducts,
-    products, // TODO: check with team any reason for using products.length instead of products
+    products,
     setProducts,
     setFeatures
   ]);

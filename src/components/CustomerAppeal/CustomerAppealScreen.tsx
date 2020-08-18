@@ -88,7 +88,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const getReasons = (): Reason[] => {
     return transform(
       allProducts,
-      (result: Array<Reason>, policy) => {
+      (result: Reason[], policy) => {
         if (policy.categoryType === "APPEAL") {
           const policyLimt = policy.quantity.limit;
           const quotaResponse = allQuotaResponse?.remainingQuota.find(
@@ -112,20 +112,19 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     );
   };
 
-  const onReasonSelection = (productName: string): boolean => {
+  const onReasonSelection = (productName: string): void => {
     emptyCart();
     const appealProducts = allProducts.find(
       policy => policy.categoryType === "APPEAL" && policy.name === productName
     );
     if (appealProducts === undefined) {
       Sentry.captureException(`Unable to find appeal product: ${productName}}`);
-      return false;
+      return;
     }
     pushRoute(navigation, "CustomerQuotaProxy", {
       id: ids,
       products: [appealProducts]
     });
-    return true;
   };
 
   return (
