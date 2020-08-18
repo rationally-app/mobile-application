@@ -23,7 +23,7 @@ export class ErrorBoundary extends Component<unknown, State> {
   render(): ReactNode {
     const error = `(${this.state.errorMessage} ${format(
       Date.now(),
-      "hh:mma, do MMMM"
+      "h:mma, d MMM yyyy"
     )})`;
 
     return this.state.hasError ? (
