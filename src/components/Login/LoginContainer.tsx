@@ -106,6 +106,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   } = useProductContext();
   const { showAlert } = useContext(AlertModalContext);
   const { logout } = useLogout();
+
   const resetStage = (): void => {
     setLoginStage("SCAN");
   };
