@@ -14,8 +14,8 @@ export const ERROR_MESSAGE = {
   DUPLICATE_IDENTIFIER_INPUT: "Enter unique code details",
   DUPLICATE_POD_INPUT:
     "Scan another item that is not tagged to any contact number",
-  INVALID_IDENTIFIER_INPUT: "Enter code details again",
-  MISSING_IDENTIFIER_INPUT: "Enter code details",
+  INVALID_IDENTIFIER_INPUT: "Enter or scan code details again",
+  MISSING_IDENTIFIER_INPUT: "Enter or scan code details",
   INVALID_VOUCHER_INPUT: "Enter voucher code details again",
   MISSING_VOUCHER_INPUT: "Enter voucher details code",
   INVALID_POD_INPUT: "Scan your device code again",

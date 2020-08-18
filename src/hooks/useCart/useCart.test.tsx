@@ -658,7 +658,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Enter your voucher code again' when there are multiple identifiers and at least one is empty", async () => {
+    it("should set error with message 'Enter or scan code details' when there are multiple identifiers and at least one is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -684,7 +684,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter code details");
+      expect(result.current.error?.message).toBe("Enter or scan code details");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -717,7 +717,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Enter your voucher code' when there is one identifier and it is empty", async () => {
+    it("should set error with message 'Enter or scan code details' when there is one identifier and it is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce({
         remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
@@ -758,7 +758,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter code details");
+      expect(result.current.error?.message).toBe("Enter or scan code details");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -1040,7 +1040,9 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter code details again");
+      expect(result.current.error?.message).toBe(
+        "Enter or scan code details again"
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
