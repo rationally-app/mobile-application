@@ -55,8 +55,8 @@ export const ErrorBoundaryContent: FunctionComponent<{
       <AlertIcon style={styles.icon} width={size(5)} height={size(5)} />
       <AppText style={styles.heading}>System issue</AppText>
       <AppText style={styles.body}>
-        We are currently facing connectivity issues and are looking into it. Try
-        restarting the app or contact GovTech if the problem persists.
+        We are currently facing connectivity issues. Try restarting the app or
+        contact GovTech if the problem persists.
       </AppText>
       {error && <AppText style={styles.errorDescription}>{error}</AppText>}
     </View>
