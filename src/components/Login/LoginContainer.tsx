@@ -250,6 +250,17 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           ...systemAlertProps,
           description: e.message
         });
+        if (e.message === ERROR_MESSAGE.SERVER_ERROR) {
+          showAlert({
+            ...systemAlertProps,
+            description: e.message
+          });
+        } else {
+          showAlert({
+            ...wrongFormatAlertProps,
+            description: e.message
+          });
+        }
         setIsLoading(false);
       }
     }
