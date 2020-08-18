@@ -13,7 +13,8 @@ import { useProductContext } from "../../../context/products";
 import {
   AlertModalContext,
   defaultWarningProps,
-  wrongFormatAlertProps
+  wrongFormatAlertProps,
+  systemAlertProps
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { EnvVersionError } from "../../../services/envVersion";
@@ -60,7 +61,17 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     } catch (e) {
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
-        // todo: alert for env version errors
+        showAlert({
+          ...systemAlertProps,
+          description: e.message,
+          onOk: () => setIsAddUserModalVisible(true)
+        });
+      } else {
+        showAlert({
+          ...wrongFormatAlertProps,
+          description: e.message,
+          onOk: () => setIsAddUserModalVisible(true)
+        });
       }
       showAlert({
         ...wrongFormatAlertProps,
