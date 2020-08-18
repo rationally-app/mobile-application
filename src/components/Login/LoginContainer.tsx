@@ -4,8 +4,7 @@ import React, {
   FunctionComponent,
   useEffect,
   useLayoutEffect,
-  useContext,
-  useRef
+  useContext
 } from "react";
 import {
   View,
@@ -54,7 +53,6 @@ const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
 const ALLOW_MODE_CHANGE = false;
 
-// let shouldShowLastResendWarning = false;
 let lastResendWarningMessage = "";
 
 const styles = StyleSheet.create({
@@ -104,7 +102,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   } = useProductContext();
   const { showAlert } = useContext(AlertModalContext);
   const { logout } = useLogout();
-  const lastResendWarningMessageRef = useRef<string>("");
   const resetStage = (): void => {
     setLoginStage("SCAN");
   };
@@ -120,8 +117,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       const response = await requestOTP(fullNumber, codeKey, endpointTemp);
       if (lastResendWarningMessage) lastResendWarningMessage = "";
       if (typeof response.warning === "string") {
-        console.log("here");
-        // lastResendWarningMessageRef.current = response.warning;
         lastResendWarningMessage = response.warning;
       }
       return true;
@@ -205,7 +200,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   useLayoutEffect(() => {
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
-      lastResendWarningMessageRef.current = "";
+      lastResendWarningMessage = "";
       switch (features?.FLOW_TYPE) {
         case "DEFAULT":
         case "MERCHANT":
