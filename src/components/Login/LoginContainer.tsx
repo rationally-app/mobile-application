@@ -47,7 +47,11 @@ import {
   wrongFormatAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
-import { requestOTP, LoginError } from "../../services/auth";
+import {
+  requestOTP,
+  LoginError,
+  LoginLockedOutError
+} from "../../services/auth";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -106,10 +110,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setLoginStage("SCAN");
   };
 
-  const checkIfLockedOut = (e: LoginError): void => {
-    if (e.message.includes("Please wait")) resetStage();
-  };
-
   const handleRequestOTP = async (fullNumber?: string): Promise<boolean> => {
     setIsLoading(true);
     try {
@@ -129,7 +129,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             {
               text: "OK",
               onPress: () => {
-                checkIfLockedOut(e);
+                if (e instanceof LoginLockedOutError) resetStage();
               }
             }
           ],
@@ -380,7 +380,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               endpoint={endpointTemp}
               lastResendWarningMessage={lastResendWarningMessage}
               handleRequestOTP={handleRequestOTP}
-              checkIfLockedOut={checkIfLockedOut}
             />
           )}
           <FeatureToggler feature="HELP_MODAL">

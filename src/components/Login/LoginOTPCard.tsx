@@ -12,7 +12,11 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { useAuthenticationContext } from "../../context/auth";
-import { validateOTP, LoginError } from "../../services/auth";
+import {
+  validateOTP,
+  LoginError,
+  LoginLockedOutError
+} from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
@@ -49,7 +53,6 @@ interface LoginOTPCard {
   endpoint: string;
   lastResendWarningMessage: string;
   handleRequestOTP: () => Promise<boolean>;
-  checkIfLockedOut: (e: LoginError) => void;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
@@ -58,8 +61,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   codeKey,
   endpoint,
   lastResendWarningMessage,
-  handleRequestOTP,
-  checkIfLockedOut
+  handleRequestOTP
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
