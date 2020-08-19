@@ -29,9 +29,9 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import {
   AlertModalContext,
-  wrongFormatAlertProp,
-  incompleteEntryAlertProp,
-  systemAlertProp,
+  wrongFormatAlertProps,
+  incompleteEntryAlertProps,
+  systemAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
@@ -145,7 +145,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       const message =
         error.message ?? "Encounted an error while fetching quota";
       showAlert({
-        ...systemAlertProp,
+        ...systemAlertProps,
         description: message,
         onOk: () => clearError()
       });
@@ -153,7 +153,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       switch (error.message) {
         case ERROR_MESSAGE.MISSING_SELECTION:
           showAlert({
-            ...incompleteEntryAlertProp,
+            ...incompleteEntryAlertProps,
             description: ERROR_MESSAGE.MISSING_SELECTION,
             onOk: () => clearError()
           });
@@ -161,7 +161,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
         case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
           showAlert({
-            ...incompleteEntryAlertProp,
+            ...incompleteEntryAlertProps,
             description:
               campaignFeatures?.campaignName === "TT Token"
                 ? ERROR_MESSAGE.MISSING_POD_INPUT
@@ -174,7 +174,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
         case ERROR_MESSAGE.SERVER_ERROR:
           showAlert({
-            ...systemAlertProp,
+            ...systemAlertProps,
             description: error.message,
             onOk: () => clearError()
           });
@@ -182,7 +182,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
         case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
           showAlert({
-            ...systemAlertProp,
+            ...systemAlertProps,
             title: "Already used",
             description:
               campaignFeatures?.campaignName === "TT Token"
@@ -194,7 +194,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
         case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
           showAlert({
-            ...wrongFormatAlertProp,
+            ...wrongFormatAlertProps,
             description:
               campaignFeatures?.campaignName === "TT Token"
                 ? ERROR_MESSAGE.INVALID_POD_INPUT
@@ -204,11 +204,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           break;
 
         default:
-          showAlert({
-            ...wrongFormatAlertProp,
-            description: error.message,
-            onOk: () => clearError()
-          });
+          throw new Error(error.message);
       }
     }
   }, [cartState, clearError, error, onCancel, showAlert, campaignFeatures]);

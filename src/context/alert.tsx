@@ -30,7 +30,7 @@ export enum ERROR_MESSAGE {
   SERVER_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
 }
 
-const defaultAlertProp: AlertModalProps = {
+const defaultAlertProps: AlertModalProps = {
   alertType: "ERROR",
   title: "",
   description: "",
@@ -43,7 +43,7 @@ const defaultAlertProp: AlertModalProps = {
   onExit: () => {}
 };
 
-export const defaultWarningProp: AlertModalProps = {
+export const defaultWarningProps: AlertModalProps = {
   alertType: "WARN",
   title: "",
   description: "",
@@ -57,7 +57,7 @@ export const defaultWarningProp: AlertModalProps = {
   onExit: () => {}
 };
 
-export const defaultConfirmationProp: AlertModalProps = {
+export const defaultConfirmationProps: AlertModalProps = {
   alertType: "CONFIRM",
   title: "",
   description: "",
@@ -71,32 +71,32 @@ export const defaultConfirmationProp: AlertModalProps = {
   onExit: () => {}
 };
 
-export const incompleteEntryAlertProp: AlertModalProps = {
-  ...defaultAlertProp,
+export const incompleteEntryAlertProps: AlertModalProps = {
+  ...defaultAlertProps,
   title: "Incomplete entry",
   visible: true
 };
 
-export const invalidEntryAlertProp: AlertModalProps = {
-  ...defaultAlertProp,
+export const invalidEntryAlertProps: AlertModalProps = {
+  ...defaultAlertProps,
   title: "Wrong entry",
   visible: true
 };
 
-export const wrongFormatAlertProp: AlertModalProps = {
-  ...defaultAlertProp,
+export const wrongFormatAlertProps: AlertModalProps = {
+  ...defaultAlertProps,
   title: "Wrong format",
   visible: true
 };
 
-export const duplicateAlertProp: AlertModalProps = {
-  ...defaultAlertProp,
+export const duplicateAlertProps: AlertModalProps = {
+  ...defaultAlertProps,
   title: "Already used",
   visible: true
 };
 
-export const systemAlertProp: AlertModalProps = {
-  ...defaultAlertProp,
+export const systemAlertProps: AlertModalProps = {
+  ...defaultAlertProps,
   title: "System error",
   visible: true
 };
@@ -113,7 +113,7 @@ export const AlertModalContext = createContext<AlertModalContext>({
 
 export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
   const [alertProps, setAlertProps] = useState<AlertModalProps>(
-    defaultAlertProp
+    defaultAlertProps
   );
 
   const showAlert: AlertModalContext["showAlert"] = useCallback(
@@ -124,7 +124,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
   );
 
   const clearAlert: AlertModalContext["clearAlert"] = () => {
-    setAlertProps(defaultAlertProp);
+    setAlertProps(defaultAlertProps);
   };
 
   return (
