@@ -10,10 +10,10 @@ export class LoginError extends Error {
   }
 }
 
-export class LoginLockedOutError extends LoginError {
+export class LoginLockedError extends LoginError {
   constructor(message: string) {
     super(message);
-    this.name = "LoginLockedOutError";
+    this.name = "LoginLockedError";
   }
 }
 
