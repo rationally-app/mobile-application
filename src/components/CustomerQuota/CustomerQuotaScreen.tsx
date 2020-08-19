@@ -181,7 +181,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           break;
 
         case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
-          console.log(campaignFeatures?.campaignName);
           showAlert({
             ...systemAlertProps,
             title: "Already used",
