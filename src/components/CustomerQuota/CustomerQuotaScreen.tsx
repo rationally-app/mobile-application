@@ -165,7 +165,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             description:
               campaignFeatures?.campaignName === "TT Token"
                 ? ERROR_MESSAGE.MISSING_POD_INPUT
-                : campaignFeatures?.campaignName === "CDC Vouchers"
+                : campaignFeatures?.campaignName.includes("Vouchers")
                 ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
                 : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT,
             onOk: () => clearError()
