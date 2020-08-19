@@ -611,7 +611,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Please select at least one item to checkout"
+        "Select at least one item to checkout"
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -636,7 +636,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter unique details to checkout' when there are multiple identifiers and at least one is empty", async () => {
+    it("should set error with message 'Enter unique code details' when there are multiple identifiers and at least one is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -662,9 +662,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
-        "Please enter unique details to checkout"
-      );
+      expect(result.current.error?.message).toBe("Enter or scan code details");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -701,7 +699,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter details to checkout' when there is one identifier and it is empty", async () => {
+    it("should set error with message 'Enter or scan code details' when there is one identifier and it is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce({
         remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
@@ -742,9 +740,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
-        "Please enter details to checkout"
-      );
+      expect(result.current.error?.message).toBe("Enter or scan code details");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -766,7 +762,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter unique details to checkout' when identifier values are identical in the same category", async () => {
+    it("should set error with message 'Enter unique details' when identifier values are identical in the same category", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -792,9 +788,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
-        "Please enter unique details to checkout"
-      );
+      expect(result.current.error?.message).toBe("Enter unique code details");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -831,7 +825,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Please enter unique details to checkout' when some identifier values are identical across different categories", async () => {
+    it("should set error with message 'Enter unique code details' when some identifier values are identical across different categories", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -871,9 +865,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
-        "Please enter unique details to checkout"
-      );
+      expect(result.current.error?.message).toBe("Enter unique code details");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -971,7 +963,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Invalid contact number");
+      expect(result.current.error?.message).toBe("Enter valid contact number");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -1042,7 +1034,9 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Invalid details");
+      expect(result.current.error?.message).toBe(
+        "Enter or scan code details again"
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -1086,7 +1080,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Couldn't checkout, please try again later"
+        "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([

@@ -17,6 +17,7 @@ import {
   Policy
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
+import { ERROR_MESSAGE } from "../../context/alert";
 
 export type CartItem = {
   category: string;
@@ -206,7 +207,7 @@ export const useCart = (
             )
           );
         } else {
-          setError(e);
+          setError(new Error(e.message));
         }
       }
     };
@@ -249,7 +250,7 @@ export const useCart = (
   const updateCart: CartHook["updateCart"] = useCallback(
     (category, quantity, identifierInputs) => {
       if (quantity < 0) {
-        setError(new Error("Invalid quantity"));
+        setError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
         return;
       }
       const [item, itemIdx] = getItem(cart, category);
@@ -266,11 +267,11 @@ export const useCart = (
             ...cart.slice(itemIdx + 1)
           ]);
         } else {
-          setError(new Error("Insufficient quota"));
+          setError(new Error(ERROR_MESSAGE.INSUFFICIENT_QUOTA));
           return;
         }
       } else {
-        setError(new Error("Category does not exist"));
+        setError(new Error(ERROR_MESSAGE.INVALID_CATEGORY));
         return;
       }
     },
@@ -300,7 +301,7 @@ export const useCart = (
         });
 
       if (transactions.length === 0) {
-        setError(new Error("Please select at least one item to checkout"));
+        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         setCartState("DEFAULT");
         return;
       }
@@ -323,8 +324,15 @@ export const useCart = (
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
       } catch (e) {
+        // backend will throw general duplicate identifier message
+        if (
+          e.message === "Invalid Purchase Request: Duplicate identifier inputs"
+        ) {
+          setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else {
+          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+        }
         setCartState("DEFAULT");
-        setError(new Error("Couldn't checkout, please try again later"));
       }
     };
 
