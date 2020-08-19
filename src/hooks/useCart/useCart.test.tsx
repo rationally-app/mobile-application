@@ -458,7 +458,7 @@ describe("useCart", () => {
         result.current.updateCart("chocolate", -5);
       });
 
-      expect(result.current.error?.message).toBe("Invalid quantity");
+      expect(result.current.error?.message).toBe("Invalid quantity.");
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -492,7 +492,7 @@ describe("useCart", () => {
       await wait(() => {
         result.current.updateCart("chocolate", 100);
       });
-      expect(result.current.error?.message).toBe("Insufficient quota");
+      expect(result.current.error?.message).toBe("Insufficient quota.");
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -526,7 +526,7 @@ describe("useCart", () => {
       await wait(() => {
         result.current.updateCart("eggs", 1);
       });
-      expect(result.current.error?.message).toBe("Category does not exist");
+      expect(result.current.error?.message).toBe("Category does not exist.");
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -611,7 +611,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Select at least one item to checkout"
+        "Select at least one item to checkout."
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -662,7 +662,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter or scan code details");
+      expect(result.current.error?.message).toBe("Enter or scan code details.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -740,7 +740,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter or scan code details");
+      expect(result.current.error?.message).toBe("Enter or scan code details.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -788,7 +788,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter unique code details");
+      expect(result.current.error?.message).toBe("Enter unique code details.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -865,7 +865,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter unique code details");
+      expect(result.current.error?.message).toBe("Enter unique code details.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -963,7 +963,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter valid contact number");
+      expect(result.current.error?.message).toBe("Enter valid contact number.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -1035,7 +1035,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Enter or scan code details again"
+        "Enter or scan code details again."
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -1072,7 +1072,7 @@ describe("useCart", () => {
       });
 
       mockPostTransaction.mockRejectedValueOnce(
-        new Error("error when checking out")
+        new Error("error when checking out.")
       );
 
       await wait(() => {
