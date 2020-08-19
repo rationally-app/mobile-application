@@ -24,23 +24,6 @@ describe("auth", () => {
   });
 
   describe("requestOTP", () => {
-    it("should check the validity of the code", async () => {
-      expect.assertions(1);
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({})
-      });
-      await requestOTP(phone, code, endpoint);
-      const payload = { code, phone };
-      expect(mockFetch.mock.calls[0]).toEqual([
-        `${endpoint}/auth/register`,
-        {
-          method: "POST",
-          body: JSON.stringify(payload)
-        }
-      ]);
-    });
-
     it("should return an object with a status key if the request is successful", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
@@ -59,6 +42,17 @@ describe("auth", () => {
       });
       const response = await requestOTP(phone, code, endpoint);
       expect(response).toEqual({ warning, status });
+    });
+
+    it("should throw error if the returned value does not have a status key", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({})
+      });
+      await expect(requestOTP(phone, code, endpoint)).rejects.toThrow(
+        LoginError
+      );
     });
 
     it("should throw error if OTP could not be retrieved", async () => {

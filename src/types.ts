@@ -12,10 +12,14 @@ export const SessionCredentials = t.type({
   ttl: DateFromNumber
 });
 
-export const OTPResponse = t.partial({
-  status: t.string,
-  warning: t.string
-});
+export const OTPResponse = t.intersection([
+  t.type({
+    status: t.string
+  }),
+  t.partial({
+    warning: t.string
+  })
+]);
 
 export type SessionCredentials = t.TypeOf<typeof SessionCredentials>;
 export type OTPResponse = t.TypeOf<typeof OTPResponse>;

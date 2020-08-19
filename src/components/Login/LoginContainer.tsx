@@ -48,11 +48,7 @@ import {
   wrongFormatAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
-import {
-  requestOTP,
-  LoginError,
-  LoginLockedOutError
-} from "../../services/auth";
+import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -144,7 +140,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof LoginLockedOutError) {
+      if (e instanceof LoginLockedError) {
         Alert.alert(
           "Error",
           e.message,
