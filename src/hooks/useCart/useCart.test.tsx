@@ -636,7 +636,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Enter unique code details' when there are multiple identifiers and at least one is empty", async () => {
+    it("should set error with message 'Enter or scan code details' when there are multiple identifiers and at least one is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -762,7 +762,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Enter unique details' when identifier values are identical in the same category", async () => {
+    it("should set error with message 'Enter unique code details' when identifier values are identical in the same category", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];

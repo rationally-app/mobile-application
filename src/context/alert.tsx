@@ -10,30 +10,25 @@ import {
   AlertModalProps
 } from "../components/AlertModal/AlertModal";
 
-export const ERROR_MESSAGE = {
-  DUPLICATE_IDENTIFIER_INPUT: "Enter unique code details",
-  DUPLICATE_POD_INPUT:
-    "Scan another item that is not tagged to any contact number",
-  INVALID_IDENTIFIER_INPUT: "Enter or scan code details again",
-  MISSING_IDENTIFIER_INPUT: "Enter or scan code details",
-  INVALID_VOUCHER_INPUT: "Enter voucher code details again",
-  MISSING_VOUCHER_INPUT: "Enter voucher code details",
-  INVALID_POD_INPUT: "Scan your device code again",
-  MISSING_POD_INPUT: "Scan your device code",
-  INVALID_PHONE_NUMBER: "Enter valid contact number",
-  MISSING_SELECTION: "Select at least one item to checkout",
-  AUTH_FAILURE_INVALID_TOKEN:
-    "Scan QR code again or get a new QR code from your in-charge",
-  AUTH_FAILURE_EXPIRED_TOKEN:
-    "We could not find a validity period. Get a new QR code from your in-charge",
-  ENV_VERSION_ERROR:
-    "Encountered an issue obtaining environment information. We've noted this down and are looking into it!",
-  INSUFFICIENT_QUOTA: "Insufficient quota",
-  INVALID_QUANTITY: "Invalid quantity",
-  INVALID_CATEGORY: "Category does not exist",
-  SERVER_ERROR:
-    "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
-};
+export enum ERROR_MESSAGE {
+  DUPLICATE_IDENTIFIER_INPUT = "Enter unique code details",
+  DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any contact number",
+  INVALID_IDENTIFIER_INPUT = "Enter or scan code details again",
+  MISSING_IDENTIFIER_INPUT = "Enter or scan code details",
+  INVALID_VOUCHER_INPUT = "Enter voucher code details again",
+  MISSING_VOUCHER_INPUT = "Enter voucher code details",
+  INVALID_POD_INPUT = "Scan your device code again",
+  MISSING_POD_INPUT = "Scan your device code",
+  INVALID_PHONE_NUMBER = "Enter valid contact number",
+  MISSING_SELECTION = "Select at least one item to checkout",
+  AUTH_FAILURE_INVALID_TOKEN = "Scan QR code again or get a new QR code from your in-charge",
+  AUTH_FAILURE_EXPIRED_TOKEN = "We could not find a validity period. Get a new QR code from your in-charge",
+  ENV_VERSION_ERROR = "Encountered an issue obtaining environment information. We've noted this down and are looking into it!",
+  INSUFFICIENT_QUOTA = "Insufficient quota",
+  INVALID_QUANTITY = "Invalid quantity",
+  INVALID_CATEGORY = "Category does not exist",
+  SERVER_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
+}
 
 const defaultAlertProp: AlertModalProps = {
   alertType: "ERROR",
