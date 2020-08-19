@@ -19,8 +19,7 @@ import { Sentry } from "../../utils/errorTracking";
 import {
   AlertModalContext,
   disabledAccessAlertProps,
-  invalidEntryAlertProps,
-  ERROR_MESSAGE
+  invalidEntryAlertProps
 } from "../../context/alert";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
@@ -126,10 +125,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       } else if (e instanceof LoginError) {
         showAlert({
           ...invalidEntryAlertProps,
-          description:
-            e.message === ERROR_MESSAGE.LAST_OTP_ERROR
-              ? ERROR_MESSAGE.LAST_OTP_ERROR
-              : ERROR_MESSAGE.OTP_ERROR
+          description: e.message
         });
       } else {
         alert(e);

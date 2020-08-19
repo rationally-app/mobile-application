@@ -41,19 +41,12 @@ import { useLogout } from "../../hooks/useLogout";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
-import {
-  requestOTP,
-  LoginError,
-  LoginLockedError,
-  AuthTakenError
-} from "../../services/auth";
+import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
 import {
   AlertModalContext,
   defaultConfirmationProps,
   invalidEntryAlertProps,
-  ERROR_MESSAGE,
-  disabledAccessAlertProps,
-  duplicateAlertProps
+  disabledAccessAlertProps
 } from "../../context/alert";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
@@ -143,12 +136,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof AuthTakenError) {
-        showAlert({
-          ...duplicateAlertProps,
-          description: ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN
-        });
-      } else if (e instanceof LoginLockedError) {
+      if (e instanceof LoginLockedError) {
         showAlert({
           ...disabledAccessAlertProps,
           description: e.message,
@@ -157,10 +145,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } else if (e instanceof LoginError) {
         showAlert({
           ...invalidEntryAlertProps,
-          description:
-            e.message === ERROR_MESSAGE.LAST_OTP_ERROR
-              ? ERROR_MESSAGE.LAST_OTP_ERROR
-              : ERROR_MESSAGE.OTP_ERROR
+          description: e.message
         });
       } else {
         alert(e);

@@ -27,10 +27,7 @@ export enum ERROR_MESSAGE {
   INSUFFICIENT_QUOTA = "Insufficient quota.",
   INVALID_QUANTITY = "Invalid quantity.",
   INVALID_CATEGORY = "Category does not exist.",
-  SERVER_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists.",
-  OTP_ERROR = "Enter OTP again.",
-  LAST_OTP_ERROR = "Enter OTP again. After 1 more invalid OTP entry, you will have to wait 3 minutes before trying again.",
-  AUTH_FAILURE_TAKEN_TOKEN = "Get a new QR code that is not tagged to any contact number from your in-charge."
+  SERVER_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
 }
 
 const defaultAlertProps: AlertModalProps = {
