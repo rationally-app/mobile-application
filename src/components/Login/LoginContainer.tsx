@@ -106,8 +106,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   const getResendConfirmationIfNeeded = async (): Promise<boolean> => {
     return new Promise(resolve => {
-      if (!lastResendWarningMessageRef.current) resolve(true);
-      else {
+      if (!lastResendWarningMessageRef.current) {
+        resolve(true);
+      } else {
         Alert.alert(
           "Resend OTP?",
           lastResendWarningMessageRef.current,
@@ -136,16 +137,27 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof LoginError) {
+      if (e instanceof LoginLockedOutError) {
         Alert.alert(
           "Error",
           e.message,
           [
             {
               text: "OK",
-              onPress: () => {
-                if (e instanceof LoginLockedOutError) resetStage();
-              }
+              onPress: () => resetStage()
+            }
+          ],
+          {
+            cancelable: false
+          }
+        );
+      } else if (e instanceof LoginError) {
+        Alert.alert(
+          "Error",
+          e.message,
+          [
+            {
+              text: "OK"
             }
           ],
           {
