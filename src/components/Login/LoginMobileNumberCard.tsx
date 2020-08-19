@@ -18,7 +18,7 @@ import {
   countryCodeValidator,
   mobileNumberValidator
 } from "../../utils/validatePhoneNumbers";
-import { AlertModalContext, wrongFormatAlertProp } from "../../context/alert";
+import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -72,12 +72,12 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const onSubmitMobileNumber = (): void => {
     if (!countryCodeValidator(countryCode)) {
       showAlert({
-        ...wrongFormatAlertProp,
+        ...wrongFormatAlertProps,
         description: "Invalid country code"
       });
     } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
       showAlert({
-        ...wrongFormatAlertProp,
+        ...wrongFormatAlertProps,
         description: "Invalid mobile phone number"
       });
     } else {

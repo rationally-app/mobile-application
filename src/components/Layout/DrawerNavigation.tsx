@@ -13,7 +13,7 @@ import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import {
   AlertModalContext,
-  defaultConfirmationProp
+  defaultConfirmationProps
 } from "../../context/alert";
 
 const styles = StyleSheet.create({
@@ -99,7 +99,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
 
   const onPressLogout = (): void => {
     showAlert({
-      ...defaultConfirmationProp,
+      ...defaultConfirmationProps,
       title: "Confirm Logout?",
       buttonTexts: {
         primaryActionText: "Logout",

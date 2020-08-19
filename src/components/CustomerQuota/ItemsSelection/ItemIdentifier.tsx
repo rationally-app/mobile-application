@@ -6,7 +6,7 @@ import { IdentifierPhoneNumberInput } from "./IdentifierLayout/IdentifierPhoneNu
 import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
-import { AlertModalContext, systemAlertProp } from "../../../context/alert";
+import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -43,7 +43,7 @@ export const ItemIdentifier: FunctionComponent<{
     } catch (e) {
       setShouldShowCamera(false);
       showAlert({
-        ...systemAlertProp,
+        ...systemAlertProps,
         description: e.message || e
       });
     }
