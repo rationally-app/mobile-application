@@ -324,6 +324,7 @@ export const useCart = (
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
       } catch (e) {
+        setCartState("DEFAULT");
         // backend will throw general duplicate identifier message
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
@@ -332,7 +333,6 @@ export const useCart = (
         } else {
           setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
-        setCartState("DEFAULT");
       }
     };
 
