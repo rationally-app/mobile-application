@@ -60,9 +60,11 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
     setIsLoading(true);
     const fullNumber = createFullNumber(countryCode, mobileNumberValue);
     const isRequestSuccessful = await handleRequestOTP(fullNumber);
-    setMobileNumber(fullNumber);
     setIsLoading(false);
-    if (isRequestSuccessful) setLoginStage("OTP");
+    if (isRequestSuccessful) {
+      setMobileNumber(fullNumber);
+      setLoginStage("OTP");
+    }
   };
 
   const onSubmitMobileNumber = (): void => {

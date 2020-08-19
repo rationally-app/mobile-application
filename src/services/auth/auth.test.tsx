@@ -41,7 +41,17 @@ describe("auth", () => {
       ]);
     });
 
-    it("should return an object with warning and status keys if the response contains these properties", async () => {
+    it("should return an object with a status key if the request is successful", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ status })
+      });
+      const response = await requestOTP(phone, code, endpoint);
+      expect(response).toEqual({ status });
+    });
+
+    it("should return an object with warning and status keys if the next request will be the the last one before user is locked out", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
