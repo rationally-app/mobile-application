@@ -207,7 +207,7 @@ export const useCart = (
             )
           );
         } else {
-          setError(new Error(e.message));
+          setError(e);
         }
       }
     };
