@@ -6,6 +6,7 @@ import React, {
   useContext
 } from "react";
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
+import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -35,7 +36,6 @@ import {
   ERROR_MESSAGE
 } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
-import { NavigationProps } from "../../types";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 

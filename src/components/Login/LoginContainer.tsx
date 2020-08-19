@@ -150,9 +150,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     features,
     setFeatures,
     setProducts,
+    showAlert,
     setAllProducts,
-    handleLogout,
-    showAlert
+    handleLogout
   ]);
 
   useLayoutEffect(() => {

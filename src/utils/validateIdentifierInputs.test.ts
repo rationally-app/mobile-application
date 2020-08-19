@@ -110,19 +110,6 @@ describe("validateIdentifierInputs", () => {
   });
 
   it("should throw error if identifier has empty value", () => {
-    expect.assertions(1);
-    expect(() =>
-      validateIdentifierInputs([
-        {
-          label: "empty string",
-          value: "",
-          textInputType: "STRING"
-        }
-      ])
-    ).toThrow("Enter or scan code details");
-  });
-
-  it("should throw error if at least one of the identifiers has empty value", () => {
     expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([

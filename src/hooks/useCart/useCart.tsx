@@ -17,11 +17,7 @@ import {
   Policy
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import {
-  AlertModalContext,
-  systemAlertProps,
-  ERROR_MESSAGE
-} from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 
 export type CartItem = {
   category: string;
@@ -211,7 +207,6 @@ export const useCart = (
             )
           );
         } else {
-          showAlert({ ...systemAlertProps, description: e.message });
           setError(e);
         }
       }

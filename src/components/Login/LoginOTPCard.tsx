@@ -62,8 +62,8 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     RESEND_OTP_TIME_LIMIT
   );
   const { setAuthInfo } = useAuthenticationContext();
-  const { setFeatures, setProducts, setAllProducts } = useProductContext();
   const { showAlert } = useContext(AlertModalContext);
+  const { setFeatures, setProducts, setAllProducts } = useProductContext();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
