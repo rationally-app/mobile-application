@@ -104,32 +104,34 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setLoginStage("SCAN");
   };
 
-  const shouldResendAlert = async (): Promise<boolean> => {
+  const getResendConfirmationIfNeeded = async (): Promise<boolean> => {
     return new Promise(resolve => {
-      Alert.alert(
-        "Resend OTP?",
-        lastResendWarningMessageRef.current,
-        [
-          {
-            text: "CANCEL",
-            onPress: () => resolve(false)
-          },
-          {
-            text: "RESEND",
-            onPress: () => resolve(true)
-          }
-        ],
-        { cancelable: false }
-      );
+      if (!lastResendWarningMessageRef.current) resolve(true);
+      else {
+        Alert.alert(
+          "Resend OTP?",
+          lastResendWarningMessageRef.current,
+          [
+            {
+              text: "CANCEL",
+              onPress: () => resolve(false)
+            },
+            {
+              text: "RESEND",
+              onPress: () => resolve(true)
+            }
+          ],
+          { cancelable: false }
+        );
+      }
     });
   };
 
-  const handleRequestOTP = async (fullNumber?: string): Promise<boolean> => {
+  const handleRequestOTP = async (
+    fullNumber = mobileNumber
+  ): Promise<boolean> => {
     try {
-      fullNumber = fullNumber ?? mobileNumber;
-      if (lastResendWarningMessageRef.current) {
-        if (!(await shouldResendAlert())) return false;
-      }
+      if (!(await getResendConfirmationIfNeeded())) return false;
       const response = await requestOTP(fullNumber, codeKey, endpointTemp);
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
