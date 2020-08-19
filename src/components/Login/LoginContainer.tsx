@@ -4,7 +4,8 @@ import React, {
   FunctionComponent,
   useEffect,
   useLayoutEffect,
-  useContext
+  useContext,
+  useRef
 } from "react";
 import {
   View,
@@ -50,8 +51,6 @@ import {
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
 const ALLOW_MODE_CHANGE = false;
-
-let lastResendWarningMessage = "";
 
 const styles = StyleSheet.create({
   content: {
@@ -99,6 +98,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setAllProducts
   } = useProductContext();
   const { logout } = useLogout();
+  const lastResendWarningMessageRef = useRef("");
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
@@ -108,7 +108,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     return new Promise(resolve => {
       Alert.alert(
         "Resend OTP?",
-        lastResendWarningMessage,
+        lastResendWarningMessageRef.current,
         [
           {
             text: "CANCEL",
@@ -127,11 +127,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const handleRequestOTP = async (fullNumber?: string): Promise<boolean> => {
     try {
       fullNumber = fullNumber ?? mobileNumber;
-      if (lastResendWarningMessage) {
+      if (lastResendWarningMessageRef.current) {
         if (!(await shouldResendAlert())) return false;
       }
       const response = await requestOTP(fullNumber, codeKey, endpointTemp);
-      lastResendWarningMessage = response.warning ?? "";
+      lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
@@ -209,7 +209,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   useLayoutEffect(() => {
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
-      lastResendWarningMessage = "";
+      lastResendWarningMessageRef.current = "";
       switch (features?.FLOW_TYPE) {
         case "DEFAULT":
         case "MERCHANT":
