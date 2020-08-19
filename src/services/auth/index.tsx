@@ -35,7 +35,7 @@ export const liveRequestOTP = async (
     return response;
   } catch (e) {
     if (e.message.includes("Please wait")) {
-      throw new LoginLockedOutError(e.message);
+      throw new LoginLockedError(e.message);
     } else {
       throw new LoginError(e.message);
     }
@@ -47,7 +47,7 @@ export const mockRequestOTP = async (
   _key: string,
   _endpoint: string
 ): Promise<OTPResponse> => {
-  return {};
+  return { status: "OK" };
 };
 
 export const liveValidateOTP = async (
@@ -72,7 +72,7 @@ export const liveValidateOTP = async (
       Sentry.captureException(e);
     }
     if (e.message.includes("Please wait")) {
-      throw new LoginLockedOutError(e.message);
+      throw new LoginLockedError(e.message);
     } else {
       throw new LoginError(e.message);
     }
