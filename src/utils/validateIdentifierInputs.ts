@@ -1,5 +1,6 @@
 import { IdentifierInput } from "../types";
 import { fullPhoneNumberValidator } from "./validatePhoneNumbers";
+import { ERROR_MESSAGE } from "../context/alert";
 
 const isMatchRegex = (text: string, regex?: string): boolean => {
   if (!regex) {
@@ -16,20 +17,16 @@ export const validateIdentifierInputs = (
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
     if (!value) {
-      throw new Error(
-        `Please enter ${
-          identifierInputs.length === 1 ? "" : "unique "
-        }details to checkout`
-      );
+      throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
-      throw new Error("Invalid details");
+      throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
     if (!isMatchRegex(value, validationRegex)) {
-      throw new Error("Invalid details");
+      throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
     if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
-      throw new Error("Invalid contact number");
+      throw new Error(ERROR_MESSAGE.INVALID_PHONE_NUMBER);
     }
   }
 
@@ -38,11 +35,7 @@ export const validateIdentifierInputs = (
       identifierInputs.map(identifierInput => identifierInput.value)
     )
   ) {
-    throw new Error(
-      `Please enter ${
-        identifierInputs.length === 1 ? "" : "unique "
-      }details to checkout`
-    );
+    throw new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT);
   }
 
   return true;

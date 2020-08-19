@@ -5,13 +5,7 @@ import React, {
   useCallback,
   useContext
 } from "react";
-import {
-  View,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-  BackHandler
-} from "react-native";
+import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -32,6 +26,14 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+import { CampaignConfigContext } from "../../context/campaignConfig";
+import {
+  AlertModalContext,
+  wrongFormatAlertProps,
+  incompleteEntryAlertProps,
+  systemAlertProps,
+  ERROR_MESSAGE
+} from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { NavigationProps } from "../../types";
 
@@ -64,11 +66,6 @@ const styles = StyleSheet.create({
   }
 });
 
-const showAlert = (message: string, onDismiss: () => void): void =>
-  Alert.alert("Error", message, [{ text: "OK", onPress: onDismiss }], {
-    onDismiss: onDismiss // for android outside alert clicks
-  });
-
 export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   navigation,
   navIds
@@ -89,7 +86,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { config } = useConfigContext();
   const { token, endpoint } = useAuthenticationContext();
   const showHelpModal = useContext(HelpModalContext);
+  const { showAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
+  const { features: campaignFeatures } = useContext(CampaignConfigContext);
 
   const {
     cartState,
@@ -145,11 +144,70 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     if (cartState === "FETCHING_QUOTA") {
       const message =
         error.message ?? "Encounted an error while fetching quota";
-      showAlert(message, onCancel);
+      showAlert({
+        ...systemAlertProps,
+        description: message,
+        onOk: () => clearError()
+      });
     } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
-      showAlert(error.message, () => clearError());
+      switch (error.message) {
+        case ERROR_MESSAGE.MISSING_SELECTION:
+          showAlert({
+            ...incompleteEntryAlertProps,
+            description: ERROR_MESSAGE.MISSING_SELECTION,
+            onOk: () => clearError()
+          });
+          break;
+
+        case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
+          showAlert({
+            ...incompleteEntryAlertProps,
+            description:
+              campaignFeatures?.campaignName === "TT Token"
+                ? ERROR_MESSAGE.MISSING_POD_INPUT
+                : campaignFeatures?.campaignName.includes("Vouchers")
+                ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
+                : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT,
+            onOk: () => clearError()
+          });
+          break;
+
+        case ERROR_MESSAGE.SERVER_ERROR:
+          showAlert({
+            ...systemAlertProps,
+            description: error.message,
+            onOk: () => clearError()
+          });
+          break;
+
+        case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
+          showAlert({
+            ...systemAlertProps,
+            title: "Already used",
+            description:
+              campaignFeatures?.campaignName === "TT Token"
+                ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
+                : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT,
+            onOk: () => clearError()
+          });
+          break;
+
+        case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
+          showAlert({
+            ...wrongFormatAlertProps,
+            description:
+              campaignFeatures?.campaignName === "TT Token"
+                ? ERROR_MESSAGE.INVALID_POD_INPUT
+                : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT,
+            onOk: () => clearError()
+          });
+          break;
+
+        default:
+          throw new Error(error.message);
+      }
     }
-  }, [cartState, clearError, error, onCancel]);
+  }, [cartState, clearError, error, onCancel, showAlert, campaignFeatures]);
 
   return cartState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
