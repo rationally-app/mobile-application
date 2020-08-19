@@ -65,10 +65,9 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
           onPress={() => {
             showAlert({
               ...defaultWarningProp,
-              // TBD with UX
-              title: "Cancel?",
+              title: "Cancel entry and scan another ID number?",
               buttonTexts: {
-                primaryActionText: "Cancel",
+                primaryActionText: "Cancel entry",
                 secondaryActionText: "Keep"
               },
               visible: true,
