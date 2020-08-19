@@ -181,11 +181,12 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           break;
 
         case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
+          console.log(campaignFeatures?.campaignName);
           showAlert({
             ...systemAlertProps,
             title: "Already used",
             description:
-              campaignFeatures?.campaignName === "TT Token"
+              campaignFeatures?.campaignName === "TT Tokens"
                 ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
                 : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT,
             onOk: () => clearError()
@@ -196,9 +197,17 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           showAlert({
             ...wrongFormatAlertProps,
             description:
-              campaignFeatures?.campaignName === "TT Token"
+              campaignFeatures?.campaignName === "TT Tokens"
                 ? ERROR_MESSAGE.INVALID_POD_INPUT
                 : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT,
+            onOk: () => clearError()
+          });
+          break;
+
+        case ERROR_MESSAGE.INVALID_PHONE_NUMBER:
+          showAlert({
+            ...wrongFormatAlertProps,
+            description: error.message,
             onOk: () => clearError()
           });
           break;
