@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useContext } from "react";
-import { Alert, View, Vibration } from "react-native";
+import { View, Vibration } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { size, color } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";

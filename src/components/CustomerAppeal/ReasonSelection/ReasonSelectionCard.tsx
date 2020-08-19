@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext } from "react";
-import { StyleSheet, View, Alert } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { CustomerCard } from "../../CustomerQuota/CustomerCard";
 import { size } from "../../../common/styles";
 import { Card } from "../../Layout/Card";

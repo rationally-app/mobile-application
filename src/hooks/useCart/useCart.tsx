@@ -19,9 +19,6 @@ import {
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import {
   AlertModalContext,
-  incompleteEntryAlertProps,
-  wrongFormatAlertProps,
-  duplicateAlertProps,
   systemAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
@@ -232,7 +229,8 @@ export const useCart = (
     prevProducts,
     products,
     setProducts,
-    setFeatures
+    setFeatures,
+    showAlert
   ]);
 
   /**
@@ -316,11 +314,8 @@ export const useCart = (
       try {
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
-        showAlert({
-          ...wrongFormatAlertProps,
-          description: error.message
-        });
         setCartState("DEFAULT");
+        setError(error);
         return;
       }
 
@@ -335,15 +330,11 @@ export const useCart = (
         setCartState("PURCHASED");
       } catch (e) {
         if (e.message === ERROR_MESSAGE.DUPLICATE_POD_INPUT) {
-          showAlert({ ...duplicateAlertProps, description: e.message });
+          setError(e);
         } else {
-          showAlert({
-            ...systemAlertProps,
-            description: ERROR_MESSAGE.SERVER_ERROR
-          });
+          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
         setCartState("DEFAULT");
-        // backend will throw general duplicate identifier message
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {

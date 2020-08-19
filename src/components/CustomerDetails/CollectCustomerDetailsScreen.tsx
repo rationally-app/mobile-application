@@ -39,8 +39,8 @@ import { EnvVersionError } from "../../services/envVersion";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import {
   AlertModalContext,
-  wrongFormatAlertProp,
-  systemAlertProp
+  wrongFormatAlertProps,
+  systemAlertProps
 } from "../../context/alert";
 
 const styles = StyleSheet.create({
@@ -146,13 +146,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
         showAlert({
-          ...systemAlertProp,
+          ...systemAlertProps,
           description: e.message,
           onOk: () => setIsScanningEnabled(true)
         });
       } else {
         showAlert({
-          ...wrongFormatAlertProp,
+          ...wrongFormatAlertProps,
           description: e.message,
           onOk: () => setIsScanningEnabled(true)
         });
