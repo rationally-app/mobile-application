@@ -12,21 +12,16 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { useAuthenticationContext } from "../../context/auth";
-import {
-  validateOTP,
-  LoginError,
-  LoginLockedOutError
-} from "../../services/auth";
+import { validateOTP, LoginError, LoginLockedError } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
 import {
   AlertModalContext,
-  systemAlertProps,
+  disabledAccessAlertProps,
   invalidEntryAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
-import { LoginError } from "../../services/auth";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -71,6 +66,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const { setAuthInfo } = useAuthenticationContext();
   const { showAlert } = useContext(AlertModalContext);
   const { setFeatures, setProducts, setAllProducts } = useProductContext();
+  const { showAlert } = useContext(AlertModalContext);
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -119,9 +115,15 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     } catch (e) {
       Sentry.captureException(e);
       if (e instanceof EnvVersionError) {
+        Sentry.captureException(e);
+        alert(
+          "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+        );
+      } else if (e instanceof LoginLockedError) {
         showAlert({
-          ...systemAlertProps,
-          description: e.message
+          ...disabledAccessAlertProps,
+          description: e.message,
+          onOk: () => resetStage()
         });
       } else if (e instanceof LoginError) {
         showAlert({

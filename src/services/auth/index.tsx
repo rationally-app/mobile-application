@@ -17,6 +17,13 @@ export class LoginLockedError extends LoginError {
   }
 }
 
+export class AuthTakenError extends LoginError {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthTakenError";
+  }
+}
+
 export const liveRequestOTP = async (
   mobileNumber: string,
   code: string,
@@ -34,7 +41,9 @@ export const liveRequestOTP = async (
     );
     return response;
   } catch (e) {
-    if (e.message.includes("Please wait")) {
+    if (e.message === "Auth token already in use") {
+      throw new AuthTakenError(e.message);
+    } else if (e.message.match(/Try again in [1-9] minutes?\./)) {
       throw new LoginLockedError(e.message);
     } else {
       throw new LoginError(e.message);
@@ -71,7 +80,7 @@ export const liveValidateOTP = async (
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
-    if (e.message.includes("Please wait")) {
+    if (e.message.match(/Try again in [1-9] minutes?\./)) {
       throw new LoginLockedError(e.message);
     } else {
       throw new LoginError(e.message);

@@ -12,8 +12,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Vibration,
-  BackHandler,
-  Alert
+  BackHandler
 } from "react-native";
 import { NavigationProps } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
@@ -43,12 +42,19 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
 import {
+  requestOTP,
+  LoginError,
+  LoginLockedError,
+  AuthTakenError
+} from "../../services/auth";
+import {
   AlertModalContext,
-  systemAlertProps,
-  wrongFormatAlertProps,
-  ERROR_MESSAGE
+  defaultConfirmationProps,
+  invalidEntryAlertProps,
+  ERROR_MESSAGE,
+  disabledAccessAlertProps,
+  duplicateAlertProps
 } from "../../context/alert";
-import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -102,6 +108,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const { showAlert } = useContext(AlertModalContext);
   const { logout } = useLogout();
   const lastResendWarningMessageRef = useRef("");
+  const { showAlert } = useContext(AlertModalContext);
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
@@ -112,21 +119,18 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       if (!lastResendWarningMessageRef.current) {
         resolve(true);
       } else {
-        Alert.alert(
-          "Resend OTP?",
-          lastResendWarningMessageRef.current,
-          [
-            {
-              text: "CANCEL",
-              onPress: () => resolve(false)
-            },
-            {
-              text: "RESEND",
-              onPress: () => resolve(true)
-            }
-          ],
-          { cancelable: false }
-        );
+        showAlert({
+          ...defaultConfirmationProps,
+          title: "Resend OTP?",
+          description: lastResendWarningMessageRef.current,
+          buttonTexts: {
+            primaryActionText: "Resend",
+            secondaryActionText: "No"
+          },
+          onOk: () => resolve(true),
+          onCancel: () => resolve(false),
+          visible: true
+        });
       }
     });
   };
@@ -140,33 +144,25 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof LoginLockedError) {
-        Alert.alert(
-          "Error",
-          e.message,
-          [
-            {
-              text: "OK",
-              onPress: () => resetStage()
-            }
-          ],
-          {
-            cancelable: false
-          }
-        );
+      if (e instanceof AuthTakenError) {
+        showAlert({
+          ...duplicateAlertProps,
+          description: ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN
+        });
+      } else if (e instanceof LoginLockedError) {
+        showAlert({
+          ...disabledAccessAlertProps,
+          description: e.message,
+          onOk: () => resetStage()
+        });
       } else if (e instanceof LoginError) {
-        Alert.alert(
-          "Error",
-          e.message,
-          [
-            {
-              text: "OK"
-            }
-          ],
-          {
-            cancelable: false
-          }
-        );
+        showAlert({
+          ...invalidEntryAlertProps,
+          description:
+            e.message === ERROR_MESSAGE.LAST_OTP_ERROR
+              ? ERROR_MESSAGE.LAST_OTP_ERROR
+              : ERROR_MESSAGE.OTP_ERROR
+        });
       } else {
         alert(e);
       }
