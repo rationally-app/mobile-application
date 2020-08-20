@@ -108,7 +108,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [cartState]);
 
   const onCancel = useCallback((): void => {
-    navigation.goBack();
+    navigateHome(navigation);
   }, [navigation]);
 
   const addId = useCallback((id: string): void => {
