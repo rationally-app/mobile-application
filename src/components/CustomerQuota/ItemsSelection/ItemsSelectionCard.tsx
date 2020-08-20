@@ -14,7 +14,8 @@ import {
   AlertModalContext,
   defaultWarningProps,
   wrongFormatAlertProps,
-  systemAlertProps
+  systemAlertProps,
+  ERROR_MESSAGE
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { EnvVersionError } from "../../../services/envVersion";
@@ -53,7 +54,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       Vibration.vibrate(50);
       setIsAddUserModalVisible(false);
       if (ids.indexOf(id) > -1) {
-        throw new Error("Enter or scan a different ID number.");
+        throw new Error(ERROR_MESSAGE.DUPLICATE_ID);
       }
       addId(id);
     } catch (e) {

@@ -142,8 +142,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       return;
     }
     if (cartState === "FETCHING_QUOTA") {
-      const message =
-        error.message ?? "Encounted an error while fetching quota";
+      const message = error.message ?? ERROR_MESSAGE.QUOTA_ERROR;
       showAlert({
         ...systemAlertProps,
         description: message,
