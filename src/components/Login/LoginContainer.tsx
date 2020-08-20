@@ -150,9 +150,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     features,
     setFeatures,
     setProducts,
-    showAlert,
     setAllProducts,
-    handleLogout
+    handleLogout,
+    showAlert
   ]);
 
   useLayoutEffect(() => {
@@ -255,11 +255,19 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             ...systemAlertProps,
             description: e.message
           });
-        } else {
+        } else if (e.message === ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN) {
+          showAlert({
+            ...systemAlertProps,
+            title: "Expired",
+            description: e.message
+          });
+        } else if (e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN) {
           showAlert({
             ...wrongFormatAlertProps,
             description: e.message
           });
+        } else {
+          throw error;
         }
         setIsLoading(false);
       }

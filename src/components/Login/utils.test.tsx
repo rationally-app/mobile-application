@@ -5,7 +5,7 @@ describe("decodeQr", () => {
     expect.assertions(1);
     const code = "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4";
     expect(() => decodeQr(code)).toThrow(
-      "Scan QR code again or get a new QR code from your in-charge."
+      "We could not find a validity period. Get a new QR code from your in-charge."
     );
   });
 
