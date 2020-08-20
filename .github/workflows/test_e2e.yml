@@ -1,4 +1,4 @@
-name: Pre-Commit E2E Tests
+name: E2E Tests
 
 # For now leaving as PR so that we can test the functionality without pushing to master branch
 on: [pull_request]
@@ -15,7 +15,6 @@ on: [pull_request]
 jobs:
   e2e_test:
     name: E2E PCloudy
-    needs: publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
