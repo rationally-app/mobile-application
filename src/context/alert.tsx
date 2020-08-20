@@ -28,6 +28,7 @@ export enum ERROR_MESSAGE {
   INSUFFICIENT_QUOTA = "Insufficient quota.",
   INVALID_QUANTITY = "Invalid quantity.",
   INVALID_CATEGORY = "Category does not exist.",
+  INVALID_ID = "Enter or scan ID number again.",
   SERVER_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
 }
 
