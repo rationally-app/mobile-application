@@ -20,6 +20,7 @@ export enum ERROR_MESSAGE {
   INVALID_POD_INPUT = "Scan your device code again.",
   MISSING_POD_INPUT = "Scan your device code.",
   INVALID_PHONE_NUMBER = "Enter valid contact number.",
+  INVALID_COUNTRY_CODE = "Enter valid country code.",
   MISSING_SELECTION = "Select at least one item to checkout.",
   AUTH_FAILURE_INVALID_TOKEN = "Scan QR code again or get a new QR code from your in-charge.",
   AUTH_FAILURE_EXPIRED_TOKEN = "We could not find a validity period. Get a new QR code from your in-charge.",

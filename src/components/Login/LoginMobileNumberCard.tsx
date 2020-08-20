@@ -73,12 +73,12 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
     if (!countryCodeValidator(countryCode)) {
       showAlert({
         ...wrongFormatAlertProps,
-        description: "Invalid country code"
+        description: ERROR_MESSAGE.INVALID_COUNTRY_CODE
       });
     } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
       showAlert({
         ...wrongFormatAlertProps,
-        description: "Invalid mobile phone number"
+        description: ERROR_MESSAGE.INVALID_PHONE_NUMBER
       });
     } else {
       onRequestOTP();
