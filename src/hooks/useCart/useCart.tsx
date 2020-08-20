@@ -301,8 +301,8 @@ export const useCart = (
         });
 
       if (transactions.length === 0) {
-        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         setCartState("DEFAULT");
+        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         return;
       }
 
@@ -324,11 +324,6 @@ export const useCart = (
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
       } catch (e) {
-        if (e.message === ERROR_MESSAGE.DUPLICATE_POD_INPUT) {
-          setError(e);
-        } else {
-          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
-        }
         setCartState("DEFAULT");
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
