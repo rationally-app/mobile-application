@@ -145,7 +145,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } else if (e instanceof LoginError) {
         showAlert({
           ...invalidEntryAlertProps,
-          description: e.message
+          description: e.message,
+          onOk: () => resetStage()
         });
       } else {
         alert(e);
