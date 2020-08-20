@@ -13,32 +13,6 @@ on: [pull_request]
 #       - "prod-[1-9]+.[0-9]+.[0-9]+" # Push events to matching prod-*, i.e.prod-20.15.10
 
 jobs:
-  publish:
-    name: Publish to E2E Channel
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: Install Application
-        run: npm install
-      - uses: expo/expo-github-action@v5
-        with:
-          expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_TEST_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_TEST_PASSWORD }}
-          expo-cache: true
-      - name: Expo Publish Channel
-        env:
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: 1.0.0
-          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-        run: expo publish --non-interactive --release-channel e2e
   e2e_test:
     name: E2E PCloudy
     needs: publish
