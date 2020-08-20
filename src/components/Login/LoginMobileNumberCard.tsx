@@ -18,7 +18,11 @@ import {
   countryCodeValidator,
   mobileNumberValidator
 } from "../../utils/validatePhoneNumbers";
-import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
+import {
+  AlertModalContext,
+  wrongFormatAlertProps,
+  ERROR_MESSAGE
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
