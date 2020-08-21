@@ -45,7 +45,8 @@ import {
   requestOTP,
   LoginError,
   LoginLockedError,
-  AuthTakenError
+  AuthTakenError,
+  AuthError
 } from "../../services/auth";
 import {
   AlertModalContext,
@@ -54,8 +55,7 @@ import {
   ERROR_MESSAGE,
   disabledAccessAlertProps,
   duplicateAlertProps,
-  systemAlertProps,
-  wrongFormatAlertProps
+  systemAlertProps
 } from "../../context/alert";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
@@ -110,6 +110,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const { showAlert } = useContext(AlertModalContext);
   const { logout } = useLogout();
   const lastResendWarningMessageRef = useRef("");
+  const setState = useState()[1];
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
@@ -313,24 +314,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
-        if (e.message === ERROR_MESSAGE.SERVER_ERROR) {
-          showAlert({
-            ...systemAlertProps,
-            description: e.message
-          });
-        } else if (e.message === ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN) {
-          showAlert({
-            ...systemAlertProps,
-            title: "Expired",
-            description: e.message
-          });
-        } else if (e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN) {
-          showAlert({
-            ...wrongFormatAlertProps,
-            description: e.message
-          });
+        if (e instanceof AuthError) {
+          showAlert(e.alertProps);
         } else {
-          throw error;
+          setState(() => {
+            throw error; // Let ErrorBoundary handle
+          });
         }
         setIsLoading(false);
       }

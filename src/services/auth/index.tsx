@@ -2,7 +2,6 @@ import { IS_MOCK } from "../../config";
 import { SessionCredentials, OTPResponse } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
-import { AlertModalProps } from "../../components/AlertModal/AlertModal";
 import {
   defaultWarningProps,
   duplicateAlertProps,
@@ -16,67 +15,75 @@ export class LoginError extends Error {
     super(message);
     this.name = "LoginError";
   }
+  alertProps = systemAlertProps;
 }
 
 export class LoginLockedError extends LoginError {
   constructor(message: string) {
     super(message);
     this.name = "LoginLockedError";
+    this.alertProps = {
+      ...defaultWarningProps,
+      description: this.message,
+      visible: true
+    };
   }
-  alertProps: AlertModalProps = {
-    ...defaultWarningProps,
-    description: this.message,
-    visible: true
-  };
 }
 
-export class AuthTakenError extends LoginError {
+export class AuthError extends LoginError {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthError";
+  }
+}
+
+export class AuthTakenError extends AuthError {
   constructor(message: string) {
     super(message);
     this.name = "AuthTakenError";
+    this.alertProps = {
+      ...duplicateAlertProps,
+      description: ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN,
+      visible: true
+    };
   }
-  alertProps: AlertModalProps = {
-    ...duplicateAlertProps,
-    description: ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN,
-    visible: true
-  };
 }
 
-export class AuthExpiredError extends LoginError {
+export class AuthExpiredError extends AuthError {
   constructor(message: string) {
     super(message);
     this.name = "AuthExpiredError";
+    this.alertProps = {
+      ...systemAlertProps,
+      title: "Expired",
+      description: ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN,
+      visible: true
+    };
   }
-  alertProps: AlertModalProps = {
-    ...systemAlertProps,
-    title: "Expired",
-    description: ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN,
-    visible: true
-  };
 }
 
-export class AuthNotFoundError extends LoginError {
+export class AuthNotFoundError extends AuthError {
   constructor(message: string) {
     super(message);
     this.name = "AuthNotFoundError";
+    this.alertProps = {
+      ...wrongFormatAlertProps,
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
+      visible: true
+    };
   }
-  alertProps: AlertModalProps = {
-    ...wrongFormatAlertProps,
-    description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
-    visible: true
-  };
 }
 
-export class AuthInvalidError extends LoginError {
+export class AuthInvalidError extends AuthError {
   constructor(message: string) {
     super(message);
     this.name = "AuthInvalidError";
+    this.alertProps = {
+      ...wrongFormatAlertProps,
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT,
+      visible: true
+    };
   }
-  alertProps: AlertModalProps = {
-    ...wrongFormatAlertProps,
-    description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT,
-    visible: true
-  };
 }
 
 export const liveRequestOTP = async (
