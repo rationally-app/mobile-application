@@ -53,7 +53,9 @@ import {
   invalidEntryAlertProps,
   ERROR_MESSAGE,
   disabledAccessAlertProps,
-  duplicateAlertProps
+  duplicateAlertProps,
+  systemAlertProps,
+  wrongFormatAlertProps
 } from "../../context/alert";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
@@ -108,7 +110,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const { showAlert } = useContext(AlertModalContext);
   const { logout } = useLogout();
   const lastResendWarningMessageRef = useRef("");
-  const { showAlert } = useContext(AlertModalContext);
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
