@@ -1,6 +1,5 @@
 import { IS_MOCK } from "../../config";
-import * as t from "io-ts";
-import { SessionCredentials } from "../../types";
+import { SessionCredentials, OTPResponse } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 
@@ -11,15 +10,22 @@ export class LoginError extends Error {
   }
 }
 
+export class LoginLockedError extends LoginError {
+  constructor(message: string) {
+    super(message);
+    this.name = "LoginLockedError";
+  }
+}
+
 export const liveRequestOTP = async (
   mobileNumber: string,
   code: string,
   endpoint: string
-): Promise<unknown> => {
+): Promise<OTPResponse> => {
   const payload = { code, phone: mobileNumber };
   try {
     const response = await fetchWithValidator(
-      t.unknown,
+      OTPResponse,
       `${endpoint}/auth/register`,
       {
         method: "POST",
@@ -28,7 +34,11 @@ export const liveRequestOTP = async (
     );
     return response;
   } catch (e) {
-    throw new LoginError(e.message);
+    if (e.message.includes("Please wait")) {
+      throw new LoginLockedError(e.message);
+    } else {
+      throw new LoginError(e.message);
+    }
   }
 };
 
@@ -36,8 +46,8 @@ export const mockRequestOTP = async (
   _mobileNumber: string,
   _key: string,
   _endpoint: string
-): Promise<unknown> => {
-  return Promise.resolve();
+): Promise<OTPResponse> => {
+  return { status: "OK" };
 };
 
 export const liveValidateOTP = async (
@@ -61,7 +71,11 @@ export const liveValidateOTP = async (
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
-    throw new LoginError(e.message);
+    if (e.message.includes("Please wait")) {
+      throw new LoginLockedError(e.message);
+    } else {
+      throw new LoginError(e.message);
+    }
   }
 };
 

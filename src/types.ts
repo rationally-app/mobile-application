@@ -12,7 +12,17 @@ export const SessionCredentials = t.type({
   ttl: DateFromNumber
 });
 
+export const OTPResponse = t.intersection([
+  t.type({
+    status: t.string
+  }),
+  t.partial({
+    warning: t.string
+  })
+]);
+
 export type SessionCredentials = t.TypeOf<typeof SessionCredentials>;
+export type OTPResponse = t.TypeOf<typeof OTPResponse>;
 
 const PolicyAlert = t.type({
   threshold: t.number,

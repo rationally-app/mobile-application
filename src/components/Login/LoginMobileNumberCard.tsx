@@ -10,7 +10,6 @@ import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { LoginStage } from "./types";
-import { requestOTP } from "../../services/auth";
 import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 import {
   createFullNumber,
@@ -27,15 +26,13 @@ const styles = StyleSheet.create({
 interface LoginMobileNumberCard {
   setLoginStage: Dispatch<SetStateAction<LoginStage>>;
   setMobileNumber: Dispatch<SetStateAction<string>>;
-  codeKey: string;
-  endpoint: string;
+  handleRequestOTP: (fullNumber?: string) => Promise<boolean>;
 }
 
 export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
   setLoginStage,
   setMobileNumber,
-  codeKey,
-  endpoint
+  handleRequestOTP
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("+65");
@@ -54,15 +51,12 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   const onRequestOTP = async (): Promise<void> => {
     setIsLoading(true);
-    try {
-      const fullNumber = createFullNumber(countryCode, mobileNumberValue);
-      await requestOTP(fullNumber, codeKey, endpoint);
-      setIsLoading(false);
+    const fullNumber = createFullNumber(countryCode, mobileNumberValue);
+    const isRequestSuccessful = await handleRequestOTP(fullNumber);
+    setIsLoading(false);
+    if (isRequestSuccessful) {
       setMobileNumber(fullNumber);
       setLoginStage("OTP");
-    } catch (e) {
-      setIsLoading(false);
-      alert(e);
     }
   };
 

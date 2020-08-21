@@ -4,7 +4,8 @@ import React, {
   FunctionComponent,
   useEffect,
   useLayoutEffect,
-  useContext
+  useContext,
+  useRef
 } from "react";
 import {
   View,
@@ -40,6 +41,13 @@ import { useLogout } from "../../hooks/useLogout";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
+import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
+import {
+  AlertModalContext,
+  defaultConfirmationProps,
+  invalidEntryAlertProps,
+  disabledAccessAlertProps
+} from "../../context/alert";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -91,9 +99,60 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setAllProducts
   } = useProductContext();
   const { logout } = useLogout();
+  const lastResendWarningMessageRef = useRef("");
+  const { showAlert } = useContext(AlertModalContext);
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
+  };
+
+  const getResendConfirmationIfNeeded = async (): Promise<boolean> => {
+    return new Promise(resolve => {
+      if (!lastResendWarningMessageRef.current) {
+        resolve(true);
+      } else {
+        showAlert({
+          ...defaultConfirmationProps,
+          title: "Resend OTP?",
+          description: lastResendWarningMessageRef.current,
+          buttonTexts: {
+            primaryActionText: "Resend",
+            secondaryActionText: "No"
+          },
+          onOk: () => resolve(true),
+          onCancel: () => resolve(false),
+          visible: true
+        });
+      }
+    });
+  };
+
+  const handleRequestOTP = async (
+    fullNumber = mobileNumber
+  ): Promise<boolean> => {
+    try {
+      if (!(await getResendConfirmationIfNeeded())) return false;
+      const response = await requestOTP(fullNumber, codeKey, endpointTemp);
+      lastResendWarningMessageRef.current = response.warning ?? "";
+      return true;
+    } catch (e) {
+      if (e instanceof LoginLockedError) {
+        showAlert({
+          ...disabledAccessAlertProps,
+          description: e.message,
+          onOk: () => resetStage()
+        });
+      } else if (e instanceof LoginError) {
+        showAlert({
+          ...invalidEntryAlertProps,
+          description: e.message,
+          onOk: () => resetStage()
+        });
+      } else {
+        throw e;
+      }
+      return false;
+    }
   };
 
   const handleLogout = useCallback((): void => {
@@ -148,6 +207,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   useLayoutEffect(() => {
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
+      lastResendWarningMessageRef.current = "";
       switch (features?.FLOW_TYPE) {
         case "DEFAULT":
         case "MERCHANT":
@@ -289,8 +349,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             <LoginMobileNumberCard
               setLoginStage={setLoginStage}
               setMobileNumber={setMobileNumber}
-              codeKey={codeKey}
-              endpoint={endpointTemp}
+              handleRequestOTP={handleRequestOTP}
             />
           )}
           {loginStage === "OTP" && (
@@ -299,6 +358,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               mobileNumber={mobileNumber}
               codeKey={codeKey}
               endpoint={endpointTemp}
+              handleRequestOTP={handleRequestOTP}
             />
           )}
           <FeatureToggler feature="HELP_MODAL">
