@@ -2,6 +2,8 @@ import { IS_MOCK } from "../../config";
 import { SessionCredentials, OTPResponse } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
+import { AlertModalProps } from "../../components/AlertModal/AlertModal";
+import { defaultWarningProps, duplicateAlertProps } from "../../context/alert";
 
 export class LoginError extends Error {
   constructor(message: string) {
@@ -15,6 +17,11 @@ export class LoginLockedError extends LoginError {
     super(message);
     this.name = "LoginLockedError";
   }
+  alertProps: AlertModalProps = {
+    ...defaultWarningProps,
+    description: this.message,
+    visible: true
+  };
 }
 
 export class AuthTakenError extends LoginError {
@@ -22,6 +29,12 @@ export class AuthTakenError extends LoginError {
     super(message);
     this.name = "AuthTakenError";
   }
+  alertProps: AlertModalProps = {
+    ...duplicateAlertProps,
+    description:
+      "Get a new QR code that is not tagged to any contact number from your in-charge.",
+    visible: true
+  };
 }
 
 export const liveRequestOTP = async (
