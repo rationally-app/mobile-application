@@ -21,8 +21,7 @@ import {
   systemAlertProps,
   invalidEntryAlertProps,
   ERROR_MESSAGE,
-  disabledAccessAlertProps,
-  invalidEntryAlertProps
+  disabledAccessAlertProps
 } from "../../context/alert";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
@@ -68,7 +67,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const { setAuthInfo } = useAuthenticationContext();
   const { showAlert } = useContext(AlertModalContext);
   const { setFeatures, setProducts, setAllProducts } = useProductContext();
-  const { showAlert } = useContext(AlertModalContext);
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -120,6 +118,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         showAlert({
           ...systemAlertProps,
           description: e.message
+        });
       } else if (e instanceof LoginLockedError) {
         showAlert({
           ...disabledAccessAlertProps,

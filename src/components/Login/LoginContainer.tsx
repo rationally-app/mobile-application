@@ -49,8 +49,8 @@ import {
   defaultConfirmationProps,
   invalidEntryAlertProps,
   disabledAccessAlertProps
-import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
 } from "../../context/alert";
+import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -104,7 +104,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const { showAlert } = useContext(AlertModalContext);
   const { logout } = useLogout();
   const lastResendWarningMessageRef = useRef("");
-  const { showAlert } = useContext(AlertModalContext);
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
