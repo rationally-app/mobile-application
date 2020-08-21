@@ -1071,9 +1071,7 @@ describe("useCart", () => {
         result.current.updateCart("chocolate", 5);
       });
 
-      mockPostTransaction.mockRejectedValueOnce(
-        new Error("error when checking out.")
-      );
+      mockPostTransaction.mockRejectedValueOnce(new Error());
 
       await wait(() => {
         result.current.checkoutCart();

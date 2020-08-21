@@ -159,13 +159,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } else if (e instanceof LoginError) {
         showAlert({
           ...invalidEntryAlertProps,
-          description:
-            e.message === ERROR_MESSAGE.LAST_OTP_ERROR
-              ? ERROR_MESSAGE.LAST_OTP_ERROR
-              : ERROR_MESSAGE.OTP_ERROR
+          description: e.message,
+          onOk: () => resetStage()
         });
       } else {
-        alert(e);
+        throw e;
       }
       return false;
     }

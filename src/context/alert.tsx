@@ -31,7 +31,6 @@ export enum ERROR_MESSAGE {
   INVALID_CATEGORY = "Category does not exist.",
   INVALID_ID = "Enter or scan ID number again.",
   DUPLICATE_ID = "Enter or scan a different ID number.",
-  INVALID_QR = "Scan QR code again or get a new QR code from your in-charge.",
   QUOTA_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   SERVER_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists.",
   OTP_ERROR = "Enter OTP again.",
