@@ -12,7 +12,7 @@ import {
 
 export enum ERROR_MESSAGE {
   DUPLICATE_IDENTIFIER_INPUT = "Enter unique code details.",
-  DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any contact number.",
+  DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
   INVALID_IDENTIFIER_INPUT = "Enter or scan code details again.",
   MISSING_IDENTIFIER_INPUT = "Enter or scan code details.",
   INVALID_VOUCHER_INPUT = "Enter voucher code details again.",
