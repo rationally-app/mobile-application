@@ -106,6 +106,12 @@ export const systemAlertProps: AlertModalProps = {
   visible: true
 };
 
+export const disabledAccessAlertProps: AlertModalProps = {
+  ...defaultAlertProps,
+  title: "Disabled access",
+  visible: true
+};
+
 interface AlertModalContext {
   showAlert: (props: AlertModalProps) => void;
   clearAlert: () => void;
