@@ -56,7 +56,7 @@ const DistantTransactionTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>Limit reached on </AppText>
     <AppText style={sharedStyles.statusTitle}>
-      {format(transactionTime, "h:mma, d MMM yyyy")}.
+      {format(transactionTime, "d MMM yyyy, h:mma")}.
     </AppText>
   </>
 );
@@ -169,7 +169,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           const categoryName = policy?.name ?? category;
           const formattedDate = format(
             lastTransactionTime,
-            "h:mma, d MMM yyyy"
+            "d MMM yyyy, h:mma"
           );
           itemTransactions.push({
             itemHeader: `${categoryName} (${formattedDate})`,
@@ -192,7 +192,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         policy => policy.category === item.category
       );
       const categoryName = policy?.name ?? item.category;
-      const formattedDate = format(item.transactionTime, "h:mma, d MMM yyyy");
+      const formattedDate = format(item.transactionTime, "d MMM yyyy, h:mma");
       itemTransactions.push({
         itemHeader: `${categoryName} (${formattedDate})`,
         itemDetail: getAllIdentifierInputDisplay(item.identifierInputs ?? [])
