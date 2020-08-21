@@ -72,11 +72,6 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           onOk: () => setIsAddUserModalVisible(true)
         });
       }
-      showAlert({
-        ...wrongFormatAlertProps,
-        description: e.message,
-        onOk: () => setIsAddUserModalVisible(true)
-      });
     }
   };
 
