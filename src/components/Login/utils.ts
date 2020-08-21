@@ -19,7 +19,7 @@ export const decodeQr = (code: string): DecodedQrResponse => {
     return { endpoint: parsedCode.endpoint, key: parsedCode.key };
   } catch (e) {
     if (e.message.includes("Unexpected token"))
-      throw new AuthExpiredError(e.message);
+      throw new AuthExpiredError("No validity period");
     throw e;
   }
 };
