@@ -16,7 +16,6 @@ export class LoginError extends Error {
     super(message);
     this.name = "LoginError";
   }
-  displayMessage = "hi";
 }
 
 export class LoginLockedError extends LoginError {
@@ -50,7 +49,20 @@ export class AuthExpiredError extends LoginError {
   }
   alertProps: AlertModalProps = {
     ...systemAlertProps,
+    title: "Expired",
     description: ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN,
+    visible: true
+  };
+}
+
+export class AuthNotFoundError extends LoginError {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthNotFoundError";
+  }
+  alertProps: AlertModalProps = {
+    ...wrongFormatAlertProps,
+    description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
     visible: true
   };
 }
@@ -86,6 +98,10 @@ export const liveRequestOTP = async (
   } catch (e) {
     if (e.message === "Auth token already in use") {
       throw new AuthTakenError(e.message);
+    } else if (e.message === "Auth token is not currently valid") {
+      throw new AuthExpiredError(e.message);
+    } else if (e.message === "No user found") {
+      throw new AuthNotFoundError(e.message);
     } else if (e.message.match(/Try again in [1-9] minutes?\./)) {
       throw new LoginLockedError(e.message);
     } else {
