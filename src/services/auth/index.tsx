@@ -3,13 +3,20 @@ import { SessionCredentials, OTPResponse } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import { AlertModalProps } from "../../components/AlertModal/AlertModal";
-import { defaultWarningProps, duplicateAlertProps } from "../../context/alert";
+import {
+  defaultWarningProps,
+  duplicateAlertProps,
+  ERROR_MESSAGE,
+  systemAlertProps,
+  wrongFormatAlertProps
+} from "../../context/alert";
 
 export class LoginError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "LoginError";
   }
+  displayMessage = "hi";
 }
 
 export class LoginLockedError extends LoginError {
@@ -31,8 +38,31 @@ export class AuthTakenError extends LoginError {
   }
   alertProps: AlertModalProps = {
     ...duplicateAlertProps,
-    description:
-      "Get a new QR code that is not tagged to any contact number from your in-charge.",
+    description: ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN,
+    visible: true
+  };
+}
+
+export class AuthExpiredError extends LoginError {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthExpiredError";
+  }
+  alertProps: AlertModalProps = {
+    ...systemAlertProps,
+    description: ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN,
+    visible: true
+  };
+}
+
+export class AuthInvalidError extends LoginError {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthInvalidError";
+  }
+  alertProps: AlertModalProps = {
+    ...wrongFormatAlertProps,
+    description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_QR,
     visible: true
   };
 }
