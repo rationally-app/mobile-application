@@ -12,17 +12,16 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { useAuthenticationContext } from "../../context/auth";
-import { validateOTP, LoginError, LoginLockedError } from "../../services/auth";
+import {
+  validateOTP,
+  LoginError,
+  LoginLockedError,
+  OTPWrongError
+} from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
-import {
-  AlertModalContext,
-  disabledAccessAlertProps,
-  invalidEntryAlertProps,
-  ERROR_MESSAGE,
-  systemAlertProps
-} from "../../context/alert";
+import { AlertModalContext, invalidEntryAlertProps } from "../../context/alert";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -67,6 +66,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const { setAuthInfo } = useAuthenticationContext();
   const { showAlert } = useContext(AlertModalContext);
   const { setFeatures, setProducts, setAllProducts } = useProductContext();
+  const setState = useState()[1];
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -120,26 +120,17 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
         );
       } else if (e instanceof LoginLockedError) {
-        showAlert({
-          ...disabledAccessAlertProps,
-          description: e.message,
-          onOk: () => resetStage()
-        });
-      } else if (e instanceof LoginLockedError) {
-        showAlert({
-          ...disabledAccessAlertProps,
-          description: e.message,
-          onOk: () => resetStage()
-        });
+        showAlert({ ...e.alertProps, onOk: () => resetStage() });
+      } else if (e instanceof OTPWrongError) {
+        showAlert(e.alertProps);
       } else if (e instanceof LoginError) {
         showAlert({
           ...invalidEntryAlertProps,
           description: e.message
         });
       } else {
-        showAlert({
-          ...systemAlertProps,
-          description: ERROR_MESSAGE.SERVER_ERROR
+        setState(() => {
+          throw e; // Let ErrorBoundary handle
         });
       }
       setIsLoading(false);

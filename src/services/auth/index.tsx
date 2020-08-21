@@ -3,11 +3,12 @@ import { SessionCredentials, OTPResponse } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import {
-  defaultWarningProps,
   duplicateAlertProps,
   ERROR_MESSAGE,
   systemAlertProps,
-  wrongFormatAlertProps
+  wrongFormatAlertProps,
+  invalidEntryAlertProps,
+  disabledAccessAlertProps
 } from "../../context/alert";
 
 export class LoginError extends Error {
@@ -15,7 +16,11 @@ export class LoginError extends Error {
     super(message);
     this.name = "LoginError";
   }
-  alertProps = systemAlertProps;
+  alertProps = {
+    ...systemAlertProps,
+    description: this.message,
+    visible: true
+  };
 }
 
 export class LoginLockedError extends LoginError {
@@ -23,7 +28,7 @@ export class LoginLockedError extends LoginError {
     super(message);
     this.name = "LoginLockedError";
     this.alertProps = {
-      ...defaultWarningProps,
+      ...disabledAccessAlertProps,
       description: this.message,
       visible: true
     };
@@ -81,6 +86,20 @@ export class AuthInvalidError extends AuthError {
     this.alertProps = {
       ...wrongFormatAlertProps,
       description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT,
+      visible: true
+    };
+  }
+}
+
+export class OTPWrongError extends LoginError {
+  constructor(message: string, isLastTry: boolean) {
+    super(message);
+    this.name = "AuthInvalidError";
+    this.alertProps = {
+      ...invalidEntryAlertProps,
+      description: isLastTry
+        ? ERROR_MESSAGE.LAST_OTP_ERROR
+        : ERROR_MESSAGE.OTP_ERROR,
       visible: true
     };
   }
@@ -148,6 +167,10 @@ export const liveValidateOTP = async (
     }
     if (e.message.match(/Try again in [1-9] minutes?\./)) {
       throw new LoginLockedError(e.message);
+    } else if (e.message === "Wrong OTP entered") {
+      throw new OTPWrongError(e.message, false);
+    } else if (e.message === "Wrong OTP entered, last try remaining") {
+      throw new OTPWrongError(e.message, true);
     } else {
       throw new LoginError(e.message);
     }

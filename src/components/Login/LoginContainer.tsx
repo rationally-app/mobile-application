@@ -45,16 +45,12 @@ import {
   requestOTP,
   LoginError,
   LoginLockedError,
-  AuthTakenError,
   AuthError
 } from "../../services/auth";
 import {
   AlertModalContext,
   defaultConfirmationProps,
-  invalidEntryAlertProps,
   ERROR_MESSAGE,
-  disabledAccessAlertProps,
-  duplicateAlertProps,
   systemAlertProps
 } from "../../context/alert";
 
@@ -146,25 +142,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof AuthTakenError) {
-        showAlert({
-          ...duplicateAlertProps,
-          description: ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN
-        });
+      if (e instanceof AuthError) {
+        showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else if (e instanceof LoginLockedError) {
-        showAlert({
-          ...disabledAccessAlertProps,
-          description: e.message,
-          onOk: () => resetStage()
-        });
+        showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else if (e instanceof LoginError) {
-        showAlert({
-          ...invalidEntryAlertProps,
-          description: e.message,
-          onOk: () => resetStage()
-        });
+        showAlert(e.alertProps);
       } else {
-        throw e;
+        setState(() => {
+          throw e; // Let ErrorBoundary handle
+        });
       }
       return false;
     }
