@@ -74,7 +74,7 @@ export class AuthInvalidError extends LoginError {
   }
   alertProps: AlertModalProps = {
     ...wrongFormatAlertProps,
-    description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_QR,
+    description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT,
     visible: true
   };
 }
