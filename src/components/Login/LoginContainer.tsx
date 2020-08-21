@@ -149,7 +149,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           onOk: () => resetStage()
         });
       } else {
-        alert(e);
+        throw e;
       }
       return false;
     }
