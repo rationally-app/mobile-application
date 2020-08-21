@@ -15,8 +15,9 @@ export const decodeQr = (code: string): DecodedQrResponse => {
   try {
     const parsedCode: QrCode = JSON.parse(code);
     if (!parsedCode.endpoint)
-      throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_QR);
-    if (!parsedCode.key) throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_QR);
+      throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT);
+    if (!parsedCode.key)
+      throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT);
     return { endpoint: parsedCode.endpoint, key: parsedCode.key };
   } catch (e) {
     if (e.message.includes("Unexpected token"))
