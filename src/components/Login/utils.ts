@@ -22,9 +22,6 @@ export const decodeQr = (code: string): DecodedQrResponse => {
   } catch (e) {
     if (e.message.includes("Unexpected token"))
       throw new Error(ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN);
-    // if user is not an operator
-    if (e.message.includes("Unauthorized auth token"))
-      throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN);
     throw e;
   }
 };
