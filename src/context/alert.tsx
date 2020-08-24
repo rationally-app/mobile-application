@@ -23,7 +23,6 @@ export enum ERROR_MESSAGE {
   INVALID_COUNTRY_CODE = "Enter valid country code.",
   MISSING_SELECTION = "Select at least one item to checkout.",
   AUTH_FAILURE_INVALID_TOKEN = "Get a new QR code from your in-charge.",
-  AUTH_FAILURE_EXPIRED_TOKEN = "We could not find a validity period. Get a new QR code from your in-charge.",
   AUTH_FAILURE_INVALID_FORMAT = "Scan QR code again or get a new QR code from your in-charge.",
   ENV_VERSION_ERROR = "Encountered an issue obtaining environment information. We've noted this down and are looking into it!",
   INSUFFICIENT_QUOTA = "Insufficient quota.",

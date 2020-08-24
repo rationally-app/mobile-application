@@ -59,9 +59,9 @@ export class AuthExpiredError extends AuthError {
     super(message);
     this.name = "AuthExpiredError";
     this.alertProps = {
-      ...systemAlertProps,
+      ...wrongFormatAlertProps,
       title: "Expired",
-      description: ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN,
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
       visible: true
     };
   }
@@ -94,7 +94,7 @@ export class AuthInvalidError extends AuthError {
 export class OTPWrongError extends LoginError {
   constructor(message: string, isLastTry: boolean) {
     super(message);
-    this.name = "AuthInvalidError";
+    this.name = "OTPWrongError";
     this.alertProps = {
       ...invalidEntryAlertProps,
       description: isLastTry
@@ -126,7 +126,10 @@ export const liveRequestOTP = async (
       throw new AuthTakenError(e.message);
     } else if (e.message === "Auth token is not currently valid") {
       throw new AuthExpiredError(e.message);
-    } else if (e.message === "No user found") {
+    } else if (
+      e.message === "No user found" ||
+      e.message === "Unauthorized auth token"
+    ) {
       throw new AuthNotFoundError(e.message);
     } else if (e.message.match(/Try again in [1-9] minutes?\./)) {
       throw new LoginLockedError(e.message);
