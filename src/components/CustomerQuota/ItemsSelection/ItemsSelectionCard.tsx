@@ -44,7 +44,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const { getFeatures, products, features } = useProductContext();
   const { showAlert } = useContext(AlertModalContext);
 
-  const onModalCheck = async (input: string): Promise<void> => {
+  const onCheckAddedUsers = async (input: string): Promise<void> => {
     try {
       const id = validateAndCleanId(
         input,
@@ -145,7 +145,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <AddUserModal
         isVisible={isAddUserModalVisible}
         setIsVisible={setIsAddUserModalVisible}
-        validateAndUpdateIds={onModalCheck}
+        validateAndUpdateIds={onCheckAddedUsers}
       />
     </View>
   );

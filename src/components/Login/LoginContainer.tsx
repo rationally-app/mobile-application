@@ -49,9 +49,9 @@ import {
 } from "../../services/auth";
 import {
   AlertModalContext,
-  defaultConfirmationProps,
+  systemAlertProps,
   ERROR_MESSAGE,
-  systemAlertProps
+  defaultConfirmationProps
 } from "../../context/alert";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;

@@ -21,7 +21,11 @@ import {
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
-import { AlertModalContext, invalidEntryAlertProps } from "../../context/alert";
+import {
+  AlertModalContext,
+  systemAlertProps,
+  invalidEntryAlertProps
+} from "../../context/alert";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -115,10 +119,10 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     } catch (e) {
       Sentry.captureException(e);
       if (e instanceof EnvVersionError) {
-        Sentry.captureException(e);
-        alert(
-          "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
-        );
+        showAlert({
+          ...systemAlertProps,
+          description: e.message
+        });
       } else if (e instanceof LoginLockedError) {
         showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else if (e instanceof OTPWrongError) {
