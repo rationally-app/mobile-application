@@ -316,7 +316,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             title: "Expired",
             description: e.message
           });
-        } else if (e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN) {
+        } else if (
+          e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT ||
+          e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+        ) {
           showAlert({
             ...wrongFormatAlertProps,
             description: e.message
