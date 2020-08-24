@@ -21,12 +21,12 @@ describe("decodeQr", () => {
     expect.assertions(2);
     const missingKey = `{"keys": "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4","endpoint": "https://somewhere.com"}`;
     expect(() => decodeQr(missingKey)).toThrow(
-      "We are currently facing login issues. Get a new QR code from your in-charge."
+      "Scan QR code again or get a new QR code from your in-charge."
     );
 
     const missingEndpoint = `{"key": "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4","endpointed": "https://somewhere.com"}`;
     expect(() => decodeQr(missingEndpoint)).toThrow(
-      "We are currently facing login issues. Get a new QR code from your in-charge."
+      "Scan QR code again or get a new QR code from your in-charge."
     );
   });
 });
