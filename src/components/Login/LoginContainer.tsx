@@ -104,6 +104,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const { showAlert } = useContext(AlertModalContext);
   const { logout } = useLogout();
   const lastResendWarningMessageRef = useRef("");
+  const setState = useState()[1];
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
@@ -152,7 +153,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           onOk: () => resetStage()
         });
       } else {
-        throw e;
+        setState(() => {
+          throw e; // Let ErrorBoundary handle
+        });
       }
       return false;
     }
@@ -319,7 +322,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             description: e.message
           });
         } else {
-          throw error;
+          setState(() => {
+            throw e; // Let ErrorBoundary handle
+          });
         }
         setIsLoading(false);
       }
