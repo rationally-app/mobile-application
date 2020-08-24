@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
@@ -17,7 +17,7 @@ import {
   Policy
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import { ERROR_MESSAGE } from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 
 export type CartItem = {
   category: string;
@@ -167,7 +167,7 @@ export const useCart = (
   const [error, setError] = useState<Error>();
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
-
+  const { showAlert } = useContext(AlertModalContext);
   const clearError = useCallback((): void => setError(undefined), []);
 
   /**
@@ -224,7 +224,8 @@ export const useCart = (
     prevProducts,
     products,
     setProducts,
-    setFeatures
+    setFeatures,
+    showAlert
   ]);
 
   /**
@@ -296,21 +297,20 @@ export const useCart = (
           ) {
           }
           allIdentifierInputs.push(...identifierInputs);
-
           return { category, quantity, identifierInputs };
         });
 
       if (transactions.length === 0) {
-        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         setCartState("DEFAULT");
+        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         return;
       }
 
       try {
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
-        setError(error);
         setCartState("DEFAULT");
+        setError(error);
         return;
       }
 
@@ -325,7 +325,6 @@ export const useCart = (
         setCartState("PURCHASED");
       } catch (e) {
         setCartState("DEFAULT");
-        // backend will throw general duplicate identifier message
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {

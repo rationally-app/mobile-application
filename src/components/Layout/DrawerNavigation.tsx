@@ -1,11 +1,5 @@
 import React, { FunctionComponent, useCallback, useContext } from "react";
-import {
-  Linking,
-  StyleSheet,
-  Alert,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   DrawerContentComponentProps,
   DrawerActions
@@ -17,6 +11,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
+import {
+  AlertModalContext,
+  defaultConfirmationProps
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   container: {
@@ -92,6 +90,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   navigation
 }) => {
   const { logout } = useLogout();
+  const { showAlert } = useContext(AlertModalContext);
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
   const handleLogout = useCallback((): void => {
@@ -99,21 +98,16 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   }, [logout, navigation.dispatch]);
 
   const onPressLogout = (): void => {
-    Alert.alert(
-      "Confirm Logout",
-      "Are you sure you want to log out?",
-      [
-        {
-          text: "Cancel"
-        },
-        {
-          text: "Logout",
-          onPress: handleLogout,
-          style: "destructive"
-        }
-      ],
-      { cancelable: false }
-    );
+    showAlert({
+      ...defaultConfirmationProps,
+      title: "Confirm Logout?",
+      buttonTexts: {
+        primaryActionText: "Logout",
+        secondaryActionText: "Cancel"
+      },
+      visible: true,
+      onOk: handleLogout
+    });
   };
 
   const onPressCloseDrawer = (): void => {

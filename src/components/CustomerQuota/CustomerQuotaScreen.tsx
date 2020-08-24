@@ -6,6 +6,7 @@ import React, {
   useContext
 } from "react";
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
+import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
 import { useAuthenticationContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -35,7 +36,6 @@ import {
   ERROR_MESSAGE
 } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
-import { NavigationProps } from "../../types";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -142,8 +142,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       return;
     }
     if (cartState === "FETCHING_QUOTA") {
-      const message =
-        error.message ?? "Encounted an error while fetching quota";
+      const message = error.message ?? ERROR_MESSAGE.QUOTA_ERROR;
       showAlert({
         ...systemAlertProps,
         description: message,
@@ -163,7 +162,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           showAlert({
             ...incompleteEntryAlertProps,
             description:
-              campaignFeatures?.campaignName === "TT Token"
+              campaignFeatures?.campaignName === "TT Tokens"
                 ? ERROR_MESSAGE.MISSING_POD_INPUT
                 : campaignFeatures?.campaignName.includes("Vouchers")
                 ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT

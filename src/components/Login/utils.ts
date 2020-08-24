@@ -1,3 +1,5 @@
+import { ERROR_MESSAGE } from "../../context/alert";
+
 interface QrCode {
   version: string;
   endpoint: string;
@@ -12,14 +14,14 @@ interface DecodedQrResponse {
 export const decodeQr = (code: string): DecodedQrResponse => {
   try {
     const parsedCode: QrCode = JSON.parse(code);
-    if (!parsedCode.endpoint) throw new Error("No endpoint specified");
-    if (!parsedCode.key) throw new Error("No key specified");
+    if (!parsedCode.endpoint)
+      throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT);
+    if (!parsedCode.key)
+      throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT);
     return { endpoint: parsedCode.endpoint, key: parsedCode.key };
   } catch (e) {
     if (e.message.includes("Unexpected token"))
-      throw new Error(
-        "Invalid QR code format, consider regenerating your QR code"
-      );
+      throw new Error(ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN);
     throw e;
   }
 };

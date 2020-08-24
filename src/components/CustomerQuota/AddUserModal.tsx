@@ -2,15 +2,12 @@ import React, { FunctionComponent, useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
-  Alert,
   Modal,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  Vibration
+  TouchableWithoutFeedback
 } from "react-native";
 import { InputIdSection } from "../CustomerDetails/InputIdSection";
 import { IdScanner } from "../IdScanner/IdScanner";
-import { validateAndCleanId } from "../../utils/validateIdentification";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { color, size } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -68,15 +65,13 @@ const CloseButton: FunctionComponent<{ onPress: () => void }> = ({
 interface AddUserModal {
   isVisible: boolean;
   setIsVisible: (visible: boolean) => void;
-  ids: string[];
-  addId: (id: string) => void;
+  validateAndUpdateIds: (input: string) => Promise<void>;
 }
 
 export const AddUserModal: FunctionComponent<AddUserModal> = ({
   isVisible,
   setIsVisible,
-  ids,
-  addId
+  validateAndUpdateIds
 }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
@@ -90,38 +85,9 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   }, [isVisible]);
 
   const onCheck = async (input: string): Promise<void> => {
-    try {
-      setIsScanningEnabled(false);
-      const id = validateAndCleanId(
-        input,
-        features?.id?.validation,
-        features?.id?.validationRegex
-      );
-      Vibration.vibrate(50);
-      if (ids.indexOf(id) > -1) {
-        throw new Error(
-          "You've added this ID before, please scan a different ID."
-        );
-      }
-      addId(id);
-      setIsVisible(false);
-      setIdInput("");
-    } catch (e) {
-      setIsScanningEnabled(false);
-      Alert.alert(
-        "Error",
-        e.message || e,
-        [
-          {
-            text: "OK",
-            onPress: () => setIsScanningEnabled(true)
-          }
-        ],
-        {
-          onDismiss: () => setIsScanningEnabled(true) // for android outside alert clicks
-        }
-      );
-    }
+    setIsScanningEnabled(false);
+    await validateAndUpdateIds(input);
+    setIdInput("");
   };
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {

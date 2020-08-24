@@ -109,7 +109,7 @@ describe("validateIdentifierInputs", () => {
     ).toThrow("Enter valid contact number");
   });
 
-  it("should throw error if at least one of the identifiers has empty value", () => {
+  it("should throw error if identifier has empty value", () => {
     expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([

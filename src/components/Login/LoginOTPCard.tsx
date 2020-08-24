@@ -1,8 +1,8 @@
 import React, {
   useState,
+  useContext,
   useEffect,
-  FunctionComponent,
-  useContext
+  FunctionComponent
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -18,8 +18,10 @@ import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
 import {
   AlertModalContext,
-  disabledAccessAlertProps,
-  invalidEntryAlertProps
+  systemAlertProps,
+  invalidEntryAlertProps,
+  ERROR_MESSAGE,
+  disabledAccessAlertProps
 } from "../../context/alert";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
@@ -63,8 +65,8 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   );
 
   const { setAuthInfo } = useAuthenticationContext();
-  const { setFeatures, setProducts, setAllProducts } = useProductContext();
   const { showAlert } = useContext(AlertModalContext);
+  const { setFeatures, setProducts, setAllProducts } = useProductContext();
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -111,11 +113,12 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         resetStage();
       }
     } catch (e) {
+      Sentry.captureException(e);
       if (e instanceof EnvVersionError) {
-        Sentry.captureException(e);
-        alert(
-          "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
-        );
+        showAlert({
+          ...systemAlertProps,
+          description: e.message
+        });
       } else if (e instanceof LoginLockedError) {
         showAlert({
           ...disabledAccessAlertProps,
@@ -128,7 +131,10 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           description: e.message
         });
       } else {
-        alert(e);
+        showAlert({
+          ...systemAlertProps,
+          description: ERROR_MESSAGE.SERVER_ERROR
+        });
       }
       setIsLoading(false);
     }

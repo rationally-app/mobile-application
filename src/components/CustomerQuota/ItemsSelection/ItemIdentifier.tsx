@@ -1,11 +1,12 @@
-import React, { FunctionComponent, useState } from "react";
-import { View, StyleSheet, Alert } from "react-native";
+import React, { FunctionComponent, useState, useContext } from "react";
+import { View, StyleSheet } from "react-native";
 import { size } from "../../../common/styles";
 import { PolicyIdentifier } from "../../../types";
 import { IdentifierPhoneNumberInput } from "./IdentifierLayout/IdentifierPhoneNumberInput";
 import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
+import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -30,6 +31,7 @@ export const ItemIdentifier: FunctionComponent<{
 }> = ({ index, identifier, updateIdentifierValue }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const { showAlert } = useContext(AlertModalContext);
 
   const { label, textInput, scanButton } = identifier;
 
@@ -40,11 +42,10 @@ export const ItemIdentifier: FunctionComponent<{
       setShouldShowCamera(false);
     } catch (e) {
       setShouldShowCamera(false);
-      Alert.alert("Error", e.message || e, [
-        {
-          text: "OK"
-        }
-      ]);
+      showAlert({
+        ...systemAlertProps,
+        description: e.message || e
+      });
     }
   };
 
