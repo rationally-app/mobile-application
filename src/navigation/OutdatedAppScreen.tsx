@@ -2,7 +2,7 @@ import React, { useEffect, FunctionComponent } from "react";
 import * as Sentry from "sentry-expo";
 import { AppText } from "../components/Layout/AppText";
 import { StyleSheet, View, Linking, Platform } from "react-native";
-import { size, fontSize, color } from "../common/styles";
+import { size, fontSize } from "../common/styles";
 import { DarkButton } from "../components/Layout/Buttons/DarkButton";
 
 const styles = StyleSheet.create({
