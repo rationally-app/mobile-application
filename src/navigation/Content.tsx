@@ -6,6 +6,7 @@ import {
 } from "react-navigation";
 import CustomerQuotaStack from "./CustomerQuotaStack";
 import MerchantPayoutStack from "./MerchantPayoutStack";
+import OutdatedAppScreen from "./OutdatedAppScreen";
 import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
@@ -15,11 +16,12 @@ import { Linking } from "expo";
 
 const SwitchNavigator = createSwitchNavigator(
   {
+    OutdatedAppScreen: { screen: OutdatedAppScreen },
     LoginScreen: { screen: LoginScreen, path: "login" },
     CustomerQuotaStack,
     MerchantPayoutStack
   },
-  { initialRouteName: "LoginScreen" }
+  { initialRouteName: "OutdatedAppScreen" }
 );
 
 const AppContainer = createAppContainer(SwitchNavigator);
