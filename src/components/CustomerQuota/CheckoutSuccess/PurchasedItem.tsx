@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { size } from "../../../common/styles";
 import { CampaignPolicy } from "../../../types";
 import { formatQuantityText } from "../utils";
@@ -6,7 +6,6 @@ import { View } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { ItemQuantities } from "../types";
 import { sum } from "lodash";
-import React from "react";
 import { sharedStyles } from "./sharedStyles";
 import { ProductContext } from "../../../context/products";
 
