@@ -19,7 +19,7 @@ export class LoginError extends Error {
   }
   alertProps = {
     ...systemAlertProps,
-    description: ERROR_MESSAGE.LOGIN_ERROR,
+    description: ERROR_MESSAGE.LOGIN_ERROR as string,
     visible: true
   };
 }
@@ -30,7 +30,7 @@ export class LoginLockedError extends LoginError {
     this.name = "LoginLockedError";
     this.alertProps = {
       ...disabledAccessAlertProps,
-      description: this.message as ERROR_MESSAGE
+      description: this.message
     };
   }
 }
