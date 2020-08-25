@@ -8,7 +8,8 @@ import {
   systemAlertProps,
   wrongFormatAlertProps,
   invalidEntryAlertProps,
-  disabledAccessAlertProps
+  disabledAccessAlertProps,
+  expiredAlertProps
 } from "../../context/alert";
 
 export class LoginError extends Error {
@@ -29,8 +30,7 @@ export class LoginLockedError extends LoginError {
     this.name = "LoginLockedError";
     this.alertProps = {
       ...disabledAccessAlertProps,
-      description: this.message,
-      visible: true
+      description: this.message
     };
   }
 }
@@ -48,8 +48,7 @@ export class AuthTakenError extends AuthError {
     this.name = "AuthTakenError";
     this.alertProps = {
       ...duplicateAlertProps,
-      description: ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN,
-      visible: true
+      description: ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN
     };
   }
 }
@@ -59,10 +58,8 @@ export class AuthExpiredError extends AuthError {
     super(message);
     this.name = "AuthExpiredError";
     this.alertProps = {
-      ...wrongFormatAlertProps,
-      title: "Expired",
-      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
-      visible: true
+      ...expiredAlertProps,
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
     };
   }
 }
@@ -73,8 +70,7 @@ export class AuthNotFoundError extends AuthError {
     this.name = "AuthNotFoundError";
     this.alertProps = {
       ...wrongFormatAlertProps,
-      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
-      visible: true
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
     };
   }
 }
@@ -85,8 +81,7 @@ export class AuthInvalidError extends AuthError {
     this.name = "AuthInvalidError";
     this.alertProps = {
       ...wrongFormatAlertProps,
-      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT,
-      visible: true
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT
     };
   }
 }
@@ -99,8 +94,18 @@ export class OTPWrongError extends LoginError {
       ...invalidEntryAlertProps,
       description: isLastTry
         ? ERROR_MESSAGE.LAST_OTP_ERROR
-        : ERROR_MESSAGE.OTP_ERROR,
-      visible: true
+        : ERROR_MESSAGE.OTP_ERROR
+    };
+  }
+}
+
+export class OTPExpiredError extends LoginError {
+  constructor(message: string) {
+    super(message);
+    this.name = "OTPWrongError";
+    this.alertProps = {
+      ...expiredAlertProps,
+      description: ERROR_MESSAGE.OTP_EXPIRED
     };
   }
 }
@@ -131,6 +136,9 @@ export const liveRequestOTP = async (
       e.message === "Unauthorized auth token"
     ) {
       throw new AuthNotFoundError(e.message);
+    } else if (e.message === "Auth token is of invalid format") {
+      // this should not happen since we check the format before coming to this stage
+      throw new AuthInvalidError(e.message);
     } else if (e.message.match(/Try again in [1-9] minutes?\./)) {
       throw new LoginLockedError(e.message);
     } else {
@@ -174,6 +182,8 @@ export const liveValidateOTP = async (
       throw new OTPWrongError(e.message, false);
     } else if (e.message === "Wrong OTP entered, last try remaining") {
       throw new OTPWrongError(e.message, true);
+    } else if (e.message === "OTP expired") {
+      throw new OTPExpiredError(e.message);
     } else {
       throw new LoginError(e.message);
     }

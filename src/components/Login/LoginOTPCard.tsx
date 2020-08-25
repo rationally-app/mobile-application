@@ -16,7 +16,8 @@ import {
   validateOTP,
   LoginError,
   LoginLockedError,
-  OTPWrongError
+  OTPWrongError,
+  OTPExpiredError
 } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
@@ -126,6 +127,8 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       } else if (e instanceof LoginLockedError) {
         showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else if (e instanceof OTPWrongError) {
+        showAlert(e.alertProps);
+      } else if (e instanceof OTPExpiredError) {
         showAlert(e.alertProps);
       } else if (e instanceof LoginError) {
         showAlert({
