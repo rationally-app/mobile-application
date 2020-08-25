@@ -7,14 +7,13 @@ const styles = StyleSheet.create({
   reasonComponent: {
     margin: 0,
     marginBottom: size(2),
-    marginHorizontal: -size(2),
+    marginHorizontal: -size(3),
     paddingVertical: size(2.5),
     backgroundColor: color("grey", 10)
   },
   reasonLayout: {
-    paddingLeft: size(2),
     flexDirection: "row",
-    marginHorizontal: 0,
+    marginHorizontal: size(3),
     marginBottom: 0
   },
   reasonAlert: {
