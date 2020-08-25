@@ -38,7 +38,6 @@ export enum ERROR_MESSAGE {
 const defaultAlertProps: AlertModalProps = {
   alertType: "ERROR",
   title: "",
-  description: "",
   buttonTexts: {
     primaryActionText: "OK"
   },
@@ -51,7 +50,6 @@ const defaultAlertProps: AlertModalProps = {
 export const defaultWarningProps: AlertModalProps = {
   alertType: "WARN",
   title: "",
-  description: "",
   buttonTexts: {
     primaryActionText: "Back",
     secondaryActionText: "Confirm"
@@ -65,7 +63,6 @@ export const defaultWarningProps: AlertModalProps = {
 export const defaultConfirmationProps: AlertModalProps = {
   alertType: "CONFIRM",
   title: "",
-  description: "",
   buttonTexts: {
     primaryActionText: "Back",
     secondaryActionText: "Confirm"

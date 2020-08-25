@@ -38,14 +38,14 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold",
     fontSize: fontSize(2),
     color: color("blue", 50),
-    textAlign: "center",
-    marginBottom: size(1)
-  },
-  modalText: {
-    marginBottom: size(4),
     textAlign: "center"
   },
-  modalGroupButton: {
+  modalDescription: {
+    marginTop: size(1),
+    textAlign: "center"
+  },
+  modalButtonRow: {
+    marginTop: size(4),
     flexDirection: "row",
     alignSelf: "stretch"
   },
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 export interface AlertModalProps {
   alertType: "ERROR" | "WARN" | "CONFIRM" | "INFO";
   title: string;
-  description: string;
+  description?: string;
   buttonTexts: {
     primaryActionText: string;
     /**
@@ -95,8 +95,10 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
         <View style={styles.modalView}>
           {alertType === "ERROR" && <AlertIcon style={styles.alertIcon} />}
           <AppText style={styles.modalTitle}>{title}</AppText>
-          <AppText style={styles.modalText}>{description}</AppText>
-          <View style={styles.modalGroupButton}>
+          {description ? (
+            <AppText style={styles.modalDescription}>{description}</AppText>
+          ) : null}
+          <View style={styles.modalButtonRow}>
             {buttonTexts.secondaryActionText && (
               <View style={styles.modalSecondaryButton}>
                 <SecondaryButton
