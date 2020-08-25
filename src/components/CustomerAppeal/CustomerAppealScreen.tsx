@@ -24,7 +24,7 @@ import {
   ReasonSelectionCard,
   Reason
 } from "./ReasonSelection/ReasonSelectionCard";
-import { pushRoute } from "../../common/navigation";
+import { pushRoute, navigateHome } from "../../common/navigation";
 import { useAuthenticationContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
@@ -75,7 +75,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   }, [validateTokenExpiry]);
 
   const onCancel = useCallback((): void => {
-    navigation.goBack();
+    navigateHome(navigation);
   }, [navigation]);
 
   const messageContent = useContext(ImportantMessageContentContext);
