@@ -30,7 +30,7 @@ export class LoginLockedError extends LoginError {
     this.name = "LoginLockedError";
     this.alertProps = {
       ...disabledAccessAlertProps,
-      description: this.message
+      description: this.message as ERROR_MESSAGE
     };
   }
 }
