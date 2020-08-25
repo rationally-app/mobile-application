@@ -101,6 +101,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     clearError
   } = useCart(ids, token, endpoint);
 
+  const { products } = useProductContext();
+
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "cartState",
@@ -109,7 +111,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [cartState]);
 
   const onCancel = useCallback((): void => {
-    const { products } = useProductContext();
     const isAppeal = products.some(
       product => product.categoryType === "APPEAL"
     );
