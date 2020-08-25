@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     backgroundColor: color("grey", 10)
   },
   reasonLayout: {
+    paddingLeft: size(2),
     flexDirection: "row",
     marginHorizontal: 0,
     marginBottom: 0
