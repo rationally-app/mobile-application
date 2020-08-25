@@ -22,11 +22,7 @@ import {
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
-import {
-  AlertModalContext,
-  systemAlertProps,
-  invalidEntryAlertProps
-} from "../../context/alert";
+import { AlertModalContext, systemAlertProps } from "../../context/alert";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -126,15 +122,10 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         });
       } else if (e instanceof LoginLockedError) {
         showAlert({ ...e.alertProps, onOk: () => resetStage() });
-      } else if (e instanceof OTPWrongError) {
-        showAlert(e.alertProps);
-      } else if (e instanceof OTPExpiredError) {
+      } else if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
         showAlert(e.alertProps);
       } else if (e instanceof LoginError) {
-        showAlert({
-          ...invalidEntryAlertProps,
-          description: e.message
-        });
+        showAlert(e.alertProps);
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle

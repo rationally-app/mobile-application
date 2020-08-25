@@ -19,7 +19,7 @@ export class LoginError extends Error {
   }
   alertProps = {
     ...systemAlertProps,
-    description: this.message,
+    description: ERROR_MESSAGE.LOGIN_ERROR,
     visible: true
   };
 }
