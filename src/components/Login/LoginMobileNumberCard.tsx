@@ -2,7 +2,8 @@ import React, {
   useState,
   FunctionComponent,
   Dispatch,
-  SetStateAction
+  SetStateAction,
+  useContext
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -10,13 +11,17 @@ import { size } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { LoginStage } from "./types";
-import { requestOTP } from "../../services/auth";
 import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 import {
   createFullNumber,
   countryCodeValidator,
   mobileNumberValidator
 } from "../../utils/validatePhoneNumbers";
+import {
+  AlertModalContext,
+  wrongFormatAlertProps,
+  ERROR_MESSAGE
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -27,19 +32,18 @@ const styles = StyleSheet.create({
 interface LoginMobileNumberCard {
   setLoginStage: Dispatch<SetStateAction<LoginStage>>;
   setMobileNumber: Dispatch<SetStateAction<string>>;
-  codeKey: string;
-  endpoint: string;
+  handleRequestOTP: (fullNumber?: string) => Promise<boolean>;
 }
 
 export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
   setLoginStage,
   setMobileNumber,
-  codeKey,
-  endpoint
+  handleRequestOTP
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("+65");
   const [mobileNumberValue, setMobileNumberValue] = useState("");
+  const { showAlert } = useContext(AlertModalContext);
 
   const onChangeCountryCode = (value: string): void => {
     if (value.length <= 4) {
@@ -54,23 +58,26 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   const onRequestOTP = async (): Promise<void> => {
     setIsLoading(true);
-    try {
-      const fullNumber = createFullNumber(countryCode, mobileNumberValue);
-      await requestOTP(fullNumber, codeKey, endpoint);
-      setIsLoading(false);
+    const fullNumber = createFullNumber(countryCode, mobileNumberValue);
+    const isRequestSuccessful = await handleRequestOTP(fullNumber);
+    setIsLoading(false);
+    if (isRequestSuccessful) {
       setMobileNumber(fullNumber);
       setLoginStage("OTP");
-    } catch (e) {
-      setIsLoading(false);
-      alert(e);
     }
   };
 
   const onSubmitMobileNumber = (): void => {
     if (!countryCodeValidator(countryCode)) {
-      alert("Invalid country code");
+      showAlert({
+        ...wrongFormatAlertProps,
+        description: ERROR_MESSAGE.INVALID_COUNTRY_CODE
+      });
     } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
-      alert("Invalid mobile phone number");
+      showAlert({
+        ...wrongFormatAlertProps,
+        description: ERROR_MESSAGE.INVALID_PHONE_NUMBER
+      });
     } else {
       onRequestOTP();
     }

@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState } from "react";
-import { View, Alert } from "react-native";
+import React, { FunctionComponent, useState, useContext } from "react";
+import { View, Vibration } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { size, color } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
@@ -10,6 +10,16 @@ import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
 import { useProductContext } from "../../../context/products";
+import {
+  AlertModalContext,
+  defaultWarningProps,
+  wrongFormatAlertProps,
+  systemAlertProps,
+  ERROR_MESSAGE
+} from "../../../context/alert";
+import { validateAndCleanId } from "../../../utils/validateIdentification";
+import { EnvVersionError } from "../../../services/envVersion";
+import { Sentry } from "../../../utils/errorTracking";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -31,7 +41,39 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
-  const { getFeatures, products } = useProductContext();
+  const { getFeatures, products, features } = useProductContext();
+  const { showAlert } = useContext(AlertModalContext);
+
+  const onCheckAddedUsers = async (input: string): Promise<void> => {
+    try {
+      const id = validateAndCleanId(
+        input,
+        features?.id?.validation,
+        features?.id?.validationRegex
+      );
+      Vibration.vibrate(50);
+      setIsAddUserModalVisible(false);
+      if (ids.indexOf(id) > -1) {
+        throw new Error(ERROR_MESSAGE.DUPLICATE_ID);
+      }
+      addId(id);
+    } catch (e) {
+      if (e instanceof EnvVersionError) {
+        Sentry.captureException(e);
+        showAlert({
+          ...systemAlertProps,
+          description: e.message,
+          onOk: () => setIsAddUserModalVisible(true)
+        });
+      } else {
+        showAlert({
+          ...wrongFormatAlertProps,
+          description: e.message,
+          onOk: () => setIsAddUserModalVisible(true)
+        });
+      }
+    }
+  };
 
   // TODO:
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
@@ -57,7 +99,6 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           ))}
         </View>
       </CustomerCard>
-
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         {!isLoading && (
           <SecondaryButton
@@ -66,16 +107,16 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               isAppeal
                 ? onCancel
                 : () => {
-                    Alert.alert("Cancel transaction?", undefined, [
-                      {
-                        text: "No"
+                    showAlert({
+                      ...defaultWarningProps,
+                      title: "Cancel entry and scan another ID number?",
+                      buttonTexts: {
+                        primaryActionText: "Cancel entry",
+                        secondaryActionText: "Keep"
                       },
-                      {
-                        text: "Yes",
-                        onPress: onCancel,
-                        style: "destructive"
-                      }
-                    ]);
+                      visible: true,
+                      onOk: onCancel
+                    });
                   }
             }
           />
@@ -104,8 +145,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <AddUserModal
         isVisible={isAddUserModalVisible}
         setIsVisible={setIsAddUserModalVisible}
-        ids={ids}
-        addId={addId}
+        validateAndUpdateIds={onCheckAddedUsers}
       />
     </View>
   );

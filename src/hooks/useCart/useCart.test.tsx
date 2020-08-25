@@ -1058,7 +1058,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when transaction does not succeed", async () => {
+    it("should set general error when transaction does not succeed", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
@@ -1071,9 +1071,7 @@ describe("useCart", () => {
         result.current.updateCart("chocolate", 5);
       });
 
-      mockPostTransaction.mockRejectedValueOnce(
-        new Error("error when checking out.")
-      );
+      mockPostTransaction.mockRejectedValueOnce(new Error());
 
       await wait(() => {
         result.current.checkoutCart();

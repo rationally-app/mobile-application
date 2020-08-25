@@ -1,4 +1,9 @@
-import React, { useState, useEffect, FunctionComponent } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  FunctionComponent
+} from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -7,10 +12,17 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { useAuthenticationContext } from "../../context/auth";
-import { validateOTP, requestOTP } from "../../services/auth";
+import { validateOTP, LoginError, LoginLockedError } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
 import { Sentry } from "../../utils/errorTracking";
+import {
+  AlertModalContext,
+  systemAlertProps,
+  invalidEntryAlertProps,
+  ERROR_MESSAGE,
+  disabledAccessAlertProps
+} from "../../context/alert";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -35,13 +47,15 @@ interface LoginOTPCard {
   mobileNumber: string;
   codeKey: string;
   endpoint: string;
+  handleRequestOTP: () => Promise<boolean>;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   resetStage,
   mobileNumber,
   codeKey,
-  endpoint
+  endpoint,
+  handleRequestOTP
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -49,7 +63,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const [resendDisabledTime, setResendDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT
   );
+
   const { setAuthInfo } = useAuthenticationContext();
+  const { showAlert } = useContext(AlertModalContext);
   const { setFeatures, setProducts, setAllProducts } = useProductContext();
 
   useEffect(() => {
@@ -97,13 +113,28 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         resetStage();
       }
     } catch (e) {
+      Sentry.captureException(e);
       if (e instanceof EnvVersionError) {
-        Sentry.captureException(e);
-        alert(
-          "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
-        );
+        showAlert({
+          ...systemAlertProps,
+          description: e.message
+        });
+      } else if (e instanceof LoginLockedError) {
+        showAlert({
+          ...disabledAccessAlertProps,
+          description: e.message,
+          onOk: () => resetStage()
+        });
+      } else if (e instanceof LoginError) {
+        showAlert({
+          ...invalidEntryAlertProps,
+          description: e.message
+        });
       } else {
-        alert(e);
+        showAlert({
+          ...systemAlertProps,
+          description: ERROR_MESSAGE.SERVER_ERROR
+        });
       }
       setIsLoading(false);
     }
@@ -115,14 +146,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   const resendOTP = async (): Promise<void> => {
     setIsResending(true);
-    try {
-      await requestOTP(mobileNumber, codeKey, endpoint);
-      setIsResending(false);
-      setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
-    } catch (e) {
-      setIsResending(false);
-      alert(e.message || e);
-    }
+    const isRequestSuccessful = await handleRequestOTP();
+    setIsResending(false);
+    if (isRequestSuccessful) setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
   };
 
   const handleChange = (text: string): void => {

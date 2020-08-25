@@ -14,6 +14,8 @@ const otp = "123456";
 const endpoint = "https://myendpoint.com";
 const ttl = new Date(2030, 0, 1);
 const sessionToken = "0000-11111-22222-33333-44444";
+const warning = "warn!";
+const status = "status";
 
 describe("auth", () => {
   beforeEach(() => {
@@ -22,21 +24,35 @@ describe("auth", () => {
   });
 
   describe("requestOTP", () => {
-    it("should check the validity of the code", async () => {
+    it("should return an object with a status key if the request is successful", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve()
+        json: () => Promise.resolve({ status })
       });
-      await requestOTP(phone, code, endpoint);
-      const payload = { code, phone };
-      expect(mockFetch.mock.calls[0]).toEqual([
-        `${endpoint}/auth/register`,
-        {
-          method: "POST",
-          body: JSON.stringify(payload)
-        }
-      ]);
+      const response = await requestOTP(phone, code, endpoint);
+      expect(response).toEqual({ status });
+    });
+
+    it("should return an object with warning and status keys if the request is successful and the next request will be the the last one before user is locked out", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ warning, status })
+      });
+      const response = await requestOTP(phone, code, endpoint);
+      expect(response).toEqual({ warning, status });
+    });
+
+    it("should throw error if the returned value does not have a status key", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({})
+      });
+      await expect(requestOTP(phone, code, endpoint)).rejects.toThrow(
+        LoginError
+      );
     });
 
     it("should throw error if OTP could not be retrieved", async () => {

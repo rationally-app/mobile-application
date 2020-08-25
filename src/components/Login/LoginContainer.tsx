@@ -4,7 +4,8 @@ import React, {
   FunctionComponent,
   useEffect,
   useLayoutEffect,
-  useContext
+  useContext,
+  useRef
 } from "react";
 import {
   View,
@@ -40,6 +41,16 @@ import { useLogout } from "../../hooks/useLogout";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
+import {
+  AlertModalContext,
+  systemAlertProps,
+  wrongFormatAlertProps,
+  ERROR_MESSAGE,
+  defaultConfirmationProps,
+  invalidEntryAlertProps,
+  disabledAccessAlertProps
+} from "../../context/alert";
+import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -90,10 +101,64 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     setProducts,
     setAllProducts
   } = useProductContext();
+  const { showAlert } = useContext(AlertModalContext);
   const { logout } = useLogout();
+  const lastResendWarningMessageRef = useRef("");
+  const setState = useState()[1];
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
+  };
+
+  const getResendConfirmationIfNeeded = async (): Promise<boolean> => {
+    return new Promise(resolve => {
+      if (!lastResendWarningMessageRef.current) {
+        resolve(true);
+      } else {
+        showAlert({
+          ...defaultConfirmationProps,
+          title: "Resend OTP?",
+          description: lastResendWarningMessageRef.current,
+          buttonTexts: {
+            primaryActionText: "Resend",
+            secondaryActionText: "No"
+          },
+          onOk: () => resolve(true),
+          onCancel: () => resolve(false),
+          visible: true
+        });
+      }
+    });
+  };
+
+  const handleRequestOTP = async (
+    fullNumber = mobileNumber
+  ): Promise<boolean> => {
+    try {
+      if (!(await getResendConfirmationIfNeeded())) return false;
+      const response = await requestOTP(fullNumber, codeKey, endpointTemp);
+      lastResendWarningMessageRef.current = response.warning ?? "";
+      return true;
+    } catch (e) {
+      if (e instanceof LoginLockedError) {
+        showAlert({
+          ...disabledAccessAlertProps,
+          description: e.message,
+          onOk: () => resetStage()
+        });
+      } else if (e instanceof LoginError) {
+        showAlert({
+          ...invalidEntryAlertProps,
+          description: e.message,
+          onOk: () => resetStage()
+        });
+      } else {
+        setState(() => {
+          throw e; // Let ErrorBoundary handle
+        });
+      }
+      return false;
+    }
   };
 
   const handleLogout = useCallback((): void => {
@@ -124,9 +189,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } catch (e) {
         if (e instanceof EnvVersionError) {
           Sentry.captureException(e);
-          alert(
-            "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
-          );
+          showAlert({
+            ...systemAlertProps,
+            description: ERROR_MESSAGE.ENV_VERSION_ERROR
+          });
           handleLogout();
         }
       } finally {
@@ -139,15 +205,17 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   }, [
     endpoint,
     token,
+    features,
     setFeatures,
     setProducts,
     setAllProducts,
-    features,
-    handleLogout
+    handleLogout,
+    showAlert
   ]);
 
   useLayoutEffect(() => {
     if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
+      lastResendWarningMessageRef.current = "";
       switch (features?.FLOW_TYPE) {
         case "DEFAULT":
         case "MERCHANT":
@@ -158,14 +226,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           });
           break;
         default:
-          alert(
-            "Invalid Environment Error: Make sure you scanned a valid QR code"
-          );
+          showAlert({
+            ...systemAlertProps,
+            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+          });
           // Reset to initial login state
           resetStage();
       }
     }
-  }, [isLoading, endpoint, navigation, token, features]);
+  }, [isLoading, endpoint, navigation, token, features, showAlert]);
 
   useEffect(() => {
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
@@ -177,7 +246,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
-          alert("Invalid QR code");
+          showAlert({
+            ...systemAlertProps,
+            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+          });
           setLoginStage("SCAN");
         } else {
           setCodeKey(queryKey);
@@ -187,7 +259,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       }
     };
     skipScanningIfParamsInDeepLink();
-  }, []);
+  }, [showAlert]);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
@@ -224,7 +296,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       try {
         const { key, endpoint } = decodeQr(qrCode);
         Vibration.vibrate(50);
-        if (!RegExp(DOMAIN_FORMAT).test(endpoint)) throw new Error();
+        if (!RegExp(DOMAIN_FORMAT).test(endpoint))
+          throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN);
         setCodeKey(key);
         setEndpointTemp(endpoint);
         setIsLoading(false);
@@ -232,7 +305,30 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
-        alert("Invalid QR code");
+        if (e.message === ERROR_MESSAGE.SERVER_ERROR) {
+          showAlert({
+            ...systemAlertProps,
+            description: e.message
+          });
+        } else if (e.message === ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN) {
+          showAlert({
+            ...systemAlertProps,
+            title: "Expired",
+            description: e.message
+          });
+        } else if (
+          e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT ||
+          e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+        ) {
+          showAlert({
+            ...wrongFormatAlertProps,
+            description: e.message
+          });
+        } else {
+          setState(() => {
+            throw e; // Let ErrorBoundary handle
+          });
+        }
         setIsLoading(false);
       }
     }
@@ -289,8 +385,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             <LoginMobileNumberCard
               setLoginStage={setLoginStage}
               setMobileNumber={setMobileNumber}
-              codeKey={codeKey}
-              endpoint={endpointTemp}
+              handleRequestOTP={handleRequestOTP}
             />
           )}
           {loginStage === "OTP" && (
@@ -299,6 +394,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
               mobileNumber={mobileNumber}
               codeKey={codeKey}
               endpoint={endpointTemp}
+              handleRequestOTP={handleRequestOTP}
             />
           )}
           <FeatureToggler feature="HELP_MODAL">
