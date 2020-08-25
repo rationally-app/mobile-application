@@ -36,6 +36,7 @@ import {
 } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { NavigationProps } from "../../types";
+import { useProductContext } from "../../context/products";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -108,7 +109,11 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [cartState]);
 
   const onCancel = useCallback((): void => {
-    navigateHome(navigation);
+    const { products } = useProductContext();
+    const isAppeal = products.some(
+      product => product.categoryType === "APPEAL"
+    );
+    isAppeal ? navigation.goBack() : navigateHome(navigation);
   }, [navigation]);
 
   const addId = useCallback((id: string): void => {
