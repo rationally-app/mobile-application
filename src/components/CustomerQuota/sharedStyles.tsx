@@ -12,7 +12,7 @@ export const sharedStyles = StyleSheet.create({
     borderColor: color("green", 30)
   },
   failureResultWrapper: {
-    paddingTop: size(0.5),
+    paddingTop: size(2),
     paddingBottom: size(4),
     backgroundColor: color("red", 10),
     borderColor: color("red", 30)
