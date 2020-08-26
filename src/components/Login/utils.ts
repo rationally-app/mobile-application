@@ -20,7 +20,6 @@ export const decodeQr = (code: string): DecodedQrResponse => {
       throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT);
     return { endpoint: parsedCode.endpoint, key: parsedCode.key };
   } catch (e) {
-    console.log(e);
     if (e.message.includes("token") || e instanceof SyntaxError)
       throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT);
     throw e;
