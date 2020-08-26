@@ -69,7 +69,8 @@ export class AuthNotFoundError extends AuthError {
     super(message);
     this.name = "AuthNotFoundError";
     this.alertProps = {
-      ...wrongFormatAlertProps,
+      ...invalidEntryAlertProps,
+      title: "Input mismatch",
       description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
     };
   }
@@ -92,6 +93,7 @@ export class OTPWrongError extends LoginError {
     this.name = "OTPWrongError";
     this.alertProps = {
       ...invalidEntryAlertProps,
+      title: "Input mismatch",
       description: isLastTry
         ? ERROR_MESSAGE.LAST_OTP_ERROR
         : ERROR_MESSAGE.OTP_ERROR
