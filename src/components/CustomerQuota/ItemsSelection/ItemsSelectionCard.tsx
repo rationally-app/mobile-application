@@ -86,6 +86,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
   const isAppeal = products.some(product => product.categoryType === "APPEAL");
+  const isChargable = cart.some(
+    cartItem => cartItem.descriptionAlert === "*chargeable"
+  );
   return (
     <View>
       <CustomerCard
@@ -143,7 +146,24 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 color={color("grey", 0)}
               />
             }
-            onPress={checkoutCart}
+            onPress={
+              !isChargable
+                ? checkoutCart
+                : () => {
+                    showAlert({
+                      ...defaultWarningProps,
+                      title: "Payment collected?",
+                      description:
+                        "This action cannot be undone. Proceed only when payment has been collected",
+                      buttonTexts: {
+                        primaryActionText: "Collected",
+                        secondaryActionText: "No"
+                      },
+                      visible: true,
+                      onOk: checkoutCart
+                    });
+                  }
+            }
             isLoading={isLoading}
             fullWidth={true}
           />
