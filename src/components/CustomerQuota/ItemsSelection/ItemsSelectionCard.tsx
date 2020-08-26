@@ -15,7 +15,9 @@ import {
   defaultWarningProps,
   wrongFormatAlertProps,
   systemAlertProps,
-  ERROR_MESSAGE
+  ERROR_MESSAGE,
+  defaultConfirmationProps,
+  CONFIRMATION_MESSAGE
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { EnvVersionError } from "../../../services/envVersion";
@@ -27,6 +29,7 @@ interface ItemsSelectionCard {
   isLoading: boolean;
   checkoutCart: () => void;
   onCancel: () => void;
+  onBack: () => void;
   cart: Cart;
   updateCart: CartHook["updateCart"];
 }
@@ -37,6 +40,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   isLoading,
   checkoutCart,
   onCancel,
+  onBack,
   cart,
   updateCart
 }) => {
@@ -79,6 +83,22 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
   const isAppeal = products.some(product => product.categoryType === "APPEAL");
+  const handleCheckout = (): void => {
+    cart.find(item => item.descriptionAlert === "*chargeable")
+      ? showAlert({
+          ...defaultConfirmationProps,
+          title: "Payment collected?",
+          description: CONFIRMATION_MESSAGE.PAYMENT_COLLECTED,
+          buttonTexts: {
+            primaryActionText: "Collected",
+            secondaryActionText: "No"
+          },
+          visible: true,
+          onOk: checkoutCart
+        })
+      : checkoutCart();
+  };
+
   return (
     <View>
       <CustomerCard
@@ -105,7 +125,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             text={isAppeal ? "Back" : "Cancel"}
             onPress={
               isAppeal
-                ? onCancel
+                ? onBack
                 : () => {
                     showAlert({
                       ...defaultWarningProps,
@@ -136,7 +156,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 color={color("grey", 0)}
               />
             }
-            onPress={checkoutCart}
+            onPress={handleCheckout}
             isLoading={isLoading}
             fullWidth={true}
           />

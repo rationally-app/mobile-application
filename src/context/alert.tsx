@@ -35,6 +35,10 @@ export enum ERROR_MESSAGE {
   SERVER_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
 }
 
+export enum CONFIRMATION_MESSAGE {
+  PAYMENT_COLLECTED = "This action cannot be undone. Proceed only when payment has been collected."
+}
+
 const defaultAlertProps: AlertModalProps = {
   alertType: "ERROR",
   title: "",
