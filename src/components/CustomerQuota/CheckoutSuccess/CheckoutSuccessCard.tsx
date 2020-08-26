@@ -9,8 +9,9 @@ import { PurchasedItem } from "./PurchasedItem";
 import { getPurchasedQuantitiesByItem } from "../utils";
 import { useProductContext } from "../../../context/products";
 import { RedeemedItem } from "./RedeemedItem";
-import { size } from "../../../common/styles";
+import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
+import { AntDesign } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -45,7 +46,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             sharedStyles.successfulResultWrapper
           ]}
         >
-          <Text style={sharedStyles.emoji}>✅</Text>
+          <AntDesign name="check" size={size(4)} color={color("green", 50)} />
           <AppText style={sharedStyles.statusTitleWrapper}>
             <AppText style={sharedStyles.statusTitle}>{title}</AppText>
           </AppText>
