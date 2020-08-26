@@ -13,6 +13,7 @@ import { useProductContext } from "../../../context/products";
 import {
   AlertModalContext,
   defaultWarningProps,
+  defaultConfirmationProps,
   wrongFormatAlertProps,
   systemAlertProps,
   ERROR_MESSAGE,
@@ -151,7 +152,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 ? checkoutCart
                 : () => {
                     showAlert({
-                      ...defaultWarningProps,
+                      ...defaultConfirmationProps,
                       title: "Payment collected?",
                       description:
                         "This action cannot be undone. Proceed only when payment has been collected",
