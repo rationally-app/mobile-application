@@ -90,6 +90,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { showAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
+  const { products } = useProductContext();
 
   const {
     cartState,
@@ -100,8 +101,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     error,
     clearError
   } = useCart(ids, token, endpoint);
-
-  const { products } = useProductContext();
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -115,7 +114,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       product => product.categoryType === "APPEAL"
     );
     isAppeal ? navigation.goBack() : navigateHome(navigation);
-  }, [navigation]);
+  }, [navigation, products]);
 
   const addId = useCallback((id: string): void => {
     setIds(ids => [...ids, id]);
