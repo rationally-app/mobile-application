@@ -5,6 +5,7 @@ import { AppText } from "../Layout/AppText";
 import { color, size } from "../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
+import { FontAwesome } from "@expo/vector-icons";
 
 const NotEligibleTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>Not eligible</AppText>
@@ -37,7 +38,11 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
             sharedStyles.failureResultWrapper
           ]}
         >
-          <Text style={sharedStyles.emoji}>❌</Text>
+          <FontAwesome
+            name="thumbs-down"
+            color={color("red", 60)}
+            style={sharedStyles.icon}
+          />
           <AppText style={sharedStyles.statusTitleWrapper}>
             <NotEligibleTransactionTitle />
           </AppText>

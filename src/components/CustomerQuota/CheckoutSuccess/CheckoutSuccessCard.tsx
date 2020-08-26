@@ -11,7 +11,7 @@ import { useProductContext } from "../../../context/products";
 import { RedeemedItem } from "./RedeemedItem";
 import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
-import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -46,7 +46,11 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             sharedStyles.successfulResultWrapper
           ]}
         >
-          <AntDesign name="check" size={size(4)} color={color("green", 50)} />
+          <FontAwesome
+            name="thumbs-up"
+            color={color("blue-green", 40)}
+            style={sharedStyles.icon}
+          />
           <AppText style={sharedStyles.statusTitleWrapper}>
             <AppText style={sharedStyles.statusTitle}>{title}</AppText>
           </AppText>

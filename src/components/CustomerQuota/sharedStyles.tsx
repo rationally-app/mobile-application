@@ -25,8 +25,8 @@ export const sharedStyles = StyleSheet.create({
     flexDirection: "row"
   },
   submitButton: { flex: 1 },
-  emoji: {
-    fontSize: fontSize(3),
+  icon: {
+    fontSize: fontSize(6),
     marginBottom: size(2),
     marginTop: size(2)
   },
