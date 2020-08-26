@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { compareDesc } from "date-fns";
 import { differenceInSeconds, format, formatDistance } from "date-fns";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { CustomerCard } from "./CustomerCard";
 import { AppText } from "../Layout/AppText";
 import { color, size, fontSize } from "../../common/styles";

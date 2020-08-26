@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { CustomerCard } from "./CustomerCard";
 import { AppText } from "../Layout/AppText";
 import { color, size } from "../../common/styles";
