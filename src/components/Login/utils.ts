@@ -22,6 +22,8 @@ export const decodeQr = (code: string): DecodedQrResponse => {
   } catch (e) {
     if (e.message.includes("Unexpected token"))
       throw new Error(ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN);
+    if (e.message.includes("Unrecognized token") || e instanceof SyntaxError)
+      throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT);
     throw e;
   }
 };
