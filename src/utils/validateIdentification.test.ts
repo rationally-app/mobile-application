@@ -26,7 +26,7 @@ describe("throw EnvVersionError", () => {
       validateAndCleanId("100000001", undefinedIdValidation)
     ).toThrow(
       new EnvVersionError(
-        "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+        "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists."
       )
     );
   });
@@ -39,7 +39,7 @@ describe("throw EnvVersionError", () => {
       validateAndCleanId("100000001", idRegexValidation, undefinedRegex)
     ).toThrow(
       new EnvVersionError(
-        "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+        "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists."
       )
     );
   });
@@ -52,7 +52,7 @@ describe("throw EnvVersionError", () => {
       validateAndCleanId("100000001", idNRICValidation, validRegex)
     ).toThrow(
       new EnvVersionError(
-        "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+        "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists."
       )
     );
   });

@@ -13,9 +13,11 @@ import { useProductContext } from "../../../context/products";
 import {
   AlertModalContext,
   defaultWarningProps,
+  defaultConfirmationProps,
   wrongFormatAlertProps,
   systemAlertProps,
   ERROR_MESSAGE,
+  WARNING_MESSAGE,
   duplicateAlertProps
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
@@ -86,6 +88,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
   const isAppeal = products.some(product => product.categoryType === "APPEAL");
+  const isChargeable = cart.some(
+    cartItem => cartItem.descriptionAlert === "*chargeable"
+  );
   return (
     <View>
       <CustomerCard
@@ -143,7 +148,23 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 color={color("grey", 0)}
               />
             }
-            onPress={checkoutCart}
+            onPress={
+              !isChargeable
+                ? checkoutCart
+                : () => {
+                    showAlert({
+                      ...defaultConfirmationProps,
+                      title: "Payment collected?",
+                      description: WARNING_MESSAGE.PAYMENT_COLLECTION,
+                      buttonTexts: {
+                        primaryActionText: "Collected",
+                        secondaryActionText: "No"
+                      },
+                      visible: true,
+                      onOk: checkoutCart
+                    });
+                  }
+            }
             isLoading={isLoading}
             fullWidth={true}
           />

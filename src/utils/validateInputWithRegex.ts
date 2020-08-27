@@ -10,7 +10,7 @@ export const validateAndCleanRegexInput = (
 ): string => {
   if (!idRegex)
     throw new EnvVersionError(
-      "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+      "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists."
     );
   // set ID to all uppercase to remove case sensitivity
   const id = inputId.toUpperCase();
