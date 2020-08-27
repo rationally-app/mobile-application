@@ -88,7 +88,7 @@ export const incompleteEntryAlertProps: AlertModalProps = {
 
 export const invalidEntryAlertProps: AlertModalProps = {
   ...defaultAlertProps,
-  title: "Wrong entry",
+  title: "Invalid input",
   visible: true
 };
 
