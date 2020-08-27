@@ -50,7 +50,12 @@ import {
   invalidEntryAlertProps,
   disabledAccessAlertProps
 } from "../../context/alert";
-import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
+import {
+  requestOTP,
+  LoginError,
+  LoginLockedError,
+  TokenError
+} from "../../services/auth";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -149,6 +154,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } else if (e instanceof LoginError) {
         showAlert({
           ...invalidEntryAlertProps,
+          description: e.message,
+          onOk: () => resetStage()
+        });
+      } else if (e instanceof TokenError) {
+        showAlert({
+          ...wrongFormatAlertProps,
           description: e.message,
           onOk: () => resetStage()
         });

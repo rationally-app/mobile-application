@@ -2,11 +2,24 @@ import { IS_MOCK } from "../../config";
 import { SessionCredentials, OTPResponse } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
+import { ERROR_MESSAGE } from "../../context/alert";
 
+export enum BACKEND_ERROR_MESSAGE {
+  AUTH_NOT_FOUND = "No user found",
+  AUTH_FAILURE_EXPIRED_TOKEN = "Auth token is not currently valid",
+  AUTH_ROLE_UNAUTHORIZED = "Unauthorized auth token"
+}
 export class LoginError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "LoginError";
+  }
+}
+
+export class TokenError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "TokenError";
   }
 }
 
@@ -36,6 +49,15 @@ export const liveRequestOTP = async (
   } catch (e) {
     if (e.message.includes("Please wait")) {
       throw new LoginLockedError(e.message);
+      // non-operator role
+    } else if (e.message === BACKEND_ERROR_MESSAGE.AUTH_ROLE_UNAUTHORIZED) {
+      throw new TokenError(ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN);
+    } else if (
+      e.message === BACKEND_ERROR_MESSAGE.AUTH_NOT_FOUND ||
+      e.message === BACKEND_ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN ||
+      e instanceof SyntaxError
+    ) {
+      throw new TokenError(ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT);
     } else {
       throw new LoginError(e.message);
     }
