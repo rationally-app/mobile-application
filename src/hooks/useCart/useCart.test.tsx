@@ -964,7 +964,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Enter valid contact number and country code."
+        "Enter valid country code and contact number."
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
