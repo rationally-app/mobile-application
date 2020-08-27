@@ -264,17 +264,20 @@ export const livePastTransactions = async (
 ): Promise<PastTransactionsResult> => {
   let response;
   if (_.isEmpty(id)) {
-    throw new PastTransactionError("No ID was provided");
+    throw new PastTransactionError("No IDs were provided");
   }
   try {
     response = await fetchWithValidator(
       PastTransactionsResult,
-      `${endpoint}/transactions/${id}`,
+      `${endpoint}/transactions/history`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           Authorization: key
-        }
+        },
+        body: JSON.stringify({
+          ids: [id]
+        })
       }
     );
     return response;
