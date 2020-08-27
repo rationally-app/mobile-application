@@ -15,7 +15,8 @@ import {
   defaultWarningProps,
   wrongFormatAlertProps,
   systemAlertProps,
-  ERROR_MESSAGE
+  ERROR_MESSAGE,
+  duplicateAlertProps
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { EnvVersionError } from "../../../services/envVersion";
@@ -52,16 +53,22 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         features?.id?.validationRegex
       );
       Vibration.vibrate(50);
-      setIsAddUserModalVisible(false);
       if (ids.indexOf(id) > -1) {
         throw new Error(ERROR_MESSAGE.DUPLICATE_ID);
       }
       addId(id);
     } catch (e) {
+      setIsAddUserModalVisible(false);
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
         showAlert({
           ...systemAlertProps,
+          description: e.message,
+          onOk: () => setIsAddUserModalVisible(true)
+        });
+      } else if (e.message === ERROR_MESSAGE.DUPLICATE_ID) {
+        showAlert({
+          ...duplicateAlertProps,
           description: e.message,
           onOk: () => setIsAddUserModalVisible(true)
         });
