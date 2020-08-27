@@ -10,6 +10,10 @@ import {
   AlertModalProps
 } from "../components/AlertModal/AlertModal";
 
+export enum WARNING_MESSAGE {
+  PAYMENT_COLLECTION = "This action cannot be undone. Proceed only when payment has been collected."
+}
+
 export enum ERROR_MESSAGE {
   DUPLICATE_IDENTIFIER_INPUT = "Enter unique code details.",
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
