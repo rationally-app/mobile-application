@@ -25,7 +25,7 @@ export enum ERROR_MESSAGE {
   AUTH_FAILURE_INVALID_TOKEN = "Get a new QR code from your in-charge.",
   AUTH_FAILURE_EXPIRED_TOKEN = "We could not find a validity period. Get a new QR code from your in-charge.",
   AUTH_FAILURE_INVALID_FORMAT = "Scan QR code again or get a new QR code from your in-charge.",
-  ENV_VERSION_ERROR = "Encountered an issue obtaining environment information. We've noted this down and are looking into it!",
+  ENV_VERSION_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   INSUFFICIENT_QUOTA = "Insufficient quota.",
   INVALID_QUANTITY = "Invalid quantity.",
   INVALID_CATEGORY = "Category does not exist.",
