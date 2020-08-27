@@ -17,6 +17,7 @@ import {
   wrongFormatAlertProps,
   systemAlertProps,
   ERROR_MESSAGE,
+  WARNING_MESSAGE,
   duplicateAlertProps
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
@@ -87,7 +88,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
   const isAppeal = products.some(product => product.categoryType === "APPEAL");
-  const isChargable = cart.some(
+  const isChargeable = cart.some(
     cartItem => cartItem.descriptionAlert === "*chargeable"
   );
   return (
@@ -148,14 +149,13 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               />
             }
             onPress={
-              !isChargable
+              !isChargeable
                 ? checkoutCart
                 : () => {
                     showAlert({
                       ...defaultConfirmationProps,
                       title: "Payment collected?",
-                      description:
-                        "This action cannot be undone. Proceed only when payment has been collected",
+                      description: WARNING_MESSAGE.PAYMENT_COLLECTION,
                       buttonTexts: {
                         primaryActionText: "Collected",
                         secondaryActionText: "No"
