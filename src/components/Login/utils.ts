@@ -1,4 +1,4 @@
-import { AuthInvalidError, AuthExpiredError } from "../../services/auth";
+import { AuthInvalidError } from "../../services/auth";
 
 interface QrCode {
   version: string;
