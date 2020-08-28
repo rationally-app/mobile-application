@@ -12,6 +12,7 @@ const processIdentifierInputValue = (
     : identifierInput.value;
 };
 
+// TODO: @deprecated in favour of getAllIdentifierInputDisplay below
 export const getIdentifierInputDisplay = (
   identifierInputs: IdentifierInput[]
 ): string => {
@@ -33,7 +34,6 @@ export const getIdentifierInputDisplay = (
   return identifierInputDisplay;
 };
 
-// TODO: this is just an interim solution for the 24th deadline.
 export const getAllIdentifierInputDisplay = (
   identifierInputs: IdentifierInput[]
 ): string => {
