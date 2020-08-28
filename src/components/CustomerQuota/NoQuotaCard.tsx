@@ -15,19 +15,26 @@ import { CampaignConfigContext } from "../../context/campaignConfig";
 import { ProductContext } from "../../context/products";
 import { getAllIdentifierInputDisplay } from "../../utils/getIdentifierInputDisplay";
 import { AuthContext } from "../../context/auth";
+import { formatQuantityText } from "./utils";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
 const styles = StyleSheet.create({
+  wrapper: {
+    marginTop: size(2),
+    marginBottom: size(2)
+  },
   itemRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline"
   },
   itemHeader: {
-    marginTop: size(1.5),
     lineHeight: 1.5 * fontSize(0),
-    marginBottom: -size(2),
+    fontFamily: "brand-bold"
+  },
+  itemSubheader: {
+    fontSize: fontSize(-1),
     fontFamily: "brand-bold"
   },
   itemDetailWrapper: {
@@ -98,18 +105,26 @@ const UsageQuotaTitle: FunctionComponent<{
   </>
 );
 
-// TODO: add quantity
-const ItemTransaction: FunctionComponent<{
-  categoryName: string;
-  formattedDate: string;
+interface ItemTransaction {
+  name: string;
+  transactionDate: string;
   details: string;
-}> = ({ categoryName, formattedDate, details }) => (
-  <>
+  quantity: string;
+}
+
+const ItemTransaction: FunctionComponent<ItemTransaction> = ({
+  name,
+  transactionDate,
+  details,
+  quantity
+}) => (
+  <View style={styles.wrapper}>
     <View style={styles.itemRow}>
-      <AppText style={styles.itemHeader}>{categoryName}</AppText>
+      <AppText style={styles.itemHeader}>{name}</AppText>
     </View>
     <View style={styles.itemRow}>
-      <AppText style={styles.itemHeader}>{formattedDate}</AppText>
+      <AppText style={styles.itemSubheader}>{transactionDate}</AppText>
+      <AppText style={styles.itemSubheader}>{quantity}</AppText>
     </View>
     {!!details && (
       <View style={styles.itemDetailWrapper}>
@@ -117,7 +132,7 @@ const ItemTransaction: FunctionComponent<{
         <AppText style={styles.itemDetail}>{details}</AppText>
       </View>
     )}
-  </>
+  </View>
 );
 
 const NoPreviousTransactionTitle: FunctionComponent<{
@@ -173,11 +188,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const itemTransactions: {
-    categoryName: string;
-    formattedDate: string;
-    details: string;
-  }[] = [];
+  const itemTransactions: ItemTransaction[] = [];
   let latestTransactionTime: Date | undefined = new Date();
 
   const { pastTransactionsResult } = usePastTransaction(
@@ -198,9 +209,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     const categoryName = policy?.name ?? item.category;
     const formattedDate = format(item.transactionTime, "d MMM yyyy, h:mma");
     itemTransactions.push({
-      categoryName,
-      formattedDate,
-      details: getAllIdentifierInputDisplay(item.identifierInputs ?? [])
+      name: categoryName,
+      transactionDate: formattedDate,
+      details: getAllIdentifierInputDisplay(item.identifierInputs ?? []),
+      quantity: formatQuantityText(
+        item.quantity,
+        policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
+      )
     });
   });
 
@@ -269,19 +284,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           </AppText>
           {itemTransactions.length > 0 && (
             <View>
-              <AppText style={{ marginBottom: size(1) }}>
-                Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}:
+              <AppText style={styles.wrapper}>
+                Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
+                previously:
               </AppText>
-              {itemTransactions.map(
-                ({ categoryName, formattedDate, details }, index: number) => (
-                  <ItemTransaction
-                    key={index}
-                    categoryName={categoryName}
-                    formattedDate={formattedDate}
-                    details={details}
-                  />
-                )
-              )}
+              {itemTransactions.map((transaction, index: number) => (
+                <ItemTransaction key={index} {...transaction} />
+              ))}
             </View>
           )}
         </View>
