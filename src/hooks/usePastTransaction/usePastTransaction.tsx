@@ -9,7 +9,7 @@ export type PastTransactionHook = {
 };
 
 export const usePastTransaction = (
-  id: string,
+  ids: string[],
   authKey: string,
   endpoint: string
 ): PastTransactionHook => {
@@ -17,12 +17,12 @@ export const usePastTransaction = (
     pastTransactionsResult,
     setPastTransactionsResult
   ] = useState<PastTransactionsResult | null>(null);
-  const prevId = usePrevious(id);
+  const prevIds = usePrevious(ids);
 
   useEffect(() => {
     const fetchPastTransactions = async (): Promise<void> => {
       const pastTransactionsResponse = await getPastTransactions(
-        id,
+        ids,
         authKey,
         endpoint
       );
@@ -30,11 +30,11 @@ export const usePastTransaction = (
       setPastTransactionsResult(pastTransactionsResponse);
     };
 
-    if (prevId != id)
+    if (prevIds !== ids)
       fetchPastTransactions().catch(() => {
-        Sentry.captureException(`Unable to fetch past transactions: ${id}`);
+        Sentry.captureException(`Unable to fetch past transactions: ${ids}`);
       });
-  }, [authKey, endpoint, id, prevId]);
+  }, [authKey, endpoint, ids, prevIds]);
 
   return {
     pastTransactionsResult

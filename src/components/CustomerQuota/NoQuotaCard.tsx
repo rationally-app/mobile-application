@@ -180,9 +180,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
    * 2. Listing of past transactions with identifiers and transacted time; identifier and single ID transactions
    */
 
-  // This hook is only used in single ID transaction
   const { pastTransactionsResult } = usePastTransaction(
-    ids[0],
+    ids,
     sessionToken,
     endpoint
   );
