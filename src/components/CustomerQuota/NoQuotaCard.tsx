@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useContext, useState } from "react";
-import { compareDesc } from "date-fns";
 import { differenceInSeconds, format, formatDistance } from "date-fns";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { CustomerCard } from "./CustomerCard";
@@ -249,7 +248,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const { pastTransactionsResult } = usePastTransaction(ids, sessionToken, endpoint);
+  const { pastTransactionsResult } = usePastTransaction(
+    ids,
+    sessionToken,
+    endpoint
+  );
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult?.pastTransactions;
 
@@ -260,6 +263,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
 
+  const hasAppealProduct = (): boolean => {
+    return (
+      allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false
+    );
+  };
+
+  // Group transactions by category
   const transactionsByCategoryMap: {
     [category: string]: {
       transactions: Transaction[];
@@ -294,6 +304,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         0;
   });
 
+  // Split categories into those with the latest transactions and those without
   const latestTransactionsByCategory: TransactionsByCategory[] = [];
   const otherTransactionsByCategory: TransactionsByCategory[] = [];
   Object.entries(transactionsByCategoryMap).forEach(([key, value]) => {
@@ -308,6 +319,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     }
   });
 
+  // Order each category list by alphabetical order
   const sortTransactionsByCategory = (
     a: TransactionsByCategory,
     b: TransactionsByCategory
@@ -316,6 +328,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   latestTransactionsByCategory.sort(sortTransactionsByCategory);
   otherTransactionsByCategory.sort(sortTransactionsByCategory);
 
+  // Concat category lists into a single list
+  // Add order to each transaction for "Show more" feature
   let transactionCounter = 0;
   const transactionsByCategoryList = latestTransactionsByCategory
     .concat(otherTransactionsByCategory)
@@ -329,12 +343,6 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       );
       return { ...transactionsByCategory, transactions: orderedTransactions };
     });
-
-  const hasAppealProduct = (): boolean => {
-    return (
-      allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false
-    );
-  };
 
   const showGlobalQuota =
     !!quotaResponse?.globalQuota &&
