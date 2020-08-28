@@ -27,7 +27,7 @@ describe("throw EnvVersionError", () => {
       validateAndCleanRegexInput("100000001", undefinedRegex)
     ).toThrow(
       new EnvVersionError(
-        "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+        "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists."
       )
     );
   });

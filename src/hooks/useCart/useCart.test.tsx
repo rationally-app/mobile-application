@@ -963,7 +963,9 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter valid contact number.");
+      expect(result.current.error?.message).toBe(
+        "Enter valid country code and contact number."
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {

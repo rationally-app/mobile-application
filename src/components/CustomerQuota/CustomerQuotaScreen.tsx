@@ -207,6 +207,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           break;
 
         case ERROR_MESSAGE.INVALID_PHONE_NUMBER:
+        case ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE:
           showAlert({
             ...wrongFormatAlertProps,
             description: error.message,
