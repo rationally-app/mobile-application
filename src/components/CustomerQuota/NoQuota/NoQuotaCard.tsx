@@ -1,199 +1,33 @@
 import React, { FunctionComponent, useContext, useState } from "react";
-import { differenceInSeconds, format, formatDistance } from "date-fns";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { CustomerCard } from "./CustomerCard";
-import { AppText } from "../Layout/AppText";
-import { color, size, fontSize } from "../../common/styles";
-import { sharedStyles } from "./sharedStyles";
-import { DarkButton } from "../Layout/Buttons/DarkButton";
-import { Cart } from "../../hooks/useCart/useCart";
-import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransaction";
-import { Quota } from "../../types";
-import { CampaignConfigContext } from "../../context/campaignConfig";
-import { ProductContext } from "../../context/products";
-import { getAllIdentifierInputDisplay } from "../../utils/getIdentifierInputDisplay";
-import { AuthContext } from "../../context/auth";
+import { differenceInSeconds, format } from "date-fns";
+import { View } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { formatQuantityText } from "./utils";
+import { formatQuantityText } from "../utils";
+import { styles } from "./styles";
+import { TransactionsByCategory, Transaction } from "./TransactionsByCategory";
+import { ShowFullListToggle } from "./ShowFullListToggle";
+import {
+  DistantTransactionTitle,
+  RecentTransactionTitle,
+  NoPreviousTransactionTitle
+} from "./TransactionTitle";
+import { AppealButton } from "./AppealButton";
+import { Quota } from "../../../types";
+import { Cart } from "../../../hooks/useCart/useCart";
+import { CampaignConfigContext } from "../../../context/campaignConfig";
+import { ProductContext } from "../../../context/products";
+import { AuthContext } from "../../../context/auth";
+import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
+import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
+import { CustomerCard } from "../CustomerCard";
+import { color } from "react-native-reanimated";
+import { sharedStyles } from "../sharedStyles";
+import { AppText } from "../../Layout/AppText";
+import { size } from "fp-ts/lib/ReadonlyRecord";
+import { DarkButton } from "../../Layout/Buttons/DarkButton";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
-
-const styles = StyleSheet.create({
-  wrapper: {
-    marginTop: size(2),
-    marginBottom: size(2)
-  },
-  itemRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "baseline"
-  },
-  itemHeader: {
-    lineHeight: 1.5 * fontSize(0),
-    fontFamily: "brand-bold"
-  },
-  itemSubheader: {
-    fontSize: fontSize(-1),
-    fontFamily: "brand-bold"
-  },
-  itemDetailWrapper: {
-    flexDirection: "row"
-  },
-  itemDetailBorder: {
-    borderLeftWidth: 1,
-    borderLeftColor: color("grey", 30),
-    marginLeft: size(1),
-    marginRight: size(1)
-  },
-  itemDetail: {
-    fontSize: fontSize(-1)
-  },
-  appealButtonText: {
-    marginTop: size(1),
-    marginBottom: 0,
-    fontFamily: "brand-bold",
-    fontSize: size(2)
-  },
-  showFullListToggleBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: color("grey", 30),
-    flex: 1
-  },
-  showFullListToggleWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center"
-  }
-});
-
-const DistantTransactionTitle: FunctionComponent<{
-  transactionTime: Date;
-  toggleTimeSensitiveTitle: boolean;
-}> = ({ transactionTime, toggleTimeSensitiveTitle }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>Limit reached on </AppText>
-    <AppText style={sharedStyles.statusTitle}>
-      {format(transactionTime, "d MMM yyyy, h:mma")}
-    </AppText>
-    {toggleTimeSensitiveTitle ? (
-      <AppText style={sharedStyles.statusTitle}> for today.</AppText>
-    ) : (
-      <AppText style={sharedStyles.statusTitle}>.</AppText>
-    )}
-  </>
-);
-
-const RecentTransactionTitle: FunctionComponent<{
-  now: Date;
-  transactionTime: Date;
-  toggleTimeSensitiveTitle: boolean;
-}> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>Limit reached </AppText>
-    <AppText style={sharedStyles.statusTitle}>
-      {formatDistance(now, transactionTime)}
-    </AppText>
-    <AppText style={sharedStyles.statusTitle}> ago</AppText>
-    {toggleTimeSensitiveTitle ? (
-      <AppText style={sharedStyles.statusTitle}> for today.</AppText>
-    ) : (
-      <AppText style={sharedStyles.statusTitle}>.</AppText>
-    )}
-  </>
-);
-
-const UsageQuotaTitle: FunctionComponent<{
-  quantity: number;
-  quotaRefreshTime: number;
-}> = ({ quantity, quotaRefreshTime }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {"\n"}
-      {quantity} item(s) more till {format(quotaRefreshTime, "d MMM yyyy")}.
-    </AppText>
-  </>
-);
-
-interface TransactionsByCategory {
-  category: string;
-  transactions: Transaction[];
-}
-
-interface Transaction {
-  transactionDate: string;
-  details: string;
-  quantity: string;
-  order?: number;
-}
-
-const TransactionsByCategory: FunctionComponent<{
-  category: string;
-  transactions: Transaction[];
-  maxTransactionsToDisplay: number;
-}> = ({ category, transactions, maxTransactionsToDisplay }) => {
-  const shouldShowCategory =
-    (transactions[0].order || 0) < maxTransactionsToDisplay;
-  return shouldShowCategory ? (
-    <View style={styles.wrapper}>
-      <View style={styles.itemRow}>
-        <AppText style={styles.itemHeader}>{category}</AppText>
-      </View>
-      {transactions.map(
-        (transaction, index) =>
-          (transaction.order || 0) < maxTransactionsToDisplay && (
-            <Transaction key={index} {...transaction} />
-          )
-      )}
-    </View>
-  ) : null;
-};
-
-const Transaction: FunctionComponent<Transaction> = ({
-  transactionDate,
-  details,
-  quantity
-}) => (
-  <>
-    <View style={styles.itemRow}>
-      <AppText style={styles.itemSubheader}>{transactionDate}</AppText>
-      <AppText style={styles.itemSubheader}>{quantity}</AppText>
-    </View>
-    {!!details && (
-      <View style={styles.itemDetailWrapper}>
-        <View style={styles.itemDetailBorder} />
-        <AppText style={styles.itemDetail}>{details}</AppText>
-      </View>
-    )}
-  </>
-);
-
-const NoPreviousTransactionTitle: FunctionComponent<{
-  toggleTimeSensitiveTitle: boolean;
-}> = ({ toggleTimeSensitiveTitle }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>Limit reached</AppText>
-    {toggleTimeSensitiveTitle ? (
-      <AppText style={sharedStyles.statusTitle}> for today.</AppText>
-    ) : (
-      <AppText style={sharedStyles.statusTitle}>.</AppText>
-    )}
-  </>
-);
-
-const AppealButton: FunctionComponent<AppealButton> = ({ onAppeal }) => {
-  return (
-    <TouchableOpacity onPress={onAppeal}>
-      <View style={{ alignItems: "center" }}>
-        <AppText style={styles.appealButtonText}>Raise an appeal</AppText>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-interface AppealButton {
-  onAppeal: () => void;
-}
 
 interface NoQuotaCard {
   ids: string[];
@@ -202,33 +36,6 @@ interface NoQuotaCard {
   onAppeal?: () => void;
   quotaResponse: Quota | null;
 }
-
-const ShowFullListToggle: FunctionComponent<{
-  onClick: () => void;
-  displayText: string;
-  icon: any;
-}> = ({ onClick, displayText, icon }) => (
-  <View
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: size(2),
-      marginBottom: size(2)
-    }}
-  >
-    <TouchableOpacity
-      onPress={onClick}
-      style={styles.showFullListToggleWrapper}
-    >
-      <View style={styles.showFullListToggleBorder} />
-      {icon}
-      <View style={styles.showFullListToggleBorder} />
-    </TouchableOpacity>
-    <AppText style={styles.itemHeader}>{displayText}</AppText>
-  </View>
-);
-
 /**
  * Shows when the user cannot purchase anything
  *
@@ -277,7 +84,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     };
   } = {};
   sortedTransactions?.forEach(item => {
-    const policy = allProducts.find(
+    const policy = allProducts?.find(
       policy => policy.category === item.category
     );
     const categoryName = policy?.name ?? item.category;

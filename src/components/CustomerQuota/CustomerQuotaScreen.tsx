@@ -15,7 +15,7 @@ import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
 import { Card } from "../Layout/Card";
 import { ItemsSelectionCard } from "./ItemsSelection/ItemsSelectionCard";
-import { NoQuotaCard } from "./NoQuotaCard";
+import { NoQuotaCard } from "./NoQuota/NoQuotaCard";
 import { CheckoutSuccessCard } from "./CheckoutSuccess/CheckoutSuccessCard";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
