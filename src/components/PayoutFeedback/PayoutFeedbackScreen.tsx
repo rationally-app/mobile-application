@@ -16,6 +16,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Card } from "../Layout/Card";
 import { sharedStyles } from "../CustomerQuota/CheckoutSuccess/sharedStyles";
 import { sharedStyles as sharedCardStyles } from "../CustomerQuota/sharedStyles";
+import { FontAwesome } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   content: {
@@ -126,7 +127,11 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
                 sharedCardStyles.successfulResultWrapper
               ]}
             >
-              <AppText style={sharedCardStyles.emoji}>✅</AppText>
+              <FontAwesome
+                name="thumbs-up"
+                color={color("blue-green", 40)}
+                style={sharedCardStyles.icon}
+              />
               <View style={sharedCardStyles.statusTitleWrapper}>
                 <AppText style={sharedCardStyles.statusTitle}>
                   Redeemed!

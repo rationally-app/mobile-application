@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { compareDesc } from "date-fns";
 import { differenceInSeconds, format, formatDistance } from "date-fns";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { CustomerCard } from "./CustomerCard";
 import { AppText } from "../Layout/AppText";
 import { color, size, fontSize } from "../../common/styles";
@@ -15,6 +15,7 @@ import {
 } from "../../utils/getIdentifierInputDisplay";
 import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransaction";
 import { useAuthenticationContext } from "../../context/auth";
+import { FontAwesome } from "@expo/vector-icons";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -221,7 +222,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
             sharedStyles.failureResultWrapper
           ]}
         >
-          <Text style={sharedStyles.emoji}>❌</Text>
+          <FontAwesome
+            name="thumbs-down"
+            color={color("red", 60)}
+            style={sharedStyles.icon}
+          />
           <AppText style={sharedStyles.statusTitleWrapper}>
             {secondsFromLatestTransaction > 0 ? (
               secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
