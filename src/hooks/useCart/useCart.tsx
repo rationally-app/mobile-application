@@ -23,7 +23,6 @@ export type CartItem = {
   category: string;
   quantity: number;
   maxQuantity: number;
-  checkoutLimit?: number;
   descriptionAlert?: string;
   /**
    * Indicates the previous time quota was used.
@@ -82,10 +81,11 @@ const mergeWithCart = (
     .map(
       ({
         category,
-        quantity: maxQuantity,
+        quantity: remainingQuantity,
         transactionTime,
         identifierInputs
       }) => {
+        remainingQuantity = Math.max(remainingQuantity, 0);
         const [existingItem] = getItem(cart, category);
 
         const product = getProduct(category);
@@ -103,21 +103,25 @@ const mergeWithCart = (
 
         let descriptionAlert: string | undefined = undefined;
         if (product && product.alert) {
-          const expandedQuota = product.quantity.limit - maxQuantity;
+          const expandedQuota = product.quantity.limit - remainingQuantity;
           descriptionAlert =
             expandedQuota >= product.alert.threshold
               ? product.alert.label
               : undefined;
         }
+
+        const checkoutLimit = product?.quantity.checkoutLimit;
+        const maxQuantity = checkoutLimit
+          ? Math.min(remainingQuantity, checkoutLimit)
+          : remainingQuantity;
+
         return {
           category,
           quantity: Math.min(
-            Math.max(maxQuantity, 0),
+            maxQuantity,
             existingItem?.quantity || defaultQuantity
           ),
-          maxQuantity: Math.max(maxQuantity, 0),
-          checkoutLimit:
-            existingItem?.checkoutLimit || product?.quantity.checkoutLimit,
+          maxQuantity,
           descriptionAlert,
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
