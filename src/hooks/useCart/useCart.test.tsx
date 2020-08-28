@@ -197,7 +197,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [
             {
@@ -219,7 +218,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -245,7 +243,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -254,7 +251,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -279,7 +275,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -288,7 +283,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -335,7 +329,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: undefined,
@@ -344,7 +337,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: undefined,
@@ -369,7 +361,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -378,7 +369,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -402,7 +392,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -411,7 +400,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -427,7 +415,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: undefined,
@@ -436,7 +423,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: undefined,
@@ -462,7 +448,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -471,7 +456,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -496,7 +480,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -505,7 +488,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -530,7 +512,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -539,7 +520,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -575,7 +555,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -584,7 +563,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -617,7 +595,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -626,7 +603,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -667,7 +643,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [
             {
@@ -689,7 +664,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -745,7 +719,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [
             {
@@ -793,7 +766,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [
             {
@@ -815,7 +787,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -870,7 +841,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [
             {
@@ -892,7 +862,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [
             {
@@ -970,7 +939,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [
             {
@@ -1043,7 +1011,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [
             {
@@ -1086,7 +1053,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -1095,7 +1061,6 @@ describe("useCart", () => {
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -1160,7 +1125,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: 1,
           descriptionAlert: "*chargeable",
           identifierInputs: [
             {
@@ -1177,12 +1141,11 @@ describe("useCart", () => {
             }
           ],
           lastTransactionTime: transactionTime,
-          maxQuantity: 8,
+          maxQuantity: 1,
           quantity: 0
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
@@ -1230,7 +1193,6 @@ describe("useCart", () => {
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
-          checkoutLimit: 1,
           descriptionAlert: "*chargeable",
           identifierInputs: [
             {
@@ -1247,12 +1209,11 @@ describe("useCart", () => {
             }
           ],
           lastTransactionTime: transactionTime,
-          maxQuantity: 8,
+          maxQuantity: 1,
           quantity: 0
         },
         {
           category: "chocolate",
-          checkoutLimit: undefined,
           descriptionAlert: undefined,
           identifierInputs: [],
           lastTransactionTime: transactionTime,
