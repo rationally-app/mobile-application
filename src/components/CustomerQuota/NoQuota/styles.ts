@@ -31,6 +31,11 @@ export const styles = StyleSheet.create({
   itemDetail: {
     fontSize: fontSize(-1)
   },
+  appealLabel: {
+    fontSize: fontSize(-1),
+    color: color("red", 60),
+    fontFamily: "brand-italic"
+  },
   appealButtonText: {
     marginTop: size(1),
     marginBottom: 0,
