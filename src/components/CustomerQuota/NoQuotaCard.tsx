@@ -8,16 +8,13 @@ import { color, size, fontSize } from "../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Cart } from "../../hooks/useCart/useCart";
-import {
-  getIdentifierInputDisplay,
-  getAllIdentifierInputDisplay
-} from "../../utils/getIdentifierInputDisplay";
 import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransaction";
 import { FontAwesome } from "@expo/vector-icons";
 import { Quota } from "../../types";
-import { AuthContext } from "../../context/auth";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { ProductContext } from "../../context/products";
+import { getAllIdentifierInputDisplay } from "../../utils/getIdentifierInputDisplay";
+import { AuthContext } from "../../context/auth";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -101,18 +98,23 @@ const UsageQuotaTitle: FunctionComponent<{
   </>
 );
 
+// TODO: add quantity
 const ItemTransaction: FunctionComponent<{
-  itemHeader: string;
-  itemDetail: string;
-}> = ({ itemHeader, itemDetail }) => (
+  categoryName: string;
+  formattedDate: string;
+  details: string;
+}> = ({ categoryName, formattedDate, details }) => (
   <>
     <View style={styles.itemRow}>
-      <AppText style={styles.itemHeader}>{itemHeader}</AppText>
+      <AppText style={styles.itemHeader}>{categoryName}</AppText>
     </View>
-    {!!itemDetail && (
+    <View style={styles.itemRow}>
+      <AppText style={styles.itemHeader}>{formattedDate}</AppText>
+    </View>
+    {!!details && (
       <View style={styles.itemDetailWrapper}>
         <View style={styles.itemDetailBorder} />
-        <AppText style={styles.itemDetail}>{itemDetail}</AppText>
+        <AppText style={styles.itemDetail}>{details}</AppText>
       </View>
     )}
   </>
@@ -171,14 +173,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
+  const itemTransactions: {
+    categoryName: string;
+    formattedDate: string;
+    details: string;
+  }[] = [];
   let latestTransactionTime: Date | undefined = new Date();
-  /**
-   * Refactoring of Limit Reached Screen TBD
-   * Current Limit Reached Screen caters for the following scenarios
-   * 1. Listing of categories with latest transacted time; no identifiers and/or group transactions
-   * 2. Listing of past transactions with identifiers and transacted time; identifier and single ID transactions
-   */
 
   const { pastTransactionsResult } = usePastTransaction(
     ids,
@@ -186,60 +186,25 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     endpoint
   );
 
-  if (
-    ids.length > 1 ||
-    allProducts?.some(product => product.identifiers === undefined)
-  ) {
-    // For first scenario, cart provides an aggregated summary of the transacted categories
-    // since it fetch data from quota endpoint
-    // current distributions don't allow group transactions with identifiers
-    // if it does, default to aggregated summary
-    const sortedCart = cart.sort((item1, item2) =>
-      compareDesc(
-        item1.lastTransactionTime ?? 0,
-        item2.lastTransactionTime ?? 0
-      )
-    );
-    sortedCart.forEach(
-      ({ category, lastTransactionTime, identifierInputs = [] }) => {
-        if (lastTransactionTime) {
-          const policy = getProduct(category);
-          const categoryName = policy?.name ?? category;
-          const formattedDate = format(
-            lastTransactionTime,
-            "d MMM yyyy, h:mma"
-          );
-          itemTransactions.push({
-            itemHeader: `${categoryName} (${formattedDate})`,
-            itemDetail: getIdentifierInputDisplay(identifierInputs)
-          });
-        }
-      }
-    );
-    latestTransactionTime = sortedCart[0]?.lastTransactionTime ?? undefined;
-  } else {
-    // For second scenario, transactions with identifiers would require to show details transactions
-    // hence, data will fetch from transactions endpoint
-    const sortedTransactions = pastTransactionsResult?.pastTransactions.sort(
-      (item1, item2) =>
-        compareDesc(item1.transactionTime ?? 0, item2.transactionTime ?? 0)
-    );
+  const sortedTransactions = pastTransactionsResult?.pastTransactions.sort(
+    (item1, item2) =>
+      compareDesc(item1.transactionTime ?? 0, item2.transactionTime ?? 0)
+  );
 
-    sortedTransactions?.forEach(item => {
-      const policy = allProducts?.find(
-        policy => policy.category === item.category
-      );
-      const categoryName = policy?.name ?? item.category;
-      const formattedDate = format(item.transactionTime, "d MMM yyyy, h:mma");
-      itemTransactions.push({
-        itemHeader: `${categoryName} (${formattedDate})`,
-        itemDetail: getAllIdentifierInputDisplay(item.identifierInputs ?? [])
-      });
+  sortedTransactions?.forEach(item => {
+    const policy = allProducts.find(
+      policy => policy.category === item.category
+    );
+    const categoryName = policy?.name ?? item.category;
+    const formattedDate = format(item.transactionTime, "d MMM yyyy, h:mma");
+    itemTransactions.push({
+      categoryName,
+      formattedDate,
+      details: getAllIdentifierInputDisplay(item.identifierInputs ?? [])
     });
+  });
 
-    latestTransactionTime =
-      sortedTransactions?.[0].transactionTime ?? undefined;
-  }
+  latestTransactionTime = sortedTransactions?.[0].transactionTime ?? undefined;
 
   const now = new Date();
   const secondsFromLatestTransaction = latestTransactionTime
@@ -308,11 +273,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}:
               </AppText>
               {itemTransactions.map(
-                ({ itemHeader, itemDetail }, index: number) => (
+                ({ categoryName, formattedDate, details }, index: number) => (
                   <ItemTransaction
                     key={index}
-                    itemHeader={itemHeader}
-                    itemDetail={itemDetail}
+                    categoryName={categoryName}
+                    formattedDate={formattedDate}
+                    details={details}
                   />
                 )
               )}
