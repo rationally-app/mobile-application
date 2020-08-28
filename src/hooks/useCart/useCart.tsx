@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { useQuota } from "../useQuota/useQuota";
-import { Sentry } from "../../utils/errorTracking";
 import { postTransaction } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
@@ -156,7 +155,7 @@ export const useCart = (
    */
 
   useEffect(() => {
-    async function fetchQuotaWrapper() {
+    async function fetchQuotaWrapper(): Promise<void> {
       setCartState("FETCHING_QUOTA");
       const newState = await fetchQuota();
       if (newState !== undefined) {
@@ -177,7 +176,8 @@ export const useCart = (
     products,
     setProducts,
     setFeatures,
-    showAlert
+    showAlert,
+    fetchQuota
   ]);
 
   /**

@@ -5,7 +5,7 @@ import { useProductContext } from "../../context/products";
 
 import { transform } from "lodash";
 
-import { Quota, ItemQuota, IdentifierInput, Policy } from "../../types";
+import { Quota, Policy } from "../../types";
 
 export type QuotaHook = {
   quotaResponse: Quota | null;
@@ -52,12 +52,7 @@ export const useQuota = (
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
   const [quotaError, setError] = useState<Error>();
-  const {
-    products,
-    getProduct,
-    setProducts,
-    setFeatures
-  } = useProductContext();
+  const { products } = useProductContext();
 
   const fetchQuota = async (): Promise<CartState | undefined> => {
     try {
