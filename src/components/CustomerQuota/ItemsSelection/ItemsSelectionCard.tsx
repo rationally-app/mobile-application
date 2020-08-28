@@ -13,9 +13,12 @@ import { useProductContext } from "../../../context/products";
 import {
   AlertModalContext,
   defaultWarningProps,
+  defaultConfirmationProps,
   wrongFormatAlertProps,
   systemAlertProps,
-  ERROR_MESSAGE
+  ERROR_MESSAGE,
+  WARNING_MESSAGE,
+  duplicateAlertProps
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { EnvVersionError } from "../../../services/envVersion";
@@ -27,6 +30,7 @@ interface ItemsSelectionCard {
   isLoading: boolean;
   checkoutCart: () => void;
   onCancel: () => void;
+  onBack: () => void;
   cart: Cart;
   updateCart: CartHook["updateCart"];
 }
@@ -37,6 +41,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   isLoading,
   checkoutCart,
   onCancel,
+  onBack,
   cart,
   updateCart
 }) => {
@@ -52,16 +57,22 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         features?.id?.validationRegex
       );
       Vibration.vibrate(50);
-      setIsAddUserModalVisible(false);
       if (ids.indexOf(id) > -1) {
         throw new Error(ERROR_MESSAGE.DUPLICATE_ID);
       }
       addId(id);
     } catch (e) {
+      setIsAddUserModalVisible(false);
       if (e instanceof EnvVersionError) {
         Sentry.captureException(e);
         showAlert({
           ...systemAlertProps,
+          description: e.message,
+          onOk: () => setIsAddUserModalVisible(true)
+        });
+      } else if (e.message === ERROR_MESSAGE.DUPLICATE_ID) {
+        showAlert({
+          ...duplicateAlertProps,
           description: e.message,
           onOk: () => setIsAddUserModalVisible(true)
         });
@@ -79,6 +90,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
   const isAppeal = products.some(product => product.categoryType === "APPEAL");
+  const isChargeable = cart.some(
+    cartItem => cartItem.descriptionAlert === "*chargeable"
+  );
   return (
     <View>
       <CustomerCard
@@ -105,7 +119,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             text={isAppeal ? "Back" : "Cancel"}
             onPress={
               isAppeal
-                ? onCancel
+                ? onBack
                 : () => {
                     showAlert({
                       ...defaultWarningProps,
@@ -136,7 +150,23 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 color={color("grey", 0)}
               />
             }
-            onPress={checkoutCart}
+            onPress={
+              !isChargeable
+                ? checkoutCart
+                : () => {
+                    showAlert({
+                      ...defaultConfirmationProps,
+                      title: "Payment collected?",
+                      description: WARNING_MESSAGE.PAYMENT_COLLECTION,
+                      buttonTexts: {
+                        primaryActionText: "Collected",
+                        secondaryActionText: "No"
+                      },
+                      visible: true,
+                      onOk: checkoutCart
+                    });
+                  }
+            }
             isLoading={isLoading}
             fullWidth={true}
           />

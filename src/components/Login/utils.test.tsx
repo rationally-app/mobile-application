@@ -1,7 +1,7 @@
 import { decodeQr } from "./utils";
 
 describe("decodeQr", () => {
-  it("should fail for old QR codes", () => {
+  it("should fail for old, deprecated QR codes", () => {
     expect.assertions(1);
     const code = "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4";
     expect(() => decodeQr(code)).toThrow("No validity period");
@@ -16,7 +16,7 @@ describe("decodeQr", () => {
   });
 
   it("should throw if the code can be parsed but does not contain the right fields", () => {
-    expect.assertions(2);
+    expect.assertions(3);
     const missingKey = `{"keys": "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4","endpoint": "https://somewhere.com"}`;
     expect(() => decodeQr(missingKey)).toThrow("No key");
 

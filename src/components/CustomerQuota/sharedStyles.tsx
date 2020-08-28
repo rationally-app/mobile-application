@@ -12,7 +12,7 @@ export const sharedStyles = StyleSheet.create({
     borderColor: color("green", 30)
   },
   failureResultWrapper: {
-    paddingTop: size(0.5),
+    paddingTop: size(2),
     paddingBottom: size(4),
     backgroundColor: color("red", 10),
     borderColor: color("red", 30)
@@ -25,8 +25,8 @@ export const sharedStyles = StyleSheet.create({
     flexDirection: "row"
   },
   submitButton: { flex: 1 },
-  emoji: {
-    fontSize: fontSize(3),
+  icon: {
+    fontSize: fontSize(6),
     marginBottom: size(2),
     marginTop: size(2)
   },

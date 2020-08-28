@@ -11,7 +11,7 @@ import { DarkButton } from "../../../src/components/Layout/Buttons/DarkButton";
 const AlertModalItem: FunctionComponent<{
   alertType: AlertModalProps["alertType"];
   title: AlertModalProps["title"];
-  description: AlertModalProps["description"];
+  description?: AlertModalProps["description"];
   buttonTexts: AlertModalProps["buttonTexts"];
 }> = ({ alertType, title, description, buttonTexts }) => {
   const [visible, setVisible] = useState(false);
@@ -54,6 +54,14 @@ storiesOf("Modals", module).add("Alerts", () => (
       buttonTexts={{
         primaryActionText: "Delete",
         secondaryActionText: "Cancel"
+      }}
+    />
+    <AlertModalItem
+      alertType="WARN"
+      title="Are you sure?"
+      buttonTexts={{
+        primaryActionText: "Yes",
+        secondaryActionText: "No"
       }}
     />
     <AlertModalItem

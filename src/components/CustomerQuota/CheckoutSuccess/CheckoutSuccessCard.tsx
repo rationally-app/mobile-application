@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
@@ -9,8 +9,9 @@ import { PurchasedItem } from "./PurchasedItem";
 import { getPurchasedQuantitiesByItem } from "../utils";
 import { useProductContext } from "../../../context/products";
 import { RedeemedItem } from "./RedeemedItem";
-import { size } from "../../../common/styles";
+import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
+import { FontAwesome } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -45,7 +46,11 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             sharedStyles.successfulResultWrapper
           ]}
         >
-          <Text style={sharedStyles.emoji}>✅</Text>
+          <FontAwesome
+            name="thumbs-up"
+            color={color("blue-green", 40)}
+            style={sharedStyles.icon}
+          />
           <AppText style={sharedStyles.statusTitleWrapper}>
             <AppText style={sharedStyles.statusTitle}>{title}</AppText>
           </AppText>

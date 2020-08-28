@@ -27,7 +27,7 @@ export const validateIdentifierInputs = (
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
     if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
-      throw new Error(ERROR_MESSAGE.INVALID_PHONE_NUMBER);
+      throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
   }
 

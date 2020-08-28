@@ -10,13 +10,13 @@ export const validateAndCleanId = (
   let id: string;
   if (!idValidation)
     throw new EnvVersionError(
-      "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+      "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists."
     );
   switch (idValidation) {
     case "NRIC":
       if (idRegex)
         throw new EnvVersionError(
-          "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
+          "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists."
         );
       id = validateAndCleanNric(inputId);
       break;

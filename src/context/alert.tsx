@@ -10,6 +10,10 @@ import {
   AlertModalProps
 } from "../components/AlertModal/AlertModal";
 
+export enum WARNING_MESSAGE {
+  PAYMENT_COLLECTION = "This action cannot be undone. Proceed only when payment has been collected."
+}
+
 export enum ERROR_MESSAGE {
   DUPLICATE_IDENTIFIER_INPUT = "Enter unique code details.",
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
@@ -21,10 +25,11 @@ export enum ERROR_MESSAGE {
   MISSING_POD_INPUT = "Scan your device code.",
   INVALID_PHONE_NUMBER = "Enter valid contact number.",
   INVALID_COUNTRY_CODE = "Enter valid country code.",
+  INVALID_PHONE_AND_COUNTRY_CODE = "Enter valid country code and contact number.",
   MISSING_SELECTION = "Select at least one item to checkout.",
   AUTH_FAILURE_INVALID_TOKEN = "Get a new QR code from your in-charge.",
   AUTH_FAILURE_INVALID_FORMAT = "Scan QR code again or get a new QR code from your in-charge.",
-  ENV_VERSION_ERROR = "Encountered an issue obtaining environment information. We've noted this down and are looking into it!",
+  ENV_VERSION_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   INSUFFICIENT_QUOTA = "Insufficient quota.",
   INVALID_QUANTITY = "Invalid quantity.",
   INVALID_CATEGORY = "Category does not exist.",
@@ -42,7 +47,6 @@ export enum ERROR_MESSAGE {
 const defaultAlertProps: AlertModalProps = {
   alertType: "ERROR",
   title: "",
-  description: "",
   buttonTexts: {
     primaryActionText: "OK"
   },
@@ -55,7 +59,6 @@ const defaultAlertProps: AlertModalProps = {
 export const defaultWarningProps: AlertModalProps = {
   alertType: "WARN",
   title: "",
-  description: "",
   buttonTexts: {
     primaryActionText: "Back",
     secondaryActionText: "Confirm"
@@ -69,7 +72,6 @@ export const defaultWarningProps: AlertModalProps = {
 export const defaultConfirmationProps: AlertModalProps = {
   alertType: "CONFIRM",
   title: "",
-  description: "",
   buttonTexts: {
     primaryActionText: "Back",
     secondaryActionText: "Confirm"

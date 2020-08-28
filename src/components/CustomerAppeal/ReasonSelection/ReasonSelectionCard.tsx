@@ -9,8 +9,11 @@ import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
 import { AlertModalContext, defaultWarningProps } from "../../../context/alert";
 
 const styles = StyleSheet.create({
-  commonPadding: {
+  titlePadding: {
     padding: size(2),
+    paddingTop: size(0.5)
+  },
+  reasonPadding: {
     paddingTop: size(0.5)
   },
   backbuttonComponent: {
@@ -43,10 +46,10 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
     <View>
       <CustomerCard ids={ids}>
         <Card>
-          <View style={styles.commonPadding}>
+          <View style={styles.titlePadding}>
             <ReasonSelectionHeader title={reasonSelectionHeader} />
           </View>
-          <View style={styles.commonPadding}>
+          <View style={styles.reasonPadding}>
             {reasons.map(reason => (
               <ReasonItem
                 key={reason.description}
