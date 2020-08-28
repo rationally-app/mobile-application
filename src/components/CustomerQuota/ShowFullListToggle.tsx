@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { AppText } from "../../Layout/AppText";
-import { size, color } from "../../../common/styles";
-import { styles } from "./styles";
+import { AppText } from "../Layout/AppText";
+import { size, color } from "../../common/styles";
+import { styles } from "./NoQuota/styles";
 import { Ionicons } from "@expo/vector-icons";
 
 export const ShowFullListToggle: FunctionComponent<{

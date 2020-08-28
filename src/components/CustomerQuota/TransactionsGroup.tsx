@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { View } from "react-native";
-import { AppText } from "../../Layout/AppText";
-import { styles } from "./styles";
+import { AppText } from "../Layout/AppText";
+import { styles } from "./NoQuota/styles";
 
 export interface Transaction {
   transactionDate: string;
@@ -11,8 +11,8 @@ export interface Transaction {
   order?: number;
 }
 
-export interface TransactionsByCategory {
-  category: string;
+export interface TransactionsGroup {
+  header: string;
   transactions: Transaction[];
   order: number;
 }
@@ -49,17 +49,17 @@ const Transaction: FunctionComponent<Transaction> = ({
   </>
 );
 
-export const TransactionsByCategory: FunctionComponent<{
-  category: string;
-  transactions: Transaction[];
-  maxTransactionsToDisplay: number;
-}> = ({ category, transactions, maxTransactionsToDisplay }) => {
+export const TransactionsGroup: FunctionComponent<
+  TransactionsGroup & {
+    maxTransactionsToDisplay: number;
+  }
+> = ({ header, transactions, maxTransactionsToDisplay }) => {
   const shouldShowCategory =
     (transactions[0].order || 0) < maxTransactionsToDisplay;
   return shouldShowCategory ? (
     <View style={styles.wrapper}>
       <View style={styles.itemRow}>
-        <AppText style={styles.itemHeader}>{category}</AppText>
+        <AppText style={styles.itemHeader}>{header}</AppText>
       </View>
       {transactions.map(
         (transaction, index) =>
