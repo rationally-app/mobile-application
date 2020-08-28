@@ -128,10 +128,10 @@ describe("usePastTransaction", () => {
   describe("fetch past transactions on initialisation", () => {
     it("should populate the past transactions with values", async () => {
       expect.assertions(1);
-      mockGetPastTransactions.mockReturnValueOnce(mockPastTransactions);
+      mockGetPastTransactions.mockReturnValue(mockPastTransactions);
 
       const { result, waitForNextUpdate } = renderHook(
-        () => usePastTransaction(id, key, endpoint),
+        () => usePastTransaction([id], key, endpoint),
         { wrapper }
       );
 
@@ -181,10 +181,10 @@ describe("usePastTransaction", () => {
 
     it("should populate the past transactions with empty values", async () => {
       expect.assertions(1);
-      mockGetPastTransactions.mockReturnValueOnce(mockEmptyPastTransactions);
+      mockGetPastTransactions.mockReturnValue(mockEmptyPastTransactions);
 
       const { result, waitForNextUpdate } = renderHook(
-        () => usePastTransaction(id, key, endpoint),
+        () => usePastTransaction([id], key, endpoint),
         { wrapper }
       );
 
@@ -200,7 +200,7 @@ describe("usePastTransaction", () => {
       mockGetPastTransactions.mockImplementation(mockSomeUnknownError);
 
       const { result } = renderHook(
-        () => usePastTransaction(id, key, endpoint),
+        () => usePastTransaction([id], key, endpoint),
         { wrapper }
       );
 
