@@ -90,13 +90,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
   const isAppeal = products.some(product => product.categoryType === "APPEAL");
-<<<<<<< HEAD
-
-=======
   const isChargeable = cart.some(
     cartItem => cartItem.descriptionAlert === "*chargeable"
   );
->>>>>>> master
   return (
     <View>
       <CustomerCard
