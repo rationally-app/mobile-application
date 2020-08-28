@@ -1,14 +1,14 @@
 import React, { FunctionComponent } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { AppText } from "../../Layout/AppText";
-import { size } from "../../../common/styles";
+import { size, color } from "../../../common/styles";
 import { styles } from "./styles";
+import { Ionicons } from "@expo/vector-icons";
 
 export const ShowFullListToggle: FunctionComponent<{
-  onClick: () => void;
-  displayText: string;
-  icon: any;
-}> = ({ onClick, displayText, icon }) => (
+  toggleIsShowFullList: () => void;
+  isShowFullList: boolean;
+}> = ({ toggleIsShowFullList, isShowFullList }) => (
   <View
     style={{
       display: "flex",
@@ -19,13 +19,23 @@ export const ShowFullListToggle: FunctionComponent<{
     }}
   >
     <TouchableOpacity
-      onPress={onClick}
+      onPress={toggleIsShowFullList}
       style={styles.showFullListToggleWrapper}
     >
       <View style={styles.showFullListToggleBorder} />
-      {icon}
+      <Ionicons
+        name={
+          isShowFullList
+            ? "ios-arrow-dropup-circle"
+            : "ios-arrow-dropdown-circle"
+        }
+        size={size(4)}
+        color={color("blue", 50)}
+      />
       <View style={styles.showFullListToggleBorder} />
     </TouchableOpacity>
-    <AppText style={styles.itemHeader}>{displayText}</AppText>
+    <AppText style={styles.itemHeader}>{`Show ${
+      isShowFullList ? "less" : "more"
+    }`}</AppText>
   </View>
 );

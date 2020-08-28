@@ -1,7 +1,15 @@
 import React, { FunctionComponent, useContext, useState } from "react";
 import { differenceInSeconds, format } from "date-fns";
 import { View } from "react-native";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { CustomerCard } from "../CustomerCard";
+import { AppText } from "../../Layout/AppText";
+import { color } from "../../../common/styles";
+import { sharedStyles } from "../sharedStyles";
+import { DarkButton } from "../../Layout/Buttons/DarkButton";
+import { Cart } from "../../../hooks/useCart/useCart";
+import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
+import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
+import { FontAwesome } from "@expo/vector-icons";
 import { formatQuantityText } from "../utils";
 import { styles } from "./styles";
 import { TransactionsByCategory, Transaction } from "./TransactionsByCategory";
@@ -13,18 +21,9 @@ import {
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
 import { Quota } from "../../../types";
-import { Cart } from "../../../hooks/useCart/useCart";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
-import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
-import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import { CustomerCard } from "../CustomerCard";
-import { color } from "react-native-reanimated";
-import { sharedStyles } from "../sharedStyles";
-import { AppText } from "../../Layout/AppText";
-import { size } from "fp-ts/lib/ReadonlyRecord";
-import { DarkButton } from "../../Layout/Buttons/DarkButton";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -225,19 +224,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           )}
           {transactionCounter > MAX_TRANSACTIONS_TO_DISPLAY && (
             <ShowFullListToggle
-              onClick={() => setIsShowFullList(!isShowFullList)}
-              displayText={isShowFullList ? "Show less" : "Show more"}
-              icon={
-                <Ionicons
-                  name={
-                    isShowFullList
-                      ? "ios-arrow-dropup-circle"
-                      : "ios-arrow-dropdown-circle"
-                  }
-                  size={size(4)}
-                  color={color("blue", 50)}
-                />
-              }
+              toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
+              isShowFullList={isShowFullList}
             />
           )}
         </View>
