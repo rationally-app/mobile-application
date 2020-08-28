@@ -1,7 +1,28 @@
-import { useState, useCallback, useContext } from "react";
-import { CampaignConfig } from "../../types";
-import { CampaignConfigContext } from "../../context/campaignConfig";
+import { useState, useCallback } from "react";
+import { CampaignConfig, ConfigHashes } from "../../types";
+import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { getCampaignConfig } from "../../services/campaignConfig";
+import { hashString } from "../../utils/hash";
+
+const generateConfigHashes = async (
+  config: CampaignConfig | undefined
+): Promise<ConfigHashes | undefined> => {
+  if (!config) {
+    return Promise.resolve(undefined);
+  }
+  const configHashes: ConfigHashes = {
+    features: undefined,
+    policies: undefined
+  };
+  for (const [key, value] of Object.entries(config)) {
+    if (value !== null) {
+      configHashes[key as keyof ConfigHashes] = await hashString(
+        JSON.stringify(value)
+      );
+    }
+  }
+  return configHashes;
+};
 
 type FetchingState =
   | "DEFAULT"
@@ -11,48 +32,58 @@ type FetchingState =
 
 type UpdateCampaignConfigHook = {
   fetchingState: FetchingState;
-  updateCampaignConfig: () => void;
+  updateCampaignConfig: (
+    currentCampaignConfig: CampaignConfig | undefined,
+    addCampaignConfig: CampaignConfigsStoreContext["addCampaignConfig"]
+  ) => void;
   error?: Error;
   clearError: () => void;
   result?: CampaignConfig;
 };
 
 export const useUpdateCampaignConfig = (
-  authKey: string,
+  operatorToken: string,
+  sessionToken: string,
   endpoint: string
 ): UpdateCampaignConfigHook => {
   const [fetchingState, setFetchingState] = useState<FetchingState>("DEFAULT");
   const [result, setResult] = useState<CampaignConfig>();
   const [error, setError] = useState<Error>();
 
-  const { setCampaignConfig, configHashes } = useContext(CampaignConfigContext);
+  const updateCampaignConfig: UpdateCampaignConfigHook["updateCampaignConfig"] = useCallback(
+    (currentCampaignConfig, addCampaignConfig) => {
+      const fetchCampaignConfig = async (): Promise<void> => {
+        setError(undefined);
+        setResult(undefined);
+        const configHashes = await generateConfigHashes(currentCampaignConfig);
 
-  const updateCampaignConfig = useCallback(() => {
-    const fetchCampaignConfig = async (): Promise<void> => {
-      setError(undefined);
-      setResult(undefined);
-      setFetchingState("FETCHING_CONFIG");
-      try {
-        const campaignConfigResponse = await getCampaignConfig(
-          authKey,
-          endpoint,
-          configHashes
-        );
-        const configs = Object.values(campaignConfigResponse);
-        if (configs.some(c => !!c)) {
-          await setCampaignConfig(campaignConfigResponse);
-          setResult(campaignConfigResponse);
-          setFetchingState("RETURNED_NEW_UPDATES");
-        } else {
-          setFetchingState("RETURNED_NO_UPDATES");
+        setFetchingState("FETCHING_CONFIG");
+        try {
+          const campaignConfigResponse = await getCampaignConfig(
+            sessionToken,
+            endpoint,
+            configHashes
+          );
+          const configs = Object.values(campaignConfigResponse);
+          if (configs.some(c => !!c)) {
+            addCampaignConfig(
+              `${operatorToken}${endpoint}`,
+              campaignConfigResponse
+            );
+            setResult(campaignConfigResponse);
+            setFetchingState("RETURNED_NEW_UPDATES");
+          } else {
+            setFetchingState("RETURNED_NO_UPDATES");
+          }
+        } catch (e) {
+          setError(e);
         }
-      } catch (e) {
-        setError(e);
-      }
-    };
+      };
 
-    fetchCampaignConfig();
-  }, [authKey, configHashes, endpoint, setCampaignConfig]);
+      fetchCampaignConfig();
+    },
+    [endpoint, operatorToken, sessionToken]
+  );
 
   const clearError = useCallback(() => {
     setError(undefined);

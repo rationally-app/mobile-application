@@ -22,11 +22,16 @@ const wrapper = (
       features: {
         minAppBinaryVersion: minAppBinaryVersion,
         minAppBuildVersion: minAppBuildVersion,
-        campaignName: "Test campaign"
+        campaignName: "Test campaign",
+        flowType: "DEFAULT",
+        transactionGrouping: false,
+        id: {
+          scannerType: "CODE_39",
+          type: "STRING",
+          validation: "NRIC"
+        }
       },
-      setCampaignConfig: () => null,
-      clearCampaignConfig: () => null,
-      configHashes: {}
+      policies: null
     }}
   >
     {children}

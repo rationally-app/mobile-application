@@ -14,24 +14,97 @@ const mockValidResponse = {
     minAppBinaryVersion: "3.0.0",
     minAppBuildVersion: 0,
     campaignName: "Test campaign",
+    transactionGrouping: true,
     flowType: "DEFAULT",
-    transactionGrouping: true
-  }
+    id: {
+      type: "STRING",
+      scannerType: "CODE_39",
+      validation: "NRIC"
+    }
+  },
+  policies: [
+    {
+      category: "toilet-paper",
+      name: "🧻 Toilet Paper",
+      description: "1 ply / 2 ply / 3 ply",
+      order: 1,
+      quantity: {
+        period: 7,
+        limit: 2,
+        unit: {
+          type: "POSTFIX",
+          label: " pack(s)"
+        }
+      }
+    },
+    {
+      category: "chocolate",
+      name: "🍫 Chocolate",
+      description: "Dark / White / Assorted",
+      order: 2,
+      quantity: {
+        period: 14,
+        limit: 30,
+        step: 5,
+        unit: {
+          type: "PREFIX",
+          label: "$"
+        }
+      }
+    }
+  ]
 };
 
 const mockValidResponseNewFeature = {
   features: {
+    newFeature: true,
     minAppBinaryVersion: "3.0.0",
     minAppBuildVersion: 10,
     campaignName: "Test campaign",
-    flowType: "DEFAULT",
     transactionGrouping: true,
-    newFeature: true
-  }
+    flowType: "DEFAULT",
+    id: {
+      type: "STRING",
+      scannerType: "CODE_39",
+      validation: "NRIC"
+    }
+  },
+  policies: [
+    {
+      category: "toilet-paper",
+      name: "🧻 Toilet Paper",
+      description: "1 ply / 2 ply / 3 ply",
+      order: 1,
+      quantity: {
+        period: 7,
+        limit: 2,
+        unit: {
+          type: "POSTFIX",
+          label: " pack(s)"
+        }
+      }
+    },
+    {
+      category: "chocolate",
+      name: "🍫 Chocolate",
+      description: "Dark / White / Assorted",
+      order: 2,
+      quantity: {
+        period: 14,
+        limit: 30,
+        step: 5,
+        unit: {
+          type: "PREFIX",
+          label: "$"
+        }
+      }
+    }
+  ]
 };
 
 const mockValidResponseNoUpdates = {
-  features: null
+  features: null,
+  policies: null
 };
 
 const mockInvalidResponseIncorrectType = {
@@ -68,7 +141,10 @@ describe("campaignConfig", () => {
           json: () => Promise.resolve(response)
         });
 
-        const config = await getCampaignConfig(key, endpoint, {});
+        const config = await getCampaignConfig(key, endpoint, {
+          features: undefined,
+          policies: undefined
+        });
         expect(config).toStrictEqual(response);
       }
     );
@@ -81,7 +157,8 @@ describe("campaignConfig", () => {
       });
 
       const config = await getCampaignConfig(key, endpoint, {
-        features: "latest-hash"
+        features: "latest-hash",
+        policies: "latest-hash"
       });
       expect(config).toStrictEqual(mockValidResponseNoUpdates);
     });
@@ -95,9 +172,12 @@ describe("campaignConfig", () => {
           json: () => Promise.resolve(response)
         });
 
-        await expect(getCampaignConfig(key, endpoint, {})).rejects.toThrow(
-          CampaignConfigError
-        );
+        await expect(
+          getCampaignConfig(key, endpoint, {
+            features: undefined,
+            policies: undefined
+          })
+        ).rejects.toThrow(CampaignConfigError);
       }
     );
 
@@ -110,9 +190,12 @@ describe("campaignConfig", () => {
           json: () => Promise.resolve(response)
         });
 
-        await expect(getCampaignConfig(key, endpoint, {})).rejects.toThrow(
-          CampaignConfigError
-        );
+        await expect(
+          getCampaignConfig(key, endpoint, {
+            features: undefined,
+            policies: undefined
+          })
+        ).rejects.toThrow(CampaignConfigError);
         expect(mockCaptureException).toHaveBeenCalledTimes(1);
       }
     );
@@ -125,18 +208,24 @@ describe("campaignConfig", () => {
           Promise.resolve({ message: "Invalid authentication token provided" })
       });
 
-      await expect(getCampaignConfig(key, endpoint, {})).rejects.toThrow(
-        CampaignConfigError
-      );
+      await expect(
+        getCampaignConfig(key, endpoint, {
+          features: undefined,
+          policies: undefined
+        })
+      ).rejects.toThrow(CampaignConfigError);
     });
 
     it("should throw error if there were issues fetching", async () => {
       expect.assertions(1);
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      await expect(getCampaignConfig(key, endpoint, {})).rejects.toThrow(
-        "Network error"
-      );
+      await expect(
+        getCampaignConfig(key, endpoint, {
+          features: undefined,
+          policies: undefined
+        })
+      ).rejects.toThrow("Network error");
     });
   });
 });

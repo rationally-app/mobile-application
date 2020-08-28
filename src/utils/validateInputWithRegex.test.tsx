@@ -1,8 +1,8 @@
 import { validate, validateAndCleanRegexInput } from "./validateInputWithRegex";
-import { EnvVersionError } from "../services/envVersion";
+
+const alphanumericRegex = "^[a-zA-Z0-9-_ ]+$";
 
 describe("validate", () => {
-  const alphanumericRegex = "^[a-zA-Z0-9-_ ]+$";
   it("should return true for alphanumeric regex", () => {
     expect.assertions(4);
     expect(validate("100000001", alphanumericRegex)).toBe(true);
@@ -19,16 +19,22 @@ describe("validate", () => {
   });
 });
 
-describe("throw EnvVersionError", () => {
-  const undefinedRegex = undefined;
-  it("should throw EnvVersionError if validationRegex is missing", () => {
-    expect.assertions(1);
-    expect(() =>
-      validateAndCleanRegexInput("100000001", undefinedRegex)
-    ).toThrow(
-      new EnvVersionError(
-        "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists."
-      )
+describe("validateAndCleanRegexInput", () => {
+  it("should return uppercased input id", () => {
+    expect.assertions(2);
+    expect(validateAndCleanRegexInput("asd", alphanumericRegex)).toEqual("ASD");
+    expect(validateAndCleanRegexInput("asDF", alphanumericRegex)).toEqual(
+      "ASDF"
     );
+  });
+
+  it("should throw error when the id is invalid", () => {
+    expect.assertions(2);
+    expect(() => validateAndCleanRegexInput("*asd", alphanumericRegex)).toThrow(
+      "Please check that the ID is in the correct format"
+    );
+    expect(() =>
+      validateAndCleanRegexInput("asDF/", alphanumericRegex)
+    ).toThrow("Please check that the ID is in the correct format");
   });
 });

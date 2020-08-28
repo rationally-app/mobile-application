@@ -8,7 +8,7 @@ import React, {
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
-import { useAuthenticationContext } from "../../context/auth";
+import { AuthContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -88,7 +88,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
-  const { token, endpoint } = useAuthenticationContext();
+  const { sessionToken, endpoint } = useContext(AuthContext);
   const showHelpModal = useContext(HelpModalContext);
   const { showAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
@@ -112,7 +112,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     error,
     clearError,
     quotaResponse
-  } = useCart(ids, token, endpoint);
+  } = useCart(ids, sessionToken, endpoint);
 
   useEffect(() => {
     Sentry.addBreadcrumb({

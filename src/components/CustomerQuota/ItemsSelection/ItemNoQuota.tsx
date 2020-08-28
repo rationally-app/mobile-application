@@ -1,10 +1,10 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { size, color, fontSize, borderRadius } from "../../../common/styles";
 import { ItemContent } from "./ItemContent";
 import { CartItem } from "../../../hooks/useCart/useCart";
-import { useProductContext } from "../../../context/products";
+import { ProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
 
 const styles = StyleSheet.create({
@@ -30,7 +30,7 @@ export const ItemNoQuota: FunctionComponent<{
   cartItem: CartItem;
 }> = ({ cartItem }) => {
   const { category, maxQuantity } = cartItem;
-  const { getProduct } = useProductContext();
+  const { getProduct } = useContext(ProductContext);
   const { name = category, description, quantity, type } =
     getProduct(category) || {};
 

@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
     borderColor: color("grey", 40),
     fontSize: fontSize(0),
     color: color("blue", 50),
-    minWidth: size(7)
+    minWidth: size(7),
+    fontFamily: "brand-regular"
   },
   numberInput: {
     flex: 1,
@@ -30,7 +31,8 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     borderColor: color("grey", 40),
     fontSize: fontSize(0),
-    color: color("blue", 50)
+    color: color("blue", 50),
+    fontFamily: "brand-regular"
   },
   hyphen: {
     marginRight: size(1),

@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
@@ -7,13 +7,13 @@ import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { CartHook } from "../../../hooks/useCart/useCart";
 import { PurchasedItem } from "./PurchasedItem";
 import { getPurchasedQuantitiesByItem } from "../utils";
-import { useProductContext } from "../../../context/products";
 import { RedeemedItem } from "./RedeemedItem";
 import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
 import { FontAwesome } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Quota } from "../../../types";
+import { ProductContext } from "../../../context/products";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -47,7 +47,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   quotaResponse
 }) => {
   const checkoutQuantities = getPurchasedQuantitiesByItem(ids, checkoutResult!);
-  const { getProduct } = useProductContext();
+  const { getProduct } = useContext(ProductContext);
   const productType = getProduct(checkoutQuantities[0].category)?.type;
   const { title, description, ctaButtonText } = getCheckoutMessages(
     productType

@@ -36,7 +36,7 @@ import { VoucherStatusModal } from "./VoucherStatusModal/VoucherStatusModal";
 import { AllValidVouchersModal } from "./AllValidVouchersModal";
 import { useVoucher } from "../../hooks/useVoucher/useVoucher";
 import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
-import { useAuthenticationContext } from "../../context/auth";
+import { AuthContext } from "../../context/auth";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 
 const styles = StyleSheet.create({
@@ -78,7 +78,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
     false
   );
-  const { token, endpoint } = useAuthenticationContext();
+  const { sessionToken, endpoint } = useContext(AuthContext);
 
   const {
     checkoutVouchersState,
@@ -89,7 +89,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     checkoutResult,
     error: merchantError,
     resetState: resetVoucherState
-  } = useVoucher(token, endpoint);
+  } = useVoucher(sessionToken, endpoint);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -119,7 +119,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     validityResult,
     error: validityError,
     resetValidityState
-  } = useCheckVoucherValidity(token, endpoint);
+  } = useCheckVoucherValidity(sessionToken, endpoint);
 
   const onCheckVoucher = (input: string): void => {
     setIsScanningEnabled(false);

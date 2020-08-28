@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useContext
+} from "react";
 import {
   View,
   StyleSheet,
@@ -14,7 +19,7 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { useProductContext } from "../../context/products";
+import { CampaignConfigContext } from "../../context/campaignConfig";
 
 const styles = StyleSheet.create({
   background: {
@@ -76,7 +81,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [idInput, setIdInput] = useState("");
-  const { features } = useProductContext();
+  const { features } = useContext(CampaignConfigContext);
 
   useEffect(() => {
     if (isVisible) {
@@ -116,7 +121,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             onCancel={() => setShouldShowCamera(false)}
             cancelButtonText="Enter ID manually"
             barCodeTypes={
-              features?.id?.scannerType === "QR"
+              features?.id.scannerType === "QR"
                 ? [BarCodeScanner.Constants.BarCodeType.qr]
                 : [BarCodeScanner.Constants.BarCodeType.code39]
             }
@@ -145,7 +150,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
                 setIdInput={setIdInput}
                 submitId={() => onCheck(idInput)}
                 keyboardType={
-                  features?.id?.type === "NUMBER" ? "numeric" : "default"
+                  features?.id.type === "NUMBER" ? "numeric" : "default"
                 }
               />
             </Card>

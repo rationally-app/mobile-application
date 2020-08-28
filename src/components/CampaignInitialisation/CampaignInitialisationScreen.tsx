@@ -2,19 +2,26 @@ import React, {
   FunctionComponent,
   useEffect,
   useCallback,
-  useState
+  useState,
+  useContext
 } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { StyleSheet, View } from "react-native";
 import { size } from "../../common/styles";
-import { NavigationProps } from "../../types";
+import { NavigationProps, AuthCredentials } from "../../types";
 import { UpdateByRestartingAlert } from "./UpdateByRestartingAlert";
 import { UpdateFromAppStoreAlert } from "./UpdateFromAppStoreAlert";
 import { LoadingView } from "../Loading";
 import { useUpdateCampaignConfig } from "../../hooks/useUpdateCampaignConfig/useUpdateCampaignConfig";
-import { useAuthenticationContext } from "../../context/auth";
 import { useCheckVersion } from "../../hooks/useCheckVersion/useCheckVersion";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
+import { CampaignConfigError } from "../../services/campaignConfig";
+import {
+  AlertModalContext,
+  systemAlertProps,
+  ERROR_MESSAGE
+} from "../../context/alert";
+import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -49,38 +56,87 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     });
   }, []);
 
-  const { token, endpoint } = useAuthenticationContext();
+  const authCredentials: AuthCredentials = navigation.getParam(
+    "authCredentials"
+  );
+  const {
+    hasLoadedFromStore,
+    allCampaignConfigs,
+    addCampaignConfig
+  } = useContext(CampaignConfigsStoreContext);
   const {
     fetchingState,
     updateCampaignConfig,
-    error: fetchCampaignConfigError
-  } = useUpdateCampaignConfig(token, endpoint);
+    error: updateCampaignConfigError
+  } = useUpdateCampaignConfig(
+    authCredentials.operatorToken,
+    authCredentials.sessionToken,
+    authCredentials.endpoint
+  );
   const checkVersion = useCheckVersion();
   const checkUpdates = useCheckUpdates();
+  const { showAlert } = useContext(AlertModalContext);
 
+  const [hasAttemptedToUpdateConfig, setHasAttemptedToUpdateConfig] = useState(
+    false
+  );
   useEffect(() => {
-    updateCampaignConfig();
-    // updating the campaign config should only happen once when this screen is loaded
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (fetchCampaignConfigError) {
-      throw fetchCampaignConfigError; // Let ErrorBoundary handle
+    if (hasLoadedFromStore && !hasAttemptedToUpdateConfig) {
+      updateCampaignConfig(
+        allCampaignConfigs[
+          `${authCredentials.operatorToken}${authCredentials.endpoint}`
+        ],
+        addCampaignConfig
+      );
+      setHasAttemptedToUpdateConfig(true);
     }
-  }, [fetchCampaignConfigError]);
+  }, [
+    addCampaignConfig,
+    allCampaignConfigs,
+    authCredentials,
+    hasAttemptedToUpdateConfig,
+    hasLoadedFromStore,
+    updateCampaignConfig
+  ]);
+
+  useEffect(() => {
+    if (updateCampaignConfigError) {
+      if (updateCampaignConfigError instanceof CampaignConfigError) {
+        Sentry.captureException(updateCampaignConfigError);
+        showAlert({
+          ...systemAlertProps,
+          description: ERROR_MESSAGE.ENV_VERSION_ERROR
+        });
+      } else {
+        throw updateCampaignConfigError; // Let ErrorBoundary handle
+      }
+    }
+  }, [showAlert, updateCampaignConfigError]);
 
   const continueToNormalFlow = useCallback(() => {
-    const flowType = navigation.getParam("flowType", "DEFAULT");
-    switch (flowType) {
-      case "DEFAULT":
-        navigation.navigate("CollectCustomerDetailsScreen");
-        break;
-      case "MERCHANT":
-        navigation.navigate("MerchantPayoutScreen");
-        break;
+    const config =
+      allCampaignConfigs[
+        `${authCredentials.operatorToken}${authCredentials.endpoint}`
+      ];
+    if (config?.features?.flowType) {
+      switch (config?.features?.flowType) {
+        case "DEFAULT":
+          navigation.navigate("CustomerQuotaStack", {
+            operatorToken: authCredentials.operatorToken,
+            endpoint: authCredentials.endpoint
+          });
+          break;
+        case "MERCHANT":
+          navigation.navigate("MerchantPayoutScreen");
+          break;
+      }
     }
-  }, [navigation]);
+  }, [
+    allCampaignConfigs,
+    authCredentials.endpoint,
+    authCredentials.operatorToken,
+    navigation
+  ]);
 
   const [outdatedType, setOutdatedType] = useState<"BINARY" | "BUILD">();
 
