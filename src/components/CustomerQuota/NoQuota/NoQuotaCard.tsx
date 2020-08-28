@@ -102,9 +102,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       quantity: formatQuantityText(
         item.quantity,
         policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
-      )
+      ),
+      isAppeal: policy?.categoryType === "APPEAL"
     });
-    // TODO: check if seconds is good, or need to change to minutes
     transactionsByCategoryMap[categoryName].hasLatestTransaction =
       transactionsByCategoryMap[categoryName].hasLatestTransaction ||
       differenceInSeconds(latestTransactionTime || 0, item.transactionTime) ===
