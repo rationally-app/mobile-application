@@ -111,6 +111,10 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     navigateHome(navigation);
   }, [navigation]);
 
+  const onBack = useCallback((): void => {
+    navigation.goBack();
+  }, [navigation]);
+
   const addId = useCallback((id: string): void => {
     setIds(ids => [...ids, id]);
   }, []);
@@ -262,6 +266,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             isLoading={cartState === "CHECKING_OUT"}
             checkoutCart={checkoutCart}
             onCancel={onCancel}
+            onBack={onBack}
             cart={cart}
             updateCart={updateCart}
           />

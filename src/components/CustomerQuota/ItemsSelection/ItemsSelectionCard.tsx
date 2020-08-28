@@ -30,6 +30,7 @@ interface ItemsSelectionCard {
   isLoading: boolean;
   checkoutCart: () => void;
   onCancel: () => void;
+  onBack: () => void;
   cart: Cart;
   updateCart: CartHook["updateCart"];
 }
@@ -40,6 +41,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   isLoading,
   checkoutCart,
   onCancel,
+  onBack,
   cart,
   updateCart
 }) => {
@@ -117,7 +119,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             text={isAppeal ? "Back" : "Cancel"}
             onPress={
               isAppeal
-                ? onCancel
+                ? onBack
                 : () => {
                     showAlert({
                       ...defaultWarningProps,

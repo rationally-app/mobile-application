@@ -6,7 +6,7 @@ import { ItemQuantities } from "../types";
 import { size } from "../../../common/styles";
 import { useProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
-import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
+import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 
 export const RedeemedItem: FunctionComponent<{
   itemQuantities: ItemQuantities;
@@ -16,7 +16,7 @@ export const RedeemedItem: FunctionComponent<{
   const categoryName = getProduct(category)?.name ?? category;
 
   const identifierInputDisplay = identifierInputs
-    ? getIdentifierInputDisplay(identifierInputs)
+    ? getAllIdentifierInputDisplay(identifierInputs)
     : null;
 
   const quantitiesDisplay = Object.values(quantities)[0];
