@@ -4,6 +4,7 @@ import { NavigationDispatch } from "react-navigation";
 import { ImportantMessageSetterContext } from "../context/importantMessage";
 import { useAuthenticationContext } from "../context/auth";
 import { useLogout } from "./useLogout";
+import { expiredAlertProps } from "../context/alert";
 
 const ABOUT_TO_EXPIRE_SECONDS = 30 * 60;
 const MAX_INTERVAL_SECONDS = 60; // refreshes countdown at most every minute
@@ -18,7 +19,7 @@ export const useValidateExpiry = (
 
   const onExpired = useCallback(() => {
     logout(navigationDispatch, {
-      title: "Session expired",
+      ...expiredAlertProps,
       description: "You have been logged out"
     });
   }, [logout, navigationDispatch]);

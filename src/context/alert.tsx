@@ -44,7 +44,7 @@ export enum ERROR_MESSAGE {
   LOGIN_ERROR = "We are currently facing login issues. Get a new QR code from your in-charge."
 }
 
-const defaultAlertProps: AlertModalProps = {
+export const defaultAlertProps: AlertModalProps = {
   alertType: "ERROR",
   title: "",
   buttonTexts: {

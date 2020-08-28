@@ -2,21 +2,17 @@ import { useContext, useState, useCallback } from "react";
 import { ImportantMessageSetterContext } from "../context/importantMessage";
 import { useAuthenticationContext } from "../context/auth";
 import { useProductContext } from "../context/products";
-import { Alert } from "react-native";
 import { NavigationDispatch, NavigationActions } from "react-navigation";
 import { Features } from "../types";
 import { CampaignConfigContext } from "../context/campaignConfig";
-
-type AlertProps = {
-  title: string;
-  description?: string;
-};
+import { AlertModalContext } from "../context/alert";
+import { AlertModalProps } from "../components/AlertModal/AlertModal";
 
 interface LogoutHook {
   isLoggingOut: boolean;
   logout: (
     navigationDispatch: NavigationDispatch | undefined,
-    alert?: AlertProps
+    alert?: AlertModalProps
   ) => void;
 }
 
@@ -26,6 +22,7 @@ export const useLogout = (): LogoutHook => {
   const { setProducts, setFeatures, setAllProducts } = useProductContext();
   const { clearCampaignConfig } = useContext(CampaignConfigContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { showAlert } = useContext(AlertModalContext);
 
   const logout: LogoutHook["logout"] = useCallback(
     async (navigationDispatch, alert) => {
@@ -46,8 +43,7 @@ export const useLogout = (): LogoutHook => {
         })
       );
       if (alert) {
-        const { title, description } = alert;
-        Alert.alert(title, description);
+        showAlert(alert);
       }
     },
     [
@@ -56,7 +52,8 @@ export const useLogout = (): LogoutHook => {
       setProducts,
       setFeatures,
       setAllProducts,
-      setMessageContent
+      setMessageContent,
+      showAlert
     ]
   );
 

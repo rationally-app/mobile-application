@@ -4,7 +4,8 @@ import {
   getQuota,
   postTransaction,
   QuotaError,
-  NotEligibleError
+  NotEligibleError,
+  AuthenticationError
 } from "../../services/quota";
 import { transform } from "lodash";
 import { useProductContext, ProductContextValue } from "../../context/products";
@@ -333,6 +334,8 @@ export const useCart = (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
           setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e instanceof AuthenticationError) {
+          setError(e);
         } else {
           setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }

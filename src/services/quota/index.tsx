@@ -16,6 +16,13 @@ export class NotEligibleError extends Error {
   }
 }
 
+export class AuthenticationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthenticationError";
+  }
+}
+
 export class QuotaError extends Error {
   constructor(message: string) {
     super(message);
@@ -137,11 +144,14 @@ export const liveGetQuota = async (
     }
     return response;
   } catch (e) {
+    console.log(e);
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
     if (e.message === "User is not eligible") {
       throw new NotEligibleError(e.message);
+    } else if (e.message === "Invalid authentication token provided") {
+      throw new AuthenticationError(e.message);
     }
     throw new QuotaError(e.message);
   }
@@ -209,6 +219,8 @@ export const livePostTransaction = async ({
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
+    } else if (e.message === "Invalid authentication token provided") {
+      throw new AuthenticationError(e.message);
     }
     throw new PostTransactionError(e.message);
   }
@@ -271,6 +283,8 @@ export const livePastTransactions = async (
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
+    } else if (e.message === "Invalid authentication token provided") {
+      throw new AuthenticationError(e.message);
     }
     throw new PastTransactionError(e.message);
   }

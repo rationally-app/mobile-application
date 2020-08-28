@@ -33,9 +33,12 @@ import {
   wrongFormatAlertProps,
   incompleteEntryAlertProps,
   systemAlertProps,
-  ERROR_MESSAGE
+  ERROR_MESSAGE,
+  expiredAlertProps
 } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
+import { useLogout } from "../../hooks/useLogout";
+import { AuthenticationError } from "../../services/quota";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -89,6 +92,14 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { showAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
+  const { logout } = useLogout();
+
+  const forceLogout = useCallback((): void => {
+    logout(navigation.dispatch, {
+      ...expiredAlertProps,
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+    });
+  }, [logout, navigation.dispatch]);
 
   const {
     cartState,
@@ -143,6 +154,11 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
   useEffect(() => {
     if (!error) {
+      return;
+    }
+    if (error instanceof AuthenticationError) {
+      clearError();
+      forceLogout();
       return;
     }
     if (cartState === "FETCHING_QUOTA") {
@@ -219,7 +235,15 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           throw new Error(error.message);
       }
     }
-  }, [cartState, clearError, error, onCancel, showAlert, campaignFeatures]);
+  }, [
+    cartState,
+    clearError,
+    error,
+    onCancel,
+    showAlert,
+    campaignFeatures,
+    forceLogout
+  ]);
 
   return cartState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
