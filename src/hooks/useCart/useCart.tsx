@@ -1,20 +1,14 @@
 import { useState, useEffect, useCallback, useContext } from "react";
+import { useQuota } from "../useQuota/useQuota";
 import { Sentry } from "../../utils/errorTracking";
-import {
-  getQuota,
-  postTransaction,
-  QuotaError,
-  NotEligibleError
-} from "../../services/quota";
-import { transform } from "lodash";
+import { postTransaction } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
   Quota,
   ItemQuota,
-  IdentifierInput,
-  Policy
+  IdentifierInput
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
@@ -126,28 +120,6 @@ const mergeWithCart = (
     );
 };
 
-const filterQuotaWithAvailableProducts = (
-  quota: Quota,
-  products: Policy[]
-): Quota => {
-  const filteredQuota: Quota = { remainingQuota: [] };
-  return transform(
-    quota.remainingQuota,
-    (result: Quota, itemQuota) => {
-      if (products.some(policy => policy.category === itemQuota.category))
-        result.remainingQuota.push(itemQuota);
-    },
-    filteredQuota
-  );
-};
-
-const hasNoQuota = (quota: Quota): boolean =>
-  quota.remainingQuota.every(item => item.quantity === 0);
-
-const hasInvalidQuota = (quota: Quota): boolean =>
-  // Note: Invalid quota refers to negative quota received
-  quota.remainingQuota.some(item => item.quantity < 0);
-
 export const useCart = (
   ids: string[],
   authKey: string,
@@ -165,55 +137,35 @@ export const useCart = (
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
-  const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
-  const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
+  const { quotaResponse, allQuotaResponse, fetchQuota, quotaError } = useQuota(
+    ids,
+    authKey,
+    endpoint
+  );
   const { showAlert } = useContext(AlertModalContext);
   const clearError = useCallback((): void => setError(undefined), []);
+
+  useEffect(() => {
+    if (quotaError) {
+      setError(quotaError);
+    }
+  }, [quotaError]);
 
   /**
    * Fetch quota whenever IDs change.
    */
+
   useEffect(() => {
-    const fetchQuota = async (): Promise<void> => {
+    async function fetchQuotaWrapper() {
       setCartState("FETCHING_QUOTA");
-      try {
-        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
-        setAllQuotaResponse(allQuotaResponse);
-        const quotaResponse = filterQuotaWithAvailableProducts(
-          allQuotaResponse,
-          products
-        );
-        if (hasInvalidQuota(quotaResponse)) {
-          Sentry.captureException(
-            `Negative Quota Received: ${JSON.stringify(
-              quotaResponse.remainingQuota
-            )}`
-          );
-          setCartState("NO_QUOTA");
-        } else if (hasNoQuota(quotaResponse)) {
-          setCartState("NO_QUOTA");
-        } else {
-          setCartState("DEFAULT");
-        }
-        setQuotaResponse(quotaResponse);
-      } catch (e) {
-        if (e instanceof NotEligibleError) {
-          setCartState("NOT_ELIGIBLE");
-          // Cart will remain in FETCHING_QUOTA state.
-        } else if (e instanceof QuotaError) {
-          setError(
-            new Error(
-              "Error getting quota. We've noted this down and are looking into it!"
-            )
-          );
-        } else {
-          setError(e);
-        }
+      const newState = await fetchQuota();
+      if (newState !== undefined) {
+        setCartState(newState);
       }
-    };
+    }
 
     if (prevIds !== ids || prevProducts !== products) {
-      fetchQuota();
+      fetchQuotaWrapper();
     }
   }, [
     authKey,
