@@ -47,7 +47,7 @@ import {
   wrongFormatAlertProps,
   ERROR_MESSAGE,
   defaultConfirmationProps,
-  invalidEntryAlertProps,
+  invalidInputAlertProps,
   disabledAccessAlertProps
 } from "../../context/alert";
 import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
@@ -148,7 +148,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         });
       } else if (e instanceof LoginError) {
         showAlert({
-          ...invalidEntryAlertProps,
+          ...invalidInputAlertProps,
           description: e.message,
           onOk: () => resetStage()
         });
