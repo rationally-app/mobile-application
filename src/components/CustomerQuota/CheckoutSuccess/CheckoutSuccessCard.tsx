@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
@@ -14,9 +14,10 @@ import { AuthContext } from "../../../context/auth";
 import { format } from "date-fns";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import { formatQuantityText } from "../utils";
+import { formatQuantityText, sortByHeaderAsc } from "../utils";
 import { TransactionsGroup } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
+import { ShowFullListToggle } from "../ShowFullListToggle";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -27,7 +28,6 @@ const styles = StyleSheet.create({
 interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
-  checkoutResult: CartHook["checkoutResult"];
   quotaResponse: Quota | null;
 }
 
@@ -46,9 +46,10 @@ const UsageQuotaTitle: FunctionComponent<{
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   ids,
   onCancel,
-  checkoutResult,
   quotaResponse
 }) => {
+  const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
+
   const { getProduct } = useContext(ProductContext);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
@@ -98,7 +99,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     transactionsByTimeMap
   )
     .sort(
-      (a, b) => a[1].transactionTime.getTime() - b[1].transactionTime.getTime()
+      (a, b) => b[1].transactionTime.getTime() - a[1].transactionTime.getTime()
     )
     .map(([, { transactionTime, transactions }]) => ({
       header: format(transactionTime.getTime(), "d MMM yyyy, h:mma"),
@@ -145,14 +146,23 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
           <View>
             <AppText>{description}</AppText>
             <View style={styles.checkoutItemsList}>
-              {transactionsByTimeList.map(
-                (transactionsByTime: TransactionsGroup, index: number) => (
-                  <TransactionsGroup
-                    key={index}
-                    maxTransactionsToDisplay={99999}
-                    {...transactionsByTime}
-                  />
-                )
+              {(isShowFullList
+                ? transactionsByTimeList
+                : transactionsByTimeList.slice(0, MAX_TRANSACTIONS_TO_DISPLAY)
+              ).map((transactionsByTime: TransactionsGroup, index: number) => (
+                <TransactionsGroup
+                  key={index}
+                  maxTransactionsToDisplay={99999}
+                  {...transactionsByTime}
+                />
+              ))}
+              {transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+                <ShowFullListToggle
+                  toggleIsShowFullList={() =>
+                    setIsShowFullList(!isShowFullList)
+                  }
+                  isShowFullList={isShowFullList}
+                />
               )}
             </View>
           </View>

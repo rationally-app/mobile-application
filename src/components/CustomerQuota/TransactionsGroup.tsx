@@ -54,9 +54,9 @@ export const TransactionsGroup: FunctionComponent<
     maxTransactionsToDisplay: number;
   }
 > = ({ header, transactions, maxTransactionsToDisplay }) => {
-  const shouldShowCategory =
+  const shouldShowGroup =
     (transactions[0].order || 0) < maxTransactionsToDisplay;
-  return shouldShowCategory ? (
+  return shouldShowGroup ? (
     <View style={styles.wrapper}>
       <View style={styles.itemRow}>
         <AppText style={styles.itemHeader}>{header}</AppText>
