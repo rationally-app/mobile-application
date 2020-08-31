@@ -63,7 +63,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   // Group transactions by transaction time (round to seconds)
   const transactionsByTimeMap: {
     [transactionTimeInSeconds: string]: {
-      formattedDate: string;
+      transactionTime: Date;
       transactions: Transaction[];
     };
   } = {};
@@ -78,10 +78,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
     if (!(transactionTimeInSeconds in transactionsByTimeMap)) {
       transactionsByTimeMap[transactionTimeInSeconds] = {
-        formattedDate: format(
-          item.transactionTime.getTime(),
-          "d MMM yyyy, h:mma"
-        ),
+        transactionTime: item.transactionTime,
         transactions: []
       };
     }
@@ -99,13 +96,14 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   // Transform map to array of transactions group
   const transactionsByTimeList: TransactionsGroup[] = Object.entries(
     transactionsByTimeMap
-  ).map(([, value]) => ({
-    header: value.formattedDate,
-    transactions: value.transactions.sort(sortByHeaderAsc)
-  }));
-
-  // Order each group of transactions by category
-  transactionsByTimeList.sort((a, b) => -sortByHeaderAsc(a, b));
+  )
+    .sort(
+      (a, b) => a[1].transactionTime.getTime() - b[1].transactionTime.getTime()
+    )
+    .map(([, { transactionTime, transactions }]) => ({
+      header: format(transactionTime.getTime(), "d MMM yyyy, h:mma"),
+      transactions: transactions.sort(sortByHeaderAsc)
+    }));
 
   const productType = getProduct(allProducts[0].category)?.type;
   const { title, description, ctaButtonText } = getCheckoutMessages(
