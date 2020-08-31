@@ -17,9 +17,8 @@ const Stack = createStackNavigator();
 const CustomerQuotaStack: FunctionComponent<CustomerQuotaStackProps> = ({
   route
 }) => {
-  const { operatorToken } = route.params;
-  const { endpoint } = route.params;
-
+  const { operatorToken, endpoint } = route.params;
+q
   const key = `${operatorToken}${endpoint}`;
 
   const { authCredentials } = useContext(AuthStoreContext);
