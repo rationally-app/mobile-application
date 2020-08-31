@@ -19,7 +19,7 @@ import { Sentry } from "../../utils/errorTracking";
 import {
   AlertModalContext,
   systemAlertProps,
-  invalidEntryAlertProps,
+  invalidInputAlertProps,
   ERROR_MESSAGE,
   disabledAccessAlertProps
 } from "../../context/alert";
@@ -127,7 +127,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         });
       } else if (e instanceof LoginError) {
         showAlert({
-          ...invalidEntryAlertProps,
+          ...invalidInputAlertProps,
           description: e.message
         });
       } else {

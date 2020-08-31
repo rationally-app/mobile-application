@@ -1005,7 +1005,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "Enter or scan code details again."
+        "Enter or scan valid code details."
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([

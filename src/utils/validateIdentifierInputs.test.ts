@@ -52,7 +52,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toThrow("Enter or scan code details again");
+    ).toThrow("Enter or scan valid code details.");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -62,7 +62,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING"
         }
       ])
-    ).toThrow("Enter or scan code details again");
+    ).toThrow("Enter or scan valid code details.");
   });
 
   it("should throw error if at least one of the identifiers is an invalid number", () => {
@@ -75,7 +75,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toThrow("Enter or scan code details again");
+    ).toThrow("Enter or scan valid code details.");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -84,7 +84,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toThrow("Enter or scan code details again");
+    ).toThrow("Enter or scan valid code details.");
   });
 
   it("should throw error if at least one of the identifiers is an invalid phone number", () => {

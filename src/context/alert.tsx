@@ -17,12 +17,12 @@ export enum WARNING_MESSAGE {
 export enum ERROR_MESSAGE {
   DUPLICATE_IDENTIFIER_INPUT = "Enter unique code details.",
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
-  INVALID_IDENTIFIER_INPUT = "Enter or scan code details again.",
+  INVALID_IDENTIFIER_INPUT = "Enter or scan valid code details.",
   MISSING_IDENTIFIER_INPUT = "Enter or scan code details.",
-  INVALID_VOUCHER_INPUT = "Enter voucher code details again.",
+  INVALID_VOUCHER_INPUT = "Enter valid voucher code details.",
   MISSING_VOUCHER_INPUT = "Enter voucher code details.",
-  INVALID_POD_INPUT = "Scan your device code again.",
-  MISSING_POD_INPUT = "Scan your device code.",
+  INVALID_POD_INPUT = "Scan valid device code.",
+  MISSING_POD_INPUT = "Scan device code.",
   INVALID_PHONE_NUMBER = "Enter valid contact number.",
   INVALID_COUNTRY_CODE = "Enter valid country code.",
   INVALID_PHONE_AND_COUNTRY_CODE = "Enter valid country code and contact number.",
@@ -34,7 +34,7 @@ export enum ERROR_MESSAGE {
   INSUFFICIENT_QUOTA = "Insufficient quota.",
   INVALID_QUANTITY = "Invalid quantity.",
   INVALID_CATEGORY = "Category does not exist.",
-  INVALID_ID = "Enter or scan ID number again.",
+  INVALID_ID = "Enter or scan valid ID number.",
   DUPLICATE_ID = "Enter or scan a different ID number.",
   QUOTA_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   SERVER_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
@@ -84,9 +84,9 @@ export const incompleteEntryAlertProps: AlertModalProps = {
   visible: true
 };
 
-export const invalidEntryAlertProps: AlertModalProps = {
+export const invalidInputAlertProps: AlertModalProps = {
   ...defaultAlertProps,
-  title: "Wrong entry",
+  title: "Invalid input",
   visible: true
 };
 
