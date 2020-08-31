@@ -4,7 +4,7 @@ import { AppText } from "../Layout/AppText";
 import { styles } from "./NoQuota/styles";
 
 export interface Transaction {
-  transactionDate: string;
+  header: string;
   details: string;
   quantity: string;
   isAppeal: boolean;
@@ -18,7 +18,7 @@ export interface TransactionsGroup {
 }
 
 const Transaction: FunctionComponent<Transaction> = ({
-  transactionDate,
+  header: transactionDate,
   details,
   quantity,
   isAppeal

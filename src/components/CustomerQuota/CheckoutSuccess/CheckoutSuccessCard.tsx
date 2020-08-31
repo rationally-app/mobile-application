@@ -5,15 +5,18 @@ import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { CartHook } from "../../../hooks/useCart/useCart";
-import { PurchasedItem } from "./PurchasedItem";
-import { getPurchasedQuantitiesByItem } from "../utils";
-import { RedeemedItem } from "./RedeemedItem";
 import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
 import { FontAwesome } from "@expo/vector-icons";
-import { format } from "date-fns";
-import { Quota } from "../../../types";
+import { Quota, Transaction } from "../../../types";
 import { ProductContext } from "../../../context/products";
+import { AuthContext } from "../../../context/auth";
+import { format } from "date-fns";
+import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
+import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
+import { formatQuantityText } from "../utils";
+import { TransactionsGroup } from "../TransactionsGroup";
+import { CampaignConfigContext } from "../../../context/campaignConfig";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -46,9 +49,65 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   checkoutResult,
   quotaResponse
 }) => {
-  const checkoutQuantities = getPurchasedQuantitiesByItem(ids, checkoutResult!);
   const { getProduct } = useContext(ProductContext);
-  const productType = getProduct(checkoutQuantities[0].category)?.type;
+  const { policies: allProducts } = useContext(CampaignConfigContext);
+  const { sessionToken, endpoint } = useContext(AuthContext);
+  const { pastTransactionsResult } = usePastTransaction(
+    ids,
+    sessionToken,
+    endpoint
+  );
+  // Assumes results are already sorted (valid assumption for results from /transactions/history)
+  const sortedTransactions = pastTransactionsResult;
+
+  // Group transactions by transaction time (round to seconds)
+  const transactionsByTimeMap: {
+    [transactionTimeInSeconds: string]: {
+      formattedDate: string;
+      transactions: Transaction[];
+    };
+  } = {};
+  sortedTransactions?.forEach(item => {
+    const policy = allProducts?.find(
+      policy => policy.category === item.category
+    );
+    const categoryName = policy?.name ?? item.category;
+    const transactionTimeInSeconds = String(
+      Math.floor(item.transactionTime.getTime() / 1000)
+    );
+
+    if (!(transactionTimeInSeconds in transactionsByTimeMap)) {
+      transactionsByTimeMap[transactionTimeInSeconds] = {
+        formattedDate: format(
+          item.transactionTime.getTime(),
+          "d MMM yyyy, h:mma"
+        ),
+        transactions: []
+      };
+    }
+    transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
+      header: categoryName,
+      details: getAllIdentifierInputDisplay(item.identifierInputs ?? []),
+      quantity: formatQuantityText(
+        item.quantity,
+        policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
+      ),
+      isAppeal: policy?.categoryType === "APPEAL"
+    });
+  });
+
+  // Transform map to array of transactions group
+  const transactionsByTimeList: TransactionsGroup[] = Object.entries(
+    transactionsByTimeMap
+  ).map(([, value]) => ({
+    header: value.formattedDate,
+    transactions: value.transactions.sort(sortByHeaderAsc)
+  }));
+
+  // Order each group of transactions by category
+  transactionsByTimeList.sort((a, b) => -sortByHeaderAsc(a, b));
+
+  const productType = getProduct(allProducts[0].category)?.type;
   const { title, description, ctaButtonText } = getCheckoutMessages(
     productType
   );
@@ -88,13 +147,15 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
           <View>
             <AppText>{description}</AppText>
             <View style={styles.checkoutItemsList}>
-              {checkoutQuantities.map(item => {
-                return productType === "REDEEM" ? (
-                  <RedeemedItem key={item.category} itemQuantities={item} />
-                ) : (
-                  <PurchasedItem key={item.category} itemQuantities={item} />
-                );
-              })}
+              {transactionsByTimeList.map(
+                (transactionsByTime: TransactionsGroup, index: number) => (
+                  <TransactionsGroup
+                    key={index}
+                    maxTransactionsToDisplay={99999}
+                    {...transactionsByTime}
+                  />
+                )
+              )}
             </View>
           </View>
         </View>

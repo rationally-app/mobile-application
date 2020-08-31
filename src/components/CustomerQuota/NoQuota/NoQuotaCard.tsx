@@ -107,7 +107,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       };
     }
     transactionsByCategoryMap[categoryName].transactions.push({
-      transactionDate: formattedDate,
+      header: formattedDate,
       details: getAllIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
