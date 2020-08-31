@@ -1,10 +1,11 @@
 import * as t from "io-ts";
 import { DateFromNumber } from "io-ts-types/lib/DateFromNumber";
-import { NavigationParams, NavigationRoute } from "react-navigation";
-import { NavigationDrawerProp } from "react-navigation-drawer";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ParamListBase } from "@react-navigation/native";
+// import { NavigationDrawerProp } from "@react-navigation/drawer";
 
 export interface NavigationProps {
-  navigation: NavigationDrawerProp<NavigationRoute, NavigationParams>;
+  navigation: StackNavigationProp<ParamListBase>;
 }
 
 export type AuthCredentials = {

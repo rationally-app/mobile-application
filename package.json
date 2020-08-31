@@ -15,12 +15,16 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
+    "@react-navigation/drawer": "^5.9.0",
+    "@react-navigation/native": "^5.7.3",
+    "@react-navigation/stack": "^5.9.0",
     "@types/lodash": "^4.14.158",
     "date-fns": "^2.11.1",
     "expo": "^38.0.0",
     "expo-barcode-scanner": "~8.2.1",
     "expo-camera": "~8.3.1",
     "expo-constants": "~9.1.1",
+    "expo-crypto": "~7.0.0",
     "expo-linear-gradient": "~8.2.1",
     "expo-linking": "^1.0.3",
     "expo-permissions": "~9.0.1",
@@ -39,11 +43,7 @@
     "react-native-screens": "~2.9.0",
     "react-native-svg": "12.1.0",
     "react-native-webview": "^10.3.2",
-    "react-navigation": "^4.1.0",
-    "react-navigation-drawer": "^2.5.0",
-    "react-navigation-stack": "^1.10.3",
-    "sentry-expo": "^2.0.3",
-    "expo-crypto": "~7.0.0"
+    "sentry-expo": "^2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

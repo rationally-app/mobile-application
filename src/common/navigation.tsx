@@ -1,55 +1,29 @@
 import { NavigationProps } from "../types";
-import {
-  StackActions,
-  NavigationActions,
-  NavigationReplaceActionPayload
-} from "react-navigation";
+import { StackActions, ParamListBase } from "@react-navigation/native";
 
-export const replaceRoute = (
+export const replaceRouteFn = <
+  T extends ParamListBase,
+  K extends Extract<keyof T, string>
+>(
   navigation: NavigationProps["navigation"],
-  routeName: string,
-  params?: NavigationReplaceActionPayload["params"]
-): boolean => {
-  const action = StackActions.replace({ routeName, params });
+  routeName: K,
+  params?: T[K]
+): (() => void) => (): void => {
+  const action = StackActions.replace(routeName, params);
   return navigation.dispatch(action);
 };
 
 // This resets the entire stack and puts the navigated route right on top of the home page
-export const resetRoute = (
+export const resetRouteFn = <
+  T extends ParamListBase,
+  K extends Extract<keyof T, string>
+>(
   navigation: NavigationProps["navigation"],
-  routeName: string,
-  params?: NavigationReplaceActionPayload["params"]
-): boolean => {
-  const action = StackActions.reset({
+  routeName: K,
+  params?: T[K]
+): (() => void) => (): void => {
+  navigation.reset({
     index: 1,
-    actions: [
-      NavigationActions.navigate({ routeName: "CollectCustomerDetailsScreen" }),
-      NavigationActions.navigate({ routeName, params })
-    ]
+    routes: [{ name: "CollectCustomerDetailsScreen" }, { name, params }]
   });
-  return navigation.dispatch(action);
-};
-
-export const pushRoute = (
-  navigation: NavigationProps["navigation"],
-  routeName: string,
-  params?: NavigationReplaceActionPayload["params"]
-): boolean => {
-  const action = StackActions.push({
-    routeName: routeName,
-    params: params
-  });
-  return navigation.dispatch(action);
-};
-
-export const navigateHome = (
-  navigation: NavigationProps["navigation"]
-): boolean => {
-  const action = StackActions.reset({
-    index: 0,
-    actions: [
-      NavigationActions.navigate({ routeName: "CollectCustomerDetailsScreen" })
-    ]
-  });
-  return navigation.dispatch(action);
 };
