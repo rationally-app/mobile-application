@@ -10,7 +10,7 @@ import { Quota, Policy } from "../../types";
 export type QuotaHook = {
   quotaResponse: Quota | null;
   allQuotaResponse: Quota | null;
-  fetchQuota: () => Promise<CartState | undefined>;
+  fetchQuota: (setter: (cartState: CartState) => void) => Promise<void>;
   quotaError?: Error;
 };
 
@@ -54,7 +54,13 @@ export const useQuota = (
   const [quotaError, setError] = useState<Error>();
   const { products } = useProductContext();
 
-  const fetchQuota = async (): Promise<CartState | undefined> => {
+  const fetchQuota = async (
+    setCartState: (cartState: CartState) => void
+  ): Promise<void> => {
+    Sentry.addBreadcrumb({
+      category: "useQuota",
+      message: "fetchQuota - fetching quota"
+    });
     try {
       const allQuotaResponse = await getQuota(ids, authKey, endpoint);
       setAllQuotaResponse(allQuotaResponse);
@@ -69,23 +75,31 @@ export const useQuota = (
             quotaResponse.remainingQuota
           )}`
         );
-        return "NO_QUOTA";
+        setCartState("NO_QUOTA");
       } else if (hasNoQuota(quotaResponse)) {
-        return "NO_QUOTA";
+        setCartState("NO_QUOTA");
       } else {
-        return "DEFAULT";
+        setCartState("DEFAULT");
       }
     } catch (e) {
       if (e instanceof NotEligibleError) {
-        return "NOT_ELIGIBLE";
+        setCartState("NOT_ELIGIBLE");
         // Cart will remain in FETCHING_QUOTA state.
       } else if (e instanceof QuotaError) {
+        Sentry.addBreadcrumb({
+          category: "useQuota",
+          message: "fetchQuota - quota error"
+        });
         setError(
           new Error(
             "Error getting quota. We've noted this down and are looking into it!"
           )
         );
       } else {
+        Sentry.addBreadcrumb({
+          category: "useQuota",
+          message: "fetchQuota - unidentified error"
+        });
         setError(e);
       }
     }

@@ -155,16 +155,9 @@ export const useCart = (
    */
 
   useEffect(() => {
-    async function fetchQuotaWrapper(): Promise<void> {
-      setCartState("FETCHING_QUOTA");
-      const newState = await fetchQuota();
-      if (newState !== undefined) {
-        setCartState(newState);
-      }
-    }
-
     if (prevIds !== ids || prevProducts !== products) {
-      fetchQuotaWrapper();
+      setCartState("FETCHING_QUOTA");
+      fetchQuota(setCartState);
     }
   }, [
     authKey,
