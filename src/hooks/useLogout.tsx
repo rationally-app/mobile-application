@@ -22,7 +22,7 @@ export const useLogout = (): LogoutHook => {
   const { setProducts, setFeatures, setAllProducts } = useProductContext();
   const { clearCampaignConfig } = useContext(CampaignConfigContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showAlert, clearAlert } = useContext(AlertModalContext);
 
   const logout: LogoutHook["logout"] = useCallback(
     async (navigationDispatch, alert) => {
@@ -36,6 +36,7 @@ export const useLogout = (): LogoutHook => {
       setFeatures({} as Features);
       setAllProducts([]);
       setMessageContent(null);
+      clearAlert();
       setIsLoggingOut(false);
       navigationDispatch?.(
         NavigationActions.navigate({
@@ -53,6 +54,7 @@ export const useLogout = (): LogoutHook => {
       setFeatures,
       setAllProducts,
       setMessageContent,
+      clearAlert,
       showAlert
     ]
   );

@@ -145,9 +145,9 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     },
     []
   );
-  const clearAlert: AlertModalContext["clearAlert"] = () => {
+  const clearAlert: AlertModalContext["clearAlert"] = useCallback(() => {
     setAlertProps(defaultAlertProps);
-  };
+  }, []);
 
   return (
     <AlertModalContext.Provider
