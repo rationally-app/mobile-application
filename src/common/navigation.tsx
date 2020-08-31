@@ -1,6 +1,7 @@
 import { NavigationProps } from "../types";
 import { StackActions, ParamListBase } from "@react-navigation/native";
 
+//TODO: see if needed or not
 export const replaceRouteFn = <
   T extends ParamListBase,
   K extends Extract<keyof T, string>
@@ -24,6 +25,30 @@ export const resetRouteFn = <
 ): (() => void) => (): void => {
   navigation.reset({
     index: 1,
-    routes: [{ name: "CollectCustomerDetailsScreen" }, { name, params }]
+    routes: [
+      { name: "CollectCustomerDetailsScreen" },
+      { name: routeName, params: params }
+    ]
+  });
+};
+
+export const pushRoute = <
+  T extends ParamListBase,
+  K extends Extract<keyof T, string>
+>(
+  navigation: NavigationProps["navigation"],
+  routeName: string,
+  params?: T[K]
+): (() => void) => (): void => {
+  StackActions.push(routeName, params);
+};
+
+//TODO: when user goes home, params are gone -> need to find a way to retain params
+export const navigateHome = (
+  navigation: NavigationProps["navigation"]
+): (() => void) => (): void => {
+  navigation.reset({
+    index: 0,
+    routes: [{ name: "CollectCustomerDetailsScreen" }]
   });
 };

@@ -1,12 +1,21 @@
 import * as t from "io-ts";
 import { DateFromNumber } from "io-ts-types/lib/DateFromNumber";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 // import { NavigationDrawerProp } from "@react-navigation/drawer";
+
+export type RootParamList = {
+  CustomerQuotaStack: { operatorToken: string; endpoint: string };
+};
 
 export interface NavigationProps {
   navigation: StackNavigationProp<ParamListBase>;
 }
+
+export type CustomerQuotaStackProps = StackScreenProps<
+  RootParamList,
+  "CustomerQuotaStack"
+>;
 
 export type AuthCredentials = {
   operatorToken: string;
