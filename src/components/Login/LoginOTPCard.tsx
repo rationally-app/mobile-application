@@ -121,12 +121,13 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           ...systemAlertProps,
           description: e.message
         });
-      } else if (e instanceof LoginLockedError) {
+      } else if (
+        e instanceof LoginLockedError ||
+        e instanceof AuthInvalidError
+      ) {
         showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
         showAlert(e.alertProps);
-      } else if (e instanceof AuthInvalidError) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else if (e instanceof LoginError) {
         showAlert(e.alertProps);
       } else {
