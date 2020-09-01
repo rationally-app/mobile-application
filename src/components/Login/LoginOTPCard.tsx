@@ -125,10 +125,10 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
         showAlert(e.alertProps);
-      } else if (e instanceof LoginError) {
-        showAlert(e.alertProps);
       } else if (e instanceof AuthInvalidError) {
         showAlert({ ...e.alertProps, onOk: () => resetStage() });
+      } else if (e instanceof LoginError) {
+        showAlert(e.alertProps);
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
