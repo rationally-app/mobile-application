@@ -44,7 +44,6 @@ import { DOMAIN_FORMAT } from "../../config";
 import {
   requestOTP,
   LoginError,
-  LoginLockedError,
   AuthError,
   AuthInvalidError
 } from "../../services/auth";
