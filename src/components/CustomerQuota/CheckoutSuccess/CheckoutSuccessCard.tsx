@@ -14,7 +14,7 @@ import { AuthContext } from "../../../context/auth";
 import { format } from "date-fns";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import { formatQuantityText, sortByHeaderAsc } from "../utils";
+import { formatQuantityText } from "../utils";
 import { TransactionsGroup } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
 interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
+  checkoutResult: CartHook["checkoutResult"];
   quotaResponse: Quota | null;
 }
 
@@ -46,6 +47,7 @@ const UsageQuotaTitle: FunctionComponent<{
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   ids,
   onCancel,
+  checkoutResult,
   quotaResponse
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
@@ -103,7 +105,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     )
     .map(([, { transactionTime, transactions }]) => ({
       header: format(transactionTime.getTime(), "d MMM yyyy, h:mma"),
-      transactions: transactions.sort(sortByHeaderAsc)
+      transactions: transactions.sort(sortObjectsByHeaderAsc)
     }));
 
   const productType = getProduct(allProducts[0].category)?.type;

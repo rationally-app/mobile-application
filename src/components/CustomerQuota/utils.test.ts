@@ -1,4 +1,8 @@
-import { formatQuantityText, getPurchasedQuantitiesByItem } from "./utils";
+import {
+  formatQuantityText,
+  getPurchasedQuantitiesByItem,
+  sortObjectsByHeaderAsc
+} from "./utils";
 import { CheckoutQuantitiesByItem } from "./types";
 import { PostTransactionResult } from "../../types";
 
@@ -90,5 +94,20 @@ describe("getPurchasedQuantitiesByItem", () => {
     expect(
       getPurchasedQuantitiesByItem(["id-1", "id-2"], checkoutResult)
     ).toStrictEqual(transformed);
+  });
+});
+
+describe("sortObjectsByHeaderAsc", () => {
+  it("should sort objects by header field in ascending order", () => {
+    const arr = [
+      { header: "wow", someField: "ok", someOtherField: "yeah" },
+      { header: "but", anotherField: "nah" },
+      { header: "hmm", someField: "right" }
+    ];
+    expect(arr.sort(sortObjectsByHeaderAsc)).toEqual([
+      { header: "but", anotherField: "nah" },
+      { header: "hmm", someField: "right" },
+      { header: "wow", someField: "ok", someOtherField: "yeah" }
+    ]);
   });
 });

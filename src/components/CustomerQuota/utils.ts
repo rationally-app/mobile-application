@@ -39,8 +39,7 @@ export const getPurchasedQuantitiesByItem = (
   return result.value();
 };
 
-// TODO: write unit test
-export const sortByHeaderAsc = (
+export const sortObjectsByHeaderAsc = (
   a: { header: string },
   b: { header: string }
 ): 1 | -1 | 0 => (a.header > b.header ? 1 : b.header > a.header ? -1 : 0);
