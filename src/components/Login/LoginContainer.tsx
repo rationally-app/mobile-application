@@ -143,12 +143,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof AuthError) {
+      if (e instanceof LoginError) {
         showAlert({ ...e.alertProps, onOk: () => resetStage() });
-      } else if (e instanceof LoginLockedError) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
-      } else if (e instanceof LoginError) {
-        showAlert(e.alertProps);
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
