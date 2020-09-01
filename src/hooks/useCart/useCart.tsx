@@ -204,16 +204,13 @@ export const useCart = (
       } catch (e) {
         if (e instanceof NotEligibleError) {
           setCartState("NOT_ELIGIBLE");
-          // Cart will remain in FETCHING_QUOTA state.
+          return;
         } else if (e instanceof QuotaError) {
-          setError(
-            new Error(
-              "Error getting quota. We've noted this down and are looking into it!"
-            )
-          );
+          setError(new Error(ERROR_MESSAGE.QUOTA_ERROR));
         } else {
           setError(e);
         }
+        setCartState("DEFAULT");
       }
     };
 

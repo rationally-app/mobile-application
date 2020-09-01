@@ -161,14 +161,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       forceLogout();
       return;
     }
-    if (cartState === "FETCHING_QUOTA") {
-      const message = error.message ?? ERROR_MESSAGE.QUOTA_ERROR;
-      showAlert({
-        ...systemAlertProps,
-        description: message,
-        onOk: () => clearError()
-      });
-    } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
+    if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
       switch (error.message) {
         case ERROR_MESSAGE.MISSING_SELECTION:
           showAlert({
@@ -231,10 +224,18 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           });
           break;
 
+        case ERROR_MESSAGE.QUOTA_ERROR:
+          showAlert({
+            ...systemAlertProps,
+            description: error.message,
+            onOk: () => clearError()
+          });
+          break;
+
         default:
           throw new Error(error.message);
       }
-    }
+    } else throw new Error(error.message);
   }, [
     cartState,
     clearError,
