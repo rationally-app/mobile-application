@@ -45,7 +45,8 @@ import {
   requestOTP,
   LoginError,
   LoginLockedError,
-  AuthError
+  AuthError,
+  AuthInvalidError
 } from "../../services/auth";
 import {
   AlertModalContext,
@@ -183,14 +184,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         );
         setAllProducts(versionResponse.policies);
       } catch (e) {
+        Sentry.captureException(e);
         if (e instanceof EnvVersionError) {
-          Sentry.captureException(e);
           showAlert({
             ...systemAlertProps,
             description: ERROR_MESSAGE.ENV_VERSION_ERROR
           });
-          handleLogout();
+        } else if (e instanceof AuthInvalidError) {
+          showAlert(e.alertProps);
         }
+        handleLogout();
       } finally {
         setIsLoading(false);
       }
