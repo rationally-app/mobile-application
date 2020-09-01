@@ -15,10 +15,8 @@ import { useAuthenticationContext } from "../../context/auth";
 import {
   validateOTP,
   LoginError,
-  LoginLockedError,
   OTPWrongError,
-  OTPExpiredError,
-  AuthInvalidError
+  OTPExpiredError
 } from "../../services/auth";
 import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
 import { useProductContext } from "../../context/products";
@@ -121,15 +119,10 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           ...systemAlertProps,
           description: e.message
         });
-      } else if (
-        e instanceof LoginLockedError ||
-        e instanceof AuthInvalidError
-      ) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
         showAlert(e.alertProps);
       } else if (e instanceof LoginError) {
-        showAlert(e.alertProps);
+        showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
