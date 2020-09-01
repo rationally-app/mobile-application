@@ -22,6 +22,7 @@ import {
   wrongFormatAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
+import { ConfigContext } from "../../context/config";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -32,23 +33,30 @@ const styles = StyleSheet.create({
 interface LoginMobileNumberCard {
   setLoginStage: Dispatch<SetStateAction<LoginStage>>;
   setMobileNumber: Dispatch<SetStateAction<string>>;
+  setCountryCode: Dispatch<SetStateAction<string>>;
   handleRequestOTP: (fullNumber?: string) => Promise<boolean>;
 }
 
 export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
   setLoginStage,
   setMobileNumber,
+  setCountryCode,
   handleRequestOTP
 }) => {
+  const { config } = useContext(ConfigContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [countryCode, setCountryCode] = useState("+65");
-  const [mobileNumberValue, setMobileNumberValue] = useState("");
+  const [countryCode, setCountryCodeValue] = useState(
+    config.mobileNumber?.countryCode ?? "+65"
+  );
+  const [mobileNumberValue, setMobileNumberValue] = useState(
+    config.mobileNumber?.value ?? ""
+  );
   const { showAlert } = useContext(AlertModalContext);
 
   const onChangeCountryCode = (value: string): void => {
     if (value.length <= 4) {
       const valueWithPlusSign = value[0] === "+" ? value : `+${value}`;
-      setCountryCode(valueWithPlusSign);
+      setCountryCodeValue(valueWithPlusSign);
     }
   };
 
@@ -62,7 +70,8 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
     const isRequestSuccessful = await handleRequestOTP(fullNumber);
     setIsLoading(false);
     if (isRequestSuccessful) {
-      setMobileNumber(fullNumber);
+      setMobileNumber(mobileNumberValue);
+      setCountryCode(countryCode);
       setLoginStage("OTP");
     }
   };

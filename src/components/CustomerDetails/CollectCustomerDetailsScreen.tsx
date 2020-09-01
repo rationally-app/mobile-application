@@ -11,7 +11,7 @@ import {
   Vibration,
   BackHandler
 } from "react-native";
-import { size, fontSize } from "../../common/styles";
+import { size, fontSize, color, borderRadius } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -36,6 +36,11 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Feather } from "@expo/vector-icons";
+import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
+import { AuthStoreContext } from "../../context/authStore";
+import { AuthContext } from "../../context/auth";
 
 const styles = StyleSheet.create({
   content: {
@@ -55,9 +60,29 @@ const styles = StyleSheet.create({
   campaignName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
-    marginBottom: size(3)
+    marginBottom: size(3),
+    flexGrow: 1,
+    flexShrink: 1
+  },
+  manageButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: borderRadius(2),
+    padding: size(1),
+    marginRight: -size(1),
+    marginTop: -size(0.5)
   }
 });
+
+const ManageButton: FunctionComponent<{
+  onPress: () => void;
+}> = ({ onPress }) => (
+  <View style={styles.manageButton}>
+    <TouchableOpacity onPress={onPress}>
+      <Feather name="trash-2" size={size(2.5)} color={color("blue", 50)} />
+    </TouchableOpacity>
+  </View>
+);
 
 const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   navigation,
@@ -77,8 +102,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
-  const { features, policies } = useContext(CampaignConfigContext);
   const { showAlert } = useContext(AlertModalContext);
+  const { features, policies } = useContext(CampaignConfigContext);
+  const { operatorToken, endpoint } = useContext(AuthContext);
+  const { removeAuthCredentials } = useContext(AuthStoreContext);
+  const { removeCampaignConfig } = useContext(CampaignConfigsStoreContext);
 
   useEffect(() => {
     if (isFocused) {
@@ -153,6 +181,23 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
+  const onPressDelete = (): void => {
+    showAlert({
+      alertType: "WARN",
+      title: "Delete campaign?",
+      buttonTexts: {
+        primaryActionText: "Delete",
+        secondaryActionText: "Cancel"
+      },
+      visible: true,
+      onOk: () => {
+        const key = `${operatorToken}${endpoint}`;
+        removeAuthCredentials(key);
+        removeCampaignConfig(key);
+      }
+    });
+  };
+
   return (
     <>
       <Credits style={{ bottom: size(3) }} />
@@ -168,11 +213,14 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             </View>
           )}
           <Card>
-            {features?.campaignName && (
-              <AppText style={styles.campaignName}>
-                {features.campaignName}
-              </AppText>
-            )}
+            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+              {features?.campaignName && (
+                <AppText style={styles.campaignName}>
+                  {features.campaignName}
+                </AppText>
+              )}
+              <ManageButton onPress={onPressDelete} />
+            </View>
             <AppText>
               Check the number of item(s) eligible for redemption
             </AppText>

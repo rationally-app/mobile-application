@@ -15,6 +15,10 @@ export enum AppMode {
 
 interface Config {
   appMode: AppMode;
+  mobileNumber?: {
+    countryCode: string;
+    value: string;
+  };
 }
 
 interface ConfigContext {
@@ -25,7 +29,7 @@ interface ConfigContext {
 const CONFIG_KEY = "CONFIG";
 const DEFAULT_CONFIG: Config = { appMode: AppMode.production };
 
-const ConfigContext = createContext<ConfigContext>({
+export const ConfigContext = createContext<ConfigContext>({
   config: DEFAULT_CONFIG,
   setConfigValue: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
 });
