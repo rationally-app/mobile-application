@@ -1,4 +1,5 @@
 import { getEnvVersion, EnvVersionError } from ".";
+import { AuthInvalidError } from "../../services/auth";
 import { Sentry } from "../../utils/errorTracking";
 
 jest.mock("../../utils/errorTracking");
@@ -183,7 +184,7 @@ describe("policies", () => {
       });
 
       await expect(getEnvVersion(key, endpoint)).rejects.toThrow(
-        EnvVersionError
+        AuthInvalidError
       );
     });
 
