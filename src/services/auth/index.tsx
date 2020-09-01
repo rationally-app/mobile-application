@@ -7,7 +7,7 @@ import {
   ERROR_MESSAGE,
   systemAlertProps,
   wrongFormatAlertProps,
-  invalidEntryAlertProps,
+  invalidInputAlertProps,
   disabledAccessAlertProps,
   expiredAlertProps
 } from "../../context/alert";
@@ -69,7 +69,7 @@ export class AuthNotFoundError extends AuthError {
     super(message);
     this.name = "AuthNotFoundError";
     this.alertProps = {
-      ...invalidEntryAlertProps,
+      ...invalidInputAlertProps,
       description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
     };
   }
@@ -91,7 +91,7 @@ export class OTPWrongError extends LoginError {
     super(message);
     this.name = "OTPWrongError";
     this.alertProps = {
-      ...invalidEntryAlertProps,
+      ...invalidInputAlertProps,
       description: isLastTry
         ? ERROR_MESSAGE.LAST_OTP_ERROR
         : ERROR_MESSAGE.OTP_ERROR
