@@ -1,10 +1,4 @@
-import {
-  formatQuantityText,
-  getPurchasedQuantitiesByItem,
-  sortObjectsByHeaderAsc
-} from "./utils";
-import { CheckoutQuantitiesByItem } from "./types";
-import { PostTransactionResult } from "../../types";
+import { formatQuantityText, sortObjectsByHeaderAsc } from "./utils";
 
 describe("formatQuantityText", () => {
   it("should return only the quantity when no unit is given", () => {
@@ -34,77 +28,15 @@ describe("formatQuantityText", () => {
   });
 });
 
-describe("getPurchasedQuantitiesByItem", () => {
-  it("should return the correct result", () => {
-    expect.assertions(1);
-    const transactionTime = new Date(2020, 3, 1);
-    const checkoutResult: PostTransactionResult = {
-      transactions: [
-        {
-          transaction: [
-            {
-              category: "toilet-paper",
-              quantity: 0,
-              identifierInputs: []
-            },
-            {
-              category: "chocolate",
-              quantity: 5,
-              identifierInputs: []
-            }
-          ],
-          timestamp: transactionTime
-        },
-        {
-          transaction: [
-            {
-              category: "toilet-paper",
-              quantity: 1,
-              identifierInputs: []
-            },
-            {
-              category: "chocolate",
-              quantity: 3,
-              identifierInputs: []
-            }
-          ],
-          timestamp: transactionTime
-        }
-      ]
-    };
-    const transformed: CheckoutQuantitiesByItem = [
-      {
-        category: "toilet-paper",
-        quantities: {
-          "id-1": 0,
-          "id-2": 1
-        },
-        identifierInputs: []
-      },
-      {
-        category: "chocolate",
-        quantities: {
-          "id-1": 5,
-          "id-2": 3
-        },
-        identifierInputs: []
-      }
-    ];
-
-    expect(
-      getPurchasedQuantitiesByItem(["id-1", "id-2"], checkoutResult)
-    ).toStrictEqual(transformed);
-  });
-});
-
 describe("sortObjectsByHeaderAsc", () => {
   it("should sort objects by header field in ascending order", () => {
+    expect.assertions(1);
     const arr = [
       { header: "wow", someField: "ok", someOtherField: "yeah" },
       { header: "but", anotherField: "nah" },
       { header: "hmm", someField: "right" }
     ];
-    expect(arr.sort(sortObjectsByHeaderAsc)).toEqual([
+    expect(arr.sort(sortObjectsByHeaderAsc)).toStrictEqual([
       { header: "but", anotherField: "nah" },
       { header: "hmm", someField: "right" },
       { header: "wow", someField: "ok", someOtherField: "yeah" }

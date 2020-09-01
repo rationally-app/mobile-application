@@ -95,7 +95,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     cart,
     updateCart,
     checkoutCart,
-    checkoutResult,
     error,
     clearError,
     quotaResponse
