@@ -4,6 +4,7 @@ import { Alert } from "react-native";
 import { NavigationDispatch, NavigationActions } from "react-navigation";
 import { AuthStoreContext } from "../context/authStore";
 import { CampaignConfigsStoreContext } from "../context/campaignConfigsStore";
+import { ConfigContext } from "../context/config";
 
 type AlertProps = {
   title: string;
@@ -20,6 +21,7 @@ interface LogoutHook {
 
 export const useLogout = (): LogoutHook => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
+  const { setConfigValue } = useContext(ConfigContext);
   const { clearAuthCredentials } = useContext(AuthStoreContext);
   const { clearCampaignConfigs } = useContext(CampaignConfigsStoreContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -32,6 +34,7 @@ export const useLogout = (): LogoutHook => {
       setIsLoggingOut(true);
       clearAuthCredentials();
       clearCampaignConfigs();
+      setConfigValue("mobileNumber", undefined);
       setMessageContent(null);
       setIsLoggingOut(false);
       navigationDispatch?.(
@@ -46,7 +49,12 @@ export const useLogout = (): LogoutHook => {
         Alert.alert(title, description);
       }
     },
-    [clearAuthCredentials, clearCampaignConfigs, setMessageContent]
+    [
+      setConfigValue,
+      clearAuthCredentials,
+      clearCampaignConfigs,
+      setMessageContent
+    ]
   );
 
   return {
