@@ -6,6 +6,7 @@ import { Alert } from "react-native";
 import { NavigationDispatch, NavigationActions } from "react-navigation";
 import { Features } from "../types";
 import { CampaignConfigContext } from "../context/campaignConfig";
+import { AlertModalContext } from "../context/alert";
 
 type AlertProps = {
   title: string;
@@ -26,6 +27,7 @@ export const useLogout = (): LogoutHook => {
   const { setProducts, setFeatures, setAllProducts } = useProductContext();
   const { clearCampaignConfig } = useContext(CampaignConfigContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { clearAlert } = useContext(AlertModalContext);
 
   const logout: LogoutHook["logout"] = useCallback(
     async (navigationDispatch, alert) => {
@@ -33,6 +35,7 @@ export const useLogout = (): LogoutHook => {
         return;
       }
       setIsLoggingOut(true);
+      clearAlert();
       await clearAuthInfo();
       await clearCampaignConfig();
       setProducts([]);
@@ -47,10 +50,13 @@ export const useLogout = (): LogoutHook => {
       );
       if (alert) {
         const { title, description } = alert;
+        // using react-native alerts here for now because there are cases where the user is currently on a (non-alert) modal
+        // but is logged out, so two modals will be visible at once, causing some problems on ios
         Alert.alert(title, description);
       }
     },
     [
+      clearAlert,
       clearAuthInfo,
       clearCampaignConfig,
       setProducts,
