@@ -95,11 +95,12 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { logout } = useLogout();
 
   const forceLogout = useCallback((): void => {
-    logout(navigation.dispatch, {
+    showAlert({
       ...expiredAlertProps,
       description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
     });
-  }, [logout, navigation.dispatch]);
+    logout(navigation.dispatch);
+  }, [logout, navigation.dispatch, showAlert]);
 
   const {
     cartState,

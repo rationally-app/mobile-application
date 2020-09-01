@@ -2,17 +2,21 @@ import { useContext, useState, useCallback } from "react";
 import { ImportantMessageSetterContext } from "../context/importantMessage";
 import { useAuthenticationContext } from "../context/auth";
 import { useProductContext } from "../context/products";
+import { Alert } from "react-native";
 import { NavigationDispatch, NavigationActions } from "react-navigation";
 import { Features } from "../types";
 import { CampaignConfigContext } from "../context/campaignConfig";
-import { AlertModalContext } from "../context/alert";
-import { AlertModalProps } from "../components/AlertModal/AlertModal";
+
+type AlertProps = {
+  title: string;
+  description?: string;
+};
 
 interface LogoutHook {
   isLoggingOut: boolean;
   logout: (
     navigationDispatch: NavigationDispatch | undefined,
-    alert?: AlertModalProps
+    alert?: AlertProps
   ) => void;
 }
 
@@ -22,7 +26,6 @@ export const useLogout = (): LogoutHook => {
   const { setProducts, setFeatures, setAllProducts } = useProductContext();
   const { clearCampaignConfig } = useContext(CampaignConfigContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { showAlert, clearAlert } = useContext(AlertModalContext);
 
   const logout: LogoutHook["logout"] = useCallback(
     async (navigationDispatch, alert) => {
@@ -36,7 +39,6 @@ export const useLogout = (): LogoutHook => {
       setFeatures({} as Features);
       setAllProducts([]);
       setMessageContent(null);
-      clearAlert();
       setIsLoggingOut(false);
       navigationDispatch?.(
         NavigationActions.navigate({
@@ -44,7 +46,8 @@ export const useLogout = (): LogoutHook => {
         })
       );
       if (alert) {
-        showAlert(alert);
+        const { title, description } = alert;
+        Alert.alert(title, description);
       }
     },
     [
@@ -53,9 +56,7 @@ export const useLogout = (): LogoutHook => {
       setProducts,
       setFeatures,
       setAllProducts,
-      setMessageContent,
-      clearAlert,
-      showAlert
+      setMessageContent
     ]
   );
 
