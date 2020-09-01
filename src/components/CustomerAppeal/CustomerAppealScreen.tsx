@@ -90,7 +90,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
       allProducts ?? [],
       (result: Reason[], policy) => {
         if (policy.categoryType === "APPEAL") {
-          const policyLimt = policy.quantity.limit;
+          const policyLimit = policy.quantity.limit;
           const quotaResponse = allQuotaResponse?.remainingQuota.find(
             quota => quota.category === policy.category
           );
@@ -98,7 +98,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
           if (
             quotaResponse &&
             policy.alert &&
-            policyLimt - quotaResponse.quantity >= policy.alert.threshold
+            policyLimit - quotaResponse.quantity >= policy.alert.threshold
           ) {
             descriptionAlert = policy.alert.label;
           }
