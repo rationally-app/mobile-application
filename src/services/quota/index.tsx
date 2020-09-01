@@ -144,7 +144,6 @@ export const liveGetQuota = async (
     }
     return response;
   } catch (e) {
-    console.log(e);
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
