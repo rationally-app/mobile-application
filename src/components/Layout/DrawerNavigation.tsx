@@ -1,9 +1,6 @@
 import React, { FunctionComponent, useCallback, useContext } from "react";
 import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
-import {
-  DrawerContentComponentProps,
-  DrawerActions
-} from "react-navigation-drawer";
+import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { useLogout } from "../../hooks/useLogout";
 import { AppText } from "./AppText";
 import { size, color, fontSize } from "../../common/styles";
@@ -15,6 +12,7 @@ import {
   AlertModalContext,
   defaultConfirmationProps
 } from "../../context/alert";
+import { DrawerActions } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   container: {
@@ -94,8 +92,8 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
   const handleLogout = useCallback((): void => {
-    logout(navigation.dispatch);
-  }, [logout, navigation.dispatch]);
+    logout();
+  }, [logout]);
 
   const onPressLogout = (): void => {
     showAlert({

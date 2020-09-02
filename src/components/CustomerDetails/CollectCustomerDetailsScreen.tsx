@@ -17,10 +17,6 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
-import {
-  withNavigationFocus,
-  NavigationFocusInjectedProps
-} from "react-navigation";
 import { IdScanner } from "../IdScanner/IdScanner";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { validateAndCleanId } from "../../utils/validateIdentification";
@@ -36,6 +32,7 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
+import { NavigationProps } from "../../types";
 
 const styles = StyleSheet.create({
   content: {
@@ -59,9 +56,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
-  navigation,
-  isFocused
+export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = ({
+  navigation
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -69,7 +65,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       message: "CollectCustomerDetailsScreen"
     });
   }, []);
-
+  const isFocused = navigation.isFocused();
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
@@ -148,7 +144,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
-    if (isFocused && isScanningEnabled && event.data) {
+    if (navigation.isFocused && isScanningEnabled && event.data) {
       onCheck(event.data);
     }
   };
@@ -207,7 +203,3 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     </>
   );
 };
-
-export const CollectCustomerDetailsScreenContainer = withNavigationFocus(
-  CollectCustomerDetailsScreen
-);

@@ -14,10 +14,6 @@ import {
   Keyboard
 } from "react-native";
 import { size, color } from "../../common/styles";
-import {
-  withNavigationFocus,
-  NavigationFocusInjectedProps
-} from "react-navigation";
 import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
 import { AppHeader } from "../Layout/AppHeader";
@@ -45,6 +41,7 @@ import {
   expiredAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
+import { NavigationProps } from "../../types";
 
 const styles = StyleSheet.create({
   content: {
@@ -72,10 +69,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
-  navigation,
-  isFocused
+export const MerchantPayoutScreen: FunctionComponent<NavigationProps> = ({
+  navigation
 }) => {
+  const isFocused = navigation.isFocused();
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
@@ -311,7 +308,3 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     </>
   );
 };
-
-export const MerchantPayoutScreenContainer = withNavigationFocus(
-  MerchantPayoutScreen
-);

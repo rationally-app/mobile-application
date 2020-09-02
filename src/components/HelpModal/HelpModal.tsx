@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
-import { SafeAreaView } from "react-navigation";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const BASE_URL = "https://supplyallyhelp.zendesk.com/hc/en-us";
 const FEEDBACK_URL = BASE_URL + "/requests/new";

@@ -1,3 +1,3 @@
-import { MerchantPayoutScreenContainer } from "../../components/MerchantPayout/MerchantPayoutScreen";
+import { MerchantPayoutScreen } from "../../components/MerchantPayout/MerchantPayoutScreen";
 
-export default MerchantPayoutScreenContainer;
+export default MerchantPayoutScreen;

@@ -1,58 +1,24 @@
-import React, { ReactElement, useEffect } from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import React, { useEffect, FunctionComponent, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
   TransitionPresets
 } from "@react-navigation/stack";
-import CustomerQuotaStack from "./CustomerQuotaStack";
-import MerchantPayoutStack from "./MerchantPayoutStack";
 import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
 import * as Linking from "expo-linking";
-import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation";
 import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
+import { AuthStoreContext } from "../context/authStore";
+import { useValidateExpiry } from "../hooks/useValidateExpiry";
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
 
-// const SwitchNavigator = createSwitchNavigator(
-//   {
-//     LoginScreen: { screen: LoginScreen, path: "login" },
-//     CampaignInitialisationScreen,
-//     DrawerNavigator: createDrawerNavigator(
-//       {
-//         CustomerQuotaStack: {
-//           screen: CustomerQuotaStack
-//         },
-//         MerchantPayoutStack: {
-//           screen: MerchantPayoutStack
-//         }
-//       },
-//       {
-//         drawerPosition: "right",
-//         drawerType: "slide",
-//         contentComponent: DrawerNavigationComponent,
-//         navigationOptions: {
-//           transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
-//           navigationOptions: {
-//             gesturesEnabled: true
-//           }
-//         }
-//       }
-//     )
-//   },
-//   { initialRouteName: "LoginScreen" }
-// );
-
-// const AppContainer = createAppContainer(SwitchNavigator);
-
-export const Content = (): ReactElement => {
-  const navigatorRef = React.useRef(null);
+export const Content: FunctionComponent = () => {
   const appState = useAppState();
   const prefix = Linking.makeUrl("/");
+  const { hasLoadedFromStore, authCredentials } = useContext(AuthStoreContext);
 
   const checkUpdates = useCheckUpdates();
   useEffect(() => {
@@ -60,6 +26,13 @@ export const Content = (): ReactElement => {
       checkUpdates();
     }
   }, [appState, checkUpdates]);
+
+  const validateTokenExpiry = useValidateExpiry();
+  useEffect(() => {
+    if (appState === "active") {
+      validateTokenExpiry();
+    }
+  }, [appState, validateTokenExpiry]);
 
   return (
     <>
@@ -72,7 +45,6 @@ export const Content = (): ReactElement => {
         }}
       >
         <NavigationContainer
-          ref={navigatorRef}
           linking={{
             prefixes: [prefix]
           }}
@@ -84,29 +56,19 @@ export const Content = (): ReactElement => {
               ...TransitionPresets.SlideFromRightIOS
             }}
           >
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            <Stack.Screen
-              name="CampaignInitialisationScreen"
-              component={CampaignInitialisationScreen}
-            />
-            <Drawer.Navigator
-              initialRouteName="Home"
-              drawerPosition="right"
-              drawerType="slide"
-              drawerContent={DrawerNavigationComponent}
-            >
-              <Drawer.Screen
-                name="CustomerQuotaStack"
-                component={CustomerQuotaStack}
+            {hasLoadedFromStore && Object.keys(authCredentials).length === 1 ? (
+              <Stack.Screen
+                name="CampaignInitialisationScreen"
+                component={CampaignInitialisationScreen}
+                initialParams={{
+                  authCredentials: Object.values(authCredentials)[0]
+                }}
               />
-              <Drawer.Screen
-                name="MerchantPayoutStack"
-                component={MerchantPayoutStack}
-              />
-            </Drawer.Navigator>
+            ) : (
+              <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            )}
           </Stack.Navigator>
         </NavigationContainer>
-        {/* <AppContainer ref={navigatorRef} uriPrefix={prefix} /> */}
       </View>
     </>
   );

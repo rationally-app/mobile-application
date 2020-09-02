@@ -1,9 +1,9 @@
 import { useContext, useState, useCallback } from "react";
 import { ImportantMessageSetterContext } from "../context/importantMessage";
 import { Alert } from "react-native";
-import { NavigationDispatch, NavigationActions } from "react-navigation";
 import { AuthStoreContext } from "../context/authStore";
 import { CampaignConfigsStoreContext } from "../context/campaignConfigsStore";
+import { useNavigation } from "@react-navigation/native";
 
 type AlertProps = {
   title: string;
@@ -12,10 +12,7 @@ type AlertProps = {
 
 interface LogoutHook {
   isLoggingOut: boolean;
-  logout: (
-    navigationDispatch: NavigationDispatch | undefined,
-    alert?: AlertProps
-  ) => void;
+  logout: (alert?: AlertProps) => void;
 }
 
 export const useLogout = (): LogoutHook => {
@@ -23,22 +20,16 @@ export const useLogout = (): LogoutHook => {
   const { clearAuthCredentials } = useContext(AuthStoreContext);
   const { clearCampaignConfigs } = useContext(CampaignConfigsStoreContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigation = useNavigation();
 
   const logout: LogoutHook["logout"] = useCallback(
-    async (navigationDispatch, alert) => {
-      if (!navigationDispatch) {
-        return;
-      }
+    async alert => {
       setIsLoggingOut(true);
       clearAuthCredentials();
       clearCampaignConfigs();
       setMessageContent(null);
       setIsLoggingOut(false);
-      navigationDispatch?.(
-        NavigationActions.navigate({
-          routeName: "LoginScreen"
-        })
-      );
+      navigation.navigate("LoginScreen");
       if (alert) {
         const { title, description } = alert;
         // using react-native alerts here for now because there are cases where the user is currently on a (non-alert) modal
@@ -46,7 +37,7 @@ export const useLogout = (): LogoutHook => {
         Alert.alert(title, description);
       }
     },
-    [clearAuthCredentials, clearCampaignConfigs, setMessageContent]
+    [clearAuthCredentials, clearCampaignConfigs, navigation, setMessageContent]
   );
 
   return {

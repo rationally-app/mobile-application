@@ -1,6 +1,5 @@
 import { differenceInSeconds } from "date-fns";
 import { useCallback, useContext } from "react";
-import { NavigationDispatch } from "react-navigation";
 import { ImportantMessageSetterContext } from "../context/importantMessage";
 import { AuthContext } from "../context/auth";
 import { useLogout } from "./useLogout";
@@ -9,19 +8,17 @@ const ABOUT_TO_EXPIRE_SECONDS = 30 * 60;
 const MAX_INTERVAL_SECONDS = 60; // refreshes countdown at most every minute
 let timeout: NodeJS.Timeout;
 
-export const useValidateExpiry = (
-  navigationDispatch: NavigationDispatch | undefined
-): (() => void) => {
+export const useValidateExpiry = (): (() => void) => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
   const { expiry } = useContext(AuthContext);
   const { isLoggingOut, logout } = useLogout();
 
   const onExpired = useCallback(() => {
-    logout(navigationDispatch, {
+    logout({
       title: "Session expired",
       description: "You have been logged out"
     });
-  }, [logout, navigationDispatch]);
+  }, [logout]);
 
   const onAboutToExpire = useCallback(
     secondsLeft => {
@@ -35,12 +32,12 @@ export const useValidateExpiry = (
           "You will need to login with a new QR code when it expires",
         featherIconName: "clock",
         action: {
-          callback: () => logout(navigationDispatch),
+          callback: () => logout(),
           label: "Logout"
         }
       });
     },
-    [logout, navigationDispatch, setMessageContent]
+    [logout, setMessageContent]
   );
 
   const validate = useCallback(async (): Promise<void> => {

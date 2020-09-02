@@ -1,20 +1,28 @@
 import * as t from "io-ts";
 import { DateFromNumber } from "io-ts-types/lib/DateFromNumber";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
-import { ParamListBase } from "@react-navigation/native";
-// import { NavigationDrawerProp } from "@react-navigation/drawer";
 
 export type RootParamList = {
   CustomerQuotaStack: { operatorToken: string; endpoint: string };
+  CampaignInitialisationScreen: { authCredentials: AuthCredentials };
+  MerchantPayoutScreen: undefined;
+  CollectCustomerDetailsScreen: undefined;
+  CustomerQuotaProxy: { id: string; products: any }; // please retype
+  PayoutFeedbackScreen: { merchantCode: string; checkoutResult: any };
 };
 
 export interface NavigationProps {
-  navigation: StackNavigationProp<ParamListBase>;
+  navigation: StackNavigationProp<RootParamList>;
 }
 
 export type CustomerQuotaStackProps = StackScreenProps<
   RootParamList,
   "CustomerQuotaStack"
+>;
+
+export type CampaignInitialisationScreenProps = StackScreenProps<
+  RootParamList,
+  "CampaignInitialisationScreen"
 >;
 
 export type AuthCredentials = {

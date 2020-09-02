@@ -10,6 +10,7 @@ import { Content } from "./Content";
 import { Providers } from "../context/composeProviders";
 import { DrawerContextProvider } from "../context/drawer";
 import { CampaignConfigsStoreContextProvider } from "../context/campaignConfigsStore";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const App = (): ReactElement => {
   return (
@@ -23,7 +24,8 @@ const App = (): ReactElement => {
             HelpModalContextProvider,
             AlertModalContextProvider,
             ImportantMessageContextProvider,
-            DrawerContextProvider
+            DrawerContextProvider,
+            SafeAreaProvider
           ]}
         >
           <Content />

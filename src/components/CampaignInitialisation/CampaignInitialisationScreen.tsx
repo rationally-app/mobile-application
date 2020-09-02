@@ -8,7 +8,10 @@ import React, {
 import { Sentry } from "../../utils/errorTracking";
 import { StyleSheet, View } from "react-native";
 import { size } from "../../common/styles";
-import { NavigationProps, AuthCredentials } from "../../types";
+import {
+  AuthCredentials,
+  CampaignInitialisationScreenProps
+} from "../../types";
 import { UpdateByRestartingAlert } from "./UpdateByRestartingAlert";
 import { UpdateFromAppStoreAlert } from "./UpdateFromAppStoreAlert";
 import { LoadingView } from "../Loading";
@@ -26,6 +29,12 @@ import * as config from "../../config";
 import { checkVersion } from "./utils";
 import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
+import CustomerQuotaStack from "../../navigation/CustomerQuotaStack";
+import MerchantPayoutStack from "../../navigation/MerchantPayoutStack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { DrawerNavigationComponent } from "../../components/Layout/DrawerNavigation";
+
+const Drawer = createDrawerNavigator();
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -50,7 +59,8 @@ export class UpdateError extends Error {
   }
 }
 
-export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = ({
+export const CampaignInitialisationScreen: FunctionComponent<CampaignInitialisationScreenProps> = ({
+  route,
   navigation
 }) => {
   useEffect(() => {
@@ -60,9 +70,8 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     });
   }, []);
 
-  const authCredentials: AuthCredentials = navigation.getParam(
-    "authCredentials"
-  );
+  const authCredentials: AuthCredentials = route.params.authCredentials;
+
   const {
     hasLoadedFromStore,
     allCampaignConfigs,
@@ -126,29 +135,29 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     }
   }, [handleLogout, showAlert, updateCampaignConfigError]);
 
+  const [shouldContinueToNormalFlow, setShouldContinueToNormalFlow] = useState(
+    false
+  );
   const continueToNormalFlow = useCallback(() => {
-    if (campaignConfig?.features?.flowType) {
-      switch (campaignConfig?.features?.flowType) {
-        case "DEFAULT":
-          navigation.navigate("CustomerQuotaStack", {
-            operatorToken: authCredentials.operatorToken,
-            endpoint: authCredentials.endpoint
-          });
-          break;
-        case "MERCHANT":
-          navigation.navigate("MerchantPayoutStack", {
-            operatorToken: authCredentials.operatorToken,
-            endpoint: authCredentials.endpoint
-          });
-          break;
-      }
-    }
-  }, [
-    authCredentials.endpoint,
-    authCredentials.operatorToken,
-    campaignConfig?.features?.flowType,
-    navigation
-  ]);
+    setShouldContinueToNormalFlow(true);
+    // const config =
+    //   allCampaignConfigs[
+    //     `${authCredentials.operatorToken}${authCredentials.endpoint}`
+    //   ];
+    // if (config?.features?.flowType) {
+    //   switch (config?.features?.flowType) {
+    //     case "DEFAULT":
+    //       navigation.navigate("CustomerQuotaStack", {
+    //         operatorToken: authCredentials.operatorToken,
+    //         endpoint: authCredentials.endpoint
+    //       });
+    //       break;
+    //     case "MERCHANT":
+    //       navigation.navigate("MerchantPayoutScreen");
+    //       break;
+    //   }
+    // }
+  }, []);
 
   const [outdatedType, setOutdatedType] = useState<"BINARY" | "BUILD">();
 
@@ -236,7 +245,32 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     }
   }, [continueToNormalFlow, fetchingState, handleNewCampaignConfig]);
 
-  return (
+  const config =
+    allCampaignConfigs[
+      `${authCredentials.operatorToken}${authCredentials.endpoint}`
+    ];
+
+  return shouldContinueToNormalFlow ? (
+    <Drawer.Navigator
+      initialRouteName="CustomerQuotaStack"
+      drawerPosition="right"
+      drawerType="slide"
+      drawerContent={DrawerNavigationComponent}
+    >
+      {config?.features?.flowType === "DEFAULT" && (
+        <Drawer.Screen
+          name="CustomerQuotaStack"
+          component={CustomerQuotaStack}
+        />
+      )}
+      {config?.features?.flowType === "MERCHANT" && (
+        <Drawer.Screen
+          name="MerchantPayoutStack"
+          component={MerchantPayoutStack}
+        />
+      )}
+    </Drawer.Navigator>
+  ) : (
     <View style={styles.wrapper}>
       <View style={styles.content}>
         {outdatedType === "BINARY" ? (
