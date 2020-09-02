@@ -25,11 +25,7 @@ export async function fetchWithValidator<T, O, I>(
 
   const json = await response.json();
   if (!response.ok) {
-    // the first message is thrown by mystique, the sec
-    if (
-      json.message === "User is not authorized" ||
-      json.message === "Invalid authentication token provided"
-    )
+    if (json.message === "Invalid authentication token provided")
       throw new AuthenticationError(json.message);
     throw new Error(json.message ?? "Fetch failed");
   }
