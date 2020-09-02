@@ -1,6 +1,10 @@
 import { IS_MOCK } from "../../config";
 import { EnvVersion } from "../../types";
-import { fetchWithValidator, ValidationError } from "../helpers";
+import {
+  fetchWithValidator,
+  ValidationError,
+  AuthenticationError
+} from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import { AuthInvalidError } from "../../services/auth";
 
@@ -30,7 +34,7 @@ const liveGetEnvVersion = async (
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
-    } else if (e.message === "Invalid authentication token provided") {
+    } else if (e instanceof AuthenticationError) {
       throw new AuthInvalidError(e.message);
     }
     throw new EnvVersionError(e.message);

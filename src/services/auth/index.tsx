@@ -102,7 +102,7 @@ export class OTPWrongError extends LoginError {
 export class OTPExpiredError extends LoginError {
   constructor(message: string) {
     super(message);
-    this.name = "OTPWrongError";
+    this.name = "OTPExpiredError";
     this.alertProps = {
       ...expiredAlertProps,
       description: ERROR_MESSAGE.OTP_EXPIRED

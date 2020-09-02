@@ -9,6 +9,13 @@ export class ValidationError extends Error {
   }
 }
 
+export class AuthenticationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthenticationError";
+  }
+}
+
 export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
@@ -18,6 +25,12 @@ export async function fetchWithValidator<T, O, I>(
 
   const json = await response.json();
   if (!response.ok) {
+    // the first message is thrown by mystique, the sec
+    if (
+      json.message === "User is not authorized" ||
+      json.message === "Invalid authentication token provided"
+    )
+      throw new AuthenticationError(json.message);
     throw new Error(json.message ?? "Fetch failed");
   }
 

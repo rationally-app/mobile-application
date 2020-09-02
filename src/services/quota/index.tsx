@@ -6,20 +6,17 @@ import {
   PastTransactionsResult
 } from "../../types";
 import _ from "lodash";
-import { fetchWithValidator, ValidationError } from "../helpers";
+import {
+  fetchWithValidator,
+  ValidationError,
+  AuthenticationError
+} from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 
 export class NotEligibleError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "NotEligibleError";
-  }
-}
-
-export class AuthenticationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "AuthenticationError";
   }
 }
 
@@ -149,8 +146,8 @@ export const liveGetQuota = async (
     }
     if (e.message === "User is not eligible") {
       throw new NotEligibleError(e.message);
-    } else if (e.message === "Invalid authentication token provided") {
-      throw new AuthenticationError(e.message);
+    } else if (e instanceof AuthenticationError) {
+      throw e;
     }
     throw new QuotaError(e.message);
   }
@@ -218,8 +215,8 @@ export const livePostTransaction = async ({
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
-    } else if (e.message === "Invalid authentication token provided") {
-      throw new AuthenticationError(e.message);
+    } else if (e instanceof AuthenticationError) {
+      throw e;
     }
     throw new PostTransactionError(e.message);
   }
@@ -282,8 +279,8 @@ export const livePastTransactions = async (
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
-    } else if (e.message === "Invalid authentication token provided") {
-      throw new AuthenticationError(e.message);
+    } else if (e instanceof AuthenticationError) {
+      throw e;
     }
     throw new PastTransactionError(e.message);
   }

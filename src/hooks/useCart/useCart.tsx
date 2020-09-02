@@ -4,8 +4,7 @@ import {
   getQuota,
   postTransaction,
   QuotaError,
-  NotEligibleError,
-  AuthenticationError
+  NotEligibleError
 } from "../../services/quota";
 import { transform } from "lodash";
 import { useProductContext, ProductContextValue } from "../../context/products";
@@ -19,6 +18,7 @@ import {
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import { AuthenticationError } from "../../services/helpers";
 
 export type CartItem = {
   category: string;

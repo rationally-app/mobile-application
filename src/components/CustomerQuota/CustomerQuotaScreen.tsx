@@ -38,7 +38,7 @@ import {
 } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { useLogout } from "../../hooks/useLogout";
-import { AuthenticationError } from "../../services/quota";
+import { AuthenticationError } from "../../services/helpers";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
