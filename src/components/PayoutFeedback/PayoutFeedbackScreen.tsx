@@ -1,6 +1,10 @@
 import React, { FunctionComponent, useContext } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { NavigationProps, PostTransactionResult } from "../../types";
+import {
+  NavigationProps,
+  PostTransactionResult,
+  PayoutFeedbackScreenProps
+} from "../../types";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { useConfigContext } from "../../context/config";
@@ -72,22 +76,20 @@ const styles = StyleSheet.create({
   }
 });
 
-export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+export const PayoutFeedbackScreen: FunctionComponent<PayoutFeedbackScreenProps> = ({
+  route
 }) => {
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const checkoutResult: PostTransactionResult = navigation.getParam(
-    "checkoutResult"
-  );
+  const checkoutResult: PostTransactionResult = route.params.checkoutResult;
   const voucherArr = checkoutResult.transactions.filter(
     transaction =>
       transaction.transaction.filter(obj => obj.category === "voucher").length >
       0
   );
   const itemQuantities = voucherArr.length;
-  const merchantCode: string = navigation.getParam("merchantCode");
+  const merchantCode: string = route.params.merchantCode;
 
   return (
     <ScrollView

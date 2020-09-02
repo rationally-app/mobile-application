@@ -44,6 +44,8 @@ import {
   defaultConfirmationProps
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
+import { useValidateExpiry } from "../../hooks/useValidateExpiry";
+import { useAppState } from "../../hooks/useAppState";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -91,6 +93,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const messageContent = useContext(ImportantMessageContentContext);
   const { showAlert } = useContext(AlertModalContext);
   const lastResendWarningMessageRef = useRef("");
+  const appState = useAppState();
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -102,6 +105,13 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const resetStage = (): void => {
     setLoginStage("SCAN");
   };
+
+  const validateTokenExpiry = useValidateExpiry();
+  useEffect(() => {
+    if (appState === "active") {
+      validateTokenExpiry();
+    }
+  }, [appState, validateTokenExpiry]);
 
   const getResendConfirmationIfNeeded = async (): Promise<boolean> => {
     return new Promise(resolve => {

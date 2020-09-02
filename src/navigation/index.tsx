@@ -1,4 +1,5 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useRef } from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import { AuthStoreContextProvider } from "../context/authStore";
 import { ConfigContextProvider } from "../context/config";
 import { FontLoader } from "../components/FontLoader";
@@ -11,8 +12,12 @@ import { Providers } from "../context/composeProviders";
 import { DrawerContextProvider } from "../context/drawer";
 import { CampaignConfigsStoreContextProvider } from "../context/campaignConfigsStore";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import * as Linking from "expo-linking";
 
 const App = (): ReactElement => {
+  const prefix = Linking.makeUrl("/");
+  const navigationRef = useRef(null);
+
   return (
     <ErrorBoundary>
       <FontLoader>
@@ -28,7 +33,14 @@ const App = (): ReactElement => {
             SafeAreaProvider
           ]}
         >
-          <Content />
+          <NavigationContainer
+            linking={{
+              prefixes: [prefix]
+            }}
+            ref={navigationRef}
+          >
+            <Content />
+          </NavigationContainer>
         </Providers>
       </FontLoader>
     </ErrorBoundary>

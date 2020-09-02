@@ -1,17 +1,18 @@
 import React, { FunctionComponent } from "react";
-import { NavigationProps, CampaignPolicy } from "../../types";
+import { CampaignPolicy, CustomerQuotaProxyProps } from "../../types";
 import { ProductContextProvider } from "../../context/products";
 import { CustomerQuotaScreen } from "./CustomerQuotaScreen";
 
-export const CustomerQuotaProxy: FunctionComponent<NavigationProps> = ({
-  navigation
+export const CustomerQuotaProxy: FunctionComponent<CustomerQuotaProxyProps> = ({
+  navigation,
+  route
 }) => {
   // coming from NRIC screen, it will be a string
   // coming from appeal, it can be an array if group appeal is supported
-  const navId = navigation.getParam("id");
+  const navId = route.params.id;
   const navIds = Array.isArray(navId) ? navId : [navId];
 
-  const selectedProducts: CampaignPolicy[] = navigation.getParam("products");
+  const selectedProducts: CampaignPolicy[] = route.params.products;
 
   return (
     <ProductContextProvider products={selectedProducts}>

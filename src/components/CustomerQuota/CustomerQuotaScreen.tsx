@@ -35,10 +35,10 @@ import {
   ERROR_MESSAGE,
   expiredAlertProps
 } from "../../context/alert";
-import { navigateHome, replaceRoute } from "../../common/navigation";
 import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
 import { QuotaError } from "../../services/quota";
+import { navigateHome, replaceRouteFn } from "../../common/navigation";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -80,6 +80,14 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     });
   }, []);
 
+<<<<<<< HEAD
+=======
+  const validateTokenExpiry = useValidateExpiry();
+  useEffect(() => {
+    validateTokenExpiry();
+  }, [validateTokenExpiry]);
+
+>>>>>>> 8aeb14c... fix: initialParams and drawer nav content
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const { sessionToken, endpoint } = useContext(AuthContext);
@@ -128,7 +136,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, []);
 
   const onAppeal = useCallback((): void => {
-    replaceRoute(navigation, "CustomerAppealScreen", { ids });
+    replaceRouteFn(navigation, "CustomerAppealScreen", { ids });
   }, [ids, navigation]);
 
   const onNextId = useCallback((): void => {

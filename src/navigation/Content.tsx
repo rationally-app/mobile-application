@@ -1,5 +1,4 @@
 import React, { useEffect, FunctionComponent, useContext } from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
   TransitionPresets
@@ -17,7 +16,7 @@ const Stack = createStackNavigator();
 
 export const Content: FunctionComponent = () => {
   const appState = useAppState();
-  const prefix = Linking.makeUrl("/");
+  // const prefix = Linking.makeUrl("/");
   const { hasLoadedFromStore, authCredentials } = useContext(AuthStoreContext);
 
   const checkUpdates = useCheckUpdates();
@@ -26,13 +25,6 @@ export const Content: FunctionComponent = () => {
       checkUpdates();
     }
   }, [appState, checkUpdates]);
-
-  const validateTokenExpiry = useValidateExpiry();
-  useEffect(() => {
-    if (appState === "active") {
-      validateTokenExpiry();
-    }
-  }, [appState, validateTokenExpiry]);
 
   return (
     <>
@@ -44,31 +36,32 @@ export const Content: FunctionComponent = () => {
             Platform.OS === "android" && !__DEV__ ? StatusBar.currentHeight : 0 // padding is used to prevent content from going behind the status bar on Android production builds
         }}
       >
-        <NavigationContainer
+        {/* <NavigationContainer
           linking={{
             prefixes: [prefix]
           }}
+        > */}
+        <Stack.Navigator
+          initialRouteName="LoginScreen"
+          headerMode="none"
+          screenOptions={{
+            gestureEnabled: true,
+            ...TransitionPresets.SlideFromRightIOS
+          }}
         >
-          <Stack.Navigator
-            initialRouteName="LoginScreen"
-            screenOptions={{
-              gestureEnabled: true,
-              ...TransitionPresets.SlideFromRightIOS
-            }}
-          >
-            {hasLoadedFromStore && Object.keys(authCredentials).length === 1 ? (
-              <Stack.Screen
-                name="CampaignInitialisationScreen"
-                component={CampaignInitialisationScreen}
-                initialParams={{
-                  authCredentials: Object.values(authCredentials)[0]
-                }}
-              />
-            ) : (
-              <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            )}
-          </Stack.Navigator>
-        </NavigationContainer>
+          {hasLoadedFromStore && Object.keys(authCredentials).length === 1 ? (
+            <Stack.Screen
+              name="CampaignInitialisationScreen"
+              component={CampaignInitialisationScreen}
+              initialParams={{
+                authCredentials: Object.values(authCredentials)[0]
+              }}
+            />
+          ) : (
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          )}
+        </Stack.Navigator>
+        {/* </NavigationContainer> */}
       </View>
     </>
   );

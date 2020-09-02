@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { transform } from "lodash";
 import { StyleSheet, View } from "react-native";
-import { NavigationProps } from "../../types";
+import { CustomerAppealScreenProps } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
@@ -55,8 +55,9 @@ const styles = StyleSheet.create({
   }
 });
 
-export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+export const CustomerAppealScreen: FunctionComponent<CustomerAppealScreenProps> = ({
+  navigation,
+  route
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -65,8 +66,13 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
-  const [ids] = useState(navigation.getParam("ids"));
+  const [ids] = useState(route.params.ids);
   const { policies: allProducts } = useContext(CampaignConfigContext);
+
+  const validateTokenExpiry = useValidateExpiry();
+  useEffect(() => {
+    validateTokenExpiry();
+  }, [validateTokenExpiry]);
 
   const onCancel = useCallback((): void => {
     navigateHome(navigation);

@@ -255,12 +255,16 @@ export const CampaignInitialisationScreen: FunctionComponent<CampaignInitialisat
       initialRouteName="CustomerQuotaStack"
       drawerPosition="right"
       drawerType="slide"
-      drawerContent={DrawerNavigationComponent}
+      drawerContent={props => <DrawerNavigationComponent {...props} />}
     >
       {config?.features?.flowType === "DEFAULT" && (
         <Drawer.Screen
           name="CustomerQuotaStack"
           component={CustomerQuotaStack}
+          initialParams={{
+            operatorToken: authCredentials.operatorToken,
+            endpoint: authCredentials.endpoint
+          }}
         />
       )}
       {config?.features?.flowType === "MERCHANT" && (

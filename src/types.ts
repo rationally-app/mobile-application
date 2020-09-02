@@ -9,11 +9,27 @@ export type RootParamList = {
   CollectCustomerDetailsScreen: undefined;
   CustomerQuotaProxy: { id: string; products: any }; // please retype
   PayoutFeedbackScreen: { merchantCode: string; checkoutResult: any };
+  CustomerAppealScreen: { ids: string[] }; // please retype
 };
 
 export interface NavigationProps {
   navigation: StackNavigationProp<RootParamList>;
 }
+
+export type CustomerAppealScreenProps = StackScreenProps<
+  RootParamList,
+  "CustomerAppealScreen"
+>;
+
+export type CustomerQuotaProxyProps = StackScreenProps<
+  RootParamList,
+  "CustomerQuotaProxy"
+>;
+
+export type PayoutFeedbackScreenProps = StackScreenProps<
+  RootParamList,
+  "PayoutFeedbackScreen"
+>;
 
 export type CustomerQuotaStackProps = StackScreenProps<
   RootParamList,
