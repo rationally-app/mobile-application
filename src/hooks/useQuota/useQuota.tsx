@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Sentry } from "../../utils/errorTracking";
-import { getQuota, QuotaError, NotEligibleError } from "../../services/quota";
+import { getQuota } from "../../services/quota";
 import { useProductContext } from "../../context/products";
 
 import { transform } from "lodash";
@@ -10,19 +10,11 @@ import { Quota, Policy } from "../../types";
 export type QuotaHook = {
   quotaResponse: Quota | null;
   allQuotaResponse: Quota | null;
-  fetchQuota: (setter: (cartState: CartState) => void) => Promise<void>;
+  fetchQuota: () => Promise<void>;
   quotaError?: Error;
 };
 
-type CartState =
-  | "FETCHING_QUOTA"
-  | "NO_QUOTA"
-  | "DEFAULT"
-  | "CHECKING_OUT"
-  | "PURCHASED"
-  | "NOT_ELIGIBLE";
-
-const filterQuotaWithAvailableProducts = (
+export const filterQuotaWithAvailableProducts = (
   quota: Quota,
   products: Policy[]
 ): Quota => {
@@ -37,12 +29,20 @@ const filterQuotaWithAvailableProducts = (
   );
 };
 
-const hasNoQuota = (quota: Quota): boolean =>
-  quota.remainingQuota.every(item => item.quantity === 0);
+export const hasNoQuota = (quota: Quota | null): boolean => {
+  if (quota === null) {
+    return true;
+  }
+  return quota.remainingQuota.every(item => item.quantity === 0);
+};
 
-const hasInvalidQuota = (quota: Quota): boolean =>
+export const hasInvalidQuota = (quota: Quota | null): boolean => {
   // Note: Invalid quota refers to negative quota received
-  quota.remainingQuota.some(item => item.quantity < 0);
+  if (quota === null) {
+    return true;
+  }
+  return quota.remainingQuota.some(item => item.quantity < 0);
+};
 
 export const useQuota = (
   ids: string[],
@@ -54,55 +54,18 @@ export const useQuota = (
   const [quotaError, setError] = useState<Error>();
   const { products } = useProductContext();
 
-  const fetchQuota = async (
-    setCartState: (cartState: CartState) => void
-  ): Promise<void> => {
+  const fetchQuota = async (): Promise<void> => {
     Sentry.addBreadcrumb({
       category: "useQuota",
       message: "fetchQuota - fetching quota"
     });
-    try {
-      const allQuotaResponse = await getQuota(ids, authKey, endpoint);
-      setAllQuotaResponse(allQuotaResponse);
-      const quotaResponse = filterQuotaWithAvailableProducts(
-        allQuotaResponse,
-        products
-      );
-      setQuotaResponse(quotaResponse);
-      if (hasInvalidQuota(quotaResponse)) {
-        Sentry.captureException(
-          `Negative Quota Received: ${JSON.stringify(
-            quotaResponse.remainingQuota
-          )}`
-        );
-        setCartState("NO_QUOTA");
-      } else if (hasNoQuota(quotaResponse)) {
-        setCartState("NO_QUOTA");
-      } else {
-        setCartState("DEFAULT");
-      }
-    } catch (e) {
-      if (e instanceof NotEligibleError) {
-        setCartState("NOT_ELIGIBLE");
-        // Cart will remain in FETCHING_QUOTA state.
-      } else if (e instanceof QuotaError) {
-        Sentry.addBreadcrumb({
-          category: "useQuota",
-          message: "fetchQuota - quota error"
-        });
-        setError(
-          new Error(
-            "Error getting quota. We've noted this down and are looking into it!"
-          )
-        );
-      } else {
-        Sentry.addBreadcrumb({
-          category: "useQuota",
-          message: "fetchQuota - unidentified error"
-        });
-        setError(e);
-      }
-    }
+    const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+    setAllQuotaResponse(allQuotaResponse);
+    const quotaResponse = filterQuotaWithAvailableProducts(
+      allQuotaResponse,
+      products
+    );
+    setQuotaResponse(quotaResponse);
   };
 
   return {

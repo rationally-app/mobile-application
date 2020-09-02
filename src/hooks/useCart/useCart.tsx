@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback, useContext } from "react";
-import { useQuota } from "../useQuota/useQuota";
+import { Sentry } from "../../utils/errorTracking";
+
+import { QuotaError, NotEligibleError } from "../../services/quota";
+import { useQuota, hasNoQuota, hasInvalidQuota } from "../useQuota/useQuota";
 import { postTransaction } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
@@ -155,9 +158,52 @@ export const useCart = (
    */
 
   useEffect(() => {
+
+    async function fetchQuotaWrapper(){
+      try {
+        await fetchQuota();
+        if (hasInvalidQuota(quotaResponse)) {
+          Sentry.captureException(
+            `Negative Quota Received: ${JSON.stringify(
+              quotaResponse?.remainingQuota
+            )}`
+          );
+          setCartState("NO_QUOTA");
+        } else if (hasNoQuota(quotaResponse)) {
+          setCartState("NO_QUOTA");
+        } else {
+          setCartState("DEFAULT");
+        }
+      }
+      catch (e) {
+        if (e instanceof NotEligibleError) {
+          setCartState("NOT_ELIGIBLE");
+          // Cart will remain in FETCHING_QUOTA state.
+        } else if (e instanceof QuotaError) {
+          Sentry.addBreadcrumb({
+            category: "useQuota",
+            message: "fetchQuota - quota error"
+          });
+          setError(
+            new Error(
+              "Error getting quota. We've noted this down and are looking into it!"
+            )
+          );
+        } else {
+          Sentry.addBreadcrumb({
+            category: "useQuota",
+            message: "fetchQuota - unidentified error"
+          });
+          setError(e);
+        }
+      }
+    }
+
     if (prevIds !== ids || prevProducts !== products) {
       setCartState("FETCHING_QUOTA");
-      fetchQuota(setCartState);
+      fetchQuotaWrapper();
+      
+      
     }
   }, [
     authKey,
