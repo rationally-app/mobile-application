@@ -1,10 +1,6 @@
 import React, { FunctionComponent, useContext } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import {
-  NavigationProps,
-  PostTransactionResult,
-  PayoutFeedbackScreenProps
-} from "../../types";
+import { PostTransactionResult, PayoutFeedbackScreenProps } from "../../types";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { useConfigContext } from "../../context/config";
@@ -77,6 +73,7 @@ const styles = StyleSheet.create({
 });
 
 export const PayoutFeedbackScreen: FunctionComponent<PayoutFeedbackScreenProps> = ({
+  navigation,
   route
 }) => {
   const messageContent = useContext(ImportantMessageContentContext);

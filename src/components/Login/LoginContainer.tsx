@@ -161,6 +161,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   useLayoutEffect(() => {
     if (hasLoadedFromStore && Object.keys(authCredentials).length === 1) {
+      resetStage();
       navigation.navigate("CampaignInitialisationScreen", {
         authCredentials: Object.values(authCredentials)[0]
       });
