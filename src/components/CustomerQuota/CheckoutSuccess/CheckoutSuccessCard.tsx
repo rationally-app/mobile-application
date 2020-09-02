@@ -13,11 +13,11 @@ import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { format } from "date-fns";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
-import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import { formatQuantityText } from "../utils";
+import { formatQuantityText, sortObjectsByHeaderAsc } from "../utils";
 import { TransactionsGroup } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
+import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -87,7 +87,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     }
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
       header: categoryName,
-      details: getAllIdentifierInputDisplay(item.identifierInputs ?? []),
+      details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
         policy?.quantity.unit || { type: "POSTFIX", label: " qty" }

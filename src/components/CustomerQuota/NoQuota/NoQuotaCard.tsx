@@ -7,7 +7,6 @@ import { color, size } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { Cart } from "../../../hooks/useCart/useCart";
-import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { formatQuantityText } from "../utils";
@@ -23,6 +22,7 @@ import { AppealButton } from "./AppealButton";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
+import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -108,7 +108,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     }
     transactionsByCategoryMap[categoryName].transactions.push({
       header: formattedDate,
-      details: getAllIdentifierInputDisplay(item.identifierInputs ?? []),
+      details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
         policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
