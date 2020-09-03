@@ -136,7 +136,10 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
           });
           break;
         case "MERCHANT":
-          navigation.navigate("MerchantPayoutScreen");
+          navigation.navigate("MerchantPayoutStack", {
+            operatorToken: authCredentials.operatorToken,
+            endpoint: authCredentials.endpoint
+          });
           break;
       }
     }
