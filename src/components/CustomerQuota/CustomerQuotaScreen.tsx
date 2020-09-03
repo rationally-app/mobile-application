@@ -39,6 +39,7 @@ import {
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
+import { QuotaError } from "../../services/quota";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -163,6 +164,13 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       return;
     }
     if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
+      if (error instanceof QuotaError) {
+        showAlert({
+          ...error.alertProps,
+          onOk: () => clearError()
+        });
+        return;
+      }
       switch (error.message) {
         case ERROR_MESSAGE.MISSING_SELECTION:
           showAlert({
@@ -220,14 +228,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
         case ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE:
           showAlert({
             ...wrongFormatAlertProps,
-            description: error.message,
-            onOk: () => clearError()
-          });
-          break;
-
-        case ERROR_MESSAGE.QUOTA_ERROR:
-          showAlert({
-            ...systemAlertProps,
             description: error.message,
             onOk: () => clearError()
           });

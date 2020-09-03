@@ -3,7 +3,6 @@ import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
   postTransaction,
-  QuotaError,
   NotEligibleError
 } from "../../services/quota";
 import { transform } from "lodash";
@@ -205,8 +204,6 @@ export const useCart = (
         if (e instanceof NotEligibleError) {
           setCartState("NOT_ELIGIBLE");
           return;
-        } else if (e instanceof QuotaError) {
-          setError(new Error(ERROR_MESSAGE.QUOTA_ERROR));
         } else {
           setError(e);
         }

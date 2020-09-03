@@ -8,6 +8,7 @@ import {
 import _ from "lodash";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
+import { systemAlertProps, ERROR_MESSAGE } from "../../context/alert";
 
 export class NotEligibleError extends Error {
   constructor(message: string) {
@@ -21,6 +22,11 @@ export class QuotaError extends Error {
     super(message);
     this.name = "QuotaError";
   }
+  alertProps = {
+    ...systemAlertProps,
+    description: ERROR_MESSAGE.QUOTA_ERROR as string,
+    visible: true
+  };
 }
 
 export class PostTransactionError extends Error {
