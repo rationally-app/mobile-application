@@ -13,6 +13,7 @@ import { AuthStoreContext } from "../context/authStore";
 import { useValidateExpiry } from "../hooks/useValidateExpiry";
 import { NavigationContainer } from "@react-navigation/native";
 import * as Linking from "expo-linking";
+import { useValidateExpiry } from "../hooks/useValidateExpiry";
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,12 @@ export const Content: FunctionComponent = () => {
     }
   }, [appState, checkUpdates]);
 
+  const validateTokenExpiry = useValidateExpiry();
+  useEffect(() => {
+    if (appState === "active") {
+      validateTokenExpiry();
+    }
+  }, [appState, validateTokenExpiry]);
   return (
     <>
       <StatusBar />

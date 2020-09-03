@@ -60,8 +60,7 @@ export class UpdateError extends Error {
 }
 
 export const CampaignInitialisationScreen: FunctionComponent<CampaignInitialisationScreenProps> = ({
-  route,
-  navigation
+  route
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -140,23 +139,6 @@ export const CampaignInitialisationScreen: FunctionComponent<CampaignInitialisat
   );
   const continueToNormalFlow = useCallback(() => {
     setShouldContinueToNormalFlow(true);
-    // const config =
-    //   allCampaignConfigs[
-    //     `${authCredentials.operatorToken}${authCredentials.endpoint}`
-    //   ];
-    // if (config?.features?.flowType) {
-    //   switch (config?.features?.flowType) {
-    //     case "DEFAULT":
-    //       navigation.navigate("CustomerQuotaStack", {
-    //         operatorToken: authCredentials.operatorToken,
-    //         endpoint: authCredentials.endpoint
-    //       });
-    //       break;
-    //     case "MERCHANT":
-    //       navigation.navigate("MerchantPayoutScreen");
-    //       break;
-    //   }
-    // }
   }, []);
 
   const [outdatedType, setOutdatedType] = useState<"BINARY" | "BUILD">();
@@ -250,7 +232,7 @@ export const CampaignInitialisationScreen: FunctionComponent<CampaignInitialisat
       `${authCredentials.operatorToken}${authCredentials.endpoint}`
     ];
 
-  return shouldContinueToNormalFlow ? (
+  return shouldContinueToNormalFlow && config?.features?.flowType ? (
     <Drawer.Navigator
       initialRouteName="CustomerQuotaStack"
       drawerPosition="right"
@@ -273,7 +255,7 @@ export const CampaignInitialisationScreen: FunctionComponent<CampaignInitialisat
           component={MerchantPayoutStack}
         />
       )}
-      <Drawer.Screen name="LoadingScreen" component={LoadingView} />
+      {/* <Drawer.Screen name="LoadingScreen" component={LoadingView} /> */}
     </Drawer.Navigator>
   ) : (
     <View style={styles.wrapper}>

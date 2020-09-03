@@ -33,6 +33,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 import { NavigationProps } from "../../types";
+import { useIsFocused } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   content: {
@@ -65,7 +66,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
       message: "CollectCustomerDetailsScreen"
     });
   }, []);
-  const isFocused = navigation.isFocused();
+  const isFocused = useIsFocused();
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
@@ -144,7 +145,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
   };
 
   const onBarCodeScanned: BarCodeScannedCallback = event => {
-    if (navigation.isFocused && isScanningEnabled && event.data) {
+    if (isFocused && isScanningEnabled && event.data) {
       onCheck(event.data);
     }
   };

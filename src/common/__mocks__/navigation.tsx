@@ -1,9 +1,13 @@
 import { NavigationProps } from "../../types";
+import { ParamListBase } from "@react-navigation/native";
 
-export const replaceRouteFn = (
+export const replaceRouteFn = <
+  T extends ParamListBase,
+  K extends Extract<keyof T, string>
+>(
   navigation: NavigationProps["navigation"],
-  routeName: string
-): (() => boolean) => (): boolean => {
+  routeName: K
+): (() => void) => (): void => {
   // Any casting is required to not provide key
   const action: any = {
     routeName,
@@ -15,7 +19,7 @@ export const replaceRouteFn = (
 export const resetRouteFn = (
   navigation: NavigationProps["navigation"],
   routeName: string
-): (() => boolean) => (): boolean => {
+): (() => void) => (): void => {
   // Any casting is required to not provide key
   const action: any = {
     routeName,
