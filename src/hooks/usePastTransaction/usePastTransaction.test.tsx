@@ -137,46 +137,44 @@ describe("usePastTransaction", () => {
 
       await waitForNextUpdate();
 
-      expect(result.current.pastTransactionsResult).toStrictEqual({
-        pastTransactions: [
-          {
-            category: "tt-token",
-            quantity: 1,
-            identifierInputs: [
-              {
-                ...defaultIdentifier,
-                label: "first",
-                value: "AAA987654321"
-              }
-            ],
-            transactionTime: toDate(1596530356430)
-          },
-          {
-            category: "tt-token-lost",
-            quantity: 1,
-            identifierInputs: [
-              {
-                ...defaultIdentifier,
-                label: "first",
-                value: "AAA987654322"
-              }
-            ],
-            transactionTime: toDate(1596530356431)
-          },
-          {
-            category: "tt-token-lost",
-            quantity: 1,
-            identifierInputs: [
-              {
-                ...defaultIdentifier,
-                label: "first",
-                value: "AAA987654323"
-              }
-            ],
-            transactionTime: toDate(1596530356432)
-          }
-        ]
-      });
+      expect(result.current.pastTransactionsResult).toStrictEqual([
+        {
+          category: "tt-token",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654321"
+            }
+          ],
+          transactionTime: toDate(1596530356430)
+        },
+        {
+          category: "tt-token-lost",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654322"
+            }
+          ],
+          transactionTime: toDate(1596530356431)
+        },
+        {
+          category: "tt-token-lost",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654323"
+            }
+          ],
+          transactionTime: toDate(1596530356432)
+        }
+      ]);
     });
 
     it("should populate the past transactions with empty values", async () => {
@@ -190,9 +188,7 @@ describe("usePastTransaction", () => {
 
       await waitForNextUpdate();
 
-      expect(result.current.pastTransactionsResult).toStrictEqual({
-        pastTransactions: []
-      });
+      expect(result.current.pastTransactionsResult).toStrictEqual([]);
     });
 
     it("should catch error when thrown", async () => {

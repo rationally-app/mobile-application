@@ -5,7 +5,7 @@ import { getPastTransactions } from "../../services/quota";
 import { Sentry } from "../../utils/errorTracking";
 
 export type PastTransactionHook = {
-  pastTransactionsResult: PastTransactionsResult | null;
+  pastTransactionsResult: PastTransactionsResult["pastTransactions"] | null;
 };
 
 export const usePastTransaction = (
@@ -13,10 +13,9 @@ export const usePastTransaction = (
   authKey: string,
   endpoint: string
 ): PastTransactionHook => {
-  const [
-    pastTransactionsResult,
-    setPastTransactionsResult
-  ] = useState<PastTransactionsResult | null>(null);
+  const [pastTransactionsResult, setPastTransactionsResult] = useState<
+    PastTransactionsResult["pastTransactions"] | null
+  >(null);
   const prevIds = usePrevious(ids);
 
   useEffect(() => {
@@ -27,7 +26,7 @@ export const usePastTransaction = (
         endpoint
       );
 
-      setPastTransactionsResult(pastTransactionsResponse);
+      setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
     };
 
     if (prevIds !== ids)
