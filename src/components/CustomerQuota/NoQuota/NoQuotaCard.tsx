@@ -20,10 +20,10 @@ import {
   NoPreviousTransactionTitle
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
-import { Quota } from "../../../types";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
+import { Quota, PastTransactionsResult } from "../../../types";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -35,51 +35,33 @@ interface NoQuotaCard {
   onAppeal?: () => void;
   quotaResponse: Quota | null;
 }
+
+export interface TransactionsByCategoryMap {
+  [category: string]: {
+    transactions: Transaction[];
+    hasLatestTransaction?: boolean;
+  };
+}
+
+const sortTransactionsByCategory = (
+  a: TransactionsByCategory,
+  b: TransactionsByCategory
+): 1 | -1 | 0 =>
+  a.category > b.category ? 1 : b.category > a.category ? -1 : 0;
+
 /**
- * Shows when the user cannot purchase anything
+ * Given past transactions, group them by categories.
  *
- * Precondition: Only rendered when all items in cart have max quantity of 0
+ * @param sortedTransactions Past transaction results sorted by transaction time in desc order
+ * @param allProducts Policies
+ * @param latestTransactionTime Transaction time of latest transaction
  */
-export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
-  ids,
-  cart,
-  onCancel,
-  onAppeal,
-  quotaResponse
-}) => {
-  const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
-  const { policies: allProducts } = useContext(CampaignConfigContext);
-  const { getProduct } = useContext(ProductContext);
-  const { sessionToken, endpoint } = useContext(AuthContext);
-
-  const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
-
-  const { pastTransactionsResult } = usePastTransaction(
-    ids,
-    sessionToken,
-    endpoint
-  );
-  // Assumes results are already sorted (valid assumption for results from /transactions/history)
-  const sortedTransactions = pastTransactionsResult;
-
-  const latestTransactionTime: Date | undefined =
-    sortedTransactions?.[0].transactionTime ?? undefined;
-  const now = new Date();
-  const secondsFromLatestTransaction = latestTransactionTime
-    ? differenceInSeconds(now, latestTransactionTime)
-    : -1;
-
-  const hasAppealProduct = allProducts?.some(
-    policy => policy.categoryType === "APPEAL"
-  ) ?? false;
-
-  // Group transactions by category
-  const transactionsByCategoryMap: {
-    [category: string]: {
-      transactions: Transaction[];
-      hasLatestTransaction?: boolean;
-    };
-  } = {};
+export const groupTransactionsByCategory = (
+  sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
+  allProducts: Policy[],
+  latestTransactionTime: Date | undefined
+): TransactionsByCategoryMap => {
+  const transactionsByCategoryMap: TransactionsByCategoryMap = {};
   sortedTransactions?.forEach(item => {
     const policy = allProducts?.find(
       policy => policy.category === item.category
@@ -108,7 +90,22 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         0;
   });
 
-  // Split categories into those with the latest transactions and those without
+  return transactionsByCategoryMap;
+};
+
+/**
+ * Transforms map of transactions into an array
+ * Array is sorted by:
+ *  1. Categories with latest transactions
+ *  2. All other categories
+ * Each group is sorted by category name in asc order
+ * Also adds an order attribute to each transaction for the "Show more" feature
+ *
+ * @param transactionsByCategoryMap Transactions by category
+ */
+export const sortTransactions = (
+  transactionsByCategoryMap: TransactionsByCategoryMap
+): TransactionsByCategory[] => {
   const latestTransactionsByCategory: TransactionsByCategory[] = [];
   const otherTransactionsByCategory: TransactionsByCategory[] = [];
   Object.entries(transactionsByCategoryMap).forEach(([key, value]) => {
@@ -123,19 +120,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     }
   });
 
-  // Order each category list by alphabetical order
-  const sortTransactionsByCategory = (
-    a: TransactionsByCategory,
-    b: TransactionsByCategory
-  ): 1 | -1 | 0 =>
-    a.category > b.category ? 1 : b.category > a.category ? -1 : 0;
   latestTransactionsByCategory.sort(sortTransactionsByCategory);
   otherTransactionsByCategory.sort(sortTransactionsByCategory);
 
-  // Concat category lists into a single list
-  // Add order to each transaction for "Show more" feature
   let transactionCounter = 0;
-  const transactionsByCategoryList = latestTransactionsByCategory
+  return latestTransactionsByCategory
     .concat(otherTransactionsByCategory)
     .map(transactionsByCategory => {
       const orderedTransactions = transactionsByCategory.transactions.map(
@@ -147,6 +136,49 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       );
       return { ...transactionsByCategory, transactions: orderedTransactions };
     });
+};
+
+/**
+ * Shows when the user cannot purchase anything
+ *
+ * Precondition: Only rendered when all items in cart have max quantity of 0
+ */
+export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
+  ids,
+  cart,
+  onCancel,
+  onAppeal
+}) => {
+  const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
+  const { policies: allProducts } = useContext(CampaignConfigContext);
+  const { getProduct } = useContext(ProductContext);
+  const { sessionToken, endpoint } = useContext(AuthContext);
+  const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
+
+  const { pastTransactionsResult } = usePastTransaction(ids, sessionToken, endpoint);
+  // Assumes results are already sorted (valid assumption for results from /transactions/history)
+  const sortedTransactions = pastTransactionsResult;
+
+  const latestTransactionTime: Date | undefined =
+    sortedTransactions?.[0].transactionTime ?? undefined;
+  const now = new Date();
+  const secondsFromLatestTransaction = latestTransactionTime
+    ? differenceInSeconds(now, latestTransactionTime)
+    : -1;
+
+  const hasAppealProduct = allProducts?.some(
+    policy => policy.categoryType === "APPEAL"
+  ) ?? false;
+
+  const transactionsByCategoryMap = groupTransactionsByCategory(
+    sortedTransactions,
+    allProducts || [],
+    latestTransactionTime
+  );
+
+  const transactionsByCategoryList = sortTransactions(
+    transactionsByCategoryMap
+  );
 
   const showGlobalQuota =
     !!quotaResponse?.globalQuota &&
@@ -220,12 +252,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               )}
             </View>
           )}
-          {transactionCounter > MAX_TRANSACTIONS_TO_DISPLAY && (
-            <ShowFullListToggle
-              toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
-              isShowFullList={isShowFullList}
-            />
-          )}
+          {sortedTransactions &&
+            sortedTransactions.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+              <ShowFullListToggle
+                toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
+                isShowFullList={isShowFullList}
+              />
+            )}
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
