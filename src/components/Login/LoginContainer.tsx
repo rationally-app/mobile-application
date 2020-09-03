@@ -42,15 +42,17 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
 import {
+  requestOTP,
+  LoginError,
+  AuthError,
+  AuthInvalidError
+} from "../../services/auth";
+import {
   AlertModalContext,
   systemAlertProps,
-  wrongFormatAlertProps,
   ERROR_MESSAGE,
-  defaultConfirmationProps,
-  invalidInputAlertProps,
-  disabledAccessAlertProps
+  defaultConfirmationProps
 } from "../../context/alert";
-import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -140,18 +142,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof LoginLockedError) {
-        showAlert({
-          ...disabledAccessAlertProps,
-          description: e.message,
-          onOk: () => resetStage()
-        });
-      } else if (e instanceof LoginError) {
-        showAlert({
-          ...invalidInputAlertProps,
-          description: e.message,
-          onOk: () => resetStage()
-        });
+      if (e instanceof LoginError) {
+        showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -187,14 +179,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         );
         setAllProducts(versionResponse.policies);
       } catch (e) {
+        Sentry.captureException(e);
         if (e instanceof EnvVersionError) {
-          Sentry.captureException(e);
           showAlert({
             ...systemAlertProps,
             description: ERROR_MESSAGE.ENV_VERSION_ERROR
           });
-          handleLogout();
+        } else if (e instanceof AuthInvalidError) {
+          showAlert(e.alertProps);
         }
+        handleLogout();
       } finally {
         setIsLoading(false);
       }
@@ -305,28 +299,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
-        if (e.message === ERROR_MESSAGE.SERVER_ERROR) {
-          showAlert({
-            ...systemAlertProps,
-            description: e.message
-          });
-        } else if (e.message === ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN) {
-          showAlert({
-            ...systemAlertProps,
-            title: "Expired",
-            description: e.message
-          });
-        } else if (
-          e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT ||
-          e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-        ) {
-          showAlert({
-            ...wrongFormatAlertProps,
-            description: e.message
-          });
+        if (e instanceof AuthError) {
+          showAlert(e.alertProps);
         } else {
           setState(() => {
-            throw e; // Let ErrorBoundary handle
+            throw error; // Let ErrorBoundary handle
           });
         }
         setIsLoading(false);
