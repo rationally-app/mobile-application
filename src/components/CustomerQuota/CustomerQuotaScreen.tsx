@@ -38,7 +38,7 @@ import {
 } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { useLogout } from "../../hooks/useLogout";
-import { AuthenticationError } from "../../services/helpers";
+import { SessionError } from "../../services/helpers";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -157,7 +157,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     if (!error) {
       return;
     }
-    if (error instanceof AuthenticationError) {
+    if (error instanceof SessionError) {
       clearError();
       forceLogout();
       return;

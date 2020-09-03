@@ -18,7 +18,7 @@ import {
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
-import { AuthenticationError } from "../../services/helpers";
+import { SessionError } from "../../services/helpers";
 
 export type CartItem = {
   category: string;
@@ -331,7 +331,7 @@ export const useCart = (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
           setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
-        } else if (e instanceof AuthenticationError) {
+        } else if (e instanceof SessionError) {
           setError(e);
         } else {
           setError(new Error(ERROR_MESSAGE.SERVER_ERROR));

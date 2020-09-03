@@ -9,10 +9,10 @@ export class ValidationError extends Error {
   }
 }
 
-export class AuthenticationError extends Error {
+export class SessionError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "AuthenticationError";
+    this.name = "SessionError";
   }
 }
 
@@ -26,7 +26,7 @@ export async function fetchWithValidator<T, O, I>(
   const json = await response.json();
   if (!response.ok) {
     if (json.message === "Invalid authentication token provided")
-      throw new AuthenticationError(json.message);
+      throw new SessionError(json.message);
     throw new Error(json.message ?? "Fetch failed");
   }
 
