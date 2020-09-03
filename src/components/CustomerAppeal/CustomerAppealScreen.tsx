@@ -15,7 +15,6 @@ import { useConfigContext } from "../../context/config";
 import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
-import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
@@ -68,11 +67,6 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 
   const [ids] = useState(navigation.getParam("ids"));
   const { policies: allProducts } = useContext(CampaignConfigContext);
-
-  const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
-  useEffect(() => {
-    validateTokenExpiry();
-  }, [validateTokenExpiry]);
 
   const onCancel = useCallback((): void => {
     navigateHome(navigation);

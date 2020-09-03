@@ -22,7 +22,6 @@ import { Sentry } from "../../utils/errorTracking";
 import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
-import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
@@ -80,11 +79,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       message: "CustomerQuotaScreen"
     });
   }, []);
-
-  const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
-  useEffect(() => {
-    validateTokenExpiry();
-  }, [validateTokenExpiry]);
 
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
