@@ -53,7 +53,7 @@ export const Content: FunctionComponent = () => {
               ...TransitionPresets.SlideFromRightIOS
             }}
           >
-            {hasLoadedFromStore && Object.keys(authCredentials).length === 1 && (
+            {hasLoadedFromStore && Object.keys(authCredentials).length === 1 ? (
               <Stack.Screen
                 name="CampaignInitialisationScreen"
                 component={CampaignInitialisationScreen}
@@ -61,8 +61,9 @@ export const Content: FunctionComponent = () => {
                   authCredentials: Object.values(authCredentials)[0]
                 }}
               />
+            ) : (
+              <Stack.Screen name="LoginScreen" component={LoginScreen} />
             )}
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>

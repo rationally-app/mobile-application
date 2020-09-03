@@ -3,7 +3,6 @@ import { ImportantMessageSetterContext } from "../context/importantMessage";
 import { Alert } from "react-native";
 import { AuthStoreContext } from "../context/authStore";
 import { CampaignConfigsStoreContext } from "../context/campaignConfigsStore";
-import { useNavigation } from "@react-navigation/native";
 
 type AlertProps = {
   title: string;
@@ -20,7 +19,6 @@ export const useLogout = (): LogoutHook => {
   const { clearAuthCredentials } = useContext(AuthStoreContext);
   const { clearCampaignConfigs } = useContext(CampaignConfigsStoreContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const navigation = useNavigation();
 
   const logout: LogoutHook["logout"] = useCallback(
     async alert => {
@@ -29,7 +27,6 @@ export const useLogout = (): LogoutHook => {
       clearCampaignConfigs();
       setMessageContent(null);
       setIsLoggingOut(false);
-      navigation.navigate("LoginScreen");
       if (alert) {
         const { title, description } = alert;
         // using react-native alerts here for now because there are cases where the user is currently on a (non-alert) modal
@@ -37,7 +34,7 @@ export const useLogout = (): LogoutHook => {
         Alert.alert(title, description);
       }
     },
-    [clearAuthCredentials, clearCampaignConfigs, navigation, setMessageContent]
+    [clearAuthCredentials, clearCampaignConfigs, setMessageContent]
   );
 
   return {
