@@ -8,6 +8,7 @@ import React, {
 import { AsyncStorage } from "react-native";
 import { usePrevious } from "../hooks/usePrevious";
 import { AuthCredentials } from "../types";
+import { Sentry } from "../utils/errorTracking";
 
 export const AUTH_CREDENTIALS_STORE_KEY = "AUTH_STORE";
 
@@ -125,8 +126,17 @@ export const AuthStoreContextProvider: FunctionComponent<{
       if (shouldMigrate) {
         const migrated = await migrateOldAuthFromStore();
         if (migrated) {
+          Sentry.addBreadcrumb({
+            category: "migration",
+            message: "success"
+          });
           setHasLoadedFromStore(true);
           return;
+        } else {
+          Sentry.addBreadcrumb({
+            category: "migration",
+            message: "failure"
+          });
         }
       }
 
@@ -141,7 +151,10 @@ export const AuthStoreContextProvider: FunctionComponent<{
         const authCredentialsFromStore: AuthCredentialsMap = JSON.parse(
           authCredentialsString
         );
-        setAuthCredentials(authCredentialsFromStore);
+        setAuthCredentials(prev => ({
+          ...prev,
+          ...authCredentialsFromStore
+        }));
         setHasLoadedFromStore(true);
       } catch (e) {
         setState(() => {
