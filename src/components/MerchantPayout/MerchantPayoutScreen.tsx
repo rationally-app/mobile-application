@@ -38,7 +38,6 @@ import { useVoucher } from "../../hooks/useVoucher/useVoucher";
 import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { AuthContext } from "../../context/auth";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
 import {
   AlertModalContext,
@@ -86,7 +85,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     false
   );
   const { sessionToken, endpoint } = useContext(AuthContext);
-  const { logout } = useLogout();
   const { showAlert } = useContext(AlertModalContext);
 
   const {
@@ -159,9 +157,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         ...expiredAlertProps,
         description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
       });
-      logout(navigation.dispatch);
+      navigation.navigate("CampaignLocationsScreen");
     }
-  }, [logout, navigation.dispatch, showAlert, validityError]);
+  }, [navigation, showAlert, validityError]);
 
   const redeemVouchers = (): void => {
     checkoutVouchers(merchantCode);
@@ -188,7 +186,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
           ...expiredAlertProps,
           description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
         });
-        logout(navigation.dispatch);
+        navigation.navigate("CampaignLocationsScreen");
       } else {
         Alert.alert("Error", merchantError.message, [
           {
@@ -201,7 +199,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   }, [
     checkoutResult,
     checkoutVouchersState,
-    logout,
     merchantCode,
     merchantError,
     navigation,

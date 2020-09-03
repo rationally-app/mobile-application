@@ -115,8 +115,11 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
   useLayoutEffect(() => {
     if (hasLoadedAuthFromStore) {
       const numCampaignLocations = Object.keys(authCredentials).length;
-      if (numCampaignLocations === 1) {
-        // Automatically go to the only campaign location
+      if (
+        numCampaignLocations === 1 &&
+        Date.now() < Object.values(authCredentials)[0].expiry
+      ) {
+        // Automatically go to the only valid campaign location
         navigateToCampaignLocation(Object.values(authCredentials)[0]);
       } else if (numCampaignLocations === 0) {
         // Automatically go to the Login Screen to add a campaign

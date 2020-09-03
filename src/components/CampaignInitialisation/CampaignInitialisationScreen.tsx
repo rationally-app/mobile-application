@@ -24,7 +24,6 @@ import {
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import * as config from "../../config";
 import { checkVersion } from "./utils";
-import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
 
 const styles = StyleSheet.create({
@@ -79,7 +78,6 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   );
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
-  const { logout } = useLogout();
 
   const campaignConfig =
     allCampaignConfigs[
@@ -102,10 +100,6 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     updateCampaignConfig
   ]);
 
-  const handleLogout = useCallback((): void => {
-    logout(navigation.dispatch);
-  }, [logout, navigation.dispatch]);
-
   useEffect(() => {
     if (updateCampaignConfigError) {
       if (updateCampaignConfigError instanceof CampaignConfigError) {
@@ -119,12 +113,12 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
           ...expiredAlertProps,
           description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
         });
-        handleLogout();
+        navigation.navigate("CampaignLocationsScreen");
       } else {
         throw updateCampaignConfigError; // Let ErrorBoundary handle
       }
     }
-  }, [handleLogout, showAlert, updateCampaignConfigError]);
+  }, [navigation, showAlert, updateCampaignConfigError]);
 
   const continueToNormalFlow = useCallback(() => {
     if (campaignConfig?.features?.flowType) {
