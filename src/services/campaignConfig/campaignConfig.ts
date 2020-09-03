@@ -1,6 +1,6 @@
 import { IS_MOCK } from "../../config";
 import { CampaignConfig, ConfigHashes } from "../../types";
-import { fetchWithValidator, ValidationError } from "../helpers";
+import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 
 export class CampaignConfigError extends Error {
@@ -31,6 +31,8 @@ const liveGetCampaignConfig = async (
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
     }
     throw new CampaignConfigError(e.message);
   }

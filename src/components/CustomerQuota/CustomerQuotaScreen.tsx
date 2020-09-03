@@ -237,7 +237,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
         default:
           throw new Error(error.message);
       }
-    } else throw new Error(error.message);
+    } else {
+      throw new Error(error.message);
+    }
   }, [
     cartState,
     clearError,
