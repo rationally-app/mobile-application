@@ -18,11 +18,14 @@ import { CampaignConfigError } from "../../services/campaignConfig";
 import {
   AlertModalContext,
   systemAlertProps,
+  expiredAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import * as config from "../../config";
 import { checkVersion } from "./utils";
+import { useLogout } from "../../hooks/useLogout";
+import { SessionError } from "../../services/helpers";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -76,6 +79,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   );
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
+  const { logout } = useLogout();
 
   const campaignConfig =
     allCampaignConfigs[
@@ -98,6 +102,10 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     updateCampaignConfig
   ]);
 
+  const handleLogout = useCallback((): void => {
+    logout(navigation.dispatch);
+  }, [logout, navigation.dispatch]);
+
   useEffect(() => {
     if (updateCampaignConfigError) {
       if (updateCampaignConfigError instanceof CampaignConfigError) {
@@ -106,11 +114,17 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
           ...systemAlertProps,
           description: ERROR_MESSAGE.ENV_VERSION_ERROR
         });
+      } else if (updateCampaignConfigError instanceof SessionError) {
+        showAlert({
+          ...expiredAlertProps,
+          description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+        });
+        handleLogout();
       } else {
         throw updateCampaignConfigError; // Let ErrorBoundary handle
       }
     }
-  }, [showAlert, updateCampaignConfigError]);
+  }, [handleLogout, showAlert, updateCampaignConfigError]);
 
   const continueToNormalFlow = useCallback(() => {
     if (campaignConfig?.features?.flowType) {
