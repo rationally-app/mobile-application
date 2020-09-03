@@ -86,11 +86,6 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
       `${authCredentials.operatorToken}${authCredentials.endpoint}`
     ];
 
-  const campaignConfig =
-    allCampaignConfigs[
-      `${authCredentials.operatorToken}${authCredentials.endpoint}`
-    ];
-
   const [hasAttemptedToUpdateConfig, setHasAttemptedToUpdateConfig] = useState(
     false
   );
