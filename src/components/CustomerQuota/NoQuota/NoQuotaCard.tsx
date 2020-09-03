@@ -60,7 +60,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     endpoint
   );
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
-  const sortedTransactions = pastTransactionsResult?.pastTransactions;
+  const sortedTransactions = pastTransactionsResult;
 
   const latestTransactionTime: Date | undefined =
     sortedTransactions?.[0].transactionTime ?? undefined;
