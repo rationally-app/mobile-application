@@ -1,6 +1,7 @@
 import { getCampaignConfig, CampaignConfigError } from "./campaignConfig";
 import { boolean } from "io-ts";
 import { Sentry } from "../../utils/errorTracking";
+import { SessionError } from "../helpers";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -213,7 +214,7 @@ describe("campaignConfig", () => {
           features: undefined,
           policies: undefined
         })
-      ).rejects.toThrow(CampaignConfigError);
+      ).rejects.toThrow(SessionError);
     });
 
     it("should throw error if there were issues fetching", async () => {
