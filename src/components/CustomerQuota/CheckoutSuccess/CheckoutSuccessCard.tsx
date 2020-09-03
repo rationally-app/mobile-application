@@ -12,6 +12,8 @@ import { RedeemedItem } from "./RedeemedItem";
 import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
 import { FontAwesome } from "@expo/vector-icons";
+import { format } from "date-fns";
+import { Quota } from "../../../types";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -23,12 +25,26 @@ interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
   checkoutResult: CartHook["checkoutResult"];
+  allQuotaResponse: Quota | null;
 }
+
+const UsageQuotaTitle: FunctionComponent<{
+  quantity: number;
+  quotaRefreshTime: number;
+}> = ({ quantity, quotaRefreshTime }) => (
+  <>
+    <AppText style={sharedStyles.statusTitle}>
+      {"\n"}
+      {quantity} item(s) more till {format(quotaRefreshTime, "dd MMM yyyy")}.
+    </AppText>
+  </>
+);
 
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   ids,
   onCancel,
-  checkoutResult
+  checkoutResult,
+  allQuotaResponse
 }) => {
   const checkoutQuantities = getPurchasedQuantitiesByItem(ids, checkoutResult!);
   const { getProduct } = useProductContext();
@@ -36,6 +52,12 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   const { title, description, ctaButtonText } = getCheckoutMessages(
     productType
   );
+
+  const showGlobalQuota =
+    allQuotaResponse &&
+    getProduct(checkoutQuantities[0].category)?.quantity.usage
+      ? true
+      : false;
 
   return (
     <View>
@@ -53,6 +75,19 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
           />
           <AppText style={sharedStyles.statusTitleWrapper}>
             <AppText style={sharedStyles.statusTitle}>{title}</AppText>
+            {showGlobalQuota &&
+              allQuotaResponse &&
+              allQuotaResponse.globalQuota &&
+              allQuotaResponse.globalQuota.map(
+                ({ quantity, quotaRefreshTime }, index: number) =>
+                  quotaRefreshTime ? (
+                    <UsageQuotaTitle
+                      key={index}
+                      quantity={quantity}
+                      quotaRefreshTime={quotaRefreshTime}
+                    />
+                  ) : undefined
+              )}
           </AppText>
           <View>
             <AppText>{description}</AppText>

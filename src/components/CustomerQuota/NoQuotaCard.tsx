@@ -16,6 +16,7 @@ import {
 import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransaction";
 import { useAuthenticationContext } from "../../context/auth";
 import { FontAwesome } from "@expo/vector-icons";
+import { Quota } from "../../types";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -75,6 +76,18 @@ const RecentTransactionTitle: FunctionComponent<{
   </>
 );
 
+const UsageQuotaTitle: FunctionComponent<{
+  quantity: number;
+  quotaRefreshTime: number;
+}> = ({ quantity, quotaRefreshTime }) => (
+  <>
+    <AppText style={sharedStyles.statusTitle}>
+      {"\n"}
+      {quantity} item(s) more till {format(quotaRefreshTime, "dd MMM yyyy")}.
+    </AppText>
+  </>
+);
+
 const ItemTransaction: FunctionComponent<{
   itemHeader: string;
   itemDetail: string;
@@ -115,6 +128,7 @@ interface NoQuotaCard {
   cart: Cart;
   onCancel: () => void;
   onAppeal?: () => void;
+  allQuotaResponse: Quota | null;
 }
 
 /**
@@ -126,12 +140,20 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   ids,
   cart,
   onCancel,
-  onAppeal
+  onAppeal,
+  allQuotaResponse
 }) => {
   const { getProduct, allProducts } = useProductContext();
   const { token, endpoint } = useAuthenticationContext();
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
+
+  const showGlobalQuota =
+    allQuotaResponse &&
+    cart.length > 0 &&
+    getProduct(cart[0].category)?.quantity.usage
+      ? true
+      : false;
 
   const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
   let latestTransactionTime: Date | undefined = new Date();
@@ -242,6 +264,18 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
             ) : (
               <NoPreviousTransactionTitle />
             )}
+            {showGlobalQuota &&
+              allQuotaResponse &&
+              allQuotaResponse.globalQuota.map(
+                ({ quantity, quotaRefreshTime }, index: number) =>
+                  quotaRefreshTime ? (
+                    <UsageQuotaTitle
+                      key={index}
+                      quantity={quantity}
+                      quotaRefreshTime={quotaRefreshTime}
+                    />
+                  ) : undefined
+              )}
           </AppText>
           {itemTransactions.length > 0 && (
             <View>

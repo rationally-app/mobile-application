@@ -326,6 +326,10 @@ export const useCart = (
           endpoint
         });
         setCheckoutResult(transactionResponse);
+
+        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        setAllQuotaResponse(allQuotaResponse);
+
         setCartState("PURCHASED");
       } catch (e) {
         setCartState("DEFAULT");
