@@ -13,7 +13,6 @@ import { UpdateByRestartingAlert } from "./UpdateByRestartingAlert";
 import { UpdateFromAppStoreAlert } from "./UpdateFromAppStoreAlert";
 import { LoadingView } from "../Loading";
 import { useUpdateCampaignConfig } from "../../hooks/useUpdateCampaignConfig/useUpdateCampaignConfig";
-import { useCheckVersion } from "../../hooks/useCheckVersion/useCheckVersion";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { CampaignConfigError } from "../../services/campaignConfig";
 import {
@@ -22,6 +21,8 @@ import {
   ERROR_MESSAGE
 } from "../../context/alert";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
+import * as config from "../../config";
+import { checkVersion } from "./utils";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -73,27 +74,25 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     authCredentials.sessionToken,
     authCredentials.endpoint
   );
-  const checkVersion = useCheckVersion();
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
+
+  const campaignConfig =
+    allCampaignConfigs[
+      `${authCredentials.operatorToken}${authCredentials.endpoint}`
+    ];
 
   const [hasAttemptedToUpdateConfig, setHasAttemptedToUpdateConfig] = useState(
     false
   );
   useEffect(() => {
     if (hasLoadedFromStore && !hasAttemptedToUpdateConfig) {
-      updateCampaignConfig(
-        allCampaignConfigs[
-          `${authCredentials.operatorToken}${authCredentials.endpoint}`
-        ],
-        addCampaignConfig
-      );
+      updateCampaignConfig(campaignConfig, addCampaignConfig);
       setHasAttemptedToUpdateConfig(true);
     }
   }, [
     addCampaignConfig,
-    allCampaignConfigs,
-    authCredentials,
+    campaignConfig,
     hasAttemptedToUpdateConfig,
     hasLoadedFromStore,
     updateCampaignConfig
@@ -114,12 +113,8 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   }, [showAlert, updateCampaignConfigError]);
 
   const continueToNormalFlow = useCallback(() => {
-    const config =
-      allCampaignConfigs[
-        `${authCredentials.operatorToken}${authCredentials.endpoint}`
-      ];
-    if (config?.features?.flowType) {
-      switch (config?.features?.flowType) {
+    if (campaignConfig?.features?.flowType) {
+      switch (campaignConfig?.features?.flowType) {
         case "DEFAULT":
           navigation.navigate("CustomerQuotaStack", {
             operatorToken: authCredentials.operatorToken,
@@ -132,9 +127,9 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
       }
     }
   }, [
-    allCampaignConfigs,
     authCredentials.endpoint,
     authCredentials.operatorToken,
+    campaignConfig?.features?.flowType,
     navigation
   ]);
 
@@ -182,7 +177,12 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
    */
   const handleNewCampaignConfig = useCallback((): void => {
     try {
-      const versionCheckResult = checkVersion();
+      const versionCheckResult = checkVersion({
+        currentBinaryVersion: config.APP_BINARY_VERSION,
+        currentBuildVersion: config.APP_BUILD_VERSION,
+        minBinaryVersion: campaignConfig?.features?.minAppBinaryVersion,
+        minBuildVersion: campaignConfig?.features?.minAppBuildVersion
+      });
       switch (versionCheckResult) {
         case "OK":
           continueToNormalFlow();
@@ -200,7 +200,12 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     } catch (e) {
       throw e; // Let ErrorBoundary handle
     }
-  }, [checkVersion, continueToNormalFlow, getNewBuildIfAny]);
+  }, [
+    campaignConfig?.features?.minAppBinaryVersion,
+    campaignConfig?.features?.minAppBuildVersion,
+    continueToNormalFlow,
+    getNewBuildIfAny
+  ]);
 
   /**
    * When the campaign config has been fetched, figure out if version is
