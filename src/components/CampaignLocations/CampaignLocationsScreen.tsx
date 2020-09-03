@@ -6,7 +6,7 @@ import React, {
   useCallback
 } from "react";
 import { View, StyleSheet } from "react-native";
-import { size } from "../../common/styles";
+import { size, fontSize } from "../../common/styles";
 import { Credits } from "../Credits";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { TopBackground } from "../Layout/TopBackground";
@@ -24,6 +24,7 @@ import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore"
 import { useDrawerContext } from "../../context/drawer";
 import { LoadingView } from "../Loading";
 import { Card } from "../Layout/Card";
+import { AppText } from "../Layout/AppText";
 
 const styles = StyleSheet.create({
   content: {
@@ -40,7 +41,18 @@ const styles = StyleSheet.create({
   bannerWrapper: {
     marginBottom: size(1.5)
   },
-  loadingViewWrapper: { alignItems: "center", justifyContent: "center" }
+  loadingViewWrapper: {
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  selectCampaignHeader: {
+    fontFamily: "brand-bold",
+    fontSize: fontSize(1)
+  },
+  campaignLocationWrapper: {
+    marginHorizontal: -size(3),
+    marginTop: size(2)
+  }
 });
 
 export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
@@ -134,18 +146,25 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
           )}
 
           {hasLoadedAuthFromStore && hasLoadedCampaignConfigFromStore ? (
-            Object.entries(authCredentials).map(([key, credentials], idx) => (
-              <View key={key} style={{ marginBottom: size(1.5) }}>
-                <CampaignLocationsListItem
-                  {...credentials}
-                  name={
-                    allCampaignConfigs[key]?.features?.campaignName ||
-                    `Campaign ${idx + 1}`
-                  }
-                  onPress={() => navigateToCampaignLocation(credentials)}
-                />
-              </View>
-            ))
+            <Card>
+              <AppText style={styles.selectCampaignHeader}>
+                Select campaign
+              </AppText>
+              {Object.entries(authCredentials).map(
+                ([key, credentials], idx) => (
+                  <View key={key} style={styles.campaignLocationWrapper}>
+                    <CampaignLocationsListItem
+                      {...credentials}
+                      name={
+                        allCampaignConfigs[key]?.features?.campaignName ||
+                        `Campaign ${idx + 1}`
+                      }
+                      onPress={() => navigateToCampaignLocation(credentials)}
+                    />
+                  </View>
+                )
+              )}
+            </Card>
           ) : (
             <Card style={styles.loadingViewWrapper}>
               <LoadingView wrapperStyle={{ height: "50%" }} />
