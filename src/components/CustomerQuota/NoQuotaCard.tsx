@@ -83,7 +83,7 @@ const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {quantity} item(s) more till {format(quotaRefreshTime, "dd MMM yyyy")}.
+      {quantity} item(s) more till {format(quotaRefreshTime, "d MMM yyyy")}.
     </AppText>
   </>
 );
@@ -266,6 +266,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
             )}
             {showGlobalQuota &&
               allQuotaResponse &&
+              allQuotaResponse.globalQuota &&
               allQuotaResponse.globalQuota.map(
                 ({ quantity, quotaRefreshTime }, index: number) =>
                   quotaRefreshTime ? (
