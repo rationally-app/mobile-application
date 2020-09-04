@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useContext, useState } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useContext,
+  useEffect
+} from "react";
 import { differenceInSeconds, format } from "date-fns";
 import { View } from "react-native";
 import { CustomerCard } from "../CustomerCard";
@@ -24,6 +29,7 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { Quota, PastTransactionsResult } from "../../../types";
+import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -155,9 +161,19 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const { sessionToken, endpoint } = useContext(AuthContext);
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const { pastTransactionsResult } = usePastTransaction(ids, sessionToken, endpoint);
+  const { pastTransactionsResult, error } = usePastTransaction(ids, sessionToken, endpoint);
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
+
+  const { showAlert } = useContext(AlertModalContext);
+  useEffect(() => {
+    if (error) {
+      showAlert({
+        ...systemAlertProps,
+        description: error.message || ""
+      });
+    }
+  }, [error, showAlert]);
 
   const latestTransactionTime: Date | undefined =
     sortedTransactions?.[0].transactionTime ?? undefined;
