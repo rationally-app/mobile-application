@@ -9,6 +9,7 @@ import { PastTransactionsResult, CampaignPolicy } from "../../types";
 import { defaultIdentifier } from "../../test/helpers/defaults";
 import { toDate } from "date-fns";
 import { ProductContextProvider } from "../../context/products";
+import { ERROR_MESSAGE } from "../../context/alert";
 
 jest.mock("../../services/quota");
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
@@ -109,11 +110,6 @@ const mockEmptyPastTransactions: PastTransactionsResult = {
   pastTransactions: []
 };
 
-const mockSomeUnknownError: any = () => {
-  const errorMessage = "Some random error";
-  throw new PastTransactionError(errorMessage);
-};
-
 const wrapper: FunctionComponent = ({ children }) => (
   <ProductContextProvider products={customProducts}>
     {children}
@@ -191,16 +187,24 @@ describe("usePastTransaction", () => {
       expect(result.current.pastTransactionsResult).toStrictEqual([]);
     });
 
-    it("should catch error when thrown", async () => {
-      expect.assertions(1);
-      mockGetPastTransactions.mockImplementation(mockSomeUnknownError);
+    it("should return PAST_TRANSACTION_ERROR when error thrown", async () => {
+      expect.assertions(3);
+      mockGetPastTransactions.mockRejectedValue(
+        new PastTransactionError("Some random error")
+      );
 
-      const { result } = renderHook(
+      const { result, waitForNextUpdate } = renderHook(
         () => usePastTransaction([id], key, endpoint),
         { wrapper }
       );
 
+      await waitForNextUpdate();
+
       expect(result.current.pastTransactionsResult).toBeNull();
+      expect(result.current.error instanceof Error).toStrictEqual(true);
+      expect(result.current.error?.message).toStrictEqual(
+        ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
+      );
     });
   });
 });
