@@ -18,7 +18,7 @@ const CustomerQuotaStack: FunctionComponent<CustomerQuotaStackProps> = ({
   route
 }) => {
   const { operatorToken, endpoint } = route.params;
-q
+
   const key = `${operatorToken}${endpoint}`;
 
   const { authCredentials } = useContext(AuthStoreContext);

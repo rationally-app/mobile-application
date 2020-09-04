@@ -12,8 +12,6 @@ import { CampaignInitialisationScreen } from "../components/CampaignInitialisati
 import { AuthStoreContext } from "../context/authStore";
 import { useValidateExpiry } from "../hooks/useValidateExpiry";
 import { NavigationContainer } from "@react-navigation/native";
-import * as Linking from "expo-linking";
-import { useValidateExpiry } from "../hooks/useValidateExpiry";
 
 const Stack = createStackNavigator();
 

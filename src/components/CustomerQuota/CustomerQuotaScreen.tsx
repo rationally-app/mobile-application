@@ -39,6 +39,7 @@ import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
 import { QuotaError } from "../../services/quota";
 import { navigateHome, replaceRouteFn } from "../../common/navigation";
+import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -80,14 +81,11 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     });
   }, []);
 
-<<<<<<< HEAD
-=======
   const validateTokenExpiry = useValidateExpiry();
   useEffect(() => {
     validateTokenExpiry();
   }, [validateTokenExpiry]);
 
->>>>>>> 8aeb14c... fix: initialParams and drawer nav content
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const { sessionToken, endpoint } = useContext(AuthContext);
@@ -102,8 +100,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       ...expiredAlertProps,
       description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
     });
-    logout(navigation.dispatch);
-  }, [logout, navigation.dispatch, showAlert]);
+    logout();
+  }, [logout, showAlert]);
 
   const {
     cartState,

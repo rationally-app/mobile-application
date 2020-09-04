@@ -25,7 +25,7 @@ import {
   ERROR_MESSAGE
 } from "../../context/alert";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
-import * as config from "../../config";
+import * as appConfig from "../../config";
 import { checkVersion } from "./utils";
 import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
@@ -111,8 +111,8 @@ export const CampaignInitialisationScreen: FunctionComponent<CampaignInitialisat
   ]);
 
   const handleLogout = useCallback((): void => {
-    logout(navigation.dispatch);
-  }, [logout, navigation.dispatch]);
+    logout();
+  }, [logout]);
 
   useEffect(() => {
     if (updateCampaignConfigError) {
@@ -186,8 +186,8 @@ export const CampaignInitialisationScreen: FunctionComponent<CampaignInitialisat
   const handleNewCampaignConfig = useCallback((): void => {
     try {
       const versionCheckResult = checkVersion({
-        currentBinaryVersion: config.APP_BINARY_VERSION,
-        currentBuildVersion: config.APP_BUILD_VERSION,
+        currentBinaryVersion: appConfig.APP_BINARY_VERSION,
+        currentBuildVersion: appConfig.APP_BUILD_VERSION,
         minBinaryVersion: campaignConfig?.features?.minAppBinaryVersion,
         minBuildVersion: campaignConfig?.features?.minAppBuildVersion
       });

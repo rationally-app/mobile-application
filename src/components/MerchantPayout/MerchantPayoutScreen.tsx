@@ -156,7 +156,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationProps> = ({
         ...expiredAlertProps,
         description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
       });
-      logout(navigation.dispatch);
+      logout();
     }
   }, [logout, navigation.dispatch, showAlert, validityError]);
 
@@ -185,7 +185,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationProps> = ({
           ...expiredAlertProps,
           description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
         });
-        logout(navigation.dispatch);
+        logout();
       } else {
         Alert.alert("Error", merchantError.message, [
           {

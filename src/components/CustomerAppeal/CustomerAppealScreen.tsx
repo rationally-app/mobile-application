@@ -27,6 +27,7 @@ import { AuthContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
+import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
