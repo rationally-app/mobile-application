@@ -47,15 +47,25 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   allQuotaResponse
 }) => {
   const checkoutQuantities = getPurchasedQuantitiesByItem(ids, checkoutResult!);
-  const { getProduct } = useProductContext();
+  const { getProduct, allProducts } = useProductContext();
   const productType = getProduct(checkoutQuantities[0].category)?.type;
   const { title, description, ctaButtonText } = getCheckoutMessages(
     productType
   );
 
+  const appealProductsPolicies = allProducts.filter(
+    policy => policy.categoryType === "APPEAL"
+  );
+
+  const quotaResponse = allQuotaResponse?.globalQuota?.filter(
+    quota =>
+      !appealProductsPolicies.some(
+        policy => policy.categoryType === quota.category
+      )
+  );
+
   const showGlobalQuota =
-    allQuotaResponse &&
-    getProduct(checkoutQuantities[0].category)?.quantity.usage
+    quotaResponse && getProduct(checkoutQuantities[0].category)?.quantity.usage
       ? true
       : false;
 
@@ -76,9 +86,9 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
           <AppText style={sharedStyles.statusTitleWrapper}>
             <AppText style={sharedStyles.statusTitle}>{title}</AppText>
             {showGlobalQuota &&
-              allQuotaResponse &&
-              allQuotaResponse.globalQuota &&
-              allQuotaResponse.globalQuota.map(
+              quotaResponse &&
+              quotaResponse.length > 0 &&
+              quotaResponse.map(
                 ({ quantity, quotaRefreshTime }, index: number) =>
                   quotaRefreshTime ? (
                     <UsageQuotaTitle

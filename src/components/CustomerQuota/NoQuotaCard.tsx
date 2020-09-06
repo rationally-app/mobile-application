@@ -169,13 +169,6 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const showGlobalQuota =
-    allQuotaResponse &&
-    cart.length > 0 &&
-    getProduct(cart[0].category)?.quantity.usage
-      ? true
-      : false;
-
   const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
   let latestTransactionTime: Date | undefined = new Date();
   /**
@@ -256,6 +249,22 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     return allProducts.some(policy => policy.categoryType === "APPEAL");
   };
 
+  const appealProductsPolicies = allProducts.filter(
+    policy => policy.categoryType === "APPEAL"
+  );
+
+  const quotaResponse = allQuotaResponse?.globalQuota?.filter(
+    quota =>
+      !appealProductsPolicies.some(policy => policy.category === quota.category)
+  );
+
+  const showGlobalQuota =
+    quotaResponse &&
+    cart.length > 0 &&
+    getProduct(cart[0].category)?.quantity.usage
+      ? true
+      : false;
+
   return (
     <View>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
@@ -290,9 +299,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               />
             )}
             {showGlobalQuota &&
-              allQuotaResponse &&
-              allQuotaResponse.globalQuota &&
-              allQuotaResponse.globalQuota.map(
+              quotaResponse &&
+              quotaResponse.length > 0 &&
+              quotaResponse.map(
                 ({ quantity, quotaRefreshTime }, index: number) =>
                   quotaRefreshTime ? (
                     <UsageQuotaTitle
