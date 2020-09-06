@@ -253,13 +253,18 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     policy => policy.categoryType === "APPEAL"
   );
 
-  const quotaResponse = allQuotaResponse?.globalQuota?.filter(
-    quota =>
-      !appealProductsPolicies.some(policy => policy.category === quota.category)
-  );
+  const globalQuotaResponse =
+    appealProductsPolicies.length > 0
+      ? allQuotaResponse?.globalQuota?.filter(
+          quota =>
+            !appealProductsPolicies?.some(
+              policy => policy.category === quota.category
+            )
+        )
+      : allQuotaResponse?.globalQuota;
 
   const showGlobalQuota =
-    quotaResponse &&
+    globalQuotaResponse &&
     cart.length > 0 &&
     getProduct(cart[0].category)?.quantity.usage
       ? true
@@ -299,9 +304,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               />
             )}
             {showGlobalQuota &&
-              quotaResponse &&
-              quotaResponse.length > 0 &&
-              quotaResponse.map(
+              globalQuotaResponse &&
+              globalQuotaResponse.length > 0 &&
+              globalQuotaResponse.map(
                 ({ quantity, quotaRefreshTime }, index: number) =>
                   quotaRefreshTime ? (
                     <UsageQuotaTitle
