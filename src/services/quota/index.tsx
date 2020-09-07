@@ -5,7 +5,6 @@ import {
   PostTransactionResult,
   PastTransactionsResult
 } from "../../types";
-import _ from "lodash";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import { systemAlertProps, ERROR_MESSAGE } from "../../context/alert";
