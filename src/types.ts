@@ -43,7 +43,12 @@ const PolicyQuantity = t.intersection([
       type: t.union([t.literal("PREFIX"), t.literal("POSTFIX")]),
       label: t.string
     }),
-    checkoutLimit: t.number
+    checkoutLimit: t.number,
+    usage: t.type({
+      periodType: t.union([t.literal("ROLLING"), t.literal("CRON")]),
+      periodExpression: t.union([t.number, t.string]),
+      limit: t.number
+    })
   })
 ]);
 
@@ -150,14 +155,18 @@ const ItemQuota = t.intersection([
     quantity: t.number
   }),
   t.partial({
+    quotaRefreshTime: t.number,
     transactionTime: DateFromNumber,
     identifierInputs: t.array(IdentifierInput)
   })
 ]);
 
-export const Quota = t.type({
-  remainingQuota: t.array(ItemQuota)
-});
+export const Quota = t.intersection([
+  t.type({
+    remainingQuota: t.array(ItemQuota)
+  }),
+  t.partial({ localQuota: t.array(ItemQuota), globalQuota: t.array(ItemQuota) })
+]);
 
 export type ItemQuota = t.TypeOf<typeof ItemQuota>;
 export type Quota = t.TypeOf<typeof Quota>;

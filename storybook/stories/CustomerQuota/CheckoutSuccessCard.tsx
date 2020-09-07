@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { size } from "../../../src/common/styles";
 import { CheckoutSuccessCard } from "../../../src/components/CustomerQuota/CheckoutSuccess/CheckoutSuccessCard";
 import { ProductContext } from "../../../src/context/products";
-import { Policy, PostTransactionResult } from "../../../src/types";
+import { Policy, PostTransactionResult, Quota } from "../../../src/types";
 
 const products: Policy[] = [
   {
@@ -74,6 +74,13 @@ const checkoutResult: PostTransactionResult = {
   ]
 };
 
+const quotaResponse: Quota = {
+  remainingQuota: [
+    { category: "toilet-paper", quantity: 1 },
+    { category: "chocolate", quantity: 7 }
+  ]
+};
+
 const getProduct = (category: string): Policy | undefined =>
   products?.find(product => product.category === category) ?? undefined;
 
@@ -95,6 +102,7 @@ storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
         ids={["S0000001I", "S0000002G"]}
         onCancel={() => null}
         checkoutResult={checkoutResult}
+        quotaResponse={quotaResponse}
       />
     </View>
   </ProductContext.Provider>

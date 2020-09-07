@@ -16,6 +16,7 @@ import {
 import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransaction";
 import { useAuthenticationContext } from "../../context/auth";
 import { FontAwesome } from "@expo/vector-icons";
+import { Quota } from "../../types";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -53,25 +54,49 @@ const styles = StyleSheet.create({
 
 const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
-}> = ({ transactionTime }) => (
+  toggleTimeSensitiveTitle: boolean;
+}> = ({ transactionTime, toggleTimeSensitiveTitle }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>Limit reached on </AppText>
     <AppText style={sharedStyles.statusTitle}>
-      {format(transactionTime, "d MMM yyyy, h:mma")}.
+      {format(transactionTime, "d MMM yyyy, h:mma")}
     </AppText>
+    {toggleTimeSensitiveTitle ? (
+      <AppText style={sharedStyles.statusTitle}> for today.</AppText>
+    ) : (
+      <AppText style={sharedStyles.statusTitle}>.</AppText>
+    )}
   </>
 );
 
 const RecentTransactionTitle: FunctionComponent<{
   now: Date;
   transactionTime: Date;
-}> = ({ now, transactionTime }) => (
+  toggleTimeSensitiveTitle: boolean;
+}> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>Limit reached </AppText>
     <AppText style={sharedStyles.statusTitle}>
       {formatDistance(now, transactionTime)}
     </AppText>
-    <AppText style={sharedStyles.statusTitle}> ago.</AppText>
+    <AppText style={sharedStyles.statusTitle}> ago</AppText>
+    {toggleTimeSensitiveTitle ? (
+      <AppText style={sharedStyles.statusTitle}> for today.</AppText>
+    ) : (
+      <AppText style={sharedStyles.statusTitle}>.</AppText>
+    )}
+  </>
+);
+
+const UsageQuotaTitle: FunctionComponent<{
+  quantity: number;
+  quotaRefreshTime: number;
+}> = ({ quantity, quotaRefreshTime }) => (
+  <>
+    <AppText style={sharedStyles.statusTitle}>
+      {"\n"}
+      {quantity} item(s) more till {format(quotaRefreshTime, "d MMM yyyy")}.
+    </AppText>
   </>
 );
 
@@ -92,8 +117,17 @@ const ItemTransaction: FunctionComponent<{
   </>
 );
 
-const NoPreviousTransactionTitle: FunctionComponent = () => (
-  <AppText style={sharedStyles.statusTitle}>Limit reached.</AppText>
+const NoPreviousTransactionTitle: FunctionComponent<{
+  toggleTimeSensitiveTitle: boolean;
+}> = ({ toggleTimeSensitiveTitle }) => (
+  <>
+    <AppText style={sharedStyles.statusTitle}>Limit reached</AppText>
+    {toggleTimeSensitiveTitle ? (
+      <AppText style={sharedStyles.statusTitle}> for today.</AppText>
+    ) : (
+      <AppText style={sharedStyles.statusTitle}>.</AppText>
+    )}
+  </>
 );
 
 const AppealButton: FunctionComponent<AppealButton> = ({ onAppeal }) => {
@@ -115,6 +149,7 @@ interface NoQuotaCard {
   cart: Cart;
   onCancel: () => void;
   onAppeal?: () => void;
+  quotaResponse: Quota | null;
 }
 
 /**
@@ -126,7 +161,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   ids,
   cart,
   onCancel,
-  onAppeal
+  onAppeal,
+  quotaResponse
 }) => {
   const { getProduct, allProducts } = useProductContext();
   const { token, endpoint } = useAuthenticationContext();
@@ -213,6 +249,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     return allProducts.some(policy => policy.categoryType === "APPEAL");
   };
 
+  const showGlobalQuota =
+    !!quotaResponse?.globalQuota &&
+    cart.length > 0 &&
+    !!getProduct(cart[0].category)?.quantity.usage;
+
   return (
     <View>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
@@ -232,16 +273,31 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
                 <DistantTransactionTitle
                   transactionTime={latestTransactionTime!}
+                  toggleTimeSensitiveTitle={showGlobalQuota}
                 />
               ) : (
                 <RecentTransactionTitle
                   now={now}
                   transactionTime={latestTransactionTime!}
+                  toggleTimeSensitiveTitle={showGlobalQuota}
                 />
               )
             ) : (
-              <NoPreviousTransactionTitle />
+              <NoPreviousTransactionTitle
+                toggleTimeSensitiveTitle={showGlobalQuota}
+              />
             )}
+            {showGlobalQuota &&
+              quotaResponse!.globalQuota!.map(
+                ({ quantity, quotaRefreshTime }, index: number) =>
+                  quotaRefreshTime ? (
+                    <UsageQuotaTitle
+                      key={index}
+                      quantity={quantity}
+                      quotaRefreshTime={quotaRefreshTime}
+                    />
+                  ) : undefined
+              )}
           </AppText>
           {itemTransactions.length > 0 && (
             <View>
