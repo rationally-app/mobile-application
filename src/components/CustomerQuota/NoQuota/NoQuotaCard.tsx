@@ -33,6 +33,7 @@ import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
+const BIG_NUMBER = 99999;
 
 interface NoQuotaCard {
   ids: string[];
@@ -45,15 +46,15 @@ interface NoQuotaCard {
 export interface TransactionsByCategoryMap {
   [category: string]: {
     transactions: Transaction[];
-    hasLatestTransaction?: boolean;
+    order: number;
+    hasLatestTransaction: boolean;
   };
 }
 
-const sortTransactionsByCategory = (
+const sortTransactionsByOrder = (
   a: TransactionsByCategory,
   b: TransactionsByCategory
-): 1 | -1 | 0 =>
-  a.category > b.category ? 1 : b.category > a.category ? -1 : 0;
+): number => a.order - b.order;
 
 /**
  * Given past transactions, group them by categories.
@@ -78,7 +79,8 @@ export const groupTransactionsByCategory = (
     if (!(categoryName in transactionsByCategoryMap)) {
       transactionsByCategoryMap[categoryName] = {
         transactions: [],
-        hasLatestTransaction: false
+        hasLatestTransaction: false,
+        order: policy?.order ?? BIG_NUMBER
       };
     }
     transactionsByCategoryMap[categoryName].transactions.push({
@@ -115,19 +117,20 @@ export const sortTransactions = (
   const latestTransactionsByCategory: TransactionsByCategory[] = [];
   const otherTransactionsByCategory: TransactionsByCategory[] = [];
   Object.entries(transactionsByCategoryMap).forEach(([key, value]) => {
-    const { transactions, hasLatestTransaction } = value;
+    const { transactions, hasLatestTransaction, order } = value;
     if (hasLatestTransaction) {
       latestTransactionsByCategory.push({
         category: key,
-        transactions: transactions
+        transactions,
+        order
       });
     } else {
-      otherTransactionsByCategory.push({ category: key, transactions });
+      otherTransactionsByCategory.push({ category: key, transactions, order });
     }
   });
 
-  latestTransactionsByCategory.sort(sortTransactionsByCategory);
-  otherTransactionsByCategory.sort(sortTransactionsByCategory);
+  latestTransactionsByCategory.sort(sortTransactionsByOrder);
+  otherTransactionsByCategory.sort(sortTransactionsByOrder);
 
   let transactionCounter = 0;
   return latestTransactionsByCategory
@@ -260,7 +263,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                   <TransactionsByCategory
                     key={index}
                     maxTransactionsToDisplay={
-                      isShowFullList ? 99999 : MAX_TRANSACTIONS_TO_DISPLAY
+                      isShowFullList ? BIG_NUMBER : MAX_TRANSACTIONS_TO_DISPLAY
                     }
                     {...transactionsByCategory}
                   />

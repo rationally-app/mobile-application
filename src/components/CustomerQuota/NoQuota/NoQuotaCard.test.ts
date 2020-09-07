@@ -54,9 +54,15 @@ describe("NoQuotaCard utility functions", () => {
     ];
     allProducts = [
       {
+        category: "meal-credits",
+        name: "Meal credits",
+        order: 0,
+        quantity: { period: 1, limit: 20, unit: { type: "PREFIX", label: "$" } }
+      },
+      {
         category: "tt-token",
         name: "TT token",
-        order: 0,
+        order: 1,
         quantity: { period: 1, limit: 1 },
         identifiers: [
           {
@@ -69,7 +75,7 @@ describe("NoQuotaCard utility functions", () => {
       {
         category: "vouchers",
         name: "CDC Vouchers",
-        order: 0,
+        order: 2,
         quantity: {
           period: 1,
           limit: 1,
@@ -82,12 +88,6 @@ describe("NoQuotaCard utility functions", () => {
             scanButton: { disabled: false, visible: true, type: "BARCODE" }
           }
         ]
-      },
-      {
-        category: "meal-credits",
-        name: "Meal credits",
-        order: 0,
-        quantity: { period: 1, limit: 20, unit: { type: "PREFIX", label: "$" } }
       }
     ];
 
@@ -101,7 +101,8 @@ describe("NoQuotaCard utility functions", () => {
             isAppeal: false
           }
         ],
-        hasLatestTransaction: true
+        hasLatestTransaction: true,
+        order: 1
       },
       "Meal credits": {
         transactions: [
@@ -118,7 +119,8 @@ describe("NoQuotaCard utility functions", () => {
             isAppeal: false
           }
         ],
-        hasLatestTransaction: true
+        hasLatestTransaction: true,
+        order: 0
       },
       "CDC Vouchers": {
         transactions: [
@@ -129,7 +131,8 @@ describe("NoQuotaCard utility functions", () => {
             isAppeal: false
           }
         ],
-        hasLatestTransaction: false
+        hasLatestTransaction: false,
+        order: 2
       }
     };
   });
@@ -177,7 +180,8 @@ describe("NoQuotaCard utility functions", () => {
               isAppeal: false,
               order: 1
             }
-          ]
+          ],
+          order: 0
         },
         {
           category: "TT token",
@@ -189,7 +193,8 @@ describe("NoQuotaCard utility functions", () => {
               isAppeal: false,
               order: 2
             }
-          ]
+          ],
+          order: 1
         },
         {
           category: "CDC Vouchers",
@@ -201,7 +206,8 @@ describe("NoQuotaCard utility functions", () => {
               isAppeal: false,
               order: 3
             }
-          ]
+          ],
+          order: 2
         }
       ]);
     });

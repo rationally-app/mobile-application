@@ -14,6 +14,7 @@ export interface Transaction {
 export interface TransactionsByCategory {
   category: string;
   transactions: Transaction[];
+  order: number;
 }
 
 const Transaction: FunctionComponent<Transaction> = ({
