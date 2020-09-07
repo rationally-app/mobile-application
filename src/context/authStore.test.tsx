@@ -313,6 +313,86 @@ describe("AuthStoreContextProvider", () => {
     });
   });
 
+  it("should add a set of auth credentials properly when there are existing credentials for other campaigns", async () => {
+    expect.assertions(6);
+    mockGetItem.mockImplementationOnce(() =>
+      JSON.stringify({
+        [testCampaignKey]: {
+          operatorToken: "operatorToken",
+          sessionToken: "sessionToken",
+          endpoint: "endpoint",
+          expiry: 0
+        },
+        "another-test-campaign": {
+          operatorToken: "operatorTokenA",
+          sessionToken: "sessionTokenA",
+          endpoint: "endpointA",
+          expiry: 0
+        }
+      })
+    );
+
+    const { queryByTestId, getByText } = render(
+      <AuthStoreContextProvider shouldMigrate={false}>
+        <AuthStoreContext.Consumer>
+          {({ authCredentials, addAuthCredentials }) => (
+            <>
+              <Text testID="credentials">
+                {JSON.stringify(authCredentials)}
+              </Text>
+              <Button
+                onPress={() =>
+                  addAuthCredentials(testCampaignKey, {
+                    operatorToken: "newOperatorToken",
+                    sessionToken: "newSessionToken",
+                    endpoint: "newEndpoint",
+                    expiry: 0
+                  })
+                }
+                title="test button"
+              />
+            </>
+          )}
+        </AuthStoreContext.Consumer>
+      </AuthStoreContextProvider>
+    );
+
+    expect(mockGetItem).toHaveBeenCalledTimes(1);
+    expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");
+
+    await wait(() => {
+      expect(queryByTestId("credentials")).toHaveTextContent(
+        `{"test-campaign":{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0},"another-test-campaign":{"operatorToken":"operatorTokenA","sessionToken":"sessionTokenA","endpoint":"endpointA","expiry":0}}`
+      );
+    });
+
+    const button = getByText("test button");
+    fireEvent.press(button);
+    await wait(() => {
+      expect(mockSetItem).toHaveBeenCalledTimes(1);
+      expect(mockSetItem).toHaveBeenCalledWith(
+        "AUTH_STORE",
+        JSON.stringify({
+          [testCampaignKey]: {
+            operatorToken: "newOperatorToken",
+            sessionToken: "newSessionToken",
+            endpoint: "newEndpoint",
+            expiry: 0
+          },
+          "another-test-campaign": {
+            operatorToken: "operatorTokenA",
+            sessionToken: "sessionTokenA",
+            endpoint: "endpointA",
+            expiry: 0
+          }
+        })
+      );
+      expect(queryByTestId("credentials")).toHaveTextContent(
+        `{"test-campaign":{"operatorToken":"newOperatorToken","sessionToken":"newSessionToken","endpoint":"newEndpoint","expiry":0},"another-test-campaign":{"operatorToken":"operatorTokenA","sessionToken":"sessionTokenA","endpoint":"endpointA","expiry":0}}`
+      );
+    });
+  });
+
   it("should remove a set of auth credentials properly", async () => {
     expect.assertions(6);
     mockGetItem.mockImplementationOnce(() =>

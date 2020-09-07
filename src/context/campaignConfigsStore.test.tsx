@@ -306,6 +306,74 @@ describe("CampaignConfigsStoreContextProvider", () => {
     });
   });
 
+  it("should add a campaign config properly when there are existing configs for other campaigns", async () => {
+    expect.assertions(6);
+    mockGetItem.mockImplementationOnce(() =>
+      JSON.stringify({
+        [testCampaignKey]: {
+          features: { asd: "asd" },
+          policies: [{ sdf: "sdf" }]
+        },
+        "another-test-campaign": {
+          features: { dfg: "dfg" },
+          policies: [{ sdf: "sdf" }]
+        }
+      })
+    );
+
+    const { queryByTestId, getByText } = render(
+      <CampaignConfigsStoreContextProvider>
+        <CampaignConfigsStoreContext.Consumer>
+          {({ allCampaignConfigs, addCampaignConfig }) => (
+            <>
+              <Text testID="configs">{JSON.stringify(allCampaignConfigs)}</Text>
+              <Button
+                onPress={() =>
+                  addCampaignConfig(testCampaignKey, {
+                    features: { new: "new" },
+                    policies: [{ new: "new" }]
+                  } as any)
+                }
+                title="test button"
+              />
+            </>
+          )}
+        </CampaignConfigsStoreContext.Consumer>
+      </CampaignConfigsStoreContextProvider>
+    );
+
+    expect(mockGetItem).toHaveBeenCalledTimes(1);
+    expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
+
+    await wait(() => {
+      expect(queryByTestId("configs")).toHaveTextContent(
+        `{"test-campaign":{"features":{"asd":"asd"},"policies":[{"sdf":"sdf"}]},"another-test-campaign":{"features":{"dfg":"dfg"},"policies":[{"sdf":"sdf"}]}}`
+      );
+    });
+
+    const button = getByText("test button");
+    fireEvent.press(button);
+    await wait(() => {
+      expect(mockSetItem).toHaveBeenCalledTimes(1);
+      expect(mockSetItem).toHaveBeenCalledWith(
+        "CAMPAIGN_CONFIGS_STORE",
+        JSON.stringify({
+          [testCampaignKey]: {
+            features: { new: "new" },
+            policies: [{ new: "new" }]
+          },
+          "another-test-campaign": {
+            features: { dfg: "dfg" },
+            policies: [{ sdf: "sdf" }]
+          }
+        })
+      );
+      expect(queryByTestId("configs")).toHaveTextContent(
+        `{"test-campaign":{"features":{"new":"new"},"policies":[{"new":"new"}]},"another-test-campaign":{"features":{"dfg":"dfg"},"policies":[{"sdf":"sdf"}]}}`
+      );
+    });
+  });
+
   it("should add the campaign config properly when some null keys are input", async () => {
     expect.assertions(8);
     mockGetItem.mockImplementationOnce(() =>
