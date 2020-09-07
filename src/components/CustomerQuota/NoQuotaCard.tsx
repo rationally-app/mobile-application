@@ -250,10 +250,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   };
 
   const showGlobalQuota =
-    quotaResponse?.globalQuota &&
+    !!quotaResponse?.globalQuota &&
     cart.length > 0 &&
-    getProduct(cart[0].category) &&
-    !!getProduct(cart[0].category)!.quantity.usage;
+    !!getProduct(cart[0].category)?.quantity.usage;
 
   return (
     <View>
