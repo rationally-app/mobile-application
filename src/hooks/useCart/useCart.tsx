@@ -56,6 +56,7 @@ export type CartHook = {
   error?: Error;
   clearError: () => void;
   allQuotaResponse: Quota | null;
+  quotaResponse: Quota | null;
 };
 
 const getItem = (
@@ -134,8 +135,10 @@ const filterQuotaWithAvailableProducts = (
   quota: Quota,
   products: Policy[]
 ): Quota => {
-  const filteredQuota: Quota = { remainingQuota: [] };
-  return transform(
+  let filteredQuota: Quota = {
+    remainingQuota: []
+  };
+  transform(
     quota.remainingQuota,
     (result: Quota, itemQuota) => {
       if (products.some(policy => policy.category === itemQuota.category))
@@ -143,6 +146,32 @@ const filterQuotaWithAvailableProducts = (
     },
     filteredQuota
   );
+
+  if (quota.globalQuota) {
+    filteredQuota.globalQuota = [];
+    transform(
+      quota.globalQuota!,
+      (result: Quota, itemQuota) => {
+        if (products.some(policy => policy.category === itemQuota.category))
+          result.globalQuota!.push(itemQuota);
+      },
+      filteredQuota
+    );
+  }
+
+  if (quota.localQuota) {
+    filteredQuota.localQuota = [];
+    transform(
+      quota.localQuota!,
+      (result: Quota, itemQuota) => {
+        if (products.some(policy => policy.category === itemQuota.category))
+          result.localQuota!.push(itemQuota);
+      },
+      filteredQuota
+    );
+  }
+
+  return filteredQuota;
 };
 
 const hasNoQuota = (quota: Quota): boolean =>
@@ -355,6 +384,7 @@ export const useCart = (
     checkoutResult,
     error,
     clearError,
-    allQuotaResponse
+    allQuotaResponse,
+    quotaResponse
   };
 };

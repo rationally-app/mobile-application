@@ -98,7 +98,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     checkoutResult,
     error,
     clearError,
-    allQuotaResponse
+    quotaResponse
   } = useCart(ids, token, endpoint);
 
   useEffect(() => {
@@ -250,7 +250,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             ids={ids}
             onCancel={onNextId}
             checkoutResult={checkoutResult}
-            allQuotaResponse={allQuotaResponse}
+            quotaResponse={quotaResponse}
           />
         ) : cartState === "NO_QUOTA" ? (
           <NoQuotaCard
@@ -258,7 +258,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             cart={cart}
             onCancel={onCancel}
             onAppeal={onAppeal}
-            allQuotaResponse={allQuotaResponse}
+            quotaResponse={quotaResponse}
           />
         ) : cartState === "NOT_ELIGIBLE" ? (
           <NotEligibleCard ids={ids} onCancel={onCancel} />

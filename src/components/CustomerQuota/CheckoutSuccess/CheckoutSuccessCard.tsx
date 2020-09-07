@@ -25,7 +25,7 @@ interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
   checkoutResult: CartHook["checkoutResult"];
-  allQuotaResponse: Quota | null;
+  quotaResponse: Quota | null;
 }
 
 const UsageQuotaTitle: FunctionComponent<{
@@ -44,7 +44,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   ids,
   onCancel,
   checkoutResult,
-  allQuotaResponse
+  quotaResponse
 }) => {
   const checkoutQuantities = getPurchasedQuantitiesByItem(ids, checkoutResult!);
   const { getProduct, allProducts } = useProductContext();
@@ -53,22 +53,8 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     productType
   );
 
-  const appealProductsPolicies = allProducts.filter(
-    policy => policy.categoryType === "APPEAL"
-  );
-
-  const globalQuotaResponse =
-    appealProductsPolicies.length > 0
-      ? allQuotaResponse?.globalQuota?.filter(
-          quota =>
-            !appealProductsPolicies.some(
-              policy => policy.categoryType === quota.category
-            )
-        )
-      : allQuotaResponse?.globalQuota;
-
   const showGlobalQuota =
-    globalQuotaResponse &&
+    quotaResponse?.globalQuota &&
     getProduct(checkoutQuantities[0].category)?.quantity.usage
       ? true
       : false;
@@ -90,9 +76,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
           <AppText style={sharedStyles.statusTitleWrapper}>
             <AppText style={sharedStyles.statusTitle}>{title}</AppText>
             {showGlobalQuota &&
-              globalQuotaResponse &&
-              globalQuotaResponse.length > 0 &&
-              globalQuotaResponse.map(
+              quotaResponse!.globalQuota!.map(
                 ({ quantity, quotaRefreshTime }, index: number) =>
                   quotaRefreshTime ? (
                     <UsageQuotaTitle

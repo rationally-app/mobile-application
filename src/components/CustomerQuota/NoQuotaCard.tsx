@@ -149,7 +149,7 @@ interface NoQuotaCard {
   cart: Cart;
   onCancel: () => void;
   onAppeal?: () => void;
-  allQuotaResponse: Quota | null;
+  quotaResponse: Quota | null;
 }
 
 /**
@@ -162,7 +162,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   cart,
   onCancel,
   onAppeal,
-  allQuotaResponse
+  quotaResponse
 }) => {
   const { getProduct, allProducts } = useProductContext();
   const { token, endpoint } = useAuthenticationContext();
@@ -249,22 +249,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     return allProducts.some(policy => policy.categoryType === "APPEAL");
   };
 
-  const appealProductsPolicies = allProducts.filter(
-    policy => policy.categoryType === "APPEAL"
-  );
-
-  const globalQuotaResponse =
-    appealProductsPolicies.length > 0
-      ? allQuotaResponse?.globalQuota?.filter(
-          quota =>
-            !appealProductsPolicies?.some(
-              policy => policy.category === quota.category
-            )
-        )
-      : allQuotaResponse?.globalQuota;
-
   const showGlobalQuota =
-    globalQuotaResponse &&
+    quotaResponse?.globalQuota &&
     cart.length > 0 &&
     getProduct(cart[0].category)?.quantity.usage
       ? true
@@ -304,9 +290,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               />
             )}
             {showGlobalQuota &&
-              globalQuotaResponse &&
-              globalQuotaResponse.length > 0 &&
-              globalQuotaResponse.map(
+              quotaResponse!.globalQuota!.map(
                 ({ quantity, quotaRefreshTime }, index: number) =>
                   quotaRefreshTime ? (
                     <UsageQuotaTitle
