@@ -74,7 +74,7 @@ const checkoutResult: PostTransactionResult = {
   ]
 };
 
-const allQuotaResponse: Quota = {
+const quotaResponse: Quota = {
   remainingQuota: [
     { category: "toilet-paper", quantity: 1 },
     { category: "chocolate", quantity: 7 }
@@ -102,7 +102,7 @@ storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
         ids={["S0000001I", "S0000002G"]}
         onCancel={() => null}
         checkoutResult={checkoutResult}
-        allQuotaResponse={allQuotaResponse}
+        quotaResponse={quotaResponse}
       />
     </View>
   </ProductContext.Provider>
