@@ -119,7 +119,7 @@ export const CustomerAppealScreen: FunctionComponent<CustomerAppealScreenProps> 
       Sentry.captureException(`Unable to find appeal product: ${productName}}`);
       return;
     }
-    navigation.navigate("CustomerQuotaProxy", {
+    navigation.push("CustomerQuotaProxy", {
       ids,
       products: [appealProduct]
     });
