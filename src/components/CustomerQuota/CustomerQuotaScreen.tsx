@@ -38,7 +38,6 @@ import {
 import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
 import { QuotaError } from "../../services/quota";
-import { navigateHome, replaceRouteFn } from "../../common/navigation";
 import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
@@ -122,7 +121,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [cartState]);
 
   const onCancel = useCallback((): void => {
-    navigateHome(navigation);
+    navigation.navigate("CollectCustomerDetailsScreen");
   }, [navigation]);
 
   const onBack = useCallback((): void => {
@@ -134,18 +133,18 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, []);
 
   const onAppeal = useCallback((): void => {
-    replaceRouteFn(navigation, "CustomerAppealScreen", { ids });
+    navigation.navigate("CustomerAppealScreen", { ids });
   }, [ids, navigation]);
 
   const onNextId = useCallback((): void => {
-    navigateHome(navigation);
+    navigation.navigate("CollectCustomerDetailsScreen");
   }, [navigation]);
 
   useEffect(() => {
     if (cartState !== "PURCHASED") return;
 
     const onBackPress = (): boolean => {
-      navigateHome(navigation);
+      navigation.navigate("CollectCustomerDetailsScreen");
       return true;
     };
 

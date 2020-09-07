@@ -2,8 +2,7 @@ import React, {
   FunctionComponent,
   useCallback,
   useContext,
-  useEffect,
-  useState
+  useEffect
 } from "react";
 import { transform } from "lodash";
 import { StyleSheet, View } from "react-native";
@@ -22,7 +21,6 @@ import {
   ReasonSelectionCard,
   Reason
 } from "./ReasonSelection/ReasonSelectionCard";
-import { pushRoute, navigateHome } from "../../common/navigation";
 import { AuthContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
@@ -67,7 +65,7 @@ export const CustomerAppealScreen: FunctionComponent<CustomerAppealScreenProps> 
     });
   }, []);
 
-  const [ids] = useState(route.params.ids);
+  const ids = route.params.ids;
   const { policies: allProducts } = useContext(CampaignConfigContext);
 
   const validateTokenExpiry = useValidateExpiry();
@@ -76,7 +74,7 @@ export const CustomerAppealScreen: FunctionComponent<CustomerAppealScreenProps> 
   }, [validateTokenExpiry]);
 
   const onCancel = useCallback((): void => {
-    navigateHome(navigation);
+    navigation.navigate("CollectCustomerDetailsScreen");
   }, [navigation]);
 
   const messageContent = useContext(ImportantMessageContentContext);
@@ -121,8 +119,8 @@ export const CustomerAppealScreen: FunctionComponent<CustomerAppealScreenProps> 
       Sentry.captureException(`Unable to find appeal product: ${productName}}`);
       return;
     }
-    pushRoute(navigation, "CustomerQuotaProxy", {
-      id: ids,
+    navigation.navigate("CustomerQuotaProxy", {
+      ids,
       products: [appealProduct]
     });
   };

@@ -7,9 +7,9 @@ export type RootParamList = {
   CampaignInitialisationScreen: { authCredentials: AuthCredentials };
   MerchantPayoutScreen: undefined;
   CollectCustomerDetailsScreen: undefined;
-  CustomerQuotaProxy: { id: string; products: any }; // please retype
+  CustomerQuotaProxy: { ids: string[]; products: any };
   PayoutFeedbackScreen: { merchantCode: string; checkoutResult: any };
-  CustomerAppealScreen: { ids: string[] }; // please retype
+  CustomerAppealScreen: { ids: string[] };
 };
 
 export interface NavigationProps {

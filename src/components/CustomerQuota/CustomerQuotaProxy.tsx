@@ -9,7 +9,7 @@ export const CustomerQuotaProxy: FunctionComponent<CustomerQuotaProxyProps> = ({
 }) => {
   // coming from NRIC screen, it will be a string
   // coming from appeal, it can be an array if group appeal is supported
-  const navId = route.params.id;
+  const navId = route.params.ids;
   const navIds = Array.isArray(navId) ? navId : [navId];
 
   const selectedProducts: CampaignPolicy[] = route.params.products;

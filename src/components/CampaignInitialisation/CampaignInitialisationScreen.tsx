@@ -255,7 +255,6 @@ export const CampaignInitialisationScreen: FunctionComponent<CampaignInitialisat
           component={MerchantPayoutStack}
         />
       )}
-      {/* <Drawer.Screen name="LoadingScreen" component={LoadingView} /> */}
     </Drawer.Navigator>
   ) : (
     <View style={styles.wrapper}>

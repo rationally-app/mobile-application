@@ -130,7 +130,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<NavigationProps> = 
       );
 
       navigation.navigate("CustomerQuotaProxy", {
-        id,
+        ids: [id],
         products: defaultProducts
       });
       setIdInput("");
