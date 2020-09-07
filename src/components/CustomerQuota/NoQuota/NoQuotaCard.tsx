@@ -22,7 +22,8 @@ import { ShowFullListToggle } from "./ShowFullListToggle";
 import {
   DistantTransactionTitle,
   RecentTransactionTitle,
-  NoPreviousTransactionTitle
+  NoPreviousTransactionTitle,
+  UsageQuotaTitle
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
@@ -156,7 +157,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   ids,
   cart,
   onCancel,
-  onAppeal
+  onAppeal,
+  quotaResponse
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
