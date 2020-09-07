@@ -249,11 +249,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     return allProducts.some(policy => policy.categoryType === "APPEAL");
   };
 
-  const showGlobalQuota: boolean =
+  const showGlobalQuota =
     quotaResponse?.globalQuota &&
     cart.length > 0 &&
     getProduct(cart[0].category) &&
-    !!getProduct(cart[0].category)?.quantity.usage;
+    !!getProduct(cart[0].category)!.quantity.usage;
 
   return (
     <View>
