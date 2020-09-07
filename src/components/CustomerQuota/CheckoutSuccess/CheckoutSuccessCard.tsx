@@ -55,9 +55,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   const showGlobalQuota =
     quotaResponse?.globalQuota &&
-    getProduct(checkoutQuantities[0].category)?.quantity.usage
-      ? true
-      : false;
+    !!getProduct(checkoutQuantities[0].category)?.quantity.usage;
 
   return (
     <View>
