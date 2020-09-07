@@ -15,7 +15,7 @@ export const validateAndCleanId = (
       break;
     case "REGEX":
       if (!idRegex) {
-        throw new CampaignConfigError(ERROR_MESSAGE.ENV_VERSION_ERROR);
+        throw new CampaignConfigError(ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR);
       }
       id = validateAndCleanRegexInput(inputId, idRegex);
       break;

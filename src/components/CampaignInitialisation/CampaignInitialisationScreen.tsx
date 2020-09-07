@@ -112,7 +112,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
         Sentry.captureException(updateCampaignConfigError);
         showAlert({
           ...systemAlertProps,
-          description: ERROR_MESSAGE.ENV_VERSION_ERROR
+          description: ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR
         });
       } else if (updateCampaignConfigError instanceof SessionError) {
         showAlert({
