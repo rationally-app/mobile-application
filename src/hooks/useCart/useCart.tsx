@@ -135,7 +135,7 @@ const filterQuotaWithAvailableProducts = (
   quota: Quota,
   products: Policy[]
 ): Quota => {
-  let filteredQuota: Quota = {
+  const filteredQuota: Quota = {
     remainingQuota: []
   };
   transform(

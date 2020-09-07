@@ -47,7 +47,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   quotaResponse
 }) => {
   const checkoutQuantities = getPurchasedQuantitiesByItem(ids, checkoutResult!);
-  const { getProduct, allProducts } = useProductContext();
+  const { getProduct } = useProductContext();
   const productType = getProduct(checkoutQuantities[0].category)?.type;
   const { title, description, ctaButtonText } = getCheckoutMessages(
     productType
