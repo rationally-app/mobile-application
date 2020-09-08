@@ -36,8 +36,15 @@ import { VoucherStatusModal } from "./VoucherStatusModal/VoucherStatusModal";
 import { AllValidVouchersModal } from "./AllValidVouchersModal";
 import { useVoucher } from "../../hooks/useVoucher/useVoucher";
 import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
-import { useAuthenticationContext } from "../../context/auth";
+import { AuthContext } from "../../context/auth";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
+import { useLogout } from "../../hooks/useLogout";
+import { SessionError } from "../../services/helpers";
+import {
+  AlertModalContext,
+  expiredAlertProps,
+  ERROR_MESSAGE
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -78,7 +85,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
     false
   );
-  const { token, endpoint } = useAuthenticationContext();
+  const { sessionToken, endpoint } = useContext(AuthContext);
+  const { logout } = useLogout();
+  const { showAlert } = useContext(AlertModalContext);
 
   const {
     checkoutVouchersState,
@@ -89,7 +98,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     checkoutResult,
     error: merchantError,
     resetState: resetVoucherState
-  } = useVoucher(token, endpoint);
+  } = useVoucher(sessionToken, endpoint);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -119,7 +128,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     validityResult,
     error: validityError,
     resetValidityState
-  } = useCheckVoucherValidity(token, endpoint);
+  } = useCheckVoucherValidity(sessionToken, endpoint);
 
   const onCheckVoucher = (input: string): void => {
     setIsScanningEnabled(false);
@@ -144,6 +153,16 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     }
   }, [isFocused, checkValidityState, validityResult, onModalExit, addVoucher]);
 
+  useEffect(() => {
+    if (validityError instanceof SessionError) {
+      showAlert({
+        ...expiredAlertProps,
+        description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+      });
+      logout(navigation.dispatch);
+    }
+  }, [logout, navigation.dispatch, showAlert, validityError]);
+
   const redeemVouchers = (): void => {
     checkoutVouchers(merchantCode);
   };
@@ -164,21 +183,31 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       resetState();
       Vibration.vibrate(50);
     } else if (merchantError) {
-      Alert.alert("Error", merchantError.message, [
-        {
-          text: "Dismiss",
-          onPress: () => resetVoucherState(true)
-        }
-      ]);
+      if (merchantError instanceof SessionError) {
+        showAlert({
+          ...expiredAlertProps,
+          description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+        });
+        logout(navigation.dispatch);
+      } else {
+        Alert.alert("Error", merchantError.message, [
+          {
+            text: "Dismiss",
+            onPress: () => resetVoucherState(true)
+          }
+        ]);
+      }
     }
   }, [
-    checkoutVouchersState,
-    merchantError,
     checkoutResult,
-    navigation,
+    checkoutVouchersState,
+    logout,
     merchantCode,
+    merchantError,
+    navigation,
     resetState,
-    resetVoucherState
+    resetVoucherState,
+    showAlert
   ]);
 
   const closeCamera = useCallback(() => setShouldShowCamera(false), []);

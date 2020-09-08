@@ -6,17 +6,17 @@ import {
   NotEligibleError
 } from "../../services/quota";
 import { transform } from "lodash";
-import { useProductContext, ProductContextValue } from "../../context/products";
+import { ProductContextValue, ProductContext } from "../../context/products";
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
   Quota,
   ItemQuota,
   IdentifierInput,
-  Policy
+  CampaignPolicy
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
 
 export type CartItem = {
@@ -133,7 +133,7 @@ const mergeWithCart = (
 
 const filterQuotaWithAvailableProducts = (
   quota: Quota,
-  products: Policy[]
+  products: CampaignPolicy[]
 ): Quota => {
   const filteredQuota: Quota = {
     remainingQuota: []
@@ -187,12 +187,7 @@ export const useCart = (
   endpoint: string
 ): CartHook => {
   const prevIds = usePrevious(ids);
-  const {
-    products,
-    getProduct,
-    setProducts,
-    setFeatures
-  } = useProductContext();
+  const { products, getProduct } = useContext(ProductContext);
   const prevProducts = usePrevious(products);
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
@@ -200,7 +195,6 @@ export const useCart = (
   const [error, setError] = useState<Error>();
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
-  const { showAlert } = useContext(AlertModalContext);
   const clearError = useCallback((): void => setError(undefined), []);
 
   /**
@@ -243,18 +237,7 @@ export const useCart = (
     if (prevIds !== ids || prevProducts !== products) {
       fetchQuota();
     }
-  }, [
-    authKey,
-    endpoint,
-    getProduct,
-    ids,
-    prevIds,
-    prevProducts,
-    products,
-    setProducts,
-    setFeatures,
-    showAlert
-  ]);
+  }, [authKey, endpoint, ids, prevIds, prevProducts, products]);
 
   /**
    * Merge quota response with current cart whenever quota response or products change.
@@ -272,6 +255,23 @@ export const useCart = (
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
     setCart([]);
   }, []);
+
+  /**
+   * After checkout, update quota response
+   */
+  useEffect(() => {
+    if (cartState === "PURCHASED") {
+      const updateQuotaResponse = async (): Promise<void> => {
+        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        const quotaResponse = filterQuotaWithAvailableProducts(
+          allQuotaResponse,
+          products
+        );
+        setQuotaResponse(quotaResponse);
+      };
+      updateQuotaResponse();
+    }
+  }, [ids, authKey, endpoint, cartState, products]);
 
   /**
    * Update quantity of an item in the cart.
@@ -350,10 +350,6 @@ export const useCart = (
           endpoint
         });
         setCheckoutResult(transactionResponse);
-
-        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
-        setAllQuotaResponse(allQuotaResponse);
-
         setCartState("PURCHASED");
       } catch (e) {
         setCartState("DEFAULT");

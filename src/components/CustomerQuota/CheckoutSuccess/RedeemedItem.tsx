@@ -1,17 +1,17 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext } from "react";
 import { View } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import React from "react";
 import { ItemQuantities } from "../types";
 import { size } from "../../../common/styles";
-import { useProductContext } from "../../../context/products";
+import { ProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
 import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 
 export const RedeemedItem: FunctionComponent<{
   itemQuantities: ItemQuantities;
 }> = ({ itemQuantities }) => {
-  const { getProduct } = useProductContext();
+  const { getProduct } = useContext(ProductContext);
   const { category, identifierInputs, quantities } = itemQuantities;
   const categoryName = getProduct(category)?.name ?? category;
 

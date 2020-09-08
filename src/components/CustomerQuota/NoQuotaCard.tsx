@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { compareDesc } from "date-fns";
 import { differenceInSeconds, format, formatDistance } from "date-fns";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
@@ -8,16 +8,17 @@ import { color, size, fontSize } from "../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Cart } from "../../hooks/useCart/useCart";
-import { useProductContext } from "../../context/products";
 import {
   getIdentifierInputDisplay,
   getAllIdentifierInputDisplay
 } from "../../utils/getIdentifierInputDisplay";
 import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransaction";
-import { useAuthenticationContext } from "../../context/auth";
 import { FontAwesome } from "@expo/vector-icons";
 import { Quota } from "../../types";
 import { getCheckoutMessages } from "./CheckoutSuccess/checkoutMessages";
+import { AuthContext } from "../../context/auth";
+import { CampaignConfigContext } from "../../context/campaignConfig";
+import { ProductContext } from "../../context/products";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -165,8 +166,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   onAppeal,
   quotaResponse
 }) => {
-  const { getProduct, allProducts } = useProductContext();
-  const { token, endpoint } = useAuthenticationContext();
+  const { policies: allProducts } = useContext(CampaignConfigContext);
+  const { getProduct } = useContext(ProductContext);
+  const { sessionToken, endpoint } = useContext(AuthContext);
 
   const productType =
     cart.length > 0 ? getProduct(cart[0].category)?.type : undefined;
@@ -184,13 +186,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   // This hook is only used in single ID transaction
   const { pastTransactionsResult } = usePastTransaction(
     ids[0],
-    token,
+    sessionToken,
     endpoint
   );
 
   if (
     ids.length > 1 ||
-    allProducts.some(product => product.identifiers === undefined)
+    allProducts?.some(product => product.identifiers === undefined)
   ) {
     // For first scenario, cart provides an aggregated summary of the transacted categories
     // since it fetch data from quota endpoint
@@ -228,7 +230,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     );
 
     sortedTransactions?.forEach(item => {
-      const policy = allProducts.find(
+      const policy = allProducts?.find(
         policy => policy.category === item.category
       );
       const categoryName = policy?.name ?? item.category;
@@ -249,7 +251,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     : -1;
 
   const hasAppealProduct = (): boolean => {
-    return allProducts.some(policy => policy.categoryType === "APPEAL");
+    return (
+      allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false
+    );
   };
 
   const showGlobalQuota =

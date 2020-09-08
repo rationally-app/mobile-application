@@ -10,7 +10,6 @@ import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
-import { useValidateExpiry } from "../hooks/useValidateExpiry";
 import * as Linking from "expo-linking";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation";
@@ -59,13 +58,6 @@ export const Content = (): ReactElement => {
       checkUpdates();
     }
   }, [appState, checkUpdates]);
-
-  const validateTokenExpiry = useValidateExpiry(navigatorRef.current?.dispatch);
-  useEffect(() => {
-    if (appState === "active") {
-      validateTokenExpiry();
-    }
-  }, [appState, validateTokenExpiry]);
 
   return (
     <>

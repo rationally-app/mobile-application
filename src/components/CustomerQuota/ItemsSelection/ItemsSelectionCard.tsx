@@ -9,20 +9,18 @@ import { Feather } from "@expo/vector-icons";
 import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
-import { useProductContext } from "../../../context/products";
+import { ProductContext } from "../../../context/products";
 import {
   AlertModalContext,
   defaultWarningProps,
   defaultConfirmationProps,
   wrongFormatAlertProps,
-  systemAlertProps,
   ERROR_MESSAGE,
   WARNING_MESSAGE,
   duplicateAlertProps
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
-import { EnvVersionError } from "../../../services/envVersion";
-import { Sentry } from "../../../utils/errorTracking";
+import { CampaignConfigContext } from "../../../context/campaignConfig";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -46,15 +44,19 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
-  const { getFeatures, products, features } = useProductContext();
+  const { features } = useContext(CampaignConfigContext);
+  const { products } = useContext(ProductContext);
   const { showAlert } = useContext(AlertModalContext);
 
   const onCheckAddedUsers = async (input: string): Promise<void> => {
     try {
+      if (!features) {
+        return;
+      }
       const id = validateAndCleanId(
         input,
-        features?.id?.validation,
-        features?.id?.validationRegex
+        features.id.validation,
+        features.id.validationRegex
       );
       Vibration.vibrate(50);
       if (ids.indexOf(id) > -1) {
@@ -63,14 +65,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       addId(id);
     } catch (e) {
       setIsAddUserModalVisible(false);
-      if (e instanceof EnvVersionError) {
-        Sentry.captureException(e);
-        showAlert({
-          ...systemAlertProps,
-          description: e.message,
-          onOk: () => setIsAddUserModalVisible(true)
-        });
-      } else if (e.message === ERROR_MESSAGE.DUPLICATE_ID) {
+      if (e.message === ERROR_MESSAGE.DUPLICATE_ID) {
         showAlert({
           ...duplicateAlertProps,
           description: e.message,
@@ -98,7 +93,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <CustomerCard
         ids={ids}
         onAddId={
-          getFeatures()?.TRANSACTION_GROUPING
+          features?.transactionGrouping
             ? () => setIsAddUserModalVisible(true)
             : undefined
         }
