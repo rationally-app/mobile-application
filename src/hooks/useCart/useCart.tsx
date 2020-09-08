@@ -358,6 +358,11 @@ export const useCart = (
 
         const allQuotaResponse = await getQuota(ids, authKey, endpoint);
         setAllQuotaResponse(allQuotaResponse);
+        const quotaResponse = filterQuotaWithAvailableProducts(
+          allQuotaResponse,
+          products
+        );
+        setQuotaResponse(quotaResponse);
 
         setCartState("PURCHASED");
       } catch (e) {
