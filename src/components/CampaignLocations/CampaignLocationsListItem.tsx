@@ -1,10 +1,9 @@
 import React, { FunctionComponent } from "react";
 import { AppText } from "../Layout/AppText";
 import { AuthCredentials } from "../../types";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { fontSize, color, size } from "../../common/styles";
 import { format } from "date-fns";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
   content: {

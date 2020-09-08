@@ -1,12 +1,11 @@
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { size, color } from "../../common/styles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { ValidVoucherCount } from "./ValidVoucherCount";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Voucher } from "../../types";
 
 const styles = StyleSheet.create({

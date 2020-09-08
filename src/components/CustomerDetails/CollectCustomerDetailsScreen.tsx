@@ -9,7 +9,8 @@ import {
   StyleSheet,
   Keyboard,
   Vibration,
-  BackHandler
+  BackHandler,
+  TouchableOpacity
 } from "react-native";
 import { size, fontSize, color, borderRadius } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -36,7 +37,6 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { AuthStoreContext } from "../../context/authStore";
