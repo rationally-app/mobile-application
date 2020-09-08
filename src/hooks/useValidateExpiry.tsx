@@ -2,7 +2,7 @@ import { differenceInSeconds } from "date-fns";
 import { useCallback, useContext } from "react";
 import { NavigationDispatch } from "react-navigation";
 import { ImportantMessageSetterContext } from "../context/importantMessage";
-import { useAuthenticationContext } from "../context/auth";
+import { AuthContext } from "../context/auth";
 import { useLogout } from "./useLogout";
 
 const ABOUT_TO_EXPIRE_SECONDS = 30 * 60;
@@ -13,7 +13,7 @@ export const useValidateExpiry = (
   navigationDispatch: NavigationDispatch | undefined
 ): (() => void) => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
-  const { expiry } = useAuthenticationContext();
+  const { expiry } = useContext(AuthContext);
   const { isLoggingOut, logout } = useLogout();
 
   const onExpired = useCallback(() => {
@@ -46,7 +46,7 @@ export const useValidateExpiry = (
   const validate = useCallback(async (): Promise<void> => {
     clearTimeout(timeout);
 
-    if (expiry === "" || isLoggingOut) {
+    if (!expiry || isLoggingOut) {
       return;
     }
 

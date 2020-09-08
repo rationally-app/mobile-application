@@ -29,7 +29,7 @@ export enum ERROR_MESSAGE {
   MISSING_SELECTION = "Select at least one item to checkout.",
   AUTH_FAILURE_INVALID_TOKEN = "Get a new QR code from your in-charge.",
   AUTH_FAILURE_INVALID_FORMAT = "Scan QR code again or get a new QR code from your in-charge.",
-  ENV_VERSION_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
+  CAMPAIGN_CONFIG_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   INSUFFICIENT_QUOTA = "Insufficient quota.",
   INVALID_QUANTITY = "Invalid quantity.",
   INVALID_CATEGORY = "Category does not exist.",

@@ -8,7 +8,7 @@ import React, {
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
-import { useAuthenticationContext } from "../../context/auth";
+import { AuthContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -22,7 +22,6 @@ import { Sentry } from "../../utils/errorTracking";
 import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
-import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
@@ -81,14 +80,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     });
   }, []);
 
-  const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
-  useEffect(() => {
-    validateTokenExpiry();
-  }, [validateTokenExpiry]);
-
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
-  const { token, endpoint } = useAuthenticationContext();
+  const { sessionToken, endpoint } = useContext(AuthContext);
   const showHelpModal = useContext(HelpModalContext);
   const { showAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
@@ -112,7 +106,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     error,
     clearError,
     quotaResponse
-  } = useCart(ids, token, endpoint);
+  } = useCart(ids, sessionToken, endpoint);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -237,7 +231,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
         default:
           throw new Error(error.message);
       }
-    } else throw new Error(error.message);
+    } else {
+      throw new Error(error.message);
+    }
   }, [
     cartState,
     clearError,

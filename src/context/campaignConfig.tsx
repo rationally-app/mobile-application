@@ -1,90 +1,20 @@
-import React, {
-  createContext,
-  FunctionComponent,
-  useState,
-  useEffect,
-  useCallback
-} from "react";
-import { AsyncStorage } from "react-native";
-import { CampaignFeatures, CampaignConfig, ConfigHashes } from "../types";
-import { hashString } from "../utils/hash";
-
-export const FEATURES_KEY = "FEATURES";
+import React, { createContext, FunctionComponent } from "react";
+import { CampaignFeatures, CampaignConfig, CampaignPolicy } from "../types";
 
 interface CampaignConfigContext {
-  features: CampaignFeatures | null;
-  configHashes: ConfigHashes;
-  setCampaignConfig: (config: CampaignConfig) => void;
-  clearCampaignConfig: () => void;
+  readonly features: CampaignFeatures | null;
+  readonly policies: CampaignPolicy[] | null;
 }
 export const CampaignConfigContext = createContext<CampaignConfigContext>({
   features: null,
-  configHashes: {},
-  setCampaignConfig: () => null,
-  clearCampaignConfig: () => null
+  policies: null
 });
 
-export const CampaignConfigContextProvider: FunctionComponent = ({
-  children
-}) => {
-  const [features, setFeatures] = useState<CampaignConfigContext["features"]>(
-    null
-  );
-
-  // Recalculated whenever the campaign config is set or loaded from the store
-  const [configHashes, setConfigHashes] = useState<
-    CampaignConfigContext["configHashes"]
-  >({});
-
-  const setCampaignConfig: CampaignConfigContext["setCampaignConfig"] = useCallback(
-    async ({ features }): Promise<void> => {
-      if (features) {
-        const featuresString = JSON.stringify(features);
-        const configHashes = {
-          features: await hashString(featuresString)
-        };
-        await AsyncStorage.multiSet([[FEATURES_KEY, featuresString]]);
-        setFeatures(features);
-        setConfigHashes(configHashes);
-      }
-    },
-    []
-  );
-
-  const clearCampaignConfig: CampaignConfigContext["clearCampaignConfig"] = useCallback(async (): Promise<
-    void
-  > => {
-    setFeatures(null);
-    setConfigHashes({});
-    await AsyncStorage.multiRemove([FEATURES_KEY]);
-  }, []);
-
-  const loadCampaignConfigFromStore = async (): Promise<void> => {
-    const values = await AsyncStorage.multiGet([FEATURES_KEY]);
-    const [featuresString] = values.map(value => value[1]);
-    if (featuresString) {
-      setFeatures(JSON.parse(featuresString));
-    }
-
-    const configHashes = {
-      features: featuresString ? await hashString(featuresString) : undefined
-    };
-    setConfigHashes(configHashes);
-  };
-
-  useEffect(() => {
-    loadCampaignConfigFromStore();
-  }, []);
-
+export const CampaignConfigContextProvider: FunctionComponent<{
+  campaignConfig: CampaignConfig;
+}> = ({ campaignConfig, children }) => {
   return (
-    <CampaignConfigContext.Provider
-      value={{
-        features,
-        configHashes,
-        setCampaignConfig,
-        clearCampaignConfig
-      }}
-    >
+    <CampaignConfigContext.Provider value={campaignConfig}>
       {children}
     </CampaignConfigContext.Provider>
   );

@@ -8,19 +8,15 @@ import {
   postTransaction,
   NotEligibleError
 } from "../../services/quota";
-import { getEnvVersion } from "../../services/envVersion";
 import {
-  Wrapper,
   defaultProducts,
   defaultIdentifier
-} from "../../test/helpers/wrapper";
+} from "../../test/helpers/defaults";
+import { ProductContextProvider } from "../../context/products";
 
 jest.mock("../../services/quota");
 const mockGetQuota = getQuota as jest.Mock;
 const mockPostTransaction = postTransaction as jest.Mock;
-
-jest.mock("../../services/envVersion");
-const mockGetEnvVersion = getEnvVersion as jest.Mock;
 
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
@@ -175,6 +171,12 @@ const mockQuotaResSingleIdAlert: Quota = {
   ]
 };
 
+const wrapper: FunctionComponent = ({ children }) => (
+  <ProductContextProvider products={defaultProducts}>
+    {children}
+  </ProductContextProvider>
+);
+
 describe("useCart", () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -188,7 +190,7 @@ describe("useCart", () => {
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
         () => useCart(ids, key, endpoint),
-        { wrapper: Wrapper }
+        { wrapper }
       );
       expect(result.current.cartState).toBe("FETCHING_QUOTA");
 
@@ -234,7 +236,7 @@ describe("useCart", () => {
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
         () => useCart(ids, key, endpoint),
-        { wrapper: Wrapper }
+        { wrapper }
       );
       expect(result.current.cartState).toBe("FETCHING_QUOTA");
 
@@ -266,7 +268,7 @@ describe("useCart", () => {
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
         () => useCart(ids, key, endpoint),
-        { wrapper: Wrapper }
+        { wrapper }
       );
       expect(result.current.cartState).toBe("FETCHING_QUOTA");
 
@@ -301,7 +303,7 @@ describe("useCart", () => {
       });
 
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       expect(result.current.cartState).toBe("NOT_ELIGIBLE");
@@ -310,13 +312,13 @@ describe("useCart", () => {
 
   describe("update cart quantities", () => {
     it("should update the cart when more ids are added", async () => {
-      expect.assertions(2);
+      expect.assertions(1);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
 
       let ids = ["ID1"];
       const { rerender, result, waitForNextUpdate } = renderHook(
         () => useCart(ids, key, endpoint),
-        { wrapper: Wrapper }
+        { wrapper }
       );
 
       await waitForNextUpdate();
@@ -344,7 +346,6 @@ describe("useCart", () => {
           quantity: 0
         }
       ]);
-      expect(mockGetEnvVersion).toHaveBeenCalledTimes(0);
     });
 
     it("should update the cart when quantities change", async () => {
@@ -353,7 +354,7 @@ describe("useCart", () => {
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
         () => useCart(ids, key, endpoint),
-        { wrapper: Wrapper }
+        { wrapper }
       );
 
       await waitForNextUpdate();
@@ -384,7 +385,7 @@ describe("useCart", () => {
       let ids = ["ID1"];
       const { rerender, result, waitForNextUpdate } = renderHook(
         () => useCart(ids, key, endpoint),
-        { wrapper: Wrapper }
+        { wrapper }
       );
 
       await waitForNextUpdate();
@@ -437,7 +438,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -470,7 +471,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -502,7 +503,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -536,7 +537,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -580,7 +581,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -617,7 +618,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -682,10 +683,10 @@ describe("useCart", () => {
       const SingleIdentifierProductWrapper: FunctionComponent = ({
         children
       }) => (
-        <Wrapper
+        <ProductContextProvider
           products={[
             {
-              ...defaultProducts.policies[0],
+              ...defaultProducts[0],
               identifiers: [
                 {
                   ...defaultIdentifier,
@@ -696,7 +697,7 @@ describe("useCart", () => {
           ]}
         >
           {children}
-        </Wrapper>
+        </ProductContextProvider>
       );
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
         wrapper: SingleIdentifierProductWrapper
@@ -740,7 +741,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -801,7 +802,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -893,10 +894,10 @@ describe("useCart", () => {
       const MobileNumberIdentifierProductWrapper: FunctionComponent = ({
         children
       }) => (
-        <Wrapper
+        <ProductContextProvider
           products={[
             {
-              ...defaultProducts.policies[0],
+              ...defaultProducts[0],
               identifiers: [
                 {
                   label: "code",
@@ -915,7 +916,7 @@ describe("useCart", () => {
           ]}
         >
           {children}
-        </Wrapper>
+        </ProductContextProvider>
       );
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
         wrapper: MobileNumberIdentifierProductWrapper
@@ -963,10 +964,10 @@ describe("useCart", () => {
       const InvalidIdentifierProductWrapper: FunctionComponent = ({
         children
       }) => (
-        <Wrapper
+        <ProductContextProvider
           products={[
             {
-              ...defaultProducts.policies[0],
+              ...defaultProducts[0],
               identifiers: [
                 {
                   label: "code",
@@ -986,7 +987,7 @@ describe("useCart", () => {
           ]}
         >
           {children}
-        </Wrapper>
+        </ProductContextProvider>
       );
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
         wrapper: InvalidIdentifierProductWrapper
@@ -1032,7 +1033,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -1075,7 +1076,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: Wrapper
+        wrapper
       });
 
       await wait(() => {
@@ -1093,10 +1094,10 @@ describe("useCart", () => {
 
       const ids = ["ID1"];
       const AlertProductWrapper: FunctionComponent = ({ children }) => (
-        <Wrapper
+        <ProductContextProvider
           products={[
             {
-              ...defaultProducts.policies[0],
+              ...defaultProducts[0],
               alert: {
                 threshold: 1,
                 label: "*chargeable"
@@ -1108,11 +1109,11 @@ describe("useCart", () => {
                 checkoutLimit: 1
               }
             },
-            { ...defaultProducts.policies[1] }
+            { ...defaultProducts[1] }
           ]}
         >
           {children}
-        </Wrapper>
+        </ProductContextProvider>
       );
       const { result, waitForNextUpdate } = renderHook(
         () => useCart(ids, key, endpoint),
@@ -1161,10 +1162,10 @@ describe("useCart", () => {
 
       const ids = ["ID1"];
       const AlertProductWrapper: FunctionComponent = ({ children }) => (
-        <Wrapper
+        <ProductContextProvider
           products={[
             {
-              ...defaultProducts.policies[0],
+              ...defaultProducts[0],
               alert: {
                 threshold: 1,
                 label: "*chargeable"
@@ -1176,11 +1177,11 @@ describe("useCart", () => {
                 checkoutLimit: 1
               }
             },
-            { ...defaultProducts.policies[1] }
+            { ...defaultProducts[1] }
           ]}
         >
           {children}
-        </Wrapper>
+        </ProductContextProvider>
       );
       const { result, waitForNextUpdate } = renderHook(
         () => useCart(ids, key, endpoint),

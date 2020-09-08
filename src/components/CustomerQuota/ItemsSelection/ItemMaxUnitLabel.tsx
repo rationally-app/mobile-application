@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from "react";
-import { Policy } from "../../../types";
+import { CampaignPolicy } from "../../../types";
 
 export const ItemMaxUnitLabel: FunctionComponent<{
-  unit: Policy["quantity"]["unit"];
+  unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
 }> = ({ unit, maxQuantity }) => {
   const maxUnit = unit

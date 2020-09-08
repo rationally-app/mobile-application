@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
-import { Policy } from "../../../types";
+import { CampaignPolicy } from "../../../types";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { fontSize, color } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
@@ -21,10 +21,10 @@ const styles = StyleSheet.create({
 });
 
 export const ItemContent: FunctionComponent<{
-  name: Policy["name"];
-  description: Policy["description"];
+  name: CampaignPolicy["name"];
+  description: CampaignPolicy["description"];
   descriptionAlert?: string;
-  unit: Policy["quantity"]["unit"];
+  unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
 }> = ({ name, description, descriptionAlert, unit, maxQuantity }) => (
   <View>

@@ -1,81 +1,68 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { renderHook } from "@testing-library/react-hooks";
 import { usePastTransaction } from "./usePastTransaction";
 import {
   getPastTransactions,
   PastTransactionError
 } from "../../services/quota";
-import { EnvVersion, PastTransactionsResult } from "../../types";
-import { Wrapper, defaultIdentifier } from "../../test/helpers/wrapper";
+import { PastTransactionsResult, CampaignPolicy } from "../../types";
+import { defaultIdentifier } from "../../test/helpers/defaults";
 import { toDate } from "date-fns";
+import { ProductContextProvider } from "../../context/products";
 
 jest.mock("../../services/quota");
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
-
-jest.mock("../../services/envVersion");
 
 const id = "ID1";
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
 
-const customProducts: EnvVersion = {
-  policies: [
-    {
-      category: "tt-token",
-      categoryType: "DEFAULT", // 'DEFAULT' (default) | 'APPEAL'
-      name: "TT Token",
-      order: 1,
-      identifiers: [
-        {
-          ...defaultIdentifier,
-          label: "first"
-        }
-      ],
-      quantity: {
-        period: -1,
-        periodType: "ROLLING",
-        periodExpression: 365,
-        limit: 1,
-        default: 1
-      },
-      type: "REDEEM"
+const customProducts: CampaignPolicy[] = [
+  {
+    category: "tt-token",
+    categoryType: "DEFAULT", // 'DEFAULT' (default) | 'APPEAL'
+    name: "TT Token",
+    order: 1,
+    identifiers: [
+      {
+        ...defaultIdentifier,
+        label: "first"
+      }
+    ],
+    quantity: {
+      period: -1,
+      periodType: "ROLLING",
+      periodExpression: 365,
+      limit: 1,
+      default: 1
     },
-    {
-      category: "tt-token-lost",
-      categoryType: "APPEAL",
-      name: "Lost/stolen token",
-      order: 1,
-      alert: {
-        threshold: 2,
-        label: "*chargeable"
-      },
-      quantity: {
-        period: -1,
-        periodType: "ROLLING", // ROLLING | CRON;
-        periodExpression: 365, // TBD
-        limit: 9999,
-        default: 1
-      },
-      identifiers: [
-        {
-          ...defaultIdentifier,
-          label: "first"
-        }
-      ],
-      type: "REDEEM"
-    }
-  ],
-  features: {
-    REQUIRE_OTP: true,
-    TRANSACTION_GROUPING: false,
-    FLOW_TYPE: "DEFAULT",
-    id: {
-      type: "STRING",
-      scannerType: "CODE_39",
-      validation: "NRIC"
-    }
+    type: "REDEEM"
+  },
+  {
+    category: "tt-token-lost",
+    categoryType: "APPEAL",
+    name: "Lost/stolen token",
+    order: 1,
+    alert: {
+      threshold: 2,
+      label: "*chargeable"
+    },
+    quantity: {
+      period: -1,
+      periodType: "ROLLING", // ROLLING | CRON;
+      periodExpression: 365, // TBD
+      limit: 9999,
+      default: 1
+    },
+    identifiers: [
+      {
+        ...defaultIdentifier,
+        label: "first"
+      }
+    ],
+    type: "REDEEM"
   }
-};
+];
 
 const mockPastTransactions: PastTransactionsResult = {
   pastTransactions: [
@@ -127,14 +114,10 @@ const mockSomeUnknownError: any = () => {
   throw new PastTransactionError(errorMessage);
 };
 
-const wrapper = ({ children }: any): JSX.Element => (
-  <Wrapper
-    products={customProducts.policies}
-    allProducts={customProducts.policies}
-    features={customProducts.features}
-  >
+const wrapper: FunctionComponent = ({ children }) => (
+  <ProductContextProvider products={customProducts}>
     {children}
-  </Wrapper>
+  </ProductContextProvider>
 );
 
 describe("usePastTransaction", () => {

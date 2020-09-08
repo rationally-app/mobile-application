@@ -13,10 +13,8 @@ import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
 import { HelpModalContext } from "../../context/help";
-import { useProductContext } from "../../context/products";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
-import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
@@ -25,9 +23,10 @@ import {
   Reason
 } from "./ReasonSelection/ReasonSelectionCard";
 import { pushRoute, navigateHome } from "../../common/navigation";
-import { useAuthenticationContext } from "../../context/auth";
+import { AuthContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
+import { CampaignConfigContext } from "../../context/campaignConfig";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -67,12 +66,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   }, []);
 
   const [ids] = useState(navigation.getParam("ids"));
-  const { allProducts } = useProductContext();
-
-  const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
-  useEffect(() => {
-    validateTokenExpiry();
-  }, [validateTokenExpiry]);
+  const { policies: allProducts } = useContext(CampaignConfigContext);
 
   const onCancel = useCallback((): void => {
     navigateHome(navigation);
@@ -82,15 +76,15 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
 
-  const { token, endpoint } = useAuthenticationContext();
-  const { allQuotaResponse, emptyCart } = useCart(ids, token, endpoint);
+  const { sessionToken, endpoint } = useContext(AuthContext);
+  const { allQuotaResponse } = useCart(ids, sessionToken, endpoint);
 
   const getReasons = (): Reason[] => {
     return transform(
-      allProducts,
+      allProducts ?? [],
       (result: Reason[], policy) => {
         if (policy.categoryType === "APPEAL") {
-          const policyLimt = policy.quantity.limit;
+          const policyLimit = policy.quantity.limit;
           const quotaResponse = allQuotaResponse?.remainingQuota.find(
             quota => quota.category === policy.category
           );
@@ -98,7 +92,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
           if (
             quotaResponse &&
             policy.alert &&
-            policyLimt - quotaResponse.quantity >= policy.alert.threshold
+            policyLimit - quotaResponse.quantity >= policy.alert.threshold
           ) {
             descriptionAlert = policy.alert.label;
           }
@@ -113,17 +107,16 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   };
 
   const onReasonSelection = (productName: string): void => {
-    emptyCart();
-    const appealProducts = allProducts.find(
+    const appealProduct = allProducts?.find(
       policy => policy.categoryType === "APPEAL" && policy.name === productName
     );
-    if (appealProducts === undefined) {
+    if (appealProduct === undefined) {
       Sentry.captureException(`Unable to find appeal product: ${productName}}`);
       return;
     }
     pushRoute(navigation, "CustomerQuotaProxy", {
       id: ids,
-      products: [appealProducts]
+      products: [appealProduct]
     });
   };
 
