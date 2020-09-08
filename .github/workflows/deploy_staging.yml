@@ -32,6 +32,8 @@ jobs:
         run: npx --no-install tsc --noEmit
       - name: Check Lint
         run: npm run lint
+      - name: Set Timezone to +8 (Ubuntu)
+        run: sudo timedatectl set-timezone Asia/Shanghai
       - name: Test
         run: npm run test -- --coverage
   deploy_staging:
