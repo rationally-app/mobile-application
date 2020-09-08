@@ -17,6 +17,7 @@ import { usePastTransaction } from "../../hooks/usePastTransaction/usePastTransa
 import { useAuthenticationContext } from "../../context/auth";
 import { FontAwesome } from "@expo/vector-icons";
 import { Quota } from "../../types";
+import { getCheckoutMessages } from "./CheckoutSuccess/checkoutMessages";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -167,7 +168,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const { getProduct, allProducts } = useProductContext();
   const { token, endpoint } = useAuthenticationContext();
 
-  const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
+  const productType =
+    cart.length > 0 ? getProduct(cart[0].category)?.type : undefined;
+  const { ctaButtonText } = getCheckoutMessages(productType);
 
   const itemTransactions: { itemHeader: string; itemDetail: string }[] = [];
   let latestTransactionTime: Date | undefined = new Date();
@@ -302,7 +305,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           {itemTransactions.length > 0 && (
             <View>
               <AppText style={{ marginBottom: size(1) }}>
-                Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}:
+                Item(s) {productType === "REDEEM" ? "redeemed" : "purchased"}:
               </AppText>
               {itemTransactions.map(
                 ({ itemHeader, itemDetail }, index: number) => (
@@ -318,7 +321,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
+        <DarkButton text={ctaButtonText} onPress={onCancel} fullWidth={true} />
       </View>
       {onAppeal && hasAppealProduct() ? (
         <AppealButton onAppeal={onAppeal} />

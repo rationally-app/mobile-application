@@ -17,7 +17,7 @@ export const getCheckoutMessages = (productType?: string): CheckoutMessage => {
       return {
         title: "Purchased!",
         description: "The following have been purchased:",
-        ctaButtonText: "Next customer"
+        ctaButtonText: "Next identity"
       };
   }
 };

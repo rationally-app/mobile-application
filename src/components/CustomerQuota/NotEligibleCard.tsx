@@ -6,6 +6,9 @@ import { color, size } from "../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { FontAwesome } from "@expo/vector-icons";
+import { useProductContext } from "../../context/products";
+import { getCheckoutMessages } from "./CheckoutSuccess/checkoutMessages";
+import { Cart } from "../../hooks/useCart/useCart";
 
 const NotEligibleTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>Not eligible</AppText>
@@ -19,6 +22,7 @@ const NotEligibleTransactionDescription: FunctionComponent = () => (
 
 interface NotEligibleCard {
   ids: string[];
+  cart: Cart;
   onCancel: () => void;
 }
 
@@ -27,8 +31,14 @@ interface NotEligibleCard {
  */
 export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
   ids,
+  cart,
   onCancel
 }) => {
+  const { getProduct } = useProductContext();
+  const productType =
+    cart.length > 0 ? getProduct(cart[0].category)?.type : undefined;
+  const { ctaButtonText } = getCheckoutMessages(productType);
+
   return (
     <View>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
@@ -52,7 +62,7 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
+        <DarkButton text={ctaButtonText} onPress={onCancel} fullWidth={true} />
       </View>
     </View>
   );

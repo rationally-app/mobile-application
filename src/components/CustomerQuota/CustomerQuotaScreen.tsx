@@ -287,7 +287,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             quotaResponse={quotaResponse}
           />
         ) : cartState === "NOT_ELIGIBLE" ? (
-          <NotEligibleCard ids={ids} onCancel={onCancel} />
+          <NotEligibleCard ids={ids} cart={cart} onCancel={onCancel} />
         ) : (
           <ItemsSelectionCard
             ids={ids}
