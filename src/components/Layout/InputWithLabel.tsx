@@ -18,13 +18,13 @@ const styles = StyleSheet.create({
   },
   inputEditable: {
     backgroundColor: color("grey", 0),
-    borderColor: color("grey", 40),
+    borderColor: color("blue", 50),
     color: color("blue", 50)
   },
   inputNotEditable: {
-    backgroundColor: color("grey", 30),
-    borderColor: color("grey", 30),
-    color: color("grey", 0)
+    backgroundColor: color("grey", 10),
+    borderColor: color("grey", 40),
+    color: color("grey", 40)
   }
 });
 
