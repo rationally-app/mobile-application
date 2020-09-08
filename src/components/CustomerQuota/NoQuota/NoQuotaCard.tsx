@@ -29,7 +29,7 @@ import { AppealButton } from "./AppealButton";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
-import { Quota, PastTransactionsResult } from "../../../types";
+import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
 import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
@@ -66,7 +66,7 @@ const sortTransactionsByOrder = (
  */
 export const groupTransactionsByCategory = (
   sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
-  allProducts: Policy[],
+  allProducts: CampaignPolicy[],
   latestTransactionTime: Date | undefined
 ): TransactionsByCategoryMap => {
   const transactionsByCategoryMap: TransactionsByCategoryMap = {};
@@ -166,7 +166,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const { sessionToken, endpoint } = useContext(AuthContext);
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const { pastTransactionsResult, error } = usePastTransaction(ids, sessionToken, endpoint);
+  const { pastTransactionsResult, error } = usePastTransaction(
+    ids,
+    sessionToken,
+    endpoint
+  );
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
 
@@ -187,9 +191,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
 
-  const hasAppealProduct = allProducts?.some(
-    policy => policy.categoryType === "APPEAL"
-  ) ?? false;
+  const hasAppealProduct =
+    allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false;
 
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,

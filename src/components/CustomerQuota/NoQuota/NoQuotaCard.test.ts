@@ -1,6 +1,6 @@
 import { toDate } from "date-fns";
-import { defaultIdentifier } from "../../../test/helpers/wrapper";
-import { Policy, PastTransactionsResult } from "../../../types";
+import { defaultIdentifier } from "../../../test/helpers/defaults";
+import { PastTransactionsResult, CampaignPolicy } from "../../../types";
 import {
   groupTransactionsByCategory,
   sortTransactions,
@@ -9,7 +9,7 @@ import {
 
 describe("NoQuotaCard utility functions", () => {
   let sortedTransactions: PastTransactionsResult["pastTransactions"];
-  let allProducts: Policy[];
+  let allProducts: CampaignPolicy[];
   let mockTransactionsByCategoryMap: TransactionsByCategoryMap;
 
   const latestTransactionTimeMs = 1596530350000;
