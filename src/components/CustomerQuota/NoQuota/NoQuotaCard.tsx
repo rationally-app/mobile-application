@@ -5,10 +5,10 @@ import React, {
   useEffect
 } from "react";
 import { differenceInSeconds, format } from "date-fns";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
-import { color } from "../../../common/styles";
+import { color, size } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { Cart } from "../../../hooks/useCart/useCart";
@@ -19,7 +19,6 @@ import {
   BIG_NUMBER,
   sortTransactionsByOrder
 } from "../utils";
-import { styles } from "./styles";
 import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import {
@@ -38,6 +37,13 @@ import { AuthContext } from "../../../context/auth";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
+
+export const styles = StyleSheet.create({
+  wrapper: {
+    marginTop: size(2),
+    marginBottom: size(2)
+  }
+});
 
 export interface TransactionsByCategoryMap {
   [category: string]: {
