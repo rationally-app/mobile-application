@@ -288,7 +288,7 @@ export const useCart = (
       };
       updateQuotaResponse();
     }
-  }, [cartState, products]);
+  }, [ids, authKey, endpoint, cartState]);
 
   /**
    * Update quantity of an item in the cart.
