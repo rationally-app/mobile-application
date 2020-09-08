@@ -7,7 +7,7 @@ import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
 import { FontAwesome } from "@expo/vector-icons";
-import { Quota } from "../../../types";
+import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { format } from "date-fns";
@@ -48,25 +48,25 @@ const UsageQuotaTitle: FunctionComponent<{
   </>
 );
 
-export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
-  ids,
-  onCancel,
-  quotaResponse
-}) => {
-  const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
+export interface TransactionsByTimeMap {
+  [transactionTimeInSeconds: string]: {
+    transactionTime: Date;
+    transactions: Transaction[];
+    order: number;
+  };
+}
 
-  const { getProduct } = useContext(ProductContext);
-  const { policies: allProducts } = useContext(CampaignConfigContext);
-  const { sessionToken, endpoint } = useContext(AuthContext);
-  const { pastTransactionsResult } = usePastTransaction(
-    ids,
-    sessionToken,
-    endpoint
-  );
-  // Assumes results are already sorted (valid assumption for results from /transactions/history)
-  const sortedTransactions = pastTransactionsResult;
-
-  // Group transactions by transaction time (round to seconds)
+/**
+ * Given past transactions, group them by timestamp
+ * If less than 1 second apart, count as same group.
+ *
+ * @param sortedTransactions Past transaction results sorted by transaction time in desc order
+ * @param allProducts Policies
+ */
+export const groupTransactionsByTime = (
+  sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
+  allProducts: CampaignPolicy[]
+): TransactionsByTimeMap => {
   const transactionsByTimeMap: {
     [transactionTimeInSeconds: string]: {
       transactionTime: Date;
@@ -87,7 +87,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
       transactionsByTimeMap[transactionTimeInSeconds] = {
         transactionTime: item.transactionTime,
         transactions: [],
-        order: policy?.order ?? BIG_NUMBER
+        order: -transactionTimeInSeconds
       };
     }
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
@@ -97,22 +97,48 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
         item.quantity,
         policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
       ),
-      isAppeal: policy?.categoryType === "APPEAL"
+      isAppeal: policy?.categoryType === "APPEAL",
+      order: policy?.order ?? BIG_NUMBER
     });
   });
+  return transactionsByTimeMap;
+};
 
-  // Transform map to array of transactions group
-  const transactionsByTimeList: TransactionsGroup[] = Object.entries(
-    transactionsByTimeMap
-  )
-    .sort(
-      (a, b) => b[1].transactionTime.getTime() - a[1].transactionTime.getTime()
-    )
+export const sortTransactions = (
+  transactionsByTimeMap: TransactionsByTimeMap
+): TransactionsGroup[] => {
+  return Object.entries(transactionsByTimeMap)
+    .sort(([, a], [, b]) => sortTransactionsByOrder(a, b))
     .map(([, { transactionTime, transactions, order }]) => ({
       header: format(transactionTime.getTime(), "d MMM yyyy, h:mma"),
       transactions: transactions.sort(sortTransactionsByOrder),
       order
     }));
+};
+
+export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
+  ids,
+  onCancel,
+  quotaResponse
+}) => {
+  const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
+
+  const { getProduct } = useContext(ProductContext);
+  const { policies: allProducts } = useContext(CampaignConfigContext);
+  const { sessionToken, endpoint } = useContext(AuthContext);
+  const { pastTransactionsResult } = usePastTransaction(
+    ids,
+    sessionToken,
+    endpoint
+  );
+  // Assumes results are already sorted (valid assumption for results from /transactions/history)
+  const sortedTransactions = pastTransactionsResult;
+
+  const transactionsByTimeMap = groupTransactionsByTime(
+    sortedTransactions,
+    allProducts || []
+  );
+  const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
 
   const productType =
     (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";

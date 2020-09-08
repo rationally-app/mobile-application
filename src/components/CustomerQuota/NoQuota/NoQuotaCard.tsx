@@ -96,7 +96,8 @@ export const groupTransactionsByCategory = (
         item.quantity,
         policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
       ),
-      isAppeal: policy?.categoryType === "APPEAL"
+      isAppeal: policy?.categoryType === "APPEAL",
+      order: -1
     });
     transactionsByCategoryMap[categoryName].hasLatestTransaction =
       transactionsByCategoryMap[categoryName].hasLatestTransaction ||

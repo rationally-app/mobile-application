@@ -13,6 +13,6 @@ export const formatQuantityText = (
     : `${quantity}`;
 
 export const sortTransactionsByOrder = (
-  a: { order?: number },
-  b: { order?: number }
-): number => (a.order ?? BIG_NUMBER) - (b.order ?? BIG_NUMBER);
+  a: { order: number },
+  b: { order: number }
+): number => a.order - b.order;
