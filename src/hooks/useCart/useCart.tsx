@@ -274,6 +274,23 @@ export const useCart = (
   }, []);
 
   /**
+   * After checkout, update quota response
+   */
+  useEffect(() => {
+    if (cartState === "PURCHASED") {
+      const updateQuotaResponse = async (): Promise<void> => {
+        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        const quotaResponse = filterQuotaWithAvailableProducts(
+          allQuotaResponse,
+          products
+        );
+        setQuotaResponse(quotaResponse);
+      };
+      updateQuotaResponse();
+    }
+  }, [ids, authKey, endpoint, cartState, products]);
+
+  /**
    * Update quantity of an item in the cart.
    */
   const updateCart: CartHook["updateCart"] = useCallback(
@@ -350,10 +367,6 @@ export const useCart = (
           endpoint
         });
         setCheckoutResult(transactionResponse);
-
-        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
-        setAllQuotaResponse(allQuotaResponse);
-
         setCartState("PURCHASED");
       } catch (e) {
         setCartState("DEFAULT");
