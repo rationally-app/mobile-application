@@ -375,7 +375,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [authKey, cart, endpoint, ids]);
+  }, [authKey, cart, endpoint, ids, products]);
 
   return {
     cartState,
