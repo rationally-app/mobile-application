@@ -37,12 +37,31 @@ export const CampaignLocationsListItem: FunctionComponent<
 
   return (
     <TouchableOpacity onPress={onPress} disabled={hasExpired}>
-      <View style={[styles.content, hasExpired ? { opacity: 0.5 } : {}]}>
-        <AppText style={styles.campaignName}>{name}</AppText>
+      <View style={styles.content}>
+        <AppText
+          style={[
+            styles.campaignName,
+            hasExpired ? { color: color("grey", 40) } : {}
+          ]}
+        >
+          {name}
+        </AppText>
         {operatorId ? (
-          <AppText style={styles.operatorId}>ID: {operatorId}</AppText>
+          <AppText
+            style={[
+              styles.operatorId,
+              hasExpired ? { color: color("grey", 40) } : {}
+            ]}
+          >
+            ID: {operatorId}
+          </AppText>
         ) : null}
-        <AppText style={styles.expiry}>
+        <AppText
+          style={[
+            styles.expiry,
+            hasExpired ? { color: color("grey", 40) } : {}
+          ]}
+        >
           {hasExpired ? "Expired on " : "Valid till "}
           {formattedExpiry}
         </AppText>
