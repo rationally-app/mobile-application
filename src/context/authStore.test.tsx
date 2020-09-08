@@ -181,14 +181,14 @@ describe("AuthStoreContextProvider", () => {
     const { queryByTestId, getByText } = render(
       <AuthStoreContextProvider shouldMigrate={false}>
         <AuthStoreContext.Consumer>
-          {({ authCredentials, addAuthCredentials }) => (
+          {({ authCredentials, setAuthCredentials }) => (
             <>
               <Text testID="credentials">
                 {JSON.stringify(authCredentials[testCampaignKey])}
               </Text>
               <Button
                 onPress={() =>
-                  addAuthCredentials(testCampaignKey, {
+                  setAuthCredentials(testCampaignKey, {
                     operatorToken: "newOperatorToken",
                     sessionToken: "newSessionToken",
                     endpoint: "newEndpoint",
@@ -255,14 +255,14 @@ describe("AuthStoreContextProvider", () => {
     const { queryByTestId, getByText } = render(
       <AuthStoreContextProvider shouldMigrate={false}>
         <AuthStoreContext.Consumer>
-          {({ authCredentials, addAuthCredentials }) => (
+          {({ authCredentials, setAuthCredentials }) => (
             <>
               <Text testID="credentials">
                 {JSON.stringify(authCredentials)}
               </Text>
               <Button
                 onPress={() =>
-                  addAuthCredentials(testCampaignKey, {
+                  setAuthCredentials(testCampaignKey, {
                     operatorToken: "newOperatorToken",
                     sessionToken: "newSessionToken",
                     endpoint: "newEndpoint",

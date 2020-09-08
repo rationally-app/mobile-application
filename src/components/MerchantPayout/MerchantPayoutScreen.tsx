@@ -44,6 +44,7 @@ import {
   expiredAlertProps,
   ERROR_MESSAGE
 } from "../../context/alert";
+import { AuthStoreContext } from "../../context/authStore";
 
 const styles = StyleSheet.create({
   content: {
@@ -84,8 +85,10 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
     false
   );
-  const { sessionToken, endpoint } = useContext(AuthContext);
+  const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
   const { showAlert } = useContext(AlertModalContext);
+
+  const { setAuthCredentials } = useContext(AuthStoreContext);
 
   const {
     checkoutVouchersState,
@@ -151,15 +154,35 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     }
   }, [isFocused, checkValidityState, validityResult, onModalExit, addVoucher]);
 
+  const expireSession = useCallback(() => {
+    const key = `${operatorToken}${endpoint}`;
+    setAuthCredentials(key, {
+      operatorToken,
+      endpoint,
+      sessionToken,
+      expiry: new Date().getTime()
+    });
+    showAlert({
+      ...expiredAlertProps,
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
+      onOk: () => {
+        navigation.navigate("CampaignLocationsScreen");
+      }
+    });
+  }, [
+    setAuthCredentials,
+    endpoint,
+    navigation,
+    operatorToken,
+    sessionToken,
+    showAlert
+  ]);
+
   useEffect(() => {
     if (validityError instanceof SessionError) {
-      showAlert({
-        ...expiredAlertProps,
-        description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-      });
-      navigation.navigate("CampaignLocationsScreen");
+      expireSession();
     }
-  }, [navigation, showAlert, validityError]);
+  }, [expireSession, validityError]);
 
   const redeemVouchers = (): void => {
     checkoutVouchers(merchantCode);
@@ -182,11 +205,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       Vibration.vibrate(50);
     } else if (merchantError) {
       if (merchantError instanceof SessionError) {
-        showAlert({
-          ...expiredAlertProps,
-          description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-        });
-        navigation.navigate("CampaignLocationsScreen");
+        expireSession();
       } else {
         Alert.alert("Error", merchantError.message, [
           {
@@ -199,12 +218,12 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   }, [
     checkoutResult,
     checkoutVouchersState,
+    expireSession,
     merchantCode,
     merchantError,
     navigation,
     resetState,
-    resetVoucherState,
-    showAlert
+    resetVoucherState
   ]);
 
   const closeCamera = useCallback(() => setShouldShowCamera(false), []);

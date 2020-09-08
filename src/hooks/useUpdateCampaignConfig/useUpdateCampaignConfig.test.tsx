@@ -10,11 +10,11 @@ const operatorToken = "opToken";
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
 
-const addCampaignConfigSpy = jest.fn();
+const setCampaignConfigSpy = jest.fn();
 
 describe("useUpdateCampaignConfig", () => {
   beforeEach(() => {
-    addCampaignConfigSpy.mockClear();
+    setCampaignConfigSpy.mockClear();
   });
 
   it("should set fetchingState and result when there are updates to the campaign config", async () => {
@@ -31,10 +31,10 @@ describe("useUpdateCampaignConfig", () => {
     expect(result.current.fetchingState).toBe("DEFAULT");
 
     await wait(() => {
-      result.current.updateCampaignConfig(undefined, addCampaignConfigSpy);
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
-    expect(addCampaignConfigSpy).toHaveBeenCalledTimes(1);
+    expect(setCampaignConfigSpy).toHaveBeenCalledTimes(1);
     expect(result.current.result).toStrictEqual({
       features: {
         minAppBinaryVersion: "3.0.0",
@@ -55,10 +55,10 @@ describe("useUpdateCampaignConfig", () => {
     expect(result.current.fetchingState).toBe("DEFAULT");
 
     await wait(() => {
-      result.current.updateCampaignConfig(undefined, addCampaignConfigSpy);
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
-    expect(addCampaignConfigSpy).toHaveBeenCalledTimes(0);
+    expect(setCampaignConfigSpy).toHaveBeenCalledTimes(0);
     expect(result.current.result).toBeUndefined();
     expect(result.current.fetchingState).toBe("RETURNED_NO_UPDATES");
   });
@@ -74,10 +74,10 @@ describe("useUpdateCampaignConfig", () => {
     expect(result.current.fetchingState).toBe("DEFAULT");
 
     await wait(() => {
-      result.current.updateCampaignConfig(undefined, addCampaignConfigSpy);
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
-    expect(addCampaignConfigSpy).toHaveBeenCalledTimes(0);
+    expect(setCampaignConfigSpy).toHaveBeenCalledTimes(0);
     expect(result.current.fetchingState).toBe("FETCHING_CONFIG");
     expect(result.current.error?.message).toBe("Error getting campaign config");
     expect(result.current.result).toBeUndefined();
@@ -91,7 +91,7 @@ describe("useUpdateCampaignConfig", () => {
         minAppBuildVersion: 0
       }
     });
-    addCampaignConfigSpy.mockImplementation(() => {
+    setCampaignConfigSpy.mockImplementation(() => {
       throw new Error("Error saving campaign config");
     });
     const { result } = renderHook(() =>
@@ -100,10 +100,10 @@ describe("useUpdateCampaignConfig", () => {
     expect(result.current.fetchingState).toBe("DEFAULT");
 
     await wait(() => {
-      result.current.updateCampaignConfig(undefined, addCampaignConfigSpy);
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
-    expect(addCampaignConfigSpy).toHaveBeenCalledTimes(1);
+    expect(setCampaignConfigSpy).toHaveBeenCalledTimes(1);
     expect(result.current.fetchingState).toBe("FETCHING_CONFIG");
     expect(result.current.error?.message).toBe("Error saving campaign config");
     expect(result.current.result).toBeUndefined();
@@ -117,7 +117,7 @@ describe("useUpdateCampaignConfig", () => {
         minAppBuildVersion: 0
       }
     });
-    addCampaignConfigSpy.mockImplementation(() => {
+    setCampaignConfigSpy.mockImplementation(() => {
       throw new Error("Error saving campaign config");
     });
     const { result } = renderHook(() =>
@@ -125,7 +125,7 @@ describe("useUpdateCampaignConfig", () => {
     );
 
     await wait(() =>
-      result.current.updateCampaignConfig(undefined, addCampaignConfigSpy)
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.error?.message).toBe("Error saving campaign config");
 
@@ -141,7 +141,7 @@ describe("useUpdateCampaignConfig", () => {
         minAppBuildVersion: 0
       }
     });
-    addCampaignConfigSpy.mockImplementation(() => {
+    setCampaignConfigSpy.mockImplementation(() => {
       throw new Error("Error saving campaign config");
     });
     const { result } = renderHook(() =>
@@ -149,12 +149,12 @@ describe("useUpdateCampaignConfig", () => {
     );
 
     await wait(() =>
-      result.current.updateCampaignConfig(undefined, addCampaignConfigSpy)
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.error?.message).toBe("Error saving campaign config");
 
     await wait(() => {
-      result.current.updateCampaignConfig(undefined, addCampaignConfigSpy);
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
       expect(result.current.error).toBeUndefined();
     });
   });
@@ -167,19 +167,19 @@ describe("useUpdateCampaignConfig", () => {
         minAppBuildVersion: 0
       }
     });
-    addCampaignConfigSpy.mockReset();
+    setCampaignConfigSpy.mockReset();
     const { result } = renderHook(() =>
       useUpdateCampaignConfig(operatorToken, key, endpoint)
     );
 
     await wait(() =>
-      result.current.updateCampaignConfig(undefined, addCampaignConfigSpy)
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.fetchingState).toBe("RETURNED_NEW_UPDATES");
     expect(result.current.result).not.toBeUndefined();
 
     await wait(() => {
-      result.current.updateCampaignConfig(undefined, addCampaignConfigSpy);
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
       expect(result.current.result).toBeUndefined();
     });
   });

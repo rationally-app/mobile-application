@@ -38,6 +38,7 @@ import {
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { QuotaError } from "../../services/quota";
+import { AuthStoreContext } from "../../context/authStore";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -81,11 +82,13 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
-  const { sessionToken, endpoint } = useContext(AuthContext);
+  const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
   const showHelpModal = useContext(HelpModalContext);
   const { showAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
+
+  const { setAuthCredentials } = useContext(AuthStoreContext);
 
   const {
     cartState,
@@ -145,11 +148,20 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     }
     if (error instanceof SessionError) {
       clearError();
+      const key = `${operatorToken}${endpoint}`;
+      setAuthCredentials(key, {
+        operatorToken,
+        endpoint,
+        sessionToken,
+        expiry: new Date().getTime()
+      });
       showAlert({
         ...expiredAlertProps,
-        description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+        description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
+        onOk: () => {
+          navigation.navigate("CampaignLocationsScreen");
+        }
       });
-      navigation.navigate("CampaignLocationsScreen");
       return;
     }
     if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
@@ -229,11 +241,15 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       throw new Error(error.message);
     }
   }, [
+    setAuthCredentials,
     campaignFeatures?.campaignName,
     cartState,
     clearError,
+    endpoint,
     error,
     navigation,
+    operatorToken,
+    sessionToken,
     showAlert
   ]);
 

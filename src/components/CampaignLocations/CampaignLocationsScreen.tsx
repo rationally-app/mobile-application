@@ -90,7 +90,6 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
       }
     ];
 
-    // if (hasLoadedAuthFromStore && Object.keys(authCredentials).length > 1) {
     drawerButtons.push({
       icon: "map-search",
       label: "Change campaign",
@@ -98,7 +97,6 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
         navigation.navigate("CampaignLocationsScreen");
       }
     });
-    // }
 
     setDrawerButtons(drawerButtons);
   }, [authCredentials, hasLoadedAuthFromStore, navigation, setDrawerButtons]);

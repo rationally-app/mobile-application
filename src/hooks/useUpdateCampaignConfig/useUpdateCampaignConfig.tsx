@@ -34,7 +34,7 @@ type UpdateCampaignConfigHook = {
   fetchingState: FetchingState;
   updateCampaignConfig: (
     currentCampaignConfig: CampaignConfig | undefined,
-    addCampaignConfig: CampaignConfigsStoreContext["addCampaignConfig"]
+    setCampaignConfig: CampaignConfigsStoreContext["setCampaignConfig"]
   ) => void;
   error?: Error;
   clearError: () => void;
@@ -51,7 +51,7 @@ export const useUpdateCampaignConfig = (
   const [error, setError] = useState<Error>();
 
   const updateCampaignConfig: UpdateCampaignConfigHook["updateCampaignConfig"] = useCallback(
-    (currentCampaignConfig, addCampaignConfig) => {
+    (currentCampaignConfig, setCampaignConfig) => {
       const fetchCampaignConfig = async (): Promise<void> => {
         setError(undefined);
         setResult(undefined);
@@ -66,7 +66,7 @@ export const useUpdateCampaignConfig = (
           );
           const configs = Object.values(campaignConfigResponse);
           if (configs.some(c => !!c)) {
-            addCampaignConfig(
+            setCampaignConfig(
               `${operatorToken}${endpoint}`,
               campaignConfigResponse
             );
