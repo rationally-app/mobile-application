@@ -3,7 +3,6 @@ import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
   postTransaction,
-  QuotaError,
   NotEligibleError
 } from "../../services/quota";
 import { transform } from "lodash";
@@ -18,6 +17,7 @@ import {
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import { SessionError } from "../../services/helpers";
 
 export type CartItem = {
   category: string;
@@ -232,16 +232,11 @@ export const useCart = (
       } catch (e) {
         if (e instanceof NotEligibleError) {
           setCartState("NOT_ELIGIBLE");
-          // Cart will remain in FETCHING_QUOTA state.
-        } else if (e instanceof QuotaError) {
-          setError(
-            new Error(
-              "Error getting quota. We've noted this down and are looking into it!"
-            )
-          );
+          return;
         } else {
           setError(e);
         }
+        setCartState("DEFAULT");
       }
     };
 
@@ -371,6 +366,8 @@ export const useCart = (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
           setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e instanceof SessionError) {
+          setError(e);
         } else {
           setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
