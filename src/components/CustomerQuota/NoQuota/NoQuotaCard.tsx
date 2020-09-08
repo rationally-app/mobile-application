@@ -1,98 +1,74 @@
-import React, { FunctionComponent, useState, useContext } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useContext,
+  useEffect
+} from "react";
 import { differenceInSeconds, format } from "date-fns";
 import { View } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
-import { color, size } from "../../../common/styles";
+import { color } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { Cart } from "../../../hooks/useCart/useCart";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { formatQuantityText } from "../utils";
+import { FontAwesome } from "@expo/vector-icons";
+import {
+  formatQuantityText,
+  BIG_NUMBER,
+  sortTransactionsByOrder
+} from "../utils";
 import { styles } from "./styles";
 import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import {
   DistantTransactionTitle,
   RecentTransactionTitle,
-  NoPreviousTransactionTitle
+  NoPreviousTransactionTitle,
+  UsageQuotaTitle
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
+import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
+import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
+import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
-import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
+
+export interface TransactionsByCategoryMap {
+  [category: string]: {
+    transactions: Transaction[];
+    order: number;
+    hasLatestTransaction: boolean;
+  };
+}
 
 interface NoQuotaCard {
   ids: string[];
   cart: Cart;
   onCancel: () => void;
   onAppeal?: () => void;
+  quotaResponse: Quota | null;
 }
-
-export interface TransactionsByCategoryMap {
-  [category: string]: {
-    transactions: Transaction[];
-    hasLatestTransaction?: boolean;
-  };
-}
-
-const sortTransactionsByCategory = (
-  a: TransactionsByCategory,
-  b: TransactionsByCategory
-): 1 | -1 | 0 =>
-  a.category > b.category ? 1 : b.category > a.category ? -1 : 0;
 
 /**
- * Shows when the user cannot purchase anything
+ * Given past transactions, group them by categories.
  *
- * Precondition: Only rendered when all items in cart have max quantity of 0
+ * @param sortedTransactions Past transaction results sorted by transaction time in desc order
+ * @param allProducts Policies
+ * @param latestTransactionTime Transaction time of latest transaction
  */
-export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
-  ids,
-  cart,
-  onCancel,
-  onAppeal
-}) => {
-  const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
-  const { policies: allProducts } = useContext(CampaignConfigContext);
-  const { getProduct } = useContext(ProductContext);
-  const { sessionToken, endpoint } = useContext(AuthContext);
-
-  const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
-
-  const { pastTransactionsResult } = usePastTransaction(
-    ids,
-    sessionToken,
-    endpoint
-  );
-  // Assumes results are already sorted (valid assumption for results from /transactions/history)
-  const sortedTransactions = pastTransactionsResult;
-
-  const latestTransactionTime: Date | undefined =
-    sortedTransactions?.[0].transactionTime ?? undefined;
-  const now = new Date();
-  const secondsFromLatestTransaction = latestTransactionTime
-    ? differenceInSeconds(now, latestTransactionTime)
-    : -1;
-
-  const hasAppealProduct = (): boolean => {
-    return (
-      allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false
-    );
-  };
-
+export const groupTransactionsByCategory = (
+  sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
+  allProducts: CampaignPolicy[],
+  latestTransactionTime: Date | undefined
+): TransactionsByCategoryMap => {
   // Group transactions by category
-  const transactionsByCategoryMap: {
-    [category: string]: {
-      transactions: Transaction[];
-      hasLatestTransaction?: boolean;
-    };
-  } = {};
+  const transactionsByCategoryMap: TransactionsByCategoryMap = {};
   sortedTransactions?.forEach(item => {
     const policy = allProducts?.find(
       policy => policy.category === item.category
@@ -103,7 +79,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     if (!(categoryName in transactionsByCategoryMap)) {
       transactionsByCategoryMap[categoryName] = {
         transactions: [],
-        hasLatestTransaction: false
+        hasLatestTransaction: false,
+        order: policy?.order ?? BIG_NUMBER
       };
     }
     transactionsByCategoryMap[categoryName].transactions.push({
@@ -112,36 +89,51 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       quantity: formatQuantityText(
         item.quantity,
         policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
-      )
+      ),
+      isAppeal: policy?.categoryType === "APPEAL"
     });
-    // TODO: check if seconds is good, or need to change to minutes
     transactionsByCategoryMap[categoryName].hasLatestTransaction =
       transactionsByCategoryMap[categoryName].hasLatestTransaction ||
       differenceInSeconds(latestTransactionTime || 0, item.transactionTime) ===
         0;
   });
 
-  // Split categories into those with the latest transactions and those without
+  return transactionsByCategoryMap;
+};
+
+/**
+ * Transforms map of transactions into an array
+ * Array is sorted by:
+ *  1. Categories with latest transactions
+ *  2. All other categories
+ * Each group is sorted by category name in asc order
+ * Also adds an order attribute to each transaction for the "Show more" feature
+ *
+ * @param transactionsByCategoryMap Transactions by category
+ */
+export const sortTransactions = (
+  transactionsByCategoryMap: TransactionsByCategoryMap
+): TransactionsGroup[] => {
   const latestTransactionsByCategory: TransactionsGroup[] = [];
   const otherTransactionsByCategory: TransactionsGroup[] = [];
   Object.entries(transactionsByCategoryMap).forEach(([key, value]) => {
-    const { transactions, hasLatestTransaction } = value;
-    const newTransactions = {
-      header: key,
-      transactions: transactions
-    };
+    const { transactions, hasLatestTransaction, order } = value;
     if (hasLatestTransaction) {
-      latestTransactionsByCategory.push(newTransactions);
+      latestTransactionsByCategory.push({
+        header: key,
+        transactions,
+        order
+      });
     } else {
-      otherTransactionsByCategory.push(newTransactions);
+      otherTransactionsByCategory.push({ header: key, transactions, order });
     }
   });
 
-  latestTransactionsByCategory.sort(sortTransactionsByCategory);
-  otherTransactionsByCategory.sort(sortTransactionsByCategory);
+  latestTransactionsByCategory.sort(sortTransactionsByOrder);
+  otherTransactionsByCategory.sort(sortTransactionsByOrder);
 
   let transactionCounter = 0;
-  const transactionsByCategoryList = latestTransactionsByCategory
+  return latestTransactionsByCategory
     .concat(otherTransactionsByCategory)
     .map(transactionsByCategory => {
       const orderedTransactions = transactionsByCategory.transactions.map(
@@ -153,6 +145,69 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       );
       return { ...transactionsByCategory, transactions: orderedTransactions };
     });
+};
+
+/**
+ * Shows when the user cannot purchase anything
+ *
+ * Precondition: Only rendered when all items in cart have max quantity of 0
+ */
+export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
+  ids,
+  cart,
+  onCancel,
+  onAppeal,
+  quotaResponse
+}) => {
+  const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
+  const { policies: allProducts } = useContext(CampaignConfigContext);
+  const { getProduct } = useContext(ProductContext);
+  const { sessionToken, endpoint } = useContext(AuthContext);
+
+  const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
+
+  const { pastTransactionsResult, error } = usePastTransaction(
+    ids,
+    sessionToken,
+    endpoint
+  );
+  // Assumes results are already sorted (valid assumption for results from /transactions/history)
+  const sortedTransactions = pastTransactionsResult;
+
+  const { showAlert } = useContext(AlertModalContext);
+  useEffect(() => {
+    if (error) {
+      showAlert({
+        ...systemAlertProps,
+        description: error.message || ""
+      });
+    }
+  }, [error, showAlert]);
+
+  const latestTransactionTime: Date | undefined =
+    sortedTransactions?.[0].transactionTime ?? undefined;
+  const now = new Date();
+  const secondsFromLatestTransaction = latestTransactionTime
+    ? differenceInSeconds(now, latestTransactionTime)
+    : -1;
+
+  const hasAppealProduct =
+    allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false;
+
+  const transactionsByCategoryMap = groupTransactionsByCategory(
+    sortedTransactions,
+    allProducts || [],
+    latestTransactionTime
+  );
+
+  const transactionsByCategoryList = sortTransactions(
+    transactionsByCategoryMap
+  );
+
+  const showGlobalQuota =
+    !!quotaResponse?.globalQuota &&
+    cart.length > 0 &&
+    !!getProduct(cart[0].category)?.quantity.usage;
 
   return (
     <View>
@@ -173,16 +228,31 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
                 <DistantTransactionTitle
                   transactionTime={latestTransactionTime!}
+                  toggleTimeSensitiveTitle={showGlobalQuota}
                 />
               ) : (
                 <RecentTransactionTitle
                   now={now}
                   transactionTime={latestTransactionTime!}
+                  toggleTimeSensitiveTitle={showGlobalQuota}
                 />
               )
             ) : (
-              <NoPreviousTransactionTitle />
+              <NoPreviousTransactionTitle
+                toggleTimeSensitiveTitle={showGlobalQuota}
+              />
             )}
+            {showGlobalQuota &&
+              quotaResponse!.globalQuota!.map(
+                ({ quantity, quotaRefreshTime }, index: number) =>
+                  quotaRefreshTime ? (
+                    <UsageQuotaTitle
+                      key={index}
+                      quantity={quantity}
+                      quotaRefreshTime={quotaRefreshTime}
+                    />
+                  ) : undefined
+              )}
           </AppText>
           {transactionsByCategoryList.length > 0 && (
             <View>
@@ -195,7 +265,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                   <TransactionsGroup
                     key={index}
                     maxTransactionsToDisplay={
-                      isShowFullList ? 99999 : MAX_TRANSACTIONS_TO_DISPLAY
+                      isShowFullList ? BIG_NUMBER : MAX_TRANSACTIONS_TO_DISPLAY
                     }
                     {...transactionsByCategory}
                   />
@@ -203,29 +273,19 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               )}
             </View>
           )}
-          {transactionCounter > MAX_TRANSACTIONS_TO_DISPLAY && (
-            <ShowFullListToggle
-              onClick={() => setIsShowFullList(!isShowFullList)}
-              displayText={isShowFullList ? "Show less" : "Show more"}
-              icon={
-                <Ionicons
-                  name={
-                    isShowFullList
-                      ? "ios-arrow-dropup-circle"
-                      : "ios-arrow-dropdown-circle"
-                  }
-                  size={size(4)}
-                  color={color("blue", 50)}
-                />
-              }
-            />
-          )}
+          {sortedTransactions &&
+            sortedTransactions.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+              <ShowFullListToggle
+                toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
+                isShowFullList={isShowFullList}
+              />
+            )}
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
       </View>
-      {onAppeal && hasAppealProduct() ? (
+      {onAppeal && hasAppealProduct ? (
         <AppealButton onAppeal={onAppeal} />
       ) : undefined}
     </View>

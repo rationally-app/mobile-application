@@ -3,12 +3,7 @@ import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
 import { size } from "../../../src/common/styles";
 import { CheckoutSuccessCard } from "../../../src/components/CustomerQuota/CheckoutSuccess/CheckoutSuccessCard";
-import { ProductContextProvider } from "../../../src/context/products";
-import {
-  PostTransactionResult,
-  CampaignPolicy,
-  Quota
-} from "../../../src/types";
+import { Quota, CampaignPolicy } from "../../../src/types";
 import { CampaignConfigContext } from "../../../src/context/campaignConfig";
 
 const products: CampaignPolicy[] = [
@@ -43,42 +38,6 @@ const products: CampaignPolicy[] = [
   }
 ];
 
-const transactionTime = new Date(2020, 3, 1);
-const checkoutResult: PostTransactionResult = {
-  transactions: [
-    {
-      transaction: [
-        {
-          category: "toilet-paper",
-          quantity: 0,
-          identifierInputs: []
-        },
-        {
-          category: "chocolate",
-          quantity: 5,
-          identifierInputs: []
-        }
-      ],
-      timestamp: transactionTime
-    },
-    {
-      transaction: [
-        {
-          category: "toilet-paper",
-          quantity: 1,
-          identifierInputs: []
-        },
-        {
-          category: "chocolate",
-          quantity: 3,
-          identifierInputs: []
-        }
-      ],
-      timestamp: transactionTime
-    }
-  ]
-};
-
 const quotaResponse: Quota = {
   remainingQuota: [
     { category: "toilet-paper", quantity: 1 },
@@ -93,15 +52,12 @@ storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
       features: null
     }}
   >
-    <ProductContextProvider products={products}>
-      <View style={{ margin: size(3) }}>
-        <CheckoutSuccessCard
-          ids={["S0000001I", "S0000002G"]}
-          onCancel={() => null}
-          checkoutResult={checkoutResult}
-          quotaResponse={quotaResponse}
-        />
-      </View>
-    </ProductContextProvider>
+    <View style={{ margin: size(3) }}>
+      <CheckoutSuccessCard
+        ids={["S0000001I", "S0000002G"]}
+        onCancel={() => null}
+        quotaResponse={quotaResponse}
+      />
+    </View>
   </CampaignConfigContext.Provider>
 ));

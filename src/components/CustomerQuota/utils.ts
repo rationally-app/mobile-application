@@ -1,5 +1,7 @@
 import { CampaignPolicy } from "../../types";
 
+export const BIG_NUMBER = 99999;
+
 export const formatQuantityText = (
   quantity: number,
   unit?: CampaignPolicy["quantity"]["unit"]
@@ -10,7 +12,7 @@ export const formatQuantityText = (
       : `${quantity}${unit.label}`
     : `${quantity}`;
 
-export const sortObjectsByHeaderAsc = (
-  a: { header: string },
-  b: { header: string }
-): 1 | -1 | 0 => (a.header > b.header ? 1 : b.header > a.header ? -1 : 0);
+export const sortTransactionsByOrder = (
+  a: { order?: number },
+  b: { order?: number }
+): number => (a.order ?? BIG_NUMBER) - (b.order ?? BIG_NUMBER);

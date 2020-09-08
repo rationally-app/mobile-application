@@ -4,20 +4,25 @@ import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
-import { CartHook } from "../../../hooks/useCart/useCart";
 import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
 import { FontAwesome } from "@expo/vector-icons";
-import { Quota, Transaction } from "../../../types";
+import { Quota } from "../../../types";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { format } from "date-fns";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
-import { formatQuantityText, sortObjectsByHeaderAsc } from "../utils";
-import { TransactionsGroup } from "../TransactionsGroup";
+import {
+  formatQuantityText,
+  BIG_NUMBER,
+  sortTransactionsByOrder
+} from "../utils";
+import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
+
+const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -28,7 +33,6 @@ const styles = StyleSheet.create({
 interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
-  checkoutResult: CartHook["checkoutResult"];
   quotaResponse: Quota | null;
 }
 
@@ -47,7 +51,6 @@ const UsageQuotaTitle: FunctionComponent<{
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   ids,
   onCancel,
-  checkoutResult,
   quotaResponse
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
@@ -68,6 +71,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     [transactionTimeInSeconds: string]: {
       transactionTime: Date;
       transactions: Transaction[];
+      order: number;
     };
   } = {};
   sortedTransactions?.forEach(item => {
@@ -82,7 +86,8 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     if (!(transactionTimeInSeconds in transactionsByTimeMap)) {
       transactionsByTimeMap[transactionTimeInSeconds] = {
         transactionTime: item.transactionTime,
-        transactions: []
+        transactions: [],
+        order: policy?.order ?? BIG_NUMBER
       };
     }
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
@@ -103,19 +108,23 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     .sort(
       (a, b) => b[1].transactionTime.getTime() - a[1].transactionTime.getTime()
     )
-    .map(([, { transactionTime, transactions }]) => ({
+    .map(([, { transactionTime, transactions, order }]) => ({
       header: format(transactionTime.getTime(), "d MMM yyyy, h:mma"),
-      transactions: transactions.sort(sortObjectsByHeaderAsc)
+      transactions: transactions.sort(sortTransactionsByOrder),
+      order
     }));
 
-  const productType = getProduct(allProducts[0].category)?.type;
+  const productType =
+    (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
   const { title, description, ctaButtonText } = getCheckoutMessages(
     productType
   );
 
   const showGlobalQuota: boolean =
     !!quotaResponse?.globalQuota &&
-    !!getProduct(checkoutQuantities[0].category)?.quantity.usage;
+    !!sortedTransactions &&
+    sortedTransactions.length > 0 &&
+    !!getProduct(sortedTransactions[0].category)?.quantity.usage;
 
   return (
     <View>

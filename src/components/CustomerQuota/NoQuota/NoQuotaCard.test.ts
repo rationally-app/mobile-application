@@ -94,7 +94,7 @@ describe("NoQuotaCard utility functions", () => {
       "TT token": {
         transactions: [
           {
-            transactionDate: "4 Aug 2020, 4:39PM",
+            header: "4 Aug 2020, 4:39PM",
             details: "AAA987654321",
             quantity: "1 qty",
             isAppeal: false
@@ -106,13 +106,13 @@ describe("NoQuotaCard utility functions", () => {
       "Meal credits": {
         transactions: [
           {
-            transactionDate: "4 Aug 2020, 4:39PM",
+            header: "4 Aug 2020, 4:39PM",
             details: "",
             quantity: "$10",
             isAppeal: false
           },
           {
-            transactionDate: "4 Aug 2020, 4:38PM",
+            header: "4 Aug 2020, 4:38PM",
             details: "",
             quantity: "$5",
             isAppeal: false
@@ -124,7 +124,7 @@ describe("NoQuotaCard utility functions", () => {
       "CDC Vouchers": {
         transactions: [
           {
-            transactionDate: "4 Aug 2020, 4:39PM",
+            header: "4 Aug 2020, 4:39PM",
             details: "AAA987654322",
             quantity: "1 book",
             isAppeal: false
@@ -163,17 +163,17 @@ describe("NoQuotaCard utility functions", () => {
       expect.assertions(1);
       expect(sortTransactions(mockTransactionsByCategoryMap)).toStrictEqual([
         {
-          category: "Meal credits",
+          header: "Meal credits",
           transactions: [
             {
-              transactionDate: "4 Aug 2020, 4:39PM",
+              header: "4 Aug 2020, 4:39PM",
               details: "",
               quantity: "$10",
               isAppeal: false,
               order: 0
             },
             {
-              transactionDate: "4 Aug 2020, 4:38PM",
+              header: "4 Aug 2020, 4:38PM",
               details: "",
               quantity: "$5",
               isAppeal: false,
@@ -183,10 +183,10 @@ describe("NoQuotaCard utility functions", () => {
           order: 0
         },
         {
-          category: "TT token",
+          header: "TT token",
           transactions: [
             {
-              transactionDate: "4 Aug 2020, 4:39PM",
+              header: "4 Aug 2020, 4:39PM",
               details: "AAA987654321",
               quantity: "1 qty",
               isAppeal: false,
@@ -196,10 +196,10 @@ describe("NoQuotaCard utility functions", () => {
           order: 1
         },
         {
-          category: "CDC Vouchers",
+          header: "CDC Vouchers",
           transactions: [
             {
-              transactionDate: "4 Aug 2020, 4:39PM",
+              header: "4 Aug 2020, 4:39PM",
               details: "AAA987654322",
               quantity: "1 book",
               isAppeal: false,

@@ -1,4 +1,4 @@
-import { formatQuantityText, sortObjectsByHeaderAsc } from "./utils";
+import { formatQuantityText, sortTransactionsByOrder } from "./utils";
 
 describe("formatQuantityText", () => {
   it("should return only the quantity when no unit is given", () => {
@@ -28,18 +28,20 @@ describe("formatQuantityText", () => {
   });
 });
 
-describe("sortObjectsByHeaderAsc", () => {
-  it("should sort objects by header field in ascending order", () => {
+describe("sortTransactionsByOrder", () => {
+  it("should sort objects by order field in ascending order", () => {
     expect.assertions(1);
     const arr = [
-      { header: "wow", someField: "ok", someOtherField: "yeah" },
-      { header: "but", anotherField: "nah" },
-      { header: "hmm", someField: "right" }
+      { order: 2, someField: "ok", someOtherField: "yeah" },
+      { order: 0, anotherField: "nah" },
+      { order: 1, someField: "right" },
+      { someField: "mmm" }
     ];
-    expect(arr.sort(sortObjectsByHeaderAsc)).toStrictEqual([
-      { header: "but", anotherField: "nah" },
-      { header: "hmm", someField: "right" },
-      { header: "wow", someField: "ok", someOtherField: "yeah" }
+    expect(arr.sort(sortTransactionsByOrder)).toStrictEqual([
+      { order: 0, anotherField: "nah" },
+      { order: 1, someField: "right" },
+      { order: 2, someField: "ok", someOtherField: "yeah" },
+      { someField: "mmm" }
     ]);
   });
 });
