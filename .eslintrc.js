@@ -56,5 +56,10 @@ module.exports = {
         "jest/prefer-strict-equal": "off"
       }
     }
-  ]
+  ],
+  settings: {
+    react: {
+      version: "detect"
+    }
+  }
 };
