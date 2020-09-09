@@ -6,6 +6,7 @@ import {
 } from "react-navigation";
 import CustomerQuotaStack from "./CustomerQuotaStack";
 import MerchantPayoutStack from "./MerchantPayoutStack";
+import AnalyticsStack from "./AnalyticsStack";
 import { StatusBar, View, Platform } from "react-native";
 import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
@@ -29,6 +30,9 @@ const SwitchNavigator = createSwitchNavigator(
         },
         MerchantPayoutStack: {
           screen: MerchantPayoutStack
+        },
+        AnalyticsStack: {
+          screen: AnalyticsStack
         }
       },
       {

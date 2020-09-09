@@ -23,7 +23,8 @@ const App = (): ReactElement => {
             HelpModalContextProvider,
             AlertModalContextProvider,
             ImportantMessageContextProvider,
-            DrawerContextProvider
+            DrawerContextProvider,
+            StatisticsContextProvider
           ]}
         >
           <Content />
