@@ -7,7 +7,6 @@ import {
 } from "../../services/quota";
 import { PastTransactionsResult, CampaignPolicy } from "../../types";
 import { defaultIdentifier } from "../../test/helpers/defaults";
-import { toDate } from "date-fns";
 import { ProductContextProvider } from "../../context/products";
 import { ERROR_MESSAGE } from "../../context/alert";
 
@@ -77,7 +76,7 @@ const mockPastTransactions: PastTransactionsResult = {
           value: "AAA987654321"
         }
       ],
-      transactionTime: toDate(1596530356430)
+      transactionTime: new Date(1596530356430)
     },
     {
       category: "tt-token-lost",
@@ -89,7 +88,7 @@ const mockPastTransactions: PastTransactionsResult = {
           value: "AAA987654322"
         }
       ],
-      transactionTime: toDate(1596530356431)
+      transactionTime: new Date(1596530356431)
     },
     {
       category: "tt-token-lost",
@@ -101,7 +100,7 @@ const mockPastTransactions: PastTransactionsResult = {
           value: "AAA987654323"
         }
       ],
-      transactionTime: toDate(1596530356432)
+      transactionTime: new Date(1596530356432)
     }
   ]
 };
@@ -144,7 +143,7 @@ describe("usePastTransaction", () => {
               value: "AAA987654321"
             }
           ],
-          transactionTime: toDate(1596530356430)
+          transactionTime: new Date(1596530356430)
         },
         {
           category: "tt-token-lost",
@@ -156,7 +155,7 @@ describe("usePastTransaction", () => {
               value: "AAA987654322"
             }
           ],
-          transactionTime: toDate(1596530356431)
+          transactionTime: new Date(1596530356431)
         },
         {
           category: "tt-token-lost",
@@ -168,7 +167,7 @@ describe("usePastTransaction", () => {
               value: "AAA987654323"
             }
           ],
-          transactionTime: toDate(1596530356432)
+          transactionTime: new Date(1596530356432)
         }
       ]);
     });
