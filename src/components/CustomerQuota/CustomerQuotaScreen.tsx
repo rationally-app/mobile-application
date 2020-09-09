@@ -142,26 +142,37 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     };
   }, [cartState, navigation]);
 
+  const expireSession = useCallback(() => {
+    const key = `${operatorToken}${endpoint}`;
+    setAuthCredentials(key, {
+      operatorToken,
+      endpoint,
+      sessionToken,
+      expiry: new Date().getTime()
+    });
+    showAlert({
+      ...expiredAlertProps,
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
+      onOk: () => {
+        navigation.navigate("CampaignLocationsScreen");
+      }
+    });
+  }, [
+    setAuthCredentials,
+    endpoint,
+    navigation,
+    operatorToken,
+    sessionToken,
+    showAlert
+  ]);
+
   useEffect(() => {
     if (!error) {
       return;
     }
     if (error instanceof SessionError) {
       clearError();
-      const key = `${operatorToken}${endpoint}`;
-      setAuthCredentials(key, {
-        operatorToken,
-        endpoint,
-        sessionToken,
-        expiry: new Date().getTime()
-      });
-      showAlert({
-        ...expiredAlertProps,
-        description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
-        onOk: () => {
-          navigation.navigate("CampaignLocationsScreen");
-        }
-      });
+      expireSession();
       return;
     }
     if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
@@ -241,15 +252,11 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       throw new Error(error.message);
     }
   }, [
-    setAuthCredentials,
     campaignFeatures?.campaignName,
     cartState,
     clearError,
-    endpoint,
     error,
-    navigation,
-    operatorToken,
-    sessionToken,
+    expireSession,
     showAlert
   ]);
 
