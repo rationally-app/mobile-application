@@ -189,7 +189,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               ).map((transactionsByTime: TransactionsGroup, index: number) => (
                 <TransactionsGroup
                   key={index}
-                  maxTransactionsToDisplay={99999}
+                  maxTransactionsToDisplay={BIG_NUMBER}
                   {...transactionsByTime}
                 />
               ))}
