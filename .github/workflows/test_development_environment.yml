@@ -35,10 +35,10 @@ jobs:
         run: npm run lint
       - name: Set Timezone to +8 (Ubuntu)
         if: startsWith(matrix.os, 'ubuntu')
-        run: sudo timedatectl set-timezone Asia/Shanghai
+        run: sudo timedatectl set-timezone Asia/Singapore
       - name: Set Timezone to +8 (MacOS)
         if: startsWith(matrix.os, 'macOS')
-        run: sudo systemsetup -settimezone Asia/Shanghai
+        run: sudo systemsetup -settimezone Asia/Singapore
       - name: Set Timezone to +8 (Windows)
         if: startsWith(matrix.os, 'windows')
         run: tzutil /s "Singapore Standard Time"

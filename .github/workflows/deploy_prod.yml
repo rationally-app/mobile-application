@@ -20,7 +20,7 @@ jobs:
       - name: Check Lint
         run: npm run lint
       - name: Set Timezone to +8 (Ubuntu)
-        run: sudo timedatectl set-timezone Asia/Shanghai
+        run: sudo timedatectl set-timezone Asia/Singapore
       - name: Test
         run: npm run test -- --coverage
   deploy_prod:
