@@ -5,7 +5,6 @@ import {
   sortTransactions
 } from "./CheckoutSuccessCard";
 import { defaultIdentifier } from "../../../test/helpers/defaults";
-import { toDate } from "date-fns";
 
 describe("CheckoutSuccessCard utility functions", () => {
   let sortedTransactions: PastTransactionsResult["pastTransactions"];
@@ -13,7 +12,7 @@ describe("CheckoutSuccessCard utility functions", () => {
   let mockTransactionsByTimeMap: TransactionsByTimeMap;
 
   const latestTransactionTimeMs = 1596530350000;
-  const latestTransactionTime = toDate(latestTransactionTimeMs);
+  const latestTransactionTime = new Date(latestTransactionTimeMs);
 
   beforeAll(() => {
     sortedTransactions = [
@@ -44,12 +43,12 @@ describe("CheckoutSuccessCard utility functions", () => {
             value: "AAA987654322"
           }
         ],
-        transactionTime: toDate(latestTransactionTimeMs - 10000)
+        transactionTime: new Date(latestTransactionTimeMs - 10000)
       },
       {
         category: "meal-credits",
         quantity: 5,
-        transactionTime: toDate(latestTransactionTimeMs - 20000)
+        transactionTime: new Date(latestTransactionTimeMs - 20000)
       }
     ];
     allProducts = [
@@ -113,7 +112,7 @@ describe("CheckoutSuccessCard utility functions", () => {
         order: -1596530350
       },
       "1596530340": {
-        transactionTime: toDate(latestTransactionTimeMs - 10000),
+        transactionTime: new Date(latestTransactionTimeMs - 10000),
         transactions: [
           {
             header: "CDC Vouchers",
@@ -126,7 +125,7 @@ describe("CheckoutSuccessCard utility functions", () => {
         order: -1596530340
       },
       "1596530330": {
-        transactionTime: toDate(latestTransactionTimeMs - 20000),
+        transactionTime: new Date(latestTransactionTimeMs - 20000),
         transactions: [
           {
             header: "Meal credits",
