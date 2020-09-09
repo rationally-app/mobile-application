@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { getQuota } from "../../services/quota";
 import { useProductContext } from "../../context/products";
@@ -10,8 +10,9 @@ import { Quota, Policy } from "../../types";
 export type QuotaHook = {
   quotaResponse: Quota | null;
   allQuotaResponse: Quota | null;
-  fetchQuota: () => Promise<void>;
-  quotaError?: Error;
+  fetchQuota: () => Promise<Quota | null>;
+  hasNoQuota: (quota?: Quota | null) => boolean;
+  hasInvalidQuota: (quota?: Quota | null) => boolean;
 };
 
 export const filterQuotaWithAvailableProducts = (
@@ -29,21 +30,6 @@ export const filterQuotaWithAvailableProducts = (
   );
 };
 
-export const hasNoQuota = (quota: Quota | null): boolean => {
-  if (quota === null) {
-    return true;
-  }
-  return quota.remainingQuota.every(item => item.quantity === 0);
-};
-
-export const hasInvalidQuota = (quota: Quota | null): boolean => {
-  // Note: Invalid quota refers to negative quota received
-  if (quota === null) {
-    return true;
-  }
-  return quota.remainingQuota.some(item => item.quantity < 0);
-};
-
 export const useQuota = (
   ids: string[],
   authKey: string,
@@ -51,27 +37,43 @@ export const useQuota = (
 ): QuotaHook => {
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
-  const [quotaError, setError] = useState<Error>();
   const { products } = useProductContext();
 
-  const fetchQuota = async (): Promise<void> => {
+  const fetchQuota = async (): Promise<Quota | null> => {
     Sentry.addBreadcrumb({
       category: "useQuota",
       message: "fetchQuota - fetching quota"
     });
-    const allQuotaResponse = await getQuota(ids, authKey, endpoint);
-    setAllQuotaResponse(allQuotaResponse);
-    const quotaResponse = filterQuotaWithAvailableProducts(
-      allQuotaResponse,
+    const _allQuotaResponse = await getQuota(ids, authKey, endpoint);
+    setAllQuotaResponse(_allQuotaResponse);
+    const _quotaResponse = filterQuotaWithAvailableProducts(
+      _allQuotaResponse,
       products
     );
-    setQuotaResponse(quotaResponse);
+    setQuotaResponse(_quotaResponse);
+    return _quotaResponse;
+  };
+
+  const hasNoQuota = (quota: Quota | null = quotaResponse): boolean => {
+    if (quota === null) {
+      return true;
+    }
+    return quota.remainingQuota.every(item => item.quantity === 0);
+  };
+
+  const hasInvalidQuota = (quota: Quota | null = quotaResponse): boolean => {
+    // Note: Invalid quota refers to negative quota received
+    if (quota === null) {
+      return true;
+    }
+    return quota.remainingQuota.some(item => item.quantity < 0);
   };
 
   return {
     quotaResponse,
     allQuotaResponse,
     fetchQuota,
-    quotaError
+    hasNoQuota,
+    hasInvalidQuota
   };
 };

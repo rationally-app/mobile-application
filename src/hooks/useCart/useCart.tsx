@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useContext } from "react";
 import { Sentry } from "../../utils/errorTracking";
 
 import { QuotaError, NotEligibleError } from "../../services/quota";
-import { useQuota, hasNoQuota, hasInvalidQuota } from "../useQuota/useQuota";
+import { useQuota } from "../useQuota/useQuota";
 import { postTransaction } from "../../services/quota";
 import { useProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
@@ -139,29 +139,24 @@ export const useCart = (
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
-  const { quotaResponse, allQuotaResponse, fetchQuota, quotaError } = useQuota(
-    ids,
-    authKey,
-    endpoint
-  );
+  const {
+    quotaResponse,
+    allQuotaResponse,
+    fetchQuota,
+    hasNoQuota,
+    hasInvalidQuota
+  } = useQuota(ids, authKey, endpoint);
   const { showAlert } = useContext(AlertModalContext);
   const clearError = useCallback((): void => setError(undefined), []);
-
-  useEffect(() => {
-    if (quotaError) {
-      setError(quotaError);
-    }
-  }, [quotaError]);
 
   /**
    * Fetch quota whenever IDs change.
    */
 
   useEffect(() => {
-
-    async function fetchQuotaWrapper(){
+    async function fetchQuotaWrapper() {
       try {
-        await fetchQuota();
+        const quotaResponse = await fetchQuota();
         if (hasInvalidQuota(quotaResponse)) {
           Sentry.captureException(
             `Negative Quota Received: ${JSON.stringify(
@@ -174,8 +169,7 @@ export const useCart = (
         } else {
           setCartState("DEFAULT");
         }
-      }
-      catch (e) {
+      } catch (e) {
         if (e instanceof NotEligibleError) {
           setCartState("NOT_ELIGIBLE");
           // Cart will remain in FETCHING_QUOTA state.
@@ -202,8 +196,6 @@ export const useCart = (
     if (prevIds !== ids || prevProducts !== products) {
       setCartState("FETCHING_QUOTA");
       fetchQuotaWrapper();
-      
-      
     }
   }, [
     authKey,
