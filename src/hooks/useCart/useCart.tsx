@@ -10,7 +10,7 @@ import {
   IdentifierInput
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
 import { useQuota } from "../useQuota/useQuota";
 
@@ -145,7 +145,6 @@ export const useCart = (
     hasNoQuota,
     hasInvalidQuota
   } = useQuota(ids, authKey, endpoint);
-  const { showAlert } = useContext(AlertModalContext);
   const clearError = useCallback((): void => setError(undefined), []);
 
   /**
@@ -153,7 +152,7 @@ export const useCart = (
    */
 
   useEffect(() => {
-    async function fetchQuotaWrapper() {
+    async function fetchQuotaWrapper(): Promise<void> {
       try {
         const quotaResponse = await fetchQuota();
         if (hasInvalidQuota(quotaResponse)) {
@@ -187,7 +186,17 @@ export const useCart = (
       setCartState("FETCHING_QUOTA");
       fetchQuotaWrapper();
     }
-  }, [authKey, endpoint, ids, prevIds, prevProducts, products, fetchQuota]);
+  }, [
+    authKey,
+    endpoint,
+    ids,
+    prevIds,
+    prevProducts,
+    products,
+    fetchQuota,
+    hasInvalidQuota,
+    hasNoQuota
+  ]);
 
   /**
    * Merge quota response with current cart whenever quota response or products change.
@@ -213,7 +222,7 @@ export const useCart = (
     if (cartState === "PURCHASED") {
       fetchQuota();
     }
-  }, [ids, authKey, endpoint, cartState, products]);
+  }, [ids, authKey, endpoint, cartState, products, fetchQuota]);
 
   /**
    * Update quantity of an item in the cart.
