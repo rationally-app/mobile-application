@@ -13,7 +13,7 @@ import { ERROR_MESSAGE } from "../../context/alert";
 jest.mock("../../services/quota");
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
 
-const id = "ID1";
+const ids = ["ID1"];
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
 
@@ -126,7 +126,7 @@ describe("usePastTransaction", () => {
       mockGetPastTransactions.mockReturnValue(mockPastTransactions);
 
       const { result, waitForNextUpdate } = renderHook(
-        () => usePastTransaction([id], key, endpoint),
+        () => usePastTransaction(ids, key, endpoint),
         { wrapper }
       );
 
@@ -177,7 +177,7 @@ describe("usePastTransaction", () => {
       mockGetPastTransactions.mockReturnValue(mockEmptyPastTransactions);
 
       const { result, waitForNextUpdate } = renderHook(
-        () => usePastTransaction([id], key, endpoint),
+        () => usePastTransaction(ids, key, endpoint),
         { wrapper }
       );
 
@@ -193,7 +193,7 @@ describe("usePastTransaction", () => {
       );
 
       const { result, waitForNextUpdate } = renderHook(
-        () => usePastTransaction([id], key, endpoint),
+        () => usePastTransaction(ids, key, endpoint),
         { wrapper }
       );
 
