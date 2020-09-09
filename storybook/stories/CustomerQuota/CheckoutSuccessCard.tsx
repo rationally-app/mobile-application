@@ -3,10 +3,15 @@ import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
 import { size } from "../../../src/common/styles";
 import { CheckoutSuccessCard } from "../../../src/components/CustomerQuota/CheckoutSuccess/CheckoutSuccessCard";
-import { ProductContext } from "../../../src/context/products";
-import { Policy, PostTransactionResult } from "../../../src/types";
+import { ProductContextProvider } from "../../../src/context/products";
+import {
+  PostTransactionResult,
+  CampaignPolicy,
+  Quota
+} from "../../../src/types";
+import { CampaignConfigContext } from "../../../src/context/campaignConfig";
 
-const products: Policy[] = [
+const products: CampaignPolicy[] = [
   {
     category: "toilet-paper",
     name: "🧻 Toilet Paper",
@@ -74,28 +79,29 @@ const checkoutResult: PostTransactionResult = {
   ]
 };
 
-const getProduct = (category: string): Policy | undefined =>
-  products?.find(product => product.category === category) ?? undefined;
+const quotaResponse: Quota = {
+  remainingQuota: [
+    { category: "toilet-paper", quantity: 1 },
+    { category: "chocolate", quantity: 7 }
+  ]
+};
 
 storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
-  <ProductContext.Provider
+  <CampaignConfigContext.Provider
     value={{
-      products,
-      allProducts: products,
-      getProduct,
-      setProducts: () => null,
-      features: undefined,
-      getFeatures: () => undefined,
-      setFeatures: () => null,
-      setAllProducts: () => null
+      policies: products,
+      features: null
     }}
   >
-    <View style={{ margin: size(3) }}>
-      <CheckoutSuccessCard
-        ids={["S0000001I", "S0000002G"]}
-        onCancel={() => null}
-        checkoutResult={checkoutResult}
-      />
-    </View>
-  </ProductContext.Provider>
+    <ProductContextProvider products={products}>
+      <View style={{ margin: size(3) }}>
+        <CheckoutSuccessCard
+          ids={["S0000001I", "S0000002G"]}
+          onCancel={() => null}
+          checkoutResult={checkoutResult}
+          quotaResponse={quotaResponse}
+        />
+      </View>
+    </ProductContextProvider>
+  </CampaignConfigContext.Provider>
 ));

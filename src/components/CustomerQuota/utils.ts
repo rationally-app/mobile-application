@@ -1,10 +1,10 @@
 import { chain } from "lodash";
 import { CheckoutQuantitiesByItem, ItemQuantities } from "./types";
-import { Policy, PostTransactionResult } from "../../types";
+import { PostTransactionResult, CampaignPolicy } from "../../types";
 
 export const formatQuantityText = (
   quantity: number,
-  unit?: Policy["quantity"]["unit"]
+  unit?: CampaignPolicy["quantity"]["unit"]
 ): string =>
   unit
     ? unit?.type === "PREFIX"

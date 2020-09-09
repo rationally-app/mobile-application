@@ -7,6 +7,13 @@ export interface NavigationProps {
   navigation: NavigationDrawerProp<NavigationRoute, NavigationParams>;
 }
 
+export type AuthCredentials = {
+  operatorToken: string;
+  sessionToken: string;
+  endpoint: string;
+  expiry: number;
+};
+
 export const SessionCredentials = t.type({
   sessionToken: t.string,
   ttl: DateFromNumber
@@ -43,7 +50,12 @@ const PolicyQuantity = t.intersection([
       type: t.union([t.literal("PREFIX"), t.literal("POSTFIX")]),
       label: t.string
     }),
-    checkoutLimit: t.number
+    checkoutLimit: t.number,
+    usage: t.type({
+      periodType: t.union([t.literal("ROLLING"), t.literal("CRON")]),
+      periodExpression: t.union([t.number, t.string]),
+      limit: t.number
+    })
   })
 ]);
 
@@ -95,7 +107,7 @@ const IdentifierInput = t.intersection([
 
 const CategoryType = t.union([t.literal("DEFAULT"), t.literal("APPEAL")]);
 
-const Policy = t.intersection([
+const CampaignPolicy = t.intersection([
   t.type({
     category: t.string,
     name: t.string,
@@ -123,16 +135,18 @@ const IdentificationFlag = t.intersection([
   })
 ]);
 
-const Features = t.type({
-  REQUIRE_OTP: t.boolean,
-  TRANSACTION_GROUPING: t.boolean,
-  FLOW_TYPE: t.string,
+const CampaignFeatures = t.type({
+  minAppBinaryVersion: t.string,
+  minAppBuildVersion: t.number,
+  campaignName: t.string,
+  transactionGrouping: t.boolean,
+  flowType: t.string,
   id: IdentificationFlag
 });
 
-export const EnvVersion = t.type({
-  policies: t.array(Policy),
-  features: Features
+export const CampaignConfig = t.type({
+  features: t.union([CampaignFeatures, t.null]),
+  policies: t.union([t.array(CampaignPolicy), t.null])
 });
 
 export type TextInputType = t.TypeOf<typeof TextInputType>;
@@ -140,9 +154,12 @@ export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
 export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
-export type Policy = t.TypeOf<typeof Policy>;
-export type EnvVersion = t.TypeOf<typeof EnvVersion>;
-export type Features = t.TypeOf<typeof Features>;
+export type CampaignPolicy = t.TypeOf<typeof CampaignPolicy>;
+export type CampaignFeatures = t.TypeOf<typeof CampaignFeatures>;
+export type CampaignConfig = t.TypeOf<typeof CampaignConfig>;
+export type ConfigHashes = {
+  [config in keyof CampaignConfig]: string | undefined;
+};
 
 const ItemQuota = t.intersection([
   t.type({
@@ -150,14 +167,18 @@ const ItemQuota = t.intersection([
     quantity: t.number
   }),
   t.partial({
+    quotaRefreshTime: t.number,
     transactionTime: DateFromNumber,
     identifierInputs: t.array(IdentifierInput)
   })
 ]);
 
-export const Quota = t.type({
-  remainingQuota: t.array(ItemQuota)
-});
+export const Quota = t.intersection([
+  t.type({
+    remainingQuota: t.array(ItemQuota)
+  }),
+  t.partial({ localQuota: t.array(ItemQuota), globalQuota: t.array(ItemQuota) })
+]);
 
 export type ItemQuota = t.TypeOf<typeof ItemQuota>;
 export type Quota = t.TypeOf<typeof Quota>;
@@ -199,21 +220,4 @@ export type PastTransactionsResult = t.TypeOf<typeof PastTransactionsResult>;
 export type Voucher = {
   serial: string;
   denomination: number;
-};
-
-const NewFeatures = t.type({
-  minAppBinaryVersion: t.string,
-  minAppBuildVersion: t.number,
-  campaignName: t.string
-});
-
-export const CampaignConfig = t.type({
-  features: t.union([NewFeatures, t.null])
-});
-
-export type CampaignFeatures = t.TypeOf<typeof NewFeatures>;
-export type CampaignConfig = t.TypeOf<typeof CampaignConfig>;
-
-export type ConfigHashes = {
-  [config in keyof CampaignConfig]?: string;
 };

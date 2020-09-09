@@ -9,17 +9,18 @@ import { Feather } from "@expo/vector-icons";
 import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
 import { Item } from "./Item";
-import { useProductContext } from "../../../context/products";
+import { ProductContext } from "../../../context/products";
 import {
   AlertModalContext,
   defaultWarningProps,
+  defaultConfirmationProps,
   wrongFormatAlertProps,
-  systemAlertProps,
-  ERROR_MESSAGE
+  ERROR_MESSAGE,
+  WARNING_MESSAGE,
+  duplicateAlertProps
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
-import { EnvVersionError } from "../../../services/envVersion";
-import { Sentry } from "../../../utils/errorTracking";
+import { CampaignConfigContext } from "../../../context/campaignConfig";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -27,6 +28,7 @@ interface ItemsSelectionCard {
   isLoading: boolean;
   checkoutCart: () => void;
   onCancel: () => void;
+  onBack: () => void;
   cart: Cart;
   updateCart: CartHook["updateCart"];
 }
@@ -37,31 +39,35 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   isLoading,
   checkoutCart,
   onCancel,
+  onBack,
   cart,
   updateCart
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
-  const { getFeatures, products, features } = useProductContext();
+  const { features } = useContext(CampaignConfigContext);
+  const { products } = useContext(ProductContext);
   const { showAlert } = useContext(AlertModalContext);
 
   const onCheckAddedUsers = async (input: string): Promise<void> => {
     try {
+      if (!features) {
+        return;
+      }
       const id = validateAndCleanId(
         input,
-        features?.id?.validation,
-        features?.id?.validationRegex
+        features.id.validation,
+        features.id.validationRegex
       );
       Vibration.vibrate(50);
-      setIsAddUserModalVisible(false);
       if (ids.indexOf(id) > -1) {
         throw new Error(ERROR_MESSAGE.DUPLICATE_ID);
       }
       addId(id);
     } catch (e) {
-      if (e instanceof EnvVersionError) {
-        Sentry.captureException(e);
+      setIsAddUserModalVisible(false);
+      if (e.message === ERROR_MESSAGE.DUPLICATE_ID) {
         showAlert({
-          ...systemAlertProps,
+          ...duplicateAlertProps,
           description: e.message,
           onOk: () => setIsAddUserModalVisible(true)
         });
@@ -79,12 +85,15 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
   const isAppeal = products.some(product => product.categoryType === "APPEAL");
+  const isChargeable = cart.some(
+    cartItem => cartItem.descriptionAlert === "*chargeable"
+  );
   return (
     <View>
       <CustomerCard
         ids={ids}
         onAddId={
-          getFeatures()?.TRANSACTION_GROUPING
+          features?.transactionGrouping
             ? () => setIsAddUserModalVisible(true)
             : undefined
         }
@@ -105,7 +114,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             text={isAppeal ? "Back" : "Cancel"}
             onPress={
               isAppeal
-                ? onCancel
+                ? onBack
                 : () => {
                     showAlert({
                       ...defaultWarningProps,
@@ -136,7 +145,23 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 color={color("grey", 0)}
               />
             }
-            onPress={checkoutCart}
+            onPress={
+              !isChargeable
+                ? checkoutCart
+                : () => {
+                    showAlert({
+                      ...defaultConfirmationProps,
+                      title: "Payment collected?",
+                      description: WARNING_MESSAGE.PAYMENT_COLLECTION,
+                      buttonTexts: {
+                        primaryActionText: "Collected",
+                        secondaryActionText: "No"
+                      },
+                      visible: true,
+                      onOk: checkoutCart
+                    });
+                  }
+            }
             isLoading={isLoading}
             fullWidth={true}
           />

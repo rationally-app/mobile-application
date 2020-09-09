@@ -34,14 +34,8 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { useProductContext } from "../../context/products";
-import { EnvVersionError } from "../../services/envVersion";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import {
-  AlertModalContext,
-  wrongFormatAlertProps,
-  systemAlertProps
-} from "../../context/alert";
+import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -83,8 +77,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
-  const { features, allProducts } = useProductContext();
-  const { features: campaignFeatures } = useContext(CampaignConfigContext);
+  const { features, policies } = useContext(CampaignConfigContext);
   const { showAlert } = useContext(AlertModalContext);
 
   useEffect(() => {
@@ -125,13 +118,16 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const onCheck = async (input: string): Promise<void> => {
     try {
       setIsScanningEnabled(false);
+      if (!features) {
+        return;
+      }
       const id = validateAndCleanId(
         input,
-        features?.id?.validation,
-        features?.id?.validationRegex
+        features.id.validation,
+        features.id.validationRegex
       );
       Vibration.vibrate(50);
-      const defaultProducts = allProducts.filter(
+      const defaultProducts = policies?.filter(
         policy =>
           policy.categoryType === undefined || policy.categoryType === "DEFAULT"
       );
@@ -143,20 +139,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
-      if (e instanceof EnvVersionError) {
-        Sentry.captureException(e);
-        showAlert({
-          ...systemAlertProps,
-          description: e.message,
-          onOk: () => setIsScanningEnabled(true)
-        });
-      } else {
-        showAlert({
-          ...wrongFormatAlertProps,
-          description: e.message,
-          onOk: () => setIsScanningEnabled(true)
-        });
-      }
+      showAlert({
+        ...wrongFormatAlertProps,
+        description: e.message,
+        onOk: () => setIsScanningEnabled(true)
+      });
     }
   };
 
@@ -181,9 +168,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             </View>
           )}
           <Card>
-            {campaignFeatures?.campaignName && (
+            {features?.campaignName && (
               <AppText style={styles.campaignName}>
-                {campaignFeatures.campaignName}
+                {features.campaignName}
               </AppText>
             )}
             <AppText>
@@ -195,7 +182,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               setIdInput={setIdInput}
               submitId={() => onCheck(idInput)}
               keyboardType={
-                features?.id?.type === "NUMBER" ? "numeric" : "default"
+                features?.id.type === "NUMBER" ? "numeric" : "default"
               }
             />
           </Card>
@@ -211,7 +198,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           onCancel={() => setShouldShowCamera(false)}
           cancelButtonText="Enter ID manually"
           barCodeTypes={
-            features?.id?.scannerType === "QR"
+            features?.id.scannerType === "QR"
               ? [BarCodeScanner.Constants.BarCodeType.qr]
               : [BarCodeScanner.Constants.BarCodeType.code39]
           }

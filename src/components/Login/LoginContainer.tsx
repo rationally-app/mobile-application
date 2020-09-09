@@ -1,5 +1,4 @@
 import React, {
-  useCallback,
   useState,
   FunctionComponent,
   useEffect,
@@ -14,9 +13,8 @@ import {
   Vibration,
   BackHandler
 } from "react-native";
-import { NavigationProps } from "../../types";
+import { NavigationProps, AuthCredentials } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
-import { useAuthenticationContext } from "../../context/auth";
 import { size } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
@@ -35,22 +33,17 @@ import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { Banner } from "../Layout/Banner";
-import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
-import { useProductContext } from "../../context/products";
-import { useLogout } from "../../hooks/useLogout";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
+import { requestOTP, LoginError, AuthError } from "../../services/auth";
 import {
   AlertModalContext,
   systemAlertProps,
-  wrongFormatAlertProps,
   ERROR_MESSAGE,
-  defaultConfirmationProps,
-  invalidEntryAlertProps,
-  disabledAccessAlertProps
+  defaultConfirmationProps
 } from "../../context/alert";
-import { requestOTP, LoginError, LoginLockedError } from "../../services/auth";
+import { AuthStoreContext } from "../../context/authStore";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -85,26 +78,26 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     Sentry.addBreadcrumb({ category: "navigation", message: "LoginContainer" });
   }, []);
 
-  const { token, endpoint } = useAuthenticationContext();
+  const { hasLoadedFromStore, authCredentials } = useContext(AuthStoreContext);
   const [isLoading, setIsLoading] = useState(false);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const { config, setConfigValue } = useConfigContext();
   const [loginStage, setLoginStage] = useState<LoginStage>("SCAN");
   const [mobileNumber, setMobileNumber] = useState("");
-  const [codeKey, setCodeKey] = useState("");
-  const [endpointTemp, setEndpointTemp] = useState("");
+  const [tempAuthCredentials, setTempAuthCredentials] = useState<
+    Pick<AuthCredentials, "endpoint" | "operatorToken">
+  >();
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const {
-    features,
-    setFeatures,
-    setProducts,
-    setAllProducts
-  } = useProductContext();
   const { showAlert } = useContext(AlertModalContext);
-  const { logout } = useLogout();
   const lastResendWarningMessageRef = useRef("");
-  const setState = useState()[1];
+
+  useEffect(() => {
+    Sentry.addBreadcrumb({
+      category: "loginStage",
+      message: loginStage
+    });
+  }, [loginStage]);
 
   const resetStage = (): void => {
     setLoginStage("SCAN");
@@ -131,27 +124,22 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     });
   };
 
+  const setState = useState()[1];
   const handleRequestOTP = async (
     fullNumber = mobileNumber
   ): Promise<boolean> => {
     try {
       if (!(await getResendConfirmationIfNeeded())) return false;
-      const response = await requestOTP(fullNumber, codeKey, endpointTemp);
+      const response = await requestOTP(
+        fullNumber,
+        tempAuthCredentials?.operatorToken ?? "",
+        tempAuthCredentials?.endpoint ?? ""
+      );
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof LoginLockedError) {
-        showAlert({
-          ...disabledAccessAlertProps,
-          description: e.message,
-          onOk: () => resetStage()
-        });
-      } else if (e instanceof LoginError) {
-        showAlert({
-          ...invalidEntryAlertProps,
-          description: e.message,
-          onOk: () => resetStage()
-        });
+      if (e instanceof LoginError) {
+        showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -161,80 +149,13 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     }
   };
 
-  const handleLogout = useCallback((): void => {
-    logout(navigation.dispatch);
-  }, [logout, navigation.dispatch]);
-
-  useEffect(() => {
-    Sentry.addBreadcrumb({
-      category: "loginStage",
-      message: loginStage
-    });
-  }, [loginStage]);
-
-  useEffect(() => {
-    const setEnvVersion = async (): Promise<void> => {
-      try {
-        setIsLoading(true);
-        const versionResponse = await getEnvVersion(token, endpoint);
-        setFeatures(versionResponse.features);
-        setProducts(
-          versionResponse.policies.filter(
-            policy =>
-              policy.categoryType === undefined ||
-              policy.categoryType === "DEFAULT"
-          )
-        );
-        setAllProducts(versionResponse.policies);
-      } catch (e) {
-        if (e instanceof EnvVersionError) {
-          Sentry.captureException(e);
-          showAlert({
-            ...systemAlertProps,
-            description: ERROR_MESSAGE.ENV_VERSION_ERROR
-          });
-          handleLogout();
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    if (token && endpoint && !features) {
-      setEnvVersion();
-    }
-  }, [
-    endpoint,
-    token,
-    features,
-    setFeatures,
-    setProducts,
-    setAllProducts,
-    handleLogout,
-    showAlert
-  ]);
-
   useLayoutEffect(() => {
-    if (!isLoading && token && endpoint && features?.FLOW_TYPE) {
-      lastResendWarningMessageRef.current = "";
-      switch (features?.FLOW_TYPE) {
-        case "DEFAULT":
-        case "MERCHANT":
-          // TODO: Navigate directly to CampaignInitialisationScreen on successful login.
-          // CampaignInitialisationScreen will handle the retrieval of the campaign config + version checks
-          navigation.navigate("CampaignInitialisationScreen", {
-            flowType: features.FLOW_TYPE
-          });
-          break;
-        default:
-          showAlert({
-            ...systemAlertProps,
-            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-          });
-          // Reset to initial login state
-          resetStage();
-      }
+    if (hasLoadedFromStore && Object.keys(authCredentials).length === 1) {
+      navigation.navigate("CampaignInitialisationScreen", {
+        authCredentials: Object.values(authCredentials)[0]
+      });
     }
-  }, [isLoading, endpoint, navigation, token, features, showAlert]);
+  }, [authCredentials, hasLoadedFromStore, navigation]);
 
   useEffect(() => {
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
@@ -252,8 +173,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           });
           setLoginStage("SCAN");
         } else {
-          setCodeKey(queryKey);
-          setEndpointTemp(queryEndpoint);
+          setTempAuthCredentials({
+            endpoint: queryEndpoint,
+            operatorToken: queryKey
+          });
           setLoginStage("MOBILE_NUMBER");
         }
       }
@@ -298,35 +221,20 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         Vibration.vibrate(50);
         if (!RegExp(DOMAIN_FORMAT).test(endpoint))
           throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN);
-        setCodeKey(key);
-        setEndpointTemp(endpoint);
+        setTempAuthCredentials({
+          endpoint,
+          operatorToken: key
+        });
         setIsLoading(false);
         setLoginStage("MOBILE_NUMBER");
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
-        if (e.message === ERROR_MESSAGE.SERVER_ERROR) {
-          showAlert({
-            ...systemAlertProps,
-            description: e.message
-          });
-        } else if (e.message === ERROR_MESSAGE.AUTH_FAILURE_EXPIRED_TOKEN) {
-          showAlert({
-            ...systemAlertProps,
-            title: "Expired",
-            description: e.message
-          });
-        } else if (
-          e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT ||
-          e.message === ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-        ) {
-          showAlert({
-            ...wrongFormatAlertProps,
-            description: e.message
-          });
+        if (e instanceof AuthError) {
+          showAlert(e.alertProps);
         } else {
           setState(() => {
-            throw e; // Let ErrorBoundary handle
+            throw error; // Let ErrorBoundary handle
           });
         }
         setIsLoading(false);
@@ -392,8 +300,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             <LoginOTPCard
               resetStage={resetStage}
               mobileNumber={mobileNumber}
-              codeKey={codeKey}
-              endpoint={endpointTemp}
+              operatorToken={tempAuthCredentials?.operatorToken ?? ""}
+              endpoint={tempAuthCredentials?.endpoint ?? ""}
               handleRequestOTP={handleRequestOTP}
             />
           )}

@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { getQuota } from "../../services/quota";
-import { useProductContext } from "../../context/products";
+import { ProductContext } from "../../context/products";
 
 import { transform } from "lodash";
 
-import { Quota, Policy } from "../../types";
+import { Quota, CampaignPolicy } from "../../types";
 
 export type QuotaHook = {
   quotaResponse: Quota | null;
@@ -15,12 +15,14 @@ export type QuotaHook = {
   hasInvalidQuota: (quota?: Quota | null) => boolean;
 };
 
-export const filterQuotaWithAvailableProducts = (
+const filterQuotaWithAvailableProducts = (
   quota: Quota,
-  products: Policy[]
+  products: CampaignPolicy[]
 ): Quota => {
-  const filteredQuota: Quota = { remainingQuota: [] };
-  return transform(
+  const filteredQuota: Quota = {
+    remainingQuota: []
+  };
+  transform(
     quota.remainingQuota,
     (result: Quota, itemQuota) => {
       if (products.some(policy => policy.category === itemQuota.category))
@@ -28,6 +30,32 @@ export const filterQuotaWithAvailableProducts = (
     },
     filteredQuota
   );
+
+  if (quota.globalQuota) {
+    filteredQuota.globalQuota = [];
+    transform(
+      quota.globalQuota!,
+      (result: Quota, itemQuota) => {
+        if (products.some(policy => policy.category === itemQuota.category))
+          result.globalQuota!.push(itemQuota);
+      },
+      filteredQuota
+    );
+  }
+
+  if (quota.localQuota) {
+    filteredQuota.localQuota = [];
+    transform(
+      quota.localQuota!,
+      (result: Quota, itemQuota) => {
+        if (products.some(policy => policy.category === itemQuota.category))
+          result.localQuota!.push(itemQuota);
+      },
+      filteredQuota
+    );
+  }
+
+  return filteredQuota;
 };
 
 export const useQuota = (
@@ -37,7 +65,7 @@ export const useQuota = (
 ): QuotaHook => {
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
-  const { products } = useProductContext();
+  const { products } = useContext(ProductContext);
 
   const fetchQuota = async (): Promise<Quota | null> => {
     Sentry.addBreadcrumb({

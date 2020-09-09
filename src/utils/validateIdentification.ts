@@ -1,26 +1,22 @@
 import { validateAndCleanNric } from "./validateNric";
 import { validateAndCleanRegexInput } from "./validateInputWithRegex";
-import { EnvVersionError } from "../services/envVersion";
+import { CampaignConfigError } from "../services/campaignConfig";
+import { ERROR_MESSAGE } from "../context/alert";
 
 export const validateAndCleanId = (
   inputId: string,
-  idValidation: string | undefined,
-  idRegex?: string | undefined
+  idValidation: string,
+  idRegex?: string
 ): string => {
   let id: string;
-  if (!idValidation)
-    throw new EnvVersionError(
-      "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
-    );
   switch (idValidation) {
     case "NRIC":
-      if (idRegex)
-        throw new EnvVersionError(
-          "Encountered an issue obtaining environment information. We've noted this down and are looking into it!"
-        );
       id = validateAndCleanNric(inputId);
       break;
     case "REGEX":
+      if (!idRegex) {
+        throw new CampaignConfigError(ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR);
+      }
       id = validateAndCleanRegexInput(inputId, idRegex);
       break;
     default:

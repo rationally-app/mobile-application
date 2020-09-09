@@ -1,63 +1,30 @@
-import React, {
-  createContext,
-  useContext,
-  FunctionComponent,
-  useState,
-  useCallback
-} from "react";
-import { Policy, Features } from "../types";
+import React, { createContext, FunctionComponent, useCallback } from "react";
+import { CampaignPolicy } from "../types";
 
 export interface ProductContextValue {
-  products: Policy[];
-  features: Features | undefined;
-  allProducts: Policy[];
-  setProducts: (products: Policy[]) => void;
-  getProduct: (category: string) => Policy | undefined;
-  setFeatures: (features: Features) => void;
-  getFeatures: () => Features | undefined;
-  setAllProducts: (allProducts: Policy[]) => void;
+  products: CampaignPolicy[];
+  getProduct: (category: string) => CampaignPolicy | undefined;
 }
 
 export const ProductContext = createContext<ProductContextValue>({
   products: [],
-  features: {} as Features,
-  allProducts: [],
-  setProducts: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  getProduct: () => undefined,
-  setFeatures: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  getFeatures: () => undefined,
-  setAllProducts: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
+  getProduct: () => undefined
 });
 
-export const useProductContext = (): ProductContextValue =>
-  useContext<ProductContextValue>(ProductContext);
-
-export const ProductContextProvider: FunctionComponent = ({ children }) => {
-  const [products, setProducts] = useState<Policy[]>([]);
+export const ProductContextProvider: FunctionComponent<{
+  products: CampaignPolicy[];
+}> = ({ products, children }) => {
   const getProduct = useCallback(
-    (category: string): Policy | undefined =>
+    (category: string): CampaignPolicy | undefined =>
       products.find(product => product.category === category),
     [products]
   );
-
-  const [features, setFeatures] = useState<Features>();
-  const getFeatures = useCallback((): Features | undefined => features, [
-    features
-  ]);
-
-  const [allProducts, setAllProducts] = useState<Policy[]>([]);
 
   return (
     <ProductContext.Provider
       value={{
         products,
-        features,
-        allProducts,
-        setProducts,
-        getProduct,
-        setFeatures,
-        getFeatures,
-        setAllProducts
+        getProduct
       }}
     >
       {children}

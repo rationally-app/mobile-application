@@ -1,19 +1,19 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext } from "react";
 import { size } from "../../../common/styles";
-import { Policy } from "../../../types";
+import { CampaignPolicy } from "../../../types";
 import { formatQuantityText } from "../utils";
 import { View } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { ItemQuantities } from "../types";
-import { useProductContext } from "../../../context/products";
 import { sum } from "lodash";
 import React from "react";
 import { sharedStyles } from "./sharedStyles";
+import { ProductContext } from "../../../context/products";
 
 const PurchasedQuantityById: FunctionComponent<{
   id: string;
   quantity: number;
-  unit?: Policy["quantity"]["unit"];
+  unit?: CampaignPolicy["quantity"]["unit"];
 }> = ({ id, quantity, unit }) => {
   const quantityText = formatQuantityText(quantity, unit);
   return (
@@ -27,7 +27,7 @@ const PurchasedQuantityById: FunctionComponent<{
 export const PurchasedItem: FunctionComponent<{
   itemQuantities: ItemQuantities;
 }> = ({ itemQuantities }) => {
-  const { getProduct } = useProductContext();
+  const { getProduct } = useContext(ProductContext);
   const { category, quantities } = itemQuantities;
   const categoryName = getProduct(category)?.name ?? category;
   const unit = getProduct(category)?.quantity.unit;

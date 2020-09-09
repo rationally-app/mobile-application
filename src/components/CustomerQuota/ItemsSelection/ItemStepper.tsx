@@ -1,11 +1,16 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useContext
+} from "react";
 import { CartItem, CartHook } from "../../../hooks/useCart/useCart";
 import { View } from "react-native";
 import { Stepper } from "../../Layout/Stepper";
 import { AppText } from "../../Layout/AppText";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { ItemContent } from "./ItemContent";
-import { useProductContext } from "../../../context/products";
+import { ProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
 
 export const ItemStepper: FunctionComponent<{
@@ -13,7 +18,7 @@ export const ItemStepper: FunctionComponent<{
   updateCart: CartHook["updateCart"];
 }> = ({ cartItem, updateCart }) => {
   const { category, quantity, maxQuantity } = cartItem;
-  const { getProduct } = useProductContext();
+  const { getProduct } = useContext(ProductContext);
   const { name = category, description, quantity: productQuantity } =
     getProduct(category) || {};
 

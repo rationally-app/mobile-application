@@ -6,8 +6,9 @@ import {
   PastTransactionsResult
 } from "../../types";
 import _ from "lodash";
-import { fetchWithValidator, ValidationError } from "../helpers";
+import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
+import { systemAlertProps, ERROR_MESSAGE } from "../../context/alert";
 
 export class NotEligibleError extends Error {
   constructor(message: string) {
@@ -21,6 +22,11 @@ export class QuotaError extends Error {
     super(message);
     this.name = "QuotaError";
   }
+  alertProps = {
+    ...systemAlertProps,
+    description: ERROR_MESSAGE.QUOTA_ERROR as string,
+    visible: true
+  };
 }
 
 export class PostTransactionError extends Error {
@@ -142,6 +148,8 @@ export const liveGetQuota = async (
     }
     if (e.message === "User is not eligible") {
       throw new NotEligibleError(e.message);
+    } else if (e instanceof SessionError) {
+      throw e;
     }
     throw new QuotaError(e.message);
   }
@@ -209,6 +217,8 @@ export const livePostTransaction = async ({
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
     }
     throw new PostTransactionError(e.message);
   }
@@ -271,6 +281,8 @@ export const livePastTransactions = async (
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
     }
     throw new PastTransactionError(e.message);
   }

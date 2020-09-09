@@ -8,7 +8,7 @@ import React, {
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
 import { NavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
-import { useAuthenticationContext } from "../../context/auth";
+import { AuthContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -22,7 +22,6 @@ import { Sentry } from "../../utils/errorTracking";
 import { HelpModalContext } from "../../context/help";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
-import { useValidateExpiry } from "../../hooks/useValidateExpiry";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
@@ -33,9 +32,13 @@ import {
   wrongFormatAlertProps,
   incompleteEntryAlertProps,
   systemAlertProps,
-  ERROR_MESSAGE
+  ERROR_MESSAGE,
+  expiredAlertProps
 } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
+import { useLogout } from "../../hooks/useLogout";
+import { SessionError } from "../../services/helpers";
+import { QuotaError } from "../../services/quota";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -77,18 +80,22 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     });
   }, []);
 
-  const validateTokenExpiry = useValidateExpiry(navigation.dispatch);
-  useEffect(() => {
-    validateTokenExpiry();
-  }, [validateTokenExpiry]);
-
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
-  const { token, endpoint } = useAuthenticationContext();
+  const { sessionToken, endpoint } = useContext(AuthContext);
   const showHelpModal = useContext(HelpModalContext);
   const { showAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
+  const { logout } = useLogout();
+
+  const forceLogout = useCallback((): void => {
+    showAlert({
+      ...expiredAlertProps,
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+    });
+    logout(navigation.dispatch);
+  }, [logout, navigation.dispatch, showAlert]);
 
   const {
     cartState,
@@ -97,8 +104,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     checkoutCart,
     checkoutResult,
     error,
-    clearError
-  } = useCart(ids, token, endpoint);
+    clearError,
+    quotaResponse
+  } = useCart(ids, sessionToken, endpoint);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -109,6 +117,10 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
   const onCancel = useCallback((): void => {
     navigateHome(navigation);
+  }, [navigation]);
+
+  const onBack = useCallback((): void => {
+    navigation.goBack();
   }, [navigation]);
 
   const addId = useCallback((id: string): void => {
@@ -141,14 +153,19 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     if (!error) {
       return;
     }
-    if (cartState === "FETCHING_QUOTA") {
-      const message = error.message ?? ERROR_MESSAGE.QUOTA_ERROR;
-      showAlert({
-        ...systemAlertProps,
-        description: message,
-        onOk: () => clearError()
-      });
-    } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
+    if (error instanceof SessionError) {
+      clearError();
+      forceLogout();
+      return;
+    }
+    if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
+      if (error instanceof QuotaError) {
+        showAlert({
+          ...error.alertProps,
+          onOk: () => clearError()
+        });
+        return;
+      }
       switch (error.message) {
         case ERROR_MESSAGE.MISSING_SELECTION:
           showAlert({
@@ -203,6 +220,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           break;
 
         case ERROR_MESSAGE.INVALID_PHONE_NUMBER:
+        case ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE:
           showAlert({
             ...wrongFormatAlertProps,
             description: error.message,
@@ -213,8 +231,18 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
         default:
           throw new Error(error.message);
       }
+    } else {
+      throw new Error(error.message);
     }
-  }, [cartState, clearError, error, onCancel, showAlert, campaignFeatures]);
+  }, [
+    cartState,
+    clearError,
+    error,
+    onCancel,
+    showAlert,
+    campaignFeatures,
+    forceLogout
+  ]);
 
   return cartState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
@@ -244,6 +272,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             ids={ids}
             onCancel={onNextId}
             checkoutResult={checkoutResult}
+            quotaResponse={quotaResponse}
           />
         ) : cartState === "NO_QUOTA" ? (
           <NoQuotaCard
@@ -251,6 +280,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             cart={cart}
             onCancel={onCancel}
             onAppeal={onAppeal}
+            quotaResponse={quotaResponse}
           />
         ) : cartState === "NOT_ELIGIBLE" ? (
           <NotEligibleCard ids={ids} onCancel={onCancel} />
@@ -261,6 +291,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             isLoading={cartState === "CHECKING_OUT"}
             checkoutCart={checkoutCart}
             onCancel={onCancel}
+            onBack={onBack}
             cart={cart}
             updateCart={updateCart}
           />

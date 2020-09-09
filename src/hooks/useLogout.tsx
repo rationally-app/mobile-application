@@ -1,11 +1,9 @@
 import { useContext, useState, useCallback } from "react";
 import { ImportantMessageSetterContext } from "../context/importantMessage";
-import { useAuthenticationContext } from "../context/auth";
-import { useProductContext } from "../context/products";
 import { Alert } from "react-native";
 import { NavigationDispatch, NavigationActions } from "react-navigation";
-import { Features } from "../types";
-import { CampaignConfigContext } from "../context/campaignConfig";
+import { AuthStoreContext } from "../context/authStore";
+import { CampaignConfigsStoreContext } from "../context/campaignConfigsStore";
 
 type AlertProps = {
   title: string;
@@ -22,9 +20,8 @@ interface LogoutHook {
 
 export const useLogout = (): LogoutHook => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
-  const { clearAuthInfo } = useAuthenticationContext();
-  const { setProducts, setFeatures, setAllProducts } = useProductContext();
-  const { clearCampaignConfig } = useContext(CampaignConfigContext);
+  const { clearAuthCredentials } = useContext(AuthStoreContext);
+  const { clearCampaignConfigs } = useContext(CampaignConfigsStoreContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const logout: LogoutHook["logout"] = useCallback(
@@ -33,11 +30,8 @@ export const useLogout = (): LogoutHook => {
         return;
       }
       setIsLoggingOut(true);
-      await clearAuthInfo();
-      await clearCampaignConfig();
-      setProducts([]);
-      setFeatures({} as Features);
-      setAllProducts([]);
+      clearAuthCredentials();
+      clearCampaignConfigs();
       setMessageContent(null);
       setIsLoggingOut(false);
       navigationDispatch?.(
@@ -47,17 +41,12 @@ export const useLogout = (): LogoutHook => {
       );
       if (alert) {
         const { title, description } = alert;
+        // using react-native alerts here for now because there are cases where the user is currently on a (non-alert) modal
+        // but is logged out, so two modals will be visible at once, causing some problems on ios
         Alert.alert(title, description);
       }
     },
-    [
-      clearAuthInfo,
-      clearCampaignConfig,
-      setProducts,
-      setFeatures,
-      setAllProducts,
-      setMessageContent
-    ]
+    [clearAuthCredentials, clearCampaignConfigs, setMessageContent]
   );
 
   return {

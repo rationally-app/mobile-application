@@ -1,10 +1,7 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { Sentry } from "../../utils/errorTracking";
-
-import { QuotaError, NotEligibleError } from "../../services/quota";
-import { useQuota } from "../useQuota/useQuota";
-import { postTransaction } from "../../services/quota";
-import { useProductContext, ProductContextValue } from "../../context/products";
+import { postTransaction, NotEligibleError } from "../../services/quota";
+import { ProductContextValue, ProductContext } from "../../context/products";
 import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
@@ -14,12 +11,13 @@ import {
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import { SessionError } from "../../services/helpers";
+import { useQuota } from "../useQuota/useQuota";
 
 export type CartItem = {
   category: string;
   quantity: number;
   maxQuantity: number;
-  checkoutLimit?: number;
   descriptionAlert?: string;
   /**
    * Indicates the previous time quota was used.
@@ -53,6 +51,7 @@ export type CartHook = {
   error?: Error;
   clearError: () => void;
   allQuotaResponse: Quota | null;
+  quotaResponse: Quota | null;
 };
 
 const getItem = (
@@ -78,10 +77,11 @@ const mergeWithCart = (
     .map(
       ({
         category,
-        quantity: maxQuantity,
+        quantity: remainingQuantity,
         transactionTime,
         identifierInputs
       }) => {
+        remainingQuantity = Math.max(remainingQuantity, 0);
         const [existingItem] = getItem(cart, category);
 
         const product = getProduct(category);
@@ -99,21 +99,25 @@ const mergeWithCart = (
 
         let descriptionAlert: string | undefined = undefined;
         if (product && product.alert) {
-          const expandedQuota = product.quantity.limit - maxQuantity;
+          const expandedQuota = product.quantity.limit - remainingQuantity;
           descriptionAlert =
             expandedQuota >= product.alert.threshold
               ? product.alert.label
               : undefined;
         }
+
+        const checkoutLimit = product?.quantity.checkoutLimit;
+        const maxQuantity = checkoutLimit
+          ? Math.min(remainingQuantity, checkoutLimit)
+          : remainingQuantity;
+
         return {
           category,
           quantity: Math.min(
-            Math.max(maxQuantity, 0),
+            maxQuantity,
             existingItem?.quantity || defaultQuantity
           ),
-          maxQuantity: Math.max(maxQuantity, 0),
-          checkoutLimit:
-            existingItem?.checkoutLimit || product?.quantity.checkoutLimit,
+          maxQuantity,
           descriptionAlert,
           lastTransactionTime: transactionTime,
           identifierInputs: identifierInputs || defaultIdentifierInputs
@@ -128,12 +132,7 @@ export const useCart = (
   endpoint: string
 ): CartHook => {
   const prevIds = usePrevious(ids);
-  const {
-    products,
-    getProduct,
-    setProducts,
-    setFeatures
-  } = useProductContext();
+  const { products, getProduct } = useContext(ProductContext);
   const prevProducts = usePrevious(products);
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
@@ -172,17 +171,7 @@ export const useCart = (
       } catch (e) {
         if (e instanceof NotEligibleError) {
           setCartState("NOT_ELIGIBLE");
-          // Cart will remain in FETCHING_QUOTA state.
-        } else if (e instanceof QuotaError) {
-          Sentry.addBreadcrumb({
-            category: "useQuota",
-            message: "fetchQuota - quota error"
-          });
-          setError(
-            new Error(
-              "Error getting quota. We've noted this down and are looking into it!"
-            )
-          );
+          return;
         } else {
           Sentry.addBreadcrumb({
             category: "useQuota",
@@ -190,6 +179,7 @@ export const useCart = (
           });
           setError(e);
         }
+        setCartState("DEFAULT");
       }
     }
 
@@ -197,19 +187,7 @@ export const useCart = (
       setCartState("FETCHING_QUOTA");
       fetchQuotaWrapper();
     }
-  }, [
-    authKey,
-    endpoint,
-    getProduct,
-    ids,
-    prevIds,
-    prevProducts,
-    products,
-    setProducts,
-    setFeatures,
-    showAlert,
-    fetchQuota
-  ]);
+  }, [authKey, endpoint, ids, prevIds, prevProducts, products, fetchQuota]);
 
   /**
    * Merge quota response with current cart whenever quota response or products change.
@@ -227,6 +205,15 @@ export const useCart = (
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
     setCart([]);
   }, []);
+
+  /**
+   * After checkout, update quota response
+   */
+  useEffect(() => {
+    if (cartState === "PURCHASED") {
+      fetchQuota();
+    }
+  }, [ids, authKey, endpoint, cartState, products]);
 
   /**
    * Update quantity of an item in the cart.
@@ -312,6 +299,8 @@ export const useCart = (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
           setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e instanceof SessionError) {
+          setError(e);
         } else {
           setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
@@ -330,6 +319,7 @@ export const useCart = (
     checkoutResult,
     error,
     clearError,
-    allQuotaResponse
+    allQuotaResponse,
+    quotaResponse
   };
 };

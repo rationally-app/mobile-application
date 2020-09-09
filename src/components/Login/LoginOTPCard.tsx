@@ -11,18 +11,15 @@ import { size, fontSize } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { InputWithLabel } from "../Layout/InputWithLabel";
-import { useAuthenticationContext } from "../../context/auth";
-import { validateOTP, LoginError, LoginLockedError } from "../../services/auth";
-import { getEnvVersion, EnvVersionError } from "../../services/envVersion";
-import { useProductContext } from "../../context/products";
-import { Sentry } from "../../utils/errorTracking";
 import {
-  AlertModalContext,
-  systemAlertProps,
-  invalidEntryAlertProps,
-  ERROR_MESSAGE,
-  disabledAccessAlertProps
-} from "../../context/alert";
+  validateOTP,
+  LoginError,
+  OTPWrongError,
+  OTPExpiredError
+} from "../../services/auth";
+import { Sentry } from "../../utils/errorTracking";
+import { AlertModalContext } from "../../context/alert";
+import { AuthStoreContext } from "../../context/authStore";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -45,7 +42,7 @@ const styles = StyleSheet.create({
 interface LoginOTPCard {
   resetStage: () => void;
   mobileNumber: string;
-  codeKey: string;
+  operatorToken: string;
   endpoint: string;
   handleRequestOTP: () => Promise<boolean>;
 }
@@ -53,7 +50,7 @@ interface LoginOTPCard {
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   resetStage,
   mobileNumber,
-  codeKey,
+  operatorToken,
   endpoint,
   handleRequestOTP
 }) => {
@@ -64,9 +61,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     RESEND_OTP_TIME_LIMIT
   );
 
-  const { setAuthInfo } = useAuthenticationContext();
+  const { addAuthCredentials } = useContext(AuthStoreContext);
   const { showAlert } = useContext(AlertModalContext);
-  const { setFeatures, setProducts, setAllProducts } = useProductContext();
+  const setState = useState()[1];
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {
@@ -87,53 +84,28 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const onValidateOTP = async (otp: string): Promise<void> => {
     setIsLoading(true);
     try {
-      const response = await validateOTP(otp, mobileNumber, codeKey, endpoint);
-      const versionResponse = await getEnvVersion(
-        response.sessionToken,
+      const response = await validateOTP(
+        otp,
+        mobileNumber,
+        operatorToken,
         endpoint
       );
       setIsLoading(false);
-
-      if (versionResponse.features.FLOW_TYPE) {
-        setAuthInfo(response.sessionToken, response.ttl.getTime(), endpoint);
-        setFeatures(versionResponse.features);
-        setProducts(
-          versionResponse.policies.filter(
-            policy =>
-              policy.categoryType === undefined ||
-              policy.categoryType === "DEFAULT"
-          )
-        );
-        setAllProducts(versionResponse.policies);
-      } else {
-        alert(
-          "Invalid Environment Error: Make sure you scanned a valid QR code"
-        );
-        // Reset to initial login state
-        resetStage();
-      }
+      addAuthCredentials(`${operatorToken}${endpoint}`, {
+        endpoint,
+        expiry: response.ttl.getTime(),
+        operatorToken: operatorToken,
+        sessionToken: response.sessionToken
+      });
     } catch (e) {
       Sentry.captureException(e);
-      if (e instanceof EnvVersionError) {
-        showAlert({
-          ...systemAlertProps,
-          description: e.message
-        });
-      } else if (e instanceof LoginLockedError) {
-        showAlert({
-          ...disabledAccessAlertProps,
-          description: e.message,
-          onOk: () => resetStage()
-        });
+      if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
+        showAlert(e.alertProps);
       } else if (e instanceof LoginError) {
-        showAlert({
-          ...invalidEntryAlertProps,
-          description: e.message
-        });
+        showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else {
-        showAlert({
-          ...systemAlertProps,
-          description: ERROR_MESSAGE.SERVER_ERROR
+        setState(() => {
+          throw e; // Let ErrorBoundary handle
         });
       }
       setIsLoading(false);
