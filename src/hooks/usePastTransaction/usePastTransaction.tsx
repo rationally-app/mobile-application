@@ -10,6 +10,23 @@ export type PastTransactionHook = {
   error: { message: string } | null;
 };
 
+const areSameIds = (
+  prevIds: string[] | undefined,
+  ids: string[] | undefined
+): boolean => {
+  if (typeof prevIds !== typeof ids) {
+    return false;
+  }
+
+  if (!!prevIds && !!ids) {
+    return (
+      prevIds.length === ids.length && prevIds.every(id => ids.includes(id))
+    );
+  }
+
+  return true;
+};
+
 export const usePastTransaction = (
   ids: string[],
   authKey: string,
@@ -36,10 +53,8 @@ export const usePastTransaction = (
       }
     };
 
-    if (
-      typeof prevIds !== typeof ids ||
-      (prevIds && ids && !prevIds.every(id => ids.includes(id)))
-    ) {
+    if (!areSameIds(prevIds, ids)) {
+      setError(null);
       fetchPastTransactions();
     }
   }, [authKey, endpoint, ids, prevIds]);
