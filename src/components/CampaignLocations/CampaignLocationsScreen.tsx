@@ -80,25 +80,22 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
   const { setDrawerButtons } = useDrawerContext();
 
   useEffect(() => {
-    const drawerButtons = [
+    setDrawerButtons([
       {
         icon: "map-marker-plus",
         label: "Add campaign",
         onPress: () => {
           navigation.navigate("LoginScreen");
         }
+      },
+      {
+        icon: "map-search",
+        label: "Change campaign",
+        onPress: () => {
+          navigation.navigate("CampaignLocationsScreen");
+        }
       }
-    ];
-
-    drawerButtons.push({
-      icon: "map-search",
-      label: "Change campaign",
-      onPress: () => {
-        navigation.navigate("CampaignLocationsScreen");
-      }
-    });
-
-    setDrawerButtons(drawerButtons);
+    ]);
   }, [authCredentials, hasLoadedAuthFromStore, navigation, setDrawerButtons]);
 
   const navigateToCampaignLocation = useCallback(
