@@ -45,7 +45,7 @@ interface LoginOTPCard {
   fullMobileNumber: string;
   operatorToken: string;
   endpoint: string;
-  handleRequestOTP: () => Promise<boolean>;
+  handleRequestOTP: (fullMobileNumber: string) => Promise<boolean>;
   onSuccess: (credentials: AuthCredentials) => void;
 }
 
@@ -123,7 +123,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   const resendOTP = async (): Promise<void> => {
     setIsResending(true);
-    const isRequestSuccessful = await handleRequestOTP();
+    const isRequestSuccessful = await handleRequestOTP(fullMobileNumber);
     setIsResending(false);
     if (isRequestSuccessful) setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
   };

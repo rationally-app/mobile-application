@@ -34,7 +34,7 @@ interface LoginMobileNumberCard {
   setLoginStage: Dispatch<SetStateAction<LoginStage>>;
   setMobileNumber: Dispatch<SetStateAction<string>>;
   setCountryCode: Dispatch<SetStateAction<string>>;
-  handleRequestOTP: (fullNumber?: string) => Promise<boolean>;
+  handleRequestOTP: (fullMobileNumber: string) => Promise<boolean>;
 }
 
 export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
@@ -46,10 +46,10 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const { config } = useContext(ConfigContext);
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCodeValue] = useState(
-    config.mobileNumber?.countryCode ?? "+65"
+    config.fullMobileNumber?.countryCode ?? "+65"
   );
   const [mobileNumberValue, setMobileNumberValue] = useState(
-    config.mobileNumber?.value ?? ""
+    config.fullMobileNumber?.mobileNumber ?? ""
   );
   const { showAlert } = useContext(AlertModalContext);
 
@@ -66,8 +66,8 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   const onRequestOTP = async (): Promise<void> => {
     setIsLoading(true);
-    const fullNumber = createFullNumber(countryCode, mobileNumberValue);
-    const isRequestSuccessful = await handleRequestOTP(fullNumber);
+    const fullMobileNumber = createFullNumber(countryCode, mobileNumberValue);
+    const isRequestSuccessful = await handleRequestOTP(fullMobileNumber);
     setIsLoading(false);
     if (isRequestSuccessful) {
       setMobileNumber(mobileNumberValue);

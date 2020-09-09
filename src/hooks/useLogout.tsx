@@ -34,7 +34,7 @@ export const useLogout = (): LogoutHook => {
       setIsLoggingOut(true);
       clearAuthCredentials();
       clearCampaignConfigs();
-      setConfigValue("mobileNumber", undefined);
+      setConfigValue("fullMobileNumber", undefined);
       setMessageContent(null);
       setIsLoggingOut(false);
       navigationDispatch?.(

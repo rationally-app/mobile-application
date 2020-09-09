@@ -15,9 +15,9 @@ export enum AppMode {
 
 interface Config {
   appMode: AppMode;
-  mobileNumber?: {
+  fullMobileNumber?: {
     countryCode: string;
-    value: string;
+    mobileNumber: string;
   };
 }
 

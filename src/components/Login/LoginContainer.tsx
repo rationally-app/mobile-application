@@ -148,12 +148,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   const setState = useState()[1];
   const handleRequestOTP = async (
-    fullNumber = mobileNumber
+    fullMobileNumber: string
   ): Promise<boolean> => {
     try {
       if (!(await getResendConfirmationIfNeeded())) return false;
       const response = await requestOTP(
-        fullNumber,
+        fullMobileNumber,
         tempAuthCredentials?.operatorToken ?? "",
         tempAuthCredentials?.endpoint ?? ""
       );
@@ -176,7 +176,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   };
 
   const onSuccess = (authCredentials: AuthCredentials): void => {
-    setConfigValue("mobileNumber", { countryCode, value: mobileNumber });
+    setConfigValue("fullMobileNumber", { countryCode, mobileNumber });
     navigation.navigate("CampaignInitialisationScreen", { authCredentials });
   };
 
