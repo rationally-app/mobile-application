@@ -30,12 +30,8 @@ jobs:
       - name: Setup Appium
         run: npm install appium -g
       - name: Setup E2E Environment
-        run: |
-          wget -O Exponent.apk http://expo.io/--/api/v2/versions/download-android-apk
-          pip3 install -r requirements.txt
+        run: pip3 install -r requirements.txt
       - name: Run E2E Tests
-        env:
-          RELEASE_CHANNEL: e2e
         run: ./e2e_run_all_tests_pCloudy.sh
       - name: Get Current Date
         id: date
