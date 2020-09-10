@@ -9,6 +9,8 @@ interface TitleStatisticComponent {
   totalCount: number | null;
   currentTimestamp: number;
   lastTransactionTime: number;
+  onPressPrevDay: () => void;
+  onPressNextDay: () => void;
 }
 
 const styles = StyleSheet.create({
@@ -33,28 +35,31 @@ const styles = StyleSheet.create({
     fontSize: fontSize(7)
   },
   dateText: {
-    marginTop: size(3),
-    flexDirection: "row",
+    marginTop: size(1),
+    fontSize: size(2),
     fontFamily: "brand-bold",
     textAlign: "center",
-    width: "100%",
-    color: "white",
-    flex: 1
+    color: "white"
   },
-  chevron: {
-    marginTop: size(3),
+  dateToggle: {
+    marginTop: size(1),
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginRight: size(3),
-    marginLeft: size(3)
+    alignItems: "center"
+  },
+  chevron: {
+    marginTop: size(1),
+    marginRight: size(7),
+    marginLeft: size(7)
   }
 });
 
 export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent> = ({
   totalCount,
   currentTimestamp,
-  lastTransactionTime
+  lastTransactionTime,
+  onPressPrevDay,
+  onPressNextDay
 }) => {
   return (
     <View style={styles.appHeaderWrapper}>
@@ -63,8 +68,8 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
       <AppText style={styles.smallText}>
         Last distributed at {format(new Date(lastTransactionTime), "h:mma")}
       </AppText>
-      <View style={styles.chevron}>
-        <TouchableOpacity>
+      <View style={styles.dateToggle}>
+        <TouchableOpacity onPress={onPressPrevDay}>
           <View>
             <MaterialCommunityIcons
               name="chevron-left"
@@ -77,7 +82,7 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
         <AppText style={styles.dateText}>
           {format(new Date(currentTimestamp), "dd MMM yyyy")}
         </AppText>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onPressNextDay}>
           <View>
             <MaterialCommunityIcons
               name="chevron-right"

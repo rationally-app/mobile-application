@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useEffect, useContext } from "react";
-import { groupBy, forEach } from "lodash";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -22,9 +21,10 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { AuthContext } from "../../context/auth";
 import { StatisticsContext } from "../../context/statistic";
 import { getDailyStatistics } from "../../services/statistics";
-import { ItemQuantity } from "./types";
+import { summariseTransactions } from "./utils";
 import { TransactionHistory } from "./TransactionHistory";
-import { AnalyticsHeader } from "./AnalyticsHeader";
+import { StatisticsHeader } from "./StatisticsHeader";
+import { addDays, subDays, getTime } from "date-fns";
 
 const styles = StyleSheet.create({
   content: {
@@ -74,7 +74,9 @@ const DailyAnalyticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
     StatisticsContext
   );
 
-  const fetchDailyStatistics = async (): Promise<void> => {
+  const fetchDailyStatistics = async (
+    currentTimestamp: number
+  ): Promise<void> => {
     const response = await getDailyStatistics(
       currentTimestamp,
       sessionToken,
@@ -82,37 +84,35 @@ const DailyAnalyticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
       [operatorToken]
     );
 
-    const result: ItemQuantity[] = [];
+    const summarisedTransactionHistory = summariseTransactions(response);
 
-    const transactionsByCategory = groupBy(
-      response.dailyTransactions,
-      "category"
-    );
-    forEach(transactionsByCategory, (value, key) => {
-      let quantity = 0;
-      transactionsByCategory[key].forEach(transaction => {
-        quantity += transaction.quantity;
-      });
-      result.push({ category: key, quantity: quantity });
-    });
-
-    if (result) {
-      setTransactionHistory(result);
-    }
-
-    setTotalCount(response.dailyTransactions.length);
+    setTransactionHistory(summarisedTransactionHistory);
+    setTotalCount(response.pastTransactions.length);
     setCurrentTimestamp(currentTimestamp);
 
-    if (response.dailyTransactions.length !== 0) {
-      setLastTransactionTime(response.dailyTransactions[0].transactionTime);
+    if (response.pastTransactions.length !== 0) {
+      setLastTransactionTime(response.pastTransactions[0].transactionTime);
     } else {
       setLastTransactionTime(0);
     }
   };
 
+  const onPressPrevDay = (): void => {
+    const prevDay = getTime(subDays(currentTimestamp, 1));
+    setCurrentTimestamp(prevDay);
+    fetchDailyStatistics(prevDay);
+  };
+
+  const onPressNextDay = (): void => {
+    const nextDay = getTime(addDays(currentTimestamp, 1));
+    setCurrentTimestamp(nextDay);
+    fetchDailyStatistics(nextDay);
+  };
+
   useEffect(() => {
-    if (totalCount !== null) {
-      fetchDailyStatistics();
+    // When entering the first time
+    if (totalCount === null) {
+      fetchDailyStatistics(currentTimestamp);
     }
   });
   useEffect(() => {
@@ -138,13 +138,15 @@ const DailyAnalyticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
         />
         <View style={styles.content}>
           <View style={styles.headerText}>
-            <AnalyticsHeader mode={config.appMode} />
+            <StatisticsHeader mode={config.appMode} />
             <TitleStatistic
               totalCount={totalCount ? totalCount : 0}
               currentTimestamp={currentTimestamp}
               lastTransactionTime={
                 lastTransactionTime ? lastTransactionTime : 0
               }
+              onPressPrevDay={onPressPrevDay}
+              onPressNextDay={onPressNextDay}
             />
           </View>
           {messageContent && (
