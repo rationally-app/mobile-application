@@ -4,8 +4,12 @@ import { DailyStatistics } from "../../types";
 
 export const summariseTransactions = (
   response: DailyStatistics
-): ItemQuantity[] => {
-  const result: ItemQuantity[] = [];
+): {
+  summarisedTransactionHistory: ItemQuantity[];
+  summarisedTotalCount: number;
+} => {
+  const summarisedTransactionHistory: ItemQuantity[] = [];
+  let summarisedTotalCount = 0;
 
   const transactionsByCategory = groupBy(response.pastTransactions, "category");
   forEach(transactionsByCategory, (value, key) => {
@@ -13,8 +17,9 @@ export const summariseTransactions = (
     transactionsByCategory[key].forEach(transaction => {
       quantity += transaction.quantity;
     });
-    result.push({ category: key, quantity: quantity });
+    summarisedTotalCount += quantity;
+    summarisedTransactionHistory.push({ category: key, quantity: quantity });
   });
 
-  return result;
+  return { summarisedTransactionHistory, summarisedTotalCount };
 };
