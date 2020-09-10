@@ -3,8 +3,10 @@ import { PastTransactionsResult, CampaignPolicy } from "../../../types";
 import {
   groupTransactionsByCategory,
   sortTransactions,
-  TransactionsByCategoryMap
+  TransactionsByCategoryMap,
+  getLatestTransactionTime
 } from "./NoQuotaCard";
+import { Cart } from "../../../hooks/useCart/useCart";
 
 describe("NoQuotaCard utility functions", () => {
   let sortedTransactions: PastTransactionsResult["pastTransactions"];
@@ -213,6 +215,50 @@ describe("NoQuotaCard utility functions", () => {
           order: 2
         }
       ]);
+    });
+  });
+
+  describe("getLatestTransactionTime", () => {
+    it("should return latest transaction time from cart", () => {
+      expect.assertions(1);
+      const cart: Cart = [
+        {
+          category: "category-a",
+          quantity: 1,
+          maxQuantity: 1,
+          lastTransactionTime: new Date(latestTransactionTimeMs - 5000),
+          identifierInputs: []
+        },
+        {
+          category: "category-b",
+          quantity: 1,
+          maxQuantity: 1,
+          lastTransactionTime: new Date(latestTransactionTimeMs - 2000),
+          identifierInputs: []
+        },
+        {
+          category: "category-c",
+          quantity: 1,
+          maxQuantity: 1,
+          lastTransactionTime: latestTransactionTime,
+          identifierInputs: []
+        },
+        {
+          category: "category-d",
+          quantity: 1,
+          maxQuantity: 1,
+          lastTransactionTime: new Date(latestTransactionTimeMs - 3000),
+          identifierInputs: []
+        }
+      ];
+      expect(getLatestTransactionTime(cart)).toStrictEqual(
+        latestTransactionTime
+      );
+    });
+
+    it("should return undefined if cart is empty", () => {
+      expect.assertions(1);
+      expect(getLatestTransactionTime([])).toBeUndefined();
     });
   });
 });

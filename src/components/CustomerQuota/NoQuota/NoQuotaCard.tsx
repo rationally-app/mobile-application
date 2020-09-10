@@ -4,7 +4,7 @@ import React, {
   useContext,
   useEffect
 } from "react";
-import { differenceInSeconds, format } from "date-fns";
+import { differenceInSeconds, format, compareDesc } from "date-fns";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
@@ -155,6 +155,11 @@ export const sortTransactions = (
     });
 };
 
+export const getLatestTransactionTime = (cart: Cart): Date | undefined =>
+  cart.sort((item1, item2) =>
+    compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
+  )[0]?.lastTransactionTime;
+
 /**
  * Shows when the user cannot purchase anything
  *
@@ -193,7 +198,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   }, [error, showAlert]);
 
   const latestTransactionTime: Date | undefined =
-    sortedTransactions?.[0].transactionTime ?? undefined;
+    (quotaResponse && getLatestTransactionTime(cart)) ?? undefined;
+
   const now = new Date();
   const secondsFromLatestTransaction = latestTransactionTime
     ? differenceInSeconds(now, latestTransactionTime)
