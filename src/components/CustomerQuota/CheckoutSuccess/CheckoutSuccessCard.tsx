@@ -1,5 +1,10 @@
-import React, { FunctionComponent, useContext, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, {
+  FunctionComponent,
+  useContext,
+  useState,
+  useEffect
+} from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
@@ -21,6 +26,7 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
+import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -126,13 +132,23 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   const { getProduct } = useContext(ProductContext);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
-  const { pastTransactionsResult } = usePastTransaction(
+  const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
     sessionToken,
     endpoint
   );
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
+
+  const { showAlert } = useContext(AlertModalContext);
+  useEffect(() => {
+    if (error) {
+      showAlert({
+        ...systemAlertProps,
+        description: error.message || ""
+      });
+    }
+  }, [error, showAlert]);
 
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
@@ -179,27 +195,39 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             <View>
               <AppText>{description}</AppText>
               <View style={styles.checkoutItemsList}>
-                {(isShowFullList
-                  ? transactionsByTimeList
-                  : transactionsByTimeList.slice(0, MAX_TRANSACTIONS_TO_DISPLAY)
-                ).map(
-                  (transactionsByTime: TransactionsGroup, index: number) => (
-                    <TransactionsGroup
-                      key={index}
-                      maxTransactionsToDisplay={BIG_NUMBER}
-                      {...transactionsByTime}
-                    />
+                {loading ? (
+                  <ActivityIndicator
+                    style={{ alignSelf: "flex-start" }}
+                    size="large"
+                    color={color("grey", 40)}
+                  />
+                ) : (
+                  (isShowFullList
+                    ? transactionsByTimeList
+                    : transactionsByTimeList.slice(
+                        0,
+                        MAX_TRANSACTIONS_TO_DISPLAY
+                      )
+                  ).map(
+                    (transactionsByTime: TransactionsGroup, index: number) => (
+                      <TransactionsGroup
+                        key={index}
+                        maxTransactionsToDisplay={BIG_NUMBER}
+                        {...transactionsByTime}
+                      />
+                    )
                   )
                 )}
               </View>
             </View>
           </View>
-          {transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
-            <ShowFullListToggle
-              toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
-              isShowFullList={isShowFullList}
-            />
-          )}
+          {!loading &&
+            transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+              <ShowFullListToggle
+                toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
+                isShowFullList={isShowFullList}
+              />
+            )}
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>

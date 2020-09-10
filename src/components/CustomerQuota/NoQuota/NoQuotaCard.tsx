@@ -4,8 +4,8 @@ import React, {
   useContext,
   useEffect
 } from "react";
-import { differenceInSeconds } from "date-fns";
-import { View, StyleSheet } from "react-native";
+import { differenceInSeconds, compareDesc } from "date-fns";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { color, size } from "../../../common/styles";
@@ -155,6 +155,11 @@ export const sortTransactions = (
     });
 };
 
+export const getLatestTransactionTime = (cart: Cart): Date | undefined =>
+  cart.sort((item1, item2) =>
+    compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
+  )[0]?.lastTransactionTime;
+
 /**
  * Shows when the user cannot purchase anything
  *
@@ -174,7 +179,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const { pastTransactionsResult, error } = usePastTransaction(
+  const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
     sessionToken,
     endpoint
@@ -193,7 +198,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   }, [error, showAlert]);
 
   const latestTransactionTime: Date | undefined =
-    sortedTransactions?.[0].transactionTime ?? undefined;
+    (quotaResponse && getLatestTransactionTime(cart)) ?? undefined;
+
   const now = new Date();
   const secondsFromLatestTransaction = latestTransactionTime
     ? differenceInSeconds(now, latestTransactionTime)
@@ -258,32 +264,41 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                     ) : undefined
                 )}
             </AppText>
-            {transactionsByCategoryList.length > 0 && (
-              <View>
-                <AppText style={styles.wrapper}>
-                  Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
-                  previously:
-                </AppText>
-                {transactionsByCategoryList.map(
-                  (
-                    transactionsByCategory: TransactionsGroup,
-                    index: number
-                  ) => (
-                    <TransactionsGroup
-                      key={index}
-                      maxTransactionsToDisplay={
-                        isShowFullList
-                          ? BIG_NUMBER
-                          : MAX_TRANSACTIONS_TO_DISPLAY
-                      }
-                      {...transactionsByCategory}
-                    />
-                  )
-                )}
-              </View>
+            {loading ? (
+              <ActivityIndicator
+                style={{ alignSelf: "flex-start" }}
+                size="large"
+                color={color("grey", 40)}
+              />
+            ) : (
+              transactionsByCategoryList.length > 0 && (
+                <View>
+                  <AppText style={styles.wrapper}>
+                    Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
+                    previously:
+                  </AppText>
+                  {transactionsByCategoryList.map(
+                    (
+                      transactionsByCategory: TransactionsGroup,
+                      index: number
+                    ) => (
+                      <TransactionsGroup
+                        key={index}
+                        maxTransactionsToDisplay={
+                          isShowFullList
+                            ? BIG_NUMBER
+                            : MAX_TRANSACTIONS_TO_DISPLAY
+                        }
+                        {...transactionsByCategory}
+                      />
+                    )
+                  )}
+                </View>
+              )
             )}
           </View>
-          {sortedTransactions &&
+          {!loading &&
+            sortedTransactions &&
             sortedTransactions.length > MAX_TRANSACTIONS_TO_DISPLAY && (
               <ShowFullListToggle
                 toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
