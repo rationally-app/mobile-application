@@ -77,7 +77,7 @@ export const groupTransactionsByCategory = (
     const categoryName = policy?.name ?? item.category;
     const formattedDate = format(item.transactionTime, "d MMM yyyy, h:mma");
 
-    if (!(categoryName in transactionsByCategoryMap)) {
+    if (!transactionsByCategoryMap.hasOwnProperty(categoryName)) {
       transactionsByCategoryMap[categoryName] = {
         transactions: [],
         hasLatestTransaction: false,
