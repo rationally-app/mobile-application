@@ -155,54 +155,51 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   return (
     <View>
       <CustomerCard ids={ids}>
-        <View
-          style={[
-            sharedStyles.resultWrapper,
-            sharedStyles.successfulResultWrapper
-          ]}
-        >
-          <FontAwesome
-            name="thumbs-up"
-            color={color("blue-green", 40)}
-            style={sharedStyles.icon}
-          />
-          <AppText style={sharedStyles.statusTitleWrapper}>
-            <AppText style={sharedStyles.statusTitle}>{title}</AppText>
-            {showGlobalQuota &&
-              quotaResponse!.globalQuota!.map(
-                ({ quantity, quotaRefreshTime }, index: number) =>
-                  quotaRefreshTime ? (
-                    <UsageQuotaTitle
+        <View style={sharedStyles.successfulResultWrapper}>
+          <View style={sharedStyles.resultWrapper}>
+            <FontAwesome
+              name="thumbs-up"
+              color={color("blue-green", 40)}
+              style={sharedStyles.icon}
+            />
+            <AppText style={sharedStyles.statusTitleWrapper}>
+              <AppText style={sharedStyles.statusTitle}>{title}</AppText>
+              {showGlobalQuota &&
+                quotaResponse!.globalQuota!.map(
+                  ({ quantity, quotaRefreshTime }, index: number) =>
+                    quotaRefreshTime ? (
+                      <UsageQuotaTitle
+                        key={index}
+                        quantity={quantity}
+                        quotaRefreshTime={quotaRefreshTime}
+                      />
+                    ) : undefined
+                )}
+            </AppText>
+            <View>
+              <AppText>{description}</AppText>
+              <View style={styles.checkoutItemsList}>
+                {(isShowFullList
+                  ? transactionsByTimeList
+                  : transactionsByTimeList.slice(0, MAX_TRANSACTIONS_TO_DISPLAY)
+                ).map(
+                  (transactionsByTime: TransactionsGroup, index: number) => (
+                    <TransactionsGroup
                       key={index}
-                      quantity={quantity}
-                      quotaRefreshTime={quotaRefreshTime}
+                      maxTransactionsToDisplay={BIG_NUMBER}
+                      {...transactionsByTime}
                     />
-                  ) : undefined
-              )}
-          </AppText>
-          <View>
-            <AppText>{description}</AppText>
-            <View style={styles.checkoutItemsList}>
-              {(isShowFullList
-                ? transactionsByTimeList
-                : transactionsByTimeList.slice(0, MAX_TRANSACTIONS_TO_DISPLAY)
-              ).map((transactionsByTime: TransactionsGroup, index: number) => (
-                <TransactionsGroup
-                  key={index}
-                  maxTransactionsToDisplay={BIG_NUMBER}
-                  {...transactionsByTime}
-                />
-              ))}
-              {transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
-                <ShowFullListToggle
-                  toggleIsShowFullList={() =>
-                    setIsShowFullList(!isShowFullList)
-                  }
-                  isShowFullList={isShowFullList}
-                />
-              )}
+                  )
+                )}
+              </View>
             </View>
           </View>
+          {transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+            <ShowFullListToggle
+              toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
+              isShowFullList={isShowFullList}
+            />
+          )}
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>

@@ -4,7 +4,7 @@ import { AppText } from "../Layout/AppText";
 import { size, color, fontSize } from "../../common/styles";
 import { Ionicons } from "@expo/vector-icons";
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   toggleText: {
     lineHeight: 1.5 * fontSize(0),
     fontFamily: "brand-bold"
