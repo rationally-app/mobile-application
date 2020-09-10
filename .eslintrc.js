@@ -45,7 +45,8 @@ module.exports = {
     "jest/no-hooks": 0,
     "jest/lowercase-name": 0,
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "error"
+    "react-hooks/exhaustive-deps": "error",
+    "no-duplicate-imports": "error"
   },
   overrides: [
     {
@@ -55,5 +56,10 @@ module.exports = {
         "jest/prefer-strict-equal": "off"
       }
     }
-  ]
+  ],
+  settings: {
+    react: {
+      version: "detect"
+    }
+  }
 };

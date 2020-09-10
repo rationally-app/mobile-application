@@ -1,7 +1,6 @@
-import { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { View } from "react-native";
 import { AppText } from "../../Layout/AppText";
-import React from "react";
 import { ItemQuantities } from "../types";
 import { size } from "../../../common/styles";
 import { ProductContext } from "../../../context/products";

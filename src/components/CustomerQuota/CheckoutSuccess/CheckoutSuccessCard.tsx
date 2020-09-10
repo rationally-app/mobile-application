@@ -10,7 +10,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
-import { format } from "date-fns";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import {
   formatQuantityText,
@@ -21,6 +20,7 @@ import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
+import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -43,7 +43,7 @@ const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {quantity} item(s) more till {format(quotaRefreshTime, "d MMM yyyy")}.
+      {quantity} item(s) more till {formatDate(quotaRefreshTime)}.
     </AppText>
   </>
 );
@@ -110,7 +110,7 @@ export const sortTransactions = (
   return Object.entries(transactionsByTimeMap)
     .sort(([, a], [, b]) => sortTransactionsByOrder(a, b))
     .map(([, { transactionTime, transactions, order }]) => ({
-      header: format(transactionTime.getTime(), "d MMM yyyy, h:mma"),
+      header: formatDateTime(transactionTime.getTime()),
       transactions: transactions.sort(sortTransactionsByOrder),
       order
     }));
