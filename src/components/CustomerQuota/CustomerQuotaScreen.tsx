@@ -38,7 +38,7 @@ import {
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
-import { QuotaError } from "../../services/quota";
+import { useQuota } from "../../hooks/useQuota/useQuota";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -97,6 +97,12 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch, showAlert]);
 
+  const { quotaResponse, quotaState, quotaError, updateQuota } = useQuota(
+    ids,
+    sessionToken,
+    endpoint
+  );
+
   const {
     cartState,
     cart,
@@ -104,9 +110,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     checkoutCart,
     checkoutResult,
     error,
-    clearError,
-    quotaResponse
-  } = useCart(ids, sessionToken, endpoint);
+    clearError
+  } = useCart(ids, sessionToken, endpoint, quotaResponse);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -150,7 +155,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [cartState, navigation]);
 
   useEffect(() => {
-    if (!error) {
+    if (!error || !quotaError) {
       return;
     }
     if (error instanceof SessionError) {
@@ -158,14 +163,14 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       forceLogout();
       return;
     }
-    if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
-      if (error instanceof QuotaError) {
-        showAlert({
-          ...error.alertProps,
-          onOk: () => clearError()
-        });
-        return;
-      }
+    if (quotaState === "FETCHING_QUOTA") {
+      const message = quotaError.message ?? ERROR_MESSAGE.QUOTA_ERROR;
+      showAlert({
+        ...systemAlertProps,
+        description: message,
+        onOk: () => clearError()
+      });
+    } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
       switch (error.message) {
         case ERROR_MESSAGE.MISSING_SELECTION:
           showAlert({
@@ -241,10 +246,19 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     onCancel,
     showAlert,
     campaignFeatures,
-    forceLogout
+    forceLogout,
+    quotaError,
+    quotaState
   ]);
 
-  return cartState === "FETCHING_QUOTA" ? (
+  useEffect(() => {
+    /**
+     * Update quota after checkout
+     */
+    if (cartState === "PURCHASED") updateQuota();
+  }, [cartState]);
+
+  return quotaState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
       <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
       <Card>
@@ -274,7 +288,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             checkoutResult={checkoutResult}
             quotaResponse={quotaResponse}
           />
-        ) : cartState === "NO_QUOTA" ? (
+        ) : quotaState === "NO_QUOTA" ? (
           <NoQuotaCard
             ids={ids}
             cart={cart}
@@ -282,7 +296,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             onAppeal={onAppeal}
             quotaResponse={quotaResponse}
           />
-        ) : cartState === "NOT_ELIGIBLE" ? (
+        ) : quotaState === "NOT_ELIGIBLE" ? (
           <NotEligibleCard ids={ids} onCancel={onCancel} />
         ) : (
           <ItemsSelectionCard

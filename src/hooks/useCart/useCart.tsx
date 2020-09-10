@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useContext } from "react";
-import { Sentry } from "../../utils/errorTracking";
-import { postTransaction, NotEligibleError } from "../../services/quota";
+import { postTransaction } from "../../services/quota";
 import { ProductContextValue, ProductContext } from "../../context/products";
-import { usePrevious } from "../usePrevious";
 import {
   PostTransactionResult,
   Quota,
@@ -12,7 +10,6 @@ import {
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
-import { useQuota } from "../useQuota/useQuota";
 
 export type CartItem = {
   category: string;
@@ -29,13 +26,7 @@ export type CartItem = {
 
 export type Cart = CartItem[];
 
-type CartState =
-  | "FETCHING_QUOTA"
-  | "NO_QUOTA"
-  | "DEFAULT"
-  | "CHECKING_OUT"
-  | "PURCHASED"
-  | "NOT_ELIGIBLE";
+type CartState = "DEFAULT" | "CHECKING_OUT" | "PURCHASED";
 
 export type CartHook = {
   cartState: CartState;
@@ -50,8 +41,6 @@ export type CartHook = {
   checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
-  allQuotaResponse: Quota | null;
-  quotaResponse: Quota | null;
 };
 
 const getItem = (
@@ -129,74 +118,15 @@ const mergeWithCart = (
 export const useCart = (
   ids: string[],
   authKey: string,
-  endpoint: string
+  endpoint: string,
+  quotaResponse?: Quota | null
 ): CartHook => {
-  const prevIds = usePrevious(ids);
   const { products, getProduct } = useContext(ProductContext);
-  const prevProducts = usePrevious(products);
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
-  const {
-    quotaResponse,
-    allQuotaResponse,
-    fetchQuota,
-    hasNoQuota,
-    hasInvalidQuota
-  } = useQuota(ids, authKey, endpoint);
   const clearError = useCallback((): void => setError(undefined), []);
-
-  /**
-   * Fetch quota whenever IDs change.
-   */
-
-  useEffect(() => {
-    async function fetchQuotaWrapper(): Promise<void> {
-      try {
-        const quotaResponse = await fetchQuota();
-        if (hasInvalidQuota(quotaResponse)) {
-          Sentry.captureException(
-            `Negative Quota Received: ${JSON.stringify(
-              quotaResponse?.remainingQuota
-            )}`
-          );
-          setCartState("NO_QUOTA");
-        } else if (hasNoQuota(quotaResponse)) {
-          setCartState("NO_QUOTA");
-        } else {
-          setCartState("DEFAULT");
-        }
-      } catch (e) {
-        if (e instanceof NotEligibleError) {
-          setCartState("NOT_ELIGIBLE");
-          return;
-        } else {
-          Sentry.addBreadcrumb({
-            category: "useQuota",
-            message: "fetchQuota - unidentified error"
-          });
-          setError(e);
-        }
-        setCartState("DEFAULT");
-      }
-    }
-
-    if (prevIds !== ids || prevProducts !== products) {
-      setCartState("FETCHING_QUOTA");
-      fetchQuotaWrapper();
-    }
-  }, [
-    authKey,
-    endpoint,
-    ids,
-    prevIds,
-    prevProducts,
-    products,
-    fetchQuota,
-    hasInvalidQuota,
-    hasNoQuota
-  ]);
 
   /**
    * Merge quota response with current cart whenever quota response or products change.
@@ -214,15 +144,6 @@ export const useCart = (
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
     setCart([]);
   }, []);
-
-  /**
-   * After checkout, update quota response
-   */
-  useEffect(() => {
-    if (cartState === "PURCHASED") {
-      fetchQuota();
-    }
-  }, [ids, authKey, endpoint, cartState, products, fetchQuota]);
 
   /**
    * Update quantity of an item in the cart.
@@ -327,8 +248,6 @@ export const useCart = (
     checkoutCart,
     checkoutResult,
     error,
-    clearError,
-    allQuotaResponse,
-    quotaResponse
+    clearError
   };
 };
