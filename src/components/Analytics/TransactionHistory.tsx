@@ -46,7 +46,7 @@ export const TransactionHistoryComponent: FunctionComponent<TransactionHistoryCo
     <>
       {transactionHistory.length !== 0 ? (
         transactionHistory.map(item => (
-          <View style={styles.stats}>
+          <View style={styles.stats} key={item.category}>
             <AppText style={styles.categoryName}>{item.category}</AppText>
             <AppText style={styles.quantity}>{item.quantity}</AppText>
             <AppText style={styles.test}>qty</AppText>
@@ -54,9 +54,7 @@ export const TransactionHistoryComponent: FunctionComponent<TransactionHistoryCo
         ))
       ) : (
         <>
-          <AppText style={styles.noTransactionText}>
-            No transactions were made
-          </AppText>
+          <AppText style={styles.noTransactionText}>No items scanned</AppText>
         </>
       )}
     </>
