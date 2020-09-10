@@ -264,34 +264,36 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 size="large"
                 color={color("grey", 40)}
               />
-            ) : transactionsByCategoryList.length > 0 ? (
-              <View>
-                <AppText style={styles.wrapper}>
-                  Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
-                  previously:
-                </AppText>
-                {transactionsByCategoryList.map(
-                  (
-                    transactionsByCategory: TransactionsGroup,
-                    index: number
-                  ) => (
-                    <TransactionsGroup
-                      key={index}
-                      maxTransactionsToDisplay={
-                        isShowFullList
-                          ? BIG_NUMBER
-                          : MAX_TRANSACTIONS_TO_DISPLAY
-                      }
-                      {...transactionsByCategory}
-                    />
-                  )
-                )}
-              </View>
-            ) : null}
+            ) : (
+              transactionsByCategoryList.length > 0 && (
+                <View>
+                  <AppText style={styles.wrapper}>
+                    Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
+                    previously:
+                  </AppText>
+                  {transactionsByCategoryList.map(
+                    (
+                      transactionsByCategory: TransactionsGroup,
+                      index: number
+                    ) => (
+                      <TransactionsGroup
+                        key={index}
+                        maxTransactionsToDisplay={
+                          isShowFullList
+                            ? BIG_NUMBER
+                            : MAX_TRANSACTIONS_TO_DISPLAY
+                        }
+                        {...transactionsByCategory}
+                      />
+                    )
+                  )}
+                </View>
+              )
+            )}
           </View>
           {!loading &&
             sortedTransactions &&
-            sortedTransactions?.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+            sortedTransactions.length > MAX_TRANSACTIONS_TO_DISPLAY && (
               <ShowFullListToggle
                 toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
                 isShowFullList={isShowFullList}
