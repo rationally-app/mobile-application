@@ -66,7 +66,10 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
       <AppText style={styles.smallText}>You distributed</AppText>
       <AppText style={styles.statText}>{totalCount}</AppText>
       <AppText style={styles.smallText}>
-        Last distributed at {format(new Date(lastTransactionTime), "h:mma")}
+        Last distributed at{" "}
+        {lastTransactionTime !== 0
+          ? format(new Date(lastTransactionTime), "h:mma")
+          : "-"}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>
