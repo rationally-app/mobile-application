@@ -4,7 +4,7 @@ import React, {
   useContext,
   useEffect
 } from "react";
-import { differenceInSeconds, format } from "date-fns";
+import { differenceInSeconds } from "date-fns";
 import { View, StyleSheet } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
@@ -34,6 +34,7 @@ import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
+import { formatDateTime } from "../../../utils/dateTimeFormatter";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -80,7 +81,7 @@ export const groupTransactionsByCategory = (
       policy => policy.category === item.category
     );
     const categoryName = policy?.name ?? item.category;
-    const formattedDate = format(item.transactionTime, "d MMM yyyy, h:mma");
+    const formattedDate = formatDateTime(item.transactionTime);
 
     if (!transactionsByCategoryMap.hasOwnProperty(categoryName)) {
       transactionsByCategoryMap[categoryName] = {

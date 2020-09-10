@@ -3,7 +3,7 @@ import { AppText } from "../Layout/AppText";
 import { AuthCredentials } from "../../types";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { fontSize, color, size } from "../../common/styles";
-import { format } from "date-fns";
+import { formatDateTime } from "../../utils/dateTimeFormatter";
 
 const styles = StyleSheet.create({
   content: {
@@ -30,7 +30,7 @@ export const CampaignLocationsListItem: FunctionComponent<
   AuthCredentials & { name: string; onPress: () => void }
 > = ({ name, expiry, operatorToken, onPress }) => {
   const operatorId = operatorToken.slice(0, 6); // May be blank for existing users because we didn't store operatorToken previously
-  const formattedExpiry = format(expiry, "d MMM yyyy, h:mma");
+  const formattedExpiry = formatDateTime(expiry);
 
   const hasExpired = Date.now() >= expiry;
 

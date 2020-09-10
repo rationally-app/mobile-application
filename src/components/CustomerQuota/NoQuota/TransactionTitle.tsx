@@ -1,7 +1,8 @@
 import React, { FunctionComponent } from "react";
-import { format, formatDistance } from "date-fns";
+import { formatDistance } from "date-fns";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
+import { formatDateTime, formatDate } from "../../../utils/dateTimeFormatter";
 
 export const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
@@ -10,7 +11,7 @@ export const DistantTransactionTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>Limit reached on </AppText>
     <AppText style={sharedStyles.statusTitle}>
-      {format(transactionTime, "d MMM yyyy, h:mma")}
+      {formatDateTime(transactionTime)}
     </AppText>
     {toggleTimeSensitiveTitle ? (
       <AppText style={sharedStyles.statusTitle}> for today.</AppText>
@@ -59,7 +60,7 @@ export const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {quantity} item(s) more till {format(quotaRefreshTime, "d MMM yyyy")}.
+      {quantity} item(s) more till {formatDate(quotaRefreshTime)}.
     </AppText>
   </>
 );
