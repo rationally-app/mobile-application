@@ -4,7 +4,7 @@ import React, {
   useState,
   useEffect
 } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
@@ -195,26 +195,29 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             <View>
               <AppText>{description}</AppText>
               <View style={styles.checkoutItemsList}>
-                {loading
-                  ? "isLoading"
-                  : (isShowFullList
-                      ? transactionsByTimeList
-                      : transactionsByTimeList.slice(
-                          0,
-                          MAX_TRANSACTIONS_TO_DISPLAY
-                        )
-                    ).map(
-                      (
-                        transactionsByTime: TransactionsGroup,
-                        index: number
-                      ) => (
-                        <TransactionsGroup
-                          key={index}
-                          maxTransactionsToDisplay={BIG_NUMBER}
-                          {...transactionsByTime}
-                        />
+                {loading ? (
+                  <ActivityIndicator
+                    style={{ alignSelf: "flex-start" }}
+                    size="large"
+                    color={color("grey", 40)}
+                  />
+                ) : (
+                  (isShowFullList
+                    ? transactionsByTimeList
+                    : transactionsByTimeList.slice(
+                        0,
+                        MAX_TRANSACTIONS_TO_DISPLAY
                       )
-                    )}
+                  ).map(
+                    (transactionsByTime: TransactionsGroup, index: number) => (
+                      <TransactionsGroup
+                        key={index}
+                        maxTransactionsToDisplay={BIG_NUMBER}
+                        {...transactionsByTime}
+                      />
+                    )
+                  )
+                )}
               </View>
             </View>
           </View>

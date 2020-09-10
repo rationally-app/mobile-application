@@ -4,8 +4,8 @@ import React, {
   useContext,
   useEffect
 } from "react";
-import { differenceInSeconds } from "date-fns";
-import { View, StyleSheet } from "react-native";
+import { differenceInSeconds, format } from "date-fns";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { color, size } from "../../../common/styles";
@@ -259,7 +259,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 )}
             </AppText>
             {loading ? (
-              "isLoading"
+              <ActivityIndicator
+                style={{ alignSelf: "flex-start" }}
+                size="large"
+                color={color("grey", 40)}
+              />
             ) : transactionsByCategoryList.length > 0 ? (
               <View>
                 <AppText style={styles.wrapper}>
