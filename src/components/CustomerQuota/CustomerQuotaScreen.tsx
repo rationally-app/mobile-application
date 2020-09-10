@@ -256,7 +256,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
      * Update quota after checkout
      */
     if (cartState === "PURCHASED") updateQuota();
-  }, [cartState]);
+  }, [cartState, updateQuota]);
 
   return quotaState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
