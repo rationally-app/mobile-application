@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { size } from "../../../common/styles";
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   appealButtonText: {
     marginTop: size(1),
     marginBottom: 0,

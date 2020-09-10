@@ -83,7 +83,7 @@ export const groupTransactionsByTime = (
       Math.floor(item.transactionTime.getTime() / 1000)
     );
 
-    if (!(transactionTimeInSeconds in transactionsByTimeMap)) {
+    if (!transactionsByTimeMap.hasOwnProperty(transactionTimeInSeconds)) {
       transactionsByTimeMap[transactionTimeInSeconds] = {
         transactionTime: item.transactionTime,
         transactions: [],
