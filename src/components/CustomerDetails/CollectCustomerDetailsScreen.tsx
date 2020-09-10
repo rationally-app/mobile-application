@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
   statsButton: {
     marginTop: size(4),
     flexDirection: "row",
-
     alignSelf: "center"
   },
   statsText: {

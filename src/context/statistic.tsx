@@ -7,7 +7,7 @@ interface StatisticsContext {
   totalCount: number | null;
   currentTimestamp: number;
   lastTransactionTime: number | null;
-  transactionHistory: ItemQuantity[] | null;
+  transactionHistory: ItemQuantity[];
   setTotalCount: (totalCount: number) => void;
   setCurrentTimestamp: (currentTimestamp: number) => void;
   setLastTransactionTime: (lastTransactionTime: number) => void;
@@ -15,9 +15,9 @@ interface StatisticsContext {
 }
 export const StatisticsContext = createContext<StatisticsContext>({
   totalCount: null,
-  currentTimestamp: Date.now(), // TODO: format later
+  currentTimestamp: Date.now(),
   lastTransactionTime: null,
-  transactionHistory: null,
+  transactionHistory: [],
   setTotalCount: () => null,
   setCurrentTimestamp: () => null,
   setLastTransactionTime: () => null,
@@ -36,7 +36,7 @@ export const StatisticsContextProvider: FunctionComponent = ({ children }) => {
   >(null);
   const [transactionHistory, setTransactionHistory] = useState<
     StatisticsContext["transactionHistory"]
-  >(null);
+  >([]);
 
   return (
     <StatisticsContext.Provider

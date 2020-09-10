@@ -236,7 +236,7 @@ export const Statistics = t.intersection([
 export type Statistics = t.TypeOf<typeof Statistics>;
 
 export const DailyStatistics = t.type({
-  dailyTransactions: t.array(Statistics)
+  pastTransactions: t.array(Statistics)
 });
 
 export type DailyStatistics = t.TypeOf<typeof DailyStatistics>;

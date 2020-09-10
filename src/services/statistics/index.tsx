@@ -1,6 +1,6 @@
 import { IS_MOCK } from "../../config";
 import { DailyStatistics } from "../../types";
-import { fetchWithValidator } from "../helpers";
+import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 
 export class StatisticsError extends Error {
@@ -27,7 +27,7 @@ export const mockGetStatistics = async (
   const transactionTime = Date.now();
 
   return {
-    dailyTransactions: [
+    pastTransactions: [
       {
         category: "toilet-paper",
         quantity: 100,
@@ -86,7 +86,10 @@ export const liveGetStatistics = async (
     );
     return response;
   } catch (e) {
-    Sentry.captureException(e);
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    }
+
     throw new StatisticsError(e.message);
   }
 };

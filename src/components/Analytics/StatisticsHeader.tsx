@@ -7,7 +7,7 @@ import { withNavigation } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppText } from "../Layout/AppText";
 
-interface AnalyticsHeader extends NavigationProps {
+interface StatisticsHeader extends NavigationProps {
   mode?: AppMode;
 }
 
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export const AnalyticsHeaderComponent: FunctionComponent<AnalyticsHeader> = ({
+export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
   navigation
 }) => {
   const onPressOpenDrawer = (): void => {
@@ -48,7 +48,7 @@ export const AnalyticsHeaderComponent: FunctionComponent<AnalyticsHeader> = ({
           color={color("grey", 0)}
         />
       </TouchableOpacity>
-      <AppText style={styles.header}>Analytics</AppText>
+      <AppText style={styles.header}>Statistics</AppText>
       <TouchableOpacity onPress={onPressOpenDrawer}>
         <MaterialCommunityIcons
           name="menu"
@@ -60,4 +60,4 @@ export const AnalyticsHeaderComponent: FunctionComponent<AnalyticsHeader> = ({
   );
 };
 
-export const AnalyticsHeader = withNavigation(AnalyticsHeaderComponent);
+export const StatisticsHeader = withNavigation(StatisticsHeaderComponent);
