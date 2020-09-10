@@ -1,5 +1,5 @@
 import React, { createContext, FunctionComponent, useState } from "react";
-import { ItemQuantity } from "../components/Analytics/types";
+import { ItemQuantity } from "../components/DailyStatistics/types";
 
 export const FEATURES_KEY = "FEATURES";
 

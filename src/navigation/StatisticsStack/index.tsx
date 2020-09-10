@@ -2,7 +2,7 @@ import {
   createStackNavigator,
   StackViewTransitionConfigs
 } from "react-navigation-stack";
-import DailyAnalyticsScreen from "./DailyAnalyticsScreen";
+import DailyStatisticsScreen from "./DailyStatisticsScreen";
 import React, { FunctionComponent, useContext } from "react";
 import { NavigationInjectedProps } from "react-navigation";
 import { AuthStoreContext } from "../../context/authStore";
@@ -12,8 +12,8 @@ import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 
 const Stack = createStackNavigator(
   {
-    DailyAnalyticsScreen: {
-      screen: DailyAnalyticsScreen
+    DailyStatisticsScreen: {
+      screen: DailyStatisticsScreen
     }
   },
   {
@@ -22,11 +22,11 @@ const Stack = createStackNavigator(
     navigationOptions: {
       gesturesEnabled: true
     },
-    initialRouteName: "DailyAnalyticsScreen"
+    initialRouteName: "DailyStatisticsScreen"
   }
 );
 
-const AnalyticsStack: FunctionComponent<NavigationInjectedProps> & {
+const StatisticsStack: FunctionComponent<NavigationInjectedProps> & {
   router: unknown;
 } = ({ navigation }) => {
   const operatorToken = navigation.getParam("operatorToken");
@@ -53,6 +53,6 @@ const AnalyticsStack: FunctionComponent<NavigationInjectedProps> & {
   );
 };
 
-AnalyticsStack.router = Stack.router;
+StatisticsStack.router = Stack.router;
 
-export default AnalyticsStack;
+export default StatisticsStack;

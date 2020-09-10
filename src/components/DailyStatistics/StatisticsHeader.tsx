@@ -18,6 +18,17 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center"
   },
+  backButton: {
+    flexDirection: "row",
+    color: "white",
+    marginLeft: -15,
+    marginRight: -10
+  },
+  backText: {
+    color: "white",
+    marginTop: size(1),
+    marginLeft: -10
+  },
   header: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
@@ -41,12 +52,13 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
 
   return (
     <View style={styles.appHeaderWrapper}>
-      <TouchableOpacity onPress={onPressBack}>
+      <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
         <MaterialCommunityIcons
-          name="arrow-left"
-          size={size(4)}
+          name="chevron-left"
+          size={size(5)}
           color={color("grey", 0)}
         />
+        <AppText style={styles.backText}>Back</AppText>
       </TouchableOpacity>
       <AppText style={styles.header}>Statistics</AppText>
       <TouchableOpacity onPress={onPressOpenDrawer}>

@@ -19,7 +19,7 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { AuthContext } from "../../context/auth";
-import { StatisticsContext } from "../../context/statistic";
+import { StatisticsContext } from "../../context/statistics";
 import { getDailyStatistics } from "../../services/statistics";
 import { summariseTransactions } from "./utils";
 import { TransactionHistory } from "./TransactionHistory";
@@ -47,14 +47,14 @@ const styles = StyleSheet.create({
   }
 });
 
-const DailyAnalyticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
+const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   navigation,
   isFocused
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "DailyAnalyticsScreen"
+      message: "DailyStatisticsScreen"
     });
   }, []);
 
@@ -166,6 +166,6 @@ const DailyAnalyticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   );
 };
 
-export const DailyAnalyticsScreenContainer = withNavigationFocus(
-  DailyAnalyticsScreen
+export const DailyStatisticsScreenContainer = withNavigationFocus(
+  DailyStatisticsScreen
 );

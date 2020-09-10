@@ -182,7 +182,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const onPressStatistics = (): void => {
-    navigation.navigate("AnalyticsStack", {
+    navigation.navigate("StatisticsStack", {
       operatorToken: operatorToken,
       endpoint: endpoint,
       sessionToken: sessionToken
