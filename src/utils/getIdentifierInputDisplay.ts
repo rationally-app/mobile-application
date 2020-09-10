@@ -12,29 +12,7 @@ const processIdentifierInputValue = (
     : identifierInput.value;
 };
 
-// TODO: @deprecated in favour of getAllIdentifierInputDisplay below
 export const getIdentifierInputDisplay = (
-  identifierInputs: IdentifierInput[]
-): string => {
-  const filteredInputs = identifierInputs.filter(
-    identifierInput => !!identifierInput.value
-  );
-
-  let identifierInputDisplay = "";
-
-  if (filteredInputs.length === 1) {
-    identifierInputDisplay = processIdentifierInputValue(filteredInputs[0]);
-  } else if (filteredInputs.length > 1) {
-    identifierInputDisplay = `${processIdentifierInputValue(
-      filteredInputs[0]
-    )} — ${processIdentifierInputValue(
-      filteredInputs[filteredInputs.length - 1]
-    )}`;
-  }
-  return identifierInputDisplay;
-};
-
-export const getAllIdentifierInputDisplay = (
   identifierInputs: IdentifierInput[]
 ): string => {
   const filteredInputs = identifierInputs.filter(

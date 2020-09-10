@@ -41,15 +41,5 @@ export const styles = StyleSheet.create({
     marginBottom: 0,
     fontFamily: "brand-bold",
     fontSize: size(2)
-  },
-  showFullListToggleBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: color("grey", 30),
-    flex: 1
-  },
-  showFullListToggleWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center"
   }
 });

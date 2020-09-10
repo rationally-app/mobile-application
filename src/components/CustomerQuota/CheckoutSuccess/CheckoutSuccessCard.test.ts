@@ -1,15 +1,15 @@
-import { defaultIdentifier } from "../../../test/helpers/defaults";
 import { PastTransactionsResult, CampaignPolicy } from "../../../types";
 import {
-  groupTransactionsByCategory,
-  sortTransactions,
-  TransactionsByCategoryMap
-} from "./NoQuotaCard";
+  TransactionsByTimeMap,
+  groupTransactionsByTime,
+  sortTransactions
+} from "./CheckoutSuccessCard";
+import { defaultIdentifier } from "../../../test/helpers/defaults";
 
-describe("NoQuotaCard utility functions", () => {
+describe("CheckoutSuccessCard utility functions", () => {
   let sortedTransactions: PastTransactionsResult["pastTransactions"];
   let allProducts: CampaignPolicy[];
-  let mockTransactionsByCategoryMap: TransactionsByCategoryMap;
+  let mockTransactionsByTimeMap: TransactionsByTimeMap;
 
   const latestTransactionTimeMs = 1596530350000;
   const latestTransactionTime = new Date(latestTransactionTimeMs);
@@ -90,127 +90,121 @@ describe("NoQuotaCard utility functions", () => {
       }
     ];
 
-    mockTransactionsByCategoryMap = {
-      "TT token": {
+    mockTransactionsByTimeMap = {
+      "1596530350": {
+        transactionTime: latestTransactionTime,
         transactions: [
           {
-            header: "4 Aug 2020, 4:39PM",
+            header: "TT token",
             details: "AAA987654321",
             quantity: "1 qty",
             isAppeal: false,
-            order: -1
-          }
-        ],
-        hasLatestTransaction: true,
-        order: 1
-      },
-      "Meal credits": {
-        transactions: [
+            order: 1
+          },
           {
-            header: "4 Aug 2020, 4:39PM",
+            header: "Meal credits",
             details: "",
             quantity: "$10",
             isAppeal: false,
-            order: -1
-          },
-          {
-            header: "4 Aug 2020, 4:38PM",
-            details: "",
-            quantity: "$5",
-            isAppeal: false,
-            order: -1
+            order: 0
           }
         ],
-        hasLatestTransaction: true,
-        order: 0
+        order: -1596530350
       },
-      "CDC Vouchers": {
+      "1596530340": {
+        transactionTime: new Date(latestTransactionTimeMs - 10000),
         transactions: [
           {
-            header: "4 Aug 2020, 4:39PM",
+            header: "CDC Vouchers",
             details: "AAA987654322",
             quantity: "1 book",
             isAppeal: false,
-            order: -1
+            order: 2
           }
         ],
-        hasLatestTransaction: false,
-        order: 2
+        order: -1596530340
+      },
+      "1596530330": {
+        transactionTime: new Date(latestTransactionTimeMs - 20000),
+        transactions: [
+          {
+            header: "Meal credits",
+            details: "",
+            quantity: "$5",
+            isAppeal: false,
+            order: 0
+          }
+        ],
+        order: -1596530330
       }
     };
   });
 
-  describe("groupTransactionsByCategory", () => {
-    it("should return categories with latest transactions and other categories", () => {
+  describe("groupTransactionsByTime", () => {
+    it("should return transactions grouped by time rounded to seconds", () => {
       expect.assertions(1);
 
       expect(
-        groupTransactionsByCategory(
-          sortedTransactions,
-          allProducts,
-          latestTransactionTime
-        )
-      ).toStrictEqual(mockTransactionsByCategoryMap);
+        groupTransactionsByTime(sortedTransactions, allProducts)
+      ).toStrictEqual(mockTransactionsByTimeMap);
     });
 
     it("should return empty object if sortedTransactions is null", () => {
       expect.assertions(1);
 
-      expect(
-        groupTransactionsByCategory(null, allProducts, undefined)
-      ).toStrictEqual({});
+      expect(groupTransactionsByTime(null, allProducts)).toStrictEqual({});
     });
   });
 
   describe("sortTransactions", () => {
-    it("should return array of transactions by category, categories with latest transactions should be before the rest", () => {
+    it("should return array of transactions by time, ordered by timestamp", () => {
       expect.assertions(1);
-      expect(sortTransactions(mockTransactionsByCategoryMap)).toStrictEqual([
+      expect(sortTransactions(mockTransactionsByTimeMap)).toStrictEqual([
         {
-          header: "Meal credits",
+          header: "4 Aug 2020, 4:39PM",
           transactions: [
             {
-              header: "4 Aug 2020, 4:39PM",
+              header: "Meal credits",
               details: "",
               quantity: "$10",
               isAppeal: false,
               order: 0
             },
             {
-              header: "4 Aug 2020, 4:38PM",
-              details: "",
-              quantity: "$5",
+              header: "TT token",
+              details: "AAA987654321",
+              quantity: "1 qty",
               isAppeal: false,
               order: 1
             }
           ],
-          order: 0
+          order: -1596530350
         },
         {
-          header: "TT token",
+          header: "4 Aug 2020, 4:39PM",
           transactions: [
             {
-              header: "4 Aug 2020, 4:39PM",
-              details: "AAA987654321",
-              quantity: "1 qty",
+              header: "CDC Vouchers",
+              details: "AAA987654322",
+              quantity: "1 book",
               isAppeal: false,
               order: 2
             }
           ],
-          order: 1
+          order: -1596530340
         },
         {
-          header: "CDC Vouchers",
+          header: "4 Aug 2020, 4:38PM",
           transactions: [
             {
-              header: "4 Aug 2020, 4:39PM",
-              details: "AAA987654322",
-              quantity: "1 book",
+              header: "Meal credits",
+              details: "",
+              quantity: "$5",
               isAppeal: false,
-              order: 3
+              order: 0
             }
           ],
-          order: 2
+          order: -1596530330
         }
       ]);
     });

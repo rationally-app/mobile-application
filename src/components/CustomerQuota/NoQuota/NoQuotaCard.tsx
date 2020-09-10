@@ -5,20 +5,22 @@ import React, {
   useEffect
 } from "react";
 import { differenceInSeconds, format } from "date-fns";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
-import { color } from "../../../common/styles";
+import { color, size } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { Cart } from "../../../hooks/useCart/useCart";
-import { getAllIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { FontAwesome } from "@expo/vector-icons";
-import { formatQuantityText } from "../utils";
-import { styles } from "./styles";
-import { TransactionsByCategory, Transaction } from "./TransactionsByCategory";
-import { ShowFullListToggle } from "./ShowFullListToggle";
+import {
+  formatQuantityText,
+  BIG_NUMBER,
+  sortTransactionsByOrder
+} from "../utils";
+import { TransactionsGroup, Transaction } from "../TransactionsGroup";
+import { ShowFullListToggle } from "../ShowFullListToggle";
 import {
   DistantTransactionTitle,
   RecentTransactionTitle,
@@ -26,23 +28,22 @@ import {
   UsageQuotaTitle
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
+import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
+import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
+import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
-import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
-import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
-const BIG_NUMBER = 99999;
 
-interface NoQuotaCard {
-  ids: string[];
-  cart: Cart;
-  onCancel: () => void;
-  onAppeal?: () => void;
-  quotaResponse: Quota | null;
-}
+export const styles = StyleSheet.create({
+  wrapper: {
+    marginTop: size(2),
+    marginBottom: size(2)
+  }
+});
 
 export interface TransactionsByCategoryMap {
   [category: string]: {
@@ -52,10 +53,13 @@ export interface TransactionsByCategoryMap {
   };
 }
 
-const sortTransactionsByOrder = (
-  a: TransactionsByCategory,
-  b: TransactionsByCategory
-): number => a.order - b.order;
+interface NoQuotaCard {
+  ids: string[];
+  cart: Cart;
+  onCancel: () => void;
+  onAppeal?: () => void;
+  quotaResponse: Quota | null;
+}
 
 /**
  * Given past transactions, group them by categories.
@@ -69,6 +73,7 @@ export const groupTransactionsByCategory = (
   allProducts: CampaignPolicy[],
   latestTransactionTime: Date | undefined
 ): TransactionsByCategoryMap => {
+  // Group transactions by category
   const transactionsByCategoryMap: TransactionsByCategoryMap = {};
   sortedTransactions?.forEach(item => {
     const policy = allProducts?.find(
@@ -85,13 +90,14 @@ export const groupTransactionsByCategory = (
       };
     }
     transactionsByCategoryMap[categoryName].transactions.push({
-      transactionDate: formattedDate,
-      details: getAllIdentifierInputDisplay(item.identifierInputs ?? []),
+      header: formattedDate,
+      details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
         policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
       ),
-      isAppeal: policy?.categoryType === "APPEAL"
+      isAppeal: policy?.categoryType === "APPEAL",
+      order: -1
     });
     transactionsByCategoryMap[categoryName].hasLatestTransaction =
       transactionsByCategoryMap[categoryName].hasLatestTransaction ||
@@ -114,19 +120,19 @@ export const groupTransactionsByCategory = (
  */
 export const sortTransactions = (
   transactionsByCategoryMap: TransactionsByCategoryMap
-): TransactionsByCategory[] => {
-  const latestTransactionsByCategory: TransactionsByCategory[] = [];
-  const otherTransactionsByCategory: TransactionsByCategory[] = [];
+): TransactionsGroup[] => {
+  const latestTransactionsByCategory: TransactionsGroup[] = [];
+  const otherTransactionsByCategory: TransactionsGroup[] = [];
   Object.entries(transactionsByCategoryMap).forEach(([key, value]) => {
     const { transactions, hasLatestTransaction, order } = value;
     if (hasLatestTransaction) {
       latestTransactionsByCategory.push({
-        category: key,
+        header: key,
         transactions,
         order
       });
     } else {
-      otherTransactionsByCategory.push({ category: key, transactions, order });
+      otherTransactionsByCategory.push({ header: key, transactions, order });
     }
   });
 
@@ -164,6 +170,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { getProduct } = useContext(ProductContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
+
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
   const { pastTransactionsResult, error } = usePastTransaction(
@@ -258,10 +265,10 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 </AppText>
                 {transactionsByCategoryList.map(
                   (
-                    transactionsByCategory: TransactionsByCategory,
+                    transactionsByCategory: TransactionsGroup,
                     index: number
                   ) => (
-                    <TransactionsByCategory
+                    <TransactionsGroup
                       key={index}
                       maxTransactionsToDisplay={
                         isShowFullList

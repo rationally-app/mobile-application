@@ -1,9 +1,25 @@
 import React, { FunctionComponent } from "react";
-import { View, TouchableOpacity } from "react-native";
-import { AppText } from "../../Layout/AppText";
-import { size, color } from "../../../common/styles";
-import { styles } from "./styles";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { AppText } from "../Layout/AppText";
+import { size, color, fontSize } from "../../common/styles";
 import { Ionicons } from "@expo/vector-icons";
+
+const styles = StyleSheet.create({
+  toggleText: {
+    lineHeight: 1.5 * fontSize(0),
+    fontFamily: "brand-bold"
+  },
+  showFullListToggleBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: color("grey", 30),
+    flex: 1
+  },
+  showFullListToggleWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+  }
+});
 
 export const ShowFullListToggle: FunctionComponent<{
   toggleIsShowFullList: () => void;
@@ -34,7 +50,7 @@ export const ShowFullListToggle: FunctionComponent<{
         />
         <View style={styles.showFullListToggleBorder} />
       </View>
-      <AppText style={styles.itemHeader}>{`Show ${
+      <AppText style={styles.toggleText}>{`Show ${
         isShowFullList ? "less" : "more"
       }`}</AppText>
     </TouchableOpacity>

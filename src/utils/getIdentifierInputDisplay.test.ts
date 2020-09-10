@@ -30,7 +30,7 @@ describe("getIdentifierInputDisplay", () => {
       }
     ];
     expect(getIdentifierInputDisplay(mockIdentifierInputs)).toBe(
-      "value1 — value3"
+      "value1\nvalue2\nvalue3"
     );
   });
 
@@ -56,7 +56,7 @@ describe("getIdentifierInputDisplay", () => {
       "*******4567"
     );
     expect(getIdentifierInputDisplay(mockIdentifierInputs)).toBe(
-      "*******4567 — value3"
+      "*******4567\n*******4567\nvalue3"
     );
   });
 
@@ -98,6 +98,6 @@ describe("getIdentifierInputDisplay", () => {
         { label: "label5", value: "value5" },
         { label: "label6", value: "" }
       ])
-    ).toBe("value4 — value5");
+    ).toBe("value4\nvalue5");
   });
 });
