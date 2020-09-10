@@ -174,7 +174,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const { pastTransactionsResult, error } = usePastTransaction(
+  const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
     sessionToken,
     endpoint
@@ -258,7 +258,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                     ) : undefined
                 )}
             </AppText>
-            {transactionsByCategoryList.length > 0 && (
+            {loading ? (
+              "isLoading"
+            ) : transactionsByCategoryList.length > 0 ? (
               <View>
                 <AppText style={styles.wrapper}>
                   Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
@@ -281,10 +283,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                   )
                 )}
               </View>
-            )}
+            ) : null}
           </View>
-          {sortedTransactions &&
-            sortedTransactions.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+          {!loading &&
+            sortedTransactions &&
+            sortedTransactions?.length > MAX_TRANSACTIONS_TO_DISPLAY && (
               <ShowFullListToggle
                 toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
                 isShowFullList={isShowFullList}

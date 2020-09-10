@@ -7,6 +7,7 @@ import { ERROR_MESSAGE } from "../../context/alert";
 
 export type PastTransactionHook = {
   pastTransactionsResult: PastTransactionsResult["pastTransactions"] | null;
+  loading: boolean;
   error: { message: string } | null;
 };
 
@@ -18,6 +19,7 @@ export const usePastTransaction = (
   const [pastTransactionsResult, setPastTransactionsResult] = useState<
     PastTransactionsResult["pastTransactions"] | null
   >(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<{ message: string } | null>(null);
   const prevIds = usePrevious(ids);
 
@@ -30,13 +32,16 @@ export const usePastTransaction = (
           endpoint
         );
         setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
+        setLoading(false);
       } catch (error) {
         Sentry.captureException(`Unable to fetch past transactions: ${ids}`);
         setError(new Error(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR));
+        setLoading(false);
       }
     };
 
     if (prevIds !== ids) {
+      setLoading(true);
       setError(null);
       fetchPastTransactions();
     }
@@ -44,6 +49,7 @@ export const usePastTransaction = (
 
   return {
     pastTransactionsResult,
+    loading,
     error
   };
 };
