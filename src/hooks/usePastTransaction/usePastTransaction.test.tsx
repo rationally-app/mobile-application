@@ -173,7 +173,7 @@ describe("usePastTransaction", () => {
         }
       ]);
       expect(result.current.loading).toStrictEqual(false);
-      expect(result.current.error).toStrictEqual(null);
+      expect(result.current.error).toBeNull();
     });
 
     it("should populate the past transactions with empty values", async () => {
@@ -189,7 +189,7 @@ describe("usePastTransaction", () => {
 
       expect(result.current.pastTransactionsResult).toStrictEqual([]);
       expect(result.current.loading).toStrictEqual(false);
-      expect(result.current.error).toStrictEqual(null);
+      expect(result.current.error).toBeNull();
     });
 
     it("should return PAST_TRANSACTION_ERROR when error thrown", async () => {
