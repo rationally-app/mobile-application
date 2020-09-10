@@ -4,7 +4,7 @@ import React, {
   useContext,
   useEffect
 } from "react";
-import { differenceInSeconds, format, compareDesc } from "date-fns";
+import { differenceInSeconds, compareDesc } from "date-fns";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
