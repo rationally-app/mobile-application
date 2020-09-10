@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
-import { Card } from "../Layout/Card";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
@@ -22,7 +21,7 @@ import { AuthContext } from "../../context/auth";
 import { StatisticsContext } from "../../context/statistics";
 import { getDailyStatistics } from "../../services/statistics";
 import { summariseTransactions } from "./utils";
-import { TransactionHistory } from "./TransactionHistory";
+import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime } from "date-fns";
 
@@ -84,10 +83,13 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
       [operatorToken]
     );
 
-    const summarisedTransactionHistory = summariseTransactions(response);
+    const {
+      summarisedTransactionHistory,
+      summarisedTotalCount
+    } = summariseTransactions(response);
 
     setTransactionHistory(summarisedTransactionHistory);
-    setTotalCount(response.pastTransactions.length);
+    setTotalCount(summarisedTotalCount);
     setCurrentTimestamp(currentTimestamp);
 
     if (response.pastTransactions.length !== 0) {
@@ -154,9 +156,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
               <Banner {...messageContent} />
             </View>
           )}
-          <Card style={{ marginVertical: size(10), minHeight: "40%" }}>
-            <TransactionHistory transactionHistory={transactionHistory} />
-          </Card>
+          <TransactionHistoryCard transactionHistory={transactionHistory} />
           <FeatureToggler feature="HELP_MODAL">
             <HelpButton onPress={showHelpModal} />
           </FeatureToggler>

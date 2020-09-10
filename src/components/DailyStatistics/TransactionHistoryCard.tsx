@@ -2,15 +2,18 @@ import React, { FunctionComponent } from "react";
 import { size, fontSize } from "../../common/styles";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "../Layout/AppText";
+import { Card } from "../Layout/Card";
 import { ItemQuantity } from "./types";
 
-interface TransactionHistoryComponent {
+interface TransactionHistoryCardComponent {
   transactionHistory: ItemQuantity[];
 }
 
 const styles = StyleSheet.create({
   stats: {
-    flexDirection: "row"
+    flexDirection: "column",
+    marginTop: -5,
+    minHeight: "20%"
   },
   categoryName: {
     fontFamily: "brand-bold",
@@ -19,7 +22,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginRight: "50%"
   },
-  test: {
+  qtyText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
     marginBottom: size(3),
@@ -30,6 +33,11 @@ const styles = StyleSheet.create({
     fontSize: fontSize(1),
     marginRight: "1%"
   },
+  transactionText: {
+    flexDirection: "row",
+    display: "flex",
+    justifyContent: "space-between"
+  },
   noTransactionText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
@@ -39,17 +47,17 @@ const styles = StyleSheet.create({
   }
 });
 
-export const TransactionHistoryComponent: FunctionComponent<TransactionHistoryComponent> = ({
+export const TransactionHistoryCardComponent: FunctionComponent<TransactionHistoryCardComponent> = ({
   transactionHistory
 }) => {
   return (
-    <>
+    <Card style={styles.stats}>
       {transactionHistory.length !== 0 ? (
         transactionHistory.map(item => (
-          <View style={styles.stats} key={item.category}>
+          <View style={styles.transactionText} key={item.category}>
             <AppText style={styles.categoryName}>{item.category}</AppText>
             <AppText style={styles.quantity}>{item.quantity}</AppText>
-            <AppText style={styles.test}>qty</AppText>
+            <AppText style={styles.qtyText}>qty</AppText>
           </View>
         ))
       ) : (
@@ -57,8 +65,8 @@ export const TransactionHistoryComponent: FunctionComponent<TransactionHistoryCo
           <AppText style={styles.noTransactionText}>No items scanned</AppText>
         </>
       )}
-    </>
+    </Card>
   );
 };
 
-export const TransactionHistory = TransactionHistoryComponent;
+export const TransactionHistoryCard = TransactionHistoryCardComponent;
