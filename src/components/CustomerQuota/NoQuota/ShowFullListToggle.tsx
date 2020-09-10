@@ -13,29 +13,30 @@ export const ShowFullListToggle: FunctionComponent<{
     style={{
       display: "flex",
       justifyContent: "center",
-      alignItems: "center",
       marginTop: size(2),
       marginBottom: size(2)
     }}
   >
     <TouchableOpacity
       onPress={toggleIsShowFullList}
-      style={styles.showFullListToggleWrapper}
+      style={{ alignItems: "center" }}
     >
-      <View style={styles.showFullListToggleBorder} />
-      <Ionicons
-        name={
-          isShowFullList
-            ? "ios-arrow-dropup-circle"
-            : "ios-arrow-dropdown-circle"
-        }
-        size={size(4)}
-        color={color("blue", 50)}
-      />
-      <View style={styles.showFullListToggleBorder} />
+      <View style={styles.showFullListToggleWrapper}>
+        <View style={styles.showFullListToggleBorder} />
+        <Ionicons
+          name={
+            isShowFullList
+              ? "ios-arrow-dropup-circle"
+              : "ios-arrow-dropdown-circle"
+          }
+          size={size(4)}
+          color={color("blue", 50)}
+        />
+        <View style={styles.showFullListToggleBorder} />
+      </View>
+      <AppText style={styles.itemHeader}>{`Show ${
+        isShowFullList ? "less" : "more"
+      }`}</AppText>
     </TouchableOpacity>
-    <AppText style={styles.itemHeader}>{`Show ${
-      isShowFullList ? "less" : "more"
-    }`}</AppText>
   </View>
 );

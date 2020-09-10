@@ -212,70 +212,69 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   return (
     <View>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
-        <View
-          style={[
-            sharedStyles.resultWrapper,
-            sharedStyles.failureResultWrapper
-          ]}
-        >
-          <FontAwesome
-            name="thumbs-down"
-            color={color("red", 60)}
-            style={sharedStyles.icon}
-          />
-          <AppText style={sharedStyles.statusTitleWrapper}>
-            {secondsFromLatestTransaction > 0 ? (
-              secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
-                <DistantTransactionTitle
-                  transactionTime={latestTransactionTime!}
-                  toggleTimeSensitiveTitle={showGlobalQuota}
-                />
-              ) : (
-                <RecentTransactionTitle
-                  now={now}
-                  transactionTime={latestTransactionTime!}
-                  toggleTimeSensitiveTitle={showGlobalQuota}
-                />
-              )
-            ) : (
-              <NoPreviousTransactionTitle
-                toggleTimeSensitiveTitle={showGlobalQuota}
-              />
-            )}
-            {showGlobalQuota &&
-              quotaResponse!.globalQuota!.map(
-                ({ quantity, quotaRefreshTime }, index: number) =>
-                  quotaRefreshTime ? (
-                    <UsageQuotaTitle
-                      key={index}
-                      quantity={quantity}
-                      quotaRefreshTime={quotaRefreshTime}
-                    />
-                  ) : undefined
-              )}
-          </AppText>
-          {transactionsByCategoryList.length > 0 && (
-            <View>
-              <AppText style={styles.wrapper}>
-                Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
-                previously:
-              </AppText>
-              {transactionsByCategoryList.map(
-                (
-                  transactionsByCategory: TransactionsByCategory,
-                  index: number
-                ) => (
-                  <TransactionsByCategory
-                    key={index}
-                    maxTransactionsToDisplay={
-                      isShowFullList ? BIG_NUMBER : MAX_TRANSACTIONS_TO_DISPLAY
-                    }
-                    {...transactionsByCategory}
+        <View style={sharedStyles.failureResultWrapper}>
+          <View style={sharedStyles.resultWrapper}>
+            <FontAwesome
+              name="thumbs-down"
+              color={color("red", 60)}
+              style={sharedStyles.icon}
+            />
+            <AppText style={sharedStyles.statusTitleWrapper}>
+              {secondsFromLatestTransaction > 0 ? (
+                secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
+                  <DistantTransactionTitle
+                    transactionTime={latestTransactionTime!}
+                    toggleTimeSensitiveTitle={showGlobalQuota}
+                  />
+                ) : (
+                  <RecentTransactionTitle
+                    now={now}
+                    transactionTime={latestTransactionTime!}
+                    toggleTimeSensitiveTitle={showGlobalQuota}
                   />
                 )
+              ) : (
+                <NoPreviousTransactionTitle
+                  toggleTimeSensitiveTitle={showGlobalQuota}
+                />
               )}
-            </View>
-          )}
+              {showGlobalQuota &&
+                quotaResponse!.globalQuota!.map(
+                  ({ quantity, quotaRefreshTime }, index: number) =>
+                    quotaRefreshTime ? (
+                      <UsageQuotaTitle
+                        key={index}
+                        quantity={quantity}
+                        quotaRefreshTime={quotaRefreshTime}
+                      />
+                    ) : undefined
+                )}
+            </AppText>
+            {transactionsByCategoryList.length > 0 && (
+              <View>
+                <AppText style={styles.wrapper}>
+                  Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
+                  previously:
+                </AppText>
+                {transactionsByCategoryList.map(
+                  (
+                    transactionsByCategory: TransactionsByCategory,
+                    index: number
+                  ) => (
+                    <TransactionsByCategory
+                      key={index}
+                      maxTransactionsToDisplay={
+                        isShowFullList
+                          ? BIG_NUMBER
+                          : MAX_TRANSACTIONS_TO_DISPLAY
+                      }
+                      {...transactionsByCategory}
+                    />
+                  )
+                )}
+              </View>
+            )}
+          </View>
           {sortedTransactions &&
             sortedTransactions.length > MAX_TRANSACTIONS_TO_DISPLAY && (
               <ShowFullListToggle
