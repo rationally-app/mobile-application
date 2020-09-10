@@ -11,7 +11,7 @@ import {
   Vibration,
   BackHandler
 } from "react-native";
-import { size, fontSize } from "../../common/styles";
+import { size, fontSize, borderRadius } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -55,7 +55,17 @@ const styles = StyleSheet.create({
   campaignName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
-    marginBottom: size(3)
+    marginBottom: size(3),
+    flexGrow: 1,
+    flexShrink: 1
+  },
+  manageButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: borderRadius(2),
+    padding: size(1),
+    marginRight: -size(1),
+    marginTop: -size(0.5)
   }
 });
 
@@ -77,8 +87,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
-  const { features, policies } = useContext(CampaignConfigContext);
   const { showAlert } = useContext(AlertModalContext);
+  const { features, policies } = useContext(CampaignConfigContext);
 
   useEffect(() => {
     if (isFocused) {

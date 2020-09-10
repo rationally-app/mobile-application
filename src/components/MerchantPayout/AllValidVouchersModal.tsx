@@ -1,9 +1,14 @@
 import React, { FunctionComponent, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Alert,
+  ScrollView
+} from "react-native";
 import { size, fontSize, color } from "../../common/styles";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { AppText } from "../Layout/AppText";
-import { ScrollView } from "react-native-gesture-handler";
 import { ModalWithClose } from "../Layout/ModalWithClose";
 import { Voucher } from "../../types";
 

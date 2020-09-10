@@ -36,9 +36,9 @@ import {
   expiredAlertProps
 } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
-import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
 import { QuotaError } from "../../services/quota";
+import { AuthStoreContext } from "../../context/authStore";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -82,20 +82,13 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
-  const { sessionToken, endpoint } = useContext(AuthContext);
+  const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
   const showHelpModal = useContext(HelpModalContext);
   const { showAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
-  const { logout } = useLogout();
 
-  const forceLogout = useCallback((): void => {
-    showAlert({
-      ...expiredAlertProps,
-      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-    });
-    logout(navigation.dispatch);
-  }, [logout, navigation.dispatch, showAlert]);
+  const { setAuthCredentials } = useContext(AuthStoreContext);
 
   const {
     cartState,
@@ -149,13 +142,37 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     };
   }, [cartState, navigation]);
 
+  const expireSession = useCallback(() => {
+    const key = `${operatorToken}${endpoint}`;
+    setAuthCredentials(key, {
+      operatorToken,
+      endpoint,
+      sessionToken,
+      expiry: new Date().getTime()
+    });
+    showAlert({
+      ...expiredAlertProps,
+      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
+      onOk: () => {
+        navigation.navigate("CampaignLocationsScreen");
+      }
+    });
+  }, [
+    setAuthCredentials,
+    endpoint,
+    navigation,
+    operatorToken,
+    sessionToken,
+    showAlert
+  ]);
+
   useEffect(() => {
     if (!error) {
       return;
     }
     if (error instanceof SessionError) {
       clearError();
-      forceLogout();
+      expireSession();
       return;
     }
     if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
@@ -235,13 +252,12 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       throw new Error(error.message);
     }
   }, [
+    campaignFeatures?.campaignName,
     cartState,
     clearError,
     error,
-    onCancel,
-    showAlert,
-    campaignFeatures,
-    forceLogout
+    expireSession,
+    showAlert
   ]);
 
   return cartState === "FETCHING_QUOTA" ? (
