@@ -19,7 +19,7 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { useAuthenticationContext } from "../../context/auth";
+import { AuthContext } from "../../context/auth";
 import { StatisticsContext } from "../../context/statistic";
 import { getDailyStatistics } from "../../services/statistics";
 import { ItemQuantity } from "./types";
@@ -62,7 +62,7 @@ const DailyAnalyticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
-  const { token, endpoint, operatorToken } = useAuthenticationContext();
+  const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
   const { totalCount, setTotalCount } = useContext(StatisticsContext);
   const { currentTimestamp, setCurrentTimestamp } = useContext(
     StatisticsContext
@@ -77,7 +77,7 @@ const DailyAnalyticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   const fetchDailyStatistics = async (): Promise<void> => {
     const response = await getDailyStatistics(
       currentTimestamp,
-      token,
+      sessionToken,
       endpoint,
       [operatorToken]
     );
@@ -111,7 +111,7 @@ const DailyAnalyticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   };
 
   useEffect(() => {
-    if (totalCount === null) {
+    if (totalCount !== null) {
       fetchDailyStatistics();
     }
   });

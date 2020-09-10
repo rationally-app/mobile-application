@@ -97,11 +97,6 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch]);
 
-  const onPressStatistics = (): void => {
-    navigation.navigate("DailyAnalyticsScreen");
-    navigation.dispatch(DrawerActions.closeDrawer());
-  };
-
   const onPressLogout = (): void => {
     showAlert({
       ...defaultConfirmationProps,
@@ -165,11 +160,6 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         {drawerButtons.map(button => (
           <DrawerButtonComponent {...button} key={button.label} />
         ))}
-        <DrawerButtonComponent
-          icon="home-analytics"
-          label="Statistics"
-          onPress={onPressStatistics}
-        />
         <DrawerButtonComponent
           icon="logout"
           label="Logout"
