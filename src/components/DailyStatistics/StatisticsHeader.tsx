@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
     fontSize: fontSize(3),
     color: "white",
     flexDirection: "row",
-    textAlign: "center"
+    textAlign: "center",
+    marginLeft: -10
   }
 });
 
