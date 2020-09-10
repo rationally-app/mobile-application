@@ -122,13 +122,15 @@ describe("usePastTransaction", () => {
 
   describe("fetch past transactions on initialisation", () => {
     it("should populate the past transactions with values", async () => {
-      expect.assertions(1);
+      expect.assertions(4);
       mockGetPastTransactions.mockReturnValue(mockPastTransactions);
 
       const { result, waitForNextUpdate } = renderHook(
         () => usePastTransaction(ids, key, endpoint),
         { wrapper }
       );
+
+      expect(result.current.loading).toStrictEqual(true);
 
       await waitForNextUpdate();
 
@@ -170,10 +172,12 @@ describe("usePastTransaction", () => {
           transactionTime: new Date(1596530356432)
         }
       ]);
+      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.error).toStrictEqual(null);
     });
 
     it("should populate the past transactions with empty values", async () => {
-      expect.assertions(1);
+      expect.assertions(3);
       mockGetPastTransactions.mockReturnValue(mockEmptyPastTransactions);
 
       const { result, waitForNextUpdate } = renderHook(
@@ -184,10 +188,12 @@ describe("usePastTransaction", () => {
       await waitForNextUpdate();
 
       expect(result.current.pastTransactionsResult).toStrictEqual([]);
+      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.error).toStrictEqual(null);
     });
 
     it("should return PAST_TRANSACTION_ERROR when error thrown", async () => {
-      expect.assertions(3);
+      expect.assertions(4);
       mockGetPastTransactions.mockRejectedValue(
         new PastTransactionError("Some random error")
       );
@@ -204,6 +210,7 @@ describe("usePastTransaction", () => {
       expect(result.current.error?.message).toStrictEqual(
         ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
       );
+      expect(result.current.loading).toStrictEqual(false);
     });
   });
 });
