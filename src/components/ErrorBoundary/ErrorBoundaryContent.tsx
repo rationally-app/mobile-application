@@ -37,6 +37,11 @@ const styles = StyleSheet.create({
     marginTop: size(4),
     fontSize: fontSize(-3)
   },
+  tokenDescription: {
+    textAlign: "center",
+    // marginTop: size(4),
+    fontSize: fontSize(-3)
+  },
   restartButton: {
     position: "absolute",
     bottom: size(4),
@@ -49,23 +54,31 @@ const styles = StyleSheet.create({
 
 export const ErrorBoundaryContent: FunctionComponent<{
   error?: string;
-}> = ({ error }) => (
-  <View style={styles.wrapper}>
-    <View style={styles.content}>
-      <AlertIcon style={styles.icon} width={size(5)} height={size(5)} />
-      <AppText style={styles.heading}>System issue</AppText>
-      <AppText style={styles.body}>
-        We are currently facing connectivity issues. Try restarting the app or
-        contact GovTech if the problem persists.
-      </AppText>
-      {error && <AppText style={styles.errorDescription}>{error}</AppText>}
+  operatorToken?: string;
+}> = ({ error, operatorToken }) => {
+  return (
+    <View style={styles.wrapper}>
+      <View style={styles.content}>
+        <AlertIcon style={styles.icon} width={size(5)} height={size(5)} />
+        <AppText style={styles.heading}>System issue</AppText>
+        <AppText style={styles.body}>
+          We are currently facing connectivity issues. Try restarting the app or
+          contact GovTech if the problem persists.
+        </AppText>
+        {error && <AppText style={styles.errorDescription}>{error}</AppText>}
+        {operatorToken && (
+          <AppText style={styles.tokenDescription}>
+            Code:{operatorToken}
+          </AppText>
+        )}
+      </View>
+      <View style={styles.restartButton}>
+        <DarkButton
+          text="Restart app"
+          onPress={() => Updates.reloadAsync()}
+          fullWidth={true}
+        />
+      </View>
     </View>
-    <View style={styles.restartButton}>
-      <DarkButton
-        text="Restart app"
-        onPress={() => Updates.reloadAsync()}
-        fullWidth={true}
-      />
-    </View>
-  </View>
-);
+  );
+};

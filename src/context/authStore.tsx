@@ -9,6 +9,7 @@ import { AsyncStorage } from "react-native";
 import { usePrevious } from "../hooks/usePrevious";
 import { AuthCredentials } from "../types";
 import { Sentry } from "../utils/errorTracking";
+import { BoundaryError } from "../components/ErrorBoundary/ErrorBoundary";
 
 export const AUTH_CREDENTIALS_STORE_KEY = "AUTH_STORE";
 
@@ -168,7 +169,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
         setHasLoadedFromStore(true);
       } catch (e) {
         setState(() => {
-          throw new Error(e);
+          throw new BoundaryError(Error(e)); //Let ErrorBoundary handle
         });
       }
     };

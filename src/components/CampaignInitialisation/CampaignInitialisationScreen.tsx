@@ -26,6 +26,7 @@ import * as config from "../../config";
 import { checkVersion } from "./utils";
 import { SessionError } from "../../services/helpers";
 import { AuthStoreContext } from "../../context/authStore";
+import { BoundaryError } from "../ErrorBoundary/ErrorBoundary";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -122,7 +123,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
           }
         });
       } else {
-        throw updateCampaignConfigError; // Let ErrorBoundary handle
+        throw new BoundaryError(updateCampaignConfigError); // Let ErrorBoundary handle
       }
     }
   }, [
@@ -192,9 +193,9 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     );
     // https://github.com/facebook/react/issues/14981#issuecomment-468460187
     setState(() => {
-      throw error; // Let ErrorBoundary handle
+      throw new BoundaryError(error, authCredentials.operatorToken); // Let ErrorBoundary handle
     });
-  }, [checkUpdates, setState]);
+  }, [checkUpdates, setState, authCredentials.operatorToken]);
 
   /**
    * When there's a new updated campaign config, check for version
@@ -224,7 +225,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
           break;
       }
     } catch (e) {
-      throw e; // Let ErrorBoundary handle
+      throw new BoundaryError(e); // Let ErrorBoundary handle
     }
   }, [
     campaignConfig?.features?.minAppBinaryVersion,

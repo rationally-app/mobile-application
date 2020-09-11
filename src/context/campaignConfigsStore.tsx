@@ -9,6 +9,7 @@ import { AsyncStorage } from "react-native";
 import { CampaignConfig } from "../types";
 import { usePrevious } from "../hooks/usePrevious";
 import { CampaignConfigError } from "../services/campaignConfig";
+import { BoundaryError } from "../components/ErrorBoundary/ErrorBoundary";
 
 export const CAMPAIGN_CONFIGS_STORE_KEY = "CAMPAIGN_CONFIGS_STORE";
 
@@ -123,7 +124,7 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
         setHasLoadedFromStore(true);
       } catch (e) {
         setState(() => {
-          throw new CampaignConfigError(e);
+          throw new BoundaryError(new CampaignConfigError(e)); //Let ErrorBoundary handle
         });
       }
     };

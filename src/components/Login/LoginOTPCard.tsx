@@ -21,6 +21,7 @@ import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { AuthCredentials } from "../../types";
+import { BoundaryError } from "../ErrorBoundary/ErrorBoundary";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -110,7 +111,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else {
         setState(() => {
-          throw e; // Let ErrorBoundary handle
+          throw new BoundaryError(e, operatorToken); // Let ErrorBoundary handle
         });
       }
       setIsLoading(false);

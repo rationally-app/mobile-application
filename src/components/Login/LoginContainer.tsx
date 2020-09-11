@@ -46,6 +46,7 @@ import {
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
+import { BoundaryError } from "../ErrorBoundary/ErrorBoundary";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -164,7 +165,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         showAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else {
         setState(() => {
-          throw e; // Let ErrorBoundary handle
+          throw new BoundaryError(e, tempAuthCredentials?.operatorToken); // Let ErrorBoundary handle
         });
       }
       return false;
@@ -257,7 +258,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           showAlert(e.alertProps);
         } else {
           setState(() => {
-            throw error; // Let ErrorBoundary handle
+            throw new BoundaryError(error, tempAuthCredentials?.operatorToken); // Let ErrorBoundary handle
           });
         }
         setIsLoading(false);
