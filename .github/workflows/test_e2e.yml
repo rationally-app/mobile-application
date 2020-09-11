@@ -43,3 +43,11 @@ jobs:
           name: Combined-Output-${{ steps.date.outputs.date }}
           path: |
             ./result
+      - name: xUnit Slack Reporter
+        uses: ivanklee86/xunit-slack-reporter@v1.0.1
+        env:
+          SLACK_CHANNEL: ${{ secrets.E2E_CHATBOT_CHANNELID }}
+          SLACK_TOKEN: ${{ secrets.E2E_CHATBOT_TOKEN }}
+          XUNIT_PATH: ./result/results.xml
+
+
