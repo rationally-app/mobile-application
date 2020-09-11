@@ -1,14 +1,22 @@
 import { groupBy, forEach } from "lodash";
-import { ItemQuantity } from "./types";
-import { DailyStatistics } from "../../types";
+import { DailyStatistics, CampaignPolicy } from "../../types";
 
 export const summariseTransactions = (
-  response: DailyStatistics
+  response: DailyStatistics,
+  policies: CampaignPolicy[] | null
 ): {
-  summarisedTransactionHistory: ItemQuantity[];
+  summarisedTransactionHistory: {
+    name: string;
+    category: string;
+    quantity: number;
+  }[];
   summarisedTotalCount: number;
 } => {
-  const summarisedTransactionHistory: ItemQuantity[] = [];
+  const summarisedTransactionHistory: {
+    name: string;
+    category: string;
+    quantity: number;
+  }[] = [];
   let summarisedTotalCount = 0;
 
   const transactionsByCategory = groupBy(response.pastTransactions, "category");
@@ -18,7 +26,17 @@ export const summariseTransactions = (
       quantity += transaction.quantity;
     });
     summarisedTotalCount += quantity;
-    summarisedTransactionHistory.push({ category: key, quantity: quantity });
+
+    const itemWithName = policies?.find(item => {
+      item.category === key;
+      return item;
+    });
+
+    summarisedTransactionHistory.push({
+      name: itemWithName ? itemWithName.name : key,
+      category: key,
+      quantity: quantity
+    });
   });
 
   return { summarisedTransactionHistory, summarisedTotalCount };

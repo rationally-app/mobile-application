@@ -3,10 +3,9 @@ import { size, fontSize } from "../../common/styles";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Card } from "../Layout/Card";
-import { ItemQuantity } from "./types";
 
 interface TransactionHistoryCardComponent {
-  transactionHistory: ItemQuantity[];
+  transactionHistory: { name: string; category: string; quantity: number }[];
 }
 
 const styles = StyleSheet.create({
@@ -55,7 +54,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
       {transactionHistory.length !== 0 ? (
         transactionHistory.map(item => (
           <View style={styles.transactionText} key={item.category}>
-            <AppText style={styles.categoryName}>{item.category}</AppText>
+            <AppText style={styles.categoryName}>{item.name}</AppText>
             <AppText style={styles.quantity}>{item.quantity}</AppText>
             <AppText style={styles.qtyText}>qty</AppText>
           </View>

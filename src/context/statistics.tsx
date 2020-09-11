@@ -1,5 +1,4 @@
 import React, { createContext, FunctionComponent, useState } from "react";
-import { ItemQuantity } from "../components/DailyStatistics/types";
 
 export const FEATURES_KEY = "FEATURES";
 
@@ -7,11 +6,13 @@ interface StatisticsContext {
   totalCount: number | null;
   currentTimestamp: number;
   lastTransactionTime: number | null;
-  transactionHistory: ItemQuantity[];
+  transactionHistory: { name: string; category: string; quantity: number }[];
   setTotalCount: (totalCount: number) => void;
   setCurrentTimestamp: (currentTimestamp: number) => void;
   setLastTransactionTime: (lastTransactionTime: number) => void;
-  setTransactionHistory: (transactionHistory: ItemQuantity[]) => void;
+  setTransactionHistory: (
+    transactionHistory: { name: string; category: string; quantity: number }[]
+  ) => void;
 }
 export const StatisticsContext = createContext<StatisticsContext>({
   totalCount: null,

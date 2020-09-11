@@ -4,6 +4,7 @@ import { size, fontSize } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
+import { CampaignConfigContext } from "../../context/campaignConfig";
 import {
   withNavigationFocus,
   NavigationFocusInjectedProps
@@ -72,6 +73,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
   const { transactionHistory, setTransactionHistory } = useContext(
     StatisticsContext
   );
+  const { policies } = useContext(CampaignConfigContext);
 
   const fetchDailyStatistics = async (
     currentTimestamp: number
@@ -86,7 +88,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
     const {
       summarisedTransactionHistory,
       summarisedTotalCount
-    } = summariseTransactions(response);
+    } = summariseTransactions(response, policies);
 
     setTransactionHistory(summarisedTransactionHistory);
     setTotalCount(summarisedTotalCount);
