@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, act } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
 import { wait } from "@testing-library/react-native";
 import { Quota, PostTransactionResult } from "../../types";
@@ -182,25 +182,20 @@ describe("useCart", () => {
     jest.resetAllMocks();
   });
 
- 
   describe("update cart quantities", () => {
-    it("should update the cart when more ids are added", async () => {
-      expect.assertions(1);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
+    it("should update the cart when quota response changes",  () => {
+      let quotaResponse = mockQuotaResSingleId
 
       let ids = ["ID1"];
       const { rerender, result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
+        () => useCart(ids, key, endpoint, quotaResponse),
         { wrapper }
       );
 
-      await waitForNextUpdate();
-
-      mockGetQuota.mockReturnValueOnce(mockQuotaResMultipleIds);
       ids = ["ID1", "ID2"];
-      rerender([ids, key, endpoint]);
+      quotaResponse = mockQuotaResMultipleIds;
+      rerender();
 
-      await waitForNextUpdate();
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -221,17 +216,14 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should update the cart when quantities change", async () => {
-      expect.assertions(1);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
+    it("should update the cart when quantities change", () => {
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
         { wrapper }
       );
 
-      await waitForNextUpdate();
-      await wait(() => result.current.updateCart("chocolate", 5));
+      act(() => result.current.updateCart("chocolate", 5));
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -252,69 +244,14 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should maintain cart quantities when more ids are added", async () => {
-      expect.assertions(2);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
-      let ids = ["ID1"];
-      const { rerender, result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
-        { wrapper }
-      );
+    it("should set error when updateCart is given a negative quantity",  () => {
 
-      await waitForNextUpdate();
-      await wait(() => result.current.updateCart("chocolate", 5));
-      expect(result.current.cart).toStrictEqual([
-        {
-          category: "toilet-paper",
-          descriptionAlert: undefined,
-          identifierInputs: [],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 2,
-          quantity: 1
-        },
-        {
-          category: "chocolate",
-          descriptionAlert: undefined,
-          identifierInputs: [],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 15,
-          quantity: 5
-        }
-      ]);
-
-      mockGetQuota.mockReturnValueOnce(mockQuotaResMultipleIds);
-      ids = ["ID1", "ID2"];
-      rerender([ids, key, endpoint]);
-      await waitForNextUpdate();
-      expect(result.current.cart).toStrictEqual([
-        {
-          category: "toilet-paper",
-          descriptionAlert: undefined,
-          identifierInputs: [],
-          lastTransactionTime: undefined,
-          maxQuantity: 4,
-          quantity: 1
-        },
-        {
-          category: "chocolate",
-          descriptionAlert: undefined,
-          identifierInputs: [],
-          lastTransactionTime: undefined,
-          maxQuantity: 30,
-          quantity: 5
-        }
-      ]);
-    });
-
-    it("should set error when updateCart is given a negative quantity", async () => {
-      expect.assertions(2);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
+      const { result } = renderHook(() => useCart(ids, key, endpoint, mockQuotaResSingleId), {
         wrapper
       });
 
-      await wait(() => {
+      act(() => {
         result.current.updateCart("chocolate", -5);
       });
 
@@ -339,15 +276,13 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when updateCart is given a quantity over the limit", async () => {
-      expect.assertions(2);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
+    it("should set error when updateCart is given a quantity over the limit", () => {
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
+      const { result } = renderHook(() => useCart(ids, key, endpoint, mockQuotaResSingleId), {
         wrapper
       });
 
-      await wait(() => {
+      act(() => {
         result.current.updateCart("chocolate", 100);
       });
       expect(result.current.error?.message).toBe("Insufficient quota.");
@@ -371,15 +306,13 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when updateCart is given a category that does not exist", async () => {
-      expect.assertions(2);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
+    it("should set error when updateCart is given a category that does not exist", () => {
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
+      const { result } = renderHook(() => useCart(ids, key, endpoint, mockQuotaResSingleId), {
         wrapper
       });
 
-      await wait(() => {
+      act(() => {
         result.current.updateCart("eggs", 1);
       });
       expect(result.current.error?.message).toBe("Category does not exist.");
