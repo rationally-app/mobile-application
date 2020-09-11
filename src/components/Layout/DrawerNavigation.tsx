@@ -15,6 +15,7 @@ import {
   AlertModalContext,
   defaultConfirmationProps
 } from "../../context/alert";
+import { LocalizationContext } from "../../context/translation";
 
 const styles = StyleSheet.create({
   container: {
@@ -96,6 +97,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch]);
+  const { i18n } = useContext(LocalizationContext);
 
   const onPressLogout = (): void => {
     showAlert({
@@ -162,34 +164,34 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         ))}
         <DrawerButtonComponent
           icon="logout"
-          label="Logout"
+          label={i18n.t("navigationDrawer.logout")}
           onPress={onPressLogout}
         />
       </View>
       <View style={{ marginTop: "auto", marginBottom: size(4) }}>
         <BottomNavigationLink onPress={showHelpModal}>
-          Help & Support
+          {i18n.t("navigationDrawer.helpSupport")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
           }}
         >
-          Terms of use
+          {i18n.t("navigationDrawer.termsOfUse")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/privacy");
           }}
         >
-          Privacy Statement
+          {i18n.t("navigationDrawer.privacyStatement")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
           }}
         >
-          Report vulnerability
+          {i18n.t("navigationDrawer.reportVulnerability")}
         </BottomNavigationLink>
         <AppText style={styles.bottomVersionText}>{version}</AppText>
       </View>

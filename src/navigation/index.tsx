@@ -16,20 +16,21 @@ const App = (): ReactElement => {
   return (
     <ErrorBoundary>
       <FontLoader>
-        <Providers
-          providers={[
-            ConfigContextProvider,
-            AuthStoreContextProvider,
-            CampaignConfigsStoreContextProvider,
-            HelpModalContextProvider,
-            AlertModalContextProvider,
-            ImportantMessageContextProvider,
-            DrawerContextProvider,
-            LocalizationContextProvider
-          ]}
-        >
-          <Content />
-        </Providers>
+        <LocalizationContextProvider>
+          <Providers
+            providers={[
+              ConfigContextProvider,
+              AuthStoreContextProvider,
+              CampaignConfigsStoreContextProvider,
+              HelpModalContextProvider,
+              AlertModalContextProvider,
+              ImportantMessageContextProvider,
+              DrawerContextProvider
+            ]}
+          >
+            <Content />
+          </Providers>
+        </LocalizationContextProvider>
       </FontLoader>
     </ErrorBoundary>
   );

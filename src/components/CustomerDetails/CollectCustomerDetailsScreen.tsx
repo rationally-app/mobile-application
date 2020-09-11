@@ -36,6 +36,7 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
+import { LocalizationContext } from "../../context/translation";
 
 const styles = StyleSheet.create({
   content: {
@@ -89,6 +90,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
+  const { i18n } = useContext(LocalizationContext);
 
   useEffect(() => {
     if (isFocused) {
@@ -184,7 +186,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               </AppText>
             )}
             <AppText>
-              Check the number of item(s) eligible for redemption
+              {i18n.t("collectCustomerDetailsScreen.checkEligibleItems")}
             </AppText>
             <InputIdSection
               openCamera={() => setShouldShowCamera(true)}
@@ -206,7 +208,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText="Enter ID manually"
+          cancelButtonText={i18n.t("idScanner.enterIdManually")}
           barCodeTypes={
             features?.id.scannerType === "QR"
               ? [BarCodeScanner.Constants.BarCodeType.qr]

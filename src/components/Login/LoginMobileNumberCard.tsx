@@ -23,6 +23,7 @@ import {
   ERROR_MESSAGE
 } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
+import { LocalizationContext } from "../../context/translation";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -59,7 +60,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       setCountryCodeValue(valueWithPlusSign);
     }
   };
-
+  const { i18n } = useContext(LocalizationContext);
   const onChangeMobileNumber = (text: string): void => {
     /^\d*$/.test(text) && setMobileNumberValue(text);
   };
@@ -94,13 +95,11 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   return (
     <Card>
-      <AppText>
-        Please enter your mobile phone number to receive a one-time password.
-      </AppText>
+      <AppText>{i18n.t("loginMobileNumberCard.enterMobileNumber")}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <PhoneNumberInput
           countryCodeValue={countryCode}
-          label="Mobile phone number"
+          label={i18n.t("loginMobileNumberCard.mobileNumber")}
           mobileNumberValue={mobileNumberValue}
           onChangeCountryCode={onChangeCountryCode}
           onChangeMobileNumber={onChangeMobileNumber}
@@ -108,7 +107,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
         />
 
         <DarkButton
-          text="Send OTP"
+          text={i18n.t("loginMobileNumberCard.sendOtp")}
           onPress={onSubmitMobileNumber}
           fullWidth={true}
           isLoading={isLoading}

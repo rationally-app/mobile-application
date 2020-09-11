@@ -10,10 +10,11 @@
         "sendOtp": "发送一次性密码"
     },
     "loginOTPCard": {
-        "sendingOtp": "一次性密码发送中",
+        "sendingOtp": "一次性密码发送中...",
         "Otp": "一次性密码",
         "resendIn": "在%{ss}秒内重新发送",
-        "submit": "提交"
+        "submit": "提交",
+        "resend": "重新发送"
     },
     "collectCustomerDetailsScreen": {
         "checkEligibleItems": "查看可领取的物品数量",
@@ -34,12 +35,12 @@
         "termsOfUse": "使用条款",
         "privacyStatement": "隐私声明",
         "reportVulnerability": "报告漏洞",
-        "expiring": "在 yyyy年mm月dd日hh时:mm分 已到期",
-        "valid": "有效期至 yyyy年mm月dd日hh时:mm分"
+        "expiring": "在 %{yyyy年MM月d日 H时:mm分} 已到期",
+        "valid": "有效期至 %{yyyy年MM月d日 H时:mm分}"
     },
     "customerQuotaScreen": {
-        "campaignExpiredOn": "在 yyyy年mm月dd日hh时:mm分 已到期",
-        "campaignValidTo": "有效期至 yyyy年mm月dd日hh时:mm分",
+        "campaignExpiredOn": "在 %{yyyy年MM月d日 H时:mm分} 已到期",
+        "campaignValidTo": "有效期至 %{yyyy年MM月d日 H时:mm分}",
         "quotaRedeemedLimitReachedIDNumber": "证件号码",
         "quotaCategoryMealCredits": "餐食积点",
         "quotaLimitMax": "最多",
@@ -74,8 +75,8 @@
         "redeemedLimitReachedShowMore": "显示更多内容",
         "redeemedLimitReachedShowLess": "隐藏内容",
         "limitReachedRecent": "mm分钟前达到领取限额",
-        "limitReached": "在 yyyy年mm月dd日 hh时:mm分 达到领取限额",
-        "redeemedLimitReached": "到 yyyy年mm月dd日 为止还有x件物品"
+        "limitReached": "在 %{yyyy年MM月d日 H时:mm分} 达到领取限额",
+        "redeemedLimitReached": "到 %{yyyy年MM月d日} 为止还有%{amount}件物品"
     },
     "customerAppealScreen": {
         "raiseAppeal": "提出上诉",
@@ -87,8 +88,8 @@
         "newDeviceCode": "新配备编号"
     },
     "statisticsScreen": {
-        "distributedAmount": "您已分发x",
-        "lastDistributedTiming": "最后在 hh时:mm分 [AM/PM] 分发",
+        "distributedAmount": "您已分发%{amount}",
+        "lastDistributedTiming": "最后在 %{yyyy年MM月d日 H时:mm分} 分发",
         "viaAppeal": "通过上诉"
     },
     "notEligibleScreen": {

@@ -76,6 +76,7 @@ export interface AlertModalProps {
    * onExit is called before onOk and onCancel
    */
   onExit?: () => void;
+  i18n?: any;
 }
 
 export const AlertModal: FunctionComponent<AlertModalProps> = ({

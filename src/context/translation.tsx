@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import * as Localization from "expo-localization";
 import zh from "../common/zh.json";
+import en from "../common/en.json";
+
 import i18n from "i18n-js";
 
 export interface LocalizationContext {
@@ -17,9 +19,6 @@ export const LocalizationContext = createContext<LocalizationContext>({
   i18n
 });
 
-export const useLocalizationContext = (): LocalizationContext =>
-  useContext<LocalizationContext>(LocalizationContext);
-
 export const LocalizationContextProvider: FunctionComponent = ({
   children
 }) => {
@@ -29,7 +28,8 @@ export const LocalizationContextProvider: FunctionComponent = ({
     i18n.fallbacks = true;
     i18n.locale = Localization.locale;
     i18n.translations = {
-      zh
+      zh,
+      en
     };
     setI18nInstance(i18n);
   }, []);

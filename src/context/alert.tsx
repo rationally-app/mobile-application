@@ -3,12 +3,14 @@ import React, {
   createContext,
   FunctionComponent,
   useState,
-  useCallback
+  useCallback,
+  useContext
 } from "react";
 import {
   AlertModal,
   AlertModalProps
 } from "../components/AlertModal/AlertModal";
+import { LocalizationContext } from "./translation";
 
 export enum WARNING_MESSAGE {
   PAYMENT_COLLECTION = "This action cannot be undone. Proceed only when payment has been collected."
@@ -136,9 +138,13 @@ export const AlertModalContext = createContext<AlertModalContext>({
 });
 
 export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
-  const [alertProps, setAlertProps] = useState<AlertModalProps>(
-    defaultAlertProps
-  );
+  const { i18n } = useContext(LocalizationContext);
+  const [alertProps, setAlertProps] = useState<AlertModalProps>({
+    ...defaultAlertProps,
+    i18n
+  });
+
+  console.log(alertProps);
 
   const showAlert: AlertModalContext["showAlert"] = useCallback(
     (props: AlertModalProps) => {
@@ -146,6 +152,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     },
     []
   );
+
   const clearAlert: AlertModalContext["clearAlert"] = useCallback(() => {
     setAlertProps(defaultAlertProps);
   }, []);

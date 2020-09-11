@@ -1,11 +1,11 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
-import { useLocalizationContext } from "../../context/translation";
+import { LocalizationContext } from "../../context/translation";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -22,7 +22,7 @@ export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   onToggleScanner,
   isLoading
 }) => {
-  const { i18n } = useLocalizationContext();
+  const { i18n } = useContext(LocalizationContext);
   return (
     <Card>
       <AppText>{i18n.t("loginScanCard.loginWithQR")}</AppText>
