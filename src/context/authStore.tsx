@@ -43,7 +43,7 @@ export const AuthStoreContext = createContext<AuthStoreContext>({
 
 export const AuthStoreContextProvider: FunctionComponent<{
   shouldMigrate?: boolean; // Temporary toggle to disable migration when testing
-}> = ({ shouldMigrate = false, children }) => {
+}> = ({ shouldMigrate = true, children }) => {
   const [hasLoadedFromStore, setHasLoadedFromStore] = useState(false);
   const [authCredentials, setAuthCredentialsMap] = useState<AuthCredentialsMap>(
     {}
