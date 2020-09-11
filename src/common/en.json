@@ -1,0 +1,264 @@
+{
+  "loginScanCard": {
+    "loginWithQR": "Please log in with your unique QR code",
+    "scanToLogin": "Scan to login",
+    "needHelp": "Need help?"
+  },
+  "loginMobileNumberCard": {
+    "enterMobileNumber": "Please enter your mobile phone number to receive a one-time password",
+    "mobileNumber": "Mobile phone number",
+    "sendOtp": "Send OTP"
+  },
+  "loginOTPCard": {
+    "sendingOtp": "We're sending you the one-time password",
+    "Otp": "OTP",
+    "resendIn": "Resend in {ss}s",
+    "submit": "Submit"
+  },
+  "collectCustomerDetailsScreen": {
+    "checkEligibleItems": "Check the number of item(s) elgible for redemption",
+    "scanIdentification": "Scan identification",
+    "or": "Or",
+    "enterIdNumber": "Enter ID Number",
+    "check": "Check"
+  },
+  "idScanner": {
+    "enterIdManually": "输入证件号码"
+  },
+  "navigationDrawer": {
+    "logout": "Logout",
+    "addCampaign": "Add Campaign",
+    "changeChampaign": "Change Campaign",
+    "helpSupport": "Help & Support",
+    "termsOfUse": "Terms of use",
+    "privacyStatement": "Privacy Statement",
+    "reportVulnerability": "Report Vulnerability"
+  },
+  "customerQuotaScreen": {
+    "campaignExpiredOn": "Expired on {dd} {mm} {yyyy}, {hh}:{mm}",
+    "campaignValidTo": "Valid till {dd} {mm} {yyyy}, {hh}:{mm}",
+    "quotaRedeemedLimitReachedIDNumber": "Identification number",
+    "quotaCategoryMealCredits": "Meal Credit(s)",
+    "quotaLimitMax": "Max",
+    "quotaAppealCancel": "Cancel",
+    "quotaButtonCheckout": "Checkout",
+    "quotaButtonAdd": "Add",
+    "quotaCategoryCommunityFoodPack": "Community Food Pack",
+    "quotaCategoryBread": "Bread",
+    "quotaCategoryEggs": "Eggs",
+    "quotaCategoryFruits": "Fruits",
+    "quotaCategoryRootVegetables": "Root Vegetables",
+    "quotaCategoryFreshVegetables": "Fresh Vegetables",
+    "quotaCategoryChicken": "Chicken (Fresh/frozen/processed)",
+    "quotaCategoryCannedFood": "Canned Food (Meat/seafood/vegetables)",
+    "quotaCategoryPaperProducts": "Paper Products",
+    "quotaCategoryInstantNoodles": "Instant Noodles",
+    "quotaCategoryRice": "Rice",
+    "quotaCategoryCookingOil": "Cooking Oil",
+    "quotaCategoryTTToken": "TT Token",
+    "quotaCategoryVouchers": "Vouchers",
+    "quotaCategoryAppreciationGift": "Appreciation Gift",
+    "quotaIdentifierDeviceCode": "Device code",
+    "quotaIdentifierContactNumber": "Contact number",
+    "quotaIdentifierFirstVoucherCode": "First voucher code",
+    "quotaIdentifierButtonScan": "Scan",
+    "quotaScanButtonBack": "Back"
+  },
+  "checkoutSuccessScreen": {
+    "redeemed": "Redeemed",
+    "redeemedLimitReachedItemsRedeemed": "Item(s) redeemed:",
+    "redeemedLimitReachedNextIdentity": "Next identity",
+    "redeemedLimitReachedShowMore": "Show more",
+    "redeemedLimitReachedShowLess": "Show less",
+    "limitReachedRecent": "Limit reached {m} minute(s) ago.",
+    "limitReached": "Limit reached on {d} {mm} {yyyy}, {hh}:{mm}",
+    "redeemedLimitReached": "{x} item(s) more till {d} {mm} {yyyy}"
+  },
+  "customerAppealScreen": {
+    "raiseAppeal": "Raise an appeal",
+    "indicateReason": "Indicate reason for app",
+    "lostStolen": "Lost/stolen token",
+    "deadBattery": "Dead battery",
+    "damagedToken": "Damaged token",
+    "oldDeviceCode": "Old device code",
+    "newDeviceCode": "New device code"
+  },
+  "statisticsScreen": {
+    "distributedAmount": "You have distributed {x}",
+    "lastDistributedTiming": "Last distributed at {hh}:{mm} {a}",
+    "viaAppeal": "Via appeal"
+  },
+  "notEligibleScreen": {
+    "notEligible": "Not eligible",
+    "logAppeal": "Please log an appeal request."
+  },
+  "errorMessages": {
+    "alreadyUsedDifferentIDNumber": {
+      "title": "Already used",
+      "body": "Enter or scan a different ID number.",
+      "primaryActionText": "OK"
+    },
+    "alreadyUsedQRCode": {
+      "title": "Already used",
+      "body": "Get a new QR code that is not tagged to any contact number from your in-charge.",
+      "primaryActionText": "OK"
+    },
+    "disabledAccess": {
+      "title": "Disabled access",
+      "body": "Try again in {x} minutes.",
+      "primaryActionText": "OK"
+    },
+    "cancelEntry": {
+      "title": "Cancel entry and scan another ID number?",
+      "primaryActionText": "Cancel entry",
+      "secondaryActionText": "Keep"
+    },
+    "confirmLogout": {
+      "title": "Confirm logout?",
+      "primaryActionText": "Logout",
+      "secondaryActionText": "No"
+    },
+    "incompleteEntryYourContactNumber": {
+      "title": "Incomplete entry",
+      "body": "Enter your contact number.",
+      "primaryActionText": "OK"
+    },
+    "incompleteEntryVoucherCode": {
+      "title": "Incomplete entry",
+      "body": "Enter voucher code.",
+      "primaryActionText": "OK"
+    },
+    "incompleteEntryDeviceCode": {
+      "title": "Incomplete entry",
+      "body": "Enter device code.",
+      "primaryActionText": "OK"
+    },
+    "incompleteEntryContactNumber": {
+      "title": "Incomplete entry",
+      "body": "Enter contact number",
+      "primaryActionText": "OK"
+    },
+    "incompleteEntrySelectCheckbox": {
+      "title": "Incomplete entry",
+      "body": "Select checkbox.",
+      "primaryActionText": "OK"
+    },
+    "resendOTP": {
+      "title": "Resend OTP?",
+      "body": "After 1 more OTP request, you will have to wait 3 minutes before trying again.",
+      "primaryActionText": "Resend",
+      "secondaryActionText": "No"
+    },
+    "systemErrorConnectivityIssues": {
+      "title": "System error",
+      "body": "We are currently facing connectivity issues.\nTry again later or contact your in-charge if the problem persists.",
+      "primaryActionText": "OK"
+    },
+    "systemErrorValidityPeriod": {
+      "title": "System error",
+      "body": "We could not find the validity period.\nGet new QR code from your in-charge and try again.",
+      "primaryActionText": "OK"
+    },
+    "systemErrorLoginIssue": {
+      "title": "System error",
+      "body": "We are currently facing login issues.\nGet a new QR code from your in-charge.",
+      "primaryActionText": "OK"
+    },
+    "systemErrorServerIssue": {
+      "title": "System error",
+      "body": "We are currently facing a server issue. Contact your in-charge if the problem persists.",
+      "primaryActionText": "OK"
+    },
+    "expiredQR": {
+      "title": "Expired",
+      "body": "Get a new QR code from your in-charge.",
+      "primaryActionText": "OK"
+    },
+    "expiredOTP": {
+      "title": "Expired",
+      "body": "Get a new OTP and try again.",
+      "primaryActionText": "OK"
+    },
+    "invalidInputOTPOneMoreInvalid": {
+      "title": "Invalid input",
+      "body": "Enter OTP again. After 1 more invalid OTP entry, you will have to wait 3 minutes before trying again.",
+      "primaryActionText": "OK"
+    },
+    "invalidInputIDNumber": {
+      "title": "Invalid input",
+      "body": "Enter or scan a valid ID number.",
+      "primaryActionText": "OK"
+    },
+    "invalidInputQR": {
+      "title": "Invalid input",
+      "body": "Scan QR code again or get a new QR code from your in-charge.",
+      "primaryActionText": "OK"
+    },
+    "invalidInputOTP": {
+      "title": "Invalid input",
+      "body": "Enter OTP again.",
+      "primaryActionText": "OK"
+    },
+    "incompleteEntry": {
+      "title": "Incomplete entry",
+      "body": "Select at least one item to checkout.",
+      "primaryActionText": "OK"
+    },
+    "paymentCollected": {
+      "title": "Payment collected?",
+      "body": "This action cannot be undone. Proceed only when payment has been collected.",
+      "primaryActionText": "Collected",
+      "secondaryActionText": "No"
+    },
+    "outdatedAppRestart": {
+      "title": "Outdated app",
+      "body": "Restart your app to get the latest app version.",
+      "primaryActionText": "Restart app"
+    },
+    "outdatedAppUpdate": {
+      "title": "Outdated app",
+      "body": "Update your app through [Play Store/App Store].",
+      "primaryActionText": "Update app"
+    },
+    "systemError": {
+      "title": "System error",
+      "body": "We are currently facing connectivity issues. Try restarting the app or contact Govtech if the problem persists.",
+      "primaryActionText": "Restart app"
+    },
+    "wrongFormatCountryCode": {
+      "title": "Wrong format",
+      "body": "Enter a valid country code.",
+      "primaryActionText": "OK"
+    },
+    "wrongFormatCountryCodePhoneNumber": {
+      "title": "Wrong format",
+      "body": "Enter a valid country code and contact number.",
+      "primaryActionText": "OK"
+    },
+    "wrongFormatQRScanAgain": {
+      "title": "Wrong format",
+      "body": "Scan QR code again or get a new QR code from your in-charge.",
+      "primaryActionText": "OK"
+    },
+    "wrongFormatValidCode": {
+      "title": "Wrong format",
+      "body": "Enter valid code details.",
+      "primaryActionText": "OK"
+    },
+    "wrongFormatDeviceCode": {
+      "title": "Wrong format",
+      "body": "Scan device code again or get a new device from your in-charge.",
+      "primaryActionText": "OK"
+    },
+    "wrongFormatID": {
+      "title": "Wrong format",
+      "body": "Enter or scan a valid ID number.",
+      "primaryActionText": "OK"
+    },
+    "wrongFormatQRGetNew": {
+      "title": "Wrong format",
+      "body": "Get a new QR code from your in-charge.",
+      "primaryActionText": "OK"
+    }
+  }
+}
