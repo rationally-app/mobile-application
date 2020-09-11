@@ -225,7 +225,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
      * We only display global limit messages if there is only one category for now
      */
     allProducts?.length === 1 &&
-    !!getProduct(cart[0].category)?.quantity.usage;
+    !!allProducts[0].quantity.usage;
 
   const firstGlobalQuota = showGlobalQuota
     ? quotaResponse!.globalQuota![0]

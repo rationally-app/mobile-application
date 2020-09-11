@@ -172,7 +172,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
      * categories.
      */
     allProducts?.length === 1 &&
-    !!getProduct(sortedTransactions[0].category)?.quantity.usage;
+    !!allProducts[0].quantity.usage;
 
   const firstGlobalQuota = showGlobalQuota
     ? quotaResponse!.globalQuota![0]
