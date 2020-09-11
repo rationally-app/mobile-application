@@ -3,11 +3,7 @@ import { renderHook, act } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
 import { wait } from "@testing-library/react-native";
 import { Quota, PostTransactionResult } from "../../types";
-import {
-  getQuota,
-  postTransaction,
-  NotEligibleError
-} from "../../services/quota";
+import { postTransaction } from "../../services/quota";
 import {
   defaultProducts,
   defaultIdentifier
@@ -15,12 +11,10 @@ import {
 import { ProductContextProvider } from "../../context/products";
 
 jest.mock("../../services/quota");
-const mockGetQuota = getQuota as jest.Mock;
 const mockPostTransaction = postTransaction as jest.Mock;
 
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
-const eligibleIds = ["ID1", "ID2"];
 
 const transactionTime = new Date(2020, 3, 1);
 
@@ -30,68 +24,6 @@ const mockQuotaResSingleId: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 2,
-      transactionTime
-    },
-    {
-      category: "chocolate",
-      identifierInputs: [],
-      quantity: 15,
-      transactionTime
-    }
-  ]
-};
-const mockQuotaResSingleIdWithIdentifiers: Quota = {
-  remainingQuota: [
-    {
-      category: "toilet-paper",
-      identifierInputs: [
-        {
-          label: "first",
-          value: "first identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        },
-        {
-          label: "last",
-          value: "last identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        }
-      ],
-      quantity: 1,
-      transactionTime
-    },
-    {
-      category: "chocolate",
-      identifierInputs: [],
-      quantity: 15,
-      transactionTime
-    }
-  ]
-};
-const mockQuotaResSingleIdNoQuota: Quota = {
-  remainingQuota: [
-    {
-      category: "toilet-paper",
-      identifierInputs: [],
-      quantity: 0,
-      transactionTime
-    },
-    {
-      category: "chocolate",
-      identifierInputs: [],
-      quantity: 0,
-      transactionTime
-    }
-  ]
-};
-
-const mockQuotaResSingleIdInvalidQuota: Quota = {
-  remainingQuota: [
-    {
-      category: "toilet-paper",
-      identifierInputs: [],
-      quantity: -1,
       transactionTime
     },
     {
@@ -132,13 +64,6 @@ const mockPostTransactionResult: PostTransactionResult = {
       timestamp: transactionTime
     }
   ]
-};
-
-const mockIdNotEligible: any = (id: string) => {
-  if (!eligibleIds.includes(id)) {
-    const errorMessage = "User is not eligible";
-    throw new NotEligibleError(errorMessage);
-  }
 };
 
 const mockQuotaResSingleIdAlert: Quota = {
@@ -184,10 +109,11 @@ describe("useCart", () => {
 
   describe("update cart quantities", () => {
     it("should update the cart when quota response changes", () => {
+      expect.assertions(1);
       let quotaResponse = mockQuotaResSingleId;
 
       let ids = ["ID1"];
-      const { rerender, result, waitForNextUpdate } = renderHook(
+      const { rerender, result } = renderHook(
         () => useCart(ids, key, endpoint, quotaResponse),
         { wrapper }
       );
@@ -217,8 +143,9 @@ describe("useCart", () => {
     });
 
     it("should update the cart when quantities change", () => {
+      expect.assertions(1);
       const ids = ["ID1"];
-      const { result, waitForNextUpdate } = renderHook(
+      const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId),
         { wrapper }
       );
@@ -245,6 +172,7 @@ describe("useCart", () => {
     });
 
     it("should set error when updateCart is given a negative quantity", () => {
+      expect.assertions(2);
       const ids = ["ID1"];
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId),
@@ -279,6 +207,7 @@ describe("useCart", () => {
     });
 
     it("should set error when updateCart is given a quantity over the limit", () => {
+      expect.assertions(2);
       const ids = ["ID1"];
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId),
@@ -312,6 +241,7 @@ describe("useCart", () => {
     });
 
     it("should set error when updateCart is given a category that does not exist", () => {
+      expect.assertions(2);
       const ids = ["ID1"];
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId),
@@ -927,7 +857,7 @@ describe("useCart", () => {
 
   describe("cart with alert items", () => {
     it("should set alert description on cart item when threshold reach", () => {
-
+      expect.assertions(2);
       const ids = ["ID1"];
       const AlertProductWrapper: FunctionComponent = ({ children }) => (
         <ProductContextProvider
@@ -955,7 +885,7 @@ describe("useCart", () => {
         () => useCart(ids, key, endpoint, mockQuotaResSingleIdAlert),
         { wrapper: AlertProductWrapper }
       );
- 
+
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -990,8 +920,8 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should not set alert description on cart item when threshold not reach",  () => {
-
+    it("should not set alert description on cart item when threshold not reach", () => {
+      expect.assertions(2);
       const ids = ["ID1"];
       const AlertProductWrapper: FunctionComponent = ({ children }) => (
         <ProductContextProvider
@@ -1015,7 +945,7 @@ describe("useCart", () => {
           {children}
         </ProductContextProvider>
       );
-      const { result, waitForNextUpdate } = renderHook(
+      const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleIdAlert),
         { wrapper: AlertProductWrapper }
       );
