@@ -49,8 +49,8 @@ jobs:
           SLACK_CHANNEL: ${{ secrets.E2E_CHATBOT_CHANNELID }}
           SLACK_TOKEN: ${{ secrets.E2E_CHATBOT_TOKEN }}
           XUNIT_PATH: ./result/allresults.xml
-        run: curl -F token=${{ secrets.E2E_CHATBOT_TOKEN }} \
-        -F channel=G01AEVAN3LK -F file="./result/report.html" -F initial_comment="Full report" \
-        https://slack.com/api/files.upload
+        run: >
+          curl -F token=${{ secrets.E2E_CHATBOT_TOKEN }} -F channel=${{ secrets.E2E_CHATBOT_CHANNELID }}
+          -F file="./result/report.html" -F initial_comment="Full report" https://slack.com/api/files.upload
 
 
