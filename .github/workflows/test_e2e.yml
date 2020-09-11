@@ -52,6 +52,6 @@ jobs:
       - name: Upload Report to Slack
         run: >
           curl -F token=${{ secrets.E2E_CHATBOT_TOKEN }} -F channel=${{ secrets.E2E_CHATBOT_CHANNELID }}
-          -F file="./result/report.html" -F initial_comment="Full report" https://slack.com/api/files.upload
+          -F file=@./result/report.html -F initial_comment="Full report" https://slack.com/api/files.upload
 
 
