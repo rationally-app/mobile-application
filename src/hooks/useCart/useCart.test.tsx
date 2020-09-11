@@ -926,8 +926,7 @@ describe("useCart", () => {
   });
 
   describe("cart with alert items", () => {
-    it("should set alert description on cart item when threshold reach", async () => {
-      expect.assertions(3);
+    it("should set alert description on cart item when threshold reach", () => {
 
       const ids = ["ID1"];
       const AlertProductWrapper: FunctionComponent = ({ children }) => (
@@ -991,9 +990,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should not set alert description on cart item when threshold not reach", async () => {
-      expect.assertions(3);
-      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdAlert);
+    it("should not set alert description on cart item when threshold not reach",  () => {
 
       const ids = ["ID1"];
       const AlertProductWrapper: FunctionComponent = ({ children }) => (
@@ -1019,12 +1016,9 @@ describe("useCart", () => {
         </ProductContextProvider>
       );
       const { result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleIdAlert),
         { wrapper: AlertProductWrapper }
       );
-      expect(result.current.cartState).toBe("FETCHING_QUOTA");
-
-      await waitForNextUpdate();
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
