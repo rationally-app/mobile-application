@@ -3,10 +3,10 @@ name: E2E Tests
 # For now leaving as PR so that we can test the functionality without pushing to master branch
 on: [pull_request]
 
-on:
-  schedule:
+# on:
+#   schedule:
   # Runs E2E every day at 9am and 5pm (0100, 0900 UTC)
-  - cron: "0 1,9 * * *"
+  # - cron: "0 1,9 * * *"
 #   # Runs on every release to prod
 #   push:
 #     tags:
