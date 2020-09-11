@@ -16,14 +16,14 @@
     "submit": "Submit"
   },
   "collectCustomerDetailsScreen": {
-    "checkEligibleItems": "Check the number of item(s) elgible for redemption",
+    "checkEligibleItems": "Check the number of item(s) eligible for redemption",
     "scanIdentification": "Scan identification",
     "or": "Or",
     "enterIdNumber": "Enter ID Number",
     "check": "Check"
   },
   "idScanner": {
-    "enterIdManually": "输入证件号码"
+    "enterIdManually": "Enter ID manually"
   },
   "navigationDrawer": {
     "logout": "Logout",
