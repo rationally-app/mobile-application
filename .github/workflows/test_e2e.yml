@@ -48,6 +48,6 @@ jobs:
         env:
           SLACK_CHANNEL: ${{ secrets.E2E_CHATBOT_CHANNELID }}
           SLACK_TOKEN: ${{ secrets.E2E_CHATBOT_TOKEN }}
-          XUNIT_PATH: ./result/results.xml
+          XUNIT_PATH: ./result/allresults.xml
 
 
