@@ -221,7 +221,15 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const showGlobalQuota =
     !!quotaResponse?.globalQuota &&
     cart.length > 0 &&
-    !!getProduct(cart[0].category)?.quantity.usage;
+    /**
+     * We only display global limit messages if there is only one category for now
+     */
+    allProducts?.length === 1 &&
+    !!allProducts[0].quantity.usage;
+
+  const firstGlobalQuota = showGlobalQuota
+    ? quotaResponse!.globalQuota![0]
+    : undefined;
 
   return (
     <View>
@@ -252,17 +260,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                   toggleTimeSensitiveTitle={showGlobalQuota}
                 />
               )}
-              {showGlobalQuota &&
-                quotaResponse!.globalQuota!.map(
-                  ({ quantity, quotaRefreshTime }, index: number) =>
-                    quotaRefreshTime ? (
-                      <UsageQuotaTitle
-                        key={index}
-                        quantity={quantity}
-                        quotaRefreshTime={quotaRefreshTime}
-                      />
-                    ) : undefined
-                )}
+              {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
+                <UsageQuotaTitle
+                  quantity={firstGlobalQuota!.quantity}
+                  quotaRefreshTime={firstGlobalQuota!.quotaRefreshTime}
+                />
+              ) : undefined}
             </AppText>
             {loading ? (
               <ActivityIndicator

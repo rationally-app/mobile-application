@@ -166,7 +166,17 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     !!quotaResponse?.globalQuota &&
     !!sortedTransactions &&
     sortedTransactions.length > 0 &&
-    !!getProduct(sortedTransactions[0].category)?.quantity.usage;
+    /**
+     * We only display global limit messages if there is only one global quota,
+     * since we have not catered for showing global limit messages for multiple
+     * categories.
+     */
+    allProducts?.length === 1 &&
+    !!allProducts[0].quantity.usage;
+
+  const firstGlobalQuota = showGlobalQuota
+    ? quotaResponse!.globalQuota![0]
+    : undefined;
 
   return (
     <View>
@@ -180,17 +190,12 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             />
             <AppText style={sharedStyles.statusTitleWrapper}>
               <AppText style={sharedStyles.statusTitle}>{title}</AppText>
-              {showGlobalQuota &&
-                quotaResponse!.globalQuota!.map(
-                  ({ quantity, quotaRefreshTime }, index: number) =>
-                    quotaRefreshTime ? (
-                      <UsageQuotaTitle
-                        key={index}
-                        quantity={quantity}
-                        quotaRefreshTime={quotaRefreshTime}
-                      />
-                    ) : undefined
-                )}
+              {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
+                <UsageQuotaTitle
+                  quantity={firstGlobalQuota!.quantity}
+                  quotaRefreshTime={firstGlobalQuota!.quotaRefreshTime}
+                />
+              ) : undefined}
             </AppText>
             <View>
               <AppText>{description}</AppText>
