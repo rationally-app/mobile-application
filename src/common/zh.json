@@ -12,7 +12,7 @@
     "loginOTPCard": {
         "sendingOtp": "一次性密码发送中",
         "Otp": "一次性密码",
-        "resendIn": "在ss秒内重新发送",
+        "resendIn": "在%{ss}秒内重新发送",
         "submit": "提交"
     },
     "collectCustomerDetailsScreen": {

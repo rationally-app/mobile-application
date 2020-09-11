@@ -5,6 +5,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
+import { useLocalizationContext } from "../../context/translation";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -20,21 +21,22 @@ interface LoginScanCard {
 export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   onToggleScanner,
   isLoading
-}) => (
-  <Card>
-    <AppText>
-      Please log in with your Unique ID provided by your supervisor
-    </AppText>
-    <View style={styles.scanButtonWrapper}>
-      <DarkButton
-        text="Scan to Login"
-        onPress={onToggleScanner}
-        icon={
-          <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
-        }
-        fullWidth={true}
-        isLoading={isLoading}
-      />
-    </View>
-  </Card>
-);
+}) => {
+  const { i18n } = useLocalizationContext();
+  return (
+    <Card>
+      <AppText>{i18n.t("loginScanCard.loginWithQR")}</AppText>
+      <View style={styles.scanButtonWrapper}>
+        <DarkButton
+          text={i18n.t("loginScanCard.scanToLogin")}
+          onPress={onToggleScanner}
+          icon={
+            <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
+          }
+          fullWidth={true}
+          isLoading={isLoading}
+        />
+      </View>
+    </Card>
+  );
+};

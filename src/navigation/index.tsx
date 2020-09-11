@@ -10,6 +10,7 @@ import { Content } from "./Content";
 import { Providers } from "../context/composeProviders";
 import { DrawerContextProvider } from "../context/drawer";
 import { CampaignConfigsStoreContextProvider } from "../context/campaignConfigsStore";
+import { LocalizationContextProvider } from "../context/translation";
 
 const App = (): ReactElement => {
   return (
@@ -23,7 +24,8 @@ const App = (): ReactElement => {
             HelpModalContextProvider,
             AlertModalContextProvider,
             ImportantMessageContextProvider,
-            DrawerContextProvider
+            DrawerContextProvider,
+            LocalizationContextProvider
           ]}
         >
           <Content />

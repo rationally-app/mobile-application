@@ -147,6 +147,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           {resendDisabledTime > 0 ? (
             <AppText style={styles.resendCountdownText}>
               Resend in {resendDisabledTime / 1000}s
+              {/* {i18n.t("loginOTPCard.resendIn", {
+                ss: resendDisabledTime / 1000
+              })} */}
             </AppText>
           ) : (
             <SecondaryButton
