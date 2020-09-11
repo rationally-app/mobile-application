@@ -123,26 +123,36 @@ export const AuthStoreContextProvider: FunctionComponent<{
     };
 
     const loadAuthCredentialsFromStore = async (): Promise<void> => {
-      if (shouldMigrate) {
-        const migrated = await migrateOldAuthFromStore();
-        if (migrated) {
-          Sentry.addBreadcrumb({
-            category: "migration",
-            message: "success"
-          });
-          setHasLoadedFromStore(true);
-          return;
-        } else {
-          Sentry.addBreadcrumb({
-            category: "migration",
-            message: "failure"
-          });
-        }
-      }
-
       const authCredentialsString = await AsyncStorage.getItem(
         AUTH_CREDENTIALS_STORE_KEY
       );
+
+      if (shouldMigrate) {
+        if (authCredentialsString) {
+          // if there's already the new store, delete old keys
+          AsyncStorage.multiRemove([
+            SESSION_TOKEN_KEY,
+            EXPIRY_KEY,
+            ENDPOINT_KEY
+          ]);
+        } else {
+          const migrated = await migrateOldAuthFromStore();
+          if (migrated) {
+            Sentry.addBreadcrumb({
+              category: "migration",
+              message: "success"
+            });
+            setHasLoadedFromStore(true);
+            return;
+          } else {
+            Sentry.addBreadcrumb({
+              category: "migration",
+              message: "failure"
+            });
+          }
+        }
+      }
+
       if (!authCredentialsString) {
         setHasLoadedFromStore(true);
         return;
