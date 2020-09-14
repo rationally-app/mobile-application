@@ -1,10 +1,9 @@
 // Thanks to https://gist.github.com/kyrene-chew/6f275325335ab27895beb7a9a7b4c1cb
 import { ERROR_MESSAGE } from "../context/alert";
 
-const NRIC_REGEX = /^(\D)(\d{7})(\D)$/;
-
-export const validate = (nricInput: string): boolean => {
+const validate = (nricInput: string): boolean => {
   // validation rules
+  const nricRegex = /(\D)(\d{7})(\D)/;
   const nricTypeRegex = /S|T|F|G/;
   const weightArr = [2, 7, 6, 5, 4, 3, 2];
   const nricLetterST = ["J", "Z", "I", "H", "G", "F", "E", "D", "C", "B", "A"];
@@ -14,12 +13,12 @@ export const validate = (nricInput: string): boolean => {
   const nric = nricInput.toUpperCase();
 
   // returns false if it false basic validation
-  if (!NRIC_REGEX.exec(nric)) {
+  if (!nricRegex.exec(nric)) {
     return false;
   }
 
   // get nric type
-  const nricArr = nric.match(NRIC_REGEX);
+  const nricArr = nric.match(nricRegex);
   if (!nricArr) return false;
   const nricType = nricArr[1];
 
@@ -52,9 +51,11 @@ export const validate = (nricInput: string): boolean => {
 };
 
 export const validateAndCleanNric = (inputNric: string): string => {
-  const isNricValid = validate(inputNric);
-  if (!isNricValid) throw new Error(ERROR_MESSAGE.INVALID_ID);
-  const cleanedNric = inputNric.match(NRIC_REGEX)?.[0].toUpperCase();
-  if (!cleanedNric) throw new Error(ERROR_MESSAGE.INVALID_ID);
-  return cleanedNric;
+  const uppercasedAndTrimmedInput = inputNric.toUpperCase().trim();
+  const firstNineChars = uppercasedAndTrimmedInput.slice(0, 9);
+  const isNricValid = validate(firstNineChars);
+  if (!isNricValid) {
+    throw new Error(ERROR_MESSAGE.INVALID_ID);
+  }
+  return firstNineChars;
 };
