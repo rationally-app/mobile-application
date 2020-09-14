@@ -37,10 +37,20 @@ EXPO_CLI_PROD_USERNAME
 EXPO_CLI_PROD_PASSWORD
 EXPO_CLI_TEST_USERNAME
 EXPO_CLI_TEST_PASSWORD
-SENTRY_AUTH_TOKEN
-SENTRY_DSN
-SENTRY_ORG
-SENTRY_PROJECT
+
+TEST_DOMAIN_CHECK
+DOMAIN_FORMAT
+```
+
+You will also need to define the following environment variables in a .env file (please refer to .env.example):
+
+```
+SENTRY_ORG: the slug of the organisation to use for a command
+SENTRY_PROJECT: the slug of the project to use for a command
+SENTRY_AUTH_TOKEN: the authentication token to use for all communication with Sentry
+SENTRY_DSN: the DSN to use to connect to sentry
+
+DOMAIN_CHECK: to validate backend endpoints
 ```
 
 If you're releasing this for the first time, you need to create a tag to specify the initial version of the app. This allows the changelog generator to generate the correct set of changes. A `base-ref` property will then need to be created in the changelog generator's `with` parameter. Once released, this property can be removed.
