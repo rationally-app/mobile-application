@@ -39,6 +39,7 @@ import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AuthContext } from "../../context/auth";
+import { StatisticsContext } from "../../context/statistics";
 
 const styles = StyleSheet.create({
   content: {
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
   },
   statsIcon: {
     marginTop: size(4),
-    textAlign: "center"
+    alignSelf: "center"
   }
 });
 
@@ -107,6 +108,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { showAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
   const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
+  const { setCurrentTimestamp } = useContext(StatisticsContext);
 
   useEffect(() => {
     if (isFocused) {
@@ -182,6 +184,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const onPressStatistics = (): void => {
+    setCurrentTimestamp(Date.now());
     navigation.navigate("StatisticsStack", {
       operatorToken: operatorToken,
       endpoint: endpoint,
