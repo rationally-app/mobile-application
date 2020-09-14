@@ -87,6 +87,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { showAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
+  const [updateAfterPurchased , setUpdateAfterPurchased]= useState<boolean>(false);
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 
@@ -270,8 +271,11 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     /**
      * Update quota after checkout
      */
-    if (cartState === "PURCHASED") updateQuota();
-  }, [cartState, updateQuota]);
+    if (cartState === "PURCHASED" && !updateAfterPurchased){
+      updateQuota();
+      setUpdateAfterPurchased(true)
+    } 
+  }, [cartState, updateQuota, updateAfterPurchased]);
 
   return quotaState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
