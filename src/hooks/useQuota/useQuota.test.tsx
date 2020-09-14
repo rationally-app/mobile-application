@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { renderHook } from "@testing-library/react-hooks";
-import { useCart } from "../useCart/useCart";
-import { wait } from "@testing-library/react-native";
+import { useQuota } from "./useQuota";
 import { Quota } from "../../types";
 import { NotEligibleError, getQuota } from "../../services/quota";
 import { defaultProducts } from "../../test/helpers/defaults";
@@ -130,23 +129,22 @@ describe("useQuota", () => {
   });
 
   describe("fetch quota on initialisation", () => {
-    it("should initialise the cart with the correct values", async () => {
+    it("should fetch quota once the hook is rendered", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdWithIdentifiers);
 
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
+        () => useQuota(ids, key, endpoint),
         { wrapper }
       );
-      expect(result.current.cartState).toBe("FETCHING_QUOTA");
+      expect(result.current.quotaState).toBe("FETCHING_QUOTA");
 
       await waitForNextUpdate();
-      expect(result.current.cartState).toBe("DEFAULT");
-      expect(result.current.cart).toStrictEqual([
+      expect(result.current.quotaState).toBe("DEFAULT");
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          descriptionAlert: undefined,
           identifierInputs: [
             {
               label: "first",
@@ -161,86 +159,75 @@ describe("useQuota", () => {
               scanButtonType: "BARCODE"
             }
           ],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 1,
+          transactionTime,
           quantity: 1
         },
         {
           category: "chocolate",
-          descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 15,
-          quantity: 0
+          transactionTime,
+          quantity: 15
         }
       ]);
     });
 
-    it("should have cart state be NO_QUOTA when no quota is available", async () => {
+    it("should have quota state be NO_QUOTA when no quota is available", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdNoQuota);
 
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
+        () => useQuota(ids, key, endpoint),
         { wrapper }
       );
-      expect(result.current.cartState).toBe("FETCHING_QUOTA");
+      expect(result.current.quotaState).toBe("FETCHING_QUOTA");
 
       await waitForNextUpdate();
-      expect(result.current.cartState).toBe("NO_QUOTA");
-      expect(result.current.cart).toStrictEqual([
+      expect(result.current.quotaState).toBe("NO_QUOTA");
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 0,
+          transactionTime,
           quantity: 0
         },
         {
           category: "chocolate",
-          descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 0,
+          transactionTime,
           quantity: 0
         }
       ]);
     });
-    it("should have cart state be NO_QUOTA when quota received is invalid", async () => {
+    it("should have quota state be NO_QUOTA when quota received is invalid", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdInvalidQuota);
 
       const ids = ["ID1"];
       const { result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
+        () => useQuota(ids, key, endpoint),
         { wrapper }
       );
-      expect(result.current.cartState).toBe("FETCHING_QUOTA");
+      expect(result.current.quotaState).toBe("FETCHING_QUOTA");
 
       await waitForNextUpdate();
-      expect(result.current.cartState).toBe("NO_QUOTA");
-      expect(result.current.cart).toStrictEqual([
+      expect(result.current.quotaState).toBe("NO_QUOTA");
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 0,
-          quantity: 0
+          transactionTime,
+          quantity: -1
         },
         {
           category: "chocolate",
-          descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 15,
-          quantity: 0
+          transactionTime,
+          quantity: 15
         }
       ]);
     });
-    it("should set cart state to be NOT_ELIGIBLE when NotEligibleError is thrown, and would not continue with fetching quota", async () => {
+    it("should set quota state to be NOT_ELIGIBLE when NotEligibleError is thrown, and would not continue with fetching quota", async () => {
       expect.assertions(1);
 
       const ids = ["ID_NOT_ELIGIBLE"];
@@ -249,65 +236,54 @@ describe("useQuota", () => {
         mockIdNotEligible(ids[0]);
       });
 
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
+      const { result } = renderHook(() => useQuota(ids, key, endpoint), {
         wrapper
       });
 
-      expect(result.current.cartState).toBe("NOT_ELIGIBLE");
+      expect(result.current.quotaState).toBe("NOT_ELIGIBLE");
     });
   });
 
   describe("update quota when necessary", () => {
-    it("should maintain cart quantities when more ids are added", async () => {
+    it("should update quota ids are added", async () => {
       expect.assertions(2);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       let ids = ["ID1"];
       const { rerender, result, waitForNextUpdate } = renderHook(
-        () => useCart(ids, key, endpoint),
+        () => useQuota(ids, key, endpoint),
         { wrapper }
       );
 
       await waitForNextUpdate();
-      await wait(() => result.current.updateCart("chocolate", 5));
-      expect(result.current.cart).toStrictEqual([
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 2,
-          quantity: 1
+          transactionTime,
+          quantity: 2
         },
         {
           category: "chocolate",
-          descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: transactionTime,
-          maxQuantity: 15,
-          quantity: 5
+          transactionTime,
+          quantity: 15
         }
       ]);
 
       mockGetQuota.mockReturnValueOnce(mockQuotaResMultipleIds);
       ids = ["ID1", "ID2"];
-      rerender([ids, key, endpoint]);
+      rerender();
       await waitForNextUpdate();
-      expect(result.current.cart).toStrictEqual([
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: undefined,
-          maxQuantity: 4,
-          quantity: 1
+          quantity: 4
         },
         {
           category: "chocolate",
-          descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: undefined,
-          maxQuantity: 30,
-          quantity: 5
+          quantity: 30
         }
       ]);
     });
