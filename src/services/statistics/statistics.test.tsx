@@ -38,58 +38,8 @@ const dailyStatsResult = [
     transactionTime: Date.now()
   }
 ];
-// const dailyStatsResult = [
-//   {
-//     category: "product-1",
-//     quantity: 1,
-//     identifierInputs: [
-//       {
-//         label: "first",
-//         scanButtonType: "QR",
-//         validationRegex: "^[A-F0-9]{9}$",
-//         value: "123456789",
-//         textInputType: "STRING"
-//       }
-//     ]
-//   },
-//   {
-//     category: "product-1",
-//     quantity: 1,
-//     identifierInputs: [
-//       {
-//         label: "first",
-//         scanButtonType: "QR",
-//         validationRegex: "^[A-F0-9]{9}$",
-//         value: "123456789",
-//         textInputType: "STRING"
-//       }
-//     ]
-//   },
-//   {
-//     category: "product-2",
-//     quantity: 1,
-//     identifierInputs: [
-//       {
-//         label: "first",
-//         scanButtonType: "QR",
-//         validationRegex: "^[A-F0-9]{9}$",
-//         value: "123456789",
-//         textInputType: "STRING"
-//       }
-//     ]
-//   }
-// ];
 
 const timestamp = new Date(2020, 3, 1);
-
-// const mockDailyStatsResult = {
-//   transactions: [
-//     {
-//       transaction: transactions,
-//       timestamp
-//     }
-//   ]
-// };
 
 const mockDailyStatsResult = {
   pastTransactions: dailyStatsResult.map(t => ({
