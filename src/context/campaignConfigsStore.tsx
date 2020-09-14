@@ -22,7 +22,7 @@ export interface CampaignConfigsStoreContext {
   /**
    * Key is currently operatorToken + endpoint
    */
-  addCampaignConfig: (key: string, config: CampaignConfig) => void;
+  setCampaignConfig: (key: string, config: CampaignConfig) => void;
   removeCampaignConfig: (key: string) => void;
   clearCampaignConfigs: () => void;
 }
@@ -32,7 +32,7 @@ export const CampaignConfigsStoreContext = createContext<
 >({
   hasLoadedFromStore: false,
   allCampaignConfigs: {},
-  addCampaignConfig: () => undefined,
+  setCampaignConfig: () => undefined,
   removeCampaignConfig: () => undefined,
   clearCampaignConfigs: () => undefined
 });
@@ -57,7 +57,7 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
     }
   }, [hasLoadedFromStore, allConfigs, prevAllConfigs]);
 
-  const addCampaignConfig: CampaignConfigsStoreContext["addCampaignConfig"] = useCallback(
+  const setCampaignConfig: CampaignConfigsStoreContext["setCampaignConfig"] = useCallback(
     (key, newConfig) => {
       if (!newConfig) {
         return;
@@ -134,7 +134,7 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
   const contextValue = {
     hasLoadedFromStore,
     allCampaignConfigs: allConfigs,
-    addCampaignConfig,
+    setCampaignConfig,
     removeCampaignConfig,
     clearCampaignConfigs
   };

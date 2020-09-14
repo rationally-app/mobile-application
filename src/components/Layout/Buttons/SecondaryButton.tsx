@@ -26,7 +26,7 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
   <BaseButton
     onPress={onPress}
     backgroundColor="transparent"
-    borderColor={color("blue", disabled ? 20 : 50)}
+    borderColor={disabled ? color("grey", 40) : color("blue", 50)}
     fullWidth={fullWidth}
     disabled={disabled || isLoading}
     size={size}
@@ -38,7 +38,7 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
         {icon && <View style={{ marginRight: sizeScale(1) }}>{icon}</View>}
         <AppText
           style={{
-            color: color("blue", disabled ? 20 : 50),
+            color: disabled ? color("grey", 40) : color("blue", 50),
             fontFamily: "brand-bold",
             textAlign: "center"
           }}

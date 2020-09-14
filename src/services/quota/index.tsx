@@ -5,7 +5,6 @@ import {
   PostTransactionResult,
   PastTransactionsResult
 } from "../../types";
-import _ from "lodash";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import { systemAlertProps, ERROR_MESSAGE } from "../../context/alert";
@@ -225,11 +224,14 @@ export const livePostTransaction = async ({
 };
 
 export const mockPastTransactions = async (
-  id: string,
+  ids: string[],
   _key: string,
   _endpoint: string
 ): Promise<PastTransactionsResult> => {
-  if (id === "S0000000J") throw new Error("Something broke");
+  if (ids[0] === "S0000000J") throw new Error("Something broke");
+  if (ids.length === 0) {
+    throw new PastTransactionError("No ID was provided");
+  }
   const transactionTime = new Date(2020, 3, 5);
   return {
     pastTransactions: [
@@ -258,23 +260,26 @@ export const mockPastTransactions = async (
 };
 
 export const livePastTransactions = async (
-  id: string,
+  ids: string[],
   key: string,
   endpoint: string
 ): Promise<PastTransactionsResult> => {
   let response;
-  if (_.isEmpty(id)) {
+  if (ids.length === 0) {
     throw new PastTransactionError("No ID was provided");
   }
   try {
     response = await fetchWithValidator(
       PastTransactionsResult,
-      `${endpoint}/transactions/${id}`,
+      `${endpoint}/transactions/history`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           Authorization: key
-        }
+        },
+        body: JSON.stringify({
+          ids
+        })
       }
     );
     return response;

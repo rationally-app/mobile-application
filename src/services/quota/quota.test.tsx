@@ -306,7 +306,7 @@ describe("quota", () => {
         json: () => Promise.resolve(mockPastTransactionsResponse)
       });
       const pastTransactionsResult = await getPastTransactions(
-        "S0000000J",
+        ["S0000000J"],
         key,
         endpoint
       );
@@ -320,7 +320,7 @@ describe("quota", () => {
         json: () => Promise.resolve({ message: "No ID was provided" })
       });
 
-      await expect(getPastTransactions("", key, endpoint)).rejects.toThrow(
+      await expect(getPastTransactions([""], key, endpoint)).rejects.toThrow(
         PastTransactionError
       );
     });
@@ -336,7 +336,7 @@ describe("quota", () => {
       });
 
       await expect(
-        getPastTransactions("S0000000J", key, endpoint)
+        getPastTransactions(["S0000000J"], key, endpoint)
       ).rejects.toThrow(PastTransactionError);
     });
   });

@@ -1,6 +1,4 @@
-import { formatQuantityText, getPurchasedQuantitiesByItem } from "./utils";
-import { CheckoutQuantitiesByItem } from "./types";
-import { PostTransactionResult } from "../../types";
+import { formatQuantityText, sortTransactionsByOrder } from "./utils";
 
 describe("formatQuantityText", () => {
   it("should return only the quantity when no unit is given", () => {
@@ -30,65 +28,18 @@ describe("formatQuantityText", () => {
   });
 });
 
-describe("getPurchasedQuantitiesByItem", () => {
-  it("should return the correct result", () => {
+describe("sortTransactionsByOrder", () => {
+  it("should sort objects by order field in ascending order", () => {
     expect.assertions(1);
-    const transactionTime = new Date(2020, 3, 1);
-    const checkoutResult: PostTransactionResult = {
-      transactions: [
-        {
-          transaction: [
-            {
-              category: "toilet-paper",
-              quantity: 0,
-              identifierInputs: []
-            },
-            {
-              category: "chocolate",
-              quantity: 5,
-              identifierInputs: []
-            }
-          ],
-          timestamp: transactionTime
-        },
-        {
-          transaction: [
-            {
-              category: "toilet-paper",
-              quantity: 1,
-              identifierInputs: []
-            },
-            {
-              category: "chocolate",
-              quantity: 3,
-              identifierInputs: []
-            }
-          ],
-          timestamp: transactionTime
-        }
-      ]
-    };
-    const transformed: CheckoutQuantitiesByItem = [
-      {
-        category: "toilet-paper",
-        quantities: {
-          "id-1": 0,
-          "id-2": 1
-        },
-        identifierInputs: []
-      },
-      {
-        category: "chocolate",
-        quantities: {
-          "id-1": 5,
-          "id-2": 3
-        },
-        identifierInputs: []
-      }
+    const arr = [
+      { order: 2, someField: "ok", someOtherField: "yeah" },
+      { order: 0, anotherField: "nah" },
+      { order: 1, someField: "right" }
     ];
-
-    expect(
-      getPurchasedQuantitiesByItem(["id-1", "id-2"], checkoutResult)
-    ).toStrictEqual(transformed);
+    expect(arr.sort(sortTransactionsByOrder)).toStrictEqual([
+      { order: 0, anotherField: "nah" },
+      { order: 1, someField: "right" },
+      { order: 2, someField: "ok", someOtherField: "yeah" }
+    ]);
   });
 });

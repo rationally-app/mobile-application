@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     backgroundColor: color("grey", 0),
     borderWidth: 1,
     borderRadius: borderRadius(2),
-    borderColor: color("grey", 40),
+    borderColor: color("blue", 50),
     fontSize: fontSize(0),
     color: color("blue", 50),
     minWidth: size(7),
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     backgroundColor: color("grey", 0),
     borderWidth: 1,
     borderRadius: borderRadius(2),
-    borderColor: color("grey", 40),
+    borderColor: color("blue", 50),
     fontSize: fontSize(0),
     color: color("blue", 50),
     fontFamily: "brand-regular"

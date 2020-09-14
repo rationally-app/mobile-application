@@ -30,33 +30,7 @@ describe("getIdentifierInputDisplay", () => {
       }
     ];
     expect(getIdentifierInputDisplay(mockIdentifierInputs)).toBe(
-      "value1 — value3"
-    );
-  });
-
-  it("should return masked phone number with only last 4 digits", () => {
-    expect.assertions(2);
-    const mockIdentifierInputs: IdentifierInput[] = [
-      {
-        label: "label1",
-        value: "+6591234567",
-        textInputType: "PHONE_NUMBER"
-      },
-      {
-        label: "label2",
-        value: "+6591234567",
-        textInputType: "PHONE_NUMBER"
-      },
-      {
-        label: "label3",
-        value: "value3"
-      }
-    ];
-    expect(getIdentifierInputDisplay([mockIdentifierInputs[0]])).toBe(
-      "*******4567"
-    );
-    expect(getIdentifierInputDisplay(mockIdentifierInputs)).toBe(
-      "*******4567 — value3"
+      "value1\nvalue2\nvalue3"
     );
   });
 
@@ -98,6 +72,6 @@ describe("getIdentifierInputDisplay", () => {
         { label: "label5", value: "value5" },
         { label: "label6", value: "" }
       ])
-    ).toBe("value4 — value5");
+    ).toBe("value4\nvalue5");
   });
 });

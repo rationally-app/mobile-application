@@ -24,8 +24,8 @@ import {
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import * as config from "../../config";
 import { checkVersion } from "./utils";
-import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
+import { AuthStoreContext } from "../../context/authStore";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -66,8 +66,10 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   const {
     hasLoadedFromStore,
     allCampaignConfigs,
-    addCampaignConfig
+    setCampaignConfig,
+    removeCampaignConfig
   } = useContext(CampaignConfigsStoreContext);
+  const { setAuthCredentials } = useContext(AuthStoreContext);
   const {
     fetchingState,
     updateCampaignConfig,
@@ -79,32 +81,25 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   );
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
-  const { logout } = useLogout();
 
-  const campaignConfig =
-    allCampaignConfigs[
-      `${authCredentials.operatorToken}${authCredentials.endpoint}`
-    ];
+  const key = `${authCredentials.operatorToken}${authCredentials.endpoint}`;
+  const campaignConfig = allCampaignConfigs[key];
 
   const [hasAttemptedToUpdateConfig, setHasAttemptedToUpdateConfig] = useState(
     false
   );
   useEffect(() => {
     if (hasLoadedFromStore && !hasAttemptedToUpdateConfig) {
-      updateCampaignConfig(campaignConfig, addCampaignConfig);
+      updateCampaignConfig(campaignConfig, setCampaignConfig);
       setHasAttemptedToUpdateConfig(true);
     }
   }, [
-    addCampaignConfig,
+    setCampaignConfig,
     campaignConfig,
     hasAttemptedToUpdateConfig,
     hasLoadedFromStore,
     updateCampaignConfig
   ]);
-
-  const handleLogout = useCallback((): void => {
-    logout(navigation.dispatch);
-  }, [logout, navigation.dispatch]);
 
   useEffect(() => {
     if (updateCampaignConfigError) {
@@ -115,16 +110,30 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
           description: ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR
         });
       } else if (updateCampaignConfigError instanceof SessionError) {
+        setAuthCredentials(key, {
+          ...authCredentials,
+          expiry: new Date().getTime()
+        });
         showAlert({
           ...expiredAlertProps,
-          description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+          description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
+          onOk: () => {
+            navigation.navigate("CampaignLocationsScreen");
+          }
         });
-        handleLogout();
       } else {
         throw updateCampaignConfigError; // Let ErrorBoundary handle
       }
     }
-  }, [handleLogout, showAlert, updateCampaignConfigError]);
+  }, [
+    setAuthCredentials,
+    authCredentials,
+    key,
+    navigation,
+    removeCampaignConfig,
+    showAlert,
+    updateCampaignConfigError
+  ]);
 
   const continueToNormalFlow = useCallback(() => {
     if (campaignConfig?.features?.flowType) {

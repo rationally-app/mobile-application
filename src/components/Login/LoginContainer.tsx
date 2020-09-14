@@ -2,12 +2,12 @@ import React, {
   useState,
   FunctionComponent,
   useEffect,
-  useLayoutEffect,
   useContext,
   useRef
 } from "react";
 import {
   View,
+  TouchableOpacity,
   StyleSheet,
   TouchableWithoutFeedback,
   Vibration,
@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { NavigationProps, AuthCredentials } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
-import { size } from "../../common/styles";
+import { size, borderRadius, color } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
@@ -44,6 +44,8 @@ import {
   defaultConfirmationProps
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
+import { Feather } from "@expo/vector-icons";
+import { createFullNumber } from "../../utils/validatePhoneNumbers";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -68,8 +70,27 @@ const styles = StyleSheet.create({
   },
   bannerWrapper: {
     marginBottom: size(1.5)
+  },
+  closeButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: borderRadius(2),
+    padding: size(1),
+    position: "absolute",
+    top: size(3),
+    right: size(1)
   }
 });
+
+const CloseButton: FunctionComponent<{
+  onPress: () => void;
+}> = ({ onPress }) => (
+  <View style={styles.closeButton}>
+    <TouchableOpacity onPress={onPress}>
+      <Feather name="x" size={size(3)} color={color("grey", 0)} />
+    </TouchableOpacity>
+  </View>
+);
 
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
@@ -83,6 +104,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const { config, setConfigValue } = useConfigContext();
   const [loginStage, setLoginStage] = useState<LoginStage>("SCAN");
+  const [countryCode, setCountryCode] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [tempAuthCredentials, setTempAuthCredentials] = useState<
     Pick<AuthCredentials, "endpoint" | "operatorToken">
@@ -126,12 +148,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
   const setState = useState()[1];
   const handleRequestOTP = async (
-    fullNumber = mobileNumber
+    fullMobileNumber: string
   ): Promise<boolean> => {
     try {
       if (!(await getResendConfirmationIfNeeded())) return false;
       const response = await requestOTP(
-        fullNumber,
+        fullMobileNumber,
         tempAuthCredentials?.operatorToken ?? "",
         tempAuthCredentials?.endpoint ?? ""
       );
@@ -149,13 +171,14 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     }
   };
 
-  useLayoutEffect(() => {
-    if (hasLoadedFromStore && Object.keys(authCredentials).length === 1) {
-      navigation.navigate("CampaignInitialisationScreen", {
-        authCredentials: Object.values(authCredentials)[0]
-      });
-    }
-  }, [authCredentials, hasLoadedFromStore, navigation]);
+  const onPressClose = (): void => {
+    navigation.navigate("CampaignLocationsScreen");
+  };
+
+  const onSuccess = (authCredentials: AuthCredentials): void => {
+    setConfigValue("fullMobileNumber", { countryCode, mobileNumber });
+    navigation.navigate("CampaignInitialisationScreen", { authCredentials });
+  };
 
   useEffect(() => {
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
@@ -257,6 +280,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           style={{ height: "50%", maxHeight: "auto" }}
           mode={config.appMode}
         />
+
         <View style={styles.content}>
           <TouchableWithoutFeedback
             delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
@@ -293,21 +317,26 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             <LoginMobileNumberCard
               setLoginStage={setLoginStage}
               setMobileNumber={setMobileNumber}
+              setCountryCode={setCountryCode}
               handleRequestOTP={handleRequestOTP}
             />
           )}
           {loginStage === "OTP" && (
             <LoginOTPCard
               resetStage={resetStage}
-              mobileNumber={mobileNumber}
+              fullMobileNumber={createFullNumber(countryCode, mobileNumber)}
               operatorToken={tempAuthCredentials?.operatorToken ?? ""}
               endpoint={tempAuthCredentials?.endpoint ?? ""}
               handleRequestOTP={handleRequestOTP}
+              onSuccess={onSuccess}
             />
           )}
           <FeatureToggler feature="HELP_MODAL">
             <HelpButton onPress={showHelpModal} />
           </FeatureToggler>
+          {hasLoadedFromStore && Object.keys(authCredentials).length >= 1 && (
+            <CloseButton onPress={onPressClose} />
+          )}
         </View>
       </KeyboardAvoidingScrollView>
       {shouldShowCamera && (
