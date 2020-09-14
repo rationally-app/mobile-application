@@ -52,6 +52,8 @@ jobs:
       - name: Upload Report to Slack
         run: >
           curl -F token=${{ secrets.E2E_CHATBOT_TOKEN }} -F channels=${{ secrets.E2E_CHATBOT_CHANNELID }}
-          -F file=@./result/report.html -F initial_comment="Full report" https://slack.com/api/files.upload
+          -F file=@./result/report.html -F
+          initial_comment="Full report. Please download the artifact for more details: https://github.com/rationally-app/mobile-application/actions/runs/${{ github.run_id }}"
+          https://slack.com/api/files.upload
 
 
