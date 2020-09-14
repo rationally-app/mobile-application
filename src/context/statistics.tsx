@@ -1,5 +1,9 @@
-import React, { createContext, FunctionComponent, useState } from "react";
-
+import React, {
+  createContext,
+  FunctionComponent,
+  useState,
+  useCallback
+} from "react";
 export const FEATURES_KEY = "FEATURES";
 
 interface StatisticsContext {
@@ -13,6 +17,7 @@ interface StatisticsContext {
   setTransactionHistory: (
     transactionHistory: { name: string; category: string; quantity: number }[]
   ) => void;
+  clearStatistics: () => void;
 }
 export const StatisticsContext = createContext<StatisticsContext>({
   totalCount: null,
@@ -22,7 +27,8 @@ export const StatisticsContext = createContext<StatisticsContext>({
   setTotalCount: () => null,
   setCurrentTimestamp: () => null,
   setLastTransactionTime: () => null,
-  setTransactionHistory: () => null
+  setTransactionHistory: () => null,
+  clearStatistics: () => null
 });
 
 export const StatisticsContextProvider: FunctionComponent = ({ children }) => {
@@ -39,6 +45,13 @@ export const StatisticsContextProvider: FunctionComponent = ({ children }) => {
     StatisticsContext["transactionHistory"]
   >([]);
 
+  const clearStatistics: StatisticsContext["clearStatistics"] = useCallback(() => {
+    setTotalCount(null);
+    setCurrentTimestamp(Date.now());
+    setLastTransactionTime(0);
+    setTransactionHistory([]);
+  }, []);
+
   return (
     <StatisticsContext.Provider
       value={{
@@ -49,7 +62,8 @@ export const StatisticsContextProvider: FunctionComponent = ({ children }) => {
         setTotalCount,
         setCurrentTimestamp,
         setLastTransactionTime,
-        setTransactionHistory
+        setTransactionHistory,
+        clearStatistics
       }}
     >
       {children}

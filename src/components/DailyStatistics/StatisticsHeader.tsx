@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { color, size, fontSize } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { withNavigation } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppText } from "../Layout/AppText";
+import { StatisticsContext } from "../../context/statistics";
 
 interface StatisticsHeader extends NavigationProps {
   mode?: AppMode;
@@ -42,12 +43,15 @@ const styles = StyleSheet.create({
 export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
   navigation
 }) => {
+  const { clearStatistics } = useContext(StatisticsContext);
+
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();
     navigation.openDrawer();
   };
 
   const onPressBack = (): void => {
+    clearStatistics();
     navigation.navigate("CollectCustomerDetailsScreen");
   };
 
