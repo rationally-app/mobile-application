@@ -51,11 +51,10 @@ const validate = (nricInput: string): boolean => {
 };
 
 export const validateAndCleanNric = (inputNric: string): string => {
-  const uppercasedAndTrimmedInput = inputNric.toUpperCase().trim();
-  const firstNineChars = uppercasedAndTrimmedInput.slice(0, 9);
-  const isNricValid = validate(firstNineChars);
+  const cleanedInputNric = inputNric.toUpperCase().trim().slice(0, 9);
+  const isNricValid = validate(cleanedInputNric);
   if (!isNricValid) {
     throw new Error(ERROR_MESSAGE.INVALID_ID);
   }
-  return firstNineChars;
+  return cleanedInputNric;
 };
