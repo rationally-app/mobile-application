@@ -51,7 +51,7 @@ const validate = (nricInput: string): boolean => {
 };
 
 export const validateAndCleanNric = (inputNric: string): string => {
-  const cleanedInputNric = inputNric.toUpperCase().trim().slice(0, 9);
+  const cleanedInputNric = inputNric.trim().slice(0, 9).toUpperCase();
   const isNricValid = validate(cleanedInputNric);
   if (!isNricValid) {
     throw new Error(ERROR_MESSAGE.INVALID_ID);
