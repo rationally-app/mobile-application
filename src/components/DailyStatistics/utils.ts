@@ -26,10 +26,10 @@ export const summariseTransactions = (
       quantity += transaction.quantity;
     });
     summarisedTotalCount += quantity;
-
     const itemWithName = policies?.find(item => {
-      item.category === key;
-      return item;
+      if (item.category === key) {
+        return item;
+      }
     });
 
     summarisedTransactionHistory.push({
