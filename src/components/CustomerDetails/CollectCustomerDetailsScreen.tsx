@@ -36,7 +36,7 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
-import { LocalizationContext } from "../../context/translation";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   content: {
@@ -90,7 +90,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
-  const { i18n } = useContext(LocalizationContext);
 
   useEffect(() => {
     if (isFocused) {

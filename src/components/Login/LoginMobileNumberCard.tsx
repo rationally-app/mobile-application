@@ -23,7 +23,7 @@ import {
   ERROR_MESSAGE
 } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
-import { LocalizationContext } from "../../context/translation";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -60,7 +60,6 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       setCountryCodeValue(valueWithPlusSign);
     }
   };
-  const { i18n } = useContext(LocalizationContext);
   const onChangeMobileNumber = (text: string): void => {
     /^\d*$/.test(text) && setMobileNumberValue(text);
   };

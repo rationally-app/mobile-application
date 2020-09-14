@@ -21,7 +21,7 @@ import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { AuthCredentials } from "../../types";
-import { LocalizationContext } from "../../context/translation";
+import i18n from "i18n-js";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -68,7 +68,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const { setAuthCredentials } = useContext(AuthStoreContext);
   const { showAlert } = useContext(AlertModalContext);
   const setState = useState()[1];
-  const { i18n } = useContext(LocalizationContext);
 
   useEffect(() => {
     const resendTimer = setTimeout(() => {

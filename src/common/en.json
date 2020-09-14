@@ -73,7 +73,7 @@
     "redeemedLimitReachedShowLess": "Show less",
     "limitReachedRecent": "Limit reached %{m} minute(s) ago.",
     "limitReached": "Limit reached on %{d MM yyyy, hh:mma}",
-    "redeemedLimitReached": "%{amount} item(s) more till %{d MMM yyyy}"
+    "redeemedLimitReached": "%{amount} item(s) more till %{date}"
   },
   "customerAppealScreen": {
     "raiseAppeal": "Raise an appeal",

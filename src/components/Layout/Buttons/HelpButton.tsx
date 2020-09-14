@@ -1,14 +1,13 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent } from "react";
 import { Feather } from "@expo/vector-icons";
 import { AppText } from "../AppText";
 import { size, fontSize, color } from "../../../common/styles";
 import { TouchableOpacity } from "react-native";
-import { LocalizationContext } from "../../../context/translation";
+import i18n from "i18n-js";
 
 export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
   onPress
 }) => {
-  const { i18n } = useContext(LocalizationContext);
   return (
     <TouchableOpacity
       style={{

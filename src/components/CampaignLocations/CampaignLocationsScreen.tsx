@@ -25,7 +25,7 @@ import { useDrawerContext } from "../../context/drawer";
 import { LoadingView } from "../Loading";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
-import { LocalizationContext } from "../../context/translation";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   content: {
@@ -68,7 +68,6 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
 
   const messageContent = useContext(ImportantMessageContentContext);
   const showHelpModal = useContext(HelpModalContext);
-  const { i18n } = useContext(LocalizationContext);
 
   const {
     hasLoadedFromStore: hasLoadedAuthFromStore,
@@ -98,13 +97,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
         }
       }
     ]);
-  }, [
-    authCredentials,
-    hasLoadedAuthFromStore,
-    i18n,
-    navigation,
-    setDrawerButtons
-  ]);
+  }, [authCredentials, hasLoadedAuthFromStore, navigation, setDrawerButtons]);
 
   const navigateToCampaignLocation = useCallback(
     (authCredentials: AuthCredentials): void => {

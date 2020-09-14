@@ -15,7 +15,7 @@ import {
   AlertModalContext,
   defaultConfirmationProps
 } from "../../context/alert";
-import { LocalizationContext } from "../../context/translation";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   container: {
@@ -97,15 +97,18 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch]);
-  const { i18n } = useContext(LocalizationContext);
 
   const onPressLogout = (): void => {
     showAlert({
       ...defaultConfirmationProps,
-      title: "Confirm logout?",
+      title: i18n.t("errorMessages.confirmLogout.title"),
       buttonTexts: {
-        primaryActionText: "Logout",
-        secondaryActionText: "Cancel"
+        primaryActionText: i18n.t(
+          "errorMessages.confirmLogout.primaryActionText"
+        ),
+        secondaryActionText: i18n.t(
+          "errorMessages.confirmLogout.secondaryActionText"
+        )
       },
       visible: true,
       onOk: handleLogout

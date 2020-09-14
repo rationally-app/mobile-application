@@ -21,7 +21,7 @@ import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import { LocalizationContext } from "../../../context/translation";
+import i18n from "i18n-js";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -40,13 +40,14 @@ interface CheckoutSuccessCard {
 const UsageQuotaTitle: FunctionComponent<{
   quantity: number;
   quotaRefreshTime: number;
-  i18n: any;
-}> = ({ quantity, quotaRefreshTime, i18n }) => (
+}> = ({ quantity, quotaRefreshTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {i18n.t("checkoutSuccessScreen.redeemedLimitReached", {})}
-      {quantity} item(s) more till {format(quotaRefreshTime, "d MMM yyyy")}.
+      {i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
+        amount: quantity,
+        date: format(quotaRefreshTime, "d MMM yyyy")
+      })}
     </AppText>
   </>
 );
@@ -134,7 +135,6 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     sessionToken,
     endpoint
   );
-  const { i18n } = useContext(LocalizationContext);
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
 
@@ -176,7 +176,6 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                         key={index}
                         quantity={quantity}
                         quotaRefreshTime={quotaRefreshTime}
-                        i18n={i18n}
                       />
                     ) : undefined
                 )}

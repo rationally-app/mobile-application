@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent } from "react";
 import { View, StyleSheet, KeyboardType } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -6,7 +6,7 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { AppText } from "../Layout/AppText";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { size, color, fontSize } from "../../common/styles";
-import { LocalizationContext } from "../../context/translation";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -55,7 +55,6 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
   submitId,
   keyboardType
 }) => {
-  const { i18n } = useContext(LocalizationContext);
   return (
     <>
       <View style={styles.scanButtonWrapper}>
