@@ -51,7 +51,7 @@ jobs:
           XUNIT_PATH: ./result/allresults.xml
       - name: Upload Report to Slack
         run: >
-          curl -F token=${{ secrets.E2E_CHATBOT_TOKEN }} -F channel=${{ secrets.E2E_CHATBOT_CHANNELID }}
+          curl -F token=${{ secrets.E2E_CHATBOT_TOKEN }} -F channels=${{ secrets.E2E_CHATBOT_CHANNELID }}
           -F file=@./result/report.html -F initial_comment="Full report" https://slack.com/api/files.upload
 
 
