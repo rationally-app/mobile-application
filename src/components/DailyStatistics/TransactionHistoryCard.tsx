@@ -17,20 +17,16 @@ const styles = StyleSheet.create({
   categoryName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
-    marginBottom: size(3),
-    flexDirection: "row",
-    marginRight: "50%"
+    marginBottom: size(3)
   },
   qtyText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
-    marginBottom: size(3),
-    flexDirection: "row"
+    marginBottom: size(3)
   },
   quantity: {
-    flexDirection: "row",
     fontSize: fontSize(1),
-    marginRight: "1%"
+    marginBottom: size(3)
   },
   transactionText: {
     flexDirection: "row",
@@ -55,8 +51,12 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
         transactionHistory.map(item => (
           <View style={styles.transactionText} key={item.category}>
             <AppText style={styles.categoryName}>{item.name}</AppText>
-            <AppText style={styles.quantity}>{item.quantity}</AppText>
-            <AppText style={styles.qtyText}>qty</AppText>
+            <View style={styles.transactionText}>
+              <AppText style={styles.quantity}>
+                {item.quantity.toLocaleString()}
+              </AppText>
+              <AppText style={styles.qtyText}>qty</AppText>
+            </View>
           </View>
         ))
       ) : (

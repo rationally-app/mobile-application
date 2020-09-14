@@ -64,7 +64,7 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
   return (
     <View style={styles.appHeaderWrapper}>
       <AppText style={styles.smallText}>You distributed</AppText>
-      <AppText style={styles.statText}>{totalCount}</AppText>
+      <AppText style={styles.statText}>{totalCount?.toLocaleString()}</AppText>
       <AppText style={styles.smallText}>
         Last distributed at{" "}
         {lastTransactionTime !== 0
