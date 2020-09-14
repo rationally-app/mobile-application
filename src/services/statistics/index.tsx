@@ -2,6 +2,7 @@ import { IS_MOCK } from "../../config";
 import { DailyStatistics } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
+import { subDays, addDays, getTime, isSameDay } from "date-fns";
 
 export class StatisticsError extends Error {
   constructor(message: string) {
@@ -24,37 +25,75 @@ export const mockGetStatistics = async (
   _endpoint: string,
   _operatorTokens: string[]
 ): Promise<DailyStatistics> => {
-  const transactionTime = Date.now();
+  const yesterday = getTime(subDays(Date.now(), 1));
+  const today = Date.now();
+  const tomorrow = getTime(addDays(Date.now(), 1));
 
-  return {
-    pastTransactions: [
-      {
-        category: "toilet-paper",
-        quantity: 100,
-        transactionTime
-      },
-      {
-        category: "instant-noodles",
-        quantity: 1,
-        transactionTime
-      },
-      {
-        category: "chocolate",
-        quantity: 30,
-        transactionTime
-      },
-      {
-        category: "vouchers",
-        quantity: 1,
-        transactionTime
-      },
-      {
-        category: "vouchers",
-        quantity: 1,
-        transactionTime
-      }
-    ]
-  };
+  if (isSameDay(_currentTimestamp, today)) {
+    return {
+      pastTransactions: [
+        {
+          category: "toilet-paper",
+          quantity: 100,
+          transactionTime: today
+        },
+        {
+          category: "instant-noodles",
+          quantity: 1,
+          transactionTime: today
+        },
+        {
+          category: "chocolate",
+          quantity: 30,
+          transactionTime: today
+        },
+        {
+          category: "vouchers",
+          quantity: 1,
+          transactionTime: today
+        },
+        {
+          category: "vouchers",
+          quantity: 1,
+          transactionTime: today
+        }
+      ]
+    };
+  } else if (isSameDay(_currentTimestamp, yesterday)) {
+    return {
+      pastTransactions: [
+        {
+          category: "instant-noodles",
+          quantity: 999,
+          transactionTime: yesterday
+        },
+        {
+          category: "chocolate",
+          quantity: 3000,
+          transactionTime: yesterday
+        },
+        {
+          category: "vouchers",
+          quantity: 20,
+          transactionTime: yesterday
+        }
+      ]
+    };
+  } else if (isSameDay(_currentTimestamp, tomorrow)) {
+    return {
+      pastTransactions: [
+        {
+          category: "vouchers",
+          quantity: 9999999,
+          transactionTime: tomorrow
+        }
+      ]
+    };
+  } else {
+    return {
+      pastTransactions: []
+    };
+  }
 };
 
 export const liveGetStatistics = async (
