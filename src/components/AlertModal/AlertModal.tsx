@@ -48,13 +48,13 @@ const styles = StyleSheet.create({
   modalButtonRow: {
     marginTop: size(4),
     flexDirection: "row",
-    alignSelf: "stretch",
-    flexWrap: "wrap"
+    alignSelf: "stretch"
+    // flexWrap: "wrap"
   },
   modalSecondaryButton: {
     marginRight: size(1),
-    flexGrow: 1,
-    padding: 10
+    flexGrow: 1
+    // padding: 10
   },
   modalPrimaryButton: {
     flexGrow: 1
