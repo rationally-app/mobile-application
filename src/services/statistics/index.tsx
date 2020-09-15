@@ -110,7 +110,7 @@ export const liveGetStatistics = async (
   try {
     response = await fetchWithValidator(
       DailyStatistics,
-      `${endpoint}/transactions/staff`,
+      `${endpoint}/statistics/staff`,
       {
         method: "POST",
         headers: {

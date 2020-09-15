@@ -64,15 +64,15 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
   const checkUpdates = useCheckUpdates();
   const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
   const { totalCount, setTotalCount } = useContext(StatisticsContext);
-  const { currentTimestamp, setCurrentTimestamp } = useContext(
-    StatisticsContext
-  );
-  const { lastTransactionTime, setLastTransactionTime } = useContext(
-    StatisticsContext
-  );
-  const { transactionHistory, setTransactionHistory } = useContext(
-    StatisticsContext
-  );
+  const {
+    currentTimestamp,
+    setCurrentTimestamp,
+    lastTransactionTime,
+    setLastTransactionTime,
+    transactionHistory,
+    setTransactionHistory
+  } = useContext(StatisticsContext);
+
   const { policies } = useContext(CampaignConfigContext);
 
   const fetchDailyStatistics = async (
