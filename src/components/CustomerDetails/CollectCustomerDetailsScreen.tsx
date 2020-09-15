@@ -88,7 +88,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
 
   useEffect(() => {
@@ -150,8 +150,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
-      showAlert({
-        ...wrongFormatAlertProps,
+      showErrorAlert({
+        title: "Wrong format",
         description: e.message,
         onOk: () => setIsScanningEnabled(true)
       });

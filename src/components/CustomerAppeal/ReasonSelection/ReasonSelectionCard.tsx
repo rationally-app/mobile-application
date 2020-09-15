@@ -6,7 +6,7 @@ import { Card } from "../../Layout/Card";
 import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
-import { AlertModalContext, defaultWarningProps } from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
 import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
@@ -42,7 +42,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   onCancel,
   onReasonSelection
 }) => {
-  const { showAlert } = useContext(AlertModalContext);
+  const { showWarnAlert } = useContext(AlertModalContext);
   return (
     <View>
       <CustomerCard ids={ids}>
@@ -67,14 +67,12 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
         <SecondaryButton
           text={i18n.t("customerQuotaScreen.quotaAppealCancel")}
           onPress={() => {
-            showAlert({
-              ...defaultWarningProps,
+            showWarnAlert({
               title: "Cancel entry and scan another ID number?",
               buttonTexts: {
                 primaryActionText: "Cancel entry",
                 secondaryActionText: "Keep"
               },
-              visible: true,
               onOk: onCancel
             });
           }}
