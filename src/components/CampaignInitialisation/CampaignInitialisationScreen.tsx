@@ -102,10 +102,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
         Sentry.captureException(updateCampaignConfigError);
         showErrorAlert({
           title: "System error",
-          description: ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR,
-          // TODO:
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          onOk: () => {}
+          description: ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR
         });
       } else if (updateCampaignConfigError instanceof SessionError) {
         setAuthCredentials(key, {

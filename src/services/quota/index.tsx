@@ -7,7 +7,7 @@ import {
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
-import { systemAlertProps, ERROR_MESSAGE } from "../../context/alert";
+import { ERROR_MESSAGE } from "../../context/alert";
 
 export class NotEligibleError extends Error {
   constructor(message: string) {
@@ -22,9 +22,9 @@ export class QuotaError extends Error {
     this.name = "QuotaError";
   }
   alertProps = {
-    ...systemAlertProps,
-    description: ERROR_MESSAGE.QUOTA_ERROR as string,
-    visible: true
+    // TODO: Replace these with translated copies
+    title: "System error",
+    description: ERROR_MESSAGE.QUOTA_ERROR as string
   };
 }
 

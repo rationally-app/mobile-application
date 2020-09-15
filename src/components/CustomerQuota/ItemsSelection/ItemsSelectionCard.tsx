@@ -65,13 +65,13 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       setIsAddUserModalVisible(false);
       if (e.message === ERROR_MESSAGE.DUPLICATE_ID) {
         showErrorAlert({
-          title: "",
+          title: "Already used",
           description: e.message,
           onOk: () => setIsAddUserModalVisible(true)
         });
       } else {
         showErrorAlert({
-          title: "",
+          title: "Wrong format",
           description: e.message,
           onOk: () => setIsAddUserModalVisible(true)
         });
