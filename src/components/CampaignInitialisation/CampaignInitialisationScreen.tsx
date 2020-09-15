@@ -15,12 +15,7 @@ import { LoadingView } from "../Loading";
 import { useUpdateCampaignConfig } from "../../hooks/useUpdateCampaignConfig/useUpdateCampaignConfig";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { CampaignConfigError } from "../../services/campaignConfig";
-import {
-  AlertModalContext,
-  systemAlertProps,
-  expiredAlertProps,
-  ERROR_MESSAGE
-} from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import * as config from "../../config";
 import { checkVersion } from "./utils";
@@ -80,7 +75,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     authCredentials.endpoint
   );
   const checkUpdates = useCheckUpdates();
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
 
   const key = `${authCredentials.operatorToken}${authCredentials.endpoint}`;
   const campaignConfig = allCampaignConfigs[key];
@@ -105,17 +100,20 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     if (updateCampaignConfigError) {
       if (updateCampaignConfigError instanceof CampaignConfigError) {
         Sentry.captureException(updateCampaignConfigError);
-        showAlert({
-          ...systemAlertProps,
-          description: ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR
+        showErrorAlert({
+          title: "System error",
+          description: ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR,
+          // TODO:
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onOk: () => {}
         });
       } else if (updateCampaignConfigError instanceof SessionError) {
         setAuthCredentials(key, {
           ...authCredentials,
           expiry: new Date().getTime()
         });
-        showAlert({
-          ...expiredAlertProps,
+        showErrorAlert({
+          title: "Expired",
           description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
           onOk: () => {
             navigation.navigate("CampaignLocationsScreen");
@@ -131,7 +129,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     key,
     navigation,
     removeCampaignConfig,
-    showAlert,
+    showErrorAlert,
     updateCampaignConfigError
   ]);
 

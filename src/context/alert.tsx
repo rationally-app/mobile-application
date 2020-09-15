@@ -14,6 +14,7 @@ export enum WARNING_MESSAGE {
   PAYMENT_COLLECTION = "This action cannot be undone. Proceed only when payment has been collected."
 }
 
+// TODO: where should we put this
 export enum ERROR_MESSAGE {
   DUPLICATE_IDENTIFIER_INPUT = "Enter unique code details.",
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
@@ -57,7 +58,7 @@ const defaultAlertProps: AlertModalProps = {
   onExit: () => {}
 };
 
-export const defaultWarningProps: AlertModalProps = {
+const defaultWarningProps: AlertModalProps = {
   alertType: "WARN",
   title: "",
   buttonTexts: {
@@ -70,7 +71,8 @@ export const defaultWarningProps: AlertModalProps = {
   onExit: () => {}
 };
 
-export const defaultConfirmationProps: AlertModalProps = {
+const defaultConfirmationProps: AlertModalProps = {
+  // todo:
   alertType: "CONFIRM",
   title: "",
   buttonTexts: {
@@ -83,55 +85,72 @@ export const defaultConfirmationProps: AlertModalProps = {
   onExit: () => {}
 };
 
-export const incompleteEntryAlertProps: AlertModalProps = {
+const incompleteEntryAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Incomplete entry",
   visible: true
 };
 
-export const invalidInputAlertProps: AlertModalProps = {
+const invalidInputAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Invalid input",
   visible: true
 };
 
-export const wrongFormatAlertProps: AlertModalProps = {
+const wrongFormatAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Wrong format",
   visible: true
 };
 
-export const duplicateAlertProps: AlertModalProps = {
+const duplicateAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Already used",
   visible: true
 };
 
-export const systemAlertProps: AlertModalProps = {
+const systemAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "System error",
   visible: true
 };
 
-export const disabledAccessAlertProps: AlertModalProps = {
+const disabledAccessAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Disabled access",
   visible: true
 };
 
-export const expiredAlertProps: AlertModalProps = {
+const expiredAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Expired",
   visible: true
 };
 
 interface AlertModalContext {
-  showAlert: (props: AlertModalProps) => void;
+  showConfirmationAlert: (props: {
+    title: string;
+    description?: string;
+    buttonTexts: { primaryActionText: string; secondaryActionText: string };
+    onOk: () => void;
+  }) => void;
+  showErrorAlert: (props: {
+    title: string;
+    description?: string;
+    onOk: () => void;
+  }) => void;
+  showWarnAlert: (props: {
+    title: string;
+    buttonTexts: { primaryActionText: string; secondaryActionText: string };
+    onOk: () => void;
+  }) => void;
   clearAlert: () => void;
 }
 
 export const AlertModalContext = createContext<AlertModalContext>({
-  showAlert: () => null,
+  showConfirmationAlert: () => null,
+  showErrorAlert: () => null,
+  showWarnAlert: () => null,
   clearAlert: () => null
 });
 
@@ -140,12 +159,67 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     defaultAlertProps
   );
 
-  const showAlert: AlertModalContext["showAlert"] = useCallback(
+  const showAlert: (props: AlertModalProps) => void = useCallback(
     (props: AlertModalProps) => {
       setAlertProps(props);
     },
     []
   );
+
+  const showConfirmationAlert = (props: {
+    title: string;
+    description?: string;
+    buttonTexts: { primaryActionText: string; secondaryActionText: string };
+    onOk: () => void;
+  }): void => {
+    showAlert({
+      alertType: "CONFIRM",
+      title: props.title,
+      ...(!!props.description ? { description: props.description } : {}),
+      buttonTexts: props.buttonTexts,
+      visible: true,
+      onOk: props.onOk,
+      onCancel: () => {},
+      onExit: () => {}
+    });
+  };
+
+  const showErrorAlert = (props: {
+    title: string;
+    description?: string;
+    onOk: () => void;
+  }): void => {
+    showAlert({
+      alertType: "ERROR",
+      title: props.title,
+      ...(!!props.description ? { description: props.description } : {}),
+      buttonTexts: {
+        primaryActionText: "OK"
+      },
+      visible: true,
+      onOk: props.onOk,
+      onCancel: () => {},
+      onExit: () => {}
+    });
+  };
+
+  const showWarnAlert = (props: {
+    title: string;
+    buttonTexts: { primaryActionText: string; secondaryActionText: string };
+    onOk: () => void;
+  }): void => {
+    showAlert({
+      alertType: "WARN",
+      title: props.title,
+      buttonTexts: props.buttonTexts,
+      visible: false,
+      onOk: props.onOk,
+      onCancel: () => {},
+      onExit: () => {}
+    });
+  };
+
+  // TODO: maybe can toggle visible to false?
   const clearAlert: AlertModalContext["clearAlert"] = useCallback(() => {
     setAlertProps(defaultAlertProps);
   }, []);
@@ -153,7 +227,9 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
   return (
     <AlertModalContext.Provider
       value={{
-        showAlert,
+        showConfirmationAlert,
+        showErrorAlert,
+        showWarnAlert,
         clearAlert
       }}
     >

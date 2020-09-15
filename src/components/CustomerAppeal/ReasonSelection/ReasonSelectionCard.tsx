@@ -6,7 +6,7 @@ import { Card } from "../../Layout/Card";
 import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
-import { AlertModalContext, defaultWarningProps } from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
 
 const styles = StyleSheet.create({
   titlePadding: {
@@ -41,7 +41,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   onCancel,
   onReasonSelection
 }) => {
-  const { showAlert } = useContext(AlertModalContext);
+  const { showWarnAlert } = useContext(AlertModalContext);
   return (
     <View>
       <CustomerCard ids={ids}>
@@ -66,14 +66,12 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
         <SecondaryButton
           text="Cancel"
           onPress={() => {
-            showAlert({
-              ...defaultWarningProps,
+            showWarnAlert({
               title: "Cancel entry and scan another ID number?",
               buttonTexts: {
                 primaryActionText: "Cancel entry",
                 secondaryActionText: "Keep"
               },
-              visible: true,
               onOk: onCancel
             });
           }}
