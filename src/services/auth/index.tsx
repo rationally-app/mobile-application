@@ -2,15 +2,7 @@ import { IS_MOCK } from "../../config";
 import { SessionCredentials, OTPResponse } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
-import {
-  duplicateAlertProps,
-  ERROR_MESSAGE,
-  systemAlertProps,
-  wrongFormatAlertProps,
-  invalidInputAlertProps,
-  disabledAccessAlertProps,
-  expiredAlertProps
-} from "../../context/alert";
+import { ERROR_MESSAGE } from "../../context/alert";
 
 export class LoginError extends Error {
   constructor(message: string) {
@@ -18,9 +10,9 @@ export class LoginError extends Error {
     this.name = "LoginError";
   }
   alertProps = {
-    ...systemAlertProps,
-    description: ERROR_MESSAGE.LOGIN_ERROR as string,
-    visible: true
+    // TODO: Replace these with translated copies
+    title: "System error",
+    description: ERROR_MESSAGE.LOGIN_ERROR as string
   };
 }
 
@@ -29,7 +21,8 @@ export class LoginLockedError extends LoginError {
     super(message);
     this.name = "LoginLockedError";
     this.alertProps = {
-      ...disabledAccessAlertProps,
+      // TODO: Replace these with translated copies
+      title: "Disabled access",
       description: this.message
     };
   }
@@ -47,7 +40,8 @@ export class AuthTakenError extends AuthError {
     super(message);
     this.name = "AuthTakenError";
     this.alertProps = {
-      ...duplicateAlertProps,
+      // TODO: Replace these with translated copies
+      title: "Already used",
       description: ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN
     };
   }
@@ -58,7 +52,8 @@ export class AuthExpiredError extends AuthError {
     super(message);
     this.name = "AuthExpiredError";
     this.alertProps = {
-      ...expiredAlertProps,
+      // TODO: Replace these with translated copies
+      title: "Expired",
       description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
     };
   }
@@ -69,7 +64,8 @@ export class AuthNotFoundError extends AuthError {
     super(message);
     this.name = "AuthNotFoundError";
     this.alertProps = {
-      ...invalidInputAlertProps,
+      // TODO: Replace these with translated copies
+      title: "Invalid input",
       description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
     };
   }
@@ -80,7 +76,8 @@ export class AuthInvalidError extends AuthError {
     super(message);
     this.name = "AuthInvalidError";
     this.alertProps = {
-      ...wrongFormatAlertProps,
+      // TODO: Replace these with translated copies
+      title: "Wrong format",
       description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT
     };
   }
@@ -91,7 +88,8 @@ export class OTPWrongError extends LoginError {
     super(message);
     this.name = "OTPWrongError";
     this.alertProps = {
-      ...invalidInputAlertProps,
+      // TODO: To replace these with translated copies
+      title: "Invalid input",
       description: isLastTry
         ? ERROR_MESSAGE.LAST_OTP_ERROR
         : ERROR_MESSAGE.OTP_ERROR
@@ -104,7 +102,8 @@ export class OTPExpiredError extends LoginError {
     super(message);
     this.name = "OTPExpiredError";
     this.alertProps = {
-      ...expiredAlertProps,
+      // TODO: To replace these with translated copies
+      title: "Expired",
       description: ERROR_MESSAGE.OTP_EXPIRED
     };
   }

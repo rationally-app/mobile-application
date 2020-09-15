@@ -160,7 +160,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       expiry: new Date().getTime()
     });
     showErrorAlert({
-      title: "",
+      title: "Expired",
       description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
       onOk: () => {
         navigation.navigate("CampaignLocationsScreen");

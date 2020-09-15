@@ -44,9 +44,8 @@ export const ItemIdentifier: FunctionComponent<{
     } catch (e) {
       setShouldShowCamera(false);
       showErrorAlert({
-        title: "",
-        description: e.message || e,
-        onOk: () => {}
+        title: "System error",
+        description: e.message || e
       });
     }
   };

@@ -195,9 +195,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   useEffect(() => {
     if (error) {
       showErrorAlert({
-        title: "",
-        description: error.message || "",
-        onOk: () => {}
+        title: "System error",
+        description: error.message || ""
       });
     }
   }, [error, showErrorAlert]);

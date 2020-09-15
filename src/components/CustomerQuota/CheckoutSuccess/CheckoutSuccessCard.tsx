@@ -151,9 +151,8 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   useEffect(() => {
     if (error) {
       showErrorAlert({
-        title: "",
-        description: error.message || "",
-        onOk: () => {}
+        title: "System error",
+        description: error.message || ""
       });
     }
   }, [error, showErrorAlert]);

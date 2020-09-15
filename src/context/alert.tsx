@@ -10,12 +10,12 @@ import {
   AlertModalProps
 } from "../components/AlertModal/AlertModal";
 
-// TODO: Where should we put this as well?
+// TODO: Where should we put this?
 export enum WARNING_MESSAGE {
   PAYMENT_COLLECTION = "This action cannot be undone. Proceed only when payment has been collected."
 }
 
-// TODO: where should we put this
+// TODO: Where should we put this?
 export enum ERROR_MESSAGE {
   DUPLICATE_IDENTIFIER_INPUT = "Enter or scan a different code.",
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
@@ -59,79 +59,6 @@ const defaultAlertProps: AlertModalProps = {
   onExit: () => {}
 };
 
-const defaultWarningProps: AlertModalProps = {
-  alertType: "WARN",
-  title: "",
-  buttonTexts: {
-    primaryActionText: "Back",
-    secondaryActionText: "Confirm"
-  },
-  visible: false,
-  onOk: () => {},
-  onCancel: () => {},
-  onExit: () => {}
-};
-
-const defaultConfirmationProps: AlertModalProps = {
-  alertType: "CONFIRM",
-  title: "",
-  buttonTexts: {
-    primaryActionText: "Back",
-    secondaryActionText: "Confirm"
-  },
-  visible: false,
-  onOk: () => {},
-  onCancel: () => {},
-  onExit: () => {}
-};
-
-const incompleteEntryAlertProps: AlertModalProps = {
-  ...defaultAlertProps,
-  title: "Incomplete entry",
-  visible: true
-};
-
-// TODO: Remove this in AuthNotFoundError and OTPWrongError
-const invalidInputAlertProps: AlertModalProps = {
-  ...defaultAlertProps,
-  title: "Invalid input",
-  visible: true
-};
-
-// TODO: Remove this in AuthInvalidError
-const wrongFormatAlertProps: AlertModalProps = {
-  ...defaultAlertProps,
-  title: "Wrong format",
-  visible: true
-};
-
-const duplicateAlertProps: AlertModalProps = {
-  ...defaultAlertProps,
-  title: "Already used",
-  visible: true
-};
-
-// TODO: Remove this in LoginError and QuotaError
-const systemAlertProps: AlertModalProps = {
-  ...defaultAlertProps,
-  title: "System error",
-  visible: true
-};
-
-// TODO: Remove this in LoginLockedError
-const disabledAccessAlertProps: AlertModalProps = {
-  ...defaultAlertProps,
-  title: "Disabled access",
-  visible: true
-};
-
-// TODO: Remove this in AuthExpiredError and OTPExpiredError
-const expiredAlertProps: AlertModalProps = {
-  ...defaultAlertProps,
-  title: "Expired",
-  visible: true
-};
-
 interface AlertModalContext {
   showConfirmationAlert: (props: {
     title: string;
@@ -143,7 +70,7 @@ interface AlertModalContext {
   showErrorAlert: (props: {
     title: string;
     description?: string;
-    onOk: () => void;
+    onOk?: () => void;
   }) => void;
   showWarnAlert: (props: {
     title: string;
@@ -172,6 +99,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     []
   );
 
+  // TODO: To check that all calls use translated copies
   const showConfirmationAlert = (props: {
     title: string;
     description?: string;
@@ -191,10 +119,11 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     });
   };
 
+  // TODO: To check that all calls use translated copies
   const showErrorAlert = (props: {
     title: string;
     description?: string;
-    onOk: () => void;
+    onOk?: () => void;
   }): void => {
     showAlert({
       alertType: "ERROR",
@@ -204,12 +133,13 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
         primaryActionText: "OK"
       },
       visible: true,
-      onOk: props.onOk,
+      onOk: !!props.onOk ? props.onOk : () => {},
       onCancel: () => {},
       onExit: () => {}
     });
   };
 
+  // TODO: To check that all calls use translated copies
   const showWarnAlert = (props: {
     title: string;
     buttonTexts: { primaryActionText: string; secondaryActionText: string };

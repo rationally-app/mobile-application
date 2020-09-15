@@ -171,8 +171,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
       if (error instanceof QuotaError) {
         showErrorAlert({
-          title: "System error",
-          description: ERROR_MESSAGE.QUOTA_ERROR as string,
+          ...error.alertProps,
           onOk: () => clearError()
         });
         return;

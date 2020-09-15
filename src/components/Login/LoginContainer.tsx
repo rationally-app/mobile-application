@@ -157,7 +157,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
-        // TODO: Potentially remove e.alertProps
         showErrorAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else {
         setState(() => {
@@ -188,9 +187,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
           showErrorAlert({
-            title: "",
-            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
-            onOk: () => {}
+            title: "System error",
+            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
           });
           setLoginStage("SCAN");
         } else {
@@ -252,7 +250,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
         if (e instanceof AuthError) {
-          // TODO: Potentially remove e.alertProps
           showErrorAlert(e.alertProps);
         } else {
           setState(() => {
