@@ -19,8 +19,7 @@ export enum ERROR_MESSAGE {
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.", //not covered
   INVALID_IDENTIFIER_INPUT = "Enter or scan valid code details.", //not covered
   MISSING_IDENTIFIER_INPUT = "Enter or scan code details.", //not covered
-  INVALID_VOUCHER_INPUT = "Enter valid voucher code details.", //not covered
-  MISSING_VOUCHER_INPUT = "Enter voucher code details.", //not covered
+  MISSING_VOUCHER_INPUT = "Enter voucher code details.", //incompleteEntryVoucherCode
   INVALID_POD_INPUT = "Scan valid device code.", //not covered
   MISSING_POD_INPUT = "Scan device code.", //not covered
   INVALID_PHONE_NUMBER = "Enter valid contact number.", //not covered

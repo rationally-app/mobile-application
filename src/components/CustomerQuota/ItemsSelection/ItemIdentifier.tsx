@@ -7,6 +7,7 @@ import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
 import { AlertModalContext, systemAlertProps } from "../../../context/alert";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -78,13 +79,20 @@ export const ItemIdentifier: FunctionComponent<{
             disabled={scanButton.disabled}
             fullWidth={!textInput.visible}
             onPress={() => setShouldShowCamera(true)}
-            text={scanButton.text || "Scan"}
+            text={
+              scanButton.text ||
+              i18n.t("customerQuotaScreen.quotaIdentifierButtonScan")
+            }
           />
         )}
       </View>
       {shouldShowCamera && (
         <IdentifierScanModal
-          cancelButtonText={textInput.disabled ? "Back" : "Enter manually"}
+          cancelButtonText={
+            textInput.disabled
+              ? i18n.t("customerQuotaScreen.quotaScanButtonBack")
+              : i18n.t("customerQuotaScreen.enterManually")
+          }
           setShouldShowCamera={setShouldShowCamera}
           shouldShowCamera={shouldShowCamera}
           onScanInput={onScanInput}

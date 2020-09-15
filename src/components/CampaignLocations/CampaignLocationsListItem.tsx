@@ -4,6 +4,7 @@ import { AuthCredentials } from "../../types";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { fontSize, color, size } from "../../common/styles";
 import { format } from "date-fns";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   content: {
@@ -55,14 +56,13 @@ export const CampaignLocationsListItem: FunctionComponent<
             ID: {operatorId}
           </AppText>
         ) : null}
-        <AppText
-          style={[
-            styles.expiry,
-            hasExpired ? { color: color("grey", 40) } : {}
-          ]}
-        >
-          {hasExpired ? "Expired on " : "Valid till "}
-          {formattedExpiry}
+        <AppText style={[styles.expiry, { color: color("grey", 40) }]}>
+          {i18n.t("customerQuotaScreen.campaignExpiredOn", {
+            dateTime: formattedExpiry
+          })}
+          {/* : i18n.t("customerQuotaScreen.campaignValidTo", {
+                dateTime: formattedExpiry
+              })} */}
         </AppText>
       </View>
     </TouchableOpacity>

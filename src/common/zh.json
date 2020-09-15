@@ -25,7 +25,8 @@
         "enterIdManually": "输入证件号码"
     },
     "idScanner": {
-        "enterIdManually": "输入证件号码"
+        "enterIdManually": "输入证件号码",
+        "enterManually": "输入证件号码"
     },
     "navigationDrawer": {
         "logout": "登出",
@@ -39,7 +40,7 @@
         "valid": "有效期至 %{yyyy年MM月d日 H时:mm分}"
     },
     "customerQuotaScreen": {
-        "campaignExpiredOn": "在 %{yyyy年MM月d日 H时:mm分} 已到期",
+        "campaignExpiredOn": "在 %{dateTime} 已到期",
         "campaignValidTo": "有效期至 %{yyyy年MM月d日 H时:mm分}",
         "quotaRedeemedLimitReachedIDNumber": "证件号码",
         "quotaCategoryMealCredits": "餐食积点",

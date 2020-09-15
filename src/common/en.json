@@ -24,7 +24,8 @@
     "check": "Check"
   },
   "idScanner": {
-    "enterIdManually": "Enter ID manually"
+    "enterIdManually": "Enter ID manually",
+    "enterManually": "Enter manually"
   },
   "navigationDrawer": {
     "logout": "Logout",
@@ -36,8 +37,8 @@
     "reportVulnerability": "Report Vulnerability"
   },
   "customerQuotaScreen": {
-    "campaignExpiredOn": "Expired on %{d MMM yyyy, h:mma}",
-    "campaignValidTo": "Valid till %{d MMM yyyy, h:mma}",
+    "campaignExpiredOn": "Expired on %{dateTime}",
+    "campaignValidTo": "Valid till %{dateTime}",
     "quotaRedeemedLimitReachedIDNumber": "Identification number",
     "quotaCategoryMealCredits": "Meal Credit(s)",
     "quotaLimitMax": "Max",
@@ -48,10 +49,12 @@
     "quotaCategoryBread": "Bread",
     "quotaCategoryEggs": "Eggs",
     "quotaCategoryFruits": "Fruits",
-    "quotaCategoryRootVegetables": "Root Vegetables",
-    "quotaCategoryFreshVegetables": "Fresh Vegetables",
-    "quotaCategoryChicken": "Chicken (Fresh/frozen/processed)",
-    "quotaCategoryCannedFood": "Canned Food (Meat/seafood/vegetables)",
+    "quotaCategory🥦 Vegetables": "🥦 Vegetables",
+    "quotaCategoryFresh vegetables": "Fresh Vegetables",
+    "quotaCategory🐔 Chicken": "🐔 Chicken (Fresh/frozen/processed)",
+    "quotaCategoryFresh / frozen / processed": "(Fresh/frozen/processed)",
+    "quotaCategory🥫 Canned food": "🥫 Canned Food (Meat/seafood/vegetables)",
+    "quotaCategory🥫 Canned food description": "🥫 Canned Food (Meat/seafood/vegetables)",
     "quotaCategoryPaperProducts": "Paper Products",
     "quotaCategoryInstantNoodles": "Instant Noodles",
     "quotaCategoryRice": "Rice",
@@ -126,7 +129,7 @@
     },
     "incompleteEntryVoucherCode": {
       "title": "Incomplete entry",
-      "body": "Enter voucher code.",
+      "body": "Enter voucher code details.",
       "primaryActionText": "OK"
     },
     "incompleteEntryDeviceCode": {

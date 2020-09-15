@@ -10,6 +10,7 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   header: {
@@ -98,7 +99,8 @@ export const CustomerCard: FunctionComponent<{
       <Feather name="user" size={size(3)} color={color("grey", 0)} />
       <View style={styles.headerText}>
         <AppText style={styles.idLabel}>
-          Identification number{ids.length > 1 ? "s" : ""}
+          {i18n.t("customerQuotaScreen.quotaRedeemedLimitReachedIDNumber")}
+          {ids.length > 1 ? "s" : ""}
         </AppText>
         {ids.map(id => (
           <AppText key={id} style={styles.idText}>
