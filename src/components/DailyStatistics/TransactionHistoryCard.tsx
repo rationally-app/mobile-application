@@ -19,12 +19,8 @@ const styles = StyleSheet.create({
     fontSize: fontSize(1),
     marginBottom: size(3)
   },
-  qtyText: {
-    fontFamily: "brand-bold",
-    fontSize: fontSize(1),
-    marginBottom: size(3)
-  },
   quantity: {
+    fontFamily: "brand-bold",
     fontSize: fontSize(1),
     marginBottom: size(3)
   },
@@ -53,9 +49,8 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
             <AppText style={styles.categoryName}>{item.name}</AppText>
             <View style={styles.transactionText}>
               <AppText style={styles.quantity}>
-                {item.quantity.toLocaleString()}
+                {item.quantity.toLocaleString()} qty
               </AppText>
-              <AppText style={styles.qtyText}>qty</AppText>
             </View>
           </View>
         ))
