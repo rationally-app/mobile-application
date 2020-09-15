@@ -35,7 +35,7 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
+import { AlertModalContext } from "../../context/alert";
 import i18n from "i18n-js";
 
 const styles = StyleSheet.create({

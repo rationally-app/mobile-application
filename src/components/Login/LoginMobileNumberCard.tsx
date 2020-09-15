@@ -17,11 +17,7 @@ import {
   countryCodeValidator,
   mobileNumberValidator
 } from "../../utils/validatePhoneNumbers";
-import {
-  AlertModalContext,
-  wrongFormatAlertProps,
-  ERROR_MESSAGE
-} from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
 import i18n from "i18n-js";
 
@@ -52,7 +48,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const [mobileNumberValue, setMobileNumberValue] = useState(
     config.fullMobileNumber?.mobileNumber ?? ""
   );
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
 
   const onChangeCountryCode = (value: string): void => {
     if (value.length <= 4) {
@@ -78,14 +74,16 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   const onSubmitMobileNumber = (): void => {
     if (!countryCodeValidator(countryCode)) {
-      showAlert({
-        ...wrongFormatAlertProps,
-        description: ERROR_MESSAGE.INVALID_COUNTRY_CODE
+      showErrorAlert({
+        title: "",
+        description: ERROR_MESSAGE.INVALID_COUNTRY_CODE,
+        onOk: () => {}
       });
     } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
-      showAlert({
-        ...wrongFormatAlertProps,
-        description: ERROR_MESSAGE.INVALID_PHONE_NUMBER
+      showErrorAlert({
+        title: "",
+        description: ERROR_MESSAGE.INVALID_PHONE_NUMBER,
+        onOk: () => {}
       });
     } else {
       onRequestOTP();

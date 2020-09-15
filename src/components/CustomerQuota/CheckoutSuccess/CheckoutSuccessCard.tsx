@@ -27,7 +27,7 @@ import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import i18n from "i18n-js";
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
-import { AlertModalContext, systemAlertProps } from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -147,15 +147,16 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
 
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
     if (error) {
-      showAlert({
-        ...systemAlertProps,
-        description: error.message || ""
+      showErrorAlert({
+        title: "",
+        description: error.message || "",
+        onOk: () => {}
       });
     }
-  }, [error, showAlert]);
+  }, [error, showErrorAlert]);
 
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,

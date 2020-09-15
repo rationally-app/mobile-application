@@ -12,10 +12,9 @@ import { Item } from "./Item";
 import { ProductContext } from "../../../context/products";
 import {
   AlertModalContext,
-  defaultWarningProps,
-  wrongFormatAlertProps,
   ERROR_MESSAGE,
-  WARNING_MESSAGE} from "../../../context/alert";
+  WARNING_MESSAGE
+} from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import i18n from "i18n-js";
@@ -44,7 +43,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { features } = useContext(CampaignConfigContext);
   const { products } = useContext(ProductContext);
-  const { showAlert, showConfirmationAlert, showErrorAlert } = useContext(
+  const { showWarnAlert, showConfirmationAlert, showErrorAlert } = useContext(
     AlertModalContext
   );
 
@@ -72,8 +71,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           onOk: () => setIsAddUserModalVisible(true)
         });
       } else {
-        showAlert({
-          ...wrongFormatAlertProps,
+        showErrorAlert({
+          title: "",
           description: e.message,
           onOk: () => setIsAddUserModalVisible(true)
         });
@@ -120,14 +119,12 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               isAppeal
                 ? onBack
                 : () => {
-                    showAlert({
-                      ...defaultWarningProps,
+                    showWarnAlert({
                       title: "Cancel entry and scan another ID number?",
                       buttonTexts: {
                         primaryActionText: "Cancel entry",
                         secondaryActionText: "Keep"
                       },
-                      visible: true,
                       onOk: onCancel
                     });
                   }

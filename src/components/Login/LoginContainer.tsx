@@ -37,12 +37,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
 import { requestOTP, LoginError, AuthError } from "../../services/auth";
-import {
-  AlertModalContext,
-  systemAlertProps,
-  ERROR_MESSAGE,
-  defaultConfirmationProps
-} from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
@@ -112,7 +107,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   >();
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showConfirmationAlert, showErrorAlert } = useContext(
+    AlertModalContext
+  );
   const lastResendWarningMessageRef = useRef("");
 
   useEffect(() => {
@@ -131,8 +128,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       if (!lastResendWarningMessageRef.current) {
         resolve(true);
       } else {
-        showAlert({
-          ...defaultConfirmationProps,
+        showConfirmationAlert({
           title: "Resend OTP?",
           description: lastResendWarningMessageRef.current,
           buttonTexts: {
@@ -140,8 +136,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             secondaryActionText: "No"
           },
           onOk: () => resolve(true),
-          onCancel: () => resolve(false),
-          visible: true
+          onCancel: () => resolve(false)
         });
       }
     });
@@ -162,7 +157,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
+        // TODO: Potentially remove e.alertProps
+        showErrorAlert({ ...e.alertProps, onOk: () => resetStage() });
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -191,9 +187,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
-          showAlert({
-            ...systemAlertProps,
-            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+          showErrorAlert({
+            title: "",
+            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
+            onOk: () => {}
           });
           setLoginStage("SCAN");
         } else {
@@ -206,7 +203,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       }
     };
     skipScanningIfParamsInDeepLink();
-  }, [showAlert]);
+  }, [showErrorAlert]);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
@@ -255,7 +252,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
         if (e instanceof AuthError) {
-          showAlert(e.alertProps);
+          // TODO: Potentially remove e.alertProps
+          showErrorAlert(e.alertProps);
         } else {
           setState(() => {
             throw error; // Let ErrorBoundary handle

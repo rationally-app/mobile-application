@@ -6,7 +6,7 @@ import { IdentifierPhoneNumberInput } from "./IdentifierLayout/IdentifierPhoneNu
 import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
-import { AlertModalContext, systemAlertProps } from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
 import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
@@ -32,7 +32,7 @@ export const ItemIdentifier: FunctionComponent<{
 }> = ({ index, identifier, updateIdentifierValue }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
 
   const { label, textInput, scanButton } = identifier;
 
@@ -43,9 +43,10 @@ export const ItemIdentifier: FunctionComponent<{
       setShouldShowCamera(false);
     } catch (e) {
       setShouldShowCamera(false);
-      showAlert({
-        ...systemAlertProps,
-        description: e.message || e
+      showErrorAlert({
+        title: "",
+        description: e.message || e,
+        onOk: () => {}
       });
     }
   };
