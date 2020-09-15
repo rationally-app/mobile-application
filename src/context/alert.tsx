@@ -10,6 +10,7 @@ import {
   AlertModalProps
 } from "../components/AlertModal/AlertModal";
 
+// TODO: Where should we put this as well?
 export enum WARNING_MESSAGE {
   PAYMENT_COLLECTION = "This action cannot be undone. Proceed only when payment has been collected."
 }
@@ -72,7 +73,6 @@ const defaultWarningProps: AlertModalProps = {
 };
 
 const defaultConfirmationProps: AlertModalProps = {
-  // todo:
   alertType: "CONFIRM",
   title: "",
   buttonTexts: {
@@ -91,12 +91,14 @@ const incompleteEntryAlertProps: AlertModalProps = {
   visible: true
 };
 
+// TODO: Remove this in AuthNotFoundError and OTPWrongError
 const invalidInputAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Invalid input",
   visible: true
 };
 
+// TODO: Remove this in AuthInvalidError
 const wrongFormatAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Wrong format",
@@ -109,18 +111,21 @@ const duplicateAlertProps: AlertModalProps = {
   visible: true
 };
 
+// TODO: Remove this in LoginError and QuotaError
 const systemAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "System error",
   visible: true
 };
 
+// TODO: Remove this in LoginLockedError
 const disabledAccessAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Disabled access",
   visible: true
 };
 
+// TODO: Remove this in AuthExpiredError and OTPExpiredError
 const expiredAlertProps: AlertModalProps = {
   ...defaultAlertProps,
   title: "Expired",
@@ -133,6 +138,7 @@ interface AlertModalContext {
     description?: string;
     buttonTexts: { primaryActionText: string; secondaryActionText: string };
     onOk: () => void;
+    onCancel?: () => void;
   }) => void;
   showErrorAlert: (props: {
     title: string;
@@ -171,6 +177,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     description?: string;
     buttonTexts: { primaryActionText: string; secondaryActionText: string };
     onOk: () => void;
+    onCancel?: () => void;
   }): void => {
     showAlert({
       alertType: "CONFIRM",
@@ -179,7 +186,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
       buttonTexts: props.buttonTexts,
       visible: true,
       onOk: props.onOk,
-      onCancel: () => {},
+      ...(!!props.onCancel ? { onCancel: props.onCancel } : {}),
       onExit: () => {}
     });
   };

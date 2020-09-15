@@ -30,7 +30,7 @@ import {
 import { AppealButton } from "./AppealButton";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
-import { AlertModalContext, systemAlertProps } from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
@@ -187,15 +187,16 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
 
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
     if (error) {
-      showAlert({
-        ...systemAlertProps,
-        description: error.message || ""
+      showErrorAlert({
+        title: "",
+        description: error.message || "",
+        onOk: () => {}
       });
     }
-  }, [error, showAlert]);
+  }, [error, showErrorAlert]);
 
   const latestTransactionTime: Date | undefined =
     (quotaResponse && getLatestTransactionTime(cart)) ?? undefined;

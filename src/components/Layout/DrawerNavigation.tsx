@@ -11,10 +11,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
-import {
-  AlertModalContext,
-  defaultConfirmationProps
-} from "../../context/alert";
+import { AlertModalContext } from "../../context/alert";
 
 const styles = StyleSheet.create({
   container: {
@@ -90,7 +87,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   navigation
 }) => {
   const { logout } = useLogout();
-  const { showAlert } = useContext(AlertModalContext);
+  const { showConfirmationAlert } = useContext(AlertModalContext);
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
   const handleLogout = useCallback((): void => {
@@ -98,14 +95,12 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   }, [logout, navigation.dispatch]);
 
   const onPressLogout = (): void => {
-    showAlert({
-      ...defaultConfirmationProps,
+    showConfirmationAlert({
       title: "Confirm logout?",
       buttonTexts: {
         primaryActionText: "Logout",
         secondaryActionText: "Cancel"
       },
-      visible: true,
       onOk: handleLogout
     });
   };
