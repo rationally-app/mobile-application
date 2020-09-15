@@ -133,7 +133,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
         scrollViewContentContainerStyle={{
           flexGrow: 1,
           alignItems: "center",
-          paddingBottom: size(8)
+          paddingBottom: size(2)
         }}
       >
         <TopBackground
