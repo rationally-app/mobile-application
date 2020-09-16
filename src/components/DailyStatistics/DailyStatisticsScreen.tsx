@@ -116,7 +116,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
   useEffect(() => {
     // When entering the first time
     if (totalCount === null) {
-      fetchDailyStatistics(currentTimestamp);
+      fetchDailyStatistics(Date.now());
     }
   });
   useEffect(() => {

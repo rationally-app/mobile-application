@@ -11,7 +11,7 @@ interface StatisticsContext {
   currentTimestamp: number;
   lastTransactionTime: number | null;
   transactionHistory: { name: string; category: string; quantity: number }[];
-  setTotalCount: (totalCount: number) => void;
+  setTotalCount: (totalCount: number | null) => void;
   setCurrentTimestamp: (currentTimestamp: number) => void;
   setLastTransactionTime: (lastTransactionTime: number) => void;
   setTransactionHistory: (

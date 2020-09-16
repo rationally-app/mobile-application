@@ -108,7 +108,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { showAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
   const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
-  const { setCurrentTimestamp } = useContext(StatisticsContext);
+  const { clearStatistics } = useContext(StatisticsContext);
 
   useEffect(() => {
     if (isFocused) {
@@ -184,7 +184,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const onPressStatistics = (): void => {
-    setCurrentTimestamp(Date.now());
+    clearStatistics();
     navigation.navigate("StatisticsStack", {
       operatorToken: operatorToken,
       endpoint: endpoint,
