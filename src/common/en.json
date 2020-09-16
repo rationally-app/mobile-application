@@ -2,7 +2,8 @@
   "loginScanCard": {
     "loginWithQR": "Please log in with your unique QR code provided by your supervisor",
     "scanToLogin": "Scan to login",
-    "needHelp": "Need help?"
+    "needHelp": "Need help?",
+    "askQuestion": "Ask a question"
   },
   "loginMobileNumberCard": {
     "enterMobileNumber": "Please enter your mobile phone number to receive a one-time password.",
@@ -30,6 +31,7 @@
   "navigationDrawer": {
     "logout": "Logout",
     "addCampaign": "Add Campaign",
+    "selectCampaign": "Select campaign",
     "changeChampaign": "Change Campaign",
     "helpSupport": "Help & Support",
     "termsOfUse": "Terms of use",
@@ -39,22 +41,21 @@
   "customerQuotaScreen": {
     "campaignExpiredOn": "Expired on %{dateTime}",
     "campaignValidTo": "Valid till %{dateTime}",
-    "quotaRedeemedLimitReachedIDNumber": "Identification number",
+    "quotaRedeemedLimitReachedIDNumber": "Identification number(s)",
     "quotaCategoryMealCredits": "Meal Credit(s)",
     "quotaLimitMax": "Max",
     "quotaAppealCancel": "Cancel",
     "quotaButtonCheckout": "Checkout",
-    "quotaButtonAdd": "Add",
+    "quotaButtonAdd": "+ Add",
+    "quotaAddId": "Add another ID to combine customer quotas",
     "quotaCategoryCommunityFoodPack": "Community Food Pack",
     "quotaCategoryBread": "Bread",
     "quotaCategoryEggs": "Eggs",
     "quotaCategoryFruits": "Fruits",
-    "quotaCategory🥦 Vegetables": "🥦 Vegetables",
-    "quotaCategoryFresh vegetables": "Fresh Vegetables",
-    "quotaCategory🐔 Chicken": "🐔 Chicken (Fresh/frozen/processed)",
-    "quotaCategoryFresh / frozen / processed": "(Fresh/frozen/processed)",
-    "quotaCategory🥫 Canned food": "🥫 Canned Food (Meat/seafood/vegetables)",
-    "quotaCategory🥫 Canned food description": "🥫 Canned Food (Meat/seafood/vegetables)",
+    "quotaCategoryRootVegetables": "Vegetables",
+    "quotaCategoryFreshVegetables": "Fresh Vegetables",
+    "quotaCategoryChicken": "Chicken (Fresh/frozen/processed)",
+    "quotaCategoryCannedFood": "Canned Food (Meat/seafood/vegetables)",
     "quotaCategoryPaperProducts": "Paper Products",
     "quotaCategoryInstantNoodles": "Instant Noodles",
     "quotaCategoryRice": "Rice",
@@ -69,18 +70,25 @@
     "quotaScanButtonBack": "Back"
   },
   "checkoutSuccessScreen": {
-    "redeemed": "Redeemed",
-    "redeemedLimitReachedItemsRedeemed": "Item(s) redeemed:",
-    "redeemedLimitReachedNextIdentity": "Next identity",
-    "redeemedLimitReachedShowMore": "Show more",
-    "redeemedLimitReachedShowLess": "Show less",
-    "limitReachedRecent": "Limit reached %{m} minute(s) ago.",
-    "limitReached": "Limit reached on %{d MM yyyy, hh:mma}",
-    "redeemedLimitReached": "%{amount} item(s) more till %{date}"
+    "redeemed": "Redeemed!",
+    "redeemedItems": "Item(s) redeemed:",
+    "redeemedNextIdentity": "Next identity",
+    "purchased": "Purchased!",
+    "purchasedItems": "The following have been purchased:",
+    "purchasedNextIdentity": "Next customer",
+    "previouslyRedeemedItems": "Item(s) redeemed previously:",
+    "previouslyPurchasedItems": "Item(s) purchased previously:",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "today": " for today.",
+    "limitReachedRecent": "Limit reached %{time} ago.",
+    "limitReachedDate": "Limit reached on %{dateTime}",
+    "limitReached": "Limit reached",
+    "redeemedLimitReached": "%{quantity} item(s) more till %{date}."
   },
   "customerAppealScreen": {
     "raiseAppeal": "Raise an appeal",
-    "indicateReason": "Indicate reason for app",
+    "indicateReason": "Indicate reason for appeal",
     "lostStolen": "Lost/stolen token",
     "deadBattery": "Dead battery",
     "damagedToken": "Damaged token",
@@ -89,8 +97,8 @@
   },
   "statisticsScreen": {
     "distributedAmount": "You have distributed %{amount}",
-    "lastDistributedTiming": "Last distributed at %{d MMM yyyy, h:mma}",
-    "viaAppeal": "Via appeal"
+    "lastDistributedTiming": "Last distributed at %{dateTime}",
+    "viaAppeal": "via appeal"
   },
   "notEligibleScreen": {
     "notEligible": "Not eligible",
@@ -221,7 +229,7 @@
     },
     "outdatedAppUpdate": {
       "title": "Outdated app",
-      "body": "Update your app through [Play Store/App Store].",
+      "body": "Update your app through the %{storeName}.",
       "primaryActionText": "Update app"
     },
     "systemError": {
@@ -262,6 +270,69 @@
     "wrongFormatQRGetNew": {
       "title": "Wrong format",
       "body": "Get a new QR code from your in-charge.",
+      "primaryActionText": "OK"
+    },
+    "alreadyUsedCode": {
+      "title": "Already Used",
+      "body": "Enter unique code details",
+      "primaryActionText": "OK"
+    },
+    "alreadyUsedItem": {
+      "title": "Already Used",
+      "body": "Scan another item that is not tagged to any ID number",
+      "primaryActionText": "OK"
+    },
+    "wrongFormatCode": {
+      "title": "Wrong format",
+      "body": "Enter or scan valid code details",
+      "primaryActionText": "OK"
+    },
+    "incompleteEntryCode": {
+      "title": "Incomplete entry",
+      "body": "Enter or scan code details",
+      "primaryActionText": "OK"
+    },
+    "wrongFormatNotValidDeviceCode": {
+      "title": "Wrong format",
+      "body": "Scan valid device code",
+      "primaryActionText": "OK"
+    },
+    "incompleteEntryScanDeviceCode": {
+      "title": "Incomplete entry",
+      "body": "Scan device code",
+      "primaryActionText": "OK"
+    },
+    "wrongFormatContactNumber": {
+      "title": "Wrong format",
+      "body": "Enter valid contact number",
+      "primaryActionText": "OK"
+    },
+    "insufficientQuota": {
+      "body": "Insufficient quota"
+    },
+    "invalidQuantity": {
+      "body": "Invalid quantity"
+    },
+    "categoryDoesNotExist": {
+      "body": "Category does not exist"
+    },
+    "systemErrorServerIssues": {
+      "title": "System error",
+      "body": "We are currently facing server issues. Try again later or contact your in-charge if the problem persists",
+      "primaryActionText": "OK"
+    },
+    "discardTransaction": {
+      "title": "Discard transaction?",
+      "body": "This will clear all scanned items",
+      "primaryActionText": "Cancel",
+      "secondaryActionText": "Discard"
+    },
+    "errorScanning": {
+      "title": "Error scanning",
+      "primaryActionText": "Continue Scanning"
+    },
+    "scanLimitReached": {
+      "title": "Scan limit reached",
       "primaryActionText": "OK"
     }
   }

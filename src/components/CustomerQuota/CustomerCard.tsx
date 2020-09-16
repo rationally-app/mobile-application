@@ -100,7 +100,6 @@ export const CustomerCard: FunctionComponent<{
       <View style={styles.headerText}>
         <AppText style={styles.idLabel}>
           {i18n.t("customerQuotaScreen.quotaRedeemedLimitReachedIDNumber")}
-          {ids.length > 1 ? "s" : ""}
         </AppText>
         {ids.map(id => (
           <AppText key={id} style={styles.idText}>
@@ -108,7 +107,12 @@ export const CustomerCard: FunctionComponent<{
           </AppText>
         ))}
       </View>
-      {onAddId && <AddButton onPress={onAddId} text="+ Add"></AddButton>}
+      {onAddId && (
+        <AddButton
+          onPress={onAddId}
+          text={i18n.t("customerQuotaScreen.quotaButtonAdd")}
+        ></AddButton>
+      )}
     </View>
     <View style={styles.childrenWrapper}>{children}</View>
   </Card>

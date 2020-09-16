@@ -1,3 +1,5 @@
+import i18n from "i18n-js";
+
 interface CheckoutMessage {
   title: string;
   description: string;
@@ -8,16 +10,20 @@ export const getCheckoutMessages = (productType?: string): CheckoutMessage => {
   switch (productType) {
     case "REDEEM":
       return {
-        title: "Redeemed!",
-        description: "Item(s) redeemed:",
-        ctaButtonText: "Next identity"
+        title: i18n.t("checkoutSuccessScreen.redeemed"),
+        description: i18n.t(
+          "checkoutSuccessScreen.redeemedLimitReachedItemsRedeemed"
+        ),
+        ctaButtonText: i18n.t(
+          "checkoutSuccessScreen.redeemedLimitReachedNextIdentity"
+        )
       };
     case "PURCHASE":
     default:
       return {
-        title: "Purchased!",
-        description: "The following have been purchased:",
-        ctaButtonText: "Next customer"
+        title: i18n.t("checkoutSuccessScreen.purchased"),
+        description: i18n.t("checkoutSuccessScreen.purchasedItems"),
+        ctaButtonText: i18n.t("checkoutSuccessScreen.purchasedNextIdentity")
       };
   }
 };

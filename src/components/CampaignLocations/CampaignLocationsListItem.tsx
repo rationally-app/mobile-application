@@ -57,12 +57,13 @@ export const CampaignLocationsListItem: FunctionComponent<
           </AppText>
         ) : null}
         <AppText style={[styles.expiry, { color: color("grey", 40) }]}>
-          {i18n.t("customerQuotaScreen.campaignExpiredOn", {
-            dateTime: formattedExpiry
-          })}
-          {/* : i18n.t("customerQuotaScreen.campaignValidTo", {
+          {hasExpired
+            ? i18n.t("customerQuotaScreen.campaignExpiredOn", {
                 dateTime: formattedExpiry
-              })} */}
+              })
+            : i18n.t("customerQuotaScreen.campaignValidTo", {
+                dateTime: formattedExpiry
+              })}
         </AppText>
       </View>
     </TouchableOpacity>

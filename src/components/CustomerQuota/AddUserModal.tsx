@@ -139,7 +139,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             <Card style={styles.card}>
               <View style={styles.cardHeader}>
                 <AppText style={{ flex: 1 }}>
-                  Add another ID to combine customer quotas
+                  {i18n.t("customerQuotaScreen.quotaAddId")}
                 </AppText>
                 <View style={{ marginLeft: size(1) }}>
                   <CloseButton onPress={() => setIsVisible(false)} />

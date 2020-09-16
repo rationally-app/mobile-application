@@ -147,7 +147,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
           {hasLoadedAuthFromStore && hasLoadedCampaignConfigFromStore ? (
             <Card>
               <AppText style={styles.selectCampaignHeader}>
-                Select campaign
+                {i18n.t("navigationDrawer.selectCampaign")}
               </AppText>
               {Object.entries(authCredentials).map(
                 ([key, credentials], idx) => (

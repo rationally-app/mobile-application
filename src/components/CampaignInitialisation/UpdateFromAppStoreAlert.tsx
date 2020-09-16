@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { Platform, Linking } from "react-native";
 import { AlertModal } from "../AlertModal/AlertModal";
+import i18n from "i18n-js";
 
 export const UpdateFromAppStoreAlert: FunctionComponent = () => {
   let storeName: string;
@@ -23,10 +24,16 @@ export const UpdateFromAppStoreAlert: FunctionComponent = () => {
   return (
     <AlertModal
       alertType="INFO"
-      title="Outdated app"
-      description={`Update your app through the ${storeName}.`}
+      title={i18n.t("errorMessages.outdatedAppUpdate.title")}
+      description={i18n.t("errorMessages.outdatedAppUpdate.body", {
+        storeName: storeName
+      })}
       visible={true}
-      buttonTexts={{ primaryActionText: "Update app" }}
+      buttonTexts={{
+        primaryActionText: i18n.t(
+          "errorMessages.outdatedAppUpdate.primaryActionText"
+        )
+      }}
       onOk={() => Linking.openURL(storeLink)}
     />
   );

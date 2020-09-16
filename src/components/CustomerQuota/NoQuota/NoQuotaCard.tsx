@@ -34,6 +34,7 @@ import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
+import i18n from "i18n-js";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -260,8 +261,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
             {transactionsByCategoryList.length > 0 && (
               <View>
                 <AppText style={styles.wrapper}>
-                  Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
-                  previously:
+                  {policyType === "REDEEM"
+                    ? i18n.t("checkoutSuccessScreen.previouslyRedeemedItems")
+                    : i18n.t("checkoutSuccessScreen.previouslyPurchasedItems")}
                 </AppText>
                 {transactionsByCategoryList.map(
                   (
@@ -292,7 +294,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
+        <DarkButton
+          text={i18n.t("checkoutSuccessScreen.redeemedNextIdentity")}
+          onPress={onCancel}
+          fullWidth={true}
+        />
       </View>
       {onAppeal && hasAppealProduct ? (
         <AppealButton onAppeal={onAppeal} />

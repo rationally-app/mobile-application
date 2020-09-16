@@ -2,7 +2,8 @@
     "loginScanCard": {
         "loginWithQR": "请使用您专属的QR码登录",
         "scanToLogin": "扫描QR码",
-        "needHelp": "需要协助？"
+        "needHelp": "需要协助？",
+        "askQuestion": "问问题"
     },
     "loginMobileNumberCard": {
         "enterMobileNumber": "请输入您的手机号码，获取一次性密码",
@@ -26,11 +27,12 @@
     },
     "idScanner": {
         "enterIdManually": "输入证件号码",
-        "enterManually": "输入证件号码"
+        "enterManually": "自己输入"
     },
     "navigationDrawer": {
         "logout": "登出",
         "addCampaign": "添加活动",
+        "selectCampaign": "选活动",
         "changeChampaign": "更改活动",
         "helpSupport": "支援服务",
         "termsOfUse": "使用条款",
@@ -48,6 +50,7 @@
         "quotaAppealCancel": "取消",
         "quotaButtonCheckout": "确认交易",
         "quotaButtonAdd": "添加",
+        "quotaAddId": "输入另一个证件号码已增加限额",
         "quotaCategoryCommunityFoodPack": "社区粮食礼包",
         "quotaCategoryBread": "面包",
         "quotaCategoryEggs": "鸡蛋",
@@ -70,14 +73,21 @@
         "quotaScanButtonBack": "返回"
     },
     "checkoutSuccessScreen": {
-        "redeemed": "已领取",
-        "redeemedLimitReachedItemsRedeemed": "已领取物品：",
-        "redeemedLimitReachedNextIdentity": "下一个证件",
-        "redeemedLimitReachedShowMore": "显示更多内容",
-        "redeemedLimitReachedShowLess": "隐藏内容",
-        "limitReachedRecent": "mm分钟前达到领取限额",
-        "limitReached": "在 %{yyyy年MM月d日 H时:mm分} 达到领取限额",
-        "redeemedLimitReached": "到 %{yyyy年MM月d日} 为止还有%{amount}件物品"
+        "redeemed": "已领取!",
+        "redeemedItems": "已领取物品：",
+        "redeemedNextIdentity": "下一个证件",
+        "purchased": "已购买!",
+        "purchasedItems": "已购买物品：",
+        "purchasedNextIdentity": "下一个证件",
+        "previouslyRedeemedItems": "已领取物品：",
+        "previouslyPurchasedItems": "已购买物品：",
+        "showMore": "显示更多内容",
+        "showLess": "隐藏内容",
+        "today": " 今天。",
+        "limitReachedRecent": "%{time} 前达到领取限额",
+        "limitReachedDate": "在 %{dateTime} 达到领取限额",
+        "limitReached": "达到领取限额",
+        "redeemedLimitReached": "到 %{date} 为止还有%{quantity}件物品"
     },
     "customerAppealScreen": {
         "raiseAppeal": "提出上诉",
@@ -90,7 +100,7 @@
     },
     "statisticsScreen": {
         "distributedAmount": "您已分发%{amount}",
-        "lastDistributedTiming": "最后在 %{yyyy年MM月d日 H时:mm分} 分发",
+        "lastDistributedTiming": "最后在 %{dateTime} 分发",
         "viaAppeal": "通过上诉"
     },
     "notEligibleScreen": {
@@ -265,6 +275,69 @@
         "wrongFormatQRGetNew": {
             "title": "格式错误",
             "body": "请向您的负责人索取新QR码。",
+            "primaryActionText": "确定"
+        },
+        "alreadyUsedCode": {
+            "title": "已使用",
+            "body": "请输入独特的编号。",
+            "primaryActionText": "确定"
+        },
+        "alreadyUsedItem": {
+            "title": "已使用",
+            "body": "请扫描另一件没有与任何证件号码挂钩的物品。",
+            "primaryActionText": "确定"
+        },
+        "wrongFormatCode": {
+            "title": "格式错误",
+            "body": "请输入或扫描有效的编号。",
+            "primaryActionText": "确定"
+        },
+        "incompleteEntryCode": {
+            "title": "资料输入不完整",
+            "body": "请输入或扫描编号。",
+            "primaryActionText": "确定"
+        },
+        "wrongFormatNotValidDeviceCode": {
+            "title": "格式错误",
+            "body": "请扫描有效的配备编号。",
+            "primaryActionText": "确定"
+        },
+        "incompleteEntryScanDeviceCode": {
+            "title": "资料输入不完整",
+            "body": "请扫描配备编号。",
+            "primaryActionText": "确定"
+        },
+        "wrongFormatContactNumber": {
+            "title": "格式错误",
+            "body": "请输入有效的联络号码。",
+            "primaryActionText": "确定"
+        },
+        "insufficientQuota": {
+            "body": "限额不足"
+        },
+        "invalidQuantity": {
+            "body": "数量无效"
+        },
+        "categoryDoesNotExist": {
+            "body": "找不到物品类别"
+        },
+        "systemErrorServerIssues": {
+            "title": "系统错误",
+            "body": "服务器目前出现问题。如果问题持续出现，请联系您的负责人。",
+            "primaryActionText": "确定"
+        },
+        "discardTransaction": {
+            "title": "清除交易?",
+            "body": "已扫描的物品将会被清除。",
+            "primaryActionText": "取消",
+            "secondaryActionText": "清除"
+        },
+        "errorScanning": {
+            "title": "扫描失败",
+            "primaryActionText": "继续扫描"
+        },
+        "scanLimitReached": {
+            "title": "达到扫描限额",
             "primaryActionText": "确定"
         }
     }

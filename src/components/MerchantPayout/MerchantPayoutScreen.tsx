@@ -45,6 +45,7 @@ import {
   ERROR_MESSAGE
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   content: {
@@ -263,7 +264,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <View style={styles.submitWrapper}>
                 <DarkButton
                   fullWidth={true}
-                  text="Checkout"
+                  text={i18n.t("customerQuotaScreen.quotaButtonCheckout")}
                   icon={
                     <Feather
                       name="shopping-cart"
@@ -276,17 +277,21 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 />
               </View>
               <SecondaryButton
-                text="Cancel"
+                text={i18n.t("customerQuotaScreen.quotaAppealCancel")}
                 onPress={() => {
                   Alert.alert(
-                    "Discard transaction?",
-                    "This will clear all scanned items",
+                    i18n.t("errorMessages.discardTransaction.title"),
+                    i18n.t("errorMessages.discardTransaction.body"),
                     [
                       {
-                        text: "Cancel"
+                        text: i18n.t(
+                          "errorMessages.discardTransaction.primaryActionText"
+                        )
                       },
                       {
-                        text: "Discard",
+                        text: i18n.t(
+                          "errorMessages.discardTransaction.secondaryActionText"
+                        ),
                         onPress: () => {
                           setMerchantCode("");
                           resetState();
