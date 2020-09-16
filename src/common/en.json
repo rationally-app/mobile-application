@@ -26,7 +26,9 @@
   },
   "idScanner": {
     "enterIdManually": "Enter ID manually",
-    "enterManually": "Enter manually"
+    "enterManually": "Enter manually",
+    "enterVoucherId": "Enter voucher ID",
+    "scanToCheck": "Scan to check validity"
   },
   "navigationDrawer": {
     "logout": "Logout",
@@ -47,6 +49,7 @@
     "quotaAppealCancel": "Cancel",
     "quotaButtonCheckout": "Checkout",
     "quotaButtonAdd": "+ Add",
+    "quotaButtonAddVoucher": "Add voucher",
     "quotaAddId": "Add another ID to combine customer quotas",
     "quotaCategoryCommunityFoodPack": "Community Food Pack",
     "quotaCategoryBread": "Bread",
@@ -61,13 +64,14 @@
     "quotaCategoryRice": "Rice",
     "quotaCategoryCookingOil": "Cooking Oil",
     "quotaCategoryTTToken": "TT Token",
-    "quotaCategoryVouchers": "Vouchers",
+    "quotaCategoryVouchers": "Voucher(s):",
     "quotaCategoryAppreciationGift": "Appreciation Gift",
     "quotaIdentifierDeviceCode": "Device code",
     "quotaIdentifierContactNumber": "Contact number",
     "quotaIdentifierFirstVoucherCode": "First voucher code",
     "quotaIdentifierButtonScan": "Scan",
-    "quotaScanButtonBack": "Back"
+    "quotaScanButtonBack": "Back",
+    "merchantCode": "Merchant Code"
   },
   "checkoutSuccessScreen": {
     "redeemed": "Redeemed!",
@@ -78,13 +82,18 @@
     "purchasedNextIdentity": "Next customer",
     "previouslyRedeemedItems": "Item(s) redeemed previously:",
     "previouslyPurchasedItems": "Item(s) purchased previously:",
+    "redeemedAgo": "Redeemed %{time} ago",
+    "redeemedOn": "Redeemed on %{time}",
+    "previouslyRedeemed": "Previously redeemed",
     "showMore": "Show more",
     "showLess": "Show less",
     "today": " for today.",
     "limitReachedRecent": "Limit reached %{time} ago.",
     "limitReachedDate": "Limit reached on %{dateTime}",
     "limitReached": "Limit reached",
-    "redeemedLimitReached": "%{quantity} item(s) more till %{date}."
+    "redeemedLimitReached": "%{quantity} item(s) more till %{date}.",
+    "valid": "Valid",
+    "complete": "Complete"
   },
   "customerAppealScreen": {
     "raiseAppeal": "Raise an appeal",

@@ -7,6 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { Voucher } from "../../types";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -71,12 +72,14 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
           </TouchableOpacity>
         </View>
       ) : (
-        <AppText>Check the number of item(s) eligible for redemption</AppText>
+        <AppText>
+          {i18n.t("collectCustomerDetailsScreen.checkEligibleItems")}
+        </AppText>
       )}
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text="Add voucher"
+          text={i18n.t("customerQuotaScreen.quotaButtonAddVoucher")}
           icon={
             <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
           }
@@ -88,7 +91,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
           <View style={styles.horizontalRule} />
           <View style={styles.inputWrapper}>
             <InputWithLabel
-              label="Merchant Code"
+              label={i18n.t("customerQuotaScreen.merchantCode")}
               value={merchantCode}
               onChange={({ nativeEvent: { text } }) => setMerchantCode(text)}
               onSubmitEditing={redeemVouchers}

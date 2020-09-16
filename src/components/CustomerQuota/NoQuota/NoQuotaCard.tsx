@@ -279,8 +279,10 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 <View>
                   <AppText style={styles.wrapper}>
                     {policyType === "REDEEM"
-                    ? i18n.t("checkoutSuccessScreen.previouslyRedeemedItems")
-                    : i18n.t("checkoutSuccessScreen.previouslyPurchasedItems")}
+                      ? i18n.t("checkoutSuccessScreen.previouslyRedeemedItems")
+                      : i18n.t(
+                          "checkoutSuccessScreen.previouslyPurchasedItems"
+                        )}
                   </AppText>
                   {transactionsByCategoryList.map(
                     (

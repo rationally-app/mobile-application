@@ -22,12 +22,13 @@
         "scanIdentification": "扫描证件",
         "or": "或",
         "enterIdNumber": "输入证件号码",
-        "check": "查看",
-        "enterIdManually": "输入证件号码"
+        "check": "查看"
     },
     "idScanner": {
         "enterIdManually": "输入证件号码",
-        "enterManually": "自己输入"
+        "enterManually": "自己输入",
+        "enterVoucherId": "输入优惠券编号",
+        "scanToCheck": "扫描查看有效"
     },
     "navigationDrawer": {
         "logout": "登出",
@@ -37,19 +38,18 @@
         "helpSupport": "支援服务",
         "termsOfUse": "使用条款",
         "privacyStatement": "隐私声明",
-        "reportVulnerability": "报告漏洞",
-        "expiring": "在 %{yyyy年MM月d日 H时:mm分} 已到期",
-        "valid": "有效期至 %{yyyy年MM月d日 H时:mm分}"
+        "reportVulnerability": "报告漏洞"
     },
     "customerQuotaScreen": {
         "campaignExpiredOn": "在 %{dateTime} 已到期",
-        "campaignValidTo": "有效期至 %{yyyy年MM月d日 H时:mm分}",
+        "campaignValidTo": "有效期至 %{dateTime}",
         "quotaRedeemedLimitReachedIDNumber": "证件号码",
         "quotaCategoryMealCredits": "餐食积点",
         "quotaLimitMax": "最多",
         "quotaAppealCancel": "取消",
         "quotaButtonCheckout": "确认交易",
-        "quotaButtonAdd": "添加",
+        "quotaButtonAdd": "+ 添加",
+        "quotaButtonAddVoucher": "添加优惠券",
         "quotaAddId": "输入另一个证件号码已增加限额",
         "quotaCategoryCommunityFoodPack": "社区粮食礼包",
         "quotaCategoryBread": "面包",
@@ -70,7 +70,8 @@
         "quotaIdentifierContactNumber": "联络号码",
         "quotaIdentifierFirstVoucherCode": "首张优惠券编号",
         "quotaIdentifierButtonScan": "扫描",
-        "quotaScanButtonBack": "返回"
+        "quotaScanButtonBack": "返回",
+        "merchantCode": "商人编号"
     },
     "checkoutSuccessScreen": {
         "redeemed": "已领取!",
@@ -81,13 +82,18 @@
         "purchasedNextIdentity": "下一个证件",
         "previouslyRedeemedItems": "已领取物品：",
         "previouslyPurchasedItems": "已购买物品：",
+        "redeemedAgo": "在 %{time} 已领取",
+        "redeemedOn": "在 %{time} 已领取",
+        "previouslyRedeemed": "已领取过",
         "showMore": "显示更多内容",
         "showLess": "隐藏内容",
         "today": " 今天。",
         "limitReachedRecent": "%{time} 前达到领取限额",
         "limitReachedDate": "在 %{dateTime} 达到领取限额",
         "limitReached": "达到领取限额",
-        "redeemedLimitReached": "到 %{date} 为止还有%{quantity}件物品"
+        "redeemedLimitReached": "到 %{date} 为止还有%{quantity}件物品",
+        "valid": "有效",
+        "complete": "确认交易"
     },
     "customerAppealScreen": {
         "raiseAppeal": "提出上诉",
@@ -120,18 +126,16 @@
         },
         "disabledAccess": {
             "title": "无法进入",
-            "body": "请在[x]分钟后再试。",
+            "body": "请在 %{mm} 分钟后再试。",
             "primaryActionText": "确定"
         },
         "cancelEntry": {
             "title": "删除所输入的资料并扫描另一个证件号码？",
-            "body": "请向负责人索取没有与任何联络号码挂钩的新QR码。",
             "primaryActionText": "删除资料",
             "secondaryActionText": "保留"
         },
         "confirmLogout": {
             "title": "确定登出？",
-            "body": "请向负责人索取没有与任何联络号码挂钩的新QR码。",
             "primaryActionText": "登出",
             "secondaryActionText": "不是"
         },
@@ -339,6 +343,12 @@
         "scanLimitReached": {
             "title": "达到扫描限额",
             "primaryActionText": "确定"
+        },
+        "removeItem": {
+            "title": "清除物品?",
+            "body": "您要清除 %{voucherSerial} 吗?",
+            "primaryActionText": "取消",
+            "secondaryActionText": "清除"
         }
     }
 }

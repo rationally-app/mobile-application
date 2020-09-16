@@ -19,6 +19,7 @@ import { formatDistance } from "date-fns";
 import { sharedStyles } from "./sharedStyles";
 import { LimitReachedError } from "../../../utils/validateVoucherCode";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
+import i18n from "i18n-js";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -40,9 +41,10 @@ const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
 }> = ({ transactionTime }) => (
   <>
-    <AppText style={sharedStyles.statusTitle}>Redeemed on </AppText>
     <AppText style={sharedStyles.statusTitle}>
-      {formatDateTime(transactionTime)}
+      {i18n.t("checkoutSuccessScreen.redeemedOn", {
+        time: formatDateTime(transactionTime)
+      })}
     </AppText>
   </>
 );
@@ -52,16 +54,18 @@ const RecentTransactionTitle: FunctionComponent<{
   transactionTime: Date;
 }> = ({ now, transactionTime }) => (
   <>
-    <AppText style={sharedStyles.statusTitle}>Redeemed </AppText>
     <AppText style={sharedStyles.statusTitle}>
-      {formatDistance(now, transactionTime)}
+      {i18n.t("checkoutSuccessScreen.redeemedAgo", {
+        time: formatDistance(now, transactionTime)
+      })}
     </AppText>
-    <AppText style={sharedStyles.statusTitle}> ago</AppText>
   </>
 );
 
 const NoPreviousTransactionTitle: FunctionComponent = () => (
-  <AppText style={sharedStyles.statusTitle}>Previously redeemed</AppText>
+  <AppText style={sharedStyles.statusTitle}>
+    {i18n.t("checkoutSuccessScreen.previouslyRedeemed")}
+  </AppText>
 );
 
 const showAlert = (
@@ -91,21 +95,31 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   if (error instanceof ScannerError) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        showAlert("Error scanning", error.message, "Continue scanning", onExit);
+        showAlert(
+          i18n.t("errorMessages.errorScanning.title"),
+          error.message,
+          i18n.t("errorMessages.errorScanning.primaryActionText"),
+          onExit
+        );
       });
     });
     return null;
   } else if (error instanceof LimitReachedError) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        showAlert("Scan limit reached", error.message, "OK", onExit);
+        showAlert(
+          i18n.t("errorMessages.scanLimitReached.title"),
+          error.message,
+          i18n.t("errorMessages.scanLimitReached.primaryActionText"),
+          onExit
+        );
       });
     });
   } else if (error instanceof NotEligibleError) {
     card = (
       <InvalidCard
         title="Invalid"
-        details="Please log an appeal request"
+        details={i18n.t("errorMessages.notEligibleScreen.logAppeal")}
         closeModal={onExit}
       />
     );
@@ -129,7 +143,7 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
     card = (
       <InvalidCard
         title={title}
-        details="Please log an appeal request"
+        details={i18n.t("errorMessages.notEligibleScreen.logAppeal")}
         closeModal={onExit}
       />
     );
@@ -137,7 +151,9 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
     card = (
       <InvalidCard
         title="Invalid"
-        details={error.message || "Please log an appeal request"}
+        details={
+          error.message || i18n.t("errorMessages.notEligibleScreen.logAppeal")
+        }
         closeModal={onExit}
       />
     );
