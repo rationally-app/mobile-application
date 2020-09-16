@@ -29,7 +29,7 @@ import { addDays, subDays, getTime } from "date-fns";
 const styles = StyleSheet.create({
   content: {
     padding: size(2),
-    paddingVertical: size(8),
+    paddingVertical: size(6),
     height: "100%",
     width: 512,
     maxWidth: "100%"
