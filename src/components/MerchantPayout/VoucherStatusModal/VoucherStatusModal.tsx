@@ -15,9 +15,10 @@ import {
 } from "../../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { NotEligibleError } from "../../../services/quota";
 import { AppText } from "../../Layout/AppText";
-import { format, formatDistance } from "date-fns";
+import { formatDistance } from "date-fns";
 import { sharedStyles } from "./sharedStyles";
 import { LimitReachedError } from "../../../utils/validateVoucherCode";
+import { formatDateTime } from "../../../utils/dateTimeFormatter";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -41,7 +42,7 @@ const DistantTransactionTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>Redeemed on </AppText>
     <AppText style={sharedStyles.statusTitle}>
-      {format(transactionTime, "hh:mm a, do MMMM")}
+      {formatDateTime(transactionTime)}
     </AppText>
   </>
 );

@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from "react";
-import { format, formatDistance } from "date-fns";
+import { formatDistance } from "date-fns";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
 import i18n from "i18n-js";
+import { formatDateTime, formatDate } from "../../../utils/dateTimeFormatter";
 
 export const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
@@ -11,7 +12,7 @@ export const DistantTransactionTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {i18n.t("checkoutSuccessScreen.limitReached", {
-        dateTime: format(transactionTime, "d MMM yyyy, h:mma")
+        dateTime: formatDateTime(transactionTime)
       })}
     </AppText>
     {toggleTimeSensitiveTitle ? (
@@ -71,7 +72,7 @@ export const UsageQuotaTitle: FunctionComponent<{
       {"\n"}
       {i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
         quantity: quantity,
-        dateTime: format(quotaRefreshTime, "d MMM yyyy")
+        dateTime: formatDate(quotaRefreshTime)
       })}
     </AppText>
   </>

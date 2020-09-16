@@ -11,12 +11,11 @@ import { Banner } from "../Layout/Banner";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { AppText } from "../Layout/AppText";
-import { Feather } from "@expo/vector-icons";
+import { Feather, FontAwesome } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Card } from "../Layout/Card";
 import { sharedStyles } from "../CustomerQuota/CheckoutSuccess/sharedStyles";
 import { sharedStyles as sharedCardStyles } from "../CustomerQuota/sharedStyles";
-import { FontAwesome } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   content: {

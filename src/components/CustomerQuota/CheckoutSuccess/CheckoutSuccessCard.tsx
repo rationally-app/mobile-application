@@ -1,5 +1,10 @@
-import React, { FunctionComponent, useContext, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, {
+  FunctionComponent,
+  useContext,
+  useState,
+  useEffect
+} from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
@@ -10,7 +15,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
-import { format } from "date-fns";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import {
   formatQuantityText,
@@ -22,6 +26,8 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import i18n from "i18n-js";
+import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
+import { AlertModalContext, systemAlertProps } from "../../../context/alert";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -46,7 +52,7 @@ const UsageQuotaTitle: FunctionComponent<{
       {"\n"}
       {i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
         amount: quantity,
-        date: format(quotaRefreshTime, "d MMM yyyy")
+        date: formatDate(quotaRefreshTime)
       })}
     </AppText>
   </>
@@ -114,7 +120,7 @@ export const sortTransactions = (
   return Object.entries(transactionsByTimeMap)
     .sort(([, a], [, b]) => sortTransactionsByOrder(a, b))
     .map(([, { transactionTime, transactions, order }]) => ({
-      header: format(transactionTime.getTime(), "d MMM yyyy, h:mma"),
+      header: formatDateTime(transactionTime.getTime()),
       transactions: transactions.sort(sortTransactionsByOrder),
       order
     }));
@@ -130,13 +136,23 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   const { getProduct } = useContext(ProductContext);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
-  const { pastTransactionsResult } = usePastTransaction(
+  const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
     sessionToken,
     endpoint
   );
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
+
+  const { showAlert } = useContext(AlertModalContext);
+  useEffect(() => {
+    if (error) {
+      showAlert({
+        ...systemAlertProps,
+        description: error.message || ""
+      });
+    }
+  }, [error, showAlert]);
 
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
@@ -154,7 +170,17 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     !!quotaResponse?.globalQuota &&
     !!sortedTransactions &&
     sortedTransactions.length > 0 &&
-    !!getProduct(sortedTransactions[0].category)?.quantity.usage;
+    /**
+     * We only display global limit messages if there is only one global quota,
+     * since we have not catered for showing global limit messages for multiple
+     * categories.
+     */
+    allProducts?.length === 1 &&
+    !!allProducts[0].quantity.usage;
+
+  const firstGlobalQuota = showGlobalQuota
+    ? quotaResponse!.globalQuota![0]
+    : undefined;
 
   return (
     <View>
@@ -168,42 +194,49 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             />
             <AppText style={sharedStyles.statusTitleWrapper}>
               <AppText style={sharedStyles.statusTitle}>{title}</AppText>
-              {showGlobalQuota &&
-                quotaResponse!.globalQuota!.map(
-                  ({ quantity, quotaRefreshTime }, index: number) =>
-                    quotaRefreshTime ? (
-                      <UsageQuotaTitle
-                        key={index}
-                        quantity={quantity}
-                        quotaRefreshTime={quotaRefreshTime}
-                      />
-                    ) : undefined
-                )}
+              {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
+                <UsageQuotaTitle
+                  quantity={firstGlobalQuota!.quantity}
+                  quotaRefreshTime={firstGlobalQuota!.quotaRefreshTime}
+                />
+              ) : undefined}
             </AppText>
             <View>
               <AppText>{description}</AppText>
               <View style={styles.checkoutItemsList}>
-                {(isShowFullList
-                  ? transactionsByTimeList
-                  : transactionsByTimeList.slice(0, MAX_TRANSACTIONS_TO_DISPLAY)
-                ).map(
-                  (transactionsByTime: TransactionsGroup, index: number) => (
-                    <TransactionsGroup
-                      key={index}
-                      maxTransactionsToDisplay={BIG_NUMBER}
-                      {...transactionsByTime}
-                    />
+                {loading ? (
+                  <ActivityIndicator
+                    style={{ alignSelf: "flex-start" }}
+                    size="large"
+                    color={color("grey", 40)}
+                  />
+                ) : (
+                  (isShowFullList
+                    ? transactionsByTimeList
+                    : transactionsByTimeList.slice(
+                        0,
+                        MAX_TRANSACTIONS_TO_DISPLAY
+                      )
+                  ).map(
+                    (transactionsByTime: TransactionsGroup, index: number) => (
+                      <TransactionsGroup
+                        key={index}
+                        maxTransactionsToDisplay={BIG_NUMBER}
+                        {...transactionsByTime}
+                      />
+                    )
                   )
                 )}
               </View>
             </View>
           </View>
-          {transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
-            <ShowFullListToggle
-              toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
-              isShowFullList={isShowFullList}
-            />
-          )}
+          {!loading &&
+            transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+              <ShowFullListToggle
+                toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
+                isShowFullList={isShowFullList}
+              />
+            )}
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>

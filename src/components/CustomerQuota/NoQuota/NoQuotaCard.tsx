@@ -4,8 +4,8 @@ import React, {
   useContext,
   useEffect
 } from "react";
-import { differenceInSeconds, format } from "date-fns";
-import { View, StyleSheet } from "react-native";
+import { differenceInSeconds, compareDesc } from "date-fns";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
 import { color, size } from "../../../common/styles";
@@ -35,6 +35,7 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import i18n from "i18n-js";
+import { formatDateTime } from "../../../utils/dateTimeFormatter";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -81,7 +82,7 @@ export const groupTransactionsByCategory = (
       policy => policy.category === item.category
     );
     const categoryName = policy?.name ?? item.category;
-    const formattedDate = format(item.transactionTime, "d MMM yyyy, h:mma");
+    const formattedDate = formatDateTime(item.transactionTime);
 
     if (!transactionsByCategoryMap.hasOwnProperty(categoryName)) {
       transactionsByCategoryMap[categoryName] = {
@@ -155,6 +156,11 @@ export const sortTransactions = (
     });
 };
 
+export const getLatestTransactionTime = (cart: Cart): Date | undefined =>
+  cart.sort((item1, item2) =>
+    compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
+  )[0]?.lastTransactionTime;
+
 /**
  * Shows when the user cannot purchase anything
  *
@@ -174,7 +180,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
-  const { pastTransactionsResult, error } = usePastTransaction(
+  const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
     sessionToken,
     endpoint
@@ -193,7 +199,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   }, [error, showAlert]);
 
   const latestTransactionTime: Date | undefined =
-    sortedTransactions?.[0].transactionTime ?? undefined;
+    (quotaResponse && getLatestTransactionTime(cart)) ?? undefined;
+
   const now = new Date();
   const secondsFromLatestTransaction = latestTransactionTime
     ? differenceInSeconds(now, latestTransactionTime)
@@ -215,7 +222,15 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const showGlobalQuota =
     !!quotaResponse?.globalQuota &&
     cart.length > 0 &&
-    !!getProduct(cart[0].category)?.quantity.usage;
+    /**
+     * We only display global limit messages if there is only one category for now
+     */
+    allProducts?.length === 1 &&
+    !!allProducts[0].quantity.usage;
+
+  const firstGlobalQuota = showGlobalQuota
+    ? quotaResponse!.globalQuota![0]
+    : undefined;
 
   return (
     <View>
@@ -246,45 +261,49 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                   toggleTimeSensitiveTitle={showGlobalQuota}
                 />
               )}
-              {showGlobalQuota &&
-                quotaResponse!.globalQuota!.map(
-                  ({ quantity, quotaRefreshTime }, index: number) =>
-                    quotaRefreshTime ? (
-                      <UsageQuotaTitle
-                        key={index}
-                        quantity={quantity}
-                        quotaRefreshTime={quotaRefreshTime}
-                      />
-                    ) : undefined
-                )}
+              {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
+                <UsageQuotaTitle
+                  quantity={firstGlobalQuota!.quantity}
+                  quotaRefreshTime={firstGlobalQuota!.quotaRefreshTime}
+                />
+              ) : undefined}
             </AppText>
-            {transactionsByCategoryList.length > 0 && (
-              <View>
-                <AppText style={styles.wrapper}>
-                  {policyType === "REDEEM"
+            {loading ? (
+              <ActivityIndicator
+                style={{ alignSelf: "flex-start" }}
+                size="large"
+                color={color("grey", 40)}
+              />
+            ) : (
+              transactionsByCategoryList.length > 0 && (
+                <View>
+                  <AppText style={styles.wrapper}>
+                    {policyType === "REDEEM"
                     ? i18n.t("checkoutSuccessScreen.previouslyRedeemedItems")
                     : i18n.t("checkoutSuccessScreen.previouslyPurchasedItems")}
-                </AppText>
-                {transactionsByCategoryList.map(
-                  (
-                    transactionsByCategory: TransactionsGroup,
-                    index: number
-                  ) => (
-                    <TransactionsGroup
-                      key={index}
-                      maxTransactionsToDisplay={
-                        isShowFullList
-                          ? BIG_NUMBER
-                          : MAX_TRANSACTIONS_TO_DISPLAY
-                      }
-                      {...transactionsByCategory}
-                    />
-                  )
-                )}
-              </View>
+                  </AppText>
+                  {transactionsByCategoryList.map(
+                    (
+                      transactionsByCategory: TransactionsGroup,
+                      index: number
+                    ) => (
+                      <TransactionsGroup
+                        key={index}
+                        maxTransactionsToDisplay={
+                          isShowFullList
+                            ? BIG_NUMBER
+                            : MAX_TRANSACTIONS_TO_DISPLAY
+                        }
+                        {...transactionsByCategory}
+                      />
+                    )
+                  )}
+                </View>
+              )
             )}
           </View>
-          {sortedTransactions &&
+          {!loading &&
+            sortedTransactions &&
             sortedTransactions.length > MAX_TRANSACTIONS_TO_DISPLAY && (
               <ShowFullListToggle
                 toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
