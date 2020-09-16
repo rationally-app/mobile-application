@@ -334,6 +334,12 @@
     "scanLimitReached": {
       "title": "Scan limit reached",
       "primaryActionText": "OK"
+    },
+    "removeItem": {
+      "title": "Remove item?",
+      "body": "Do you want to remove this item: %{voucherSerial}?",
+      "primaryActionText": "Cancel",
+      "secondaryActionText": "Remove"
     }
   }
 }

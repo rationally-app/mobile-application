@@ -46,6 +46,7 @@ import {
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
+import i18n from "i18n-js";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -132,11 +133,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } else {
         showAlert({
           ...defaultConfirmationProps,
-          title: "Resend OTP?",
+          title: i18n.t("errorMessages.resendOTP.title"),
           description: lastResendWarningMessageRef.current,
           buttonTexts: {
-            primaryActionText: "Resend",
-            secondaryActionText: "No"
+            primaryActionText: i18n.t(
+              "errorMessages.resendOTP.primaryActionText"
+            ),
+            secondaryActionText: i18n.t(
+              "errorMessages.resendOTP.secondaryActionText"
+            )
           },
           onOk: () => resolve(true),
           onCancel: () => resolve(false),
@@ -344,7 +349,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           onBarCodeScanned={onBarCodeScanned}
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText="Cancel"
+          cancelButtonText={i18n.t("customerQuotaScreen.quotaAppealCancel")}
         />
       )}
     </>
