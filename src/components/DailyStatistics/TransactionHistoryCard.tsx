@@ -16,12 +16,12 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontFamily: "brand-bold",
-    fontSize: fontSize(1),
+    fontSize: fontSize(0),
     marginBottom: size(3)
   },
   quantity: {
     fontFamily: "brand-bold",
-    fontSize: fontSize(1),
+    fontSize: fontSize(0),
     marginBottom: size(3)
   },
   transactionText: {
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   noTransactionText: {
     fontFamily: "brand-bold",
-    fontSize: fontSize(1),
+    fontSize: fontSize(0),
     marginBottom: size(3),
     flexDirection: "row",
     textAlign: "center"
