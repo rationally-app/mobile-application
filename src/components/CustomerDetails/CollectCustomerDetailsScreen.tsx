@@ -36,6 +36,7 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
+import { InputSelection } from "./InputSelection";
 
 const styles = StyleSheet.create({
   content: {
@@ -163,6 +164,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
+  const onInputSelection = (inputType: string): void => {
+    console.log(inputType);
+  };
+
   return (
     <>
       <Credits style={{ bottom: size(3) }} />
@@ -172,6 +177,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           <View style={styles.headerText}>
             <AppHeader mode={config.appMode} />
           </View>
+          <InputSelection onInputSelection={onInputSelection} />
           {messageContent && (
             <View style={styles.bannerWrapper}>
               <Banner {...messageContent} />
