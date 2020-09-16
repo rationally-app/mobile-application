@@ -20,13 +20,19 @@ const styles = StyleSheet.create({
   },
   backButton: {
     flexDirection: "row",
-    color: "white",
+    alignSelf: "center",
     marginLeft: -15,
     marginRight: -10
   },
+  backIcon: {
+    alignSelf: "center",
+    marginRight: size(0.5)
+  },
   backText: {
     color: "white",
-    marginTop: size(1),
+    alignSelf: "center",
+    fontSize: fontSize(0),
+    marginRight: size(0.5),
     marginLeft: -10
   },
   header: {
@@ -55,8 +61,9 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
     <View style={styles.appHeaderWrapper}>
       <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
         <MaterialCommunityIcons
+          style={styles.backIcon}
           name="chevron-left"
-          size={size(5)}
+          size={size(4)}
           color={color("grey", 0)}
         />
         <AppText style={styles.backText}>Back</AppText>

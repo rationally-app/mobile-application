@@ -79,11 +79,12 @@ const styles = StyleSheet.create({
   },
   statsText: {
     marginTop: size(4),
-    fontSize: fontSize(-1)
+    fontSize: fontSize(0)
   },
   statsIcon: {
     marginTop: size(4),
-    alignSelf: "center"
+    alignSelf: "center",
+    marginRight: size(0.5)
   }
 });
 
