@@ -11,12 +11,8 @@ export const getCheckoutMessages = (productType?: string): CheckoutMessage => {
     case "REDEEM":
       return {
         title: i18n.t("checkoutSuccessScreen.redeemed"),
-        description: i18n.t(
-          "checkoutSuccessScreen.redeemedLimitReachedItemsRedeemed"
-        ),
-        ctaButtonText: i18n.t(
-          "checkoutSuccessScreen.redeemedLimitReachedNextIdentity"
-        )
+        description: i18n.t("checkoutSuccessScreen.redeemedItems"),
+        ctaButtonText: i18n.t("checkoutSuccessScreen.redeemedNextIdentity")
       };
     case "PURCHASE":
     default:
