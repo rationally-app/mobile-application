@@ -10,6 +10,7 @@ import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
+import i18n from "i18n-js";
 
 const Stack = createStackNavigator(
   {
@@ -40,12 +41,12 @@ const MerchantPayoutStack: FunctionComponent<NavigationInjectedProps> & {
 
   const { authCredentials } = useContext(AuthStoreContext);
   if (!authCredentials[key]) {
-    throw new Error("No auth credentials found");
+    throw new Error(i18n.t("thrownErrors.noAuthCred"));
   }
 
   const { allCampaignConfigs } = useContext(CampaignConfigsStoreContext);
   if (!allCampaignConfigs[key]) {
-    throw new Error("No campaign config found");
+    throw new Error(i18n.t("thrownErrors.noCampaignConfig"));
   }
 
   return (

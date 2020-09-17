@@ -26,6 +26,7 @@ import * as config from "../../config";
 import { checkVersion } from "./utils";
 import { SessionError } from "../../services/helpers";
 import { AuthStoreContext } from "../../context/authStore";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -188,7 +189,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     // minimum build version too early, before the app updates have
     // been released.
     const error = new UpdateError(
-      `Error while trying to check for updates: ${lastUpdateResult}`
+      `${i18n.t("thrownErrors.updateCheckError")} ${lastUpdateResult}`
     );
     // https://github.com/facebook/react/issues/14981#issuecomment-468460187
     setState(() => {
