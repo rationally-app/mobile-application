@@ -4,7 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollViewProps,
-  KeyboardAvoidingViewProps, View
+  KeyboardAvoidingViewProps, View, FlatList
 } from "react-native";
 
 interface KeyboardAvoidingScrollView {
@@ -34,6 +34,14 @@ export const KeyboardAvoidingScrollView: FunctionComponent<KeyboardAvoidingScrol
       </ScrollView>
     ) : (
       <View style={scrollViewContentContainerStyle}>{children}</View>
+      // <FlatList
+      //   nestedScrollEnabled={true}
+      //   data={[]}
+      //   ListEmptyComponent={null}
+      //   keyExtractor={() => "dummy"}
+      //   renderItem={null}
+      //   ListHeaderComponent={() => <React.Fragment>{children}</React.Fragment>}
+      // />
     )}
   </KeyboardAvoidingView>
 );
