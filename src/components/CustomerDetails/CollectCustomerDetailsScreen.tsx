@@ -39,6 +39,7 @@ import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 import { InputSelection, SelectionDetails } from "./InputSelection";
 import { ManualPassportInput } from "./ManualPassportInput";
+import VirtualizedView from "./VirtualizedView";
 
 const styles = StyleSheet.create({
   content: {
@@ -225,40 +226,42 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   return (
     <>
       <Credits style={{ bottom: size(3) }} />
-      <KeyboardAvoidingScrollView>
-        <TopBackground mode={config.appMode} />
-        <View style={styles.content}>
-          <View style={styles.headerText}>
-            <AppHeader mode={config.appMode} />
-          </View>
-          {hasMultiInputSelection() && (
-            <InputSelection
-              selectionArray={getSelectionArray()}
-              currentSelection={selectedIdType}
-              onInputSelection={onInputSelection}
-            />
-          )}
-          {messageContent && (
-            <View style={styles.bannerWrapper}>
-              <Banner {...messageContent} />
+      <VirtualizedView>
+        <KeyboardAvoidingScrollView>
+          <TopBackground mode={config.appMode} />
+          <View style={styles.content}>
+            <View style={styles.headerText}>
+              <AppHeader mode={config.appMode} />
             </View>
-          )}
-          <Card>
-            {features?.campaignName && (
-              <AppText style={styles.campaignName}>
-                {features.campaignName}
-              </AppText>
+            {hasMultiInputSelection() && (
+              <InputSelection
+                selectionArray={getSelectionArray()}
+                currentSelection={selectedIdType}
+                onInputSelection={onInputSelection}
+              />
             )}
-            <AppText>
-              Check the number of item(s) eligible for redemption
-            </AppText>
-            {getInputComponent()}
-          </Card>
-          <FeatureToggler feature="HELP_MODAL">
-            <HelpButton onPress={showHelpModal} />
-          </FeatureToggler>
-        </View>
-      </KeyboardAvoidingScrollView>
+            {messageContent && (
+              <View style={styles.bannerWrapper}>
+                <Banner {...messageContent} />
+              </View>
+            )}
+            <Card>
+              {features?.campaignName && (
+                <AppText style={styles.campaignName}>
+                  {features.campaignName}
+                </AppText>
+              )}
+              <AppText>
+                Check the number of item(s) eligible for redemption
+              </AppText>
+              {getInputComponent()}
+            </Card>
+            <FeatureToggler feature="HELP_MODAL">
+              <HelpButton onPress={showHelpModal} />
+            </FeatureToggler>
+          </View>
+        </KeyboardAvoidingScrollView>
+      </VirtualizedView>
       {shouldShowCamera && (
         <IdScanner
           isScanningEnabled={isScanningEnabled}
