@@ -37,7 +37,12 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
 import { requestOTP, LoginError, AuthError } from "../../services/auth";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import {
+  AlertModalContext,
+  ERROR_MESSAGE,
+  getTranslationKeyFromError,
+  getTranslationKeyFromMessage
+} from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
@@ -128,12 +133,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         resolve(true);
       } else {
         showConfirmationAlert({
-          title: "Resend OTP?",
-          description: lastResendWarningMessageRef.current,
-          buttonTexts: {
-            primaryActionText: "Resend",
-            secondaryActionText: "No"
-          },
+          translationKey: getTranslationKeyFromMessage("resendOTP"),
+          content: { lastResendMessage: lastResendWarningMessageRef.current },
           onOk: () => resolve(true),
           onCancel: () => resolve(false)
         });
@@ -156,7 +157,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
-        showErrorAlert({ ...e.alertProps, onOk: () => resetStage() });
+        showErrorAlert({
+          translationKey: getTranslationKeyFromError(e),
+          onOk: () => resetStage()
+        });
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -186,8 +190,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
           showErrorAlert({
-            title: "System error",
-            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+            translationKey: getTranslationKeyFromMessage(
+              ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+            )
           });
           setLoginStage("SCAN");
         } else {
@@ -249,7 +254,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
         if (e instanceof AuthError) {
-          showErrorAlert(e.alertProps);
+          showErrorAlert({ translationKey: getTranslationKeyFromError(e) });
         } else {
           setState(() => {
             throw error; // Let ErrorBoundary handle

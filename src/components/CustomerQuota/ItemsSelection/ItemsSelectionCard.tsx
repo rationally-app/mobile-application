@@ -13,7 +13,8 @@ import { ProductContext } from "../../../context/products";
 import {
   AlertModalContext,
   ERROR_MESSAGE,
-  WARNING_MESSAGE
+  WARNING_MESSAGE,
+  getTranslationKeyFromMessage
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
@@ -63,19 +64,10 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       addId(id);
     } catch (e) {
       setIsAddUserModalVisible(false);
-      if (e.message === ERROR_MESSAGE.DUPLICATE_ID) {
-        showErrorAlert({
-          title: "Already used",
-          description: e.message,
-          onOk: () => setIsAddUserModalVisible(true)
-        });
-      } else {
-        showErrorAlert({
-          title: "Wrong format",
-          description: e.message,
-          onOk: () => setIsAddUserModalVisible(true)
-        });
-      }
+      showErrorAlert({
+        translationKey: getTranslationKeyFromMessage(e.message),
+        onOk: () => setIsAddUserModalVisible(true)
+      });
     }
   };
 
@@ -115,11 +107,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 ? onBack
                 : () => {
                     showWarnAlert({
-                      title: "Cancel entry and scan another ID number?",
-                      buttonTexts: {
-                        primaryActionText: "Cancel entry",
-                        secondaryActionText: "Keep"
-                      },
+                      translationKey: getTranslationKeyFromMessage(
+                        "cancelEntry"
+                      ),
                       onOk: onCancel
                     });
                   }
@@ -146,12 +136,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 ? checkoutCart
                 : () => {
                     showConfirmationAlert({
-                      title: "Payment collected?",
-                      description: WARNING_MESSAGE.PAYMENT_COLLECTION,
-                      buttonTexts: {
-                        primaryActionText: "Collected",
-                        secondaryActionText: "No"
-                      },
+                      translationKey: getTranslationKeyFromMessage(
+                        WARNING_MESSAGE.PAYMENT_COLLECTION
+                      ),
                       onOk: checkoutCart
                     });
                   }

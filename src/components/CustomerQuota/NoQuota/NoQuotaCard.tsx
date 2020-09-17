@@ -30,7 +30,10 @@ import {
 import { AppealButton } from "./AppealButton";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
-import { AlertModalContext } from "../../../context/alert";
+import {
+  AlertModalContext,
+  getTranslationKeyFromMessage
+} from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
@@ -191,8 +194,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   useEffect(() => {
     if (error) {
       showErrorAlert({
-        title: "System error",
-        description: error.message || ""
+        translationKey: getTranslationKeyFromMessage(error.message)
       });
     }
   }, [error, showErrorAlert]);

@@ -26,7 +26,10 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
-import { AlertModalContext } from "../../../context/alert";
+import {
+  AlertModalContext,
+  getTranslationKeyFromMessage
+} from "../../../context/alert";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -144,8 +147,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   useEffect(() => {
     if (error) {
       showErrorAlert({
-        title: "System error",
-        description: error.message || ""
+        translationKey: getTranslationKeyFromMessage(error.message)
       });
     }
   }, [error, showErrorAlert]);

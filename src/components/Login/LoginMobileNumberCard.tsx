@@ -17,7 +17,11 @@ import {
   countryCodeValidator,
   mobileNumberValidator
 } from "../../utils/validatePhoneNumbers";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import {
+  AlertModalContext,
+  ERROR_MESSAGE,
+  getTranslationKeyFromMessage
+} from "../../context/alert";
 import { ConfigContext } from "../../context/config";
 
 const styles = StyleSheet.create({
@@ -75,13 +79,15 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const onSubmitMobileNumber = (): void => {
     if (!countryCodeValidator(countryCode)) {
       showErrorAlert({
-        title: "Wrong format",
-        description: ERROR_MESSAGE.INVALID_COUNTRY_CODE
+        translationKey: getTranslationKeyFromMessage(
+          ERROR_MESSAGE.INVALID_COUNTRY_CODE
+        )
       });
     } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
       showErrorAlert({
-        title: "Wrong format",
-        description: ERROR_MESSAGE.INVALID_PHONE_NUMBER
+        translationKey: getTranslationKeyFromMessage(
+          ERROR_MESSAGE.INVALID_PHONE_NUMBER
+        )
       });
     } else {
       onRequestOTP();

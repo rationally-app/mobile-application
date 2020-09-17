@@ -27,7 +27,12 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import {
+  AlertModalContext,
+  ERROR_MESSAGE,
+  getTranslationKeyFromError,
+  getTranslationKeyFromMessage
+} from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { QuotaError } from "../../services/quota";
@@ -143,8 +148,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       expiry: new Date().getTime()
     });
     showErrorAlert({
-      title: "Expired",
-      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
+      translationKey: getTranslationKeyFromMessage(
+        ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+      ),
       onOk: () => {
         navigation.navigate("CampaignLocationsScreen");
       }
@@ -170,72 +176,89 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
       if (error instanceof QuotaError) {
         showErrorAlert({
-          ...error.alertProps,
+          translationKey: getTranslationKeyFromError(error),
           onOk: () => clearError()
         });
         return;
       }
       switch (error.message) {
         case ERROR_MESSAGE.MISSING_SELECTION:
+          // TODO: When no items are chosen, this is not showing up
           showErrorAlert({
-            title: "Incomplete entry",
-            description: ERROR_MESSAGE.MISSING_SELECTION,
+            translationKey: getTranslationKeyFromMessage(
+              ERROR_MESSAGE.MISSING_SELECTION
+            ),
             onOk: () => clearError()
           });
           break;
 
         case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
           showErrorAlert({
-            title: "Incomplete entry",
-            description:
+            translationKey:
               campaignFeatures?.campaignName === "TT Tokens"
-                ? ERROR_MESSAGE.MISSING_POD_INPUT
+                ? getTranslationKeyFromMessage(ERROR_MESSAGE.MISSING_POD_INPUT)
                 : campaignFeatures?.campaignName.includes("Vouchers")
-                ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
-                : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT,
+                ? getTranslationKeyFromMessage(
+                    ERROR_MESSAGE.MISSING_VOUCHER_INPUT
+                  )
+                : getTranslationKeyFromMessage(
+                    ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
+                  ),
             onOk: () => clearError()
           });
           break;
 
         case ERROR_MESSAGE.SERVER_ERROR:
           showErrorAlert({
-            title: "System error",
-            description: error.message,
+            translationKey: getTranslationKeyFromMessage(
+              ERROR_MESSAGE.SERVER_ERROR
+            ),
             onOk: () => clearError()
           });
           break;
 
         case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
           showErrorAlert({
-            title: "Already used",
-            description:
+            translationKey:
               campaignFeatures?.campaignName === "TT Tokens"
-                ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
-                : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT,
+                ? getTranslationKeyFromMessage(
+                    ERROR_MESSAGE.DUPLICATE_POD_INPUT
+                  )
+                : getTranslationKeyFromMessage(
+                    ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
+                  ),
             onOk: () => clearError()
           });
           break;
 
         case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
           showErrorAlert({
-            title: "Wrong format",
-            description:
+            translationKey:
               campaignFeatures?.campaignName === "TT Tokens"
-                ? ERROR_MESSAGE.INVALID_POD_INPUT
-                : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT,
+                ? getTranslationKeyFromMessage(ERROR_MESSAGE.INVALID_POD_INPUT)
+                : getTranslationKeyFromMessage(
+                    ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+                  ),
             onOk: () => clearError()
           });
           break;
 
         case ERROR_MESSAGE.INVALID_PHONE_NUMBER:
-        case ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE:
           showErrorAlert({
-            title: "Wrong format",
-            description: error.message,
+            translationKey: getTranslationKeyFromMessage(
+              ERROR_MESSAGE.INVALID_PHONE_NUMBER
+            ),
             onOk: () => clearError()
           });
           break;
-
+        case ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE:
+          showErrorAlert({
+            translationKey: getTranslationKeyFromMessage(
+              ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE
+            ),
+            onOk: () => clearError()
+          });
+          break;
         default:
           throw new Error(error.message);
       }

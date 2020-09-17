@@ -6,7 +6,10 @@ import { IdentifierPhoneNumberInput } from "./IdentifierLayout/IdentifierPhoneNu
 import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
-import { AlertModalContext } from "../../../context/alert";
+import {
+  AlertModalContext,
+  getTranslationKeyFromError
+} from "../../../context/alert";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -43,8 +46,7 @@ export const ItemIdentifier: FunctionComponent<{
     } catch (e) {
       setShouldShowCamera(false);
       showErrorAlert({
-        title: "System error",
-        description: e.message || e
+        translationKey: getTranslationKeyFromError(e)
       });
     }
   };

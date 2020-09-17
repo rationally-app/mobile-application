@@ -6,7 +6,10 @@ import { Card } from "../../Layout/Card";
 import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
-import { AlertModalContext } from "../../../context/alert";
+import {
+  AlertModalContext,
+  getTranslationKeyFromMessage
+} from "../../../context/alert";
 
 const styles = StyleSheet.create({
   titlePadding: {
@@ -67,11 +70,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
           text="Cancel"
           onPress={() => {
             showWarnAlert({
-              title: "Cancel entry and scan another ID number?",
-              buttonTexts: {
-                primaryActionText: "Cancel entry",
-                secondaryActionText: "Keep"
-              },
+              translationKey: getTranslationKeyFromMessage("cancelEntry"),
               onOk: onCancel
             });
           }}

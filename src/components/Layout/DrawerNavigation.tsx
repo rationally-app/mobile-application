@@ -11,7 +11,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
-import { AlertModalContext } from "../../context/alert";
+import {
+  AlertModalContext,
+  getTranslationKeyFromMessage
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   container: {
@@ -96,11 +99,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
 
   const onPressLogout = (): void => {
     showConfirmationAlert({
-      title: "Confirm logout?",
-      buttonTexts: {
-        primaryActionText: "Logout",
-        secondaryActionText: "Cancel"
-      },
+      translationKey: getTranslationKeyFromMessage("logout"),
       onOk: handleLogout
     });
   };

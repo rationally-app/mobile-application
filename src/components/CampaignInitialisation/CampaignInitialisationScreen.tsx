@@ -15,7 +15,11 @@ import { LoadingView } from "../Loading";
 import { useUpdateCampaignConfig } from "../../hooks/useUpdateCampaignConfig/useUpdateCampaignConfig";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { CampaignConfigError } from "../../services/campaignConfig";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import {
+  AlertModalContext,
+  ERROR_MESSAGE,
+  getTranslationKeyFromMessage
+} from "../../context/alert";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import * as config from "../../config";
 import { checkVersion } from "./utils";
@@ -101,8 +105,9 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
       if (updateCampaignConfigError instanceof CampaignConfigError) {
         Sentry.captureException(updateCampaignConfigError);
         showErrorAlert({
-          title: "System error",
-          description: ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR
+          translationKey: getTranslationKeyFromMessage(
+            ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR
+          )
         });
       } else if (updateCampaignConfigError instanceof SessionError) {
         setAuthCredentials(key, {
@@ -110,11 +115,10 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
           expiry: new Date().getTime()
         });
         showErrorAlert({
-          title: "Expired",
-          description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
-          onOk: () => {
-            navigation.navigate("CampaignLocationsScreen");
-          }
+          translationKey: getTranslationKeyFromMessage(
+            ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+          ),
+          onOk: () => navigation.navigate("CampaignLocationsScreen")
         });
       } else {
         throw updateCampaignConfigError; // Let ErrorBoundary handle
