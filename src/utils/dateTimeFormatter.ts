@@ -1,6 +1,6 @@
 import { format, formatDistance } from "date-fns";
 import { zhCN } from "date-fns/locale";
-import * as Localization from "expo-localization";
+import i18n from "i18n-js";
 
 export const formatDateTime = (date: number | Date): string =>
   format(date, "d MMM yyyy, h:mma");
@@ -12,8 +12,7 @@ export const formatTimeDifference = (
   start: number | Date,
   end: number | Date
 ): string => {
-  console.log(Localization.locale);
-  if (Localization.locale.includes("zh")) {
+  if (i18n.locale.includes("zh")) {
     return formatDistance(start, end, {
       locale: zhCN
     });
