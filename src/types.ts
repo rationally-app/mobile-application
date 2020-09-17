@@ -127,22 +127,37 @@ const CampaignPolicy = t.intersection([
 const IdentificationFlag = t.intersection([
   t.type({
     type: t.union([t.literal("STRING"), t.literal("NUMBER")]),
-    scannerType: t.union([t.literal("CODE_39"), t.literal("QR")]),
-    validation: t.union([t.literal("NRIC"), t.literal("REGEX")])
+    scannerType: t.union([
+      t.literal("CODE_39"),
+      t.literal("QR"),
+      t.literal("MRZ"),
+      t.literal("NONE")
+    ]),
+    validation: t.union([
+      t.literal("NRIC"),
+      t.literal("PASSPORT"),
+      t.literal("REGEX")
+    ])
   }),
   t.partial({
+    label: t.string,
     validationRegex: t.string
   })
 ]);
 
-const CampaignFeatures = t.type({
-  minAppBinaryVersion: t.string,
-  minAppBuildVersion: t.number,
-  campaignName: t.string,
-  transactionGrouping: t.boolean,
-  flowType: t.string,
-  id: IdentificationFlag
-});
+const CampaignFeatures = t.intersection([
+  t.type({
+    minAppBinaryVersion: t.string,
+    minAppBuildVersion: t.number,
+    campaignName: t.string,
+    transactionGrouping: t.boolean,
+    flowType: t.string,
+    id: IdentificationFlag
+  }),
+  t.partial({
+    alternateIds: t.array(IdentificationFlag)
+  })
+]);
 
 export const CampaignConfig = t.type({
   features: t.union([CampaignFeatures, t.null]),
