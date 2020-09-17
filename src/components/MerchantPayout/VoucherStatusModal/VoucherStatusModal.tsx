@@ -15,10 +15,12 @@ import {
 } from "../../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { NotEligibleError } from "../../../services/quota";
 import { AppText } from "../../Layout/AppText";
-import { formatDistance } from "date-fns";
 import { sharedStyles } from "./sharedStyles";
 import { LimitReachedError } from "../../../utils/validateVoucherCode";
-import { formatDateTime } from "../../../utils/dateTimeFormatter";
+import {
+  formatDateTime,
+  formatTimeDifference
+} from "../../../utils/dateTimeFormatter";
 import i18n from "i18n-js";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
@@ -56,7 +58,7 @@ const RecentTransactionTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {i18n.t("checkoutSuccessScreen.redeemedAgo", {
-        time: formatDistance(now, transactionTime)
+        time: formatTimeDifference(now, transactionTime)
       })}
     </AppText>
   </>
