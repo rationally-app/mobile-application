@@ -168,6 +168,7 @@ export type TextInputType = t.TypeOf<typeof TextInputType>;
 export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
 export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
+export type IdentificationFlag = t.TypeOf<typeof IdentificationFlag>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type CampaignPolicy = t.TypeOf<typeof CampaignPolicy>;
 export type CampaignFeatures = t.TypeOf<typeof CampaignFeatures>;

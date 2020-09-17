@@ -1,12 +1,7 @@
-import React, {
-  FunctionComponent} from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity
-} from "react-native";
+import React, { FunctionComponent } from "react";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { size, fontSize, color } from "../../common/styles";
+import { IdentificationFlag } from "../../types";
 
 const styles = StyleSheet.create({
   selectionContainer: {
@@ -25,32 +20,60 @@ const styles = StyleSheet.create({
     marginLeft: size(1),
     marginRight: size(5),
     marginBottom: size(2)
+  },
+  unselectedText: {
+    color: color("grey", 10),
+    fontFamily: "brand-regular",
+    fontSize: fontSize(0),
+    paddingBottom: 20
+  },
+  unselectedIndicator: {
+    borderBottomColor: color("grey", 10),
+    borderBottomWidth: 0,
+    marginLeft: size(1),
+    marginRight: size(5),
+    marginBottom: size(2)
   }
 });
 
+export type SelectionDetails = Pick<
+  IdentificationFlag,
+  "label" | "scannerType"
+>;
+
 export const InputSelection: FunctionComponent<{
-  onInputSelection: (inputType: string) => void;
-}> = ({ onInputSelection }) => {
+  selectionArray: SelectionDetails[];
+  currentSelection: SelectionDetails;
+  onInputSelection: (inputType: SelectionDetails) => void;
+}> = ({ selectionArray, currentSelection, onInputSelection }) => {
   return (
     <View style={styles.selectionContainer}>
-      <View style={styles.selectedIndicator}>
-        <TouchableOpacity
-          onPress={() => {
-            onInputSelection("NRIC");
-          }}
+      {selectionArray.map(selectionType => (
+        <View
+          key={selectionType.label}
+          style={
+            selectionType.label === currentSelection.label
+              ? styles.selectedIndicator
+              : styles.unselectedIndicator
+          }
         >
-          <Text style={styles.selectedText}>NRIC/FIN</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.selectedIndicator}>
-        <TouchableOpacity
-          onPress={() => {
-            onInputSelection("PASSPORT");
-          }}
-        >
-          <Text style={styles.selectedText}>Passport</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={() => {
+              onInputSelection(selectionType);
+            }}
+          >
+            <Text
+              style={
+                selectionType.label === currentSelection.label
+                  ? styles.selectedText
+                  : styles.unselectedText
+              }
+            >
+              {selectionType.label}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ))}
     </View>
   );
 };

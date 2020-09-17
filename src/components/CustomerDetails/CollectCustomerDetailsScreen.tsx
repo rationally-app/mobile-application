@@ -2,15 +2,15 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useContext
+  useContext,
+  useCallback
 } from "react";
 import {
   View,
   StyleSheet,
   Keyboard,
   Vibration,
-  BackHandler,
-  Text
+  BackHandler
 } from "react-native";
 import { size, fontSize, borderRadius } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -37,7 +37,7 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
-import { InputSelection } from "./InputSelection";
+import { InputSelection, SelectionDetails } from "./InputSelection";
 import { ManualPassportInput } from "./ManualPassportInput";
 
 const styles = StyleSheet.create({
@@ -94,7 +94,28 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { features, policies } = useContext(CampaignConfigContext);
 
   // to shift to context once tested to preserve across screen
-  const [selectedIdType, setSelectedIdType] = useState("");
+  const [selectedIdType, setSelectedIdType] = useState<SelectionDetails>({
+    label: "DEFAULT",
+    scannerType: "NONE"
+  });
+
+  const getSelectionArray = useCallback((): SelectionDetails[] => {
+    const selectionArray = [];
+    const defaultLabelName = "DEFAULT";
+    const defaultScannerType = "NONE";
+    selectionArray.push({
+      label: features?.id.label || defaultLabelName,
+      scannerType: features?.id.scannerType || defaultScannerType
+    });
+    features?.alternateIds &&
+      features.alternateIds.map(alternateId =>
+        selectionArray.push({
+          label: alternateId.label,
+          scannerType: alternateId.scannerType
+        })
+      );
+    return selectionArray;
+  }, [features]);
 
   useEffect(() => {
     if (isFocused) {
@@ -130,6 +151,12 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       Keyboard.dismiss();
     }
   }, [shouldShowCamera]);
+
+  // take from context after testing
+  useEffect(() => {
+    const selectionDetails = getSelectionArray();
+    setSelectedIdType(selectionDetails[0]); // temp test.. will be shifted to context
+  }, [getSelectionArray]);
 
   const onCheck = async (input: string): Promise<void> => {
     try {
@@ -169,17 +196,18 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
-  const onInputSelection = (inputType: string): void => {
+  const onInputSelection = (inputType: SelectionDetails): void => {
     console.log(inputType);
     setSelectedIdType(inputType);
   };
 
-  const hasMultiInputSelection = (): boolean | undefined => {
-    return features?.alternateIds && features.alternateIds.length > 0;
+  const hasMultiInputSelection = (): boolean => {
+    return getSelectionArray().length > 1;
   };
 
   const getInputComponent = (): JSX.Element => {
-    return selectedIdType === "PASSPORT" ? (
+    return selectedIdType.label === "Passport" &&
+      selectedIdType.scannerType === "NONE" ? (
       <ManualPassportInput />
     ) : (
       <InputIdSection
@@ -192,6 +220,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     );
   };
 
+  console.log("tmd lah");
+  console.log(selectedIdType);
   return (
     <>
       <Credits style={{ bottom: size(3) }} />
@@ -202,7 +232,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             <AppHeader mode={config.appMode} />
           </View>
           {hasMultiInputSelection() && (
-            <InputSelection onInputSelection={onInputSelection} />
+            <InputSelection
+              selectionArray={getSelectionArray()}
+              currentSelection={selectedIdType}
+              onInputSelection={onInputSelection}
+            />
           )}
           {messageContent && (
             <View style={styles.bannerWrapper}>
