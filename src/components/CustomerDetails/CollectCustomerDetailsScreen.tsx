@@ -9,7 +9,8 @@ import {
   StyleSheet,
   Keyboard,
   Vibration,
-  BackHandler
+  BackHandler,
+  Text
 } from "react-native";
 import { size, fontSize, borderRadius } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -37,6 +38,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 import { InputSelection } from "./InputSelection";
+import { ManualPassportInput } from "./ManualPassportInput";
 
 const styles = StyleSheet.create({
   content: {
@@ -90,6 +92,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
+
+  // to shift to context once tested to preserve across screen
+  const [selectedIdType, setSelectedIdType] = useState("");
 
   useEffect(() => {
     if (isFocused) {
@@ -166,6 +171,25 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onInputSelection = (inputType: string): void => {
     console.log(inputType);
+    setSelectedIdType(inputType);
+  };
+
+  const hasMultiInputSelection = (): boolean | undefined => {
+    return features?.alternateIds && features.alternateIds.length > 0;
+  };
+
+  const getInputComponent = (): JSX.Element => {
+    return selectedIdType === "PASSPORT" ? (
+      <ManualPassportInput />
+    ) : (
+      <InputIdSection
+        openCamera={() => setShouldShowCamera(true)}
+        idInput={idInput}
+        setIdInput={setIdInput}
+        submitId={() => onCheck(idInput)}
+        keyboardType={features?.id.type === "NUMBER" ? "numeric" : "default"}
+      />
+    );
   };
 
   return (
@@ -177,7 +201,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           <View style={styles.headerText}>
             <AppHeader mode={config.appMode} />
           </View>
-          <InputSelection onInputSelection={onInputSelection} />
+          {hasMultiInputSelection() && (
+            <InputSelection onInputSelection={onInputSelection} />
+          )}
           {messageContent && (
             <View style={styles.bannerWrapper}>
               <Banner {...messageContent} />
@@ -192,15 +218,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             <AppText>
               Check the number of item(s) eligible for redemption
             </AppText>
-            <InputIdSection
-              openCamera={() => setShouldShowCamera(true)}
-              idInput={idInput}
-              setIdInput={setIdInput}
-              submitId={() => onCheck(idInput)}
-              keyboardType={
-                features?.id.type === "NUMBER" ? "numeric" : "default"
-              }
-            />
+            {getInputComponent()}
           </Card>
           <FeatureToggler feature="HELP_MODAL">
             <HelpButton onPress={showHelpModal} />
