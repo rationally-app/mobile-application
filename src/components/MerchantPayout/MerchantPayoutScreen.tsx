@@ -39,7 +39,11 @@ import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/use
 import { AuthContext } from "../../context/auth";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { SessionError } from "../../services/helpers";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import {
+  AlertModalContext,
+  ERROR_MESSAGE,
+  getTranslationKeyFromMessage
+} from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import i18n from "i18n-js";
 
@@ -160,8 +164,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       expiry: new Date().getTime()
     });
     showErrorAlert({
-      title: "Expired",
-      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
+      translationKey: getTranslationKeyFromMessage(
+        ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+      ),
       onOk: () => {
         navigation.navigate("CampaignLocationsScreen");
       }

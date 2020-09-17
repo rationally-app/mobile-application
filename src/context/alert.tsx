@@ -9,13 +9,12 @@ import {
   AlertModal,
   AlertModalProps
 } from "../components/AlertModal/AlertModal";
+import i18n from "i18n-js";
 
-// TODO: Where should we put this?
 export enum WARNING_MESSAGE {
   PAYMENT_COLLECTION = "This action cannot be undone. Proceed only when payment has been collected."
 }
 
-// TODO: Where should we put this?
 export enum ERROR_MESSAGE {
   DUPLICATE_IDENTIFIER_INPUT = "Enter or scan a different code.",
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
@@ -47,6 +46,103 @@ export enum ERROR_MESSAGE {
   PAST_TRANSACTIONS_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
 }
 
+export const getTranslationKeyFromError = (error: Error): string => {
+  switch (error.name) {
+    case "LoginError":
+      return "systemErrorLoginIssue";
+    case "LoginLockedError":
+      return "disabledAccess";
+    case "AuthTakenError":
+      return "alreadyUsedQRCode";
+    case "AuthExpiredError":
+    case "AuthNotFoundError":
+      return "expiredQR";
+    case "AuthInvalidError":
+      return "wrongFormatQRScanAgain";
+    case "OTPWrongErrorLastTry":
+      return "invalidInputOTPOneMoreInvalid";
+    case "OTPWrongError":
+      return "invalidInputOTP";
+    case "OTPExpiredError":
+      return "expiredOTP";
+    case "QuotaError":
+      return "systemErrorConnectivityIssues";
+    default:
+      // TODO: Determine fallback value
+      return error.message;
+  }
+};
+
+export const getTranslationKeyFromMessage = (message: string): string => {
+  switch (message) {
+    case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
+      return "alreadyUsedCode";
+    case ERROR_MESSAGE.DUPLICATE_POD_INPUT:
+      return "alreadyUsedItem";
+    case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
+      return "wrongFormatCode";
+    case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
+      return "incompleteEntryCode";
+    case ERROR_MESSAGE.MISSING_VOUCHER_INPUT:
+      return "incompleteEntryVoucherCode";
+    case ERROR_MESSAGE.INVALID_POD_INPUT:
+      return "wrongFormatNotValidDeviceCode";
+    case ERROR_MESSAGE.MISSING_POD_INPUT:
+      return "incompleteEntryScanDeviceCode";
+    case ERROR_MESSAGE.INVALID_PHONE_NUMBER:
+      return "wrongFormatContactNumber";
+    case ERROR_MESSAGE.INVALID_COUNTRY_CODE:
+      return "wrongFormatCountryCode";
+    case ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE:
+      return "wrongFormatCountryCodePhoneNumber";
+    case ERROR_MESSAGE.MISSING_SELECTION:
+      return "incompleteEntry";
+    case ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN:
+      return "expiredQR";
+    case ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT:
+      return "invalidInputQR";
+    case ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR:
+      return "systemErrorConnectivityIssues";
+    case ERROR_MESSAGE.INSUFFICIENT_QUOTA:
+      return "insufficientQuota";
+    case ERROR_MESSAGE.INVALID_QUANTITY:
+      return "invalidQuantity";
+    case ERROR_MESSAGE.INVALID_CATEGORY:
+      return "categoryDoesNotExist";
+    case ERROR_MESSAGE.INVALID_ID:
+      return "invalidInputIDNumber";
+    case ERROR_MESSAGE.DUPLICATE_ID:
+      return "alreadyUsedDifferentIDNumber";
+    case ERROR_MESSAGE.QUOTA_ERROR:
+      return "systemErrorConnectivityIssues";
+    case ERROR_MESSAGE.SERVER_ERROR:
+      return "systemErrorServerIssues";
+    case ERROR_MESSAGE.OTP_ERROR:
+      return "invalidInputOTP";
+    case ERROR_MESSAGE.LAST_OTP_ERROR:
+      return "invalidInputOTPOneMoreInvalid";
+    case ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN:
+      return "alreadyUsedQRCode";
+    case ERROR_MESSAGE.OTP_EXPIRED:
+      return "expiredOTP";
+    case ERROR_MESSAGE.LOGIN_ERROR:
+      return "systemErrorLoginIssue";
+    case ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR:
+      return "systemErrorServerIssues";
+    case WARNING_MESSAGE.PAYMENT_COLLECTION:
+      return "paymentCollected";
+    case "logout":
+      return "confirmLogout";
+    case "resendOTP":
+      return "resendOTP";
+    case "cancelEntry":
+      return "cancelEntry";
+    default:
+      // TODO: Determine fallback value
+      return message;
+  }
+};
+
 const defaultAlertProps: AlertModalProps = {
   alertType: "ERROR",
   title: "",
@@ -61,22 +157,16 @@ const defaultAlertProps: AlertModalProps = {
 
 interface AlertModalContext {
   showConfirmationAlert: (props: {
-    title: string;
-    description?: string;
-    buttonTexts: { primaryActionText: string; secondaryActionText: string };
+    translationKey: string;
     onOk: () => void;
     onCancel?: () => void;
+    content?: Record<string, string>;
   }) => void;
   showErrorAlert: (props: {
-    title: string;
-    description?: string;
+    translationKey: string;
     onOk?: () => void;
   }) => void;
-  showWarnAlert: (props: {
-    title: string;
-    buttonTexts: { primaryActionText: string; secondaryActionText: string };
-    onOk: () => void;
-  }) => void;
+  showWarnAlert: (props: { translationKey: string; onOk: () => void }) => void;
   clearAlert: () => void;
 }
 
@@ -99,19 +189,28 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     []
   );
 
-  // TODO: To check that all calls use translated copies
+  // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
   const showConfirmationAlert = (props: {
-    title: string;
-    description?: string;
-    buttonTexts: { primaryActionText: string; secondaryActionText: string };
+    translationKey: string;
     onOk: () => void;
     onCancel?: () => void;
+    content?: Record<string, string>;
   }): void => {
     showAlert({
       alertType: "CONFIRM",
-      title: props.title,
-      ...(!!props.description ? { description: props.description } : {}),
-      buttonTexts: props.buttonTexts,
+      title: i18n.t(`errorMessages.${props.translationKey}.title`) ?? "Confirm",
+      description: i18n.t(
+        `errorMessages.${props.translationKey}.body`,
+        props.content
+      ),
+      buttonTexts: {
+        primaryActionText: i18n.t(
+          `errorMessages.${props.translationKey}.primaryActionText`
+        ),
+        secondaryActionText: i18n.t(
+          `errorMessages.${props.translationKey}.secondaryActionText`
+        )
+      },
       visible: true,
       onOk: props.onOk,
       ...(!!props.onCancel ? { onCancel: props.onCancel } : {}),
@@ -119,18 +218,24 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     });
   };
 
-  // TODO: To check that all calls use translated copies
+  // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
   const showErrorAlert = (props: {
-    title: string;
-    description?: string;
+    translationKey: string;
     onOk?: () => void;
   }): void => {
     showAlert({
       alertType: "ERROR",
-      title: props.title,
-      ...(!!props.description ? { description: props.description } : {}),
+      title: i18n.t(`errorMessages.${props.translationKey}.title`) ?? "Error",
+      description:
+        i18n.t(`errorMessages.${props.translationKey}.body`) ??
+        props.translationKey,
       buttonTexts: {
-        primaryActionText: "OK"
+        primaryActionText:
+          i18n.t(`errorMessages.${props.translationKey}.primaryActionText`) ??
+          "OK",
+        secondaryActionText: i18n.t(
+          `errorMessages.${props.translationKey}.secondaryActionText`
+        )
       },
       visible: true,
       onOk: !!props.onOk ? props.onOk : () => {},
@@ -139,17 +244,26 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     });
   };
 
-  // TODO: To check that all calls use translated copies
+  // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
   const showWarnAlert = (props: {
-    title: string;
-    buttonTexts: { primaryActionText: string; secondaryActionText: string };
+    translationKey: string;
     onOk: () => void;
   }): void => {
     showAlert({
       alertType: "WARN",
-      title: props.title,
-      buttonTexts: props.buttonTexts,
-      visible: false,
+      title: i18n.t(`errorMessages.${props.translationKey}.title`) ?? "Warning",
+      description:
+        i18n.t(`errorMessages.${props.translationKey}.body`) ??
+        props.translationKey,
+      buttonTexts: {
+        primaryActionText: i18n.t(
+          `errorMessages.${props.translationKey}.primaryActionText`
+        ),
+        secondaryActionText: i18n.t(
+          `errorMessages.${props.translationKey}.secondaryActionText`
+        )
+      },
+      visible: true,
       onOk: props.onOk,
       onCancel: () => {},
       onExit: () => {}

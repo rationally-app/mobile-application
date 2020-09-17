@@ -35,8 +35,11 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { AlertModalContext } from "../../context/alert";
 import i18n from "i18n-js";
+import {
+  AlertModalContext,
+  getTranslationKeyFromError
+} from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -151,8 +154,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     } catch (e) {
       setIsScanningEnabled(false);
       showErrorAlert({
-        title: "Wrong format",
-        description: e.message,
+        translationKey: getTranslationKeyFromError(e),
         onOk: () => setIsScanningEnabled(true)
       });
     }
