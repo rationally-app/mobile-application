@@ -36,15 +36,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export type SelectionDetails = Pick<
-  IdentificationFlag,
-  "label" | "scannerType"
->;
-
 export const InputSelection: FunctionComponent<{
-  selectionArray: SelectionDetails[];
-  currentSelection: SelectionDetails;
-  onInputSelection: (inputType: SelectionDetails) => void;
+  selectionArray: IdentificationFlag[];
+  currentSelection: IdentificationFlag;
+  onInputSelection: (inputType: IdentificationFlag) => void;
 }> = ({ selectionArray, currentSelection, onInputSelection }) => {
   return (
     <View style={styles.selectionContainer}>

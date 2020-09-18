@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { Dropdown } from "../Layout/Dropdown";
 
 export const ManualPassportInput = (): JSX.Element => {
-  const nationalityItems: { id: string|number, name: string}[] = [
+  const nationalityItems: { id: string | number; name: string }[] = [
     { id: "AFG", name: "Afghanistan" },
     { id: "ALB", name: "Albania" },
     { id: "DZA", name: "Algeria" },

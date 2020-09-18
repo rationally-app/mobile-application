@@ -35,10 +35,14 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { CampaignConfigContext } from "../../context/campaignConfig";
+import {
+  CampaignConfigContext,
+  defaultSelectedIdType
+} from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
-import { InputSelection, SelectionDetails } from "./InputSelection";
+import { InputSelection } from "./InputSelection";
 import { ManualPassportInput } from "./ManualPassportInput";
+import { IdentificationFlag } from "../../types";
 
 const styles = StyleSheet.create({
   content: {
@@ -91,28 +95,22 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
-  const { features, policies } = useContext(CampaignConfigContext);
+  const { features, policies, selectedIdType, setSelectedIdType } = useContext(
+    CampaignConfigContext
+  );
 
-  // to shift to context once tested to preserve across screen
-  const [selectedIdType, setSelectedIdType] = useState<SelectionDetails>({
-    label: "DEFAULT",
-    scannerType: "NONE"
-  });
+  // // to shift to context once tested to preserve across screen
+  // const [selectedIdType, setSelectedIdType] = useState<IdentificationFlag>({
+  //   label: "DEFAULT",
+  //   scannerType: "NONE"
+  // });
 
-  const getSelectionArray = useCallback((): SelectionDetails[] => {
+  const getSelectionArray = useCallback((): IdentificationFlag[] => {
     const selectionArray = [];
-    const defaultLabelName = "DEFAULT";
-    const defaultScannerType = "NONE";
-    selectionArray.push({
-      label: features?.id.label || defaultLabelName,
-      scannerType: features?.id.scannerType || defaultScannerType
-    });
+    selectionArray.push(features?.id || defaultSelectedIdType);
     features?.alternateIds &&
       features.alternateIds.map(alternateId =>
-        selectionArray.push({
-          label: alternateId.label,
-          scannerType: alternateId.scannerType
-        })
+        selectionArray.push(alternateId)
       );
     return selectionArray;
   }, [features]);
@@ -152,11 +150,17 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   }, [shouldShowCamera]);
 
-  // take from context after testing
   useEffect(() => {
     const selectionDetails = getSelectionArray();
-    setSelectedIdType(selectionDetails[0]); // temp test.. will be shifted to context
-  }, [getSelectionArray]);
+    // in the event the saved selection not found.. will always fall back to the first idType in array
+    setSelectedIdType(
+      selectionDetails.some(
+        selection => selection.label === selectedIdType.label
+      )
+        ? selectedIdType
+        : selectionDetails[0]
+    );
+  }, [getSelectionArray, selectedIdType, setSelectedIdType]);
 
   const onCheck = async (input: string): Promise<void> => {
     try {
@@ -196,7 +200,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
-  const onInputSelection = (inputType: SelectionDetails): void => {
+  const onInputSelection = (inputType: IdentificationFlag): void => {
     console.log(inputType);
     setSelectedIdType(inputType);
   };
@@ -220,8 +224,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     );
   };
 
-  console.log("tmd lah");
-  console.log(selectedIdType);
   return (
     <>
       <Credits style={{ bottom: size(3) }} />

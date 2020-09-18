@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import SearchableDropdown from "react-native-searchable-dropdown";
 import { AppText } from "./AppText";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import _ from "lodash";
 import { borderRadius, color, fontSize, size } from "../../common/styles";
 
