@@ -39,6 +39,7 @@ import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
+import { usePrevious } from "../../hooks/usePrevious";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -99,14 +100,23 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     endpoint
   );
 
+  const prevQuotaResponse = usePrevious(quotaResponse);
+
   const {
     cartState,
     cart,
+    updateCartQuota,
     updateCart,
     checkoutCart,
     error,
     clearError
-  } = useCart(ids, sessionToken, endpoint, quotaResponse);
+  } = useCart(ids, sessionToken, endpoint);
+
+  useEffect(() => {
+    if (quotaResponse && quotaResponse !== prevQuotaResponse) {
+      updateCartQuota(quotaResponse.remainingQuota);
+    }
+  }, [quotaResponse, prevQuotaResponse, updateCartQuota]);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -174,10 +184,13 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   ]);
 
   useEffect(() => {
+    console.log("quotaState, cartState", quotaState, cartState);
     if (!error || !quotaError) {
+      console.log("no errors");
       return;
     }
     if (error instanceof SessionError) {
+      console.log("error is session error");
       clearError();
       expireSession();
       return;
@@ -190,6 +203,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
         onOk: () => clearError()
       });
     } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
+      console.log("correct car");
       switch (error.message) {
         case ERROR_MESSAGE.MISSING_SELECTION:
           showAlert({
@@ -200,6 +214,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           break;
 
         case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
+          console.log("show error");
           showAlert({
             ...incompleteEntryAlertProps,
             description:
