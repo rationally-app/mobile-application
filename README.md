@@ -15,11 +15,31 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
 3. Login to Expo using `expo login`. Ask someone for the credentials.
 4. Install Expo on your mobile device and/or simulator and login with the same account. When using a mobile device for testing, [it needs to be on the same network.](https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet)
 5. Install dependencies: `npm install`
-6. Run one of the following to start development:
+6. This step only applies if you are on a windows machine. If not, skip this step.
+   - open `package.json` and replace the `scripts` object with the following:
+
+```json
+{
+  "start": "set APP_BUILD_VERSION=1 && set APP_BINARY_VERSION=dev && set START_STORYBOOK=false && expo start",
+  "start:mock": "set APP_BUILD_VERSION=1 && set APP_BINARY_VERSION=dev && set MOCK=true && expo start",
+  "test": "jest",
+  "test:coverage": "npm run test -- --coverage",
+  "test:watch": "jest --watch",
+  "storybook": "set APP_BUILD_VERSION=1 && set APP_BINARY_VERSION=dev && set START_STORYBOOK=true && expo start",
+  "android": "set APP_BUILD_VERSION=1 && set APP_BINARY_VERSION=dev && expo start --android",
+  "ios": "set APP_BUILD_VERSION=1 && set APP_BINARY_VERSION=dev && expo start --ios",
+  "web": "expo start --web",
+  "eject": "expo eject",
+  "lint": "eslint . --ext .ts,.tsx,.mdx --max-warnings 0",
+  "lint:fix": "npm run lint -- --fix"
+}
+```
+
+7. Run one of the following to start development:
    - `npm run start`
    - `npm run start:mock`: If you'd like to mock the APIs
    - `npm run storybook`: If you'd like to use Storybook for development
-7. Open Expo and launch the app
+8. Open Expo and launch the app
 
 ## Testing
 
