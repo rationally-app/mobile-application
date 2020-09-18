@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 import { View, Text } from "react-native";
 import { Dropdown } from "../Layout/Dropdown";
+import { Picker } from "@react-native-community/picker";
+import { Item } from "../CustomerQuota/ItemsSelection/Item";
 
 export const ManualPassportInput = (): JSX.Element => {
   const nationalityItems: { id: string | number; name: string }[] = [
@@ -210,14 +212,27 @@ export const ManualPassportInput = (): JSX.Element => {
     { id: "ZIM", name: "Zimbabwe" }
   ];
 
+  const [countryState, setCountryState] = useState<string | number>(
+    "Afghanistan"
+  );
+
   return (
     <View>
       <Text>hello MRZ</Text>
-      <Dropdown
+      {/* <Dropdown
         label="Nationality"
         items={nationalityItems}
         onItemSelect={(item: any) => console.log(JSON.stringify(item))}
-      />
+      /> */}
+      <Picker
+        selectedValue={countryState}
+        // style={{ height: 50, width: 200 }}
+        onValueChange={(itemValue, itemIndex) => setCountryState(itemValue)}
+      >
+        {nationalityItems.map(item => (
+          <Picker.Item key={item.name} label={item.name} value={item.name} />
+        ))}
+      </Picker>
     </View>
   );
 };
