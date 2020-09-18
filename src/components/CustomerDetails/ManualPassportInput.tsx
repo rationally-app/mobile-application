@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { Dropdown } from "../Layout/Dropdown";
-import { size } from "../../common/styles";
 
 export const ManualPassportInput = (): JSX.Element => {
   const nationalityItems: { id: string|number, name: string}[] = [
@@ -212,11 +211,8 @@ export const ManualPassportInput = (): JSX.Element => {
   ];
 
   return (
-    <View
-      style={{
-        marginTop: size(3)
-      }}
-    >
+    <View>
+      <Text>hello MRZ</Text>
       <Dropdown
         label="Nationality"
         items={nationalityItems}

@@ -225,9 +225,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   return (
     <>
       <Credits style={{ bottom: size(3) }} />
-      <KeyboardAvoidingScrollView
-        scrollable={selectedIdType.label !== "Passport"}
-      >
+      <KeyboardAvoidingScrollView>
         <TopBackground mode={config.appMode} />
         <View style={styles.content}>
           <View style={styles.headerText}>
