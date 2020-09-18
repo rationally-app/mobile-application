@@ -1,6 +1,6 @@
 import { useState, useContext, useCallback, useEffect } from "react";
 import { Sentry } from "../../utils/errorTracking";
-import { getQuota, NotEligibleError, QuotaError } from "../../services/quota";
+import { getQuota, NotEligibleError } from "../../services/quota";
 import { ProductContext } from "../../context/products";
 import { transform } from "lodash";
 import { Quota, CampaignPolicy } from "../../types";
@@ -113,21 +113,13 @@ export const useQuota = (
       } catch (e) {
         if (e instanceof NotEligibleError) {
           setQuotaState("NOT_ELIGIBLE");
-        } else if (e instanceof QuotaError) {
-          Sentry.addBreadcrumb({
-            category: "useQuota",
-            message: "fetchQuota - quota error"
-          });
-          setQuotaError(
-            new Error(
-              "Error getting quota. We've noted this down and are looking into it!"
-            )
-          );
+          return;
         } else {
           Sentry.addBreadcrumb({
             category: "useQuota",
             message: "fetchQuota - unidentified error"
           });
+          setQuotaState("DEFAULT");
           setQuotaError(e);
         }
       }
