@@ -46,7 +46,37 @@ export enum ERROR_MESSAGE {
   PAST_TRANSACTIONS_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
 }
 
-export const getTranslationKeyFromError = (error: Error): string => {
+const getTranslationKeyFromError = (error: Error): string => {
+  switch (error.name) {
+    case "CampaignConfigError":
+      return getTranslationKeyFromErrorMessage(
+        ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR
+      );
+    case "SessionError":
+      return getTranslationKeyFromErrorMessage(
+        ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+      );
+    case "PastTransactionError":
+      return getTranslationKeyFromErrorMessage(
+        ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
+      );
+    case "QuotaError":
+      return getTranslationKeyFromErrorName(error);
+    case "OTPWrongError":
+      return getTranslationKeyFromErrorName(error);
+    case "OTPExpiredError":
+      return getTranslationKeyFromErrorName(error);
+    case "LoginError":
+      return getTranslationKeyFromErrorName(error);
+    case "AuthError":
+      return getTranslationKeyFromErrorName(error);
+    case "Error":
+      return getTranslationKeyFromErrorMessage(error.message);
+  }
+  return "";
+};
+
+const getTranslationKeyFromErrorName = (error: Error): string => {
   switch (error.name) {
     case "LoginError":
       return "systemErrorLoginIssue";
@@ -73,7 +103,7 @@ export const getTranslationKeyFromError = (error: Error): string => {
   }
 };
 
-export const getTranslationKeyFromMessage = (message: string): string => {
+const getTranslationKeyFromErrorMessage = (message: string): string => {
   switch (message) {
     case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
       return "alreadyUsedCode";
@@ -162,10 +192,7 @@ interface AlertModalContext {
     onCancel?: () => void;
     content?: Record<string, string>;
   }) => void;
-  showErrorAlert: (props: {
-    translationKey: string;
-    onOk?: () => void;
-  }) => void;
+  showErrorAlert: (error: Error, onOk?: () => void) => void;
   showWarnAlert: (props: { translationKey: string; onOk: () => void }) => void;
   clearAlert: () => void;
 }
@@ -196,19 +223,20 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     onCancel?: () => void;
     content?: Record<string, string>;
   }): void => {
+    const translationKey = getTranslationKeyFromError(error);
     showAlert({
       alertType: "CONFIRM",
-      title: i18n.t(`errorMessages.${props.translationKey}.title`) ?? "Confirm",
+      title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Confirm",
       description: i18n.t(
-        `errorMessages.${props.translationKey}.body`,
+        `errorMessages.${translationKey}.body`,
         props.content
       ),
       buttonTexts: {
         primaryActionText: i18n.t(
-          `errorMessages.${props.translationKey}.primaryActionText`
+          `errorMessages.${translationKey}.primaryActionText`
         ),
         secondaryActionText: i18n.t(
-          `errorMessages.${props.translationKey}.secondaryActionText`
+          `errorMessages.${translationKey}.secondaryActionText`
         )
       },
       visible: true,
@@ -219,26 +247,22 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
   };
 
   // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
-  const showErrorAlert = (props: {
-    translationKey: string;
-    onOk?: () => void;
-  }): void => {
+  const showErrorAlert = (error: Error, onOk?: () => void): void => {
+    const translationKey = getTranslationKeyFromError(error);
     showAlert({
       alertType: "ERROR",
-      title: i18n.t(`errorMessages.${props.translationKey}.title`) ?? "Error",
+      title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Error",
       description:
-        i18n.t(`errorMessages.${props.translationKey}.body`) ??
-        props.translationKey,
+        i18n.t(`errorMessages.${translationKey}.body`) ?? translationKey,
       buttonTexts: {
         primaryActionText:
-          i18n.t(`errorMessages.${props.translationKey}.primaryActionText`) ??
-          "OK",
+          i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",
         secondaryActionText: i18n.t(
-          `errorMessages.${props.translationKey}.secondaryActionText`
+          `errorMessages.${translationKey}.secondaryActionText`
         )
       },
       visible: true,
-      onOk: !!props.onOk ? props.onOk : () => {},
+      onOk: !!onOk ? onOk : () => {},
       onCancel: () => {},
       onExit: () => {}
     });
@@ -249,18 +273,18 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     translationKey: string;
     onOk: () => void;
   }): void => {
+    const translationKey = getTranslationKeyFromError(error);
     showAlert({
       alertType: "WARN",
-      title: i18n.t(`errorMessages.${props.translationKey}.title`) ?? "Warning",
+      title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Warning",
       description:
-        i18n.t(`errorMessages.${props.translationKey}.body`) ??
-        props.translationKey,
+        i18n.t(`errorMessages.${translationKey}.body`) ?? translationKey,
       buttonTexts: {
         primaryActionText: i18n.t(
-          `errorMessages.${props.translationKey}.primaryActionText`
+          `errorMessages.${translationKey}.primaryActionText`
         ),
         secondaryActionText: i18n.t(
-          `errorMessages.${props.translationKey}.secondaryActionText`
+          `errorMessages.${translationKey}.secondaryActionText`
         )
       },
       visible: true,

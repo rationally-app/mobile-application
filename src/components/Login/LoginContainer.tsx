@@ -40,12 +40,12 @@ import { requestOTP, LoginError, AuthError } from "../../services/auth";
 import {
   AlertModalContext,
   ERROR_MESSAGE,
-  getTranslationKeyFromError,
   getTranslationKeyFromMessage
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
+import { SessionError } from "../../services/helpers";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -157,10 +157,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
-        showErrorAlert({
-          translationKey: getTranslationKeyFromError(e),
-          onOk: () => resetStage()
-        });
+        showErrorAlert(e, () => resetStage());
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -187,13 +184,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
       if (queryEndpoint && queryKey) {
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
-          const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
+          const error = new SessionError(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
-          showErrorAlert({
-            translationKey: getTranslationKeyFromMessage(
-              ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-            )
-          });
+          showErrorAlert(error);
           setLoginStage("SCAN");
         } else {
           setTempAuthCredentials({
@@ -254,7 +247,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
         if (e instanceof AuthError) {
-          showErrorAlert({ translationKey: getTranslationKeyFromError(e) });
+          showErrorAlert(e);
         } else {
           setState(() => {
             throw error; // Let ErrorBoundary handle

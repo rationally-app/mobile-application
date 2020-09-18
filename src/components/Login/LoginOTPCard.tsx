@@ -18,10 +18,7 @@ import {
   OTPExpiredError
 } from "../../services/auth";
 import { Sentry } from "../../utils/errorTracking";
-import {
-  AlertModalContext,
-  getTranslationKeyFromError
-} from "../../context/alert";
+import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { AuthCredentials } from "../../types";
 
@@ -108,12 +105,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     } catch (e) {
       Sentry.captureException(e);
       if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
-        showErrorAlert({ translationKey: getTranslationKeyFromError(e) });
+        showErrorAlert(e);
       } else if (e instanceof LoginError) {
-        showErrorAlert({
-          translationKey: getTranslationKeyFromError(e),
-          onOk: () => resetStage()
-        });
+        showErrorAlert(e, () => resetStage());
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle

@@ -13,8 +13,7 @@ import { ProductContext } from "../../../context/products";
 import {
   AlertModalContext,
   ERROR_MESSAGE,
-  WARNING_MESSAGE,
-  getTranslationKeyFromMessage
+  WARNING_MESSAGE
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
@@ -64,10 +63,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       addId(id);
     } catch (e) {
       setIsAddUserModalVisible(false);
-      showErrorAlert({
-        translationKey: getTranslationKeyFromMessage(e.message),
-        onOk: () => setIsAddUserModalVisible(true)
-      });
+      showErrorAlert(e, () => setIsAddUserModalVisible(true));
     }
   };
 

@@ -35,10 +35,7 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import {
-  AlertModalContext,
-  getTranslationKeyFromError
-} from "../../context/alert";
+import { AlertModalContext } from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -152,10 +149,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
-      showErrorAlert({
-        translationKey: getTranslationKeyFromError(e),
-        onOk: () => setIsScanningEnabled(true)
-      });
+      //TODO: What is e
+      showErrorAlert(e, () => setIsScanningEnabled(true));
     }
   };
 
