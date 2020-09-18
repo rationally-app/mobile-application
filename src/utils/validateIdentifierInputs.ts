@@ -23,6 +23,12 @@ export const validateIdentifierInputs = (
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
+    if (
+      textInputType === "PHONE_NUMBER" &&
+      !isMatchRegex(value, validationRegex)
+    ) {
+      throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
+    }
     if (!isMatchRegex(value, validationRegex)) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
