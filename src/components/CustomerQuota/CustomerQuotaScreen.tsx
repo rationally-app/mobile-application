@@ -39,7 +39,6 @@ import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
-import { usePrevious } from "../../hooks/usePrevious";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -100,23 +99,21 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     endpoint
   );
 
-  const prevQuotaResponse = usePrevious(quotaResponse);
-
   const {
     cartState,
     cart,
-    updateCartQuota,
+    setRemainingQuota,
     updateCart,
     checkoutCart,
     error,
     clearError
-  } = useCart(ids, sessionToken, endpoint);
+  } = useCart(ids, sessionToken, endpoint, quotaResponse?.remainingQuota);
 
   useEffect(() => {
-    if (quotaResponse && quotaResponse !== prevQuotaResponse) {
-      updateCartQuota(quotaResponse.remainingQuota);
+    if (quotaResponse) {
+      setRemainingQuota(quotaResponse.remainingQuota);
     }
-  }, [quotaResponse, prevQuotaResponse, updateCartQuota]);
+  }, [quotaResponse, setRemainingQuota]);
 
   useEffect(() => {
     Sentry.addBreadcrumb({

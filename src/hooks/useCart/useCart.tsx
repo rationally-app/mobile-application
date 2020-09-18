@@ -33,7 +33,7 @@ export type CartHook = {
     identifierInputs?: IdentifierInput[]
   ) => void;
   checkoutCart: () => void;
-  updateCartQuota: (quota: ItemQuota[]) => void;
+  setRemainingQuota: (quota: ItemQuota[]) => void;
   checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
@@ -45,62 +45,6 @@ const getItem = (
 ): [CartItem | undefined, number] => {
   const idx = cart.findIndex(item => item.category === category);
   return [cart[idx], idx];
-};
-
-const updateCartProduct = (
-  cart: Cart,
-  getProduct: ProductContextValue["getProduct"]
-): Cart => {
-  return cart.map(
-    ({
-      category,
-      quantity: remainingQuantity,
-      lastTransactionTime,
-      identifierInputs
-    }) => {
-      remainingQuantity = Math.max(remainingQuantity, 0);
-      const [existingItem] = getItem(cart, category);
-
-      const product = getProduct(category);
-      const defaultQuantity = product?.quantity.default || 0;
-      const defaultIdentifierInputs =
-        product?.identifiers?.map(
-          ({ label, textInput, scanButton, validationRegex }) => ({
-            label: label,
-            value: "",
-            ...(textInput.type ? { textInputType: textInput.type } : {}),
-            ...(scanButton.type ? { scanButtonType: scanButton.type } : {}),
-            ...(validationRegex ? { validationRegex } : {})
-          })
-        ) || [];
-
-      let descriptionAlert: string | undefined = undefined;
-      if (product && product.alert) {
-        const expandedQuota = product.quantity.limit - remainingQuantity;
-        descriptionAlert =
-          expandedQuota >= product.alert.threshold
-            ? product.alert.label
-            : undefined;
-      }
-
-      const checkoutLimit = product?.quantity.checkoutLimit;
-      const maxQuantity = checkoutLimit
-        ? Math.min(remainingQuantity, checkoutLimit)
-        : remainingQuantity;
-
-      return {
-        category,
-        quantity: Math.min(
-          maxQuantity,
-          existingItem?.quantity || defaultQuantity
-        ),
-        maxQuantity,
-        descriptionAlert,
-        lastTransactionTime,
-        identifierInputs: identifierInputs || defaultIdentifierInputs
-      };
-    }
-  );
 };
 
 const mergeWithCart = (
@@ -170,7 +114,8 @@ const mergeWithCart = (
 export const useCart = (
   ids: string[],
   authKey: string,
-  endpoint: string
+  endpoint: string,
+  initializedQuota?: ItemQuota[]
 ): CartHook => {
   const { products, getProduct } = useContext(ProductContext);
   const [cart, setCart] = useState<Cart>([]);
@@ -178,25 +123,29 @@ export const useCart = (
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
   const clearError = useCallback((): void => setError(undefined), []);
-
-  /**
-   * Merge quota response with current cart whenever products change.
-   */
-  useEffect(() => {
-    setCart(cart => updateCartProduct(cart, getProduct));
-  }, [products, getProduct]);
-
-  /**
-   * Merge quota response with current cart whenever quota response change.
-   */
-  const updateCartQuota: CartHook["updateCartQuota"] = useCallback(
-    (remainingQuota: ItemQuota[]) => {
-      if (remainingQuota) {
-        setCart(cart => mergeWithCart(cart, remainingQuota, getProduct));
-      }
-    },
-    [getProduct]
+  const [remainingQuota, setRemainingQuota] = useState<ItemQuota[] | undefined>(
+    initializedQuota
   );
+
+  /**
+   * Merge quota response with current cart whenever remaining quota change or product change.
+   */
+
+  useEffect(() => {
+    if (remainingQuota) {
+      setCart(cart => mergeWithCart(cart, remainingQuota, getProduct));
+    }
+  }, [remainingQuota, products, getProduct]);
+
+  // const updateCartQuota: CartHook["updateCartQuota"] = useCallback(
+  //   (remainingQuota: ItemQuota[]) => {
+  //     if (remainingQuota) {
+  //       setCart(cart => mergeWithCart(cart, remainingQuota, getProduct));
+  //     }
+  //   },
+  //   [getProduct]
+  // );
+
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
     setCart([]);
   }, []);
@@ -301,7 +250,7 @@ export const useCart = (
     cartState,
     cart,
     emptyCart,
-    updateCartQuota,
+    setRemainingQuota,
     updateCart,
     checkoutCart,
     checkoutResult,
