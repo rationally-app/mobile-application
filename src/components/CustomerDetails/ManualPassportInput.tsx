@@ -219,11 +219,11 @@ export const ManualPassportInput = (): JSX.Element => {
   return (
     <View>
       <Text>hello MRZ</Text>
-      {/* <Dropdown
+      <Dropdown
         label="Nationality"
         items={nationalityItems}
         onItemSelect={(item: any) => console.log(JSON.stringify(item))}
-      /> */}
+      />
       <Picker
         selectedValue={countryState}
         // style={{ height: 50, width: 200 }}
