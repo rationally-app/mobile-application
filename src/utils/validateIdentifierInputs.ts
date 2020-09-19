@@ -2,6 +2,8 @@ import { IdentifierInput } from "../types";
 import { fullPhoneNumberValidator } from "./validatePhoneNumbers";
 import { ERROR_MESSAGE } from "../context/alert";
 
+const defaultPhoneNumberValidationRegex = "^\\+[0-9]*$";
+
 const isMatchRegex = (text: string, regex?: string): boolean => {
   if (!regex) {
     return true;
@@ -25,7 +27,10 @@ export const validateIdentifierInputs = (
     }
     if (
       textInputType === "PHONE_NUMBER" &&
-      !isMatchRegex(value, validationRegex)
+      !isMatchRegex(
+        value,
+        validationRegex ? validationRegex : defaultPhoneNumberValidationRegex
+      )
     ) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
