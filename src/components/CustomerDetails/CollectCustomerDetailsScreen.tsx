@@ -10,8 +10,7 @@ import {
   StyleSheet,
   Keyboard,
   Vibration,
-  BackHandler,
-  YellowBox
+  BackHandler
 } from "react-native";
 import { size, fontSize, borderRadius } from "../../common/styles";
 import { Card } from "../Layout/Card";
