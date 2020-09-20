@@ -10,7 +10,8 @@ import {
   StyleSheet,
   Keyboard,
   Vibration,
-  BackHandler
+  BackHandler,
+  YellowBox
 } from "react-native";
 import { size, fontSize, borderRadius } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -98,12 +99,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { features, policies, selectedIdType, setSelectedIdType } = useContext(
     CampaignConfigContext
   );
-
-  // // to shift to context once tested to preserve across screen
-  // const [selectedIdType, setSelectedIdType] = useState<IdentificationFlag>({
-  //   label: "DEFAULT",
-  //   scannerType: "NONE"
-  // });
 
   const getSelectionArray = useCallback((): IdentificationFlag[] => {
     const selectionArray = [];
@@ -212,7 +207,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const getInputComponent = (): JSX.Element => {
     return selectedIdType.label === "Passport" &&
       selectedIdType.scannerType === "NONE" ? (
-      <ManualPassportInput />
+      <ManualPassportInput
+        idInput={idInput}
+        setIdInput={setIdInput}
+        submitId={() => onCheck(idInput)}
+      />
     ) : (
       <InputIdSection
         openCamera={() => setShouldShowCamera(true)}
