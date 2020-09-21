@@ -15,6 +15,7 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
+    "@react-native-community/picker": "1.6.0",
     "@types/lodash": "^4.14.158",
     "date-fns": "^2.11.1",
     "expo": "^38.0.0",
@@ -38,14 +39,12 @@
     "react-native-qrcode-svg": "^6.0.3",
     "react-native-reanimated": "~1.9.0",
     "react-native-screens": "~2.9.0",
-    "react-native-searchable-dropdown": "^1.1.1",
     "react-native-svg": "12.1.0",
     "react-native-webview": "^10.3.2",
     "react-navigation": "^4.1.0",
     "react-navigation-drawer": "^2.5.0",
     "react-navigation-stack": "^1.10.3",
-    "sentry-expo": "^2.0.3",
-    "@react-native-community/picker": "1.6.0"
+    "sentry-expo": "^2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
