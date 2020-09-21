@@ -138,7 +138,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       <AppText>{i18n.t("loginOTPCard.sendingOtp")}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <InputWithLabel
-          label={i18n.t("loginOTPCard.Otp")}
+          label={i18n.t("loginOTPCard.otp")}
           value={oTPValue}
           onChange={({ nativeEvent: { text } }) => handleChange(text)}
           onSubmitEditing={onSubmitOTP}
