@@ -256,7 +256,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         setIsLoading(false);
         setLoginStage("MOBILE_NUMBER");
       } catch (e) {
-        const error = new Error(`onBarCodeScanned ${e}`);
+        const error = new Error(
+          `${i18n.t("thrownErrors.onBarcodeScanned")} ${e}`
+        );
         Sentry.captureException(error);
         if (e instanceof AuthError) {
           showAlert(e.alertProps);

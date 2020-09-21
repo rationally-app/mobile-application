@@ -10,17 +10,7 @@ import { Content } from "./Content";
 import { Providers } from "../context/composeProviders";
 import { DrawerContextProvider } from "../context/drawer";
 import { CampaignConfigsStoreContextProvider } from "../context/campaignConfigsStore";
-import * as Localization from "expo-localization";
-import zh from "../common/zh.json";
-import en from "../common/en.json";
-import i18n from "i18n-js";
-
-i18n.fallbacks = true;
-i18n.locale = Localization.locale;
-i18n.translations = {
-  zh,
-  en
-};
+import "../common/i18n/i18nSetup";
 
 const App = (): ReactElement => {
   return (

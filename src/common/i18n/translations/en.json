@@ -89,5 +89,13 @@
   "notEligibleScreen": {
     "notEligible": "Not eligible",
     "logAppeal": "Please log an appeal request."
+  },
+  "thrownErrors": {
+    "campaignConfigNotLoad": "Campaign config not loaded",
+    "updateCheckError": "Error while trying to check for updates:",
+    "onBarcodeScanned": "onBarCodeScanned",
+    "noAuthCred": "No auth credentials found",
+    "noCampaignConfig": "No campaign config found",
+    "checkIdFormat": "Please check that the ID is in the correct format"
   }
 }
