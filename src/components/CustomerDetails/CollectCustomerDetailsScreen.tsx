@@ -165,8 +165,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       }
       const id = validateAndCleanId(
         input,
-        features.id.validation,
-        features.id.validationRegex
+        selectedIdType.validation,
+        selectedIdType.validationRegex
       );
       Vibration.vibrate(50);
       const defaultProducts = policies?.filter(
