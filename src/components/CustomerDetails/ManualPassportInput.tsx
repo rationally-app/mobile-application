@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   modalView: {
-    paddingTop: 30,
-    paddingHorizontal: 30,
+    paddingTop: size(4),
+    paddingHorizontal: 0,
     marginBottom: 0,
     padding: 0,
     width: Dimensions.get("window").width,
@@ -80,8 +80,14 @@ const styles = StyleSheet.create({
     paddingVertical: size(1)
   },
   listItemContent: {
-    fontFamily: "brand-regular",
-    fontSize: fontSize(3)
+    paddingVertical: size(3),
+    backgroundColor: color("grey", 10)
+  },
+  listItemTag: {
+    marginLeft: size(3),
+    fontFamily: "brand-bold",
+    color: color("blue", 50),
+    fontSize: fontSize(1)
   },
   nationalityInput: {
     borderColor: "black",
@@ -89,7 +95,12 @@ const styles = StyleSheet.create({
   }
 });
 
-const nationalityItems: { id: string | number; name: string }[] = [
+const nationalityItems: {
+  id: string | number;
+  name: string;
+  tag?: boolean;
+}[] = [
+  { id: "A", name: "A", tag: true },
   { id: "AFG", name: "Afghanistan" },
   { id: "ALB", name: "Albania" },
   { id: "DZA", name: "Algeria" },
@@ -102,6 +113,7 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "AUS", name: "Australia" },
   { id: "AUT", name: "Austria" },
   { id: "AZE", name: "Azerbaijan" },
+  { id: "B", name: "B", tag: true },
   { id: "BHS", name: "Bahamas" },
   { id: "BHR", name: "Bahrain" },
   { id: "BGD", name: "Bangladesh" },
@@ -119,6 +131,7 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "BGR", name: "Bulgaria" },
   { id: "BFA", name: "Burkina Faso" },
   { id: "BDI", name: "Burundi" },
+  { id: "C", name: "C", tag: true },
   { id: "KHM", name: "Cambodia" },
   { id: "CMR", name: "Cameroon" },
   { id: "CAN", name: "Canada" },
@@ -137,12 +150,14 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "CUB", name: "Cuba" },
   { id: "CYP", name: "Cyprus" },
   { id: "CZE", name: "Czech Republic" },
+  { id: "D", name: "D", tag: true },
   { id: "PRK", name: "Democratic People's Republic of Korea" },
   { id: "COD", name: "Democratic Republic of Congo" },
   { id: "DNK", name: "Denmark" },
   { id: "DJI", name: "Djibouti" },
   { id: "DMA", name: "Dominica" },
   { id: "DOM", name: "Dominican Republic" },
+  { id: "E", name: "E", tag: true },
   { id: "TMP", name: "East Timor" },
   { id: "ECU", name: "Ecuador" },
   { id: "EGY", name: "Egypt" },
@@ -151,9 +166,11 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "ERI", name: "Eritrea" },
   { id: "EST", name: "Estonia" },
   { id: "ETH", name: "Ethiopia" },
+  { id: "F", name: "F", tag: true },
   { id: "FJI", name: "Fiji" },
   { id: "FIN", name: "Finland" },
   { id: "FRA", name: "France" },
+  { id: "G", name: "G", tag: true },
   { id: "GAB", name: "Gabon" },
   { id: "GMB", name: "Gambia" },
   { id: "GEO", name: "Georgia" },
@@ -166,11 +183,13 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "GIN", name: "Guinea" },
   { id: "GNB", name: "Guinea-bissau" },
   { id: "GUY", name: "Guyana" },
+  { id: "H", name: "H", tag: true },
   { id: "HTI", name: "Haiti" },
   { id: "VAT", name: "Holy See (Vatican City State)" },
   { id: "HND", name: "Honduras" },
   { id: "HKG", name: "Hong Kong Sar" },
   { id: "HUN", name: "Hungary" },
+  { id: "I", name: "I", tag: true },
   { id: "ISL", name: "Iceland" },
   { id: "IND", name: "India" },
   { id: "IDN", name: "Indonesia" },
@@ -179,14 +198,17 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "IRL", name: "Ireland" },
   { id: "ISR", name: "Israel" },
   { id: "ITA", name: "Italy" },
+  { id: "J", name: "J", tag: true },
   { id: "JAM", name: "Jamaica" },
   { id: "JPN", name: "Japan" },
   { id: "JOR", name: "Jordan" },
+  { id: "K", name: "K", tag: true },
   { id: "KAZ", name: "Kazakhstan" },
   { id: "KEN", name: "Kenya" },
   { id: "KIR", name: "Kiribati" },
   { id: "KWT", name: "Kuwait" },
   { id: "KGZ", name: "Kyrgyzstan" },
+  { id: "L", name: "L", tag: true },
   { id: "LAO", name: "Laos" },
   { id: "LVA", name: "Latvia" },
   { id: "LBN", name: "Lebanon" },
@@ -196,6 +218,7 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "LIE", name: "Liechtenstein" },
   { id: "LTU", name: "Lithuania" },
   { id: "LUX", name: "Luxembourg" },
+  { id: "M", name: "M", tag: true },
   { id: "MAC", name: "Macao Sar" },
   { id: "MDG", name: "Madagascar" },
   { id: "MWI", name: "Malawi" },
@@ -214,6 +237,7 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "MAR", name: "Morocco" },
   { id: "MOZ", name: "Mozambique" },
   { id: "MMR", name: "Myanmar" },
+  { id: "N", name: "N", tag: true },
   { id: "NAM", name: "Namibia" },
   { id: "NRU", name: "Nauru" },
   { id: "NPL", name: "Nepal" },
@@ -225,7 +249,9 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "NIU", name: "Niue" },
   { id: "MNP", name: "Northern Mariana Islands" },
   { id: "NOR", name: "Norway" },
+  { id: "O", name: "O", tag: true },
   { id: "OMN", name: "Oman" },
+  { id: "P", name: "P", tag: true },
   { id: "PAK", name: "Pakistan" },
   { id: "PLW", name: "Palau" },
   { id: "PAN", name: "Panama" },
@@ -236,12 +262,15 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "POL", name: "Poland" },
   { id: "PRT", name: "Portugal" },
   { id: "PRI", name: "Puerto Rico" },
+  { id: "Q", name: "Q", tag: true },
   { id: "QAT", name: "Qatar" },
+  { id: "R", name: "R", tag: true },
   { id: "KOR", name: "Republic of Korea" },
   { id: "MDA", name: "Republic of Moldova" },
   { id: "ROU", name: "Romania" },
   { id: "RUS", name: "Russia" },
   { id: "RWA", name: "Rwanda" },
+  { id: "S", name: "S", tag: true },
   { id: "KNA", name: "Saint Kitts and Nevis" },
   { id: "LCA", name: "Saint Lucia" },
   { id: "VCT", name: "Saint Vincent and the Grenadines" },
@@ -268,6 +297,7 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "SWE", name: "Sweden" },
   { id: "CHE", name: "Switzerland" },
   { id: "SYR", name: "Syria" },
+  { id: "T", name: "T", tag: true },
   { id: "TWN", name: "Taiwan" },
   { id: "TJK", name: "Tajikistan" },
   { id: "THA", name: "Thailand" },
@@ -279,6 +309,7 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "TUR", name: "Turkey" },
   { id: "TKM", name: "Turkmenistan" },
   { id: "TUV", name: "Tuvalu" },
+  { id: "U", name: "U", tag: true },
   { id: "UGA", name: "Uganda" },
   { id: "UKR", name: "Ukraine" },
   { id: "ARE", name: "United Arab Emirates" },
@@ -287,11 +318,14 @@ const nationalityItems: { id: string | number; name: string }[] = [
   { id: "USA", name: "United States" },
   { id: "URY", name: "Uruguay" },
   { id: "UZB", name: "Uzbekistan" },
+  { id: "V", name: "V", tag: true },
   { id: "VUT", name: "Vanuatu" },
   { id: "VEN", name: "Venezuela" },
   { id: "VNM", name: "Vietnam" },
   { id: "VGB", name: "Virgin Islands (British)" },
+  { id: "Y", name: "Y", tag: true },
   { id: "YEM", name: "Yemen" },
+  { id: "Z", name: "Z", tag: true },
   { id: "ZMB", name: "Zambia" },
   { id: "ZIM", name: "Zimbabwe" }
 ];
@@ -305,18 +339,26 @@ export interface AlertModalProps {
 
 export const ListItem: FunctionComponent<{
   title: string;
+  isTag: boolean;
   closeModal: () => void;
   onTitleSelection: (title: string) => void;
-}> = ({ title, onTitleSelection }) => {
+}> = ({ title, isTag, onTitleSelection }) => {
   return (
     <View style={styles.listItemView}>
-      <TouchableOpacity
-        onPress={() => {
-          onTitleSelection(title);
-        }}
-      >
-        <Text style={styles.listItemContent}>{title}</Text>
-      </TouchableOpacity>
+      {isTag ? (
+        <Text style={styles.listItemTag}>{title}</Text>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            onTitleSelection(title);
+          }}
+        >
+          <View style={styles.listItemContent}>
+            {/* <Text style={styles.listItemContent}>{title}</Text> */}
+            <AppText style={{ marginLeft: size(3) }}>{title}</AppText>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -333,7 +375,7 @@ export const ManualPassportInput: FunctionComponent<{
     visible: false
   });
   const [filterState, setFilterState] = useState<
-    { id: string | number; name: string }[]
+    { id: string | number; name: string; tag?: boolean }[]
   >(nationalityItems);
   const [selectedTitle, setSelectedTitle] = useState("Select Country");
 
@@ -349,14 +391,13 @@ export const ManualPassportInput: FunctionComponent<{
   };
 
   const onTitleSelection = (title: string) => {
-    console.log(title);
     setSelectedTitle(title);
     closeModal();
   };
 
   const renderHeader = () => {
     return (
-      <View>
+      <View style={{ marginHorizontal: size(3) }}>
         <AppText style={{ fontFamily: "brand-bold" }}>
           {"Country of nationality"}
         </AppText>
@@ -377,7 +418,7 @@ export const ManualPassportInput: FunctionComponent<{
         style={{
           marginTop: size(1),
           height: 1,
-          width: "86%",
+          width: "100%",
           backgroundColor: "#CED0CE"
         }}
       />
@@ -404,6 +445,7 @@ export const ManualPassportInput: FunctionComponent<{
               renderItem={({ item }) => (
                 <ListItem
                   title={item.name}
+                  isTag={item.tag || false}
                   closeModal={closeModal}
                   onTitleSelection={onTitleSelection}
                 />
@@ -420,7 +462,6 @@ export const ManualPassportInput: FunctionComponent<{
           </AppText>
           <View
             onTouchStart={() => {
-              console.log("hello leh");
               setAlertState({
                 alertType: "unknownType",
                 title: "Title",
