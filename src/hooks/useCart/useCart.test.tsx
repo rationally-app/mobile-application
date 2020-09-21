@@ -114,7 +114,7 @@ describe("useCart", () => {
 
       let ids = ["ID1"];
       const { rerender, result } = renderHook(
-        () => useCart(ids, key, endpoint, quotaResponse),
+        () => useCart(ids, key, endpoint, quotaResponse.remainingQuota),
         { wrapper }
       );
 
@@ -882,7 +882,8 @@ describe("useCart", () => {
         </ProductContextProvider>
       );
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
+        () =>
+          useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
         { wrapper: AlertProductWrapper }
       );
 
@@ -946,7 +947,8 @@ describe("useCart", () => {
         </ProductContextProvider>
       );
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
+        () =>
+          useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
         { wrapper: AlertProductWrapper }
       );
       expect(result.current.cartState).toBe("DEFAULT");
