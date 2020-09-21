@@ -1,25 +1,15 @@
 import React, { useState, FunctionComponent } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import { size, fontSize, borderRadius, color } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { DropdownFilterModal, DropdownItem } from "./DropdownFilterModal";
 
-const styles = StyleSheet.create({
-  inputAndButtonWrapper: {
-    marginTop: size(3),
-    flexDirection: "row",
-    alignItems: "flex-end"
-  },
-  inputWrapper: {
-    flex: 1,
-    marginRight: size(1)
-  }
-});
+const styles = StyleSheet.create({});
 
 export interface DropdownFilterInput {
   label: string;
   placeholder: string;
-  value: string;
+  value?: string;
   dropdownItems: DropdownItem[];
   onItemSelection: (title: string) => void;
 }
@@ -38,41 +28,41 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
   };
 
   return (
-    <View style={styles.inputAndButtonWrapper}>
+    <View>
       <DropdownFilterModal
         isVisible={modalVisible}
         dropdownItems={dropdownItems}
         onTitleSelection={onItemSelection}
         closeModal={closeModal}
       />
-      <View style={styles.inputWrapper}>
-        <AppText style={{ fontFamily: "brand-bold" }}>{label}</AppText>
-        <View
-          onTouchStart={() => {
-            setModalVisible(true);
-          }}
+      <AppText style={{ fontFamily: "brand-bold" }}>{label}</AppText>
+      <View
+        onTouchStart={() => {
+          setModalVisible(true);
+        }}
+        style={{
+          marginTop: size(1),
+          minHeight: size(6),
+          borderRadius: borderRadius(2),
+          borderWidth: 1,
+          backgroundColor: color("grey", 0),
+          borderColor: color("blue", 50)
+        }}
+      >
+        <TextInput
           style={{
+            fontFamily: "brand-regular",
+            fontSize: fontSize(0),
             marginTop: size(1),
-            minHeight: size(6),
-            borderRadius: borderRadius(2),
-            borderWidth: 1,
-            backgroundColor: color("grey", 0),
-            borderColor: color("blue", 50)
+            marginLeft: size(1),
+            alignItems: "center",
+            color: color("blue", 50)
           }}
+          placeholder={placeholder}
+          editable={false}
         >
-          <Text
-            style={{
-              fontFamily: "brand-regular",
-              fontSize: fontSize(0),
-              marginTop: size(1),
-              marginLeft: size(1),
-              alignItems: "center",
-              color: color("blue", 50)
-            }}
-          >
-            {value}
-          </Text>
-        </View>
+          {value}
+        </TextInput>
       </View>
     </View>
   );

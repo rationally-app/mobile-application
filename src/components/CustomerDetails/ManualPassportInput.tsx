@@ -29,7 +29,7 @@ export const ManualPassportInput: FunctionComponent<{
   setIdInput: (id: string) => void;
   submitId: () => void;
 }> = ({ idInput, setIdInput, submitId }) => {
-  const [selectedCountry, setSelectedCountry] = useState("Search country");
+  const [selectedCountry, setSelectedCountry] = useState("");
 
   const onItemSelection = (title: string): void => {
     setSelectedCountry(title);
@@ -37,13 +37,17 @@ export const ManualPassportInput: FunctionComponent<{
 
   return (
     <View style={styles.centeredView}>
-      <DropdownFilterInput
-        label="Country of nationality"
-        placeholder="placeholder"
-        value={selectedCountry}
-        dropdownItems={nationalityItems}
-        onItemSelection={onItemSelection}
-      />
+      <View style={styles.inputAndButtonWrapper}>
+        <View style={styles.inputWrapper}>
+          <DropdownFilterInput
+            label="Country of nationality"
+            placeholder="Search Country"
+            value={selectedCountry}
+            dropdownItems={nationalityItems}
+            onItemSelection={onItemSelection}
+          />
+        </View>
+      </View>
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <InputWithLabel
