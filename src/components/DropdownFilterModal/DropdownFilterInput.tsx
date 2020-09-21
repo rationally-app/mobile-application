@@ -1,5 +1,5 @@
 import React, { useState, FunctionComponent } from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import { StyleSheet, View, TextInput } from "react-native";
 import { size, fontSize, borderRadius, color } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { DropdownFilterModal, DropdownItem } from "./DropdownFilterModal";

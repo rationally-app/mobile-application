@@ -94,6 +94,10 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold",
     color: color("blue", 50),
     fontSize: fontSize(1)
+  },
+  listItemText: {
+    marginLeft: size(3),
+    fontFamily: "brand-regular"
   }
 });
 
@@ -135,7 +139,7 @@ export const ListItem: FunctionComponent<{
           }}
         >
           <View style={styles.listItemContent}>
-            <AppText style={{ marginLeft: size(3) }}>{title}</AppText>
+            <AppText style={styles.listItemText}>{title}</AppText>
           </View>
         </TouchableOpacity>
       )}
