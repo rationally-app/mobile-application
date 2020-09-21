@@ -33,7 +33,6 @@ export type CartHook = {
     identifierInputs?: IdentifierInput[]
   ) => void;
   checkoutCart: () => void;
-  setRemainingQuota: (quota: ItemQuota[]) => void;
   checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
@@ -115,7 +114,7 @@ export const useCart = (
   ids: string[],
   authKey: string,
   endpoint: string,
-  initializedQuota?: ItemQuota[]
+  remainingQuota?: ItemQuota[]
 ): CartHook => {
   const { products, getProduct } = useContext(ProductContext);
   const [cart, setCart] = useState<Cart>([]);
@@ -123,9 +122,6 @@ export const useCart = (
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
   const clearError = useCallback((): void => setError(undefined), []);
-  const [remainingQuota, setRemainingQuota] = useState<ItemQuota[] | undefined>(
-    initializedQuota
-  );
 
   /**
    * Merge quota response with current cart whenever remaining quota change or product change.
@@ -136,15 +132,6 @@ export const useCart = (
       setCart(cart => mergeWithCart(cart, remainingQuota, getProduct));
     }
   }, [remainingQuota, products, getProduct]);
-
-  // const updateCartQuota: CartHook["updateCartQuota"] = useCallback(
-  //   (remainingQuota: ItemQuota[]) => {
-  //     if (remainingQuota) {
-  //       setCart(cart => mergeWithCart(cart, remainingQuota, getProduct));
-  //     }
-  //   },
-  //   [getProduct]
-  // );
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
     setCart([]);
@@ -191,7 +178,6 @@ export const useCart = (
   const checkoutCart: CartHook["checkoutCart"] = useCallback(() => {
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
-      console.log("Checkin out useCart");
 
       const allIdentifierInputs: IdentifierInput[] = [];
       const transactions = Object.values(cart)
@@ -250,7 +236,6 @@ export const useCart = (
     cartState,
     cart,
     emptyCart,
-    setRemainingQuota,
     updateCart,
     checkoutCart,
     checkoutResult,

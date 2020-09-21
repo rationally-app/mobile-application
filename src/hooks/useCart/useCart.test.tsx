@@ -146,7 +146,7 @@ describe("useCart", () => {
       expect.assertions(1);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         { wrapper }
       );
 
@@ -175,7 +175,7 @@ describe("useCart", () => {
       expect.assertions(2);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -210,7 +210,7 @@ describe("useCart", () => {
       expect.assertions(2);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -244,7 +244,7 @@ describe("useCart", () => {
       expect.assertions(2);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -280,7 +280,7 @@ describe("useCart", () => {
       expect.assertions(4);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -326,7 +326,7 @@ describe("useCart", () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -365,7 +365,7 @@ describe("useCart", () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -451,7 +451,7 @@ describe("useCart", () => {
         </ProductContextProvider>
       );
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, quotaResponse),
+        () => useCart(ids, key, endpoint, quotaResponse.remainingQuota),
         {
           wrapper: SingleIdentifierProductWrapper
         }
@@ -494,7 +494,7 @@ describe("useCart", () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -557,7 +557,7 @@ describe("useCart", () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -677,7 +677,7 @@ describe("useCart", () => {
         </ProductContextProvider>
       );
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, quotaResponse),
+        () => useCart(ids, key, endpoint, quotaResponse.remainingQuota),
         {
           wrapper: MobileNumberIdentifierProductWrapper
         }
@@ -751,7 +751,7 @@ describe("useCart", () => {
         remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
       };
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, quotaResponse),
+        () => useCart(ids, key, endpoint, quotaResponse.remainingQuota),
         {
           wrapper: InvalidIdentifierProductWrapper
         }
@@ -796,7 +796,7 @@ describe("useCart", () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -841,7 +841,7 @@ describe("useCart", () => {
       expect.assertions(1);
       const ids = ["ID1"];
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleId),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
           wrapper
         }
@@ -882,7 +882,7 @@ describe("useCart", () => {
         </ProductContextProvider>
       );
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleIdAlert),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
         { wrapper: AlertProductWrapper }
       );
 
@@ -946,7 +946,7 @@ describe("useCart", () => {
         </ProductContextProvider>
       );
       const { result } = renderHook(
-        () => useCart(ids, key, endpoint, mockQuotaResSingleIdAlert),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
         { wrapper: AlertProductWrapper }
       );
       expect(result.current.cartState).toBe("DEFAULT");

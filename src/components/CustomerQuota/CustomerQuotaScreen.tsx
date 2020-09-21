@@ -102,18 +102,11 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const {
     cartState,
     cart,
-    setRemainingQuota,
     updateCart,
     checkoutCart,
     error,
     clearError
   } = useCart(ids, sessionToken, endpoint, quotaResponse?.remainingQuota);
-
-  useEffect(() => {
-    if (quotaResponse) {
-      setRemainingQuota(quotaResponse.remainingQuota);
-    }
-  }, [quotaResponse, setRemainingQuota]);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
