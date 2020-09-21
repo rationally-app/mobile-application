@@ -1,6 +1,6 @@
 import React, { useState, FunctionComponent } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
-import { size, borderRadius, color } from "../../common/styles";
+import { size, borderRadius, color, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { DropdownFilterModal, DropdownItem } from "./DropdownFilterModal";
 
@@ -18,7 +18,9 @@ const styles = StyleSheet.create({
   },
   inputText: {
     minHeight: size(6),
-    paddingHorizontal: size(1)
+    paddingHorizontal: size(1),
+    fontSize: fontSize(0),
+    color: color("blue", 50)
   }
 });
 

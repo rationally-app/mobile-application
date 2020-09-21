@@ -157,7 +157,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   }, [getSelectionArray, selectedIdType, setSelectedIdType]);
 
   const onCheck = async (input: string): Promise<void> => {
-    console.log(input);
     try {
       setIsScanningEnabled(false);
       if (!features) {
@@ -196,7 +195,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const onInputSelection = (inputType: IdentificationFlag): void => {
-    console.log(inputType);
     setSelectedIdType(inputType);
   };
 

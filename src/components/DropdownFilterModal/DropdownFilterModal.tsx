@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
     marginBottom: size(3),
     position: "absolute",
     height: size(2.5),
-    // width: 2,
     borderWidth: 1,
     borderRadius: borderRadius(1),
     borderColor: color("grey", 0),
@@ -63,7 +62,6 @@ const styles = StyleSheet.create({
     marginBottom: size(3),
     position: "absolute",
     height: size(2.5),
-    // width: 2,
     borderWidth: 1,
     borderRadius: borderRadius(1),
     borderColor: color("grey", 0),
@@ -220,7 +218,6 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
           {renderSearchField()}
           {renderSeparator()}
           <FlatList
-            // data={nationalityItems}
             data={filterState}
             renderItem={({ item }) => (
               <ListItem

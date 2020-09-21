@@ -25,7 +25,6 @@ export const KeyboardAvoidingScrollView: FunctionComponent<KeyboardAvoidingScrol
       contentContainerStyle={scrollViewContentContainerStyle}
       scrollIndicatorInsets={{ right: 1 }}
       keyboardShouldPersistTaps="handled"
-      nestedScrollEnabled={true}
     >
       {children}
     </ScrollView>
