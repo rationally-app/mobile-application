@@ -90,7 +90,7 @@ export const nationalityItems: {
   { id: "HTI", name: "Haiti" },
   { id: "VAT", name: "Holy See (Vatican City State)" },
   { id: "HND", name: "Honduras" },
-  { id: "HKG", name: "Hong Kong Sar" },
+  { id: "CHN", name: "Hong Kong Sar" },
   { id: "HUN", name: "Hungary" },
   { id: "I", name: "I", tag: true },
   { id: "ISL", name: "Iceland" },

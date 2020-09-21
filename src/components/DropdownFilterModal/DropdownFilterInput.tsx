@@ -1,6 +1,6 @@
 import React, { useState, FunctionComponent } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
-import { size, fontSize, borderRadius, color } from "../../common/styles";
+import { size, borderRadius, color } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { DropdownFilterModal, DropdownItem } from "./DropdownFilterModal";
 
@@ -17,12 +17,8 @@ const styles = StyleSheet.create({
     borderColor: color("blue", 50)
   },
   inputText: {
-    fontFamily: "brand-regular",
-    fontSize: fontSize(0),
-    marginTop: size(1.5),
-    marginLeft: size(1),
-    alignItems: "center",
-    color: color("blue", 50)
+    minHeight: size(6),
+    paddingHorizontal: size(1)
   }
 });
 
@@ -58,6 +54,7 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
         closeModal={closeModal}
       />
       <AppText style={styles.label}>{label}</AppText>
+      {/* need a View because Android is not able to response to onTouchStart on a non-editable TextInput*/}
       <View
         onTouchStart={() => {
           setModalVisible(true);
