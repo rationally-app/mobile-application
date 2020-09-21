@@ -182,7 +182,6 @@ export const nationalityItems: {
   { id: "STP", name: "Sao Tome & Principe" },
   { id: "SAU", name: "Saudi Arabia" },
   { id: "SEN", name: "Senegal" },
-  { id: "SGP", name: "Singapore" },
   { id: "SRB", name: "Serbia" },
   { id: "SYC", name: "Seychelles" },
   { id: "SLE", name: "Sierra Leone" },
