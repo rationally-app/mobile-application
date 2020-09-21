@@ -1,7 +1,7 @@
 import { ERROR_MESSAGE } from "../context/alert";
 
 const validate = (inputPassport: string): boolean => {
-  const passportRegex = "^[A-Za-z]{1,3}-[a-zA-Z0-9]{8,11}$";
+  const passportRegex = "^[A-Za-z]{1,3}-[a-zA-Z0-9]{6,11}$";
   return inputPassport.match(passportRegex) !== null;
 };
 
