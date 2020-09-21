@@ -32,6 +32,17 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5
   },
+  header: {
+    height: "100%",
+    top: 0,
+    position: "absolute"
+  },
+  separator: {
+    marginVertical: size(1),
+    height: 1,
+    width: "100%",
+    backgroundColor: "#CED0CE"
+  },
   crossIconLeft: {
     marginLeft: size(3),
     marginTop: size(7) + 2,
@@ -165,14 +176,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   const renderHeader = (): JSX.Element => {
     return (
       <View>
-        <TopBackground
-          mode={AppMode.production}
-          style={{
-            height: "100%",
-            top: 0,
-            position: "absolute"
-          }}
-        />
+        <TopBackground mode={AppMode.production} style={styles.header} />
         <TouchableOpacity onPress={closeModal}>
           <View>
             <Text style={styles.crossIconLeft} />
@@ -200,16 +204,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   };
 
   const renderSeparator = (): JSX.Element => {
-    return (
-      <View
-        style={{
-          marginTop: size(1),
-          height: 1,
-          width: "100%",
-          backgroundColor: "#CED0CE"
-        }}
-      />
-    );
+    return <View style={styles.separator} />;
   };
 
   return (

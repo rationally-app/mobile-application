@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   inputText: {
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
-    marginTop: size(1),
+    marginTop: size(1.5),
     marginLeft: size(1),
     alignItems: "center",
     color: color("blue", 50)
