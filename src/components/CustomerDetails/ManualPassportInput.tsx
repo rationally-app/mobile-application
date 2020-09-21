@@ -25,11 +25,15 @@ const styles = StyleSheet.create({
   }
 });
 
-export const ManualPassportInput: FunctionComponent<{
-  idInput: string;
+interface ManualPassportInput {
   setIdInput: (id: string) => void;
   submitId: () => void;
-}> = ({ idInput, setIdInput, submitId }) => {
+}
+
+export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
+  setIdInput,
+  submitId
+}) => {
   const [selectedCountry, setSelectedCountry] = useState<DropdownItem | null>(
     null
   );

@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   crossIconLeft: {
     marginLeft: size(3),
     marginTop: size(7) + 2,
+    paddingTop: size(1),
     marginBottom: size(3),
     position: "absolute",
     height: size(2.5),

@@ -208,7 +208,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     return selectedIdType.label === "Passport" &&
       selectedIdType.scannerType === "NONE" ? (
       <ManualPassportInput
-        idInput={idInput}
         setIdInput={setIdInput}
         submitId={() => onCheck(idInput)}
       />
