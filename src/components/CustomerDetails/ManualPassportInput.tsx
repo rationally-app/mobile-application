@@ -60,6 +60,18 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: size(1)
   },
+  searchTextInput: {
+    minHeight: size(6),
+    paddingHorizontal: size(1),
+    marginTop: size(1),
+    backgroundColor: color("grey", 0),
+    borderWidth: 1,
+    borderRadius: borderRadius(2),
+    borderColor: color("blue", 50),
+    fontSize: fontSize(0),
+    color: color("blue", 50),
+    fontFamily: "brand-regular"
+  },
   searchItemContent: {
     fontFamily: "brand-regular",
     fontSize: fontSize(3)
@@ -344,13 +356,18 @@ export const ManualPassportInput: FunctionComponent<{
 
   const renderHeader = () => {
     return (
-      <TextInput
-        style={styles.searchItemContent}
-        onChangeText={text => searchFilterFunction(text)}
-        underlineColorAndroid="transparent"
-        placeholder="Search Here"
-        autoCorrect={false}
-      />
+      <View>
+        <AppText style={{ fontFamily: "brand-bold" }}>
+          {"Country of nationality"}
+        </AppText>
+        <TextInput
+          style={styles.searchTextInput}
+          onChangeText={text => searchFilterFunction(text)}
+          underlineColorAndroid="transparent"
+          placeholder="Search Country"
+          autoCorrect={false}
+        />
+      </View>
     );
   };
 
