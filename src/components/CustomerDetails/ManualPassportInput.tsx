@@ -1,5 +1,5 @@
 import React, { useState, FunctionComponent } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { size } from "../../common/styles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -13,34 +13,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  modalView: {
-    paddingHorizontal: 0,
-    marginBottom: 0,
-    padding: 0,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-    backgroundColor: "white",
-    borderRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  },
-  openButton: {
-    backgroundColor: "#F194FF",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
   inputAndButtonWrapper: {
     marginTop: size(3),
     flexDirection: "row",
@@ -52,21 +24,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export interface AlertModalProps {
-  alertType: string;
-  title: string;
-  description: string;
-  visible: boolean;
-}
-
 export const ManualPassportInput: FunctionComponent<{
   idInput: string;
   setIdInput: (id: string) => void;
   submitId: () => void;
 }> = ({ idInput, setIdInput, submitId }) => {
-  const [selectedCountry, setSelectedCountry] = useState("Search country");
+  const [selectedCountry, setSelectedCountry] = useState("");
 
-  const onTitleSelection = (title: string): void => {
+  const onItemSelection = (title: string): void => {
     setSelectedCountry(title);
   };
 
@@ -76,10 +41,10 @@ export const ManualPassportInput: FunctionComponent<{
         <View style={styles.inputWrapper}>
           <DropdownFilterInput
             label="Country of nationality"
-            placeholder="placeholder"
+            placeholder="Search Country"
             value={selectedCountry}
             dropdownItems={nationalityItems}
-            onTitleSelection={onTitleSelection}
+            onItemSelection={onItemSelection}
           />
         </View>
       </View>

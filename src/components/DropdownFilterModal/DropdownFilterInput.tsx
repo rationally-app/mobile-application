@@ -1,5 +1,5 @@
 import React, { useState, FunctionComponent } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import { size, fontSize, borderRadius, color } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { DropdownFilterModal, DropdownItem } from "./DropdownFilterModal";
@@ -29,9 +29,9 @@ const styles = StyleSheet.create({
 export interface DropdownFilterInput {
   label: string;
   placeholder: string;
-  value: string;
+  value?: string;
   dropdownItems: DropdownItem[];
-  onTitleSelection: (title: string) => void;
+  onItemSelection: (title: string) => void;
 }
 
 export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
@@ -39,7 +39,7 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
   placeholder,
   value,
   dropdownItems,
-  onTitleSelection
+  onItemSelection
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -52,7 +52,7 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
       <DropdownFilterModal
         isVisible={modalVisible}
         dropdownItems={dropdownItems}
-        onTitleSelection={onTitleSelection}
+        onTitleSelection={onItemSelection}
         closeModal={closeModal}
       />
       <AppText style={styles.label}>{label}</AppText>
@@ -62,7 +62,13 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
         }}
         style={styles.inputView}
       >
-        <Text style={styles.inputText}>{value}</Text>
+        <TextInput
+          style={styles.inputText}
+          placeholder={placeholder}
+          editable={false}
+        >
+          {value}
+        </TextInput>
       </View>
     </View>
   );
