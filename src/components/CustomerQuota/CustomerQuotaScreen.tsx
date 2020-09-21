@@ -174,13 +174,10 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   ]);
 
   useEffect(() => {
-    console.log("quotaState, cartState", quotaState, cartState);
     if (!error || !quotaError) {
-      console.log("no errors");
       return;
     }
     if (error instanceof SessionError) {
-      console.log("error is session error");
       clearError();
       expireSession();
       return;
@@ -193,7 +190,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
         onOk: () => clearError()
       });
     } else if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
-      console.log("correct car");
       switch (error.message) {
         case ERROR_MESSAGE.MISSING_SELECTION:
           showAlert({
@@ -204,7 +200,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           break;
 
         case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
-          console.log("show error");
           showAlert({
             ...incompleteEntryAlertProps,
             description:
