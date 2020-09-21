@@ -157,7 +157,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
 
   const searchFilterFunction = (text: string): void => {
     const newData = dropdownItems.filter(item => {
-      return item.name.toUpperCase().startsWith(text.toUpperCase());
+      return item.name.toUpperCase().includes(text.toUpperCase());
     });
     setFilterState(newData);
   };
