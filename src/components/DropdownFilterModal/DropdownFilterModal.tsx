@@ -1,6 +1,5 @@
 import React, { useState, useEffect, FunctionComponent } from "react";
 import {
-  Alert,
   Modal,
   StyleSheet,
   Text,
