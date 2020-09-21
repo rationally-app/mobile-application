@@ -52,6 +52,8 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
       <DropdownFilterModal
         isVisible={modalVisible}
         dropdownItems={dropdownItems}
+        label={label}
+        placeholder={placeholder}
         onItemSelection={onItemSelection}
         closeModal={closeModal}
       />

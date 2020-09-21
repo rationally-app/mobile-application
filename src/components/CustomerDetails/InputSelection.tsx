@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     color: color("grey", 0),
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
-    paddingBottom: 20
+    paddingBottom: size(1.5)
   },
   selectedIndicator: {
     borderBottomColor: color("grey", 0),
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     color: color("grey", 10),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
-    paddingBottom: 20
+    paddingBottom: size(1.5)
   },
   unselectedIndicator: {
     borderBottomColor: color("grey", 10),

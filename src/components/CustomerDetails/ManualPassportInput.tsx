@@ -35,11 +35,11 @@ export const ManualPassportInput: FunctionComponent<{
   );
   const [passportNo, setPassportNo] = useState<string | null>(null);
 
-  const onItemSelection = (item: DropdownItem) => {
+  const onItemSelection = (item: DropdownItem): void => {
     setSelectedCountry(item);
   };
 
-  const onPassportNoChanged = (passportNo: string) => {
+  const onPassportNoChanged = (passportNo: string): void => {
     setPassportNo(passportNo);
   };
 

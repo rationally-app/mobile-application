@@ -109,6 +109,8 @@ export interface DropdownItem {
 export interface DropdownFilterModal {
   isVisible: boolean;
   dropdownItems: DropdownItem[];
+  label: string;
+  placeholder: string;
   onItemSelection: (item: DropdownItem) => void;
   closeModal: () => void;
 }
@@ -141,6 +143,8 @@ export const ListItem: FunctionComponent<{
 export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   isVisible,
   dropdownItems,
+  label,
+  placeholder,
   onItemSelection,
   closeModal
 }) => {
@@ -182,14 +186,12 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   const renderSearchField = (): JSX.Element => {
     return (
       <View style={styles.searchSection}>
-        <AppText style={{ fontFamily: "brand-bold" }}>
-          {"Country of nationality"}
-        </AppText>
+        <AppText style={{ fontFamily: "brand-bold" }}>{label}</AppText>
         <TextInput
           style={styles.searchTextInput}
           onChangeText={text => searchFilterFunction(text)}
           underlineColorAndroid="transparent"
-          placeholder="Search Country"
+          placeholder={placeholder}
           autoCorrect={false}
         />
       </View>
