@@ -15,7 +15,6 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "@react-native-community/picker": "1.6.0",
     "@types/lodash": "^4.14.158",
     "date-fns": "^2.11.1",
     "expo": "^38.0.0",
