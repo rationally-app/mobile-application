@@ -60,6 +60,25 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: size(1)
   },
+  crossIconLeft: {
+    position: "absolute",
+    height: 25,
+    width: 2,
+    backgroundColor: color("grey", 100),
+    transform: [{ rotate: "45deg" }]
+  },
+  crossIconRight: {
+    position: "absolute",
+    height: 25,
+    width: 2,
+    backgroundColor: color("grey", 100),
+    transform: [{ rotate: "-45deg" }]
+  },
+  crossText: {
+    marginLeft: size(2),
+    fontSize: fontSize(0),
+    fontFamily: "brand-regular"
+  },
   searchTextInput: {
     minHeight: size(6),
     paddingHorizontal: size(1),
@@ -357,6 +376,20 @@ export const ManualPassportInput: FunctionComponent<{
   const renderHeader = () => {
     return (
       <View>
+        <TouchableOpacity onPress={closeModal}>
+          <View>
+            <Text style={styles.crossIconLeft} />
+            <Text style={styles.crossIconRight} />
+          </View>
+          <Text style={styles.crossText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderSearchField = () => {
+    return (
+      <View>
         <AppText style={{ fontFamily: "brand-bold" }}>
           {"Country of nationality"}
         </AppText>
@@ -397,6 +430,7 @@ export const ManualPassportInput: FunctionComponent<{
         <View style={{ flex: 1 }}>
           <View style={styles.modalView}>
             {renderHeader()}
+            {renderSearchField()}
             {renderSeparator()}
             <FlatList
               // data={nationalityItems}
