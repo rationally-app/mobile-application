@@ -72,13 +72,17 @@ export const ManualPassportInput: FunctionComponent<{
 
   return (
     <View style={styles.centeredView}>
-      <DropdownFilterInput
-        label="Country of nationality"
-        placeholder="placeholder"
-        value={selectedCountry}
-        dropdownItems={nationalityItems}
-        onTitleSelection={onTitleSelection}
-      />
+      <View style={styles.inputAndButtonWrapper}>
+        <View style={styles.inputWrapper}>
+          <DropdownFilterInput
+            label="Country of nationality"
+            placeholder="placeholder"
+            value={selectedCountry}
+            dropdownItems={nationalityItems}
+            onTitleSelection={onTitleSelection}
+          />
+        </View>
+      </View>
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <InputWithLabel
