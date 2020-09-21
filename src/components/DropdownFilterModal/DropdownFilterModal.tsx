@@ -223,9 +223,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
       animationType="slide"
       transparent={true}
       visible={isVisible}
-      onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
-      }}
+      onRequestClose={closeModal}
     >
       <View style={{ flex: 1 }}>
         <View style={styles.modalView}>
