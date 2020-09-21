@@ -31,7 +31,7 @@ export interface DropdownFilterInput {
   placeholder: string;
   value?: string;
   dropdownItems: DropdownItem[];
-  onItemSelection: (title: string) => void;
+  onItemSelection: (item: DropdownItem) => void;
 }
 
 export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
@@ -52,7 +52,7 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
       <DropdownFilterModal
         isVisible={modalVisible}
         dropdownItems={dropdownItems}
-        onTitleSelection={onItemSelection}
+        onItemSelection={onItemSelection}
         closeModal={closeModal}
       />
       <AppText style={styles.label}>{label}</AppText>

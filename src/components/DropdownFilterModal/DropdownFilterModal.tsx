@@ -100,13 +100,6 @@ const styles = StyleSheet.create({
   }
 });
 
-export interface AlertModalProps {
-  alertType: string;
-  title: string;
-  description: string;
-  visible: boolean;
-}
-
 export interface DropdownItem {
   id: string | number;
   name: string;
@@ -116,29 +109,28 @@ export interface DropdownItem {
 export interface DropdownFilterModal {
   isVisible: boolean;
   dropdownItems: DropdownItem[];
-  onTitleSelection: (title: string) => void;
+  onItemSelection: (item: DropdownItem) => void;
   closeModal: () => void;
 }
 
 export const ListItem: FunctionComponent<{
-  title: string;
-  isTag: boolean;
+  item: DropdownItem;
   closeModal: () => void;
-  onTitleSelection: (title: string) => void;
-}> = ({ title, isTag, closeModal, onTitleSelection }) => {
+  onItemSelection: (item: DropdownItem) => void;
+}> = ({ item, closeModal, onItemSelection }) => {
   return (
     <View style={styles.listItemView}>
-      {isTag ? (
-        <Text style={styles.listItemTag}>{title}</Text>
+      {item.tag ? (
+        <Text style={styles.listItemTag}>{item.name}</Text>
       ) : (
         <TouchableOpacity
           onPress={() => {
             closeModal();
-            onTitleSelection(title);
+            onItemSelection(item);
           }}
         >
           <View style={styles.listItemContent}>
-            <AppText style={styles.listItemText}>{title}</AppText>
+            <AppText style={styles.listItemText}>{item.name}</AppText>
           </View>
         </TouchableOpacity>
       )}
@@ -149,7 +141,7 @@ export const ListItem: FunctionComponent<{
 export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   isVisible,
   dropdownItems,
-  onTitleSelection,
+  onItemSelection,
   closeModal
 }) => {
   const [filterState, setFilterState] = useState<DropdownItem[]>(dropdownItems);
@@ -234,10 +226,9 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
             data={filterState}
             renderItem={({ item }) => (
               <ListItem
-                title={item.name}
-                isTag={item.tag || false}
+                item={item}
                 closeModal={closeModal}
-                onTitleSelection={onTitleSelection}
+                onItemSelection={onItemSelection}
               />
             )}
             keyExtractor={item => item.name}

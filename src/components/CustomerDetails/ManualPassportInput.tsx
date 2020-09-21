@@ -1,10 +1,11 @@
-import React, { useState, FunctionComponent } from "react";
+import React, { useState, FunctionComponent, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { size } from "../../common/styles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { DropdownFilterInput } from "../DropdownFilterModal/DropdownFilterInput";
 import { nationalityItems } from "../DropdownFilterModal/nationalityItems";
+import { DropdownItem } from "../DropdownFilterModal/DropdownFilterModal";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -29,11 +30,23 @@ export const ManualPassportInput: FunctionComponent<{
   setIdInput: (id: string) => void;
   submitId: () => void;
 }> = ({ idInput, setIdInput, submitId }) => {
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState<DropdownItem | null>(
+    null
+  );
+  const [passportNo, setPassportNo] = useState<string | null>(null);
 
-  const onItemSelection = (title: string): void => {
-    setSelectedCountry(title);
+  const onItemSelection = (item: DropdownItem) => {
+    setSelectedCountry(item);
   };
+
+  const onPassportNoChanged = (passportNo: string) => {
+    setPassportNo(passportNo);
+  };
+
+  useEffect(() => {
+    if (selectedCountry && passportNo)
+      setIdInput(`${selectedCountry?.id}-${passportNo}`);
+  }, [selectedCountry, passportNo, setIdInput]);
 
   return (
     <View style={styles.centeredView}>
@@ -42,7 +55,7 @@ export const ManualPassportInput: FunctionComponent<{
           <DropdownFilterInput
             label="Country of nationality"
             placeholder="Search Country"
-            value={selectedCountry}
+            value={selectedCountry?.name}
             dropdownItems={nationalityItems}
             onItemSelection={onItemSelection}
           />
@@ -52,8 +65,8 @@ export const ManualPassportInput: FunctionComponent<{
         <View style={styles.inputWrapper}>
           <InputWithLabel
             label="Passport number"
-            value={idInput}
-            onChange={({ nativeEvent: { text } }) => setIdInput(text)}
+            value={passportNo ? passportNo : undefined}
+            onChange={({ nativeEvent: { text } }) => onPassportNoChanged(text)}
             onSubmitEditing={submitId}
             autoCompleteType="off"
             autoCorrect={false}
