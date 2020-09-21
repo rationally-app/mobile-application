@@ -122,7 +122,7 @@ export const nationalityItems: {
   { id: "LTU", name: "Lithuania" },
   { id: "LUX", name: "Luxembourg" },
   { id: "M", name: "M", tag: true },
-  { id: "MAC", name: "Macao Sar" },
+  { id: "CHN", name: "Macao Sar" },
   { id: "MDG", name: "Madagascar" },
   { id: "MWI", name: "Malawi" },
   { id: "MYS", name: "Malaysia" },
