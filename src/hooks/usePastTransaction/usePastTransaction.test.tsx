@@ -1,10 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { renderHook } from "@testing-library/react-hooks";
 import { usePastTransaction } from "./usePastTransaction";
-import {
-  getPastTransactions,
-  PastTransactionError
-} from "../../services/quota";
+import { getPastTransactions } from "../../services/quota";
 import { PastTransactionsResult, CampaignPolicy } from "../../types";
 import { defaultIdentifier } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
@@ -12,6 +9,8 @@ import { ERROR_MESSAGE } from "../../context/alert";
 
 jest.mock("../../services/quota");
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
+
+const { PastTransactionError } = jest.requireActual("../../services/quota");
 
 const ids = ["ID1"];
 const key = "KEY";
@@ -195,7 +194,7 @@ describe("usePastTransaction", () => {
     it("should return PAST_TRANSACTION_ERROR when error thrown", async () => {
       expect.assertions(4);
       mockGetPastTransactions.mockRejectedValue(
-        new PastTransactionError("Some random error")
+        new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
       );
 
       const { result, waitForNextUpdate } = renderHook(
