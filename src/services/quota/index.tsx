@@ -118,15 +118,15 @@ export const liveGetQuota = async (
     throw new QuotaError("No ID was provided");
   }
   try {
-      response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
-        method: "POST",
-        headers: {
-          Authorization: key
-        },
-        body: JSON.stringify({
-          ids
-        })
-      });
+    response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
+      method: "POST",
+      headers: {
+        Authorization: key
+      },
+      body: JSON.stringify({
+        ids
+      })
+    });
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
