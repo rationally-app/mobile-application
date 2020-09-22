@@ -70,10 +70,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
         <SecondaryButton
           text={i18n.t("customerQuotaScreen.quotaAppealCancel")}
           onPress={() => {
-            showWarnAlert({
-              translationKey: getTranslationKeyFromMessage("cancelEntry"),
-              onOk: onCancel
-            });
+            showWarnAlert(new Error("cancelEntry"), onCancel);
           }}
           fullWidth={true}
         />

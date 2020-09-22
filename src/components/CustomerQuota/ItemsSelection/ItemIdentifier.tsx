@@ -46,7 +46,6 @@ export const ItemIdentifier: FunctionComponent<{
       setShouldShowCamera(false);
     } catch (e) {
       setShouldShowCamera(false);
-      //TODO: Find out what the error is
       showErrorAlert(e);
     }
   };

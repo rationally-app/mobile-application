@@ -99,10 +99,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   }, [logout, navigation.dispatch]);
 
   const onPressLogout = (): void => {
-    showConfirmationAlert({
-      translationKey: getTranslationKeyFromMessage("logout"),
-      onOk: handleLogout
-    });
+    showConfirmationAlert(new Error("logout"), handleLogout);
   };
 
   const onPressCloseDrawer = (): void => {

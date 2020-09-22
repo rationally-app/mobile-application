@@ -43,7 +43,8 @@ export enum ERROR_MESSAGE {
   AUTH_FAILURE_TAKEN_TOKEN = "Get a new QR code that is not tagged to any contact number from your in-charge.",
   OTP_EXPIRED = "Get a new OTP and try again.",
   LOGIN_ERROR = "We are currently facing login issues. Get a new QR code from your in-charge.",
-  PAST_TRANSACTIONS_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
+  PAST_TRANSACTIONS_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists.",
+  VALIDATE_INPUT_REGEX_ERROR = "Please check that the ID is in the correct format"
 }
 
 const getTranslationKeyFromError = (error: Error): string => {
@@ -161,6 +162,8 @@ const getTranslationKeyFromErrorMessage = (message: string): string => {
       return "systemErrorServerIssues";
     case WARNING_MESSAGE.PAYMENT_COLLECTION:
       return "paymentCollected";
+    case ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR:
+      return "validateInputWithRegex";
     case "logout":
       return "confirmLogout";
     case "resendOTP":
@@ -186,14 +189,13 @@ const defaultAlertProps: AlertModalProps = {
 };
 
 interface AlertModalContext {
-  showConfirmationAlert: (props: {
-    translationKey: string;
-    onOk: () => void;
-    onCancel?: () => void;
-    content?: Record<string, string>;
-  }) => void;
+  showConfirmationAlert: (
+    error: Error,
+    onOk: () => void,
+    onCancel?: () => void
+  ) => void;
   showErrorAlert: (error: Error, onOk?: () => void) => void;
-  showWarnAlert: (props: { translationKey: string; onOk: () => void }) => void;
+  showWarnAlert: (error: Error, onOk: () => void) => void;
   clearAlert: () => void;
 }
 
@@ -217,82 +219,80 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
   );
 
   // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
-  const showConfirmationAlert = (props: {
-    translationKey: string;
-    onOk: () => void;
-    onCancel?: () => void;
-    content?: Record<string, string>;
-  }): void => {
-    const translationKey = getTranslationKeyFromError(error);
-    showAlert({
-      alertType: "CONFIRM",
-      title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Confirm",
-      description: i18n.t(
-        `errorMessages.${translationKey}.body`,
-        props.content
-      ),
-      buttonTexts: {
-        primaryActionText: i18n.t(
-          `errorMessages.${translationKey}.primaryActionText`
-        ),
-        secondaryActionText: i18n.t(
-          `errorMessages.${translationKey}.secondaryActionText`
-        )
-      },
-      visible: true,
-      onOk: props.onOk,
-      ...(!!props.onCancel ? { onCancel: props.onCancel } : {}),
-      onExit: () => {}
-    });
-  };
+  const showConfirmationAlert = useCallback(
+    (error: Error, onOk: () => void, onCancel?: () => void): void => {
+      const translationKey = getTranslationKeyFromError(error);
+      showAlert({
+        alertType: "CONFIRM",
+        title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Confirm",
+        description: i18n.t(`errorMessages.${translationKey}.body`),
+        buttonTexts: {
+          primaryActionText: i18n.t(
+            `errorMessages.${translationKey}.primaryActionText`
+          ),
+          secondaryActionText: i18n.t(
+            `errorMessages.${translationKey}.secondaryActionText`
+          )
+        },
+        visible: true,
+        onOk: onOk,
+        onCancel: onCancel ?? undefined,
+        onExit: () => {}
+      });
+    },
+    [showAlert]
+  );
 
   // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
-  const showErrorAlert = (error: Error, onOk?: () => void): void => {
-    const translationKey = getTranslationKeyFromError(error);
-    showAlert({
-      alertType: "ERROR",
-      title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Error",
-      description:
-        i18n.t(`errorMessages.${translationKey}.body`) ?? translationKey,
-      buttonTexts: {
-        primaryActionText:
-          i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",
-        secondaryActionText: i18n.t(
-          `errorMessages.${translationKey}.secondaryActionText`
-        )
-      },
-      visible: true,
-      onOk: !!onOk ? onOk : () => {},
-      onCancel: () => {},
-      onExit: () => {}
-    });
-  };
+  const showErrorAlert = useCallback(
+    (error: Error, onOk?: () => void): void => {
+      const translationKey = getTranslationKeyFromError(error);
+      showAlert({
+        alertType: "ERROR",
+        title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Error",
+        description:
+          i18n.t(`errorMessages.${translationKey}.body`) ?? translationKey,
+        buttonTexts: {
+          primaryActionText:
+            i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",
+          secondaryActionText: i18n.t(
+            `errorMessages.${translationKey}.secondaryActionText`
+          )
+        },
+        visible: true,
+        onOk: !!onOk ? onOk : () => {},
+        onCancel: () => {},
+        onExit: () => {}
+      });
+    },
+    [showAlert]
+  );
 
   // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
-  const showWarnAlert = (props: {
-    translationKey: string;
-    onOk: () => void;
-  }): void => {
-    const translationKey = getTranslationKeyFromError(error);
-    showAlert({
-      alertType: "WARN",
-      title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Warning",
-      description:
-        i18n.t(`errorMessages.${translationKey}.body`) ?? translationKey,
-      buttonTexts: {
-        primaryActionText: i18n.t(
-          `errorMessages.${translationKey}.primaryActionText`
-        ),
-        secondaryActionText: i18n.t(
-          `errorMessages.${translationKey}.secondaryActionText`
-        )
-      },
-      visible: true,
-      onOk: props.onOk,
-      onCancel: () => {},
-      onExit: () => {}
-    });
-  };
+  const showWarnAlert = useCallback(
+    (error: Error, onOk: () => void): void => {
+      const translationKey = getTranslationKeyFromError(error);
+      showAlert({
+        alertType: "WARN",
+        title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Warning",
+        description:
+          i18n.t(`errorMessages.${translationKey}.body`) ?? translationKey,
+        buttonTexts: {
+          primaryActionText: i18n.t(
+            `errorMessages.${translationKey}.primaryActionText`
+          ),
+          secondaryActionText: i18n.t(
+            `errorMessages.${translationKey}.secondaryActionText`
+          )
+        },
+        visible: true,
+        onOk: onOk,
+        onCancel: () => {},
+        onExit: () => {}
+      });
+    },
+    [showAlert]
+  );
 
   // TODO: maybe can toggle visible to false?
   const clearAlert: AlertModalContext["clearAlert"] = useCallback(() => {

@@ -107,12 +107,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               isAppeal
                 ? onBack
                 : () => {
-                    showWarnAlert({
-                      translationKey: getTranslationKeyFromMessage(
-                        "cancelEntry"
-                      ),
-                      onOk: onCancel
-                    });
+                    showWarnAlert(new Error("cancelEntry"), onCancel);
                   }
             }
           />
@@ -136,12 +131,10 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               !isChargeable
                 ? checkoutCart
                 : () => {
-                    showConfirmationAlert({
-                      translationKey: getTranslationKeyFromMessage(
-                        WARNING_MESSAGE.PAYMENT_COLLECTION
-                      ),
-                      onOk: checkoutCart
-                    });
+                    showConfirmationAlert(
+                      new Error(WARNING_MESSAGE.PAYMENT_COLLECTION),
+                      checkoutCart
+                    );
                   }
             }
             isLoading={isLoading}
