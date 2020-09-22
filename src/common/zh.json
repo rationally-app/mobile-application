@@ -88,12 +88,12 @@
     },
     "invalidInputOTPOneMoreInvalid": {
       "title": "输入无效",
-      "body": "请向负责人索取没有与任何联络号码挂钩的新QR码。",
+      "body": "请再次输入一次性密码。若再输入无效的一次性密码，您须等待3分钟才能再试。",
       "primaryActionText": "确定"
     },
     "invalidInputIDNumber": {
       "title": "输入无效",
-      "body": "请再次输入一次性密码。若再输入无效的一次性密码，您须等待3分钟才能再试。",
+      "body": "请输入或扫描有效的证件号码。",
       "primaryActionText": "确定"
     },
     "invalidInputQR": {
@@ -235,6 +235,11 @@
       "body": "您要清除 %{voucherSerial} 吗?",
       "primaryActionText": "取消",
       "secondaryActionText": "清除"
+    },
+    "validateInputWithRegex": {
+      "title": "输入无效",
+      "body": "请检查证件号码格式合正确",
+      "primaryActionText": "确定"
     }
   }
 }

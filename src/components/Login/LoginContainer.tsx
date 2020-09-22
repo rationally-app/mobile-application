@@ -37,11 +37,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
 import { requestOTP, LoginError, AuthError } from "../../services/auth";
-import {
-  AlertModalContext,
-  ERROR_MESSAGE,
-  getTranslationKeyFromMessage
-} from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
@@ -132,12 +128,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       if (!lastResendWarningMessageRef.current) {
         resolve(true);
       } else {
-        showConfirmationAlert({
-          translationKey: getTranslationKeyFromMessage("resendOTP"),
-          content: { lastResendMessage: lastResendWarningMessageRef.current },
-          onOk: () => resolve(true),
-          onCancel: () => resolve(false)
-        });
+        showConfirmationAlert(
+          new Error("resendOTP"),
+          () => resolve(true),
+          () => resolve(false)
+        );
       }
     });
   };

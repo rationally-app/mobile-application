@@ -149,7 +149,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
-      //TODO: What is e
       showErrorAlert(e, () => setIsScanningEnabled(true));
     }
   };

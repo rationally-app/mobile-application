@@ -6,10 +6,7 @@ import { Card } from "../../Layout/Card";
 import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
-import {
-  AlertModalContext,
-  getTranslationKeyFromMessage
-} from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
 
 const styles = StyleSheet.create({
   titlePadding: {
@@ -69,10 +66,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
         <SecondaryButton
           text="Cancel"
           onPress={() => {
-            showWarnAlert({
-              translationKey: getTranslationKeyFromMessage("cancelEntry"),
-              onOk: onCancel
-            });
+            showWarnAlert(new Error("cancelEntry"), onCancel);
           }}
           fullWidth={true}
         />
