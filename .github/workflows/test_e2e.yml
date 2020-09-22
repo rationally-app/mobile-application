@@ -1,13 +1,15 @@
 name: E2E Tests
 
-on:
-  # Runs E2E every day at 9am and 5pm (0100, 0900 UTC)
-  schedule:
-    - cron: '0 1,9 * * *'
-  # Runs on every push to master
-  push:
-    branches:
-      - master
+# on:
+#   # Runs E2E every day at 9am and 5pm (0100, 0900 UTC)
+#   schedule:
+#     - cron: '0 1,9 * * *'
+#   # Runs on every push to master
+#   push:
+#     branches:
+#       - master
+
+on: [pull_request] # leaving this here for now to test
 
 jobs:
   e2e_test:
@@ -51,3 +53,25 @@ jobs:
           curl -F token=${{ secrets.E2E_CHATBOT_TOKEN }} -F channels=${{ secrets.E2E_CHATBOT_CHANNELID }} -F file=@./result/report.html -F
           initial_comment="Full report attached! Please download the artifact for more details: https://github.com/rationally-app/mobile-application/actions/runs/${{ github.run_id }}"
           https://slack.com/api/files.upload
+  e2e_ios:
+    name: E2E iOS
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: "rationally-app/mobile-e2e"
+          ref: feat/ios # using the pr branch for now
+          token: ${{ secrets.MUSKET_DEV_GITHUB_ACCESS_TOKEN }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: Setup Appium
+        run: npm install appium -g
+      - name: Setup E2E Environment
+        run: pip3 install -r requirements.txt
+      - name: Run iOS tests
+        run: ./ios/setup.sh
+
