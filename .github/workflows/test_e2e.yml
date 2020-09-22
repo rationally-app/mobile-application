@@ -75,6 +75,15 @@ jobs:
         run: |
           SIMULATOR=$(xcrun simctl list | egrep "iPhone.*\(Shutdown\)\s$" | tail -n 1 | egrep -o "[0-9A-Z]{8}(-[0-9A-Z]{4}){3}-[0-9A-Z]{12}")
           xcrun simctl boot $SIMULATOR
+          xcrun simctl list | grep Booted
       - name: Run iOS tests
         run: ./ios/setup.sh
+      - name: Upload Appium Logs
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Combined-Output-${{ steps.date.outputs.date }}
+          path: |
+            ./result/ios
+
 
