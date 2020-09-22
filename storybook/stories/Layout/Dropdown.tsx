@@ -7,16 +7,17 @@ import { DropdownFilterInput } from "../../../src/components/DropdownFilterModal
 
 const items: DropdownItem[] = [
   //name key is must.It is to show the text in front
+  { id: "A", name: "A", tag: true },
   { id: "A1", name: "angellist" },
-  { id: "A2", name: "codepen" },
-  { id: "A3", name: "envelope" },
-  { id: "A4", name: "etsy" },
-  { id: "A5", name: "facebook" },
-  { id: "A6", name: "foursquare" },
-  { id: "A7", name: "github-alt" },
-  { id: "A8", name: "github" },
-  { id: "A9", name: "gitlab" },
-  { id: "A10", name: "instagram" }
+  { id: "F", name: "F", tag: true },
+  { id: "F1", name: "facebook" },
+  { id: "F2", name: "foursquare" },
+  { id: "G", name: "G", tag: true },
+  { id: "G1", name: "github-alt" },
+  { id: "G2", name: "github" },
+  { id: "G3", name: "gitlab" },
+  { id: "I", name: "I", tag: true },
+  { id: "I1", name: "instagram" }
 ];
 
 storiesOf("Layout", module).add("Dropdown", () => (
