@@ -85,5 +85,6 @@ jobs:
           name: Combined-Output-${{ steps.date.outputs.date }}
           path: |
             ./result/ios
+            ./appium.log
 
 
