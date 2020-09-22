@@ -91,13 +91,5 @@
   "notEligibleScreen": {
     "notEligible": "不符合资格",
     "logAppeal": "请提出上诉。"
-  },
-  "thrownErrors": {
-    "campaignConfigNotLoad": "活动配置未加载",
-    "updateCheckError": "尝试更新活动格局时出错",
-    "onBarcodeScanned": "条码扫描",
-    "noAuthCred": "找不到认证凭据",
-    "noCampaignConfig": "找不到活动格局",
-    "checkIdFormat": "请检查证件号码格式合正确"
   }
 }

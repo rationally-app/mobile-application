@@ -46,7 +46,6 @@ import {
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
-import i18n from "i18n-js";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -252,9 +251,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         setIsLoading(false);
         setLoginStage("MOBILE_NUMBER");
       } catch (e) {
-        const error = new Error(
-          `${i18n.t("thrownErrors.onBarcodeScanned")} ${e}`
-        );
+        const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
         if (e instanceof AuthError) {
           showAlert(e.alertProps);

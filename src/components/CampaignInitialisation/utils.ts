@@ -1,5 +1,3 @@
-import i18n from "i18n-js";
-
 type CheckVersionResult = "OK" | "OUTDATED_BINARY" | "OUTDATED_BUILD";
 type CheckVersionProps = {
   currentBinaryVersion: string;
@@ -42,7 +40,7 @@ export const checkVersion = ({
   }
 
   if (!minBinaryVersion || minBuildVersion === undefined) {
-    throw new Error(i18n.t("thrownErrors.campaignConfigNotLoad"));
+    throw new Error("Campaign config not loaded");
   }
 
   if (!isBinaryVersionOK(currentBinaryVersion, minBinaryVersion)) {

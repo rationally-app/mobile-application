@@ -4,13 +4,12 @@ import {
 } from "react-navigation-stack";
 import MerchantPayoutScreen from "./MerchantPayoutScreen";
 import PayoutFeedbackScreen from "./PayoutFeedbackScreen";
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext, useEffect } from "react";
 import { NavigationInjectedProps } from "react-navigation";
 import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
-import i18n from "i18n-js";
 
 const Stack = createStackNavigator(
   {
@@ -40,22 +39,22 @@ const MerchantPayoutStack: FunctionComponent<NavigationInjectedProps> & {
   const key = `${operatorToken}${endpoint}`;
 
   const { authCredentials } = useContext(AuthStoreContext);
-  if (!authCredentials[key]) {
-    throw new Error(i18n.t("thrownErrors.noAuthCred"));
-  }
-
   const { allCampaignConfigs } = useContext(CampaignConfigsStoreContext);
-  if (!allCampaignConfigs[key]) {
-    throw new Error(i18n.t("thrownErrors.noCampaignConfig"));
-  }
+  const hasDataFromStore = authCredentials[key] && allCampaignConfigs[key];
 
-  return (
+  useEffect(() => {
+    if (!hasDataFromStore) {
+      navigation.navigate("CampaignLocationsScreen");
+    }
+  }, [hasDataFromStore, navigation]);
+
+  return hasDataFromStore ? (
     <AuthContextProvider authCredentials={authCredentials[key]!}>
       <CampaignConfigContextProvider campaignConfig={allCampaignConfigs[key]!}>
         <Stack navigation={navigation} />
       </CampaignConfigContextProvider>
     </AuthContextProvider>
-  );
+  ) : null;
 };
 
 MerchantPayoutStack.router = Stack.router;

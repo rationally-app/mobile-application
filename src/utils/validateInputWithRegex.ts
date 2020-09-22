@@ -1,5 +1,3 @@
-import i18n from "i18n-js";
-
 export const validate = (id: string, idRegex: string): boolean => {
   return id.match(idRegex) !== null;
 };
@@ -12,7 +10,8 @@ export const validateAndCleanRegexInput = (
   const id = inputId.toUpperCase();
 
   const isValid = validate(id, idRegex);
-  if (!isValid) throw new Error(i18n.t("thrownErrors.checkIdFormat"));
+  if (!isValid)
+    throw new Error("Please check that the ID is in the correct format");
 
   return id;
 };

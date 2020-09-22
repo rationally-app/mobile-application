@@ -1,5 +1,4 @@
 import { checkVersion } from "./utils";
-import "../../common/i18n/i18nMock";
 
 describe("checkVersion", () => {
   describe("when binary versions are different", () => {

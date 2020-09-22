@@ -1,5 +1,4 @@
 import { validate, validateAndCleanRegexInput } from "./validateInputWithRegex";
-import "../common/i18n/i18nMock";
 
 const alphanumericRegex = "^[a-zA-Z0-9-_ ]+$";
 

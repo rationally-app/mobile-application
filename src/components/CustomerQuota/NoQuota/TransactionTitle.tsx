@@ -14,7 +14,7 @@ export const DistantTransactionTitle: FunctionComponent<{
 }> = ({ transactionTime, toggleTimeSensitiveTitle }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {i18n.t("checkoutSuccessScreen.limitReached", {
+      {i18n.t("checkoutSuccessScreen.limitReachedDate", {
         dateTime: formatDateTime(transactionTime)
       })}
     </AppText>
