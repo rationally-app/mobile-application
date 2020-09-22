@@ -2,7 +2,6 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev START_STORYBOOK=false expo start",
-    "clean-start": "expo start -c",
     "start:mock": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev MOCK=true expo start",
     "test": "jest",
     "test:coverage": "npm run test -- --coverage",
@@ -40,7 +39,7 @@
     "react-native-reanimated": "~1.9.0",
     "react-native-screens": "~2.9.0",
     "react-native-svg": "12.1.0",
-    "react-native-webview": "9.4.0",
+    "react-native-webview": "^10.3.2",
     "react-navigation": "^4.1.0",
     "react-navigation-drawer": "^2.5.0",
     "react-navigation-stack": "^1.10.3",
