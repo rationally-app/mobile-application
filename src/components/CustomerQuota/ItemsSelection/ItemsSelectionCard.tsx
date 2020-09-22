@@ -21,7 +21,6 @@ import {
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
-import i18n from "i18n-js";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -112,25 +111,17 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         {!isLoading && (
           <SecondaryButton
-            text={
-              isAppeal
-                ? i18n.t("customerQuotaScreen.quotaScanButtonBack")
-                : i18n.t("customerQuotaScreen.quotaAppealCancel")
-            }
+            text={isAppeal ? "Back" : "Cancel"}
             onPress={
               isAppeal
                 ? onBack
                 : () => {
                     showAlert({
                       ...defaultWarningProps,
-                      title: i18n.t("errorMessages.cancelEntry.title"),
+                      title: "Cancel entry and scan another ID number?",
                       buttonTexts: {
-                        primaryActionText: i18n.t(
-                          "errorMessages.cancelEntry.primaryActionText"
-                        ),
-                        secondaryActionText: i18n.t(
-                          "errorMessages.cancelEntry.secondaryActionText"
-                        )
+                        primaryActionText: "Cancel entry",
+                        secondaryActionText: "Keep"
                       },
                       visible: true,
                       onOk: onCancel
@@ -146,7 +137,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           ]}
         >
           <DarkButton
-            text={i18n.t("customerQuotaScreen.quotaButtonCheckout")}
+            text="Checkout"
             icon={
               <Feather
                 name="shopping-cart"
@@ -160,15 +151,11 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 : () => {
                     showAlert({
                       ...defaultConfirmationProps,
-                      title: i18n.t("errorMessages.paymentCollected.title"),
+                      title: "Payment collected?",
                       description: WARNING_MESSAGE.PAYMENT_COLLECTION,
                       buttonTexts: {
-                        primaryActionText: i18n.t(
-                          "errorMessages.paymentCollected.primaryActionText"
-                        ),
-                        secondaryActionText: i18n.t(
-                          "errorMessages.paymentCollected.secondaryActionText"
-                        )
+                        primaryActionText: "Collected",
+                        secondaryActionText: "No"
                       },
                       visible: true,
                       onOk: checkoutCart

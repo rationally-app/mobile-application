@@ -5,7 +5,6 @@ import { AppText } from "../../Layout/AppText";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color, fontSize } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
-import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   card: {
@@ -34,7 +33,8 @@ interface InvalidCard {
 export const InvalidCard: FunctionComponent<InvalidCard> = ({
   title,
   details,
-  closeModal
+  closeModal,
+  ctaButtonText = "Continue scanning"
 }) => {
   return (
     <Card style={styles.card}>
@@ -49,7 +49,7 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
       <AppText style={styles.details}>{details}</AppText>
       <DarkButton
         fullWidth={true}
-        text={i18n.t("errorMessages.errorScanning.primaryActionText")}
+        text={ctaButtonText}
         onPress={() => {
           closeModal();
         }}

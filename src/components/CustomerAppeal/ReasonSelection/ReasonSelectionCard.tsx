@@ -7,7 +7,6 @@ import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
 import { AlertModalContext, defaultWarningProps } from "../../../context/alert";
-import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   titlePadding: {
@@ -69,14 +68,10 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
           onPress={() => {
             showAlert({
               ...defaultWarningProps,
-              title: i18n.t("errorMessages.cancelEntry.title"),
+              title: "Cancel entry and scan another ID number?",
               buttonTexts: {
-                primaryActionText: i18n.t(
-                  "errorMessages.cancelEntry.primaryActionText"
-                ),
-                secondaryActionText: i18n.t(
-                  "errorMessages.cancelEntry.secondaryActionText"
-                )
+                primaryActionText: "Cancel entry",
+                secondaryActionText: "Keep"
               },
               visible: true,
               onOk: onCancel

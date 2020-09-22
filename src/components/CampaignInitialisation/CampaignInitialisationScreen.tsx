@@ -189,7 +189,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     // minimum build version too early, before the app updates have
     // been released.
     const error = new UpdateError(
-      `${i18n.t("thrownErrors.updateCheckError")} ${lastUpdateResult}`
+      `${i18n.t("thrownErrors.updateCheckError")}: ${lastUpdateResult}`
     );
     // https://github.com/facebook/react/issues/14981#issuecomment-468460187
     setState(() => {

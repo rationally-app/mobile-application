@@ -11,7 +11,6 @@ import { ValidVoucherCount } from "./ValidVoucherCount";
 import { AppText } from "../Layout/AppText";
 import { ModalWithClose } from "../Layout/ModalWithClose";
 import { Voucher } from "../../types";
-import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   card: {
@@ -77,18 +76,14 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
             <TouchableOpacity
               onPress={() => {
                 Alert.alert(
-                  i18n.t("errorMessages.removeItem.title"),
-                  i18n.t("errorMessages.removeItem.body", {
-                    voucherSerial: voucher.serial
-                  }),
+                  "Remove item?",
+                  `Do you want to remove this item: ${voucher.serial}?`,
                   [
                     {
-                      text: i18n.t("errorMessages.removeItem.primaryActionText")
+                      text: "Cancel"
                     },
                     {
-                      text: i18n.t(
-                        "errorMessages.removeItem.secondaryActionText"
-                      ),
+                      text: "Remove",
                       onPress: () => {
                         onVoucherCodeRemove(voucher.serial);
                       },
@@ -98,9 +93,7 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
                 );
               }}
             >
-              <AppText style={styles.removeText}>
-                {i18n.t("errorMessages.removeItem.secondaryActionText")}
-              </AppText>
+              <AppText style={styles.removeText}>Remove</AppText>
             </TouchableOpacity>
           </View>
         ))}

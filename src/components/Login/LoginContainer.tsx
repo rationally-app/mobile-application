@@ -133,15 +133,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } else {
         showAlert({
           ...defaultConfirmationProps,
-          title: i18n.t("errorMessages.resendOTP.title"),
+          title: "Resend OTP?",
           description: lastResendWarningMessageRef.current,
           buttonTexts: {
-            primaryActionText: i18n.t(
-              "errorMessages.resendOTP.primaryActionText"
-            ),
-            secondaryActionText: i18n.t(
-              "errorMessages.resendOTP.secondaryActionText"
-            )
+            primaryActionText: "Resend",
+            secondaryActionText: "No"
           },
           onOk: () => resolve(true),
           onCancel: () => resolve(false),
@@ -351,7 +347,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           onBarCodeScanned={onBarCodeScanned}
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText={i18n.t("customerQuotaScreen.quotaAppealCancel")}
+          cancelButtonText="Cancel"
         />
       )}
     </>

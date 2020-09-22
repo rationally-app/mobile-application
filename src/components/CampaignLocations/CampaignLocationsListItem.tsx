@@ -56,7 +56,12 @@ export const CampaignLocationsListItem: FunctionComponent<
             ID: {operatorId}
           </AppText>
         ) : null}
-        <AppText style={[styles.expiry, { color: color("grey", 40) }]}>
+        <AppText
+          style={[
+            styles.expiry,
+            hasExpired ? { color: color("grey", 40) } : {}
+          ]}
+        >
           {hasExpired
             ? i18n.t("customerQuotaScreen.campaignExpiredOn", {
                 dateTime: formattedExpiry

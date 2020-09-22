@@ -43,7 +43,7 @@ export const ManualAddVoucherModal: FunctionComponent<ManualInputCard> = ({
       </View>
       <DarkButton
         fullWidth={true}
-        text={i18n.t("customerQuotaScreen.quotaButtonAddVoucher")}
+        text={i18n.t("merchantFlowScreen.quotaButtonAddVoucher")}
         icon={
           <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
         }

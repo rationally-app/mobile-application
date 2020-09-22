@@ -117,7 +117,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
             <Feather name="user" size={size(3)} color={color("grey", 0)} />
             <View style={styles.cardHeaderTextWrapper}>
               <AppText style={styles.cardHeaderSubText}>
-                {i18n.t("customerQuotaScreen.merchantCode")}
+                {i18n.t("merchantFlowScreen.merchantCode")}
               </AppText>
               <AppText style={styles.cardHeaderText}>{merchantCode}</AppText>
             </View>
@@ -145,7 +145,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
               <View>
                 <View style={sharedStyles.itemRow}>
                   <AppText style={sharedStyles.itemHeaderText}>
-                    {i18n.t("checkoutSuccessScreen.quotaCategoryVouchers")}
+                    {i18n.t("merchantFlowScreen.quotaCategoryVouchers")}
                   </AppText>
                 </View>
                 <View style={sharedStyles.quantitiesWrapper}>

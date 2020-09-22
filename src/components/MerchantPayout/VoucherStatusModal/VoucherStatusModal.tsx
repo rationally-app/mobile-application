@@ -97,31 +97,21 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   if (error instanceof ScannerError) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        showAlert(
-          i18n.t("errorMessages.errorScanning.title"),
-          error.message,
-          i18n.t("errorMessages.errorScanning.primaryActionText"),
-          onExit
-        );
+        showAlert("Error scanning", error.message, "Continue scanning", onExit);
       });
     });
     return null;
   } else if (error instanceof LimitReachedError) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        showAlert(
-          i18n.t("errorMessages.scanLimitReached.title"),
-          error.message,
-          i18n.t("errorMessages.scanLimitReached.primaryActionText"),
-          onExit
-        );
+        showAlert("Scan limit reached", error.message, "OK", onExit);
       });
     });
   } else if (error instanceof NotEligibleError) {
     card = (
       <InvalidCard
         title="Invalid"
-        details={i18n.t("errorMessages.notEligibleScreen.logAppeal")}
+        details="Please log an appeal request"
         closeModal={onExit}
       />
     );
@@ -145,7 +135,7 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
     card = (
       <InvalidCard
         title={title}
-        details={i18n.t("errorMessages.notEligibleScreen.logAppeal")}
+        details="Please log an appeal request"
         closeModal={onExit}
       />
     );
@@ -153,9 +143,7 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
     card = (
       <InvalidCard
         title="Invalid"
-        details={
-          error.message || i18n.t("errorMessages.notEligibleScreen.logAppeal")
-        }
+        details={error.message || "Please log an appeal request"}
         closeModal={onExit}
       />
     );

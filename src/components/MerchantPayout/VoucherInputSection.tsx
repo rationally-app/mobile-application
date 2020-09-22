@@ -79,7 +79,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text={i18n.t("customerQuotaScreen.quotaButtonAddVoucher")}
+          text={i18n.t("merchantFlowScreen.quotaButtonAddVoucher")}
           icon={
             <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
           }
@@ -91,7 +91,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
           <View style={styles.horizontalRule} />
           <View style={styles.inputWrapper}>
             <InputWithLabel
-              label={i18n.t("customerQuotaScreen.merchantCode")}
+              label={i18n.t("merchantFlowScreen.merchantCode")}
               value={merchantCode}
               onChange={({ nativeEvent: { text } }) => setMerchantCode(text)}
               onSubmitEditing={redeemVouchers}

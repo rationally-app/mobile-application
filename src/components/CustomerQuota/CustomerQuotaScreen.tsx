@@ -39,7 +39,6 @@ import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { QuotaError } from "../../services/quota";
 import { AuthStoreContext } from "../../context/authStore";
-import i18n from "i18n-js";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -216,7 +215,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
         case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
           showAlert({
             ...systemAlertProps,
-            title: i18n.t("errorMessages.alreadyUsedCode.title"),
+            title: "Already used",
             description:
               campaignFeatures?.campaignName === "TT Tokens"
                 ? ERROR_MESSAGE.DUPLICATE_POD_INPUT

@@ -280,18 +280,14 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 text={i18n.t("customerQuotaScreen.quotaAppealCancel")}
                 onPress={() => {
                   Alert.alert(
-                    i18n.t("errorMessages.discardTransaction.title"),
-                    i18n.t("errorMessages.discardTransaction.body"),
+                    "Discard transaction?",
+                    "This will clear all scanned items",
                     [
                       {
-                        text: i18n.t(
-                          "errorMessages.discardTransaction.primaryActionText"
-                        )
+                        text: "Cancel"
                       },
                       {
-                        text: i18n.t(
-                          "errorMessages.discardTransaction.secondaryActionText"
-                        ),
+                        text: "Discard",
                         onPress: () => {
                           setMerchantCode("");
                           resetState();

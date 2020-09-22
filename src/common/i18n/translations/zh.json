@@ -48,11 +48,13 @@
     "quotaAppealCancel": "取消",
     "quotaButtonCheckout": "确认交易",
     "quotaButtonAdd": "+ 添加",
-    "quotaButtonAddVoucher": "添加优惠券",
     "quotaAddId": "输入另一个证件号码已增加限额",
-    "quotaCategoryVouchers": "优惠券",
     "quotaIdentifierButtonScan": "扫描",
-    "quotaScanButtonBack": "返回",
+    "quotaScanButtonBack": "返回"
+  },
+  "merchantFlowScreen": {
+    "quotaButtonAddVoucher": "添加优惠券",
+    "quotaCategoryVouchers": "优惠券",
     "merchantCode": "商人编号"
   },
   "checkoutSuccessScreen": {
@@ -92,7 +94,7 @@
   },
   "thrownErrors": {
     "campaignConfigNotLoad": "活动配置未加载",
-    "updateCheckError": "尝试更新活动格局时出错:",
+    "updateCheckError": "尝试更新活动格局时出错",
     "onBarcodeScanned": "条码扫描",
     "noAuthCred": "找不到认证凭据",
     "noCampaignConfig": "找不到活动格局",

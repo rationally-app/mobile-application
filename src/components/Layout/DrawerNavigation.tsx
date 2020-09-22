@@ -101,14 +101,10 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const onPressLogout = (): void => {
     showAlert({
       ...defaultConfirmationProps,
-      title: i18n.t("errorMessages.confirmLogout.title"),
+      title: "Confirm logout?",
       buttonTexts: {
-        primaryActionText: i18n.t(
-          "errorMessages.confirmLogout.primaryActionText"
-        ),
-        secondaryActionText: i18n.t(
-          "errorMessages.confirmLogout.secondaryActionText"
-        )
+        primaryActionText: "Logout",
+        secondaryActionText: "Cancel"
       },
       visible: true,
       onOk: handleLogout

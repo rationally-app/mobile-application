@@ -48,11 +48,13 @@
     "quotaAppealCancel": "Cancel",
     "quotaButtonCheckout": "Checkout",
     "quotaButtonAdd": "+ Add",
-    "quotaButtonAddVoucher": "Add voucher",
     "quotaAddId": "Add another ID to combine customer quotas",
-    "quotaCategoryVouchers": "Voucher(s):",
     "quotaIdentifierButtonScan": "Scan",
-    "quotaScanButtonBack": "Back",
+    "quotaScanButtonBack": "Back"
+  },
+  "merchantFlowScreen": {
+    "quotaButtonAddVoucher": "Add voucher",
+    "quotaCategoryVouchers": "Voucher(s):",
     "merchantCode": "Merchant Code"
   },
   "checkoutSuccessScreen": {
@@ -92,7 +94,7 @@
   },
   "thrownErrors": {
     "campaignConfigNotLoad": "Campaign config not loaded",
-    "updateCheckError": "Error while trying to check for updates:",
+    "updateCheckError": "Error while trying to check for updates",
     "onBarcodeScanned": "onBarCodeScanned",
     "noAuthCred": "No auth credentials found",
     "noCampaignConfig": "No campaign config found",
