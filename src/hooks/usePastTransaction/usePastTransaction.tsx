@@ -6,7 +6,6 @@ import {
   PastTransactionError
 } from "../../services/quota";
 import { Sentry } from "../../utils/errorTracking";
-import { ERROR_MESSAGE } from "../../context/alert";
 
 export type PastTransactionHook = {
   pastTransactionsResult: PastTransactionsResult["pastTransactions"] | null;
