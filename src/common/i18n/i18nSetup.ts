@@ -1,5 +1,5 @@
-import zh from "./translations/zh.json";
-import en from "./translations/en.json";
+import { zh } from "./translations/zh";
+import { en } from "./translations/en";
 import i18n from "i18n-js";
 import * as Localization from "expo-localization";
 
