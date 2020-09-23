@@ -87,14 +87,8 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
       type: `image/${fileType}`
     });
 
-    // fetch("http://192.168.1.187:4000/mrz", {
-    //   method: "POST",
-    //   body: formData,
-    //   headers: {
-    //     "content-type": "multipart/form-data"
-    //   }
-    // });
-    fetch("http://192.168.50.57:4000/mrz", {
+    // fetch("http://192.168.50.57:4000/mrz", {
+    fetch("http://192.168.1.187:4000/mrz", {
       method: "POST",
       body: formData,
       headers: {
@@ -116,10 +110,13 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
           }
         );
         console.log("Passport", passportNoField.value);
-        onResult(`${nationalityField.value}-${passportNoField.value}`);
+        passportNoField && nationalityField
+          ? onResult(`${nationalityField.value}-${passportNoField.value}`)
+          : onResult("MRZ not recognized");
       })
       .catch(err => {
         console.log(err);
+        onResult("MRZ not recognized");
       });
   };
 
