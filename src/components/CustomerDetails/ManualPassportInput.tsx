@@ -1,7 +1,7 @@
 import React, { useState, FunctionComponent, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TextInput, Dimensions } from "react-native";
 import { InputWithLabel } from "../Layout/InputWithLabel";
-import { size } from "../../common/styles";
+import { size, borderRadius, color, fontSize } from "../../common/styles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { DropdownFilterInput } from "../DropdownFilterModal/DropdownFilterInput";
 import { nationalityItems } from "../DropdownFilterModal/nationalityItems";
@@ -22,15 +22,46 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flex: 1,
     marginRight: size(1)
+  },
+  inputView: {
+    marginTop: size(1),
+    minHeight: size(6),
+    borderRadius: borderRadius(2),
+    borderWidth: 1,
+    backgroundColor: color("grey", 0),
+    borderColor: color("blue", 50)
+  },
+  inputText: {
+    minHeight: size(6),
+    paddingHorizontal: size(1),
+    fontSize: fontSize(0),
+    color: color("blue", 50)
+  },
+  cameraWrapper: {
+    position: "absolute",
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: color("grey", 0)
   }
 });
 
 interface ManualPassportInput {
+  openCamera: () => void;
+  closeCamera: () => void;
+  mrzResult: string;
   setIdInput: (id: string) => void;
   submitId: () => void;
 }
 
 export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
+  openCamera,
+  mrzResult,
   setIdInput,
   submitId
 }) => {
@@ -78,6 +109,20 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
             keyboardType={"default"}
           />
         </View>
+      </View>
+      <View
+        onTouchStart={() => {
+          openCamera();
+        }}
+        style={styles.inputView}
+      >
+        <TextInput
+          style={styles.inputText}
+          placeholder={"press to take MRZ image"}
+          editable={false}
+        >
+          {mrzResult}
+        </TextInput>
       </View>
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>

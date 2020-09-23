@@ -44,6 +44,7 @@ import {
   IdentificationContext,
   defaultSelectedIdType
 } from "../../context/identification";
+import { MrzCamera } from "./MrzCamera";
 
 const styles = StyleSheet.create({
   content: {
@@ -90,6 +91,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
+  const [shouldShowMrzCamera, setShouldShowMrzCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [idInput, setIdInput] = useState("");
   const { config } = useConfigContext();
@@ -100,6 +102,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { selectedIdType, setSelectedIdType } = useContext(
     IdentificationContext
   );
+  const [mrzResult, setMrzResult] = useState("MRZ image");
 
   const getSelectionArray = useCallback((): IdentificationFlag[] => {
     const selectionArray = [];
@@ -132,19 +135,24 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           setShouldShowCamera(false);
           return true;
         }
+
+        if (shouldShowMrzCamera) {
+          setShouldShowMrzCamera(false);
+          return true;
+        }
         return false;
       }
     );
     return () => {
       backHandler.remove();
     };
-  }, [shouldShowCamera]);
+  }, [shouldShowCamera, shouldShowMrzCamera]);
 
   useEffect(() => {
-    if (shouldShowCamera) {
+    if (shouldShowCamera || shouldShowMrzCamera) {
       Keyboard.dismiss();
     }
-  }, [shouldShowCamera]);
+  }, [shouldShowCamera, shouldShowMrzCamera]);
 
   useEffect(() => {
     const selectionDetails = getSelectionArray();
@@ -208,6 +216,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     return selectedIdType.label === "Passport" &&
       selectedIdType.scannerType === "NONE" ? (
       <ManualPassportInput
+        openCamera={() => setShouldShowMrzCamera(true)}
+        closeCamera={() => setShouldShowMrzCamera(false)}
+        mrzResult={mrzResult}
         setIdInput={setIdInput}
         submitId={() => onCheck(idInput)}
       />
@@ -270,6 +281,12 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               ? [BarCodeScanner.Constants.BarCodeType.qr]
               : [BarCodeScanner.Constants.BarCodeType.code39]
           }
+        />
+      )}
+      {shouldShowMrzCamera && (
+        <MrzCamera
+          onResult={(result: string) => setMrzResult(result)}
+          closeCamera={() => setShouldShowMrzCamera(false)}
         />
       )}
     </>
