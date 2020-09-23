@@ -1,44 +1,20 @@
-import React, { createContext, FunctionComponent, useState } from "react";
-import {
-  CampaignFeatures,
-  CampaignConfig,
-  CampaignPolicy,
-  IdentificationFlag
-} from "../types";
-
-export const defaultSelectedIdType: IdentificationFlag = {
-  type: "STRING",
-  label: "",
-  scannerType: "NONE",
-  validation: "REGEX",
-  validationRegex: ""
-};
+import React, { createContext, FunctionComponent } from "react";
+import { CampaignFeatures, CampaignConfig, CampaignPolicy } from "../types";
 
 interface CampaignConfigContext {
   readonly features: CampaignFeatures | null;
   readonly policies: CampaignPolicy[] | null;
-  selectedIdType: IdentificationFlag;
-  setSelectedIdType: (selectedIdType: IdentificationFlag) => void;
 }
-
 export const CampaignConfigContext = createContext<CampaignConfigContext>({
   features: null,
-  policies: null,
-  selectedIdType: defaultSelectedIdType,
-  setSelectedIdType: (selectedIdType: IdentificationFlag) => undefined
+  policies: null
 });
 
 export const CampaignConfigContextProvider: FunctionComponent<{
   campaignConfig: CampaignConfig;
 }> = ({ campaignConfig, children }) => {
-  const [selectedIdType, setSelectedIdType] = useState<IdentificationFlag>(
-    defaultSelectedIdType
-  );
-
   return (
-    <CampaignConfigContext.Provider
-      value={{ ...campaignConfig, selectedIdType, setSelectedIdType }}
-    >
+    <CampaignConfigContext.Provider value={campaignConfig}>
       {children}
     </CampaignConfigContext.Provider>
   );

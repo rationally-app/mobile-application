@@ -35,14 +35,15 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import {
-  CampaignConfigContext,
-  defaultSelectedIdType
-} from "../../context/campaignConfig";
+import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 import { InputSelection } from "./InputSelection";
 import { ManualPassportInput } from "./ManualPassportInput";
 import { IdentificationFlag } from "../../types";
+import {
+  IdentificationContext,
+  defaultSelectedIdType
+} from "../../context/identification";
 
 const styles = StyleSheet.create({
   content: {
@@ -95,8 +96,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
-  const { features, policies, selectedIdType, setSelectedIdType } = useContext(
-    CampaignConfigContext
+  const { features, policies } = useContext(CampaignConfigContext);
+  const { selectedIdType, setSelectedIdType } = useContext(
+    IdentificationContext
   );
 
   const getSelectionArray = useCallback((): IdentificationFlag[] => {

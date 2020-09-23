@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
 import { size } from "../../../src/common/styles";
 import { CheckoutSuccessCard } from "../../../src/components/CustomerQuota/CheckoutSuccess/CheckoutSuccessCard";
-import { Quota, CampaignPolicy, IdentificationFlag } from "../../../src/types";
+import { Quota, CampaignPolicy } from "../../../src/types";
 import { CampaignConfigContext } from "../../../src/context/campaignConfig";
 
 const products: CampaignPolicy[] = [
@@ -49,14 +49,7 @@ storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
   <CampaignConfigContext.Provider
     value={{
       policies: products,
-      features: null,
-      selectedIdType: {
-        label: "NRIC/FIN",
-        type: "STRING",
-        scannerType: "CODE_39",
-        validation: "NRIC"
-      },
-      setSelectedIdType: (selectedIdType: IdentificationFlag) => undefined
+      features: null
     }}
   >
     <View style={{ margin: size(3) }}>
