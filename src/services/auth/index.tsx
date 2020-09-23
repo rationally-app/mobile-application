@@ -96,7 +96,8 @@ export const liveRequestOTP = async (
       // this should not happen since we check the format before coming to this stage
       throw new AuthInvalidError(e.message);
     } else if (e.message.match(/Try again in [1-9] minutes?\./)) {
-      throw new LoginLockedError(e.message);
+      const minutes = e.message.match(/\d+/);
+      throw new LoginLockedError(minutes);
     } else {
       throw new LoginError(e.message);
     }

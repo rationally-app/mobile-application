@@ -163,7 +163,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   useEffect(() => {
     if (validityError instanceof SessionError) {
       expireSession();
-      //TODO: Used to be in useCallback, need to test
       showErrorAlert(validityError, () => {
         navigation.navigate("CampaignLocationsScreen");
       });

@@ -11,8 +11,8 @@ import { Providers } from "../context/composeProviders";
 import { DrawerContextProvider } from "../context/drawer";
 import { CampaignConfigsStoreContextProvider } from "../context/campaignConfigsStore";
 import * as Localization from "expo-localization";
-import zh from "../common/zh.json";
-import en from "../common/en.json";
+import zh from "../common/i18n/translations/zh.json";
+import en from "../common/i18n/translations/en.json";
 import i18n from "i18n-js";
 
 i18n.fallbacks = true;

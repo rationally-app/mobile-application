@@ -236,7 +236,7 @@
       "primaryActionText": "Cancel",
       "secondaryActionText": "Remove"
     },
-    "validateInputWithRegex": {
+    "checkIdFormat": {
       "title": "Invalid input",
       "body": "Please check that the ID is in the correct format",
       "primaryActionText": "OK"

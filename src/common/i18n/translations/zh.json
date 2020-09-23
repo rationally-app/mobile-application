@@ -52,7 +52,7 @@
     },
     "resendOTP": {
       "title": "重新发送一次性密码？",
-      "body": "请向负责人索取没有与任何联络号码挂钩的新QR码。",
+      "body": "若再要求发送一次性密码，您须等待3分钟才能再试。",
       "primaryActionText": "重新发送",
       "secondaryActionText": "不须要"
     },
@@ -62,17 +62,17 @@
       "primaryActionText": "确定"
     },
     "systemErrorValidityPeriod": {
-      "title": "系统错误 ",
+      "title": "系统错误",
       "body": "我们找不到有效期限。\n请向您的负责人索取新QR码后再试一次。",
       "primaryActionText": "确定"
     },
     "systemErrorLoginIssue": {
-      "title": "系统错误 ",
+      "title": "系统错误",
       "body": "登录目前出现问题。\n请向您的负责人索取新QR码。",
       "primaryActionText": "确定"
     },
     "systemErrorServerIssue": {
-      "title": "系统错误 ",
+      "title": "系统错误",
       "body": "服务器目前出现问题。如果问题持续出现，请联系您的负责人。",
       "primaryActionText": "确定"
     },
@@ -236,7 +236,7 @@
       "primaryActionText": "取消",
       "secondaryActionText": "清除"
     },
-    "validateInputWithRegex": {
+    "checkIdFormat": {
       "title": "输入无效",
       "body": "请检查证件号码格式合正确",
       "primaryActionText": "确定"
