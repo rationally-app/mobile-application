@@ -48,8 +48,9 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
   };
 
   useEffect(() => {
-    if (selectedCountry && passportNo)
-      setIdInput(`${selectedCountry?.id}-${passportNo}`);
+    selectedCountry && passportNo
+      ? setIdInput(`${selectedCountry?.id}-${passportNo}`)
+      : setIdInput("");
   }, [selectedCountry, passportNo, setIdInput]);
 
   return (
