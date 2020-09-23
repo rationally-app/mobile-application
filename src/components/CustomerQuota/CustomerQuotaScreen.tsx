@@ -151,7 +151,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     if (error instanceof SessionError) {
       clearError();
       expireSession();
-      //TODO: Used to be in useCallback, need to test
       showErrorAlert(error, () => {
         navigation.navigate("CampaignLocationsScreen");
       });

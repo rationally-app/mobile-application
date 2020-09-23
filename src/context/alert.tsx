@@ -62,27 +62,17 @@ const getTranslationKeyFromError = (error: Error): string => {
         ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
       );
     case "QuotaError":
-      return getTranslationKeyFromErrorName(error);
+      return "systemErrorConnectivityIssues";
     case "OTPWrongError":
-      return getTranslationKeyFromErrorName(error);
+      return "invalidInputOTP";
+    case "OTPWrongErrorLastTry":
+      return "invalidInputOTPOneMoreInvalid";
     case "OTPExpiredError":
-      return getTranslationKeyFromErrorName(error);
-    case "LoginError":
-      return getTranslationKeyFromErrorName(error);
-    case "AuthError":
-      return getTranslationKeyFromErrorName(error);
-    case "Error":
-      return getTranslationKeyFromErrorMessage(error.message);
-  }
-  return "";
-};
-
-const getTranslationKeyFromErrorName = (error: Error): string => {
-  switch (error.name) {
-    case "LoginError":
-      return "systemErrorLoginIssue";
+      return "expiredOTP";
     case "LoginLockedError":
       return "disabledAccess";
+    case "LoginError":
+      return "systemErrorLoginIssue";
     case "AuthTakenError":
       return "alreadyUsedQRCode";
     case "AuthExpiredError":
@@ -90,17 +80,10 @@ const getTranslationKeyFromErrorName = (error: Error): string => {
       return "expiredQR";
     case "AuthInvalidError":
       return "wrongFormatQRScanAgain";
-    case "OTPWrongErrorLastTry":
-      return "invalidInputOTPOneMoreInvalid";
-    case "OTPWrongError":
-      return "invalidInputOTP";
-    case "OTPExpiredError":
-      return "expiredOTP";
-    case "QuotaError":
-      return "systemErrorConnectivityIssues";
+    case "AuthError":
+    case "Error":
     default:
-      // TODO: Determine fallback value
-      return error.message;
+      return getTranslationKeyFromErrorMessage(error.message);
   }
 };
 
@@ -163,7 +146,7 @@ const getTranslationKeyFromErrorMessage = (message: string): string => {
     case WARNING_MESSAGE.PAYMENT_COLLECTION:
       return "paymentCollected";
     case ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR:
-      return "validateInputWithRegex";
+      return "checkIdFormat";
     case "logout":
       return "confirmLogout";
     case "resendOTP":
@@ -171,7 +154,6 @@ const getTranslationKeyFromErrorMessage = (message: string): string => {
     case "cancelEntry":
       return "cancelEntry";
     default:
-      // TODO: Determine fallback value
       return message;
   }
 };
@@ -192,10 +174,19 @@ interface AlertModalContext {
   showConfirmationAlert: (
     error: Error,
     onOk: () => void,
-    onCancel?: () => void
+    onCancel?: () => void,
+    content?: Record<string, string>
   ) => void;
-  showErrorAlert: (error: Error, onOk?: () => void) => void;
-  showWarnAlert: (error: Error, onOk: () => void) => void;
+  showErrorAlert: (
+    error: Error,
+    onOk?: () => void,
+    content?: Record<string, string>
+  ) => void;
+  showWarnAlert: (
+    error: Error,
+    onOk: () => void,
+    content?: Record<string, string>
+  ) => void;
   clearAlert: () => void;
 }
 
@@ -218,9 +209,13 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     []
   );
 
-  // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
   const showConfirmationAlert = useCallback(
-    (error: Error, onOk: () => void, onCancel?: () => void): void => {
+    (
+      error: Error,
+      onOk: () => void,
+      onCancel?: () => void,
+      content?: Record<string, string>
+    ): void => {
       const translationKey = getTranslationKeyFromError(error);
       showAlert({
         alertType: "CONFIRM",
@@ -243,9 +238,12 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     [showAlert]
   );
 
-  // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
   const showErrorAlert = useCallback(
-    (error: Error, onOk?: () => void): void => {
+    (
+      error: Error,
+      onOk?: () => void,
+      content?: Record<string, string>
+    ): void => {
       const translationKey = getTranslationKeyFromError(error);
       showAlert({
         alertType: "ERROR",
@@ -268,9 +266,12 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     [showAlert]
   );
 
-  // TODO: To determine fallback value when no key is available for title, description, buttonTexts.primaryActionText
   const showWarnAlert = useCallback(
-    (error: Error, onOk: () => void): void => {
+    (
+      error: Error,
+      onOk: () => void,
+      content?: Record<string, string>
+    ): void => {
       const translationKey = getTranslationKeyFromError(error);
       showAlert({
         alertType: "WARN",
@@ -294,7 +295,6 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
     [showAlert]
   );
 
-  // TODO: maybe can toggle visible to false?
   const clearAlert: AlertModalContext["clearAlert"] = useCallback(() => {
     setAlertProps(defaultAlertProps);
   }, []);

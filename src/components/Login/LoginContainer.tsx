@@ -36,7 +36,12 @@ import { Banner } from "../Layout/Banner";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
-import { requestOTP, LoginError, AuthError } from "../../services/auth";
+import {
+  requestOTP,
+  LoginError,
+  AuthError,
+  LoginLockedError
+} from "../../services/auth";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
@@ -152,7 +157,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof LoginError) {
+      if (e instanceof LoginLockedError) {
+        // TODO: To determine if this is the best way to show this
+        showErrorAlert(e, () => resetStage(), { mm: e.message });
+      } else if (e instanceof LoginError) {
         showErrorAlert(e, () => resetStage());
       } else {
         setState(() => {
