@@ -101,8 +101,8 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
       type: `image/${fileType}`
     });
 
-    fetch("http://192.168.50.57:4000/mrz", {
-      // fetch("http://192.168.1.187:4000/mrz", {
+    // fetch("http://192.168.50.57:4000/mrz", {
+    fetch("http://192.168.1.187:4000/mrz", {
       method: "POST",
       body: formData,
       headers: {
@@ -177,14 +177,18 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
           >
             <Text
               style={{
-                fontSize: 18,
+                fontSize: 28,
+                borderColor: "white",
+                borderRadius: 10,
+                borderWidth: 2,
+                padding: 10,
                 alignItems: "center",
                 marginTop: 50,
                 color: "white"
               }}
             >
               {" "}
-              Snap{" "}
+              Snap MRZ{" "}
             </Text>
           </TouchableOpacity>
         </View>
