@@ -94,7 +94,7 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
     //     "content-type": "multipart/form-data"
     //   }
     // });
-    fetch("http://192.168.1.187:4000/mrz", {
+    fetch("http://192.168.50.57:4000/mrz", {
       method: "POST",
       body: formData,
       headers: {
@@ -104,7 +104,19 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
       .then(response => response.json())
       .then(data => {
         console.log(data.data);
-        onResult(data.data);
+        const details = data.data;
+        const passportNoField = details.find(
+          (field: { field: string; value: string }) => {
+            return field.field === "documentNumber";
+          }
+        );
+        const nationalityField = details.find(
+          (field: { field: string; value: string }) => {
+            return field.field === "issuingState";
+          }
+        );
+        console.log("Passport", passportNoField.value);
+        onResult(`${nationalityField.value}-${passportNoField.value}`);
       })
       .catch(err => {
         console.log(err);
