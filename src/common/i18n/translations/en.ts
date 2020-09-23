@@ -54,7 +54,8 @@ export const en: Translations = {
     quotaButtonAdd: "+ Add",
     quotaAddId: "Add another ID to combine customer quotas",
     quotaIdentifierButtonScan: "Scan",
-    quotaScanButtonBack: "Back"
+    quotaScanButtonBack: "Back",
+    quotaCheck: "Checking"
   },
   merchantFlowScreen: {
     quotaButtonAddVoucher: "Add voucher",

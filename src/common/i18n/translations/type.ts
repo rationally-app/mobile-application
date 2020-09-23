@@ -51,6 +51,7 @@ export type Translations = {
     quotaAddId: string;
     quotaIdentifierButtonScan: string;
     quotaScanButtonBack: string;
+    quotaCheck: string;
   };
   merchantFlowScreen: {
     quotaButtonAddVoucher: string;

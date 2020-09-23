@@ -52,7 +52,8 @@ export const zh: Translations = {
     quotaButtonAdd: "+ 添加",
     quotaAddId: "输入另一个证件号码已增加限额",
     quotaIdentifierButtonScan: "扫描",
-    quotaScanButtonBack: "返回"
+    quotaScanButtonBack: "返回",
+    quotaCheck: "检查中"
   },
   merchantFlowScreen: {
     quotaButtonAddVoucher: "添加优惠券",
