@@ -67,9 +67,22 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
     onResult("Processing....");
     closeCamera();
     if (!photo) return;
+    console.log(photo.height);
+    console.log(photo.width);
+    // ratio is 4:3
     const manipResult = await ImageManipulator.manipulateAsync(
       photo.uri,
-      [{ resize: { width: 500 } }],
+      [
+        { resize: { width: 500 } },
+        {
+          crop: {
+            originX: 0,
+            originY: (500 / 0.75) * 0.4,
+            width: 500,
+            height: (500 / 0.75) * 0.2
+          }
+        }
+      ],
       {
         compress: 0.5,
         format: ImageManipulator.SaveFormat.JPEG
@@ -87,8 +100,8 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
       type: `image/${fileType}`
     });
 
-    // fetch("http://192.168.50.57:4000/mrz", {
-    fetch("http://192.168.1.187:4000/mrz", {
+    fetch("http://192.168.50.57:4000/mrz", {
+      // fetch("http://192.168.1.187:4000/mrz", {
       method: "POST",
       body: formData,
       headers: {
