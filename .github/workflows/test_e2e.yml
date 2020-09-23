@@ -81,7 +81,7 @@ jobs:
           xcrun simctl boot $SIMULATOR
           xcrun simctl list | grep Booted
       - name: Run iOS tests
-        run: ./ios/setup.sh
+        run: ./e2e_run_all_tests_ios.sh
       - name: Upload Appium Logs
         if: always()
         uses: actions/upload-artifact@v2
