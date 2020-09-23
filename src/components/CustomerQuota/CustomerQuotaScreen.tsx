@@ -105,8 +105,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     updateCart,
     checkoutCart,
     error,
-    clearError
-  } = useCart(ids, sessionToken, endpoint, quotaResponse?.remainingQuota);
+    clearError,
+    initCartWithQuota
+  } = useCart(ids, sessionToken, endpoint);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -278,6 +279,12 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       setUpdateAfterPurchased(true);
     }
   }, [cartState, updateQuota, updateAfterPurchased]);
+
+  useEffect(() => {
+    if (quotaResponse?.remainingQuota) {
+      initCartWithQuota(quotaResponse.remainingQuota);
+    }
+  }, [quotaResponse, initCartWithQuota]);
 
   return quotaState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
