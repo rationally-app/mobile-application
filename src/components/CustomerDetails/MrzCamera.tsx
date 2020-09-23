@@ -67,6 +67,7 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
     onResult("Processing....");
     closeCamera();
     if (!photo) return;
+
     console.log(photo.height);
     console.log(photo.width);
     // ratio is 4:3
@@ -77,9 +78,9 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
         {
           crop: {
             originX: 0,
-            originY: (500 / 0.75) * 0.4,
+            originY: (500 / photo.width) * photo.height * 0.4,
             width: 500,
-            height: (500 / 0.75) * 0.2
+            height: (500 / photo.width) * photo.height * 0.2
           }
         }
       ],
