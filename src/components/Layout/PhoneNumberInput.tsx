@@ -65,7 +65,7 @@ export const PhoneNumberInput: FunctionComponent<{
 }) => {
   return (
     <View style={styles.numberWrapper}>
-      <AppText style={styles.label}>{label}</AppText>
+      <AppText style={styles.label}>hello12</AppText>
       <View style={styles.inputsWrapper}>
         <TextInput
           style={styles.countryCode}
@@ -80,6 +80,8 @@ export const PhoneNumberInput: FunctionComponent<{
           value={mobileNumberValue}
           onChange={({ nativeEvent: { text } }) => onChangeMobileNumber(text)}
           onSubmitEditing={onSubmit}
+          accessibilityLabel="PhoneNumberInput"
+          testID="PhoneNumberInput"
         />
       </View>
     </View>
