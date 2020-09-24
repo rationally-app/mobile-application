@@ -80,8 +80,8 @@ export const PhoneNumberInput: FunctionComponent<{
           value={mobileNumberValue}
           onChange={({ nativeEvent: { text } }) => onChangeMobileNumber(text)}
           onSubmitEditing={onSubmit}
-          accessibilityLabel="PhoneNumberInput"
-          testID="PhoneNumberInput"
+          accessibilityLabel="phone-number-input"
+          testID="phone-number-input"
         />
       </View>
     </View>
