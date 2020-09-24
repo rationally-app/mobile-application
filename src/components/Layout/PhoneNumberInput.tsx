@@ -65,7 +65,7 @@ export const PhoneNumberInput: FunctionComponent<{
 }) => {
   return (
     <View style={styles.numberWrapper}>
-      <AppText style={styles.label}>hello12</AppText>
+      <AppText style={styles.label}>{label}</AppText>
       <View style={styles.inputsWrapper}>
         <TextInput
           style={styles.countryCode}
