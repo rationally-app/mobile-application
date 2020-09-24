@@ -12,7 +12,7 @@ export const formatTimeDifference = (
   start: number | Date,
   end: number | Date
 ): string => {
-  if (i18n.locale.includes("zh")) {
+  if (i18n.locale.startsWith("zh")) {
     return formatDistance(start, end, {
       locale: zhCN
     });
