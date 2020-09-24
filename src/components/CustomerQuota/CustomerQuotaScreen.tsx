@@ -39,6 +39,7 @@ import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
+import { ProductContext } from "../../context/products";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -90,6 +91,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const [updateAfterPurchased, setUpdateAfterPurchased] = useState<boolean>(
     false
   );
+  const { products } = useContext(ProductContext);
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 
@@ -281,10 +283,13 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [cartState, updateQuota, updateAfterPurchased]);
 
   useEffect(() => {
+    /**
+     * Initialise available cart items when quota or product changes
+     */
     if (quotaResponse?.remainingQuota) {
       initCartWithQuota(quotaResponse.remainingQuota);
     }
-  }, [quotaResponse, initCartWithQuota]);
+  }, [quotaResponse, initCartWithQuota, products]);
 
   return quotaState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
