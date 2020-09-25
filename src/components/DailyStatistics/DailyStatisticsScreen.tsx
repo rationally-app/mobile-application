@@ -139,10 +139,10 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
           <View style={styles.headerText}>
             <StatisticsHeader mode={config.appMode} />
             <TitleStatistic
-              totalCount={totalCount ? totalCount : 0}
+              totalCount={totalCount ?? 0}
               currentTimestamp={currentTimestamp}
               lastTransactionTime={
-                lastTransactionTime ? lastTransactionTime : 0
+                lastTransactionTime ?? 0
               }
               onPressPrevDay={onPressPrevDay}
               onPressNextDay={onPressNextDay}
