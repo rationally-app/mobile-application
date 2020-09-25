@@ -63,7 +63,7 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
   }, []);
 
   const snapPhoto = async () => {
-    const photo = await cameraRef?.takePictureAsync({ quality: 0 });
+    const photo = await cameraRef?.takePictureAsync({ quality: 0.5 });
     onResult("Processing....");
     closeCamera();
     if (!photo) return;
@@ -85,8 +85,8 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
         }
       ],
       {
-        compress: 0.5,
-        format: ImageManipulator.SaveFormat.JPEG
+        // compress: 0.5,
+        format: ImageManipulator.SaveFormat.PNG
       }
     );
     console.log("photo", manipResult.uri);
@@ -101,8 +101,8 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
       type: `image/${fileType}`
     });
 
-    // fetch("http://192.168.50.57:4000/mrz", {
-    fetch("http://192.168.1.187:4000/mrz", {
+    fetch("http://192.168.50.57:4000/mrz", {
+    // fetch("http://192.168.1.187:4000/mrz", {
       method: "POST",
       body: formData,
       headers: {
