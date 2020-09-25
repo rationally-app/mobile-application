@@ -25,6 +25,7 @@ import { useDrawerContext } from "../../context/drawer";
 import { LoadingView } from "../Loading";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
+import { sortBy } from "lodash";
 
 const styles = StyleSheet.create({
   content: {
@@ -127,8 +128,20 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     navigateToCampaignLocation,
     navigation
   ]);
-  console.log(Object.entries(authCredentials));
-  // console.log(authCredentials);
+
+  const alphabeticallyOrderedNames = Object.entries(authCredentials).map(
+    (a: [string, AuthCredentials]) => {
+      return {
+        ...a[1],
+        name: allCampaignConfigs[a[0]]?.features?.campaignName
+      };
+    }
+  );
+  const sorted = sortBy(alphabeticallyOrderedNames, [
+    o => {
+      return o.name;
+    }
+  ]);
 
   return (
     <>
@@ -150,35 +163,16 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
               <AppText style={styles.selectCampaignHeader}>
                 Select campaign
               </AppText>
-              {Object.entries(authCredentials)
-                .sort(
-                  (
-                    a: [string, AuthCredentials],
-                    b: [string, AuthCredentials]
-                  ) => {
-                    const aText: string | undefined =
-                      allCampaignConfigs[a[0]]?.features?.campaignName;
-                    const bText: string | undefined =
-                      allCampaignConfigs[b[0]]?.features?.campaignName;
-                    if (!aText) return -1;
-                    else if (!bText) return 1;
-                    else if (aText.toLowerCase() > bText.toLowerCase())
-                      return 1;
-                    else return -1;
-                  }
-                )
-                .map(([key, credentials], idx) => (
-                  <View key={key} style={styles.campaignLocationWrapper}>
-                    <CampaignLocationsListItem
-                      {...credentials}
-                      name={
-                        allCampaignConfigs[key]?.features?.campaignName ||
-                        `Campaign ${idx + 1}`
-                      }
-                      onPress={() => navigateToCampaignLocation(credentials)}
-                    />
-                  </View>
-                ))}
+
+              {sorted.map((obj, idx) => (
+                <View key={idx} style={styles.campaignLocationWrapper}>
+                  <CampaignLocationsListItem
+                    {...obj}
+                    name={obj.name || `Campaign ${idx + 1}`}
+                    onPress={() => navigateToCampaignLocation(obj)}
+                  />
+                </View>
+              ))}
             </Card>
           ) : (
             <Card style={styles.loadingViewWrapper}>
