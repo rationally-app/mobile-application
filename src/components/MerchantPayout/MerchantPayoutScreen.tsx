@@ -193,12 +193,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       if (merchantError instanceof SessionError) {
         expireSession();
       } else {
-        Alert.alert("Error", merchantError.message, [
-          {
-            text: "Dismiss",
-            onPress: () => resetVoucherState(true)
-          }
-        ]);
+        showErrorAlert(new Error(merchantError.message), () =>
+          resetVoucherState(true)
+        );
       }
     }
   }, [
@@ -264,23 +261,10 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <SecondaryButton
                 text={i18n.t("customerQuotaScreen.quotaAppealCancel")}
                 onPress={() => {
-                  Alert.alert(
-                    "Discard transaction?",
-                    "This will clear all scanned items",
-                    [
-                      {
-                        text: "Cancel"
-                      },
-                      {
-                        text: "Discard",
-                        onPress: () => {
-                          setMerchantCode("");
-                          resetState();
-                        },
-                        style: "destructive"
-                      }
-                    ]
-                  );
+                  showErrorAlert(new Error("discardTransaction"), () => {
+                    setMerchantCode("");
+                    resetState();
+                  });
                 }}
               />
             </View>
