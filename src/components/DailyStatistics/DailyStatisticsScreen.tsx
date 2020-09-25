@@ -119,11 +119,6 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
       fetchDailyStatistics(Date.now());
     }
   });
-  useEffect(() => {
-    if (isFocused) {
-      checkUpdates();
-    }
-  }, [isFocused, checkUpdates]);
 
   return (
     <>
