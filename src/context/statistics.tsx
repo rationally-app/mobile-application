@@ -48,7 +48,7 @@ export const StatisticsContextProvider: FunctionComponent = ({ children }) => {
   const clearStatistics: StatisticsContext["clearStatistics"] = useCallback(() => {
     setTotalCount(null);
     setCurrentTimestamp(Date.now());
-    setLastTransactionTime(0);
+    setLastTransactionTime(null);
     setTransactionHistory([]);
   }, []);
 
