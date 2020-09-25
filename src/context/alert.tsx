@@ -147,12 +147,9 @@ const getTranslationKeyFromErrorMessage = (message: string): string => {
       return "paymentCollected";
     case ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR:
       return "checkIdFormat";
-    case "logout":
-      return "confirmLogout";
+    case "confirmLogout":
     case "resendOTP":
-      return "resendOTP";
     case "cancelEntry":
-      return "cancelEntry";
     default:
       return message;
   }
@@ -220,7 +217,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
       showAlert({
         alertType: "CONFIRM",
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Confirm",
-        description: i18n.t(`errorMessages.${translationKey}.body`),
+        description: i18n.t(`errorMessages.${translationKey}.body`, content),
         buttonTexts: {
           primaryActionText: i18n.t(
             `errorMessages.${translationKey}.primaryActionText`
@@ -249,7 +246,8 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
         alertType: "ERROR",
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Error",
         description:
-          i18n.t(`errorMessages.${translationKey}.body`) ?? translationKey,
+          i18n.t(`errorMessages.${translationKey}.body`, content) ??
+          translationKey,
         buttonTexts: {
           primaryActionText:
             i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",
@@ -277,7 +275,8 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
         alertType: "WARN",
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Warning",
         description:
-          i18n.t(`errorMessages.${translationKey}.body`) ?? translationKey,
+          i18n.t(`errorMessages.${translationKey}.body`, content) ??
+          translationKey,
         buttonTexts: {
           primaryActionText: i18n.t(
             `errorMessages.${translationKey}.primaryActionText`
