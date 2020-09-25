@@ -64,6 +64,7 @@ export const ItemStepper: FunctionComponent<{
               ? productQuantity?.unit
               : undefined
           }
+          parentItem={category}
         />
         <AppText
           style={[sharedStyles.maxQuantityLabel, { textAlign: "center" }]}

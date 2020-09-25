@@ -88,12 +88,14 @@ interface StepperButton {
   onPress: () => void;
   variant: "PLUS" | "MINUS";
   disabled?: boolean;
+  parentItem: string;
 }
 
 const StepperButton: FunctionComponent<StepperButton> = ({
   onPress,
   variant,
-  disabled = false
+  disabled = false,
+  parentItem
 }) => {
   const [isPressedIn, setIsPressedIn] = useState(false);
   const [longPressStartTime, setLongPressStartTime] = useState(0);
@@ -138,8 +140,8 @@ const StepperButton: FunctionComponent<StepperButton> = ({
       onLongPress={() => {
         setLongPressStartTime(Date.now());
       }}
-      accessibilityLabel={"stepper-" + variant.toLowerCase()}
-      testID={"stepper-" + variant.toLowerCase()}
+      accessibilityLabel={parentItem + "-stepper-" + variant.toLowerCase()}
+      testID={parentItem + "-stepper-" + variant.toLowerCase()}
     >
       <Feather
         name={variant === "PLUS" ? "plus" : "minus"}
@@ -162,6 +164,7 @@ export interface Stepper {
     type: "PREFIX" | "POSTFIX";
     label: string;
   };
+  parentItem: string;
 }
 
 export const Stepper: FunctionComponent<Stepper> = ({
@@ -172,7 +175,8 @@ export const Stepper: FunctionComponent<Stepper> = ({
     max: Number.MAX_SAFE_INTEGER
   },
   step = 1,
-  unit
+  unit,
+  parentItem
 }) => {
   const isMounted = useIsMounted();
   const [internalValue, setInternalValue] = useState<string>(`${value}`);
@@ -249,6 +253,7 @@ export const Stepper: FunctionComponent<Stepper> = ({
         variant="MINUS"
         onPress={decrement}
         disabled={value === bounds.min}
+        parentItem={parentItem}
       />
       <View style={styles.inputAndSuffixWrapper}>
         {unit?.type === "PREFIX" && (
@@ -271,6 +276,7 @@ export const Stepper: FunctionComponent<Stepper> = ({
         variant="PLUS"
         onPress={increment}
         disabled={value === bounds.max}
+        parentItem={parentItem}
       />
     </View>
   );
