@@ -169,7 +169,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
         <View style={styles.buttonsWrapper}>
           <DarkButton
             fullWidth={true}
-            text="Next merchant"
+            text={i18n.t("merchantFlowScreen.nextMerchant")}
             onPress={() => {
               navigation.navigate("MerchantPayoutScreen");
             }}

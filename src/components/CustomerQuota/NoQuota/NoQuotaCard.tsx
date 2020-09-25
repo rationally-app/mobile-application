@@ -96,7 +96,10 @@ export const groupTransactionsByCategory = (
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
+        policy?.quantity.unit || {
+          type: "POSTFIX",
+          label: i18n.t("checkoutSuccessScreen.quantity")
+        }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
       order: -1

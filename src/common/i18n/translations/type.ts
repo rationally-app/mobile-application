@@ -57,6 +57,9 @@ export type Translations = {
     quotaButtonAddVoucher: string;
     quotaCategoryVouchers: string;
     merchantCode: string;
+    seeAll: string;
+    nextMerchant: string;
+    remove: string;
   };
   checkoutSuccessScreen: {
     redeemed: string;
@@ -79,6 +82,7 @@ export type Translations = {
     redeemedLimitReached: string;
     valid: string;
     complete: string;
+    quantity: string;
   };
   customerAppealScreen: {
     raiseAppeal: string;

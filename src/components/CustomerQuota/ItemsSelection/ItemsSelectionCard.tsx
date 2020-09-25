@@ -21,6 +21,7 @@ import {
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
+import i18n from "i18n-js";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -111,7 +112,11 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         {!isLoading && (
           <SecondaryButton
-            text={isAppeal ? "Back" : "Cancel"}
+            text={
+              isAppeal
+                ? i18n.t("customerQuotaScreen.quotaScanButtonBack")
+                : i18n.t("customerQuotaScreen.quotaAppealCancel")
+            }
             onPress={
               isAppeal
                 ? onBack
@@ -137,7 +142,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           ]}
         >
           <DarkButton
-            text="Checkout"
+            text={i18n.t("customerQuotaScreen.quotaButtonCheckout")}
             icon={
               <Feather
                 name="shopping-cart"

@@ -60,7 +60,10 @@ export const en: Translations = {
   merchantFlowScreen: {
     quotaButtonAddVoucher: "Add voucher",
     quotaCategoryVouchers: "Voucher(s):",
-    merchantCode: "Merchant Code"
+    merchantCode: "Merchant Code",
+    seeAll: "See all",
+    nextMerchant: "Next merchant",
+    remove: "Remove"
   },
   checkoutSuccessScreen: {
     redeemed: "Redeemed!",
@@ -82,7 +85,8 @@ export const en: Translations = {
     limitReached: "Limit reached",
     redeemedLimitReached: "%{quantity} item(s) more till %{date}.",
     valid: "Valid",
-    complete: "Complete"
+    complete: "Complete",
+    quantity: " qty"
   },
   customerAppealScreen: {
     raiseAppeal: "Raise an appeal",

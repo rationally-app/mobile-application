@@ -11,6 +11,7 @@ import { ValidVoucherCount } from "./ValidVoucherCount";
 import { AppText } from "../Layout/AppText";
 import { ModalWithClose } from "../Layout/ModalWithClose";
 import { Voucher } from "../../types";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   card: {
@@ -93,7 +94,9 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
                 );
               }}
             >
-              <AppText style={styles.removeText}>Remove</AppText>
+              <AppText style={styles.removeText}>
+                {i18n.t("merchantFlowScreen.remove")}
+              </AppText>
             </TouchableOpacity>
           </View>
         ))}

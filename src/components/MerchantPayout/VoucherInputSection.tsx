@@ -68,7 +68,9 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
             onPress={openAllValidVouchersModal}
             style={styles.seeAllButton}
           >
-            <AppText style={styles.seeAllText}>See all</AppText>
+            <AppText style={styles.seeAllText}>
+              {i18n.t("merchantFlowScreen.seeAll")}
+            </AppText>
           </TouchableOpacity>
         </View>
       ) : (

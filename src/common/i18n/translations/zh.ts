@@ -58,7 +58,10 @@ export const zh: Translations = {
   merchantFlowScreen: {
     quotaButtonAddVoucher: "添加优惠券",
     quotaCategoryVouchers: "优惠券",
-    merchantCode: "商人编号"
+    merchantCode: "商人编号",
+    seeAll: "查看所有",
+    nextMerchant: "下一个商人",
+    remove: "清除"
   },
   checkoutSuccessScreen: {
     redeemed: "已领取!",
@@ -80,7 +83,8 @@ export const zh: Translations = {
     limitReached: "达到领取限额",
     redeemedLimitReached: "到 %{date} 为止还有%{quantity}件物品",
     valid: "有效",
-    complete: "确认交易"
+    complete: "确认交易",
+    quantity: " 个"
   },
   customerAppealScreen: {
     raiseAppeal: "提出上诉",
