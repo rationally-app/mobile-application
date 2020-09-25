@@ -44,7 +44,7 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
   };
 
   const onPassportNoChanged = (passportNo: string): void => {
-    setPassportNo(passportNo);
+    setPassportNo(passportNo.toUpperCase());
   };
 
   useEffect(() => {

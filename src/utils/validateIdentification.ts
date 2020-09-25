@@ -10,7 +10,6 @@ export const validateAndCleanId = (
   idRegex?: string
 ): string => {
   let id: string;
-  console.log(idValidation);
   switch (idValidation) {
     case "NRIC":
       id = validateAndCleanNric(inputId);
