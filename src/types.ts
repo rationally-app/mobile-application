@@ -130,7 +130,6 @@ const IdentificationFlag = t.intersection([
     scannerType: t.union([
       t.literal("CODE_39"),
       t.literal("QR"),
-      t.literal("MRZ"),
       t.literal("NONE")
     ]),
     validation: t.union([
