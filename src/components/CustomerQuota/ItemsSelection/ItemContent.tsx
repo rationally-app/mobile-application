@@ -26,9 +26,16 @@ export const ItemContent: FunctionComponent<{
   descriptionAlert?: string;
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
-}> = ({ name, description, descriptionAlert, unit, maxQuantity }) => (
+  category: string;
+}> = ({ name, description, descriptionAlert, unit, maxQuantity, category }) => (
   <View>
-    <AppText style={styles.name}>{name}</AppText>
+    <AppText
+      style={styles.name}
+      accessibilityLabel={category}
+      testID={category}
+    >
+      {name}
+    </AppText>
     {descriptionAlert && descriptionAlert.length > 0 && (
       <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
     )}

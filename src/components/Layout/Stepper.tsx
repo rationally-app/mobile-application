@@ -138,6 +138,8 @@ const StepperButton: FunctionComponent<StepperButton> = ({
       onLongPress={() => {
         setLongPressStartTime(Date.now());
       }}
+      accessibilityLabel={"stepper-" + variant.toLowerCase()}
+      testID={"stepper-" + variant.toLowerCase()}
     >
       <Feather
         name={variant === "PLUS" ? "plus" : "minus"}

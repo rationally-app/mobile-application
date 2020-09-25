@@ -9,6 +9,7 @@ export const ItemCheckbox: FunctionComponent<{
   updateCart: CartHook["updateCart"];
 }> = ({ cartItem, updateCart }) => {
   const { category, quantity, maxQuantity } = cartItem;
+  console.log(cartItem);
   const { getProduct } = useContext(ProductContext);
   const { name = category, description, quantity: productQuantity } =
     getProduct(category) || {};
@@ -22,6 +23,7 @@ export const ItemCheckbox: FunctionComponent<{
           descriptionAlert={cartItem.descriptionAlert}
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
+          category={category}
         />
       }
       isChecked={quantity > 0}

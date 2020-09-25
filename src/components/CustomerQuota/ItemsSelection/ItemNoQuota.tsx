@@ -42,6 +42,7 @@ export const ItemNoQuota: FunctionComponent<{
           description={description}
           unit={quantity?.unit}
           maxQuantity={maxQuantity}
+          category={category + "-no-quota"}
         />
       </View>
       <View style={styles.feedbackWrapper}>

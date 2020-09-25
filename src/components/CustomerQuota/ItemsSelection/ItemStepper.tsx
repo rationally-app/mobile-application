@@ -50,6 +50,7 @@ export const ItemStepper: FunctionComponent<{
           description={description}
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
+          category={category}
         />
       </View>
       <View>
