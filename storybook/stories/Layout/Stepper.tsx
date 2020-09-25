@@ -18,6 +18,7 @@ const StepperItem: FunctionComponent<{
       step={step}
       bounds={bounds}
       unit={unit}
+      parentItem="storybook"
     />
   );
 };
