@@ -61,7 +61,8 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   };
 
   const onChangeMobileNumber = (text: string): void => {
-    /^\d*$/.test(text) && setMobileNumberValue(text);
+    ///^\d*$/.test(text) &&
+    setMobileNumberValue(text);
   };
 
   const onRequestOTP = async (): Promise<void> => {
@@ -76,13 +77,15 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
     }
   };
 
+  const parsedMobileNumberValue = mobileNumberValue.replace(" ", "");
+
   const onSubmitMobileNumber = (): void => {
     if (!countryCodeValidator(countryCode)) {
       showAlert({
         ...wrongFormatAlertProps,
         description: ERROR_MESSAGE.INVALID_COUNTRY_CODE
       });
-    } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
+    } else if (!mobileNumberValidator(countryCode, parsedMobileNumberValue)) {
       showAlert({
         ...wrongFormatAlertProps,
         description: ERROR_MESSAGE.INVALID_PHONE_NUMBER

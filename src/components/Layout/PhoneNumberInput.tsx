@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
+import { AsYouType } from "libphonenumber-js";
 
 const styles = StyleSheet.create({
   inputsWrapper: {
@@ -77,7 +78,7 @@ export const PhoneNumberInput: FunctionComponent<{
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={mobileNumberValue}
+          value={new AsYouType("SG").input(mobileNumberValue)}
           onChange={({ nativeEvent: { text } }) => onChangeMobileNumber(text)}
           onSubmitEditing={onSubmit}
         />
