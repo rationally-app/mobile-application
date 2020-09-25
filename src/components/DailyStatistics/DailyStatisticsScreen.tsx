@@ -16,7 +16,6 @@ import { HelpModalContext } from "../../context/help";
 import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
-import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { AuthContext } from "../../context/auth";
 import { StatisticsContext } from "../../context/statistics";
@@ -61,7 +60,6 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const checkUpdates = useCheckUpdates();
   const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
   const { totalCount, setTotalCount } = useContext(StatisticsContext);
   const {
@@ -141,9 +139,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
             <TitleStatistic
               totalCount={totalCount ?? 0}
               currentTimestamp={currentTimestamp}
-              lastTransactionTime={
-                lastTransactionTime ?? 0
-              }
+              lastTransactionTime={lastTransactionTime ?? 0}
               onPressPrevDay={onPressPrevDay}
               onPressNextDay={onPressNextDay}
             />

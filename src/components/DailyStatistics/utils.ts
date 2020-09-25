@@ -21,21 +21,17 @@ export const summariseTransactions = (
 
   const transactionsByCategory = groupBy(response.pastTransactions, "category");
   forEach(transactionsByCategory, (value, key) => {
-    let quantity = 0;
+    let quantityPerCategory = 0;
     transactionsByCategory[key].forEach(transaction => {
-      quantity += transaction.quantity;
+      quantityPerCategory += transaction.quantity;
     });
-    summarisedTotalCount += quantity;
-    const itemWithName = policies?.find(item => {
-      if (item.category === key) {
-        return item;
-      }
-    });
+    summarisedTotalCount += quantityPerCategory;
+    const itemWithName = policies?.find(item => item.category === key);
 
     summarisedTransactionHistory.push({
-      name: itemWithName ? itemWithName.name : key,
+      name: itemWithName?.name ?? key,
       category: key,
-      quantity: quantity
+      quantity: quantityPerCategory
     });
   });
 
