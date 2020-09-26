@@ -52,6 +52,7 @@ export type Translations = {
     quotaIdentifierButtonScan: string;
     quotaScanButtonBack: string;
     quotaCheck: string;
+    id: string;
   };
   merchantFlowScreen: {
     quotaButtonAddVoucher: string;
@@ -96,5 +97,7 @@ export type Translations = {
   notEligibleScreen: {
     notEligible: string;
     logAppeal: string;
+    cannot: string;
+    purchase: string;
   };
 };

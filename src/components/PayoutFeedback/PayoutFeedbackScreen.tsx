@@ -145,7 +145,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
               <View>
                 <View style={sharedStyles.itemRow}>
                   <AppText style={sharedStyles.itemHeaderText}>
-                    {i18n.t("merchantFlowScreen.quotaCategoryVouchers")}
+                    {i18n.t("merchantFlowScreen.quotaCategoryVouchers")}:
                   </AppText>
                 </View>
                 <View style={sharedStyles.quantitiesWrapper}>

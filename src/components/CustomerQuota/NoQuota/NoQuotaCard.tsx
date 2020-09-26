@@ -98,7 +98,7 @@ export const groupTransactionsByCategory = (
         item.quantity,
         policy?.quantity.unit || {
           type: "POSTFIX",
-          label: i18n.t("checkoutSuccessScreen.quantity")
+          label: ` ${i18n.t("checkoutSuccessScreen.quantity")}`
         }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
@@ -282,10 +282,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 <View>
                   <AppText style={styles.wrapper}>
                     {policyType === "REDEEM"
-                      ? i18n.t("checkoutSuccessScreen.previouslyRedeemedItems")
-                      : i18n.t(
+                      ? `${i18n.t(
+                          "checkoutSuccessScreen.previouslyRedeemedItems"
+                        )}:`
+                      : `${i18n.t(
                           "checkoutSuccessScreen.previouslyPurchasedItems"
-                        )}
+                        )}:`}
                   </AppText>
                   {transactionsByCategoryList.map(
                     (

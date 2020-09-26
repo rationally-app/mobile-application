@@ -91,7 +91,7 @@ export const ItemIdentifier: FunctionComponent<{
           cancelButtonText={
             textInput.disabled
               ? i18n.t("customerQuotaScreen.quotaScanButtonBack")
-              : i18n.t("customerQuotaScreen.enterManually")
+              : i18n.t("idScanner.enterManually")
           }
           setShouldShowCamera={setShouldShowCamera}
           shouldShowCamera={shouldShowCamera}

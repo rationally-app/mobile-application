@@ -14,7 +14,7 @@ const NotEligibleTransactionTitle: FunctionComponent = () => (
 
 const NotEligibleTransactionDescription: FunctionComponent = () => (
   <AppText style={{ marginBottom: size(1) }}>
-    {i18n.t("notEligibleScreen.logAppeal")}
+    {`${i18n.t("notEligibleScreen.logAppeal")}.`}
   </AppText>
 );
 

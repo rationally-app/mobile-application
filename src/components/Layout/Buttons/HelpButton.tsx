@@ -26,7 +26,7 @@ export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
       }}
     >
       <Feather name="compass" size={size(1.5)} color={color("blue", 40)} />
-      {` ${i18n.t("loginScanCard.needHelp")}`}
+      {` ${i18n.t("loginScanCard.needHelp")}?`}
     </AppText>
   </TouchableOpacity>
 );

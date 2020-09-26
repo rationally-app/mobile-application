@@ -20,7 +20,7 @@ export const DistantTransactionTitle: FunctionComponent<{
     </AppText>
     {toggleTimeSensitiveTitle ? (
       <AppText style={sharedStyles.statusTitle}>
-        {i18n.t("checkoutSuccessScreen.today")}
+        {` ${i18n.t("checkoutSuccessScreen.today")}.`}
       </AppText>
     ) : (
       <AppText style={sharedStyles.statusTitle}>.</AppText>
@@ -35,13 +35,13 @@ export const RecentTransactionTitle: FunctionComponent<{
 }> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {i18n.t("checkoutSuccessScreen.limitReachedRecent", {
+      {`${i18n.t("checkoutSuccessScreen.limitReachedRecent", {
         time: formatTimeDifference(now, transactionTime)
-      })}
+      })}.`}
     </AppText>
     {toggleTimeSensitiveTitle ? (
       <AppText style={sharedStyles.statusTitle}>
-        {i18n.t("checkoutSuccessScreen.today")}
+        {` ${i18n.t("checkoutSuccessScreen.today")}.`}
       </AppText>
     ) : (
       <AppText style={sharedStyles.statusTitle}>.</AppText>
@@ -58,7 +58,7 @@ export const NoPreviousTransactionTitle: FunctionComponent<{
     </AppText>
     {toggleTimeSensitiveTitle ? (
       <AppText style={sharedStyles.statusTitle}>
-        {i18n.t("checkoutSuccessScreen.today")}
+        {` ${i18n.t("checkoutSuccessScreen.today")}.`}
       </AppText>
     ) : (
       <AppText style={sharedStyles.statusTitle}>.</AppText>
@@ -73,10 +73,10 @@ export const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
+      {`${i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
         quantity: quantity,
-        dateTime: formatDate(quotaRefreshTime)
-      })}
+        date: formatDate(quotaRefreshTime)
+      })}.`}
     </AppText>
   </>
 );

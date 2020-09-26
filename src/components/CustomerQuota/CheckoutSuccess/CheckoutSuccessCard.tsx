@@ -50,10 +50,10 @@ const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
-        amount: quantity,
+      {`${i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
+        quantity: quantity,
         date: formatDate(quotaRefreshTime)
-      })}
+      })}.`}
     </AppText>
   </>
 );
@@ -107,7 +107,7 @@ export const groupTransactionsByTime = (
         item.quantity,
         policy?.quantity.unit || {
           type: "POSTFIX",
-          label: i18n.t("checkoutSuccessScreen.quantity")
+          label: ` ${i18n.t("checkoutSuccessScreen.quantity")}`
         }
       ),
       isAppeal: policy?.categoryType === "APPEAL",

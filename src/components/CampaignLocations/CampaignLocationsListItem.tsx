@@ -53,7 +53,7 @@ export const CampaignLocationsListItem: FunctionComponent<
               hasExpired ? { color: color("grey", 40) } : {}
             ]}
           >
-            ID: {operatorId}
+            {i18n.t("customerQuotaScreen.id")}: {operatorId}
           </AppText>
         ) : null}
         <AppText

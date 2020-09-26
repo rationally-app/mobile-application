@@ -5,7 +5,7 @@ export const en: Translations = {
     loginWithQR:
       "Please log in with your unique QR code provided by your supervisor",
     scanToLogin: "Scan to login",
-    needHelp: "Need help?",
+    needHelp: "Need help",
     askQuestion: "Ask a question"
   },
   loginMobileNumberCard: {
@@ -15,7 +15,7 @@ export const en: Translations = {
     sendOtp: "Send OTP"
   },
   loginOTPCard: {
-    sendingOtp: "We're sending you the one-time password...",
+    sendingOtp: "We're sending you the one-time password",
     otp: "OTP",
     resendIn: "Resend in %{ss}s",
     submit: "Submit",
@@ -51,54 +51,57 @@ export const en: Translations = {
     quotaLimitMax: "Max",
     quotaAppealCancel: "Cancel",
     quotaButtonCheckout: "Checkout",
-    quotaButtonAdd: "+ Add",
+    quotaButtonAdd: "Add",
     quotaAddId: "Add another ID to combine customer quotas",
     quotaIdentifierButtonScan: "Scan",
     quotaScanButtonBack: "Back",
-    quotaCheck: "Checking"
+    quotaCheck: "Checking",
+    id: "ID"
   },
   merchantFlowScreen: {
     quotaButtonAddVoucher: "Add voucher",
-    quotaCategoryVouchers: "Voucher(s):",
+    quotaCategoryVouchers: "Voucher(s)",
     merchantCode: "Merchant Code",
     seeAll: "See all",
     nextMerchant: "Next merchant",
     remove: "Remove"
   },
   checkoutSuccessScreen: {
-    redeemed: "Redeemed!",
-    redeemedItems: "Item(s) redeemed:",
+    redeemed: "Redeemed",
+    redeemedItems: "Item(s) redeemed",
     redeemedNextIdentity: "Next identity",
-    purchased: "Purchased!",
-    purchasedItems: "The following have been purchased:",
+    purchased: "Purchased",
+    purchasedItems: "The following have been purchased",
     purchasedNextIdentity: "Next customer",
-    previouslyRedeemedItems: "Item(s) redeemed previously:",
-    previouslyPurchasedItems: "Item(s) purchased previously:",
+    previouslyRedeemedItems: "Item(s) redeemed previously",
+    previouslyPurchasedItems: "Item(s) purchased previously",
     redeemedAgo: "Redeemed %{time} ago",
     redeemedOn: "Redeemed on %{time}",
     previouslyRedeemed: "Previously redeemed",
     showMore: "Show more",
     showLess: "Show less",
-    today: " for today.",
-    limitReachedRecent: "Limit reached %{time} ago.",
+    today: "for today",
+    limitReachedRecent: "Limit reached %{time} ago",
     limitReachedDate: "Limit reached on %{dateTime}",
     limitReached: "Limit reached",
-    redeemedLimitReached: "%{quantity} item(s) more till %{date}.",
+    redeemedLimitReached: "%{quantity} item(s) more till %{date}",
     valid: "Valid",
     complete: "Complete",
-    quantity: " qty"
+    quantity: "qty"
   },
   customerAppealScreen: {
     raiseAppeal: "Raise an appeal",
     indicateReason: "Indicate reason for appeal"
   },
   statisticsScreen: {
-    distributedAmount: "You have distributed %{amount}",
+    distributedAmount: "You have distributed %{quantity}",
     lastDistributedTiming: "Last distributed at %{dateTime}",
     viaAppeal: "via appeal"
   },
   notEligibleScreen: {
     notEligible: "Not eligible",
-    logAppeal: "Please log an appeal request."
+    logAppeal: "Please log an appeal request",
+    cannot: "Cannot",
+    purchase: "purchase"
   }
 };

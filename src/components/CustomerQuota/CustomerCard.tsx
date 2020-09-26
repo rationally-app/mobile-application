@@ -110,7 +110,7 @@ export const CustomerCard: FunctionComponent<{
       {onAddId && (
         <AddButton
           onPress={onAddId}
-          text={i18n.t("customerQuotaScreen.quotaButtonAdd")}
+          text={`+ ${i18n.t("customerQuotaScreen.quotaButtonAdd")}`}
         ></AddButton>
       )}
     </View>
