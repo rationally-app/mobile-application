@@ -104,6 +104,11 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       onSuccess(credentials);
     } catch (e) {
       Sentry.captureException(e);
+      Sentry.addBreadcrumb({
+        data: {
+          operatorToken
+        }
+      });
       if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
         showAlert(e.alertProps);
       } else if (e instanceof LoginError) {

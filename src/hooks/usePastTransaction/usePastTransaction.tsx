@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PastTransactionsResult } from "../../types";
 import { usePrevious } from "../usePrevious";
 import { getPastTransactions } from "../../services/quota";
 import { Sentry } from "../../utils/errorTracking";
 import { ERROR_MESSAGE } from "../../context/alert";
+import { AuthContext } from "../../context/auth";
 
 export type PastTransactionHook = {
   pastTransactionsResult: PastTransactionsResult["pastTransactions"] | null;
@@ -22,6 +23,7 @@ export const usePastTransaction = (
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<{ message: string } | null>(null);
   const prevIds = usePrevious(ids);
+  const { operatorToken } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchPastTransactions = async (): Promise<void> => {
@@ -34,6 +36,11 @@ export const usePastTransaction = (
         setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
       } catch (error) {
         Sentry.captureException(`Unable to fetch past transactions: ${ids}`);
+        Sentry.addBreadcrumb({
+          data: {
+            operatorToken
+          }
+        });
         setError(new Error(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR));
       } finally {
         setLoading(false);
@@ -45,7 +52,7 @@ export const usePastTransaction = (
       setError(null);
       fetchPastTransactions();
     }
-  }, [authKey, endpoint, ids, prevIds]);
+  }, [authKey, endpoint, ids, prevIds, operatorToken]);
 
   return {
     pastTransactionsResult,

@@ -105,6 +105,11 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     if (updateCampaignConfigError) {
       if (updateCampaignConfigError instanceof CampaignConfigError) {
         Sentry.captureException(updateCampaignConfigError);
+        Sentry.addBreadcrumb({
+          data: {
+            operatorToken: authCredentials.operatorToken
+          }
+        });
         showAlert({
           ...systemAlertProps,
           description: ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR

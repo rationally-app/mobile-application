@@ -76,7 +76,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
 
-  const { sessionToken, endpoint } = useContext(AuthContext);
+  const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
   const { allQuotaResponse } = useCart(ids, sessionToken, endpoint);
 
   const getReasons = (): Reason[] => {
@@ -112,6 +112,11 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     );
     if (appealProduct === undefined) {
       Sentry.captureException(`Unable to find appeal product: ${productName}}`);
+      Sentry.addBreadcrumb({
+        data: {
+          operatorToken
+        }
+      });
       return;
     }
     pushRoute(navigation, "CustomerQuotaProxy", {

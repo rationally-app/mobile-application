@@ -18,6 +18,7 @@ import {
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
+import { AuthContext } from "../../context/auth";
 
 export type CartItem = {
   category: string;
@@ -196,6 +197,7 @@ export const useCart = (
   const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
   const clearError = useCallback((): void => setError(undefined), []);
+  const { operatorToken } = useContext(AuthContext);
 
   /**
    * Fetch quota whenever IDs change.
@@ -216,6 +218,11 @@ export const useCart = (
               quotaResponse.remainingQuota
             )}`
           );
+          Sentry.addBreadcrumb({
+            data: {
+              operatorToken
+            }
+          });
           setCartState("NO_QUOTA");
         } else if (hasNoQuota(quotaResponse)) {
           setCartState("NO_QUOTA");
@@ -237,7 +244,7 @@ export const useCart = (
     if (prevIds !== ids || prevProducts !== products) {
       fetchQuota();
     }
-  }, [authKey, endpoint, ids, prevIds, prevProducts, products]);
+  }, [authKey, endpoint, ids, prevIds, prevProducts, products, operatorToken]);
 
   /**
    * Merge quota response with current cart whenever quota response or products change.

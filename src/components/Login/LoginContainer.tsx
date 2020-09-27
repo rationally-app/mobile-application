@@ -190,6 +190,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
+          Sentry.addBreadcrumb({
+            data: {
+              operatorToken: queryKey
+            }
+          });
           showAlert({
             ...systemAlertProps,
             description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
