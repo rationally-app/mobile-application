@@ -30,10 +30,12 @@ export const zh: Translations = {
     enterIdManually: "输入证件号码",
     enterManually: "自己输入",
     enterVoucherId: "输入优惠券编号",
-    scanToCheck: "扫描优惠券"
+    scanToCheck: "扫描优惠券",
+    continueScanning: "继续扫描"
   },
   navigationDrawer: {
     logout: "登出",
+    campaign: "活动",
     addCampaign: "添加活动",
     selectCampaign: "选活动",
     changeChampaign: "更改活动",

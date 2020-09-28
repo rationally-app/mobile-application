@@ -156,7 +156,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
                       {...credentials}
                       name={
                         allCampaignConfigs[key]?.features?.campaignName ||
-                        `Campaign ${idx + 1}`
+                        `${i18n.t("navigationDrawer.campaign")} ${idx + 1}`
                       }
                       onPress={() => navigateToCampaignLocation(credentials)}
                     />

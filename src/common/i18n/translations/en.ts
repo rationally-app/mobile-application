@@ -32,10 +32,12 @@ export const en: Translations = {
     enterIdManually: "Enter ID manually",
     enterManually: "Enter manually",
     enterVoucherId: "Enter voucher ID",
-    scanToCheck: "Scan to check validity"
+    scanToCheck: "Scan to check validity",
+    continueScanning: "Continue scanning"
   },
   navigationDrawer: {
     logout: "Logout",
+    campaign: "Campaign",
     addCampaign: "Add Campaign",
     selectCampaign: "Select campaign",
     changeChampaign: "Change Campaign",

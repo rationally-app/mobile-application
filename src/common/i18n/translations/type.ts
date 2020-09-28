@@ -29,9 +29,11 @@ export type Translations = {
     enterManually: string;
     enterVoucherId: string;
     scanToCheck: string;
+    continueScanning: string;
   };
   navigationDrawer: {
     logout: string;
+    campaign: string;
     addCampaign: string;
     selectCampaign: string;
     changeChampaign: string;
