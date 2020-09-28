@@ -8,7 +8,6 @@ import React, {
 import {
   View,
   StyleSheet,
-  Alert,
   Vibration,
   BackHandler,
   Keyboard
@@ -206,7 +205,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     merchantError,
     navigation,
     resetState,
-    resetVoucherState
+    resetVoucherState,
+    showErrorAlert
   ]);
 
   const closeCamera = useCallback(() => setShouldShowCamera(false), []);
