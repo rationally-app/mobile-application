@@ -47,106 +47,64 @@ export enum ERROR_MESSAGE {
   VALIDATE_INPUT_REGEX_ERROR = "Please check that the ID is in the correct format"
 }
 
+const errorNameToTranslationKeyMappings: Record<string, string> = {
+  CampaignConfigError: "systemErrorConnectivityIssues",
+  SessionError: "expiredQR",
+  PastTransactionError: "systemErrorServerIssues",
+  QuotaError: "systemErrorConnectivityIssues",
+  OTPWrongError: "invalidInputOTP",
+  OTPWrongErrorLastTry: "invalidInputOTPOneMoreInvalid",
+  OTPExpiredError: "expiredOTP",
+  LoginLockedError: "disabledAccess",
+  LoginError: "systemErrorLoginIssue",
+  AuthTakenError: "alreadyUsedQRCode",
+  AuthExpiredError: "expiredQR",
+  AuthNotFoundError: "expiredQR",
+  AuthInvalidError: "wrongFormatQRScanAgain"
+};
+
 const getTranslationKeyFromError = (error: Error): string => {
-  switch (error.name) {
-    case "CampaignConfigError":
-      return "systemErrorConnectivityIssues";
-    case "SessionError":
-      return "expiredQR";
-    case "PastTransactionError":
-      return "systemErrorServerIssues";
-    case "QuotaError":
-      return "systemErrorConnectivityIssues";
-    case "OTPWrongError":
-      return "invalidInputOTP";
-    case "OTPWrongErrorLastTry":
-      return "invalidInputOTPOneMoreInvalid";
-    case "OTPExpiredError":
-      return "expiredOTP";
-    case "LoginLockedError":
-      return "disabledAccess";
-    case "LoginError":
-      return "systemErrorLoginIssue";
-    case "AuthTakenError":
-      return "alreadyUsedQRCode";
-    case "AuthExpiredError":
-    case "AuthNotFoundError":
-      return "expiredQR";
-    case "AuthInvalidError":
-      return "wrongFormatQRScanAgain";
-    case "AuthError":
-    case "Error":
-    default:
-      return getTranslationKeyFromErrorMessage(error.message);
-  }
+  return (
+    errorNameToTranslationKeyMappings[error.name] ??
+    getTranslationKeyFromErrorMessage(error.message)
+  );
+};
+
+const errorMessageToTranslationKeyMappings: Record<string, string> = {
+  [ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT]: "alreadyUsedCode",
+  [ERROR_MESSAGE.DUPLICATE_POD_INPUT]: "alreadyUsedItem",
+  [ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT]: "wrongFormatCode",
+  [ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT]: "incompleteEntryCode",
+  [ERROR_MESSAGE.MISSING_VOUCHER_INPUT]: "incompleteEntryVoucherCode",
+  [ERROR_MESSAGE.INVALID_POD_INPUT]: "wrongFormatNotValidDeviceCode",
+  [ERROR_MESSAGE.MISSING_POD_INPUT]: "incompleteEntryScanDeviceCode",
+  [ERROR_MESSAGE.INVALID_PHONE_NUMBER]: "wrongFormatContactNumber",
+  [ERROR_MESSAGE.INVALID_COUNTRY_CODE]: "wrongFormatCountryCode",
+  [ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE]:
+    "wrongFormatCountryCodePhoneNumber",
+  [ERROR_MESSAGE.MISSING_SELECTION]: "incompleteEntry",
+  [ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN]: "expiredQR",
+  [ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT]: "invalidInputQR",
+  [ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR]: "systemErrorConnectivityIssues",
+  [ERROR_MESSAGE.INSUFFICIENT_QUOTA]: "insufficientQuota",
+  [ERROR_MESSAGE.INVALID_QUANTITY]: "invalidQuantity",
+  [ERROR_MESSAGE.INVALID_CATEGORY]: "categoryDoesNotExist",
+  [ERROR_MESSAGE.INVALID_ID]: "invalidInputIDNumber",
+  [ERROR_MESSAGE.DUPLICATE_ID]: "alreadyUsedDifferentIDNumber",
+  [ERROR_MESSAGE.QUOTA_ERROR]: "systemErrorConnectivityIssues",
+  [ERROR_MESSAGE.SERVER_ERROR]: "systemErrorServerIssues",
+  [ERROR_MESSAGE.OTP_ERROR]: "invalidInputOTP",
+  [ERROR_MESSAGE.LAST_OTP_ERROR]: "invalidInputOTPOneMoreInvalid",
+  [ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN]: "alreadyUsedQRCode",
+  [ERROR_MESSAGE.OTP_EXPIRED]: "expiredOTP",
+  [ERROR_MESSAGE.LOGIN_ERROR]: "systemErrorLoginIssue",
+  [ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR]: "systemErrorServerIssues",
+  [WARNING_MESSAGE.PAYMENT_COLLECTION]: "paymentCollected",
+  [ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR]: "checkIdFormat"
 };
 
 const getTranslationKeyFromErrorMessage = (message: string): string => {
-  switch (message) {
-    case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
-      return "alreadyUsedCode";
-    case ERROR_MESSAGE.DUPLICATE_POD_INPUT:
-      return "alreadyUsedItem";
-    case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
-      return "wrongFormatCode";
-    case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
-      return "incompleteEntryCode";
-    case ERROR_MESSAGE.MISSING_VOUCHER_INPUT:
-      return "incompleteEntryVoucherCode";
-    case ERROR_MESSAGE.INVALID_POD_INPUT:
-      return "wrongFormatNotValidDeviceCode";
-    case ERROR_MESSAGE.MISSING_POD_INPUT:
-      return "incompleteEntryScanDeviceCode";
-    case ERROR_MESSAGE.INVALID_PHONE_NUMBER:
-      return "wrongFormatContactNumber";
-    case ERROR_MESSAGE.INVALID_COUNTRY_CODE:
-      return "wrongFormatCountryCode";
-    case ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE:
-      return "wrongFormatCountryCodePhoneNumber";
-    case ERROR_MESSAGE.MISSING_SELECTION:
-      return "incompleteEntry";
-    case ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN:
-      return "expiredQR";
-    case ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT:
-      return "invalidInputQR";
-    case ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR:
-      return "systemErrorConnectivityIssues";
-    case ERROR_MESSAGE.INSUFFICIENT_QUOTA:
-      return "insufficientQuota";
-    case ERROR_MESSAGE.INVALID_QUANTITY:
-      return "invalidQuantity";
-    case ERROR_MESSAGE.INVALID_CATEGORY:
-      return "categoryDoesNotExist";
-    case ERROR_MESSAGE.INVALID_ID:
-      return "invalidInputIDNumber";
-    case ERROR_MESSAGE.DUPLICATE_ID:
-      return "alreadyUsedDifferentIDNumber";
-    case ERROR_MESSAGE.QUOTA_ERROR:
-      return "systemErrorConnectivityIssues";
-    case ERROR_MESSAGE.SERVER_ERROR:
-      return "systemErrorServerIssues";
-    case ERROR_MESSAGE.OTP_ERROR:
-      return "invalidInputOTP";
-    case ERROR_MESSAGE.LAST_OTP_ERROR:
-      return "invalidInputOTPOneMoreInvalid";
-    case ERROR_MESSAGE.AUTH_FAILURE_TAKEN_TOKEN:
-      return "alreadyUsedQRCode";
-    case ERROR_MESSAGE.OTP_EXPIRED:
-      return "expiredOTP";
-    case ERROR_MESSAGE.LOGIN_ERROR:
-      return "systemErrorLoginIssue";
-    case ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR:
-      return "systemErrorServerIssues";
-    case WARNING_MESSAGE.PAYMENT_COLLECTION:
-      return "paymentCollected";
-    case ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR:
-      return "checkIdFormat";
-    case "confirmLogout":
-    case "resendOTP":
-    case "cancelEntry":
-    default:
-      return message;
-  }
+  return errorMessageToTranslationKeyMappings[message] ?? message;
 };
 
 const defaultAlertProps: AlertModalProps = {
