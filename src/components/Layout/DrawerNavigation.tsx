@@ -11,10 +11,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
+import { expo as manifest} from "../../../app.json";
 import {
   AlertModalContext,
   defaultConfirmationProps
 } from "../../context/alert";
+import { AppManifest } from "expo-constants/build/Constants.types";
 
 const styles = StyleSheet.create({
   container: {
@@ -114,12 +116,12 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
     navigation.dispatch(DrawerActions.closeDrawer());
   };
 
-  const releaseChannel: string | undefined = Constants.manifest.releaseChannel;
+  const releaseChannel: string | undefined = (manifest as unknown as AppManifest).releaseChannel;
   let version = "";
   if (releaseChannel) {
-    version += `ver ${Constants.manifest.version}`;
-    if (Constants.manifest.extra.appBuildVersion) {
-      version += ` / ${Constants.manifest.extra.appBuildVersion}`;
+    version += `ver ${(manifest as unknown as AppManifest).version}`;
+    if ((manifest as unknown as AppManifest).extra.appBuildVersion) {
+      version += ` / ${(manifest as unknown as AppManifest).extra.appBuildVersion}`;
     }
     if (releaseChannel === "staging" || releaseChannel.match(/pr\d+/g)) {
       version += ` / ${releaseChannel}`;
