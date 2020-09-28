@@ -240,6 +240,11 @@
       "title": "输入无效",
       "body": "请检查证件号码格式合正确",
       "primaryActionText": "确定"
+    },
+    "notEligible": {
+      "title": "无效",
+      "body": "请提出上诉。",
+      "primaryActionText": "确定"
     }
   }
 }

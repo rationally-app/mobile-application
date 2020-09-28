@@ -19,6 +19,7 @@ import { formatDistance } from "date-fns";
 import { sharedStyles } from "./sharedStyles";
 import { LimitReachedError } from "../../../utils/validateVoucherCode";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
+import i18n from "i18n-js";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -88,27 +89,35 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   const isVisible = checkValidityState === "CHECKING_VALIDITY";
 
   let card;
+
+  const title = i18n.t(`errorMessages.notEligible.title`);
+  const details = i18n.t(`errorMessages.notEligible.body`);
+
   if (error instanceof ScannerError) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        showAlert("Error scanning", error.message, "Continue scanning", onExit);
+        showAlert(
+          i18n.t(`errorMessages.errorScanning.title`),
+          error.message,
+          i18n.t(`errorMessages.errorScanning.primaryActionText`),
+          onExit
+        );
       });
     });
     return null;
   } else if (error instanceof LimitReachedError) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        showAlert("Scan limit reached", error.message, "OK", onExit);
+        showAlert(
+          i18n.t(`errorMessages.scanLimitReached.title`),
+          error.message,
+          i18n.t(`errorMessages.errorScanning.primaryActionText`),
+          onExit
+        );
       });
     });
   } else if (error instanceof NotEligibleError) {
-    card = (
-      <InvalidCard
-        title="Invalid"
-        details="Please log an appeal request"
-        closeModal={onExit}
-      />
-    );
+    card = <InvalidCard title={title} details={details} closeModal={onExit} />;
   } else if (error instanceof InvalidVoucherError) {
     const secondsFromLatestTransaction = error.getSecondsFromLatestTransaction();
     const title =
@@ -126,18 +135,12 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
       ) : (
         <NoPreviousTransactionTitle />
       );
-    card = (
-      <InvalidCard
-        title={title}
-        details="Please log an appeal request"
-        closeModal={onExit}
-      />
-    );
+    card = <InvalidCard title={title} details={details} closeModal={onExit} />;
   } else if (error instanceof Error) {
     card = (
       <InvalidCard
-        title="Invalid"
-        details={error.message || "Please log an appeal request"}
+        title={title}
+        details={error.message || details}
         closeModal={onExit}
       />
     );
