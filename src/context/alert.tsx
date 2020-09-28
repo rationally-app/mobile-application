@@ -50,17 +50,11 @@ export enum ERROR_MESSAGE {
 const getTranslationKeyFromError = (error: Error): string => {
   switch (error.name) {
     case "CampaignConfigError":
-      return getTranslationKeyFromErrorMessage(
-        ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR
-      );
+      return "systemErrorConnectivityIssues";
     case "SessionError":
-      return getTranslationKeyFromErrorMessage(
-        ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-      );
+      return "expiredQR";
     case "PastTransactionError":
-      return getTranslationKeyFromErrorMessage(
-        ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
-      );
+      return "systemErrorServerIssues";
     case "QuotaError":
       return "systemErrorConnectivityIssues";
     case "OTPWrongError":
