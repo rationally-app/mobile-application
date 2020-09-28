@@ -13,10 +13,15 @@ export class StatisticsError extends Error {
 
 export const getDailyTransactionTimestampRange = (
   currentTimestamp: number
-): { startTimestamp: number; endTimestamp: number } => {
-  const startTimestamp = new Date(currentTimestamp).setHours(0, 0, 0, 0);
-  const endTimestamp = new Date(currentTimestamp).setHours(23, 59, 59, 999);
-  return { startTimestamp, endTimestamp };
+): { startTransactionTime: number; endTransactionTime: number } => {
+  const startTransactionTime = new Date(currentTimestamp).setHours(0, 0, 0, 0);
+  const endTransactionTime = new Date(currentTimestamp).setHours(
+    23,
+    59,
+    59,
+    999
+  );
+  return { startTransactionTime, endTransactionTime };
 };
 
 export const mockGetStatistics = async (
@@ -103,9 +108,10 @@ export const liveGetStatistics = async (
   operatorTokens: string[]
 ): Promise<DailyStatistics> => {
   let response;
-  const { startTimestamp, endTimestamp } = getDailyTransactionTimestampRange(
-    currentTimestamp
-  );
+  const {
+    startTransactionTime,
+    endTransactionTime
+  } = getDailyTransactionTimestampRange(currentTimestamp);
 
   try {
     response = await fetchWithValidator(
@@ -118,8 +124,8 @@ export const liveGetStatistics = async (
         },
         body: JSON.stringify({
           operatorTokens,
-          startTimestamp,
-          endTimestamp
+          startTransactionTime,
+          endTransactionTime
         })
       }
     );
