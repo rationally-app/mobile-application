@@ -38,7 +38,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { StatisticsContext } from "../../context/statistics";
+import { StatisticsContext } from "../DailyStatistics/DailyStatisticsScreen";
 
 const styles = StyleSheet.create({
   content: {

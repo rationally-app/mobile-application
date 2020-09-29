@@ -3,7 +3,8 @@ import React, {
   useEffect,
   useContext,
   useCallback,
-  useState
+  useState,
+  createContext
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
@@ -21,7 +22,6 @@ import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { AuthContext } from "../../context/auth";
-import { StatisticsContext } from "../../context/statistics";
 import { getDailyStatistics } from "../../services/statistics";
 import { summariseTransactions } from "./utils";
 import { TransactionHistoryCard } from "./TransactionHistoryCard";
@@ -34,6 +34,72 @@ import {
 } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
+
+interface StatisticsContext {
+  totalCount: number | null;
+  currentTimestamp: number;
+  lastTransactionTime: number | null;
+  transactionHistory: { name: string; category: string; quantity: number }[];
+  setTotalCount: (totalCount: number | null) => void;
+  setCurrentTimestamp: (currentTimestamp: number) => void;
+  setLastTransactionTime: (lastTransactionTime: number) => void;
+  setTransactionHistory: (
+    transactionHistory: { name: string; category: string; quantity: number }[]
+  ) => void;
+  clearStatistics: () => void;
+}
+
+export const StatisticsContext = createContext<StatisticsContext>({
+  totalCount: null,
+  currentTimestamp: Date.now(),
+  lastTransactionTime: null,
+  transactionHistory: [],
+  setTotalCount: () => null,
+  setCurrentTimestamp: () => null,
+  setLastTransactionTime: () => null,
+  setTransactionHistory: () => null,
+  clearStatistics: () => null
+});
+
+export const StatisticsContextProvider: FunctionComponent = ({ children }) => {
+  const [totalCount, setTotalCount] = useState<StatisticsContext["totalCount"]>(
+    null
+  );
+  const [currentTimestamp, setCurrentTimestamp] = useState<
+    StatisticsContext["currentTimestamp"]
+  >(Date.now());
+  const [lastTransactionTime, setLastTransactionTime] = useState<
+    StatisticsContext["lastTransactionTime"]
+  >(null);
+  const [transactionHistory, setTransactionHistory] = useState<
+    StatisticsContext["transactionHistory"]
+  >([]);
+
+  const clearStatistics: StatisticsContext["clearStatistics"] = useCallback(() => {
+    setTotalCount(null);
+    setCurrentTimestamp(Date.now());
+    setLastTransactionTime(null);
+    setTransactionHistory([]);
+  }, []);
+
+  return (
+    <StatisticsContext.Provider
+      value={{
+        totalCount,
+        currentTimestamp,
+        lastTransactionTime,
+        transactionHistory,
+        setTotalCount,
+        setCurrentTimestamp,
+        setLastTransactionTime,
+        setTransactionHistory,
+        clearStatistics
+      }}
+    >
+      {children}
+    </StatisticsContext.Provider>
+  );
+};
 
 const styles = StyleSheet.create({
   content: {
@@ -70,12 +136,13 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
-  const { totalCount, setTotalCount } = useContext(StatisticsContext);
   const {
     currentTimestamp,
     setCurrentTimestamp,
     lastTransactionTime,
     setLastTransactionTime,
+    totalCount,
+    setTotalCount,
     transactionHistory,
     setTransactionHistory
   } = useContext(StatisticsContext);
@@ -98,7 +165,6 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
           summarisedTransactionHistory,
           summarisedTotalCount
         } = summariseTransactions(response, policies);
-
         setTransactionHistory(summarisedTransactionHistory);
         setTotalCount(summarisedTotalCount);
         setCurrentTimestamp(currentTimestamp);
