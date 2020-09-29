@@ -84,43 +84,56 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   const [error, setError] = useState<Error>();
   const clearError = useCallback((): void => setError(undefined), []);
 
-  const fetchDailyStatistics = async (
-    currentTimestamp: number
-  ): Promise<void> => {
-    try {
-      const response = await getDailyStatistics(
-        currentTimestamp,
-        sessionToken,
-        endpoint,
-        [operatorToken]
-      );
+  const fetchDailyStatistics = useCallback(
+    async (currentTimestamp: number): Promise<void> => {
+      try {
+        const response = await getDailyStatistics(
+          currentTimestamp,
+          sessionToken,
+          endpoint,
+          [operatorToken]
+        );
 
-      const {
-        summarisedTransactionHistory,
-        summarisedTotalCount
-      } = summariseTransactions(response, policies);
+        const {
+          summarisedTransactionHistory,
+          summarisedTotalCount
+        } = summariseTransactions(response, policies);
 
-      setTransactionHistory(summarisedTransactionHistory);
-      setTotalCount(summarisedTotalCount);
-      setCurrentTimestamp(currentTimestamp);
+        setTransactionHistory(summarisedTransactionHistory);
+        setTotalCount(summarisedTotalCount);
+        setCurrentTimestamp(currentTimestamp);
 
-      if (response.pastTransactions.length !== 0) {
-        setLastTransactionTime(response.pastTransactions[0].transactionTime);
-      } else {
-        setLastTransactionTime(0);
-      }
-    } catch (error) {
-      setError(error);
-      showAlert({
-        ...systemAlertProps,
-        description: ERROR_MESSAGE.SERVER_ERROR,
-        onOk: () => {
-          navigateHome(navigation);
-          clearError();
+        if (response.pastTransactions.length !== 0) {
+          setLastTransactionTime(response.pastTransactions[0].transactionTime);
+        } else {
+          setLastTransactionTime(0);
         }
-      });
-    }
-  };
+      } catch (error) {
+        setError(error);
+        showAlert({
+          ...systemAlertProps,
+          description: ERROR_MESSAGE.SERVER_ERROR,
+          onOk: () => {
+            navigateHome(navigation);
+            clearError();
+          }
+        });
+      }
+    },
+    [
+      clearError,
+      endpoint,
+      navigation,
+      operatorToken,
+      policies,
+      sessionToken,
+      setCurrentTimestamp,
+      setLastTransactionTime,
+      setTotalCount,
+      setTransactionHistory,
+      showAlert
+    ]
+  );
 
   const onPressPrevDay = (): void => {
     const prevDay = getTime(subDays(currentTimestamp, 1));
@@ -139,7 +152,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     if (totalCount === null && !error) {
       fetchDailyStatistics(Date.now());
     }
-  });
+  }, [totalCount, error, fetchDailyStatistics]);
 
   return (
     <>
