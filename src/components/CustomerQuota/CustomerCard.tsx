@@ -99,7 +99,9 @@ export const CustomerCard: FunctionComponent<{
       <Feather name="user" size={size(3)} color={color("grey", 0)} />
       <View style={styles.headerText}>
         <AppText style={styles.idLabel}>
-          {i18n.t("customerQuotaScreen.quotaRedeemedLimitReachedIDNumber")}
+          {ids.length > 1
+            ? i18n.t("customerQuotaScreen.IDNumbers")
+            : i18n.t("customerQuotaScreen.IDNumber")}
         </AppText>
         {ids.map(id => (
           <AppText key={id} style={styles.idText}>

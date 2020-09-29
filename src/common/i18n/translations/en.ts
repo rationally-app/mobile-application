@@ -49,7 +49,8 @@ export const en: Translations = {
   customerQuotaScreen: {
     campaignExpiredOn: "Expired on %{dateTime}",
     campaignValidTo: "Valid till %{dateTime}",
-    quotaRedeemedLimitReachedIDNumber: "Identification number(s)",
+    IDNumber: "Identification number",
+    IDNumbers: "Identification numbers",
     quotaLimitMax: "Max",
     quotaAppealCancel: "Cancel",
     quotaButtonCheckout: "Checkout",

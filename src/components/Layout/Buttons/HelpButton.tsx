@@ -22,11 +22,12 @@ export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
         textAlign: "center",
         fontFamily: "brand-italic",
         fontSize: fontSize(-1),
-        color: color("blue", 40)
+        color: color("blue", 40),
+        backgroundColor: "red"
       }}
     >
       <Feather name="compass" size={size(1.5)} color={color("blue", 40)} />
-      {` ${i18n.t("loginScanCard.needHelp")}?`}
+      {` ${i18n.t("loginScanCard.needHelp")}? `}
     </AppText>
   </TouchableOpacity>
 );
