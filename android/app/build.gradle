@@ -131,6 +131,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         applicationId 'sg.gov.tech.musket'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -167,10 +168,11 @@ android {
     }
 
     packagingOptions {
-        pickFirst "lib/armeabi-v7a/libc++_shared.so"
-        pickFirst "lib/arm64-v8a/libc++_shared.so"
-        pickFirst "lib/x86/libc++_shared.so"
-        pickFirst "lib/x86_64/libc++_shared.so"
+        pickFirst '**/libc++_shared.so'
+//        pickFirst "lib/armeabi-v7a/libc++_shared.so"
+//        pickFirst "lib/arm64-v8a/libc++_shared.so"
+//        pickFirst "lib/x86/libc++_shared.so"
+//        pickFirst "lib/x86_64/libc++_shared.so"
     }
 
     // applicationVariants are e.g. debug, release

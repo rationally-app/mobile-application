@@ -36,5 +36,8 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://www.jitpack.io' }
+        // Scanbot SDK Maven repositories:
+        maven { url 'https://nexus.scanbot.io/nexus/content/repositories/releases/' }
+        maven { url 'https://nexus.scanbot.io/nexus/content/repositories/snapshots/' }
     }
 }

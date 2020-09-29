@@ -219,6 +219,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         openCamera={() => setShouldShowMrzCamera(true)}
         closeCamera={() => setShouldShowMrzCamera(false)}
         mrzResult={mrzResult}
+        setMrzResult={setMrzResult}
         setIdInput={setIdInput}
         submitId={() => onCheck(idInput)}
       />

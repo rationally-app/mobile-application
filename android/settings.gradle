@@ -7,3 +7,6 @@ apply from: file("../node_modules/@react-native-community/cli-platform-android/n
 applyNativeModulesSettingsGradle(settings)
 
 include ':app'
+
+include ':react-native-scanbot-sdk'
+project(':react-native-scanbot-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-scanbot-sdk/android/app')

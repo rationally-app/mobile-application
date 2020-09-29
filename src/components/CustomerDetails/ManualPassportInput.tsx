@@ -1,11 +1,19 @@
 import React, { useState, FunctionComponent, useEffect } from "react";
-import { StyleSheet, View, TextInput, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Dimensions,
+  Platform
+} from "react-native";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { size, borderRadius, color, fontSize } from "../../common/styles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { DropdownFilterInput } from "../DropdownFilterModal/DropdownFilterInput";
 import { nationalityItems } from "../DropdownFilterModal/nationalityItems";
 import { DropdownItem } from "../DropdownFilterModal/DropdownFilterModal";
+import ScanbotSDK from "react-native-scanbot-sdk";
+import { MrzScannerConfiguration } from "react-native-scanbot-sdk/src";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -55,6 +63,7 @@ interface ManualPassportInput {
   openCamera: () => void;
   closeCamera: () => void;
   mrzResult: string;
+  setMrzResult: (id: string) => void;
   setIdInput: (id: string) => void;
   submitId: () => void;
 }
@@ -62,6 +71,7 @@ interface ManualPassportInput {
 export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
   openCamera,
   mrzResult,
+  setMrzResult,
   setIdInput,
   submitId
 }) => {
@@ -83,6 +93,33 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
       ? setIdInput(`${selectedCountry?.id}-${passportNo}`)
       : setIdInput("");
   }, [selectedCountry, passportNo, setIdInput]);
+
+  const startMRZScanner = async () => {
+    const config: MrzScannerConfiguration = {
+      // Customize colors, text resources, etc..
+      finderTextHint:
+        "Please hold your phone over the 2- or 3-line MRZ code at the front of your passport."
+    };
+
+    if (Platform.OS === "ios") {
+      const { width } = Dimensions.get("window");
+      config.finderWidth = width * 0.9;
+      config.finderHeight = width * 0.18;
+    }
+
+    const result = await ScanbotSDK.UI.startMrzScanner(config);
+    if (result.status === "OK") {
+      let natCode = "";
+      let docNo = "";
+      const fields = result.fields.map(f => {
+        if (f.name === "IssuingStateOrOrganization") natCode = f.value;
+        else if (f.name === "DocumentCode") docNo = f.value;
+        return `${f.name}: ${f.value} (${f.confidence.toFixed(2)})`;
+      });
+      console.log(fields.join("\n"));
+      setMrzResult(`${natCode}-${docNo}`);
+    }
+  };
 
   return (
     <View style={styles.centeredView}>
@@ -112,7 +149,8 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
       </View>
       <View
         onTouchStart={() => {
-          openCamera();
+          // openCamera();
+          startMRZScanner();
         }}
         style={styles.inputView}
       >
