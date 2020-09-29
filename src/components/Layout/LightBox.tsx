@@ -49,7 +49,7 @@ export const LightBox: FunctionComponent<LightBox> = ({
         style={{
           ...styles.lightBoxBorder,
           top: 0,
-          width: "100%",
+          width,
           height: verticalBorderHeight
         }}
       />
@@ -58,7 +58,7 @@ export const LightBox: FunctionComponent<LightBox> = ({
           ...styles.lightBoxBorder,
           left: 0,
           width: horizontalBorderWidth,
-          height
+          height: windowHeight
         }}
       />
       {label && (
@@ -79,14 +79,14 @@ export const LightBox: FunctionComponent<LightBox> = ({
           ...styles.lightBoxBorder,
           right: 0,
           width: horizontalBorderWidth,
-          height
+          height: windowHeight
         }}
       />
       <View
         style={{
           ...styles.lightBoxBorder,
           bottom: 0,
-          width: "100%",
+          width,
           height: verticalBorderHeight
         }}
       />
