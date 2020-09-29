@@ -100,8 +100,8 @@ export const CustomerCard: FunctionComponent<{
       <View style={styles.headerText}>
         <AppText style={styles.idLabel}>
           {ids.length > 1
-            ? i18n.t("customerQuotaScreen.IDNumbers")
-            : i18n.t("customerQuotaScreen.IDNumber")}
+            ? i18n.t("customerQuotaScreen.idNumbers")
+            : i18n.t("customerQuotaScreen.idNumber")}
         </AppText>
         {ids.map(id => (
           <AppText key={id} style={styles.idText}>

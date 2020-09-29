@@ -22,8 +22,7 @@ export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
         textAlign: "center",
         fontFamily: "brand-italic",
         fontSize: fontSize(-1),
-        color: color("blue", 40),
-        backgroundColor: "red"
+        color: color("blue", 40)
       }}
     >
       <Feather name="compass" size={size(1.5)} color={color("blue", 40)} />

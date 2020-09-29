@@ -45,8 +45,8 @@ export type Translations = {
   customerQuotaScreen: {
     campaignExpiredOn: string;
     campaignValidTo: string;
-    IDNumber: string;
-    IDNumbers: string;
+    idNumber: string;
+    idNumbers: string;
     quotaLimitMax: string;
     quotaAppealCancel: string;
     quotaButtonCheckout: string;

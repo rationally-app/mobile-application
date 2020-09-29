@@ -47,8 +47,8 @@ export const zh: Translations = {
   customerQuotaScreen: {
     campaignExpiredOn: "在 %{dateTime} 已到期",
     campaignValidTo: "有效期至 %{dateTime}",
-    IDNumber: "证件号码",
-    IDNumbers: "证件号码",
+    idNumber: "证件号码",
+    idNumbers: "证件号码",
     quotaLimitMax: "最多",
     quotaAppealCancel: "取消",
     quotaButtonCheckout: "确认交易",
