@@ -92,7 +92,7 @@ export const Camera: FunctionComponent<Camera> = ({
 
 interface IdScanner extends Camera {
   onCancel: () => void;
-  cancelButtonText: string;
+  cancelButtonText?: string;
   isScanningEnabled?: boolean;
 }
 
@@ -100,7 +100,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   onBarCodeScanned,
   barCodeTypes,
   onCancel,
-  cancelButtonText,
+  cancelButtonText = "Back",
   isScanningEnabled = true,
   hasLimitedInterestArea = true
 }) => {

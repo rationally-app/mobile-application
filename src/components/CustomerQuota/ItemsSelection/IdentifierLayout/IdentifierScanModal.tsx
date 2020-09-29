@@ -5,18 +5,11 @@ import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
 import { ScanButtonType } from "../../../../types";
 
 export const IdentifierScanModal: FunctionComponent<{
-  cancelButtonText: string;
   onScanInput: (input: string) => void;
   setShouldShowCamera: (shouldShow: boolean) => void;
   shouldShowCamera: boolean;
   type: ScanButtonType;
-}> = ({
-  cancelButtonText,
-  onScanInput,
-  setShouldShowCamera,
-  shouldShowCamera,
-  type
-}) => {
+}> = ({ onScanInput, setShouldShowCamera, shouldShowCamera, type }) => {
   const onScan: BarCodeScannedCallback = event => {
     if (event.data) {
       onScanInput(event.data);
@@ -38,7 +31,6 @@ export const IdentifierScanModal: FunctionComponent<{
       <IdScanner
         onBarCodeScanned={onScan}
         onCancel={() => setShouldShowCamera(false)}
-        cancelButtonText={cancelButtonText}
         barCodeTypes={[barcodeType]}
       />
     </Modal>

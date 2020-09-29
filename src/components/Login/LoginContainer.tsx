@@ -344,7 +344,6 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           onBarCodeScanned={onBarCodeScanned}
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText="Cancel"
         />
       )}
     </>
