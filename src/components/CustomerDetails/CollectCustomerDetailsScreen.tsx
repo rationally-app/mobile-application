@@ -38,7 +38,6 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { AuthContext } from "../../context/auth";
 import { StatisticsContext } from "../../context/statistics";
 
 const styles = StyleSheet.create({
@@ -108,7 +107,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
-  const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
   const { clearStatistics } = useContext(StatisticsContext);
 
   useEffect(() => {
@@ -186,11 +184,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onPressStatistics = (): void => {
     clearStatistics();
-    navigation.navigate("DailyStatisticsScreen", {
-      operatorToken,
-      endpoint,
-      sessionToken
-    });
+    navigation.navigate("DailyStatisticsScreen");
   };
 
   return (
