@@ -35,7 +35,7 @@ export const usePastTransaction = (
       } catch (error) {
         Sentry.captureException(
           `Unable to fetch past transactions: ${ids.map(id =>
-            id.replace(/^[\w]{5}/g, "*****")
+            id.slice(-4).padStart(id.length, "*")
           )}`
         );
         setError(new Error(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR));
