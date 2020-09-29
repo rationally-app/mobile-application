@@ -104,7 +104,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
       title: "Confirm logout?",
       buttonTexts: {
         primaryActionText: "Logout",
-        secondaryActionText: "Cancel"
+        secondaryActionText: "No"
       },
       visible: true,
       onOk: handleLogout
