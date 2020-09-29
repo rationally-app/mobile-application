@@ -222,21 +222,19 @@ export type Voucher = {
   denomination: number;
 };
 
-export const Statistics = t.intersection([
-  t.type({
-    category: t.string,
-    quantity: t.number,
-    transactionTime: t.number
-  }),
-  t.partial({
-    identifierInputs: t.array(IdentifierInput)
-  })
-]);
-
-export type Statistics = t.TypeOf<typeof Statistics>;
-
 export const DailyStatistics = t.type({
-  pastTransactions: t.array(Statistics)
+  pastTransactions: t.array(
+    t.intersection([
+      t.type({
+        category: t.string,
+        quantity: t.number,
+        transactionTime: t.number
+      }),
+      t.partial({
+        identifierInputs: t.array(IdentifierInput)
+      })
+    ])
+  )
 });
 
 export type DailyStatistics = t.TypeOf<typeof DailyStatistics>;
