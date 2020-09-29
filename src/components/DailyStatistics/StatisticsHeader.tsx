@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: "row",
     alignSelf: "center",
-    marginLeft: -15,
-    marginRight: -10
+    marginLeft: -size(2),
+    marginRight: -size(1.5)
   },
   backIcon: {
     alignSelf: "center",
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: fontSize(0),
     marginRight: size(0.5),
-    marginLeft: -10
+    marginLeft: -size(1.5)
   },
   header: {
     fontFamily: "brand-bold",
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     color: "white",
     flexDirection: "row",
     textAlign: "center",
-    marginLeft: -10
+    marginLeft: -size(1.5)
   }
 });
 

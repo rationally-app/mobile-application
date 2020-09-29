@@ -11,7 +11,7 @@ interface TransactionHistoryCardComponent {
 const styles = StyleSheet.create({
   stats: {
     flexDirection: "column",
-    marginTop: -5,
+    marginTop: -size(0.5),
     minHeight: "20%"
   },
   categoryName: {
