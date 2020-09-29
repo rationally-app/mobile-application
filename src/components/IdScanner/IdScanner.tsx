@@ -1,15 +1,21 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { Dimensions, LayoutRectangle, StyleSheet, View } from "react-native";
 import * as Permissions from "expo-permissions";
-import { color } from "../../common/styles";
+import { color, size } from "../../common/styles";
 import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
 import { LoadingView } from "../Loading";
-import { LightBox } from "../LightBox/LightBox";
+import { LightBox } from "../Layout/LightBox";
+import { Ionicons } from "@expo/vector-icons";
+import { TransparentButton } from "../Layout/Buttons/TransparentButton";
+import { IdScannerLabel } from "./IdScannerLabel";
 
 const styles = StyleSheet.create({
   cameraWrapper: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: color("grey", 100)
+  },
+  backButtonWrapper: {
+    marginTop: size(3)
   },
   scanner: {
     ...StyleSheet.absoluteFillObject
@@ -19,22 +25,47 @@ const styles = StyleSheet.create({
   }
 });
 
+const interestAreaRatios: Record<string, Record<string, number>> = {
+  [BarCodeScanner.Constants.BarCodeType.qr]: { width: 0.7, height: 0.35 },
+  [BarCodeScanner.Constants.BarCodeType.code39]: { width: 0.9, height: 0.2 }
+};
+
+const getInterestAreaDimensions = (
+  barCodeTypes: string[] | undefined
+): LayoutRectangle => {
+  const { width, height } = Dimensions.get("window");
+  if (!barCodeTypes) {
+    return { x: 0, y: 0, width, height };
+  }
+  let maxWidthRatio = 0;
+  let maxHeightRatio = 0;
+  barCodeTypes.forEach(type => {
+    maxWidthRatio = Math.max(maxWidthRatio, interestAreaRatios[type].width);
+    maxHeightRatio = Math.max(maxHeightRatio, interestAreaRatios[type].height);
+  });
+  return {
+    x: (width * (1 - maxWidthRatio)) / 2,
+    y: (height * (1 - maxHeightRatio)) / 2,
+    width: width * maxWidthRatio,
+    height: height * maxHeightRatio
+  };
+};
+
 export type Camera = {
   onBarCodeScanned: BarCodeScannedCallback;
-  barCodeTypes: string[];
-  limitInterestArea?: boolean;
-  interestAreaWidth?: number;
-  interestAreaHeight?: number;
-  updateInterestArea?: (newInterestArea: LayoutRectangle) => void;
+  barCodeTypes?: string[];
+  cancelButtonText?: string;
+  onCancel?: () => void;
+  hasLimitedInterestArea?: boolean;
+  interestAreaLayout?: LayoutRectangle;
 };
 
 export const Camera: FunctionComponent<Camera> = ({
   onBarCodeScanned,
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39],
-  limitInterestArea,
-  interestAreaWidth,
-  interestAreaHeight,
-  updateInterestArea
+  children,
+  hasLimitedInterestArea,
+  interestAreaLayout
 }) => {
   return (
     <BarCodeScanner
@@ -42,45 +73,21 @@ export const Camera: FunctionComponent<Camera> = ({
       onBarCodeScanned={onBarCodeScanned}
       style={styles.scanner}
     >
-      {limitInterestArea &&
-        updateInterestArea &&
-        interestAreaWidth &&
-        interestAreaHeight && (
-          <LightBox width={interestAreaWidth} height={interestAreaHeight}>
-            <View
-              style={{
-                position: "absolute",
-                width: interestAreaWidth,
-                height: interestAreaHeight
-              }}
-              onLayout={e => updateInterestArea(e.nativeEvent.layout)}
+      {children}
+      {hasLimitedInterestArea && interestAreaLayout && (
+        <LightBox
+          width={interestAreaLayout.width}
+          height={interestAreaLayout.height}
+          label={
+            <IdScannerLabel
+              interestAreaHeight={interestAreaLayout.height}
+              barCodeType={barCodeTypes[0]}
             />
-          </LightBox>
-        )}
+          }
+        />
+      )}
     </BarCodeScanner>
   );
-};
-
-const interestAreaDimensions: Record<string, Record<string, number>> = {
-  [BarCodeScanner.Constants.BarCodeType.qr]: { width: 0.7, height: 0.35 },
-  [BarCodeScanner.Constants.BarCodeType.code39]: { width: 0.9, height: 0.2 }
-};
-
-const getMaxInterestAreaDimensions = (
-  barCodeTypes: string[]
-): Record<string, number> => {
-  let maxWidth = 0;
-  let maxHeight = 0;
-
-  barCodeTypes.forEach(type => {
-    const width = interestAreaDimensions[type].width;
-    const height = interestAreaDimensions[type].height;
-
-    maxWidth = Math.max(maxWidth, width);
-    maxHeight = Math.max(maxHeight, height);
-  });
-
-  return { width: maxWidth, height: maxHeight };
 };
 
 interface IdScanner extends Camera {
@@ -93,20 +100,17 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   onBarCodeScanned,
   barCodeTypes,
   onCancel,
-  // TODO: Make use of "cancelButtonText" for Back Button
   cancelButtonText,
   isScanningEnabled = true,
-  // TOOD: Determine best default value for this: true is non-breaking, false is breaking
-  limitInterestArea = true
+  hasLimitedInterestArea = true
 }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
-
-  const { width, height } = Dimensions.get("window");
-  const interestAreaDimensions = getMaxInterestAreaDimensions(barCodeTypes);
-  const interestAreaWidth = width * interestAreaDimensions.width;
-  const interestAreaHeight = height * interestAreaDimensions.height;
-  const [interestArea, setInterestArea] = useState<LayoutRectangle>();
-
+  const interestAreaLayout = hasLimitedInterestArea
+    ? getInterestAreaDimensions(barCodeTypes)
+    : undefined;
+  const [interestArea, setInterestArea] = useState<LayoutRectangle | undefined>(
+    interestAreaLayout
+  );
   useEffect(() => {
     const askForCameraPermission = async (): Promise<void> => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -121,22 +125,19 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   }, [onCancel]);
 
   const checkIfInInterestArea: BarCodeScannedCallback = event => {
+    const bounds = event.bounds.origin;
     if (
-      event.bounds &&
+      bounds &&
       interestArea &&
-      event.bounds.origin.x >= interestArea.x &&
-      event.bounds.origin.y >= interestArea.y &&
-      event.bounds.origin.x + event.bounds.size.width <=
+      bounds.x >= interestArea.x &&
+      bounds.y >= interestArea.y &&
+      bounds.x + event.bounds.size.width <=
         interestArea.x + interestArea.width &&
-      event.bounds.origin.y + event.bounds.size.height <=
+      bounds.y + event.bounds.size.height <=
         interestArea.y + interestArea.height
     ) {
       onBarCodeScanned(event);
     }
-  };
-
-  const updateInterestArea = (newInterestArea: LayoutRectangle) => {
-    setInterestArea(newInterestArea);
   };
 
   return (
@@ -144,14 +145,26 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
       {hasCameraPermission && isScanningEnabled ? (
         <Camera
           onBarCodeScanned={
-            limitInterestArea ? checkIfInInterestArea : onBarCodeScanned
+            hasLimitedInterestArea ? checkIfInInterestArea : onBarCodeScanned
           }
           barCodeTypes={barCodeTypes}
-          limitInterestArea={limitInterestArea}
-          interestAreaWidth={interestAreaWidth}
-          interestAreaHeight={interestAreaHeight}
-          updateInterestArea={updateInterestArea}
-        />
+          hasLimitedInterestArea={hasLimitedInterestArea}
+          interestAreaLayout={interestAreaLayout}
+        >
+          <View style={styles.backButtonWrapper}>
+            <TransparentButton
+              onPress={onCancel}
+              text={cancelButtonText}
+              icon={
+                <Ionicons
+                  name="ios-arrow-back"
+                  size={size(2)}
+                  color={color("grey", 0)}
+                />
+              }
+            />
+          </View>
+        </Camera>
       ) : (
         <View style={{ flex: 1 }}>
           <LoadingView />
