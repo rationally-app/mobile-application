@@ -1,39 +1,36 @@
-import { groupBy, forEach } from "lodash";
+import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
 
-export const summariseTransactions = (
-  response: DailyStatistics,
-  policies: CampaignPolicy[] | null
-): {
+type SummarisedTransactions = {
   summarisedTransactionHistory: {
     name: string;
     category: string;
     quantity: number;
   }[];
   summarisedTotalCount: number;
-} => {
-  const summarisedTransactionHistory: {
-    name: string;
-    category: string;
-    quantity: number;
-  }[] = [];
-  let summarisedTotalCount = 0;
+};
 
-  const transactionsByCategory = groupBy(response.pastTransactions, "category");
-  forEach(transactionsByCategory, (value, key) => {
-    let quantityPerCategory = 0;
-    transactionsByCategory[key].forEach(transaction => {
-      quantityPerCategory += transaction.quantity;
-    });
-    summarisedTotalCount += quantityPerCategory;
-    const itemWithName = policies?.find(item => item.category === key);
-
-    summarisedTransactionHistory.push({
-      name: itemWithName?.name ?? key,
-      category: key,
-      quantity: quantityPerCategory
-    });
-  });
-
-  return { summarisedTransactionHistory, summarisedTotalCount };
+export const summariseTransactions = (
+  response: DailyStatistics,
+  policies: CampaignPolicy[] | null
+): SummarisedTransactions => {
+  return chain(response.pastTransactions)
+    .groupBy("category")
+    .reduce<SummarisedTransactions>(
+      (prev, transactionsByCategory, key) => {
+        const totalQuantityInCategory = sumBy(
+          transactionsByCategory,
+          "quantity"
+        );
+        prev.summarisedTransactionHistory.push({
+          name: policies?.find(item => item.category === key)?.name ?? key,
+          category: key,
+          quantity: totalQuantityInCategory
+        });
+        prev.summarisedTotalCount += totalQuantityInCategory;
+        return prev;
+      },
+      { summarisedTransactionHistory: [], summarisedTotalCount: 0 }
+    )
+    .value();
 };
