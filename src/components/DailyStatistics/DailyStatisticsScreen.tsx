@@ -1,14 +1,17 @@
-import React, { FunctionComponent, useEffect, useContext } from "react";
+import React, {
+  FunctionComponent,
+  useEffect,
+  useContext,
+  useCallback,
+  useState
+} from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import {
-  withNavigationFocus,
-  NavigationFocusInjectedProps
-} from "react-navigation";
+import { withNavigationFocus } from "react-navigation";
 import { TitleStatistic } from "./TitleStatistic";
 import { Sentry } from "../../utils/errorTracking";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
@@ -24,6 +27,13 @@ import { summariseTransactions } from "./utils";
 import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime } from "date-fns";
+import {
+  AlertModalContext,
+  systemAlertProps,
+  ERROR_MESSAGE
+} from "../../context/alert";
+import { navigateHome } from "../../common/navigation";
+import { NavigationProps } from "../../types";
 
 const styles = StyleSheet.create({
   content: {
@@ -46,9 +56,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
-  navigation,
-  isFocused
+const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
+  navigation
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -70,32 +79,46 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
     transactionHistory,
     setTransactionHistory
   } = useContext(StatisticsContext);
-
+  const { showAlert } = useContext(AlertModalContext);
   const { policies } = useContext(CampaignConfigContext);
+  const [error, setError] = useState<Error>();
+  const clearError = useCallback((): void => setError(undefined), []);
 
   const fetchDailyStatistics = async (
     currentTimestamp: number
   ): Promise<void> => {
-    const response = await getDailyStatistics(
-      currentTimestamp,
-      sessionToken,
-      endpoint,
-      [operatorToken]
-    );
+    try {
+      const response = await getDailyStatistics(
+        currentTimestamp,
+        sessionToken,
+        endpoint,
+        [operatorToken]
+      );
 
-    const {
-      summarisedTransactionHistory,
-      summarisedTotalCount
-    } = summariseTransactions(response, policies);
+      const {
+        summarisedTransactionHistory,
+        summarisedTotalCount
+      } = summariseTransactions(response, policies);
 
-    setTransactionHistory(summarisedTransactionHistory);
-    setTotalCount(summarisedTotalCount);
-    setCurrentTimestamp(currentTimestamp);
+      setTransactionHistory(summarisedTransactionHistory);
+      setTotalCount(summarisedTotalCount);
+      setCurrentTimestamp(currentTimestamp);
 
-    if (response.pastTransactions.length !== 0) {
-      setLastTransactionTime(response.pastTransactions[0].transactionTime);
-    } else {
-      setLastTransactionTime(0);
+      if (response.pastTransactions.length !== 0) {
+        setLastTransactionTime(response.pastTransactions[0].transactionTime);
+      } else {
+        setLastTransactionTime(0);
+      }
+    } catch (error) {
+      setError(error);
+      showAlert({
+        ...systemAlertProps,
+        description: ERROR_MESSAGE.SERVER_ERROR,
+        onOk: () => {
+          navigateHome(navigation);
+          clearError();
+        }
+      });
     }
   };
 
@@ -113,7 +136,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationFocusInjectedProps> = (
 
   useEffect(() => {
     // When entering the first time
-    if (totalCount === null) {
+    if (totalCount === null && !error) {
       fetchDailyStatistics(Date.now());
     }
   });
