@@ -3,7 +3,11 @@
     "name": "SupplyAlly",
     "slug": "rationally",
     "privacy": "public",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "orientation": "portrait",
     "scheme": "supplyally",
     "icon": "./assets/icon.png",
@@ -15,7 +19,9 @@
     "updates": {
       "fallbackToCacheTimeout": 10000
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "sg.gov.tech.musket",
@@ -37,15 +43,47 @@
         "NSMicrophoneUsageDescription": "This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.",
         "NSMotionUsageDescription": "This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.",
         "NSRemindersUsageDescription": "This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us."
-      }
+      },
+      "buildNumber": "39"
     },
     "android": {
       "package": "sg.gov.tech.musket",
-      "permissions": ["CAMERA", "VIBRATE"]
+      "permissions": [
+        "CAMERA",
+        "VIBRATE"
+      ],
+      "versionCode": 39
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": ["js", "jsx", "ts", "tsx", "svg"]
+      "sourceExts": [
+        "js",
+        "jsx",
+        "ts",
+        "tsx",
+        "svg"
+      ]
+    },
+    "version": "dev",
+    "sdkVersion": "38.0.0",
+    "extra": {
+      "mock": false,
+      "storybook": false,
+      "appBuildVersion": 39,
+      "sentryDsn": "SENTRY_DSN",
+      "domainFormat": ".*"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "SALLY_ORG",
+            "project": "SENTRY_PROJECT",
+            "authToken": "SENTRY_AUTH_TOKEN"
+          }
+        }
+      ]
     }
   }
 }
