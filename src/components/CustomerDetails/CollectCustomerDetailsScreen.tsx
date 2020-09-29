@@ -186,7 +186,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onPressStatistics = (): void => {
     clearStatistics();
-    navigation.navigate("StatisticsStack", {
+    navigation.navigate("DailyStatisticsScreen", {
       operatorToken,
       endpoint,
       sessionToken
