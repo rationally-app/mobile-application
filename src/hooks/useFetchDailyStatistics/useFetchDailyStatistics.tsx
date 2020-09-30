@@ -72,7 +72,7 @@ export const useFetchDailyStatistics = (): StatisticsHook => {
         setTotalCount(summarisedTotalCount);
         setCurrentTimestamp(currentTimestamp);
 
-        if (response.pastTransactions.length !== 0) {
+        if (summarisedTransactionHistory.length !== 0) {
           setLastTransactionTime(response.pastTransactions[0].transactionTime);
         } else {
           setLastTransactionTime(0);
