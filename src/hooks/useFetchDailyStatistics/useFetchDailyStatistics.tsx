@@ -29,7 +29,7 @@ export type StatisticsHook = {
   clearError: () => void;
 };
 
-export const useFetchDailyStatistics = (timestamp?: number): StatisticsHook => {
+export const useFetchDailyStatistics = (): StatisticsHook => {
   const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
   const { policies } = useContext(CampaignConfigContext);
   const [totalCount, setTotalCount] = useState<StatisticsHook["totalCount"]>(

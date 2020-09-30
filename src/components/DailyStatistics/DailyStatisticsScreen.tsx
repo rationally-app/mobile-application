@@ -70,7 +70,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     transactionHistory,
     error,
     clearError
-  } = useFetchDailyStatistics(Date.now());
+  } = useFetchDailyStatistics();
 
   const onPressPrevDay = (): void => {
     const prevDay = getTime(subDays(currentTimestamp, 1));
