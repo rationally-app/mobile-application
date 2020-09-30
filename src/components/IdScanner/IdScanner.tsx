@@ -113,7 +113,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   const interestAreaLayout = hasLimitedInterestArea
     ? getInterestAreaDimensions(barCodeTypes)
     : undefined;
-  const [interestArea, setInterestArea] = useState<LayoutRectangle | undefined>(
+  const [interestArea] = useState<LayoutRectangle | undefined>(
     interestAreaLayout
   );
   useEffect(() => {
