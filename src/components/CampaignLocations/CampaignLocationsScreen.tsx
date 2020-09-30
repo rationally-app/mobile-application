@@ -138,11 +138,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
 
   const sortedAuthCredentialsWithCampaignName = sortBy(
     authCredentialsWithCampaignName,
-    [
-      o => {
-        return o.name;
-      }
-    ]
+    [o => o.name]
   );
 
   return (
@@ -166,12 +162,15 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
                 Select campaign
               </AppText>
 
-              {sortedAuthCredentialsWithCampaignName.map((obj, idx) => (
-                <View key={obj.key} style={styles.campaignLocationWrapper}>
+              {sortedAuthCredentialsWithCampaignName.map((credentials, idx) => (
+                <View
+                  key={credentials.key}
+                  style={styles.campaignLocationWrapper}
+                >
                   <CampaignLocationsListItem
-                    {...obj}
-                    name={obj.name || `Campaign ${idx + 1}`}
-                    onPress={() => navigateToCampaignLocation(obj)}
+                    {...credentials}
+                    name={credentials.name || `Campaign ${idx + 1}`}
+                    onPress={() => navigateToCampaignLocation(credentials)}
                   />
                 </View>
               ))}
