@@ -110,7 +110,6 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     if (!error) {
       return;
     }
-    console.log(error);
     if (error) {
       showAlert({
         ...systemAlertProps,
