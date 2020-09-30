@@ -2,7 +2,11 @@ import React, { FunctionComponent, useState, useEffect } from "react";
 import { Dimensions, LayoutRectangle, StyleSheet, View } from "react-native";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
-import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
+import {
+  BarCodeScannedCallback,
+  BarCodeScanner,
+  BarCodeScannerProps
+} from "expo-barcode-scanner";
 import { LoadingView } from "../Loading";
 import { LightBox } from "../Layout/LightBox";
 import { Ionicons } from "@expo/vector-icons";
@@ -51,9 +55,10 @@ const getInterestAreaDimensions = (
   };
 };
 
-export type Camera = {
-  onBarCodeScanned: BarCodeScannedCallback;
-  barCodeTypes?: string[];
+export type Camera = Pick<
+  BarCodeScannerProps,
+  "onBarCodeScanned" | "barCodeTypes"
+> & {
   cancelButtonText?: string;
   onCancel?: () => void;
   hasLimitedInterestArea?: boolean;
