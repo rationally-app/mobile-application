@@ -138,7 +138,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
 
   const sortedAuthCredentialsWithCampaignName = sortBy(
     authCredentialsWithCampaignName,
-    [o => o.name]
+    "name"
   );
 
   return (
