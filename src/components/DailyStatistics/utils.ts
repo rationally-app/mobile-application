@@ -5,12 +5,12 @@ type SummarisedTransactions = {
   summarisedTransactionHistory: {
     name: string;
     category: string;
-    quantity: number;
+    quantityText: string;
   }[];
   summarisedTotalCount: number;
 };
 
-export const summariseTransactions = (
+export const countTotalTransactionsAndByCategory = (
   response: DailyStatistics,
   policies: CampaignPolicy[] | null
 ): SummarisedTransactions => {
@@ -25,7 +25,13 @@ export const summariseTransactions = (
         prev.summarisedTransactionHistory.push({
           name: policies?.find(item => item.category === key)?.name ?? key,
           category: key,
-          quantity: totalQuantityInCategory
+          quantityText: formatQuantityText(
+            totalQuantityInCategory,
+            policies?.find(item => item.category === key)?.quantity.unit || {
+              type: "POSTFIX",
+              label: " qty"
+            }
+          )
         });
         prev.summarisedTotalCount += totalQuantityInCategory;
         return prev;
@@ -34,3 +40,13 @@ export const summariseTransactions = (
     )
     .value();
 };
+
+export const formatQuantityText = (
+  quantity: number,
+  unit?: CampaignPolicy["quantity"]["unit"]
+): string =>
+  unit
+    ? unit?.type === "PREFIX"
+      ? `${unit.label}${quantity.toLocaleString()}`
+      : `${quantity.toLocaleString()}${unit.label}`
+    : `${quantity.toLocaleString()}`;

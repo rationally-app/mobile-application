@@ -1,4 +1,4 @@
-import { summariseTransactions } from "./utils";
+import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
 
 describe("summariseTransactions", () => {
@@ -147,17 +147,21 @@ describe("summariseTransactions", () => {
   it("should return multiple summarised transactions categories with total count and count per category and the name to be displayed on the stats page", () => {
     expect.assertions(1);
     expect(
-      summariseTransactions(pastTransactions, campaignPolicy)
+      countTotalTransactionsAndByCategory(pastTransactions, campaignPolicy)
     ).toStrictEqual({
       summarisedTotalCount: 4019,
       summarisedTransactionHistory: [
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantity: 999
+          quantityText: "999 pack(s)"
         },
-        { category: "chocolate", name: "🍫 Chocolate", quantity: 3000 },
-        { category: "vouchers", name: "Funfair Vouchers", quantity: 20 }
+        { category: "chocolate", name: "🍫 Chocolate", quantityText: "$3,000" },
+        {
+          category: "vouchers",
+          name: "Funfair Vouchers",
+          quantityText: "20 qty"
+        }
       ]
     });
   });
@@ -165,14 +169,17 @@ describe("summariseTransactions", () => {
   it("should return single summarised transaction category", () => {
     expect.assertions(1);
     expect(
-      summariseTransactions(pastInstantNoodleTransactions, campaignPolicy)
+      countTotalTransactionsAndByCategory(
+        pastInstantNoodleTransactions,
+        campaignPolicy
+      )
     ).toStrictEqual({
       summarisedTotalCount: 999,
       summarisedTransactionHistory: [
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantity: 999
+          quantityText: "999 pack(s)"
         }
       ]
     });
@@ -181,14 +188,17 @@ describe("summariseTransactions", () => {
   it("should return category with category as name if transacted item is not in policies", () => {
     expect.assertions(1);
     expect(
-      summariseTransactions(invalidPastTransactions, campaignPolicy)
+      countTotalTransactionsAndByCategory(
+        invalidPastTransactions,
+        campaignPolicy
+      )
     ).toStrictEqual({
       summarisedTotalCount: 999,
       summarisedTransactionHistory: [
         {
           category: "funny-category",
           name: "funny-category",
-          quantity: 999
+          quantityText: "999 qty"
         }
       ]
     });

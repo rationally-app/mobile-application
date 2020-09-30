@@ -23,7 +23,7 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { AuthContext } from "../../context/auth";
 import { getDailyStatistics } from "../../services/statistics";
-import { summariseTransactions } from "./utils";
+import { countTotalTransactionsAndByCategory } from "./utils";
 import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime } from "date-fns";
@@ -39,12 +39,20 @@ interface StatisticsContext {
   totalCount: number | null;
   currentTimestamp: number;
   lastTransactionTime: number | null;
-  transactionHistory: { name: string; category: string; quantity: number }[];
+  transactionHistory: {
+    name: string;
+    category: string;
+    quantityText: string;
+  }[];
   setTotalCount: (totalCount: number | null) => void;
   setCurrentTimestamp: (currentTimestamp: number) => void;
   setLastTransactionTime: (lastTransactionTime: number) => void;
   setTransactionHistory: (
-    transactionHistory: { name: string; category: string; quantity: number }[]
+    transactionHistory: {
+      name: string;
+      category: string;
+      quantityText: string;
+    }[]
   ) => void;
   clearStatistics: () => void;
 }
@@ -164,7 +172,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
         const {
           summarisedTransactionHistory,
           summarisedTotalCount
-        } = summariseTransactions(response, policies);
+        } = countTotalTransactionsAndByCategory(response, policies);
         setTransactionHistory(summarisedTransactionHistory);
         setTotalCount(summarisedTotalCount);
         setCurrentTimestamp(currentTimestamp);

@@ -5,7 +5,11 @@ import { AppText } from "../Layout/AppText";
 import { Card } from "../Layout/Card";
 
 interface TransactionHistoryCardComponent {
-  transactionHistory: { name: string; category: string; quantity: number }[];
+  transactionHistory: {
+    name: string;
+    category: string;
+    quantityText: string;
+  }[];
 }
 
 const styles = StyleSheet.create({
@@ -19,7 +23,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize(0),
     marginBottom: size(3)
   },
-  quantity: {
+  quantityText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
     marginBottom: size(3)
@@ -48,9 +52,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
           <View style={styles.transactionText} key={item.category}>
             <AppText style={styles.categoryName}>{item.name}</AppText>
             <View style={styles.transactionText}>
-              <AppText style={styles.quantity}>
-                {item.quantity.toLocaleString()} qty
-              </AppText>
+              <AppText style={styles.quantityText}>{item.quantityText}</AppText>
             </View>
           </View>
         ))
