@@ -107,14 +107,13 @@ export const liveGetStatistics = async (
   endpoint: string,
   operatorTokens: string[]
 ): Promise<DailyStatistics> => {
-  let response;
   const {
     startTransactionTime,
     endTransactionTime
   } = getDailyTransactionTimestampRange(currentTimestamp);
 
   try {
-    response = await fetchWithValidator(
+    return await fetchWithValidator(
       DailyStatistics,
       `${endpoint}/statistics/staff`,
       {
@@ -129,7 +128,6 @@ export const liveGetStatistics = async (
         })
       }
     );
-    return response;
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
