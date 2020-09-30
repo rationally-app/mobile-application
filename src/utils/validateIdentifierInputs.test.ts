@@ -51,7 +51,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER"
         }
       ])
-    ).toThrow("Enter valid country code and contact number.");
+    ).toThrow("Enter a valid country code and contact number.");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -60,7 +60,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER"
         }
       ])
-    ).toThrow("Enter valid country code and contact number.");
+    ).toThrow("Enter a valid country code and contact number.");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -69,7 +69,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER"
         }
       ])
-    ).toThrow("Enter valid country code and contact number.");
+    ).toThrow("Enter a valid country code and contact number.");
   });
 
   it("should throw error if at least one of the identifiers does not match the given regex pattern", () => {
