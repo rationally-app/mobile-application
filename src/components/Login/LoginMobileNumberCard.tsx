@@ -23,6 +23,7 @@ import {
   ERROR_MESSAGE
 } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
+import { PhoneNumberUtil } from "google-libphonenumber";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -61,8 +62,16 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   };
 
   const onChangeMobileNumber = (text: string): void => {
+    const phoneUtil = PhoneNumberUtil.getInstance();
+    const value: string =
+      text.length > 2
+        ? phoneUtil.formatOutOfCountryCallingNumber(
+            phoneUtil.parseAndKeepRawInput(text, "SG"),
+            "SG"
+          )
+        : text;
     ///^\d*$/.test(text) &&
-    setMobileNumberValue(text);
+    setMobileNumberValue(value);
   };
 
   const onRequestOTP = async (): Promise<void> => {

@@ -2,7 +2,6 @@ import React, { FunctionComponent } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
-import { PhoneNumberUtil } from "google-libphonenumber";
 
 const styles = StyleSheet.create({
   inputsWrapper: {
@@ -64,15 +63,6 @@ export const PhoneNumberInput: FunctionComponent<{
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit = () => {}
 }) => {
-  const phoneUtil = PhoneNumberUtil.getInstance();
-  const value: string =
-    mobileNumberValue.length > 2
-      ? phoneUtil.formatOutOfCountryCallingNumber(
-          phoneUtil.parseAndKeepRawInput(mobileNumberValue, "SG"),
-          "SG"
-        )
-      : mobileNumberValue;
-
   return (
     <View style={styles.numberWrapper}>
       <AppText style={styles.label}>{label}</AppText>
@@ -87,7 +77,7 @@ export const PhoneNumberInput: FunctionComponent<{
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={value}
+          value={mobileNumberValue}
           onChange={({ nativeEvent: { text } }) => onChangeMobileNumber(text)}
           onSubmitEditing={onSubmit}
         />
