@@ -38,7 +38,6 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { StatisticsContext } from "../DailyStatistics/DailyStatisticsScreen";
 
 const styles = StyleSheet.create({
   content: {
@@ -107,7 +106,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
-  const { clearStatistics } = useContext(StatisticsContext);
 
   useEffect(() => {
     if (isFocused) {
@@ -183,7 +181,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const onPressStatistics = (): void => {
-    clearStatistics();
     navigation.navigate("DailyStatisticsScreen");
   };
 

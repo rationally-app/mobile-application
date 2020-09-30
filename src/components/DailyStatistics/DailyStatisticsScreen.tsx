@@ -1,17 +1,9 @@
-import React, {
-  FunctionComponent,
-  useEffect,
-  useContext,
-  useCallback,
-  useState,
-  createContext
-} from "react";
+import React, { FunctionComponent, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
-import { CampaignConfigContext } from "../../context/campaignConfig";
 import { withNavigationFocus } from "react-navigation";
 import { TitleStatistic } from "./TitleStatistic";
 import { Sentry } from "../../utils/errorTracking";
@@ -21,9 +13,6 @@ import { FeatureToggler } from "../FeatureToggler/FeatureToggler";
 import { Banner } from "../Layout/Banner";
 import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { AuthContext } from "../../context/auth";
-import { getDailyStatistics } from "../../services/statistics";
-import { countTotalTransactionsAndByCategory } from "./utils";
 import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime } from "date-fns";
@@ -34,80 +23,7 @@ import {
 } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
-
-interface StatisticsContext {
-  totalCount: number | null;
-  currentTimestamp: number;
-  lastTransactionTime: number | null;
-  transactionHistory: {
-    name: string;
-    category: string;
-    quantityText: string;
-  }[];
-  setTotalCount: (totalCount: number | null) => void;
-  setCurrentTimestamp: (currentTimestamp: number) => void;
-  setLastTransactionTime: (lastTransactionTime: number) => void;
-  setTransactionHistory: (
-    transactionHistory: {
-      name: string;
-      category: string;
-      quantityText: string;
-    }[]
-  ) => void;
-  clearStatistics: () => void;
-}
-
-export const StatisticsContext = createContext<StatisticsContext>({
-  totalCount: null,
-  currentTimestamp: Date.now(),
-  lastTransactionTime: null,
-  transactionHistory: [],
-  setTotalCount: () => null,
-  setCurrentTimestamp: () => null,
-  setLastTransactionTime: () => null,
-  setTransactionHistory: () => null,
-  clearStatistics: () => null
-});
-
-export const StatisticsContextProvider: FunctionComponent = ({ children }) => {
-  const [totalCount, setTotalCount] = useState<StatisticsContext["totalCount"]>(
-    null
-  );
-  const [currentTimestamp, setCurrentTimestamp] = useState<
-    StatisticsContext["currentTimestamp"]
-  >(Date.now());
-  const [lastTransactionTime, setLastTransactionTime] = useState<
-    StatisticsContext["lastTransactionTime"]
-  >(null);
-  const [transactionHistory, setTransactionHistory] = useState<
-    StatisticsContext["transactionHistory"]
-  >([]);
-
-  const clearStatistics: StatisticsContext["clearStatistics"] = useCallback(() => {
-    setTotalCount(null);
-    setCurrentTimestamp(Date.now());
-    setLastTransactionTime(null);
-    setTransactionHistory([]);
-  }, []);
-
-  return (
-    <StatisticsContext.Provider
-      value={{
-        totalCount,
-        currentTimestamp,
-        lastTransactionTime,
-        transactionHistory,
-        setTotalCount,
-        setCurrentTimestamp,
-        setLastTransactionTime,
-        setTransactionHistory,
-        clearStatistics
-      }}
-    >
-      {children}
-    </StatisticsContext.Provider>
-  );
-};
+import { useFetchDailyStatistics } from "../../hooks/useFetchDailyStatistics/useFetchDailyStatistics";
 
 const styles = StyleSheet.create({
   content: {
@@ -143,90 +59,83 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
+  const { showAlert } = useContext(AlertModalContext);
+
   const {
+    fetchDailyStatistics,
     currentTimestamp,
     setCurrentTimestamp,
     lastTransactionTime,
-    setLastTransactionTime,
     totalCount,
-    setTotalCount,
     transactionHistory,
-    setTransactionHistory
-  } = useContext(StatisticsContext);
-  const { showAlert } = useContext(AlertModalContext);
-  const { policies } = useContext(CampaignConfigContext);
-  const [error, setError] = useState<Error>();
-  const clearError = useCallback((): void => setError(undefined), []);
-
-  const fetchDailyStatistics = useCallback(
-    async (currentTimestamp: number): Promise<void> => {
-      try {
-        const response = await getDailyStatistics(
-          currentTimestamp,
-          sessionToken,
-          endpoint,
-          [operatorToken]
-        );
-
-        const {
-          summarisedTransactionHistory,
-          summarisedTotalCount
-        } = countTotalTransactionsAndByCategory(response, policies);
-        setTransactionHistory(summarisedTransactionHistory);
-        setTotalCount(summarisedTotalCount);
-        setCurrentTimestamp(currentTimestamp);
-
-        if (response.pastTransactions.length !== 0) {
-          setLastTransactionTime(response.pastTransactions[0].transactionTime);
-        } else {
-          setLastTransactionTime(0);
-        }
-      } catch (error) {
-        setError(error);
-        showAlert({
-          ...systemAlertProps,
-          description: ERROR_MESSAGE.SERVER_ERROR,
-          onOk: () => {
-            navigateHome(navigation);
-            clearError();
-          }
-        });
-      }
-    },
-    [
-      clearError,
-      endpoint,
-      navigation,
-      operatorToken,
-      policies,
-      sessionToken,
-      setCurrentTimestamp,
-      setLastTransactionTime,
-      setTotalCount,
-      setTransactionHistory,
-      showAlert
-    ]
-  );
+    error,
+    clearError
+  } = useFetchDailyStatistics(Date.now());
 
   const onPressPrevDay = (): void => {
     const prevDay = getTime(subDays(currentTimestamp, 1));
     setCurrentTimestamp(prevDay);
-    fetchDailyStatistics(prevDay);
+    try {
+      fetchDailyStatistics(prevDay);
+    } catch (error) {
+      showAlert({
+        ...systemAlertProps,
+        description: ERROR_MESSAGE.SERVER_ERROR,
+        onOk: () => {
+          navigateHome(navigation);
+          clearError();
+        }
+      });
+    }
   };
 
   const onPressNextDay = (): void => {
     const nextDay = getTime(addDays(currentTimestamp, 1));
     setCurrentTimestamp(nextDay);
-    fetchDailyStatistics(nextDay);
+    try {
+      fetchDailyStatistics(nextDay);
+    } catch (error) {
+      showAlert({
+        ...systemAlertProps,
+        description: ERROR_MESSAGE.SERVER_ERROR,
+        onOk: () => {
+          navigateHome(navigation);
+          clearError();
+        }
+      });
+    }
   };
+
+  useEffect(() => {
+    if (!error) {
+      return;
+    }
+    console.log(error);
+    if (error) {
+      showAlert({
+        ...systemAlertProps,
+        description: ERROR_MESSAGE.SERVER_ERROR,
+        onOk: () => {
+          navigateHome(navigation);
+          clearError();
+        }
+      });
+    }
+  }, [error, clearError, navigation, showAlert]);
 
   useEffect(() => {
     // When entering the first time
     if (totalCount === null && !error) {
       fetchDailyStatistics(Date.now());
     }
-  }, [totalCount, error, fetchDailyStatistics]);
+  }, [
+    totalCount,
+    error,
+    fetchDailyStatistics,
+    clearError,
+    navigation,
+    showAlert
+  ]);
 
   return (
     <>
