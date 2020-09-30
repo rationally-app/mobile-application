@@ -1,4 +1,5 @@
 import React, { FunctionComponent, ReactElement } from "react";
+import { StyleSheet } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { color, size } from "../../common/styles";
 import { View } from "react-native";
@@ -30,6 +31,17 @@ const barCodeTypeIcons: Record<string, ReactElement> = {
   )
 };
 
+const styles = StyleSheet.create({
+  labelWrapper: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  labelText: {
+    fontWeight: "bold",
+    color: color("grey", 0)
+  }
+});
+
 type IdScannerLabel = {
   interestAreaHeight: number;
   barCodeType: string;
@@ -39,14 +51,9 @@ export const IdScannerLabel: FunctionComponent<IdScannerLabel> = ({
   barCodeType
 }) => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center"
-      }}
-    >
+    <View style={styles.labelWrapper}>
       {barCodeTypeIcons[barCodeType]}
-      <AppText style={{ fontWeight: "bold", color: color("grey", 0) }}>
+      <AppText style={styles.labelWrapper}>
         {barCodeTypeLabels[barCodeType]}
       </AppText>
     </View>
