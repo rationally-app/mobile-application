@@ -1,8 +1,7 @@
 import React, { FunctionComponent, ReactElement } from "react";
-import { StyleSheet } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { color, size } from "../../common/styles";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 
