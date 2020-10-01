@@ -19,7 +19,7 @@ const endpoint = "https://myendpoint.com";
 
 const customProducts: CampaignPolicy[] = [
   {
-    category: "tt-token",
+    category: "specs",
     categoryType: "DEFAULT", // 'DEFAULT' (default) | 'APPEAL'
     name: "TT Token",
     order: 1,
@@ -39,7 +39,7 @@ const customProducts: CampaignPolicy[] = [
     type: "REDEEM"
   },
   {
-    category: "tt-token-lost",
+    category: "specs-lost",
     categoryType: "APPEAL",
     name: "Lost/stolen token",
     order: 1,
@@ -67,7 +67,7 @@ const customProducts: CampaignPolicy[] = [
 const mockPastTransactions: PastTransactionsResult = {
   pastTransactions: [
     {
-      category: "tt-token",
+      category: "specs",
       quantity: 1,
       identifierInputs: [
         {
@@ -79,7 +79,7 @@ const mockPastTransactions: PastTransactionsResult = {
       transactionTime: new Date(1596530356430)
     },
     {
-      category: "tt-token-lost",
+      category: "specs-lost",
       quantity: 1,
       identifierInputs: [
         {
@@ -91,7 +91,7 @@ const mockPastTransactions: PastTransactionsResult = {
       transactionTime: new Date(1596530356431)
     },
     {
-      category: "tt-token-lost",
+      category: "specs-lost",
       quantity: 1,
       identifierInputs: [
         {
@@ -136,7 +136,7 @@ describe("usePastTransaction", () => {
 
       expect(result.current.pastTransactionsResult).toStrictEqual([
         {
-          category: "tt-token",
+          category: "specs",
           quantity: 1,
           identifierInputs: [
             {
@@ -148,7 +148,7 @@ describe("usePastTransaction", () => {
           transactionTime: new Date(1596530356430)
         },
         {
-          category: "tt-token-lost",
+          category: "specs-lost",
           quantity: 1,
           identifierInputs: [
             {
@@ -160,7 +160,7 @@ describe("usePastTransaction", () => {
           transactionTime: new Date(1596530356431)
         },
         {
-          category: "tt-token-lost",
+          category: "specs-lost",
           quantity: 1,
           identifierInputs: [
             {

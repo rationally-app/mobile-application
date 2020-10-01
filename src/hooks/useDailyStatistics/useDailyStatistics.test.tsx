@@ -27,9 +27,9 @@ const wrapper: FunctionComponent = ({ children }) => (
 
 const customProducts: CampaignPolicy[] = [
   {
-    category: "tt-token",
-    categoryType: "DEFAULT", // 'DEFAULT' (default) | 'APPEAL'
-    name: "TT Token",
+    category: "specs",
+    categoryType: "DEFAULT",
+    name: "Specs",
     order: 1,
     identifiers: [
       {
@@ -47,9 +47,9 @@ const customProducts: CampaignPolicy[] = [
     type: "REDEEM"
   },
   {
-    category: "tt-token-lost",
+    category: "specs-lost",
     categoryType: "APPEAL",
-    name: "Lost/stolen token",
+    name: "Lost Specs",
     order: 1,
     alert: {
       threshold: 2,
@@ -57,8 +57,8 @@ const customProducts: CampaignPolicy[] = [
     },
     quantity: {
       period: -1,
-      periodType: "ROLLING", // ROLLING | CRON;
-      periodExpression: 365, // TBD
+      periodType: "ROLLING",
+      periodExpression: 365,
       limit: 9999,
       default: 1
     },
