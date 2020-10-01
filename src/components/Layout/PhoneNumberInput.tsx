@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
-import { PhoneNumberUtil } from "google-libphonenumber";
+import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
 
 const styles = StyleSheet.create({
   inputsWrapper: {
@@ -67,9 +67,9 @@ export const PhoneNumberInput: FunctionComponent<{
   const phoneUtil = PhoneNumberUtil.getInstance();
   const value: string =
     mobileNumberValue.length > 2
-      ? phoneUtil.formatOutOfCountryCallingNumber(
-          phoneUtil.parseAndKeepRawInput(mobileNumberValue, "SG"),
-          "SG"
+      ? phoneUtil.format(
+          phoneUtil.parse(mobileNumberValue, "SG"),
+          PhoneNumberFormat.NATIONAL
         )
       : mobileNumberValue;
   return (
