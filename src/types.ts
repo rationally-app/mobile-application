@@ -173,6 +173,7 @@ const ItemQuota = t.intersection([
   })
 ]);
 
+// TODO: Change localQuota and globalQuota to non-partial
 export const Quota = t.intersection([
   t.type({
     remainingQuota: t.array(ItemQuota)

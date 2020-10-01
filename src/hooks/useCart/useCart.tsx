@@ -123,17 +123,31 @@ export const useCart = (
   const [error, setError] = useState<Error>();
   const clearError = useCallback((): void => setError(undefined), []);
   const { products, getProduct } = useContext(ProductContext);
-  const prevIds = usePrevious(ids);
   const prevProducts = usePrevious(products);
+  const prevIds = usePrevious(ids);
+  const prevCartQuota = usePrevious(cartQuota);
 
   /**
-   * Update the cart whenever the cart quota is updated
+   * Update the cart when:
+   *  1. First quota is retrieved on initialisation
+   *  2. When quota is updated (i.e. products or ids change)
    */
   useEffect(() => {
-    if (cartQuota && (prevIds !== ids || prevProducts !== products)) {
+    if (
+      cartQuota &&
+      (!prevCartQuota || prevIds !== ids || prevProducts !== products)
+    ) {
       setCart(cart => mergeWithCart(cart, cartQuota, getProduct));
     }
-  }, [prevIds, ids, prevProducts, products, cartQuota, getProduct]);
+  }, [
+    cartQuota,
+    getProduct,
+    prevCartQuota,
+    ids,
+    prevIds,
+    products,
+    prevProducts
+  ]);
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
     setCart([]);
