@@ -1,7 +1,7 @@
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
 
-describe("summariseTransactions", () => {
+describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics;
   let campaignPolicy: CampaignPolicy[] = [];
   let pastInstantNoodleTransactions: DailyStatistics;
