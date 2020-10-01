@@ -2,8 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { usePrevious } from "../usePrevious";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { getDailyStatistics } from "../../services/statistics";
-import { countTotalTransactionsAndByCategory } from "../../components/DailyStatistics/utils";
-import { Sentry } from "../../utils/errorTracking";
+import { countTotalTransactionsAndByCategory } from "./utils";
 
 export type StatisticsHook = {
   totalCount: number | null;
@@ -64,9 +63,6 @@ export const useDailyStatistics = (
           setLastTransactionTime(null);
         }
       } catch (error) {
-        Sentry.captureException(
-          `Unable to fetch daily statistics: ${operatorToken}`
-        );
         setError(error);
       } finally {
         setLoading(false);

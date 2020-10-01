@@ -29,7 +29,7 @@ import {
 } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
-import { useDailyStatistics } from "../../hooks/useFetchDailyStatistics/useFetchDailyStatistics";
+import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
 
 const styles = StyleSheet.create({
   content: {
