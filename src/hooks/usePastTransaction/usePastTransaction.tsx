@@ -35,8 +35,12 @@ export const usePastTransaction = (
         );
         setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
       } catch (error) {
-        Sentry.captureException(`Unable to fetch past transactions: ${ids}`);
-        setError(error);
+        Sentry.captureException(
+          `Unable to fetch past transactions: ${ids.map(id =>
+            id.slice(-4).padStart(id.length, "*")
+          )}`
+        );
+        setError(new Error(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR));
       } finally {
         setLoading(false);
       }
