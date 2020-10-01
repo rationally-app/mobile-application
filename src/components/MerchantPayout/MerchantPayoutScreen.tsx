@@ -34,13 +34,17 @@ import { VoucherScanner } from "../VoucherScanner/VoucherScanner";
 import { VoucherStatusModal } from "./VoucherStatusModal/VoucherStatusModal";
 import { AllValidVouchersModal } from "./AllValidVouchersModal";
 import { useVoucher } from "../../hooks/useVoucher/useVoucher";
-import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
+import {
+  ScannerError,
+  useCheckVoucherValidity
+} from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { AuthContext } from "../../context/auth";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { SessionError } from "../../services/helpers";
-import { AlertModalContext } from "../../context/alert";
+import { AlertModalContext, WARNING_MESSAGE } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import i18n from "i18n-js";
+import { LimitReachedError } from "../../utils/validateVoucherCode";
 
 const styles = StyleSheet.create({
   content: {
@@ -82,7 +86,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     false
   );
   const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
-  const { showErrorAlert } = useContext(AlertModalContext);
+  const { showWarnAlert, showErrorAlert } = useContext(AlertModalContext);
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 
@@ -209,6 +213,15 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     showErrorAlert
   ]);
 
+  useEffect(() => {
+    if (
+      validityError instanceof ScannerError ||
+      validityError instanceof LimitReachedError
+    ) {
+      showErrorAlert(validityError, onModalExit);
+    }
+  }, [validityError]);
+
   const closeCamera = useCallback(() => setShouldShowCamera(false), []);
   const openCamera = useCallback(() => {
     Keyboard.dismiss();
@@ -261,7 +274,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <SecondaryButton
                 text={i18n.t("customerQuotaScreen.quotaAppealCancel")}
                 onPress={() => {
-                  showErrorAlert(new Error("discardTransaction"), () => {
+                  showWarnAlert(WARNING_MESSAGE.DISCARD_TRANSACTION, () => {
                     setMerchantCode("");
                     resetState();
                   });

@@ -242,9 +242,9 @@
       "primaryActionText": "OK"
     },
     "notEligible": {
-      "title": "无效",
-      "body": "请提出上诉。",
-      "primaryActionText": "确定"
+      "title": "Not eligible",
+      "body": "Please log an appeal request.",
+      "primaryActionText": "OK"
     }
   }
 }

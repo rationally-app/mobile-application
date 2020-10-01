@@ -10,7 +10,7 @@ import { differenceInSeconds, compareDesc } from "date-fns";
 export class ScannerError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "ScanningError";
+    this.name = "ScannerError";
   }
 }
 

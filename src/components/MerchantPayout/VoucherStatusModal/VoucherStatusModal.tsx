@@ -1,17 +1,11 @@
 import React, { FunctionComponent } from "react";
-import {
-  View,
-  StyleSheet,
-  Modal,
-  ActivityIndicator,
-  Alert
-} from "react-native";
+import { View, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import { InvalidCard } from "./InvalidCard";
 import { color, size } from "../../../common/styles";
 import {
-  ScannerError,
   useCheckVoucherValidity,
-  InvalidVoucherError
+  InvalidVoucherError,
+  ScannerError
 } from "../../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { NotEligibleError } from "../../../services/quota";
 import { AppText } from "../../Layout/AppText";
@@ -70,16 +64,6 @@ const NoPreviousTransactionTitle: FunctionComponent = () => (
   </AppText>
 );
 
-const showAlert = (
-  title: string,
-  message: string,
-  ctaText: string,
-  onDismiss: () => void
-): void =>
-  Alert.alert(title, message, [{ text: ctaText, onPress: onDismiss }], {
-    onDismiss: onDismiss // for android outside alert clicks
-  });
-
 interface VoucherStatusModal {
   checkValidityState: useCheckVoucherValidity["checkValidityState"];
   error?: useCheckVoucherValidity["error"];
@@ -87,9 +71,9 @@ interface VoucherStatusModal {
 }
 
 export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
-  onExit,
   checkValidityState,
-  error
+  error,
+  onExit
 }) => {
   const isVisible = checkValidityState === "CHECKING_VALIDITY";
 
@@ -98,29 +82,8 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   const title = i18n.t(`errorMessages.notEligible.title`);
   const details = i18n.t(`errorMessages.notEligible.body`);
 
-  if (error instanceof ScannerError) {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        showAlert(
-          i18n.t(`errorMessages.errorScanning.title`),
-          error.message,
-          i18n.t(`errorMessages.errorScanning.primaryActionText`),
-          onExit
-        );
-      });
-    });
+  if (error instanceof ScannerError || error instanceof LimitReachedError) {
     return null;
-  } else if (error instanceof LimitReachedError) {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        showAlert(
-          i18n.t(`errorMessages.scanLimitReached.title`),
-          error.message,
-          i18n.t(`errorMessages.errorScanning.primaryActionText`),
-          onExit
-        );
-      });
-    });
   } else if (error instanceof NotEligibleError) {
     card = <InvalidCard title={title} details={details} closeModal={onExit} />;
   } else if (error instanceof InvalidVoucherError) {
