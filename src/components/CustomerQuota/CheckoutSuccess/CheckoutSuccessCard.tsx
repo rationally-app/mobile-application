@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
-  quotaResponse: Quota | null;
+  quotaResponse?: Quota;
 }
 
 const UsageQuotaTitle: FunctionComponent<{

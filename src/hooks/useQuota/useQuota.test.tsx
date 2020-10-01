@@ -245,7 +245,7 @@ describe("useQuota", () => {
   });
 
   describe("update quota when necessary", () => {
-    it("should update quota ids are added", async () => {
+    it("should update when quota ids are added", async () => {
       expect.assertions(2);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       let ids = ["ID1"];
@@ -287,5 +287,7 @@ describe("useQuota", () => {
         }
       ]);
     });
+
+    it.todo("should update the quota when products change");
   });
 });

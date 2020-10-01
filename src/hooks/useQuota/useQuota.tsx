@@ -10,8 +10,10 @@ type QuotaState = "DEFAULT" | "FETCHING_QUOTA" | "NO_QUOTA" | "NOT_ELIGIBLE";
 
 export type QuotaHook = {
   quotaState: string;
-  quotaResponse: Quota | null;
-  allQuotaResponse: Quota | null;
+  // Contains only quota of products with categories available in the current campaign policy
+  quotaResponse?: Quota;
+  // Contains quota of all products
+  allQuotaResponse?: Quota;
   updateQuota: () => void;
   quotaError?: Error;
 };
@@ -21,8 +23,11 @@ const filterQuotaWithAvailableProducts = (
   products: CampaignPolicy[]
 ): Quota => {
   const filteredQuota: Quota = {
-    remainingQuota: []
+    remainingQuota: [],
+    globalQuota: [],
+    localQuota: []
   };
+
   transform(
     quota.remainingQuota,
     (result: Quota, itemQuota) => {
@@ -32,37 +37,28 @@ const filterQuotaWithAvailableProducts = (
     filteredQuota
   );
 
-  if (quota.globalQuota) {
-    filteredQuota.globalQuota = [];
-    transform(
-      quota.globalQuota!,
-      (result: Quota, itemQuota) => {
-        if (products.some(policy => policy.category === itemQuota.category))
-          result.globalQuota!.push(itemQuota);
-      },
-      filteredQuota
-    );
-  }
+  transform(
+    quota.globalQuota!,
+    (result: Quota, itemQuota) => {
+      if (products.some(policy => policy.category === itemQuota.category))
+        result.globalQuota!.push(itemQuota);
+    },
+    filteredQuota
+  );
 
-  if (quota.localQuota) {
-    filteredQuota.localQuota = [];
-    transform(
-      quota.localQuota!,
-      (result: Quota, itemQuota) => {
-        if (products.some(policy => policy.category === itemQuota.category))
-          result.localQuota!.push(itemQuota);
-      },
-      filteredQuota
-    );
-  }
+  transform(
+    quota.localQuota!,
+    (result: Quota, itemQuota) => {
+      if (products.some(policy => policy.category === itemQuota.category))
+        result.localQuota!.push(itemQuota);
+    },
+    filteredQuota
+  );
 
   return filteredQuota;
 };
 
 const hasNoQuota = (quota: Quota): boolean => {
-  if (quota === null) {
-    return true;
-  }
   return quota.remainingQuota.every(item => item.quantity === 0);
 };
 
@@ -74,14 +70,18 @@ const hasInvalidQuota = (quota: Quota): boolean => {
   return quota.remainingQuota.some(item => item.quantity < 0);
 };
 
+/**
+ * Please note that the updateQuota hook is called on initialisation, and can also be
+ * called imperatively.
+ */
 export const useQuota = (
   ids: string[],
   authKey: string,
   endpoint: string
 ): QuotaHook => {
   const [quotaState, setQuotaState] = useState<QuotaState>("DEFAULT");
-  const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
-  const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
+  const [quotaResponse, setQuotaResponse] = useState<Quota>();
+  const [allQuotaResponse, setAllQuotaResponse] = useState<Quota>();
   const [quotaError, setQuotaError] = useState<Error>();
   const { products } = useContext(ProductContext);
   const prevIds = usePrevious(ids);
@@ -115,10 +115,6 @@ export const useQuota = (
           setQuotaState("NOT_ELIGIBLE");
           return;
         } else {
-          Sentry.addBreadcrumb({
-            category: "useQuota",
-            message: "fetchQuota - unidentified error"
-          });
           setQuotaState("DEFAULT");
           setQuotaError(e);
         }
@@ -127,6 +123,9 @@ export const useQuota = (
     update();
   }, [ids, authKey, endpoint, products, quotaResponse]);
 
+  /**
+   * Update the quota whenever the ids or products change
+   */
   useEffect(() => {
     if (prevIds !== ids || prevProducts !== products) {
       updateQuota();

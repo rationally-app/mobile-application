@@ -1,10 +1,11 @@
-import { useState, useCallback, useContext } from "react";
+import { useState, useCallback, useContext, useEffect } from "react";
 import { postTransaction } from "../../services/quota";
 import { PostTransactionResult, ItemQuota, IdentifierInput } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
 import { ProductContext, ProductContextValue } from "../../context/products";
+import { usePrevious } from "../usePrevious";
 
 export type CartItem = {
   category: string;
@@ -27,7 +28,6 @@ export type CartHook = {
   cartState: CartState;
   cart: Cart;
   emptyCart: () => void;
-  initCartWithQuota: (quota: ItemQuota[]) => void;
   updateCart: (
     category: string,
     quantity: number,
@@ -114,21 +114,26 @@ const mergeWithCart = (
 export const useCart = (
   ids: string[],
   authKey: string,
-  endpoint: string
+  endpoint: string,
+  cartQuota?: ItemQuota[]
 ): CartHook => {
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
   const clearError = useCallback((): void => setError(undefined), []);
-  const { getProduct } = useContext(ProductContext);
+  const { products, getProduct } = useContext(ProductContext);
+  const prevIds = usePrevious(ids);
+  const prevProducts = usePrevious(products);
 
-  const initCartWithQuota: CartHook["initCartWithQuota"] = useCallback(
-    (quota): void => {
-      setCart(cart => mergeWithCart(cart, quota, getProduct));
-    },
-    [getProduct]
-  );
+  /**
+   * Update the cart whenever the cart quota is updated
+   */
+  useEffect(() => {
+    if (cartQuota && (prevIds !== ids || prevProducts !== products)) {
+      setCart(cart => mergeWithCart(cart, cartQuota, getProduct));
+    }
+  }, [prevIds, ids, prevProducts, products, cartQuota, getProduct]);
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
     setCart([]);
@@ -237,7 +242,6 @@ export const useCart = (
     checkoutCart,
     checkoutResult,
     error,
-    clearError,
-    initCartWithQuota
+    clearError
   };
 };

@@ -113,14 +113,10 @@ describe("useCart", () => {
 
       let ids = ["ID1"];
       const { rerender, result } = renderHook(
-        () => useCart(ids, key, endpoint),
+        () =>
+          useCart(ids, key, endpoint, mockQuotaResMultipleIds.remainingQuota),
         { wrapper }
       );
-      act(() => {
-        result.current.initCartWithQuota(
-          mockQuotaResMultipleIds.remainingQuota
-        );
-      });
 
       ids = ["ID1", "ID2"];
       rerender();
@@ -148,12 +144,12 @@ describe("useCart", () => {
     it("should update the cart when quantities change", () => {
       expect.assertions(1);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       act(() => result.current.updateCart("chocolate", 5));
       expect(result.current.cart).toStrictEqual([
@@ -179,12 +175,12 @@ describe("useCart", () => {
     it("should set error when updateCart is given a negative quantity", () => {
       expect.assertions(2);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       act(() => {
         result.current.updateCart("chocolate", -5);
@@ -214,12 +210,12 @@ describe("useCart", () => {
     it("should set error when updateCart is given a quantity over the limit", () => {
       expect.assertions(2);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       act(() => {
         result.current.updateCart("chocolate", 100);
@@ -248,12 +244,12 @@ describe("useCart", () => {
     it("should set error when updateCart is given a category that does not exist", () => {
       expect.assertions(2);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       act(() => {
         result.current.updateCart("eggs", 1);
@@ -284,12 +280,12 @@ describe("useCart", () => {
     it("should set the correct checkoutResult when checkoutCart is called", async () => {
       expect.assertions(4);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 2);
@@ -330,12 +326,12 @@ describe("useCart", () => {
     it("should set error when no item was selected", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 0);
@@ -369,12 +365,12 @@ describe("useCart", () => {
     it("should set error with message 'Enter or scan code details' when there are multiple identifiers and at least one is empty", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
@@ -452,14 +448,13 @@ describe("useCart", () => {
           {children}
         </ProductContextProvider>
       );
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: SingleIdentifierProductWrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota([
-          mockQuotaResSingleId.remainingQuota[0]
-        ]);
-      });
+      const { result } = renderHook(
+        () =>
+          useCart(ids, key, endpoint, [mockQuotaResSingleId.remainingQuota[0]]),
+        {
+          wrapper: SingleIdentifierProductWrapper
+        }
+      );
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
@@ -497,12 +492,12 @@ describe("useCart", () => {
     it("should set error with message 'Enter unique code details' when identifier values are identical in the same category", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
@@ -560,12 +555,12 @@ describe("useCart", () => {
     it("should set error with message 'Enter unique code details' when some identifier values are identical across different categories", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
@@ -677,14 +672,13 @@ describe("useCart", () => {
           {children}
         </ProductContextProvider>
       );
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: MobileNumberIdentifierProductWrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota([
-          mockQuotaResSingleId.remainingQuota[0]
-        ]);
-      });
+      const { result } = renderHook(
+        () =>
+          useCart(ids, key, endpoint, [mockQuotaResSingleId.remainingQuota[0]]),
+        {
+          wrapper: MobileNumberIdentifierProductWrapper
+        }
+      );
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
@@ -750,14 +744,13 @@ describe("useCart", () => {
           {children}
         </ProductContextProvider>
       );
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: InvalidIdentifierProductWrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota([
-          mockQuotaResSingleId.remainingQuota[0]
-        ]);
-      });
+      const { result } = renderHook(
+        () =>
+          useCart(ids, key, endpoint, [mockQuotaResSingleId.remainingQuota[0]]),
+        {
+          wrapper: InvalidIdentifierProductWrapper
+        }
+      );
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 1, [
@@ -797,12 +790,12 @@ describe("useCart", () => {
     it("should set general error when transaction does not succeed", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(mockQuotaResSingleId.remainingQuota);
-      });
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 2);
@@ -842,14 +835,13 @@ describe("useCart", () => {
     it("should clear cart items when emptyCart is invoked", async () => {
       expect.assertions(1);
       const ids = ["ID1"];
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(
-          mockQuotaResSingleIdAlert.remainingQuota
-        );
-      });
+      const { result } = renderHook(
+        () =>
+          useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
+        {
+          wrapper
+        }
+      );
 
       await wait(() => {
         result.current.emptyCart();
@@ -885,14 +877,13 @@ describe("useCart", () => {
           {children}
         </ProductContextProvider>
       );
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: AlertProductWrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(
-          mockQuotaResSingleIdAlert.remainingQuota
-        );
-      });
+      const { result } = renderHook(
+        () =>
+          useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
+        {
+          wrapper: AlertProductWrapper
+        }
+      );
 
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -953,14 +944,13 @@ describe("useCart", () => {
           {children}
         </ProductContextProvider>
       );
-      const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: AlertProductWrapper
-      });
-      act(() => {
-        result.current.initCartWithQuota(
-          mockQuotaResSingleIdAlert.remainingQuota
-        );
-      });
+      const { result } = renderHook(
+        () =>
+          useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
+        {
+          wrapper: AlertProductWrapper
+        }
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {

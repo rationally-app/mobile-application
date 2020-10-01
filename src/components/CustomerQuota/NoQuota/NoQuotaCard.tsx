@@ -59,7 +59,7 @@ interface NoQuotaCard {
   cart: Cart;
   onCancel: () => void;
   onAppeal?: () => void;
-  quotaResponse: Quota | null;
+  quotaResponse?: Quota;
 }
 
 /**
