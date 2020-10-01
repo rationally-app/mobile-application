@@ -23,7 +23,7 @@ export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
 }) => (
   <Card>
     <AppText>
-      Please log in with your Unique ID provided by your supervisor
+      Please login with your Unique ID provided by your supervisor
     </AppText>
     <View style={styles.scanButtonWrapper}>
       <DarkButton
