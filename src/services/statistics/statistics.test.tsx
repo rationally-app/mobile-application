@@ -1,6 +1,6 @@
 import { getDailyStatistics, StatisticsError } from "./index";
 import { Sentry } from "../../utils/errorTracking";
-import { DailyStatistics } from "../../types";
+import { DailyStatisticsResult } from "../../types";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -12,9 +12,8 @@ jest.spyOn(global, "fetch").mockImplementation(mockFetch);
 describe("statistics", () => {
   let key: string;
   let endpoint: string;
-  let dailyStatsResult;
-  let mockDailyStatsResult: DailyStatistics;
-  let mockDailyStatsResponse: DailyStatistics;
+  let mockDailyStatsResult: DailyStatisticsResult;
+  let mockDailyStatsResponse: any;
   let timestamp: Date;
 
   beforeEach(() => {
@@ -27,31 +26,26 @@ describe("statistics", () => {
       key = "KEY";
       endpoint = "https://myendpoint.com";
 
-      dailyStatsResult = [
+      const dailyStatsResult = [
         {
           category: "toilet-paper",
           quantity: 100,
-          transactionTime: Date.now()
+          transactionTime: 120000000000
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime: Date.now()
+          transactionTime: 120000000000
         },
         {
           category: "chocolate",
           quantity: 30,
-          transactionTime: Date.now()
+          transactionTime: 120000000000
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime: Date.now()
-        },
-        {
-          category: "vouchers",
-          quantity: 1,
-          transactionTime: Date.now()
+          transactionTime: 120000000000
         }
       ];
 
@@ -60,17 +54,18 @@ describe("statistics", () => {
       mockDailyStatsResult = {
         pastTransactions: dailyStatsResult.map(t => ({
           ...t,
-          transactionTime: timestamp.getTime()
+          transactionTime: new Date(120000000000)
         }))
       };
 
       mockDailyStatsResponse = {
         pastTransactions: dailyStatsResult.map(t => ({
           ...t,
-          transactionTime: timestamp.getTime()
+          transactionTime: 120000000000
         }))
       };
     });
+
     it("should return past transactions based on operatorToken", async () => {
       expect.assertions(1);
       mockFetch.mockReturnValueOnce({

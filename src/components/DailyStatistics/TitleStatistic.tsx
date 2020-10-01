@@ -8,7 +8,7 @@ import { format } from "date-fns";
 interface TitleStatisticComponent {
   totalCount: number | null;
   currentTimestamp: number;
-  lastTransactionTime: number;
+  lastTransactionTime: Date | null;
   onPressPrevDay: () => void;
   onPressNextDay: () => void;
 }
@@ -67,8 +67,8 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
       <AppText style={styles.statText}>{totalCount?.toLocaleString()}</AppText>
       <AppText style={styles.smallText}>
         Last distributed at{" "}
-        {lastTransactionTime !== 0
-          ? format(new Date(lastTransactionTime), "h:mma")
+        {lastTransactionTime !== null
+          ? format(lastTransactionTime, "h:mma")
           : "-"}
       </AppText>
       <View style={styles.dateToggle}>

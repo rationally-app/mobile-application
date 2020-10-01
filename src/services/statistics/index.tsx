@@ -1,5 +1,5 @@
 import { IS_MOCK } from "../../config";
-import { DailyStatistics } from "../../types";
+import { DailyStatisticsResult } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import { subDays, addDays, getTime, isSameDay } from "date-fns";
@@ -29,7 +29,7 @@ export const mockGetStatistics = async (
   _token: string,
   _endpoint: string,
   _operatorTokens: string[]
-): Promise<DailyStatistics> => {
+): Promise<DailyStatisticsResult> => {
   const yesterday = getTime(subDays(Date.now(), 1));
   const today = Date.now();
   const tomorrow = getTime(addDays(Date.now(), 1));
@@ -40,27 +40,27 @@ export const mockGetStatistics = async (
         {
           category: "toilet-paper",
           quantity: 100,
-          transactionTime: today
+          transactionTime: new Date(today)
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime: today
+          transactionTime: new Date(today)
         },
         {
           category: "chocolate",
           quantity: 30,
-          transactionTime: today
+          transactionTime: new Date(today)
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime: today
+          transactionTime: new Date(today)
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime: today
+          transactionTime: new Date(today)
         }
       ]
     };
@@ -70,17 +70,17 @@ export const mockGetStatistics = async (
         {
           category: "instant-noodles",
           quantity: 999,
-          transactionTime: yesterday
+          transactionTime: new Date(yesterday)
         },
         {
           category: "chocolate",
           quantity: 3000,
-          transactionTime: yesterday
+          transactionTime: new Date(yesterday)
         },
         {
           category: "vouchers",
           quantity: 20,
-          transactionTime: yesterday
+          transactionTime: new Date(yesterday)
         }
       ]
     };
@@ -90,7 +90,7 @@ export const mockGetStatistics = async (
         {
           category: "vouchers",
           quantity: 9999999,
-          transactionTime: tomorrow
+          transactionTime: new Date(tomorrow)
         }
       ]
     };
@@ -106,7 +106,7 @@ export const liveGetStatistics = async (
   key: string,
   endpoint: string,
   operatorTokens: string[]
-): Promise<DailyStatistics> => {
+): Promise<DailyStatisticsResult> => {
   const {
     startTransactionTime,
     endTransactionTime
@@ -114,7 +114,7 @@ export const liveGetStatistics = async (
 
   try {
     return await fetchWithValidator(
-      DailyStatistics,
+      DailyStatisticsResult,
       `${endpoint}/statistics/staff`,
       {
         method: "POST",

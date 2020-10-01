@@ -1,8 +1,14 @@
-import React, { FunctionComponent, useEffect, useContext } from "react";
+import React, {
+  FunctionComponent,
+  useEffect,
+  useContext,
+  useState
+} from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
+import { AuthContext } from "../../context/auth";
 import { useConfigContext } from "../../context/config";
 import { withNavigationFocus } from "react-navigation";
 import { TitleStatistic } from "./TitleStatistic";
@@ -23,7 +29,7 @@ import {
 } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
-import { useFetchDailyStatistics } from "../../hooks/useFetchDailyStatistics/useFetchDailyStatistics";
+import { useDailyStatistics } from "../../hooks/useFetchDailyStatistics/useFetchDailyStatistics";
 
 const styles = StyleSheet.create({
   content: {
@@ -60,50 +66,30 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const { showAlert } = useContext(AlertModalContext);
+  const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
+  const [currentTimestamp, setCurrentTimestamp] = useState(Date.now());
 
   const {
-    fetchDailyStatistics,
-    currentTimestamp,
-    setCurrentTimestamp,
     lastTransactionTime,
     totalCount,
     transactionHistory,
     error,
-    clearError
-  } = useFetchDailyStatistics();
+    loading
+  } = useDailyStatistics(
+    sessionToken,
+    endpoint,
+    operatorToken,
+    currentTimestamp
+  );
 
   const onPressPrevDay = (): void => {
     const prevDay = getTime(subDays(currentTimestamp, 1));
     setCurrentTimestamp(prevDay);
-    try {
-      fetchDailyStatistics(prevDay);
-    } catch (error) {
-      showAlert({
-        ...systemAlertProps,
-        description: ERROR_MESSAGE.SERVER_ERROR,
-        onOk: () => {
-          navigateHome(navigation);
-          clearError();
-        }
-      });
-    }
   };
 
   const onPressNextDay = (): void => {
     const nextDay = getTime(addDays(currentTimestamp, 1));
     setCurrentTimestamp(nextDay);
-    try {
-      fetchDailyStatistics(nextDay);
-    } catch (error) {
-      showAlert({
-        ...systemAlertProps,
-        description: ERROR_MESSAGE.SERVER_ERROR,
-        onOk: () => {
-          navigateHome(navigation);
-          clearError();
-        }
-      });
-    }
   };
 
   useEffect(() => {
@@ -115,17 +101,9 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
       description: ERROR_MESSAGE.SERVER_ERROR,
       onOk: () => {
         navigateHome(navigation);
-        clearError();
       }
     });
-  }, [error, clearError, navigation, showAlert]);
-
-  useEffect(() => {
-    // When entering the first time
-    if (totalCount === null && !error) {
-      fetchDailyStatistics(Date.now());
-    }
-  });
+  }, [error, navigation, showAlert]);
 
   return (
     <>
@@ -148,7 +126,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
             <TitleStatistic
               totalCount={totalCount ?? 0}
               currentTimestamp={currentTimestamp}
-              lastTransactionTime={lastTransactionTime ?? 0}
+              lastTransactionTime={lastTransactionTime}
               onPressPrevDay={onPressPrevDay}
               onPressNextDay={onPressNextDay}
             />
@@ -158,7 +136,10 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
               <Banner {...messageContent} />
             </View>
           )}
-          <TransactionHistoryCard transactionHistory={transactionHistory} />
+          <TransactionHistoryCard
+            transactionHistory={transactionHistory}
+            loading={loading}
+          />
           <FeatureToggler feature="HELP_MODAL">
             <HelpButton onPress={showHelpModal} />
           </FeatureToggler>

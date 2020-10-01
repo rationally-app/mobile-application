@@ -1,109 +1,136 @@
+import React, { FunctionComponent } from "react";
 import { renderHook } from "@testing-library/react-hooks";
-import { useFetchDailyStatistics } from "./useFetchDailyStatistics";
-import { wait } from "@testing-library/react-native";
+import { useDailyStatistics } from "./useFetchDailyStatistics";
+import { getDailyStatistics } from "../../services/statistics";
+import { ProductContextProvider } from "../../context/products";
+import { defaultIdentifier } from "../../test/helpers/defaults";
+import { CampaignPolicy } from "../../types";
 
 jest.mock("../../services/statistics");
+const mockGetDailyStatistics = getDailyStatistics as jest.Mock;
 
-const setGetStatisticsSpy = jest.fn();
+const key = "KEY";
+const endpoint = "https://myendpoint.com";
+const operatorToken = "operator-token";
+
+const wrapper: FunctionComponent = ({ children }) => (
+  <ProductContextProvider products={customProducts}>
+    {children}
+  </ProductContextProvider>
+);
+
+const customProducts: CampaignPolicy[] = [
+  {
+    category: "tt-token",
+    categoryType: "DEFAULT", // 'DEFAULT' (default) | 'APPEAL'
+    name: "TT Token",
+    order: 1,
+    identifiers: [
+      {
+        ...defaultIdentifier,
+        label: "first"
+      }
+    ],
+    quantity: {
+      period: -1,
+      periodType: "ROLLING",
+      periodExpression: 365,
+      limit: 1,
+      default: 1
+    },
+    type: "REDEEM"
+  },
+  {
+    category: "tt-token-lost",
+    categoryType: "APPEAL",
+    name: "Lost/stolen token",
+    order: 1,
+    alert: {
+      threshold: 2,
+      label: "*chargeable"
+    },
+    quantity: {
+      period: -1,
+      periodType: "ROLLING", // ROLLING | CRON;
+      periodExpression: 365, // TBD
+      limit: 9999,
+      default: 1
+    },
+    identifiers: [
+      {
+        ...defaultIdentifier,
+        label: "first"
+      }
+    ],
+    type: "REDEEM"
+  }
+];
 
 describe("useFetchDailyStatistics", () => {
   beforeEach(() => {
-    setGetStatisticsSpy.mockClear();
+    jest.resetAllMocks();
   });
 
-  let dailyStats: {
-    name: string;
-    category: string;
-    quantityText: string;
-  }[];
-
   it("daily statistics hook should be initialised correctly", async () => {
-    expect.assertions(5);
-    const { result } = renderHook(() => useFetchDailyStatistics());
+    expect.assertions(4);
+    const { result } = renderHook(() =>
+      useDailyStatistics(key, endpoint, operatorToken, Date.now())
+    );
     expect(result.current.error).toBeUndefined();
     expect(result.current.totalCount).toBeNull();
     expect(result.current.lastTransactionTime).toBeNull();
     expect(result.current.transactionHistory).toMatchObject([]);
-    expect(result.current.currentTimestamp).toBeLessThan(Date.now());
   });
 
-  it("should be able to set total count, transaction history and timestamp", async () => {
+  it("should set error if error is thrown while getting daily stats", async () => {
+    expect.assertions(1);
+
+    mockGetDailyStatistics.mockRejectedValue(
+      new Error("Error getting daily statistics")
+    );
+
+    const { result, waitForNextUpdate } = renderHook(
+      () => useDailyStatistics(key, endpoint, operatorToken, Date.now()),
+      { wrapper }
+    );
+
+    await waitForNextUpdate();
+
+    expect(result.current.error?.message).toBe(
+      "Error getting daily statistics"
+    );
+  });
+
+  it("should set last transaction time, total count, transaction history after getting daily stats", async () => {
     expect.assertions(3);
 
-    dailyStats = [
-      {
-        name: "Maggi Mee",
-        category: "instant-noodles",
-        quantityText: "999 packs"
-      },
-      {
-        name: "Hersheys",
-        category: "chocolate",
-        quantityText: "$3,000"
-      }
-    ];
-
-    const { result } = renderHook(() => useFetchDailyStatistics());
-
-    await wait(() => {
-      result.current.setTotalCount(3999);
-      result.current.setCurrentTimestamp(1200000000);
-      result.current.setTransactionHistory(dailyStats);
+    mockGetDailyStatistics.mockResolvedValue({
+      pastTransactions: [
+        {
+          category: "vouchers",
+          quantity: 9999999,
+          transactionTime: new Date(12000000000)
+        }
+      ]
     });
 
-    expect(result.current.totalCount).toBe(3999);
-    expect(result.current.currentTimestamp).toBe(1200000000);
+    const { result, waitForNextUpdate } = renderHook(
+      () => useDailyStatistics(key, endpoint, operatorToken, 12000000000),
+      { wrapper }
+    );
+
+    await waitForNextUpdate();
+
+    expect(result.current.lastTransactionTime).toStrictEqual(
+      new Date(12000000000)
+    );
+    expect(result.current.totalCount).toBe(9999999);
     expect(result.current.transactionHistory).toStrictEqual([
       {
-        category: "instant-noodles",
-        name: "Maggi Mee",
-        quantityText: "999 packs"
-      },
-      { category: "chocolate", name: "Hersheys", quantityText: "$3,000" }
-    ]);
-  });
-
-  it("should be able to set clear all statistics", async () => {
-    expect.assertions(6);
-
-    dailyStats = [
-      {
-        name: "Maggi Mee",
-        category: "instant-noodles",
-        quantityText: "999 packs"
-      },
-      {
-        name: "Hersheys",
-        category: "chocolate",
-        quantityText: "$3,000"
+        category: "vouchers",
+        name: "vouchers",
+        quantityText: "9,999,999 qty"
       }
-    ];
-
-    const { result } = renderHook(() => useFetchDailyStatistics());
-
-    await wait(() => {
-      result.current.setTotalCount(3999);
-      result.current.setCurrentTimestamp(1200000000);
-      result.current.setTransactionHistory(dailyStats);
-    });
-
-    expect(result.current.totalCount).toBe(3999);
-    expect(result.current.currentTimestamp).toBe(1200000000);
-    expect(result.current.transactionHistory).toStrictEqual([
-      {
-        category: "instant-noodles",
-        name: "Maggi Mee",
-        quantityText: "999 packs"
-      },
-      { category: "chocolate", name: "Hersheys", quantityText: "$3,000" }
     ]);
-
-    await wait(() => {
-      result.current.clearStatistics();
-    });
-
-    expect(result.current.totalCount).toBeNull();
-    expect(result.current.currentTimestamp).toBeLessThanOrEqual(Date.now());
-    expect(result.current.transactionHistory).toStrictEqual([]);
   });
 });

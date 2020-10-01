@@ -12,10 +12,10 @@ type SummarisedTransactions = {
 };
 
 export const countTotalTransactionsAndByCategory = (
-  response: DailyStatistics,
+  transactions: DailyStatistics[],
   policies: CampaignPolicy[] | null
 ): SummarisedTransactions => {
-  return chain(response.pastTransactions)
+  return chain(transactions)
     .groupBy("category")
     .reduce<SummarisedTransactions>(
       (prev, transactionsByCategory, key) => {

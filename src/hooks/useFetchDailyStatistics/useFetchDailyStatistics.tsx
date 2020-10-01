@@ -1,43 +1,33 @@
-import { useState, useCallback, useContext } from "react";
-import { AuthContext } from "../../context/auth";
+import { useState, useContext, useEffect } from "react";
+import { usePrevious } from "../usePrevious";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { getDailyStatistics } from "../../services/statistics";
 import { countTotalTransactionsAndByCategory } from "../../components/DailyStatistics/utils";
+import { Sentry } from "../../utils/errorTracking";
 
 export type StatisticsHook = {
   totalCount: number | null;
-  currentTimestamp: number;
-  lastTransactionTime: number | null;
+  lastTransactionTime: Date | null;
   transactionHistory: {
     name: string;
     category: string;
     quantityText: string;
   }[];
-  setTotalCount: (totalCount: number | null) => void;
-  setCurrentTimestamp: (currentTimestamp: number) => void;
-  setLastTransactionTime: (lastTransactionTime: number) => void;
-  setTransactionHistory: (
-    transactionHistory: {
-      name: string;
-      category: string;
-      quantityText: string;
-    }[]
-  ) => void;
-  clearStatistics: () => void;
-  fetchDailyStatistics: (currentTimestamp: number) => void;
   error?: Error;
-  clearError: () => void;
+  loading: boolean;
 };
 
-export const useFetchDailyStatistics = (): StatisticsHook => {
-  const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
-  const { policies } = useContext(CampaignConfigContext);
+export const useDailyStatistics = (
+  sessionToken: string,
+  endpoint: string,
+  operatorToken: string,
+  currentTimestamp: number
+): StatisticsHook => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error>();
   const [totalCount, setTotalCount] = useState<StatisticsHook["totalCount"]>(
     null
   );
-  const [currentTimestamp, setCurrentTimestamp] = useState<
-    StatisticsHook["currentTimestamp"]
-  >(Date.now());
   const [lastTransactionTime, setLastTransactionTime] = useState<
     StatisticsHook["lastTransactionTime"]
   >(null);
@@ -45,19 +35,13 @@ export const useFetchDailyStatistics = (): StatisticsHook => {
     StatisticsHook["transactionHistory"]
   >([]);
 
-  const [error, setError] = useState<Error>();
-  const clearError = useCallback((): void => setError(undefined), []);
+  const { policies } = useContext(CampaignConfigContext);
+  const prevTimestamp = usePrevious(currentTimestamp);
 
-  const clearStatistics: StatisticsHook["clearStatistics"] = useCallback(() => {
-    setTotalCount(null);
-    setCurrentTimestamp(Date.now());
-    setLastTransactionTime(null);
-    setTransactionHistory([]);
-  }, []);
-
-  const fetchDailyStatistics: StatisticsHook["fetchDailyStatistics"] = useCallback(
-    async (currentTimestamp: number): Promise<void> => {
+  useEffect(() => {
+    const fetchDailyStatistics = async (): Promise<void> => {
       try {
+        setLoading(true);
         const response = await getDailyStatistics(
           currentTimestamp,
           sessionToken,
@@ -67,43 +51,45 @@ export const useFetchDailyStatistics = (): StatisticsHook => {
         const {
           summarisedTransactionHistory,
           summarisedTotalCount
-        } = countTotalTransactionsAndByCategory(response, policies);
+        } = countTotalTransactionsAndByCategory(
+          response.pastTransactions,
+          policies
+        );
         setTransactionHistory(summarisedTransactionHistory);
         setTotalCount(summarisedTotalCount);
-        setCurrentTimestamp(currentTimestamp);
 
         if (summarisedTransactionHistory.length !== 0) {
           setLastTransactionTime(response.pastTransactions[0].transactionTime);
         } else {
-          setLastTransactionTime(0);
+          setLastTransactionTime(null);
         }
       } catch (error) {
+        Sentry.captureException(
+          `Unable to fetch daily statistics: ${operatorToken}`
+        );
         setError(error);
+      } finally {
+        setLoading(false);
       }
-    },
-    [
-      endpoint,
-      operatorToken,
-      policies,
-      sessionToken,
-      setCurrentTimestamp,
-      setLastTransactionTime,
-      setTotalCount,
-      setTransactionHistory
-    ]
-  );
+    };
+
+    if (prevTimestamp !== currentTimestamp) {
+      fetchDailyStatistics();
+    }
+  }, [
+    endpoint,
+    operatorToken,
+    policies,
+    sessionToken,
+    currentTimestamp,
+    prevTimestamp
+  ]);
+
   return {
     totalCount,
-    currentTimestamp,
     lastTransactionTime,
     transactionHistory,
-    setTotalCount,
-    setCurrentTimestamp,
-    setLastTransactionTime,
-    setTransactionHistory,
-    clearStatistics,
-    fetchDailyStatistics,
     error,
-    clearError
+    loading
   };
 };

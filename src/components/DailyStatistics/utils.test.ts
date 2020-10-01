@@ -2,51 +2,45 @@ import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
 
 describe("countTotalTransactionsAndByCategory", () => {
-  let pastTransactions: DailyStatistics;
+  let pastTransactions: DailyStatistics[];
   let campaignPolicy: CampaignPolicy[] = [];
-  let pastInstantNoodleTransactions: DailyStatistics;
-  let invalidPastTransactions: DailyStatistics;
+  let pastInstantNoodleTransactions: DailyStatistics[];
+  let invalidPastTransactions: DailyStatistics[];
 
   beforeAll(() => {
-    pastTransactions = {
-      pastTransactions: [
-        {
-          category: "instant-noodles",
-          quantity: 999,
-          transactionTime: 12000000000
-        },
-        {
-          category: "chocolate",
-          quantity: 3000,
-          transactionTime: 12000000000
-        },
-        {
-          category: "vouchers",
-          quantity: 20,
-          transactionTime: 12000000000
-        }
-      ]
-    };
+    pastTransactions = [
+      {
+        category: "instant-noodles",
+        quantity: 999,
+        transactionTime: new Date(12000000000)
+      },
+      {
+        category: "chocolate",
+        quantity: 3000,
+        transactionTime: new Date(12000000000)
+      },
+      {
+        category: "vouchers",
+        quantity: 20,
+        transactionTime: new Date(12000000000)
+      }
+    ];
 
-    pastInstantNoodleTransactions = {
-      pastTransactions: [
-        {
-          category: "instant-noodles",
-          quantity: 999,
-          transactionTime: 12000000000
-        }
-      ]
-    };
+    pastInstantNoodleTransactions = [
+      {
+        category: "instant-noodles",
+        quantity: 999,
+        transactionTime: new Date(12000000000)
+      }
+    ];
 
-    invalidPastTransactions = {
-      pastTransactions: [
-        {
-          category: "funny-category",
-          quantity: 999,
-          transactionTime: 12000000000
-        }
-      ]
-    };
+    invalidPastTransactions = [
+      {
+        category: "funny-category",
+        quantity: 999,
+        transactionTime: new Date(12000000000)
+      }
+    ];
 
     campaignPolicy = [
       {
