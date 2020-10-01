@@ -127,14 +127,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     if (totalCount === null && !error) {
       fetchDailyStatistics(Date.now());
     }
-  }, [
-    totalCount,
-    error,
-    fetchDailyStatistics,
-    clearError,
-    navigation,
-    showAlert
-  ]);
+  }, []);
 
   return (
     <>
