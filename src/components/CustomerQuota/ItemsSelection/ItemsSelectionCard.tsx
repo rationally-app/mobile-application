@@ -12,6 +12,7 @@ import { Item } from "./Item";
 import { ProductContext } from "../../../context/products";
 import {
   AlertModalContext,
+  CONFIRMATION_MESSAGE,
   ERROR_MESSAGE,
   WARNING_MESSAGE
 } from "../../../context/alert";
@@ -102,7 +103,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               isAppeal
                 ? onBack
                 : () => {
-                    showWarnAlert(new Error("cancelEntry"), onCancel);
+                    showWarnAlert(WARNING_MESSAGE.CANCEL_ENTRY, onCancel);
                   }
             }
           />
@@ -127,7 +128,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 ? checkoutCart
                 : () => {
                     showConfirmationAlert(
-                      new Error(WARNING_MESSAGE.PAYMENT_COLLECTION),
+                      CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
                       checkoutCart
                     );
                   }

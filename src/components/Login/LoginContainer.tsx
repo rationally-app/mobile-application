@@ -36,17 +36,15 @@ import { Banner } from "../Layout/Banner";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
+import { requestOTP, LoginError, AuthError } from "../../services/auth";
 import {
-  requestOTP,
-  LoginError,
-  AuthError,
-  LoginLockedError
-} from "../../services/auth";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+  AlertModalContext,
+  CONFIRMATION_MESSAGE,
+  ERROR_MESSAGE
+} from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
-import { SessionError } from "../../services/helpers";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -134,7 +132,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         resolve(true);
       } else {
         showConfirmationAlert(
-          new Error("resendOTP"),
+          CONFIRMATION_MESSAGE.RESEND_OTP,
           () => resolve(true),
           () => resolve(false)
         );
@@ -156,11 +154,8 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof LoginLockedError) {
-        // TODO: To determine if this is the best way to show this
+      if (e instanceof LoginError) {
         showErrorAlert(e, () => resetStage(), { mm: e.message });
-      } else if (e instanceof LoginError) {
-        showErrorAlert(e, () => resetStage());
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -187,7 +182,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
 
       if (queryEndpoint && queryKey) {
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
-          const error = new SessionError(`Invalid endpoint: ${queryEndpoint}`);
+          const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
           showErrorAlert(error);
           setLoginStage("SCAN");

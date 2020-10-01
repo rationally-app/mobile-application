@@ -12,7 +12,13 @@ import {
 import i18n from "i18n-js";
 
 export enum WARNING_MESSAGE {
-  PAYMENT_COLLECTION = "This action cannot be undone. Proceed only when payment has been collected."
+  CANCEL_ENTRY,
+  DISCARD_TRANSACTION
+}
+export enum CONFIRMATION_MESSAGE {
+  PAYMENT_COLLECTION,
+  CONFIRM_LOGOUT,
+  RESEND_OTP
 }
 
 export enum ERROR_MESSAGE {
@@ -60,7 +66,10 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   AuthTakenError: "alreadyUsedQRCode",
   AuthExpiredError: "expiredQR",
   AuthNotFoundError: "expiredQR",
-  AuthInvalidError: "wrongFormatQRScanAgain"
+  AuthInvalidError: "wrongFormatQRScanAgain",
+  ScannerError: "errorScanning",
+  LimitReachedError: "scanLimitReached",
+  NotEligibleError: "notEligible"
 };
 
 const getTranslationKeyFromError = (error: Error): string => {
@@ -70,7 +79,7 @@ const getTranslationKeyFromError = (error: Error): string => {
   );
 };
 
-const errorMessageToTranslationKeyMappings: Record<string, string> = {
+const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT]: "alreadyUsedCode",
   [ERROR_MESSAGE.DUPLICATE_POD_INPUT]: "alreadyUsedItem",
   [ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT]: "wrongFormatCode",
@@ -99,12 +108,16 @@ const errorMessageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.OTP_EXPIRED]: "expiredOTP",
   [ERROR_MESSAGE.LOGIN_ERROR]: "systemErrorLoginIssue",
   [ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR]: "systemErrorServerIssues",
-  [WARNING_MESSAGE.PAYMENT_COLLECTION]: "paymentCollected",
-  [ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR]: "checkIdFormat"
+  [ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR]: "checkIdFormat",
+  [CONFIRMATION_MESSAGE.PAYMENT_COLLECTION]: "paymentCollected",
+  [CONFIRMATION_MESSAGE.CONFIRM_LOGOUT]: "confirmLogout",
+  [CONFIRMATION_MESSAGE.RESEND_OTP]: "resendOTP",
+  [WARNING_MESSAGE.CANCEL_ENTRY]: "cancelEntry",
+  [WARNING_MESSAGE.DISCARD_TRANSACTION]: "discardTransaction"
 };
 
 const getTranslationKeyFromErrorMessage = (message: string): string => {
-  return errorMessageToTranslationKeyMappings[message] ?? message;
+  return messageToTranslationKeyMappings[message] ?? message;
 };
 
 const defaultAlertProps: AlertModalProps = {
@@ -121,7 +134,7 @@ const defaultAlertProps: AlertModalProps = {
 
 interface AlertModalContext {
   showConfirmationAlert: (
-    error: Error,
+    confirmation: CONFIRMATION_MESSAGE,
     onOk: () => void,
     onCancel?: () => void,
     content?: Record<string, string>
@@ -132,7 +145,7 @@ interface AlertModalContext {
     content?: Record<string, string>
   ) => void;
   showWarnAlert: (
-    error: Error,
+    warning: WARNING_MESSAGE,
     onOk: () => void,
     content?: Record<string, string>
   ) => void;
@@ -160,12 +173,12 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
 
   const showConfirmationAlert = useCallback(
     (
-      error: Error,
+      confirmation: CONFIRMATION_MESSAGE,
       onOk: () => void,
       onCancel?: () => void,
       content?: Record<string, string>
     ): void => {
-      const translationKey = getTranslationKeyFromError(error);
+      const translationKey = messageToTranslationKeyMappings[confirmation];
       showAlert({
         alertType: "CONFIRM",
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Confirm",
@@ -199,7 +212,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Error",
         description:
           i18n.t(`errorMessages.${translationKey}.body`, content) ??
-          translationKey,
+          error.message,
         buttonTexts: {
           primaryActionText:
             i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",
@@ -218,11 +231,11 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
 
   const showWarnAlert = useCallback(
     (
-      error: Error,
+      warning: WARNING_MESSAGE,
       onOk: () => void,
       content?: Record<string, string>
     ): void => {
-      const translationKey = getTranslationKeyFromError(error);
+      const translationKey = messageToTranslationKeyMappings[warning];
       showAlert({
         alertType: "WARN",
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Warning",

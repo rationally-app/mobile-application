@@ -242,7 +242,7 @@
       "primaryActionText": "确定"
     },
     "notEligible": {
-      "title": "无效",
+      "title": "不符合资格",
       "body": "请提出上诉。",
       "primaryActionText": "确定"
     }
