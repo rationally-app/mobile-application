@@ -1,5 +1,6 @@
 import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
+import { formatQuantityText } from "../../components/CustomerQuota/utils";
 
 type SummarisedTransactions = {
   summarisedTransactionHistory: {
@@ -40,13 +41,3 @@ export const countTotalTransactionsAndByCategory = (
     )
     .value();
 };
-
-export const formatQuantityText = (
-  quantity: number,
-  unit?: CampaignPolicy["quantity"]["unit"]
-): string =>
-  unit
-    ? unit?.type === "PREFIX"
-      ? `${unit.label}${quantity.toLocaleString()}`
-      : `${quantity.toLocaleString()}${unit.label}`
-    : `${quantity.toLocaleString()}`;
