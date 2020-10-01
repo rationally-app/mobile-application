@@ -1,6 +1,7 @@
 import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
 import { formatQuantityText } from "../../components/CustomerQuota/utils";
+import { Sentry } from "../../utils/errorTracking";
 
 type SummarisedTransactions = {
   summarisedTransactionHistory: {
@@ -24,7 +25,14 @@ export const countTotalTransactionsAndByCategory = (
           "quantity"
         );
         prev.summarisedTransactionHistory.push({
-          name: policies?.find(item => item.category === key)?.name ?? key,
+          name:
+            policies?.find(item => item.category === key)?.name ??
+            (() => {
+              Sentry.captureException(
+                `Unable to find item category in policies: ${key}}`
+              );
+              return key;
+            })(),
           category: key,
           quantityText: formatQuantityText(
             totalQuantityInCategory,
