@@ -219,7 +219,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     ) {
       showErrorAlert(validityError, onModalExit);
     }
-  }, [validityError]);
+  }, [validityError, onModalExit, showErrorAlert]);
 
   const closeCamera = useCallback(() => setShouldShowCamera(false), []);
   const openCamera = useCallback(() => {
