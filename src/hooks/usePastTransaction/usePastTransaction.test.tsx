@@ -1,16 +1,24 @@
 import React, { FunctionComponent } from "react";
 import { renderHook } from "@testing-library/react-hooks";
 import { usePastTransaction } from "./usePastTransaction";
-import { getPastTransactions } from "../../services/quota";
+import {
+  getPastTransactions,
+  PastTransactionError
+} from "../../services/quota";
 import { PastTransactionsResult, CampaignPolicy } from "../../types";
 import { defaultIdentifier } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 import { ERROR_MESSAGE } from "../../context/alert";
 
-jest.mock("../../services/quota");
+jest.mock("../../services/quota", () => {
+  const actualModule = jest.requireActual("../../services/quota");
+  return {
+    ...actualModule,
+    // Only mock
+    getPastTransactions: jest.fn()
+  };
+});
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
-
-const { PastTransactionError } = jest.requireActual("../../services/quota");
 
 const ids = ["ID1"];
 const key = "KEY";
@@ -205,7 +213,7 @@ describe("usePastTransaction", () => {
       await waitForNextUpdate();
 
       expect(result.current.pastTransactionsResult).toBeNull();
-      expect(result.current.error instanceof Error).toStrictEqual(true);
+      expect(result.current.error).toBeInstanceOf(PastTransactionError);
       expect(result.current.error?.message).toStrictEqual(
         ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
       );
