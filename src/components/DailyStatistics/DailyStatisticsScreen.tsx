@@ -110,16 +110,14 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     if (!error) {
       return;
     }
-    if (error) {
-      showAlert({
-        ...systemAlertProps,
-        description: ERROR_MESSAGE.SERVER_ERROR,
-        onOk: () => {
-          navigateHome(navigation);
-          clearError();
-        }
-      });
-    }
+    showAlert({
+      ...systemAlertProps,
+      description: ERROR_MESSAGE.SERVER_ERROR,
+      onOk: () => {
+        navigateHome(navigation);
+        clearError();
+      }
+    });
   }, [error, clearError, navigation, showAlert]);
 
   useEffect(() => {
@@ -127,7 +125,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     if (totalCount === null && !error) {
       fetchDailyStatistics(Date.now());
     }
-  }, []);
+  });
 
   return (
     <>
