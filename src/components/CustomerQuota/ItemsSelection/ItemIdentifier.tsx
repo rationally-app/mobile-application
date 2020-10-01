@@ -7,10 +7,7 @@ import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
 import i18n from "i18n-js";
-import {
-  AlertModalContext,
-  getTranslationKeyFromError
-} from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
