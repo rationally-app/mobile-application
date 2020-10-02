@@ -95,11 +95,17 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
     const fileType = uriParts[uriParts.length - 1];
     // Upload the image using the fetch and FormData APIs
     const formData = new FormData();
-    formData.append("mrzphoto", {
+    const blobData = {
       uri,
       name: `photo.${fileType}`,
       type: `image/${fileType}`
-    });
+    } as any;
+    // formData.append("mrzphoto", {
+    //   uri,
+    //   name: `photo.${fileType}`,
+    //   type: `image/${fileType}`
+    // });
+    formData.append("mrzphoto", blobData);
 
     fetch(
       "https://bp4woe2v2k.execute-api.ap-southeast-1.amazonaws.com/pr159/mrz",
