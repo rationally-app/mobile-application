@@ -25,6 +25,7 @@ import { useDrawerContext } from "../../context/drawer";
 import { LoadingView } from "../Loading";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
+import { sortBy } from "lodash";
 
 const styles = StyleSheet.create({
   content: {
@@ -127,6 +128,18 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     navigateToCampaignLocation,
     navigation
   ]);
+  const authCredentialsWithCampaignName = Object.entries(authCredentials).map(
+    ([key, credentials]) => ({
+      ...credentials,
+      key,
+      name: allCampaignConfigs[key]?.features?.campaignName
+    })
+  );
+
+  const sortedAuthCredentialsWithCampaignName = sortBy(
+    authCredentialsWithCampaignName,
+    "name"
+  );
 
   return (
     <>
@@ -148,20 +161,19 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
               <AppText style={styles.selectCampaignHeader}>
                 Select campaign
               </AppText>
-              {Object.entries(authCredentials).map(
-                ([key, credentials], idx) => (
-                  <View key={key} style={styles.campaignLocationWrapper}>
-                    <CampaignLocationsListItem
-                      {...credentials}
-                      name={
-                        allCampaignConfigs[key]?.features?.campaignName ||
-                        `Campaign ${idx + 1}`
-                      }
-                      onPress={() => navigateToCampaignLocation(credentials)}
-                    />
-                  </View>
-                )
-              )}
+
+              {sortedAuthCredentialsWithCampaignName.map((credentials, idx) => (
+                <View
+                  key={credentials.key}
+                  style={styles.campaignLocationWrapper}
+                >
+                  <CampaignLocationsListItem
+                    {...credentials}
+                    name={credentials.name || `Campaign ${idx + 1}`}
+                    onPress={() => navigateToCampaignLocation(credentials)}
+                  />
+                </View>
+              ))}
             </Card>
           ) : (
             <Card style={styles.loadingViewWrapper}>

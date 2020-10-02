@@ -62,7 +62,7 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
     })();
   }, []);
 
-  const snapPhoto = async () => {
+  const snapPhoto = async (): Promise<void> => {
     const photo = await cameraRef?.takePictureAsync({ quality: 0.5 });
     onResult("Processing....");
     closeCamera();

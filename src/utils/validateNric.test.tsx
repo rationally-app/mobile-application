@@ -18,7 +18,7 @@ describe("validateAndCleanNric", () => {
 
   it("should throw error for invalid NRIC", () => {
     expect.assertions(7);
-    const errorMessage = "Enter or scan valid ID number.";
+    const errorMessage = "Enter or scan a valid ID number.";
     expect(() => validateAndCleanNric("S0000001A")).toThrow(errorMessage);
     expect(() => validateAndCleanNric("123AS0000001I")).toThrow(errorMessage);
     expect(() => validateAndCleanNric("S0000001A123A")).toThrow(errorMessage);

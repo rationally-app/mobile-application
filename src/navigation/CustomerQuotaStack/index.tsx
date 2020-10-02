@@ -11,6 +11,7 @@ import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
+import DailyStatisticsScreen from "./DailyStatisticsScreen";
 
 const Stack = createStackNavigator(
   {
@@ -22,6 +23,9 @@ const Stack = createStackNavigator(
     },
     CustomerAppealScreen: {
       screen: CustomerAppealScreen
+    },
+    DailyStatisticsScreen: {
+      screen: DailyStatisticsScreen
     }
   },
   {
