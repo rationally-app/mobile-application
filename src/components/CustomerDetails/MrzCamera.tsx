@@ -101,14 +101,18 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
       type: `image/${fileType}`
     });
 
-    fetch("http://192.168.50.57:4000/mrz", {
-    // fetch("http://192.168.1.187:4000/mrz", {
-      method: "POST",
-      body: formData,
-      headers: {
-        "content-type": "multipart/form-data"
+    fetch(
+      "https://bp4woe2v2k.execute-api.ap-southeast-1.amazonaws.com/pr159/mrz",
+      {
+        // fetch("http://192.168.50.57:4000/mrz", {
+        // fetch("http://192.168.1.187:4000/mrz", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "content-type": "multipart/form-data"
+        }
       }
-    })
+    )
       .then(response => response.json())
       .then(data => {
         console.log(data.data);
