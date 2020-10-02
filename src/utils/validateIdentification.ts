@@ -2,6 +2,7 @@ import { validateAndCleanNric } from "./validateNric";
 import { validateAndCleanRegexInput } from "./validateInputWithRegex";
 import { CampaignConfigError } from "../services/campaignConfig";
 import { ERROR_MESSAGE } from "../context/alert";
+import { validateAndCleanPassport } from "./validatePassport";
 
 export const validateAndCleanId = (
   inputId: string,
@@ -9,9 +10,13 @@ export const validateAndCleanId = (
   idRegex?: string
 ): string => {
   let id: string;
+  console.log(idValidation);
   switch (idValidation) {
     case "NRIC":
       id = validateAndCleanNric(inputId);
+      break;
+    case "PASSPORT":
+      id = validateAndCleanPassport(inputId);
       break;
     case "REGEX":
       if (!idRegex) {

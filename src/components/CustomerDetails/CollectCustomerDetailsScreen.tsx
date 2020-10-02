@@ -2,7 +2,8 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useContext
+  useContext,
+  useCallback
 } from "react";
 import {
   View,
@@ -37,6 +38,14 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
+import { InputSelection } from "./InputSelection";
+import { ManualPassportInput } from "./ManualPassportInput";
+import { IdentificationFlag } from "../../types";
+import {
+  IdentificationContext,
+  defaultSelectedIdType
+} from "../../context/identification";
+import { MrzCamera } from "./MrzCamera";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
@@ -99,6 +108,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
+  const [shouldShowMrzCamera, setShouldShowMrzCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [idInput, setIdInput] = useState("");
   const { config } = useConfigContext();
@@ -106,6 +116,20 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const checkUpdates = useCheckUpdates();
   const { showAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
+  const { selectedIdType, setSelectedIdType } = useContext(
+    IdentificationContext
+  );
+  const [mrzResult, setMrzResult] = useState("MRZ image");
+
+  const getSelectionArray = useCallback((): IdentificationFlag[] => {
+    const selectionArray = [];
+    selectionArray.push(features?.id || defaultSelectedIdType);
+    features?.alternateIds &&
+      features.alternateIds.map(alternateId =>
+        selectionArray.push(alternateId)
+      );
+    return selectionArray;
+  }, [features]);
 
   useEffect(() => {
     if (isFocused) {
@@ -128,19 +152,36 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           setShouldShowCamera(false);
           return true;
         }
+
+        if (shouldShowMrzCamera) {
+          setShouldShowMrzCamera(false);
+          return true;
+        }
         return false;
       }
     );
     return () => {
       backHandler.remove();
     };
-  }, [shouldShowCamera]);
+  }, [shouldShowCamera, shouldShowMrzCamera]);
 
   useEffect(() => {
-    if (shouldShowCamera) {
+    if (shouldShowCamera || shouldShowMrzCamera) {
       Keyboard.dismiss();
     }
-  }, [shouldShowCamera]);
+  }, [shouldShowCamera, shouldShowMrzCamera]);
+
+  useEffect(() => {
+    const selectionDetails = getSelectionArray();
+    // in the event the saved selection not found.. will always fall back to the first idType in array
+    setSelectedIdType(
+      selectionDetails.some(
+        selection => selection.label === selectedIdType.label
+      )
+        ? selectedIdType
+        : selectionDetails[0]
+    );
+  }, [getSelectionArray, selectedIdType, setSelectedIdType]);
 
   const onCheck = async (input: string): Promise<void> => {
     try {
@@ -150,8 +191,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       }
       const id = validateAndCleanId(
         input,
-        features.id.validation,
-        features.id.validationRegex
+        selectedIdType.validation,
+        selectedIdType.validationRegex
       );
       Vibration.vibrate(50);
       const defaultProducts = policies?.filter(
@@ -180,6 +221,35 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
+  const onInputSelection = (inputType: IdentificationFlag): void => {
+    setSelectedIdType(inputType);
+  };
+
+  const hasMultiInputSelection = (): boolean => {
+    return getSelectionArray().length > 1;
+  };
+
+  const getInputComponent = (): JSX.Element => {
+    return selectedIdType.label === "Passport" &&
+      selectedIdType.scannerType === "NONE" ? (
+      <ManualPassportInput
+        openCamera={() => setShouldShowMrzCamera(true)}
+        closeCamera={() => setShouldShowMrzCamera(false)}
+        mrzResult={mrzResult}
+        setIdInput={setIdInput}
+        submitId={() => onCheck(idInput)}
+      />
+    ) : (
+      <InputIdSection
+        openCamera={() => setShouldShowCamera(true)}
+        idInput={idInput}
+        setIdInput={setIdInput}
+        submitId={() => onCheck(idInput)}
+        keyboardType={features?.id.type === "NUMBER" ? "numeric" : "default"}
+      />
+    );
+  };
+
   const onPressStatistics = (): void => {
     navigation.navigate("DailyStatisticsScreen");
   };
@@ -193,6 +263,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           <View style={styles.headerText}>
             <AppHeader mode={config.appMode} />
           </View>
+          {hasMultiInputSelection() && (
+            <InputSelection
+              selectionArray={getSelectionArray()}
+              currentSelection={selectedIdType}
+              onInputSelection={onInputSelection}
+            />
+          )}
           {messageContent && (
             <View style={styles.bannerWrapper}>
               <Banner {...messageContent} />
@@ -207,15 +284,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             <AppText>
               Check the number of item(s) eligible for redemption
             </AppText>
-            <InputIdSection
-              openCamera={() => setShouldShowCamera(true)}
-              idInput={idInput}
-              setIdInput={setIdInput}
-              submitId={() => onCheck(idInput)}
-              keyboardType={
-                features?.id.type === "NUMBER" ? "numeric" : "default"
-              }
-            />
+            {getInputComponent()}
             <TouchableOpacity
               onPress={onPressStatistics}
               style={styles.statsButton}
@@ -245,6 +314,12 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               ? [BarCodeScanner.Constants.BarCodeType.qr]
               : [BarCodeScanner.Constants.BarCodeType.code39]
           }
+        />
+      )}
+      {shouldShowMrzCamera && (
+        <MrzCamera
+          onResult={(result: string) => setMrzResult(result)}
+          closeCamera={() => setShouldShowMrzCamera(false)}
         />
       )}
     </>
