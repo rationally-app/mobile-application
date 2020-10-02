@@ -126,8 +126,8 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data.data);
-        const details = data.data;
+        console.log(data.dataDetails);
+        const details = data.dataDetails;
         const passportNoField = details.find(
           (field: { field: string; value: string }) => {
             return field.field === "documentNumber";
