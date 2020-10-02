@@ -1,4 +1,9 @@
-import React, { useState, FunctionComponent, useEffect } from "react";
+import React, {
+  useState,
+  FunctionComponent,
+  useEffect,
+  useContext
+} from "react";
 import {
   StyleSheet,
   View,
@@ -11,6 +16,7 @@ import { size } from "../../common/styles";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { Camera } from "expo-camera";
+import { AuthContext } from "../../context/auth";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -48,6 +54,7 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
   onResult,
   closeCamera
 }) => {
+  const { sessionToken, endpoint } = useContext(AuthContext);
   const [cameraRef, setCameraRef] = useState<Camera | null>(null);
 
   useEffect(() => {
@@ -107,18 +114,16 @@ export const MrzCamera: FunctionComponent<MrzCamera> = ({
     // });
     formData.append("mrzphoto", blobData);
 
-    fetch(
-      "https://bp4woe2v2k.execute-api.ap-southeast-1.amazonaws.com/pr159/mrz",
-      {
-        // fetch("http://192.168.50.57:4000/mrz", {
-        // fetch("http://192.168.1.187:4000/mrz", {
-        method: "POST",
-        body: formData,
-        headers: {
-          "content-type": "multipart/form-data"
-        }
+    fetch(`${endpoint}/mrz`, {
+      // fetch("http://192.168.50.57:4000/mrz", {
+      // fetch("http://192.168.1.187:4000/mrz", {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: sessionToken,
+        "content-type": "multipart/form-data"
       }
-    )
+    })
       .then(response => response.json())
       .then(data => {
         console.log(data.data);
