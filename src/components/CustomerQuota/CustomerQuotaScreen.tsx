@@ -157,31 +157,35 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       return;
     }
     if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
-      if (error.message === ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT) {
-        const missingIdentifierInputError = new Error(
-          campaignFeatures?.campaignName === "TT Tokens"
-            ? ERROR_MESSAGE.MISSING_POD_INPUT
-            : campaignFeatures?.campaignName.includes("Vouchers")
-            ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
-            : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
-        );
-        showErrorAlert(missingIdentifierInputError, () => clearError());
-      } else if (error.message === ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT) {
-        const invalidIdentifierInputError = new Error(
-          campaignFeatures?.campaignName === "TT Tokens"
-            ? ERROR_MESSAGE.INVALID_POD_INPUT
-            : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
-        );
-        showErrorAlert(invalidIdentifierInputError, () => clearError());
-      } else if (error.message === ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT) {
-        const duplicateIdentifierInputError = new Error(
-          campaignFeatures?.campaignName === "TT Tokens"
-            ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
-            : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
-        );
-        showErrorAlert(duplicateIdentifierInputError, () => clearError());
-      } else {
-        showErrorAlert(error, () => clearError());
+      switch (error.message) {
+        case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
+          const missingIdentifierInputError = new Error(
+            campaignFeatures?.campaignName === "TT Tokens"
+              ? ERROR_MESSAGE.MISSING_POD_INPUT
+              : campaignFeatures?.campaignName.includes("Vouchers")
+              ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
+              : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
+          );
+          showErrorAlert(missingIdentifierInputError, () => clearError());
+          break;
+        case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
+          const invalidIdentifierInputError = new Error(
+            campaignFeatures?.campaignName === "TT Tokens"
+              ? ERROR_MESSAGE.INVALID_POD_INPUT
+              : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+          );
+          showErrorAlert(invalidIdentifierInputError, () => clearError());
+          break;
+        case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
+          const duplicateIdentifierInputError = new Error(
+            campaignFeatures?.campaignName === "TT Tokens"
+              ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
+              : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
+          );
+          showErrorAlert(duplicateIdentifierInputError, () => clearError());
+          break;
+        default:
+          showErrorAlert(error, () => clearError());
       }
     } else {
       throw new Error(error.message);

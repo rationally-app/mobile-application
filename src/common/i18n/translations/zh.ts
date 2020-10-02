@@ -81,10 +81,10 @@ export const zh: Translations = {
     previouslyRedeemed: "已领取过",
     showMore: "显示更多内容",
     showLess: "隐藏内容",
-    today: "今天",
-    limitReachedRecent: "%{time} 前达到领取限额",
-    limitReachedDate: "在 %{dateTime} 达到领取限额",
-    limitReached: "达到领取限额",
+    today: "今天的",
+    limitReachedRecent: "%{time} 前达到%{today}领取限额",
+    limitReachedDate: "在 %{dateTime} 达到%{today}领取限额",
+    limitReached: "达到%{today}领取限额",
     redeemedLimitReached: "到 %{date} 为止还有%{quantity}件物品",
     valid: "有效",
     complete: "确认交易",
@@ -118,7 +118,7 @@ export const zh: Translations = {
     },
     disabledAccess: {
       title: "无法进入",
-      body: "请在 %{mm} 分钟后再试。",
+      body: "请在 %{minutes} 分钟后再试。",
       primaryActionText: "确定"
     },
     cancelEntry: {
@@ -334,8 +334,8 @@ export const zh: Translations = {
     discardTransaction: {
       title: "清除交易?",
       body: "已扫描的物品将会被清除。",
-      primaryActionText: "取消",
-      secondaryActionText: "清除"
+      primaryActionText: "清除",
+      secondaryActionText: "取消"
     },
     errorScanning: {
       title: "扫描失败",
@@ -361,6 +361,17 @@ export const zh: Translations = {
       title: "不符合资格",
       body: "请提出上诉。",
       primaryActionText: "确定"
+    },
+    invalidMerchantCode: {
+      title: "错误",
+      body: "商家代码无效",
+      primaryActionText: "确定"
+    },
+    removeVoucher: {
+      title: "清除物品?",
+      body: "您要清除%{voucherSerial}吗?",
+      primaryActionText: "清除",
+      secondaryActionText: "取消"
     }
   }
 };

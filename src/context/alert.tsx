@@ -12,13 +12,14 @@ import {
 import i18n from "i18n-js";
 
 export enum WARNING_MESSAGE {
-  CANCEL_ENTRY,
-  DISCARD_TRANSACTION
+  CANCEL_ENTRY = "cancelEntry",
+  DISCARD_TRANSACTION = "discardTransaction"
 }
 export enum CONFIRMATION_MESSAGE {
-  PAYMENT_COLLECTION,
-  CONFIRM_LOGOUT,
-  RESEND_OTP
+  PAYMENT_COLLECTION = "paymentCollected",
+  CONFIRM_LOGOUT = "confirmLogout",
+  RESEND_OTP = "resendOTP",
+  REMOVE_VOUCHER = "removeVoucher"
 }
 
 export enum ERROR_MESSAGE {
@@ -50,7 +51,8 @@ export enum ERROR_MESSAGE {
   OTP_EXPIRED = "Get a new OTP and try again.",
   LOGIN_ERROR = "We are currently facing login issues. Get a new QR code from your in-charge.",
   PAST_TRANSACTIONS_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists.",
-  VALIDATE_INPUT_REGEX_ERROR = "Please check that the ID is in the correct format"
+  VALIDATE_INPUT_REGEX_ERROR = "Please check that the ID is in the correct format",
+  INVALID_MERCHANT_CODE = "Invalid merchant code"
 }
 
 const errorNameToTranslationKeyMappings: Record<string, string> = {
@@ -109,11 +111,14 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.LOGIN_ERROR]: "systemErrorLoginIssue",
   [ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR]: "systemErrorServerIssues",
   [ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR]: "checkIdFormat",
-  [CONFIRMATION_MESSAGE.PAYMENT_COLLECTION]: "paymentCollected",
-  [CONFIRMATION_MESSAGE.CONFIRM_LOGOUT]: "confirmLogout",
-  [CONFIRMATION_MESSAGE.RESEND_OTP]: "resendOTP",
-  [WARNING_MESSAGE.CANCEL_ENTRY]: "cancelEntry",
-  [WARNING_MESSAGE.DISCARD_TRANSACTION]: "discardTransaction"
+  [ERROR_MESSAGE.INVALID_MERCHANT_CODE]: "invalidMerchantCode",
+  [CONFIRMATION_MESSAGE.PAYMENT_COLLECTION]:
+    CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
+  [CONFIRMATION_MESSAGE.CONFIRM_LOGOUT]: CONFIRMATION_MESSAGE.CONFIRM_LOGOUT,
+  [CONFIRMATION_MESSAGE.RESEND_OTP]: CONFIRMATION_MESSAGE.RESEND_OTP,
+  [CONFIRMATION_MESSAGE.REMOVE_VOUCHER]: CONFIRMATION_MESSAGE.REMOVE_VOUCHER,
+  [WARNING_MESSAGE.CANCEL_ENTRY]: WARNING_MESSAGE.CANCEL_ENTRY,
+  [WARNING_MESSAGE.DISCARD_TRANSACTION]: WARNING_MESSAGE.DISCARD_TRANSACTION
 };
 
 const getTranslationKeyFromErrorMessage = (message: string): string => {
@@ -173,16 +178,20 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
 
   const showConfirmationAlert = useCallback(
     (
-      confirmation: CONFIRMATION_MESSAGE,
-      onOk: () => void,
-      onCancel?: () => void,
-      content?: Record<string, string>
+      confirmationMessage: CONFIRMATION_MESSAGE,
+      onClickPrimaryAction: () => void,
+      onClickSecondaryAction?: () => void,
+      dynamicContent?: Record<string, string>
     ): void => {
-      const translationKey = messageToTranslationKeyMappings[confirmation];
+      const translationKey =
+        messageToTranslationKeyMappings[confirmationMessage];
       showAlert({
         alertType: "CONFIRM",
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Confirm",
-        description: i18n.t(`errorMessages.${translationKey}.body`, content),
+        description: i18n.t(
+          `errorMessages.${translationKey}.body`,
+          dynamicContent
+        ),
         buttonTexts: {
           primaryActionText: i18n.t(
             `errorMessages.${translationKey}.primaryActionText`
@@ -192,8 +201,8 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
           )
         },
         visible: true,
-        onOk: onOk,
-        onCancel: onCancel ?? undefined,
+        onOk: onClickPrimaryAction,
+        onCancel: onClickSecondaryAction ?? (() => {}),
         onExit: () => {}
       });
     },
@@ -203,16 +212,17 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
   const showErrorAlert = useCallback(
     (
       error: Error,
-      onOk?: () => void,
-      content?: Record<string, string>
+      onClickPrimaryAction?: () => void,
+      dynamicContent?: Record<string, string>
     ): void => {
       const translationKey = getTranslationKeyFromError(error);
       showAlert({
         alertType: "ERROR",
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Error",
-        description:
-          i18n.t(`errorMessages.${translationKey}.body`, content) ??
-          error.message,
+        description: i18n.t(
+          `errorMessages.${translationKey}.body`,
+          dynamicContent
+        ),
         buttonTexts: {
           primaryActionText:
             i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",
@@ -221,7 +231,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
           )
         },
         visible: true,
-        onOk: !!onOk ? onOk : () => {},
+        onOk: !!onClickPrimaryAction ? onClickPrimaryAction : () => {},
         onCancel: () => {},
         onExit: () => {}
       });
@@ -231,17 +241,18 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
 
   const showWarnAlert = useCallback(
     (
-      warning: WARNING_MESSAGE,
-      onOk: () => void,
-      content?: Record<string, string>
+      warningMessage: WARNING_MESSAGE,
+      onClickPrimaryAction: () => void,
+      dynamicContent?: Record<string, string>
     ): void => {
-      const translationKey = messageToTranslationKeyMappings[warning];
+      const translationKey = messageToTranslationKeyMappings[warningMessage];
       showAlert({
         alertType: "WARN",
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Warning",
-        description:
-          i18n.t(`errorMessages.${translationKey}.body`, content) ??
-          translationKey,
+        description: i18n.t(
+          `errorMessages.${translationKey}.body`,
+          dynamicContent
+        ),
         buttonTexts: {
           primaryActionText: i18n.t(
             `errorMessages.${translationKey}.primaryActionText`
@@ -251,7 +262,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
           )
         },
         visible: true,
-        onOk: onOk,
+        onOk: onClickPrimaryAction,
         onCancel: () => {},
         onExit: () => {}
       });

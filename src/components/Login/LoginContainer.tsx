@@ -156,7 +156,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
-        showErrorAlert(e, () => resetStage(), { mm: e.message });
+        showErrorAlert(e, () => resetStage(), { minutes: e.message });
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle

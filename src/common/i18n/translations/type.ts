@@ -404,5 +404,17 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    invalidMerchantCode: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
+    removeVoucher: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
   };
 };

@@ -84,9 +84,9 @@ export const en: Translations = {
     showMore: "Show more",
     showLess: "Show less",
     today: "for today",
-    limitReachedRecent: "Limit reached %{time} ago",
-    limitReachedDate: "Limit reached on %{dateTime}",
-    limitReached: "Limit reached",
+    limitReachedRecent: "Limit reached %{time} ago %{today}",
+    limitReachedDate: "Limit reached on %{dateTime} %{today}",
+    limitReached: "Limit reached %{today}",
     redeemedLimitReached: "%{quantity} item(s) more till %{date}",
     valid: "Valid",
     complete: "Complete",
@@ -121,7 +121,7 @@ export const en: Translations = {
     },
     disabledAccess: {
       title: "Disabled access",
-      body: "Try again in %{mm} minutes.",
+      body: "Try again in %{minutes} minutes.",
       primaryActionText: "OK"
     },
     cancelEntry: {
@@ -343,8 +343,8 @@ export const en: Translations = {
     discardTransaction: {
       title: "Discard transaction?",
       body: "This will clear all scanned items",
-      primaryActionText: "Cancel",
-      secondaryActionText: "Discard"
+      primaryActionText: "Discard",
+      secondaryActionText: "Cancel"
     },
     errorScanning: {
       title: "Error scanning",
@@ -370,6 +370,17 @@ export const en: Translations = {
       title: "Not eligible",
       body: "Please log an appeal request.",
       primaryActionText: "OK"
+    },
+    invalidMerchantCode: {
+      title: "Error",
+      body: "Invalid merchant code",
+      primaryActionText: "OK"
+    },
+    removeVoucher: {
+      title: "Remove item?",
+      body: "Do you want to remove this item: %{voucherSerial}?",
+      primaryActionText: "Remove",
+      secondaryActionText: "Cancel"
     }
   }
 };

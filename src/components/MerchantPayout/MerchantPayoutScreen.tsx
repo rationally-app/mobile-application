@@ -41,7 +41,11 @@ import {
 import { AuthContext } from "../../context/auth";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { SessionError } from "../../services/helpers";
-import { AlertModalContext, WARNING_MESSAGE } from "../../context/alert";
+import {
+  AlertModalContext,
+  CONFIRMATION_MESSAGE,
+  WARNING_MESSAGE
+} from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import i18n from "i18n-js";
 import { LimitReachedError } from "../../utils/validateVoucherCode";
@@ -86,7 +90,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     false
   );
   const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
-  const { showWarnAlert, showErrorAlert } = useContext(AlertModalContext);
+  const { showWarnAlert, showErrorAlert, showConfirmationAlert } = useContext(
+    AlertModalContext
+  );
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 
@@ -100,6 +106,15 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     error: merchantError,
     resetState: resetVoucherState
   } = useVoucher(sessionToken, endpoint);
+
+  const handleRemoveVoucher = (voucherSerial: string): void => {
+    showConfirmationAlert(
+      CONFIRMATION_MESSAGE.REMOVE_VOUCHER,
+      () => removeVoucher(voucherSerial),
+      undefined,
+      { voucherSerial: voucherSerial }
+    );
+  };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -165,13 +180,18 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   }, [setAuthCredentials, endpoint, operatorToken, sessionToken]);
 
   useEffect(() => {
-    if (validityError instanceof SessionError) {
+    if (
+      validityError instanceof ScannerError ||
+      validityError instanceof LimitReachedError
+    ) {
+      showErrorAlert(validityError, onModalExit);
+    } else if (validityError instanceof SessionError) {
       expireSession();
       showErrorAlert(validityError, () => {
         navigation.navigate("CampaignLocationsScreen");
       });
     }
-  }, [expireSession, navigation, showErrorAlert, validityError]);
+  }, [expireSession, navigation, showErrorAlert, validityError, onModalExit]);
 
   const redeemVouchers = (): void => {
     checkoutVouchers(merchantCode);
@@ -212,15 +232,6 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     resetVoucherState,
     showErrorAlert
   ]);
-
-  useEffect(() => {
-    if (
-      validityError instanceof ScannerError ||
-      validityError instanceof LimitReachedError
-    ) {
-      showErrorAlert(validityError, onModalExit);
-    }
-  }, [validityError, onModalExit, showErrorAlert]);
 
   const closeCamera = useCallback(() => setShouldShowCamera(false), []);
   const openCamera = useCallback(() => {
@@ -289,7 +300,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         <AllValidVouchersModal
           vouchers={vouchers}
           isVisible={showAllValidVouchersModal}
-          onVoucherCodeRemove={removeVoucher}
+          onVoucherCodeRemove={handleRemoveVoucher}
           onExit={() => setShowAllValidVouchersModal(false)}
         />
       </KeyboardAvoidingScrollView>
