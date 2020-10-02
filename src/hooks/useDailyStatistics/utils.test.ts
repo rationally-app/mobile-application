@@ -148,13 +148,20 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 pack(s)"
+          quantityText: "999 pack(s)",
+          descriptionAlert: undefined
         },
-        { category: "chocolate", name: "🍫 Chocolate", quantityText: "$3,000" },
+        {
+          category: "chocolate",
+          name: "🍫 Chocolate",
+          quantityText: "$3,000",
+          descriptionAlert: undefined
+        },
         {
           category: "vouchers",
           name: "Funfair Vouchers",
-          quantityText: "20 qty"
+          quantityText: "20 qty",
+          descriptionAlert: undefined
         }
       ]
     });
@@ -173,7 +180,8 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 pack(s)"
+          quantityText: "999 pack(s)",
+          descriptionAlert: undefined
         }
       ]
     });
@@ -192,7 +200,8 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "funny-category",
           name: "funny-category",
-          quantityText: "999 qty"
+          quantityText: "999 qty",
+          descriptionAlert: undefined
         }
       ]
     });
