@@ -41,6 +41,37 @@ describe("validateIdentifierInputs", () => {
     ).toBe(true);
   });
 
+  it("should throw error if input is phone number and fails default regex", () => {
+    expect.assertions(3);
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "input without +",
+          value: "1234567",
+          textInputType: "PHONE_NUMBER"
+        }
+      ])
+    ).toThrow("Enter a valid country code and contact number.");
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "input with invalid characters",
+          value: "+1234567~",
+          textInputType: "PHONE_NUMBER"
+        }
+      ])
+    ).toThrow("Enter a valid country code and contact number.");
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "input with spaces",
+          value: "+1234567 890",
+          textInputType: "PHONE_NUMBER"
+        }
+      ])
+    ).toThrow("Enter a valid country code and contact number.");
+  });
+
   it("should throw error if at least one of the identifiers does not match the given regex pattern", () => {
     expect.assertions(2);
     expect(() =>

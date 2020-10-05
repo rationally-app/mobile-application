@@ -39,13 +39,13 @@ import { DOMAIN_FORMAT } from "../../config";
 import { requestOTP, LoginError, AuthError } from "../../services/auth";
 import {
   AlertModalContext,
-  systemAlertProps,
-  ERROR_MESSAGE,
-  defaultConfirmationProps
+  CONFIRMATION_MESSAGE,
+  ERROR_MESSAGE
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
+import i18n from "i18n-js";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -111,7 +111,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   >();
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showConfirmationAlert, showErrorAlert } = useContext(
+    AlertModalContext
+  );
   const lastResendWarningMessageRef = useRef("");
 
   useEffect(() => {
@@ -130,18 +132,11 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       if (!lastResendWarningMessageRef.current) {
         resolve(true);
       } else {
-        showAlert({
-          ...defaultConfirmationProps,
-          title: "Resend OTP?",
-          description: lastResendWarningMessageRef.current,
-          buttonTexts: {
-            primaryActionText: "Resend",
-            secondaryActionText: "No"
-          },
-          onOk: () => resolve(true),
-          onCancel: () => resolve(false),
-          visible: true
-        });
+        showConfirmationAlert(
+          CONFIRMATION_MESSAGE.RESEND_OTP,
+          () => resolve(true),
+          () => resolve(false)
+        );
       }
     });
   };
@@ -161,7 +156,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
+        showErrorAlert(e, () => resetStage(), { minutes: e.message });
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -190,10 +185,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
-          showAlert({
-            ...systemAlertProps,
-            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-          });
+          showErrorAlert(error);
           setLoginStage("SCAN");
         } else {
           setTempAuthCredentials({
@@ -205,7 +197,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       }
     };
     skipScanningIfParamsInDeepLink();
-  }, [showAlert]);
+  }, [showErrorAlert]);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
@@ -254,7 +246,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
         if (e instanceof AuthError) {
-          showAlert(e.alertProps);
+          showErrorAlert(e);
         } else {
           setState(() => {
             throw error; // Let ErrorBoundary handle

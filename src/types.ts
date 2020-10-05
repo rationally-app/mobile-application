@@ -221,3 +221,21 @@ export type Voucher = {
   serial: string;
   denomination: number;
 };
+
+const DailyStatistics = t.intersection([
+  t.type({
+    category: t.string,
+    quantity: t.number,
+    transactionTime: DateFromNumber
+  }),
+  t.partial({
+    identifierInputs: t.array(IdentifierInput)
+  })
+]);
+
+export const DailyStatisticsResult = t.type({
+  pastTransactions: t.array(DailyStatistics)
+});
+
+export type DailyStatistics = t.TypeOf<typeof DailyStatistics>;
+export type DailyStatisticsResult = t.TypeOf<typeof DailyStatisticsResult>;

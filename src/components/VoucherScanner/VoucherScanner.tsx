@@ -19,6 +19,7 @@ import { Feather } from "@expo/vector-icons";
 import { ManualAddVoucherModal } from "./ManualAddVoucherModal";
 import { SafeAreaView } from "react-navigation";
 import { Voucher } from "../../types";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -112,7 +113,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
                 fontFamily: "brand-bold"
               }}
             >
-              Scan to check validity
+              {i18n.t("idScanner.scanToCheck")}
             </AppText>
           ) : (
             <ValidVoucherCount
@@ -138,12 +139,15 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
         <View style={styles.bottomSectionWrapper}>
           <View style={styles.manualInputButtonWrapper}>
             <SecondaryButton
-              text="Enter manually"
+              text={i18n.t("idScanner.enterManually")}
               onPress={openInputModal}
               fullWidth={true}
             />
           </View>
-          <DarkButton text="Complete" onPress={onCancel} />
+          <DarkButton
+            text={i18n.t("checkoutSuccessScreen.complete")}
+            onPress={onCancel}
+          />
         </View>
         <ManualAddVoucherModal
           isVisible={showManualInput}

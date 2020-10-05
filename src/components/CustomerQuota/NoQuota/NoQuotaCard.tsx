@@ -30,10 +30,11 @@ import {
 import { AppealButton } from "./AppealButton";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
-import { AlertModalContext, systemAlertProps } from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
+import i18n from "i18n-js";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
@@ -95,7 +96,10 @@ export const groupTransactionsByCategory = (
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
+        policy?.quantity.unit || {
+          type: "POSTFIX",
+          label: ` ${i18n.t("checkoutSuccessScreen.quantity")}`
+        }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
       order: -1
@@ -187,15 +191,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
 
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
     if (error) {
-      showAlert({
-        ...systemAlertProps,
-        description: error.message || ""
-      });
+      showErrorAlert(error);
     }
-  }, [error, showAlert]);
+  }, [error, showErrorAlert]);
 
   const latestTransactionTime: Date | undefined =
     (quotaResponse && getLatestTransactionTime(cart)) ?? undefined;
@@ -277,8 +278,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               transactionsByCategoryList.length > 0 && (
                 <View>
                   <AppText style={styles.wrapper}>
-                    Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
-                    previously:
+                    {policyType === "REDEEM"
+                      ? `${i18n.t(
+                          "checkoutSuccessScreen.previouslyRedeemedItems"
+                        )}:`
+                      : `${i18n.t(
+                          "checkoutSuccessScreen.previouslyPurchasedItems"
+                        )}:`}
                   </AppText>
                   {transactionsByCategoryList.map(
                     (
@@ -311,7 +317,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
+        <DarkButton
+          text={i18n.t("checkoutSuccessScreen.redeemedNextIdentity")}
+          onPress={onCancel}
+          fullWidth={true}
+        />
       </View>
       {onAppeal && hasAppealProduct ? (
         <AppealButton onAppeal={onAppeal} />

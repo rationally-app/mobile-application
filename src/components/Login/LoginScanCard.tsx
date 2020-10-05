@@ -5,6 +5,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -22,12 +23,10 @@ export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   isLoading
 }) => (
   <Card>
-    <AppText>
-      Please login with your Unique ID provided by your supervisor
-    </AppText>
+    <AppText>{i18n.t("loginScanCard.loginWithQR")}</AppText>
     <View style={styles.scanButtonWrapper}>
       <DarkButton
-        text="Scan to Login"
+        text={i18n.t("loginScanCard.scanToLogin")}
         onPress={onToggleScanner}
         icon={
           <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
