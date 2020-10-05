@@ -38,19 +38,19 @@ const filterQuotaWithAvailableProducts = (
   );
 
   transform(
-    quota.globalQuota!,
+    quota.globalQuota,
     (result: Quota, itemQuota) => {
       if (products.some(policy => policy.category === itemQuota.category))
-        result.globalQuota!.push(itemQuota);
+        result.globalQuota.push(itemQuota);
     },
     filteredQuota
   );
 
   transform(
-    quota.localQuota!,
+    quota.localQuota,
     (result: Quota, itemQuota) => {
       if (products.some(policy => policy.category === itemQuota.category))
-        result.localQuota!.push(itemQuota);
+        result.localQuota.push(itemQuota);
     },
     filteredQuota
   );

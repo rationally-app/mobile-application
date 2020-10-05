@@ -137,6 +137,10 @@ export const useCart = (
       cartQuota &&
       (!prevCartQuota || prevIds !== ids || prevProducts !== products)
     ) {
+      /**
+       * Caveat: We must use a callback within this setState to avoid
+       * having `cart` as a dependency, preventing an infinite loop.
+       */
       setCart(cart => mergeWithCart(cart, cartQuota, getProduct));
     }
   }, [

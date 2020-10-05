@@ -392,6 +392,8 @@ describe("useQuota", () => {
         }
       ]);
     });
+
+    // TODO: Make this clearer
     it("should set quota state to be NOT_ELIGIBLE when NotEligibleError is thrown, and would not continue with fetching quota", async () => {
       expect.assertions(1);
 
