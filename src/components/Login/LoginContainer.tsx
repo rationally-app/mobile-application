@@ -17,7 +17,7 @@ import { NavigationProps, AuthCredentials } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { size, borderRadius, color } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
-import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
+import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
 import { decodeQr } from "./utils";
