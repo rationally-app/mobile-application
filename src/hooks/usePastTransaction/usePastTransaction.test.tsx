@@ -10,7 +10,14 @@ import { defaultIdentifier } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 import { ERROR_MESSAGE } from "../../context/alert";
 
-jest.mock("../../services/quota");
+jest.mock("../../services/quota", () => {
+  const actualModule = jest.requireActual("../../services/quota");
+  return {
+    ...actualModule,
+    // Only mock
+    getPastTransactions: jest.fn()
+  };
+});
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
 
 const ids = ["ID1"];
@@ -195,7 +202,7 @@ describe("usePastTransaction", () => {
     it("should return PAST_TRANSACTION_ERROR when error thrown", async () => {
       expect.assertions(4);
       mockGetPastTransactions.mockRejectedValue(
-        new PastTransactionError("Some random error")
+        new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
       );
 
       const { result, waitForNextUpdate } = renderHook(
@@ -206,7 +213,7 @@ describe("usePastTransaction", () => {
       await waitForNextUpdate();
 
       expect(result.current.pastTransactionsResult).toBeNull();
-      expect(result.current.error instanceof Error).toStrictEqual(true);
+      expect(result.current.error).toBeInstanceOf(PastTransactionError);
       expect(result.current.error?.message).toStrictEqual(
         ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
       );

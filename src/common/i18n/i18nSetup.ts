@@ -9,3 +9,6 @@ i18n.translations = {
   zh,
   en
 };
+i18n.missingTranslation = () => {
+  return undefined;
+};

@@ -35,7 +35,7 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
   title,
   details,
   closeModal,
-  ctaButtonText = i18n.t("idScanner.continueScanning")
+  ctaButtonText = i18n.t("errorMessages.errorScanning.primaryActionText")
 }) => {
   return (
     <Card style={styles.card}>

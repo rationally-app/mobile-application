@@ -11,60 +11,61 @@ import {
 export const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
   toggleTimeSensitiveTitle: boolean;
-}> = ({ transactionTime, toggleTimeSensitiveTitle }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {i18n.t("checkoutSuccessScreen.limitReachedDate", {
-        dateTime: formatDateTime(transactionTime)
-      })}
-    </AppText>
-    {toggleTimeSensitiveTitle ? (
+}> = ({ transactionTime, toggleTimeSensitiveTitle }) => {
+  const today = toggleTimeSensitiveTitle
+    ? `${i18n.t("checkoutSuccessScreen.today")}`
+    : "";
+  return (
+    <>
       <AppText style={sharedStyles.statusTitle}>
-        {` ${i18n.t("checkoutSuccessScreen.today")}.`}
+        {i18n.t("checkoutSuccessScreen.limitReachedDate", {
+          dateTime: formatDateTime(transactionTime),
+          today
+        })}
+        .
       </AppText>
-    ) : (
-      <AppText style={sharedStyles.statusTitle}>.</AppText>
-    )}
-  </>
-);
+    </>
+  );
+};
 
 export const RecentTransactionTitle: FunctionComponent<{
   now: Date;
   transactionTime: Date;
   toggleTimeSensitiveTitle: boolean;
-}> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {`${i18n.t("checkoutSuccessScreen.limitReachedRecent", {
-        time: formatTimeDifference(now, transactionTime)
-      })}.`}
-    </AppText>
-    {toggleTimeSensitiveTitle ? (
+}> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => {
+  const today = toggleTimeSensitiveTitle
+    ? `${i18n.t("checkoutSuccessScreen.today")}`
+    : "";
+  return (
+    <>
       <AppText style={sharedStyles.statusTitle}>
-        {` ${i18n.t("checkoutSuccessScreen.today")}.`}
+        {`${i18n.t("checkoutSuccessScreen.limitReachedRecent", {
+          time: formatTimeDifference(now, transactionTime),
+          today
+        })}`}
+        .
       </AppText>
-    ) : (
-      <AppText style={sharedStyles.statusTitle}>.</AppText>
-    )}
-  </>
-);
+    </>
+  );
+};
 
 export const NoPreviousTransactionTitle: FunctionComponent<{
   toggleTimeSensitiveTitle: boolean;
-}> = ({ toggleTimeSensitiveTitle }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {i18n.t("checkoutSuccessScreen.limitReached")}
-    </AppText>
-    {toggleTimeSensitiveTitle ? (
+}> = ({ toggleTimeSensitiveTitle }) => {
+  const today = toggleTimeSensitiveTitle
+    ? `${i18n.t("checkoutSuccessScreen.today")}`
+    : "";
+  return (
+    <>
       <AppText style={sharedStyles.statusTitle}>
-        {` ${i18n.t("checkoutSuccessScreen.today")}.`}
+        {i18n.t("checkoutSuccessScreen.limitReached", {
+          today
+        })}
+        .
       </AppText>
-    ) : (
-      <AppText style={sharedStyles.statusTitle}>.</AppText>
-    )}
-  </>
-);
+    </>
+  );
+};
 
 export const UsageQuotaTitle: FunctionComponent<{
   quantity: number;

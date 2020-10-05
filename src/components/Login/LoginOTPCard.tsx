@@ -66,7 +66,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   );
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   const setState = useState()[1];
 
   useEffect(() => {
@@ -106,9 +106,9 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     } catch (e) {
       Sentry.captureException(e);
       if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
-        showAlert(e.alertProps);
+        showErrorAlert(e);
       } else if (e instanceof LoginError) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
+        showErrorAlert(e, () => resetStage());
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle

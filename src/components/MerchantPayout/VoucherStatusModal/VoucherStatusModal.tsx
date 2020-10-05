@@ -1,17 +1,11 @@
 import React, { FunctionComponent } from "react";
-import {
-  View,
-  StyleSheet,
-  Modal,
-  ActivityIndicator,
-  Alert
-} from "react-native";
+import { View, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import { InvalidCard } from "./InvalidCard";
 import { color, size } from "../../../common/styles";
 import {
-  ScannerError,
   useCheckVoucherValidity,
-  InvalidVoucherError
+  InvalidVoucherError,
+  ScannerError
 } from "../../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { NotEligibleError } from "../../../services/quota";
 import { AppText } from "../../Layout/AppText";
@@ -70,16 +64,6 @@ const NoPreviousTransactionTitle: FunctionComponent = () => (
   </AppText>
 );
 
-const showAlert = (
-  title: string,
-  message: string,
-  ctaText: string,
-  onDismiss: () => void
-): void =>
-  Alert.alert(title, message, [{ text: ctaText, onPress: onDismiss }], {
-    onDismiss: onDismiss // for android outside alert clicks
-  });
-
 interface VoucherStatusModal {
   checkValidityState: useCheckVoucherValidity["checkValidityState"];
   error?: useCheckVoucherValidity["error"];
@@ -87,34 +71,21 @@ interface VoucherStatusModal {
 }
 
 export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
-  onExit,
   checkValidityState,
-  error
+  error,
+  onExit
 }) => {
   const isVisible = checkValidityState === "CHECKING_VALIDITY";
 
   let card;
-  if (error instanceof ScannerError) {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        showAlert("Error scanning", error.message, "Continue scanning", onExit);
-      });
-    });
+
+  const title = i18n.t(`errorMessages.notEligible.title`);
+  const details = i18n.t(`errorMessages.notEligible.body`);
+
+  if (error instanceof ScannerError || error instanceof LimitReachedError) {
     return null;
-  } else if (error instanceof LimitReachedError) {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        showAlert("Scan limit reached", error.message, "OK", onExit);
-      });
-    });
   } else if (error instanceof NotEligibleError) {
-    card = (
-      <InvalidCard
-        title="Invalid"
-        details="Please log an appeal request"
-        closeModal={onExit}
-      />
-    );
+    card = <InvalidCard title={title} details={details} closeModal={onExit} />;
   } else if (error instanceof InvalidVoucherError) {
     const secondsFromLatestTransaction = error.getSecondsFromLatestTransaction();
     const title =
@@ -132,18 +103,12 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
       ) : (
         <NoPreviousTransactionTitle />
       );
-    card = (
-      <InvalidCard
-        title={title}
-        details="Please log an appeal request"
-        closeModal={onExit}
-      />
-    );
+    card = <InvalidCard title={title} details={details} closeModal={onExit} />;
   } else if (error instanceof Error) {
     card = (
       <InvalidCard
-        title="Invalid"
-        details={error.message || "Please log an appeal request"}
+        title={title}
+        details={error.message || details}
         closeModal={onExit}
       />
     );

@@ -35,8 +35,8 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
 import i18n from "i18n-js";
+import { AlertModalContext } from "../../context/alert";
 
 const styles = StyleSheet.create({
   content: {
@@ -88,7 +88,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
 
   useEffect(() => {
@@ -150,11 +150,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
-      showAlert({
-        ...wrongFormatAlertProps,
-        description: e.message,
-        onOk: () => setIsScanningEnabled(true)
-      });
+      showErrorAlert(e, () => setIsScanningEnabled(true));
     }
   };
 
