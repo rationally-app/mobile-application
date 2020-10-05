@@ -6,6 +6,7 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { AppText } from "../Layout/AppText";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { size, color, fontSize } from "../../common/styles";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -59,7 +60,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text="Scan identification"
+          text={i18n.t("collectCustomerDetailsScreen.scanIdentification")}
           icon={
             <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
           }
@@ -69,13 +70,15 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
       <View style={{ position: "relative" }}>
         <View style={styles.horizontalRule} />
         <View style={styles.orWrapper}>
-          <AppText style={styles.orText}>OR</AppText>
+          <AppText style={styles.orText}>
+            {i18n.t("collectCustomerDetailsScreen.or")}
+          </AppText>
         </View>
       </View>
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <InputWithLabel
-            label="Enter ID number"
+            label={i18n.t("collectCustomerDetailsScreen.enterIdNumber")}
             value={idInput}
             onChange={({ nativeEvent: { text } }) => setIdInput(text)}
             onSubmitEditing={submitId}
@@ -84,7 +87,10 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
             keyboardType={keyboardType}
           />
         </View>
-        <SecondaryButton text="Check" onPress={submitId} />
+        <SecondaryButton
+          text={i18n.t("collectCustomerDetailsScreen.check")}
+          onPress={submitId}
+        />
       </View>
     </>
   );

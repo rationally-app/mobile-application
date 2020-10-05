@@ -27,6 +27,7 @@ import { AuthContext } from "../../context/auth";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { useQuota } from "../../hooks/useQuota/useQuota";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -136,7 +137,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         )}
         <ReasonSelectionCard
           ids={ids}
-          reasonSelectionHeader={"Indicate reason for appeal"}
+          reasonSelectionHeader={i18n.t("customerAppealScreen.indicateReason")}
           reasons={getReasons()}
           onCancel={onCancel}
           onReasonSelection={onReasonSelection}

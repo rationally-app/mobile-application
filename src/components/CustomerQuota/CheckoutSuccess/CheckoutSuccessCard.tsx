@@ -25,8 +25,9 @@ import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
+import i18n from "i18n-js";
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
-import { AlertModalContext, systemAlertProps } from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -49,7 +50,10 @@ const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {quantity} item(s) more till {formatDate(quotaRefreshTime)}.
+      {`${i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
+        quantity: quantity,
+        date: formatDate(quotaRefreshTime)
+      })}`}
     </AppText>
   </>
 );
@@ -101,7 +105,10 @@ export const groupTransactionsByTime = (
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
+        policy?.quantity.unit || {
+          type: "POSTFIX",
+          label: ` ${i18n.t("checkoutSuccessScreen.quantity")}`
+        }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
       order: policy?.order ?? BIG_NUMBER
@@ -140,15 +147,12 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
 
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
     if (error) {
-      showAlert({
-        ...systemAlertProps,
-        description: error.message || ""
-      });
+      showErrorAlert(error);
     }
-  }, [error, showAlert]);
+  }, [error, showErrorAlert]);
 
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,

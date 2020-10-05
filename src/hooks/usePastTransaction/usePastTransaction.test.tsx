@@ -10,7 +10,14 @@ import { defaultIdentifier } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 import { ERROR_MESSAGE } from "../../context/alert";
 
-jest.mock("../../services/quota");
+jest.mock("../../services/quota", () => {
+  const actualModule = jest.requireActual("../../services/quota");
+  return {
+    ...actualModule,
+    // Only mock
+    getPastTransactions: jest.fn()
+  };
+});
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
 
 const ids = ["ID1"];
@@ -19,7 +26,7 @@ const endpoint = "https://myendpoint.com";
 
 const customProducts: CampaignPolicy[] = [
   {
-    category: "tt-token",
+    category: "specs",
     categoryType: "DEFAULT", // 'DEFAULT' (default) | 'APPEAL'
     name: "TT Token",
     order: 1,
@@ -39,7 +46,7 @@ const customProducts: CampaignPolicy[] = [
     type: "REDEEM"
   },
   {
-    category: "tt-token-lost",
+    category: "specs-lost",
     categoryType: "APPEAL",
     name: "Lost/stolen token",
     order: 1,
@@ -67,7 +74,7 @@ const customProducts: CampaignPolicy[] = [
 const mockPastTransactions: PastTransactionsResult = {
   pastTransactions: [
     {
-      category: "tt-token",
+      category: "specs",
       quantity: 1,
       identifierInputs: [
         {
@@ -79,7 +86,7 @@ const mockPastTransactions: PastTransactionsResult = {
       transactionTime: new Date(1596530356430)
     },
     {
-      category: "tt-token-lost",
+      category: "specs-lost",
       quantity: 1,
       identifierInputs: [
         {
@@ -91,7 +98,7 @@ const mockPastTransactions: PastTransactionsResult = {
       transactionTime: new Date(1596530356431)
     },
     {
-      category: "tt-token-lost",
+      category: "specs-lost",
       quantity: 1,
       identifierInputs: [
         {
@@ -136,7 +143,7 @@ describe("usePastTransaction", () => {
 
       expect(result.current.pastTransactionsResult).toStrictEqual([
         {
-          category: "tt-token",
+          category: "specs",
           quantity: 1,
           identifierInputs: [
             {
@@ -148,7 +155,7 @@ describe("usePastTransaction", () => {
           transactionTime: new Date(1596530356430)
         },
         {
-          category: "tt-token-lost",
+          category: "specs-lost",
           quantity: 1,
           identifierInputs: [
             {
@@ -160,7 +167,7 @@ describe("usePastTransaction", () => {
           transactionTime: new Date(1596530356431)
         },
         {
-          category: "tt-token-lost",
+          category: "specs-lost",
           quantity: 1,
           identifierInputs: [
             {
@@ -195,7 +202,7 @@ describe("usePastTransaction", () => {
     it("should return PAST_TRANSACTION_ERROR when error thrown", async () => {
       expect.assertions(4);
       mockGetPastTransactions.mockRejectedValue(
-        new PastTransactionError("Some random error")
+        new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
       );
 
       const { result, waitForNextUpdate } = renderHook(
@@ -206,7 +213,7 @@ describe("usePastTransaction", () => {
       await waitForNextUpdate();
 
       expect(result.current.pastTransactionsResult).toBeNull();
-      expect(result.current.error instanceof Error).toStrictEqual(true);
+      expect(result.current.error).toBeInstanceOf(PastTransactionError);
       expect(result.current.error?.message).toStrictEqual(
         ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
       );

@@ -11,7 +11,7 @@ import {
   Vibration,
   BackHandler
 } from "react-native";
-import { size, fontSize, borderRadius } from "../../common/styles";
+import { size, fontSize, borderRadius, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -21,6 +21,7 @@ import {
   withNavigationFocus,
   NavigationFocusInjectedProps
 } from "react-navigation";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IdScanner } from "../IdScanner/IdScanner";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { validateAndCleanId } from "../../utils/validateIdentification";
@@ -35,7 +36,9 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { AlertModalContext, wrongFormatAlertProps } from "../../context/alert";
+import i18n from "i18n-js";
+import { AlertModalContext } from "../../context/alert";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
   content: {
@@ -65,7 +68,22 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     padding: size(1),
     marginRight: -size(1),
-    marginTop: -size(0.5)
+    marginTop: -size(0.5),
+    marginBottom: size(3)
+  },
+  statsButton: {
+    marginTop: size(4),
+    flexDirection: "row",
+    alignSelf: "center"
+  },
+  statsText: {
+    marginTop: size(4),
+    fontSize: fontSize(0)
+  },
+  statsIcon: {
+    marginTop: size(4),
+    alignSelf: "center",
+    marginRight: size(0.5)
   }
 });
 
@@ -87,7 +105,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
 
   useEffect(() => {
@@ -149,11 +167,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       setIdInput("");
     } catch (e) {
       setIsScanningEnabled(false);
-      showAlert({
-        ...wrongFormatAlertProps,
-        description: e.message,
-        onOk: () => setIsScanningEnabled(true)
-      });
+      showErrorAlert(e, () => setIsScanningEnabled(true));
     }
   };
 
@@ -161,6 +175,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     if (isFocused && isScanningEnabled && event.data) {
       onCheck(event.data);
     }
+  };
+
+  const onPressStatistics = (): void => {
+    navigation.navigate("DailyStatisticsScreen");
   };
 
   return (
@@ -184,7 +202,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               </AppText>
             )}
             <AppText>
-              Check the number of item(s) eligible for redemption
+              {i18n.t("collectCustomerDetailsScreen.checkEligibleItems")}
             </AppText>
             <InputIdSection
               openCamera={() => setShouldShowCamera(true)}
@@ -195,6 +213,18 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 features?.id.type === "NUMBER" ? "numeric" : "default"
               }
             />
+            <TouchableOpacity
+              onPress={onPressStatistics}
+              style={styles.statsButton}
+            >
+              <MaterialCommunityIcons
+                style={styles.statsIcon}
+                name="poll"
+                size={size(2)}
+                color={color("blue", 50)}
+              />
+              <AppText style={styles.statsText}>Go to statistics</AppText>
+            </TouchableOpacity>
           </Card>
           <FeatureToggler feature="HELP_MODAL">
             <HelpButton onPress={showHelpModal} />
@@ -206,7 +236,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText="Enter ID manually"
+          cancelButtonText={i18n.t("idScanner.enterIdManually")}
           barCodeTypes={
             features?.id.scannerType === "QR"
               ? [BarCodeScanner.Constants.BarCodeType.qr]
