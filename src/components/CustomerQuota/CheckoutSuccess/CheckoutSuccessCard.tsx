@@ -53,7 +53,7 @@ const UsageQuotaTitle: FunctionComponent<{
       {`${i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
         quantity: quantity,
         date: formatDate(quotaRefreshTime)
-      })}.`}
+      })}`}
     </AppText>
   </>
 );

@@ -22,7 +22,6 @@ export const DistantTransactionTitle: FunctionComponent<{
           dateTime: formatDateTime(transactionTime),
           today
         })}
-        .
       </AppText>
     </>
   );
@@ -43,7 +42,6 @@ export const RecentTransactionTitle: FunctionComponent<{
           time: formatTimeDifference(now, transactionTime),
           today
         })}`}
-        .
       </AppText>
     </>
   );
@@ -61,7 +59,6 @@ export const NoPreviousTransactionTitle: FunctionComponent<{
         {i18n.t("checkoutSuccessScreen.limitReached", {
           today
         })}
-        .
       </AppText>
     </>
   );
@@ -77,7 +74,7 @@ export const UsageQuotaTitle: FunctionComponent<{
       {`${i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
         quantity: quantity,
         date: formatDate(quotaRefreshTime)
-      })}.`}
+      })}`}
     </AppText>
   </>
 );
