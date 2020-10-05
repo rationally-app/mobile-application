@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
-import { renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 import { useQuota } from "./useQuota";
-import { Quota } from "../../types";
+import { CampaignPolicy, Quota } from "../../types";
 import { NotEligibleError, getQuota } from "../../services/quota";
 import { defaultProducts } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
@@ -279,8 +279,11 @@ const mockIdNotEligible: any = (id: string) => {
   }
 };
 
-const wrapper: FunctionComponent = ({ children }) => (
-  <ProductContextProvider products={defaultProducts}>
+const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
+  products = defaultProducts,
+  children
+}) => (
+  <ProductContextProvider products={products}>
     {children}
   </ProductContextProvider>
 );
@@ -450,7 +453,36 @@ describe("useQuota", () => {
       ]);
     });
 
-    // TODO: Write test to make sure quotaResponse is retrieved when product changes
-    it.todo("should update the quota when products change");
+    it("should update the quota when products change", async () => {
+      expect.assertions(2);
+      const ids = ["ID1"];
+      mockGetQuota.mockReturnValue(mockQuotaResSingleId);
+      const { rerender, result, waitForNextUpdate } = renderHook(
+        () => useQuota(ids, key, endpoint),
+        {
+          wrapper
+        }
+      );
+      await waitForNextUpdate();
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
+        {
+          category: "toilet-paper",
+          identifierInputs: [],
+          transactionTime,
+          quantity: 2
+        },
+        {
+          category: "chocolate",
+          identifierInputs: [],
+          transactionTime,
+          quantity: 15
+        }
+      ]);
+      act(() => {
+        rerender({ products: [] });
+      });
+      await waitForNextUpdate();
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([]);
+    });
   });
 });
