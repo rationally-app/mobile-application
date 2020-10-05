@@ -61,7 +61,6 @@ export type Camera = Pick<
 > & {
   cancelButtonText?: string;
   onCancel?: () => void;
-  hasLimitedInterestArea?: boolean;
   interestAreaLayout?: LayoutRectangle;
 };
 
@@ -69,7 +68,6 @@ export const Camera: FunctionComponent<Camera> = ({
   onBarCodeScanned,
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39],
   children,
-  hasLimitedInterestArea,
   interestAreaLayout
 }) => {
   return (
@@ -79,7 +77,7 @@ export const Camera: FunctionComponent<Camera> = ({
       style={styles.scanner}
     >
       {children}
-      {hasLimitedInterestArea && interestAreaLayout && (
+      {interestAreaLayout && (
         <LightBox
           width={interestAreaLayout.width}
           height={interestAreaLayout.height}
@@ -99,6 +97,7 @@ interface IdScanner extends Camera {
   onCancel: () => void;
   cancelButtonText?: string;
   isScanningEnabled?: boolean;
+  hasLimitedInterestArea?: boolean;
 }
 
 export const IdScanner: FunctionComponent<IdScanner> = ({
@@ -116,6 +115,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   const [interestArea] = useState<LayoutRectangle | undefined>(
     interestAreaLayout
   );
+
   useEffect(() => {
     const askForCameraPermission = async (): Promise<void> => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -153,7 +153,6 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
             hasLimitedInterestArea ? checkIfInInterestArea : onBarCodeScanned
           }
           barCodeTypes={barCodeTypes}
-          hasLimitedInterestArea={hasLimitedInterestArea}
           interestAreaLayout={interestAreaLayout}
         >
           <View style={styles.backButtonWrapper}>
