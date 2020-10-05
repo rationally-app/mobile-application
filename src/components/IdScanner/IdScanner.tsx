@@ -110,9 +110,20 @@ interface IdScanner extends Camera {
   hasLimitedInterestArea?: boolean;
 }
 
+/**
+ * A fullscreen scanner with a back button on the top left.
+ * If you want a scanner that is not fullscreen, use `Camera`.
+ *
+ * The following components are shown when `hasLimitedInterestArea` is true:
+ * - Lightbox in the middle of the screen.
+ * - Label on top of the lightbox with an icon and label indicating
+ *    what `barCodeType` to scan.
+ *
+ * Scanning also only occurs within the bounds of the lightbox.
+ */
 export const IdScanner: FunctionComponent<IdScanner> = ({
   onBarCodeScanned,
-  barCodeTypes,
+  barCodeTypes = [BarCodeScanner.Constants.BarCodeType.qr],
   onCancel,
   cancelButtonText = i18n.t("idScanner.back"),
   isScanningEnabled = true,
