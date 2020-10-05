@@ -206,7 +206,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     error,
     expireSession,
     navigation,
-    showErrorAlert
+    showErrorAlert,
+    quotaError
   ]);
 
   useEffect(() => {
