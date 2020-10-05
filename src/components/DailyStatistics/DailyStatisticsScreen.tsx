@@ -22,11 +22,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime } from "date-fns";
-import {
-  AlertModalContext,
-  systemAlertProps,
-  ERROR_MESSAGE
-} from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
@@ -65,7 +61,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
   const [currentTimestamp, setCurrentTimestamp] = useState(Date.now());
 
@@ -93,17 +89,12 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   };
 
   useEffect(() => {
-    if (!error) {
-      return;
+    if (error) {
+      showErrorAlert(new Error(ERROR_MESSAGE.SERVER_ERROR), () =>
+        navigateHome(navigation)
+      );
     }
-    showAlert({
-      ...systemAlertProps,
-      description: ERROR_MESSAGE.SERVER_ERROR,
-      onOk: () => {
-        navigateHome(navigation);
-      }
-    });
-  }, [error, navigation, showAlert]);
+  }, [error, navigation, showErrorAlert]);
 
   return (
     <>
