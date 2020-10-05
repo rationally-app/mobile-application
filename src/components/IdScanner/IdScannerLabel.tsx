@@ -4,11 +4,11 @@ import { color, size } from "../../common/styles";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
+import i18n from "i18n-js";
 
-// TODO: Add translations for these
 const barCodeTypeLabels: Record<string, string> = {
-  [BarCodeScanner.Constants.BarCodeType.qr]: "Scan QR code",
-  [BarCodeScanner.Constants.BarCodeType.code39]: "Scan Barcode"
+  [BarCodeScanner.Constants.BarCodeType.qr]: i18n.t("idScanner.scanQRCode"),
+  [BarCodeScanner.Constants.BarCodeType.code39]: i18n.t("idScanner.scanBarCode")
 };
 
 const barCodeTypeIcons: Record<string, ReactElement> = {
@@ -52,7 +52,7 @@ export const IdScannerLabel: FunctionComponent<IdScannerLabel> = ({
   return (
     <View style={styles.labelWrapper}>
       {barCodeTypeIcons[barCodeType]}
-      <AppText style={styles.labelWrapper}>
+      <AppText style={styles.labelText}>
         {barCodeTypeLabels[barCodeType]}
       </AppText>
     </View>

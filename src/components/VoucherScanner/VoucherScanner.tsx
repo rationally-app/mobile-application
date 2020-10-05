@@ -55,6 +55,11 @@ const styles = StyleSheet.create({
   manualInputButtonWrapper: {
     marginRight: size(1),
     flexGrow: 1
+  },
+  camera: {
+    flex: 1,
+    backgroundColor: color("grey", 0),
+    width: "100%"
   }
 });
 
@@ -130,6 +135,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
           <Camera
             onBarCodeScanned={onBarCodeScanned}
             barCodeTypes={barCodeTypes}
+            style={styles.camera}
           />
         ) : (
           <View style={{ flex: 1 }}>

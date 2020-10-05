@@ -1,5 +1,12 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import { Dimensions, LayoutRectangle, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  LayoutRectangle,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle
+} from "react-native";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
 import {
@@ -12,6 +19,7 @@ import { LightBox } from "../Layout/LightBox";
 import { Ionicons } from "@expo/vector-icons";
 import { TransparentButton } from "../Layout/Buttons/TransparentButton";
 import { IdScannerLabel } from "./IdScannerLabel";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   cameraWrapper: {
@@ -62,19 +70,21 @@ export type Camera = Pick<
   cancelButtonText?: string;
   onCancel?: () => void;
   interestAreaLayout?: LayoutRectangle;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const Camera: FunctionComponent<Camera> = ({
   onBarCodeScanned,
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39],
   children,
-  interestAreaLayout
+  interestAreaLayout,
+  style
 }) => {
   return (
     <BarCodeScanner
       barCodeTypes={barCodeTypes}
       onBarCodeScanned={onBarCodeScanned}
-      style={styles.scanner}
+      style={style ?? styles.scanner}
     >
       {children}
       {interestAreaLayout && (
@@ -104,7 +114,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   onBarCodeScanned,
   barCodeTypes,
   onCancel,
-  cancelButtonText = "Back",
+  cancelButtonText = i18n.t("idScanner.back"),
   isScanningEnabled = true,
   hasLimitedInterestArea = true
 }) => {
