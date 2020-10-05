@@ -10,6 +10,7 @@ import { Content } from "./Content";
 import { Providers } from "../context/composeProviders";
 import { DrawerContextProvider } from "../context/drawer";
 import { CampaignConfigsStoreContextProvider } from "../context/campaignConfigsStore";
+import "../common/i18n/i18nSetup";
 
 const App = (): ReactElement => {
   return (

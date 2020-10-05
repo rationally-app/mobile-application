@@ -12,15 +12,13 @@ import { Item } from "./Item";
 import { ProductContext } from "../../../context/products";
 import {
   AlertModalContext,
-  defaultWarningProps,
-  defaultConfirmationProps,
-  wrongFormatAlertProps,
+  CONFIRMATION_MESSAGE,
   ERROR_MESSAGE,
-  WARNING_MESSAGE,
-  duplicateAlertProps
+  WARNING_MESSAGE
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
+import i18n from "i18n-js";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -46,7 +44,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { features } = useContext(CampaignConfigContext);
   const { products } = useContext(ProductContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showWarnAlert, showConfirmationAlert, showErrorAlert } = useContext(
+    AlertModalContext
+  );
 
   const onCheckAddedUsers = async (input: string): Promise<void> => {
     try {
@@ -65,19 +65,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       addId(id);
     } catch (e) {
       setIsAddUserModalVisible(false);
-      if (e.message === ERROR_MESSAGE.DUPLICATE_ID) {
-        showAlert({
-          ...duplicateAlertProps,
-          description: e.message,
-          onOk: () => setIsAddUserModalVisible(true)
-        });
-      } else {
-        showAlert({
-          ...wrongFormatAlertProps,
-          description: e.message,
-          onOk: () => setIsAddUserModalVisible(true)
-        });
-      }
+      showErrorAlert(e, () => setIsAddUserModalVisible(true));
     }
   };
 
@@ -111,21 +99,16 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
         {!isLoading && (
           <SecondaryButton
-            text={isAppeal ? "Back" : "Cancel"}
+            text={
+              isAppeal
+                ? i18n.t("customerQuotaScreen.quotaScanButtonBack")
+                : i18n.t("customerQuotaScreen.quotaAppealCancel")
+            }
             onPress={
               isAppeal
                 ? onBack
                 : () => {
-                    showAlert({
-                      ...defaultWarningProps,
-                      title: "Cancel entry and scan another ID number?",
-                      buttonTexts: {
-                        primaryActionText: "Cancel entry",
-                        secondaryActionText: "Keep"
-                      },
-                      visible: true,
-                      onOk: onCancel
-                    });
+                    showWarnAlert(WARNING_MESSAGE.CANCEL_ENTRY, onCancel);
                   }
             }
           />
@@ -137,7 +120,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           ]}
         >
           <DarkButton
-            text="Checkout"
+            text={i18n.t("customerQuotaScreen.quotaButtonCheckout")}
             icon={
               <Feather
                 name="shopping-cart"
@@ -149,17 +132,10 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               !isChargeable
                 ? checkoutCart
                 : () => {
-                    showAlert({
-                      ...defaultConfirmationProps,
-                      title: "Payment collected?",
-                      description: WARNING_MESSAGE.PAYMENT_COLLECTION,
-                      buttonTexts: {
-                        primaryActionText: "Collected",
-                        secondaryActionText: "No"
-                      },
-                      visible: true,
-                      onOk: checkoutCart
-                    });
+                    showConfirmationAlert(
+                      CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
+                      checkoutCart
+                    );
                   }
             }
             isLoading={isLoading}

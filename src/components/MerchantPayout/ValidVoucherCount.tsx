@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   validText: {
@@ -56,7 +57,9 @@ export const ValidVoucherCount: FunctionComponent<ValidVoucherCount> = ({
             color={color("blue", 50)}
           />
         </View>
-        <AppText style={styles.validText}>Valid</AppText>
+        <AppText style={styles.validText}>
+          {i18n.t("checkoutSuccessScreen.valid")}
+        </AppText>
       </View>
       <View style={styles.numVouchersWrapper}>
         <AppText style={styles.numVouchers}>{numVouchers}</AppText>

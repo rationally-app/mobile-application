@@ -3,6 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { size, color, fontSize } from "../../common/styles";
 import { Ionicons } from "@expo/vector-icons";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   toggleText: {
@@ -50,9 +51,11 @@ export const ShowFullListToggle: FunctionComponent<{
         />
         <View style={styles.showFullListToggleBorder} />
       </View>
-      <AppText style={styles.toggleText}>{`Show ${
-        isShowFullList ? "less" : "more"
-      }`}</AppText>
+      <AppText style={styles.toggleText}>
+        {isShowFullList
+          ? i18n.t("checkoutSuccessScreen.showLess")
+          : i18n.t("checkoutSuccessScreen.showMore")}
+      </AppText>
     </TouchableOpacity>
   </View>
 );
