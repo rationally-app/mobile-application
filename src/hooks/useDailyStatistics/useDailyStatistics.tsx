@@ -11,6 +11,7 @@ export type StatisticsHook = {
     name: string;
     category: string;
     quantityText: string;
+    descriptionAlert?: string;
   }[];
   error?: Error;
   loading: boolean;

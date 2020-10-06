@@ -9,6 +9,7 @@ interface TransactionHistoryCardComponent {
     name: string;
     category: string;
     quantityText: string;
+    descriptionAlert?: string;
   }[];
   loading: boolean;
 }
@@ -40,6 +41,16 @@ const styles = StyleSheet.create({
     marginBottom: size(3),
     flexDirection: "row",
     textAlign: "center"
+  },
+  reasonAlert: {
+    marginLeft: size(1.5),
+    marginTop: -size(3),
+    marginBottom: size(3),
+    fontFamily: "brand-italic",
+    color: color("red", 50)
+  },
+  descriptionAlertText: {
+    alignItems: "flex-end"
   }
 });
 
@@ -52,11 +63,18 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
       {!loading ? (
         transactionHistory.length !== 0 ? (
           transactionHistory.map(item => (
-            <View style={styles.transactionText} key={item.category}>
-              <AppText style={styles.categoryName}>{item.name}</AppText>
+            <View key={item.category}>
               <View style={styles.transactionText}>
-                <AppText style={styles.quantityText}>
-                  {item.quantityText}
+                <AppText style={styles.categoryName}>{item.name}</AppText>
+                <View style={styles.transactionText}>
+                  <AppText style={styles.quantityText}>
+                    {item.quantityText}
+                  </AppText>
+                </View>
+              </View>
+              <View style={styles.descriptionAlertText}>
+                <AppText style={styles.reasonAlert}>
+                  {item.descriptionAlert ?? ""}
                 </AppText>
               </View>
             </View>
