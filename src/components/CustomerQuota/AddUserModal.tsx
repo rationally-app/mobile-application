@@ -20,6 +20,7 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   background: {
@@ -119,7 +120,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
           <IdScanner
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
-            cancelButtonText="Enter ID manually"
+            cancelButtonText={i18n.t("idScanner.enterIdManually")}
             barCodeTypes={
               features?.id.scannerType === "QR"
                 ? [BarCodeScanner.Constants.BarCodeType.qr]
@@ -138,7 +139,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             <Card style={styles.card}>
               <View style={styles.cardHeader}>
                 <AppText style={{ flex: 1 }}>
-                  Add another ID to combine customer quotas
+                  {i18n.t("customerQuotaScreen.quotaAddId")}
                 </AppText>
                 <View style={{ marginLeft: size(1) }}>
                   <CloseButton onPress={() => setIsVisible(false)} />

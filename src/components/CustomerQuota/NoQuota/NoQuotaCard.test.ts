@@ -7,6 +7,7 @@ import {
   getLatestTransactionTime
 } from "./NoQuotaCard";
 import { Cart } from "../../../hooks/useCart/useCart";
+import "../../../common/i18n/i18nMock";
 
 describe("NoQuotaCard utility functions", () => {
   let sortedTransactions: PastTransactionsResult["pastTransactions"];

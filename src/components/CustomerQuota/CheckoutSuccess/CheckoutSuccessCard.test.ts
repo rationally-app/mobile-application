@@ -5,6 +5,7 @@ import {
   sortTransactions
 } from "./CheckoutSuccessCard";
 import { defaultIdentifier } from "../../../test/helpers/defaults";
+import "../../../common/i18n/i18nMock";
 
 describe("CheckoutSuccessCard utility functions", () => {
   let sortedTransactions: PastTransactionsResult["pastTransactions"];

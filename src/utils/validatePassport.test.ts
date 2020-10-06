@@ -22,7 +22,7 @@ describe("parse passport", () => {
     ["aAaA-12345abcdef"]
   ])("should fail passport validation with input [%s]", (input: string) => {
     expect.assertions(1);
-    const errorMessage = "Enter or scan valid ID number.";
+    const errorMessage = "Enter or scan a valid ID number.";
     expect(() => validateAndCleanPassport(input)).toThrow(errorMessage);
   });
 });

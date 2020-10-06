@@ -11,6 +11,7 @@ import { Providers } from "../context/composeProviders";
 import { DrawerContextProvider } from "../context/drawer";
 import { CampaignConfigsStoreContextProvider } from "../context/campaignConfigsStore";
 import { IdentificationContextProvider } from "../context/identification";
+import "../common/i18n/i18nSetup";
 
 const App = (): ReactElement => {
   return (

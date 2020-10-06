@@ -7,7 +7,6 @@ import {
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
-import { systemAlertProps, ERROR_MESSAGE } from "../../context/alert";
 
 export class NotEligibleError extends Error {
   constructor(message: string) {
@@ -21,11 +20,6 @@ export class QuotaError extends Error {
     super(message);
     this.name = "QuotaError";
   }
-  alertProps = {
-    ...systemAlertProps,
-    description: ERROR_MESSAGE.QUOTA_ERROR as string,
-    visible: true
-  };
 }
 
 export class PostTransactionError extends Error {
@@ -118,28 +112,15 @@ export const liveGetQuota = async (
     throw new QuotaError("No ID was provided");
   }
   try {
-    if (ids.length === 1) {
-      response = await fetchWithValidator(
-        Quota,
-        `${endpoint}/quota/${ids[0]}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: key
-          }
-        }
-      );
-    } else {
-      response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
-        method: "POST",
-        headers: {
-          Authorization: key
-        },
-        body: JSON.stringify({
-          ids
-        })
-      });
-    }
+    response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
+      method: "POST",
+      headers: {
+        Authorization: key
+      },
+      body: JSON.stringify({
+        ids
+      })
+    });
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
