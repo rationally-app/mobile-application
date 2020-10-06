@@ -6,6 +6,7 @@ import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
 import { ProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
+import { hasInvalidRemainingQuota } from "../useQuota/useQuota";
 
 export type CartItem = {
   category: string;
@@ -129,19 +130,25 @@ export const useCart = (
 
   /**
    * Update the cart when:
-   *  1. First quota is retrieved on initialisation
-   *  2. When quota is updated (i.e. products or ids change)
+   *  1. First quota is retrieved on initialisation (i.e. no previous cart quota)
+   *  2. When quota response changes
+   *  3. When quota is updated (i.e. products or ids change)
+   * Items 2 and 3 can occur at the same time.
    */
   useEffect(() => {
     if (
       cartQuota &&
       (!prevCartQuota || prevIds !== ids || prevProducts !== products)
     ) {
-      /**
-       * Caveat: We must use a callback within this setState to avoid
-       * having `cart` as a dependency, preventing an infinite loop.
-       */
-      setCart(cart => mergeWithCart(cart, cartQuota, getProduct));
+      if (!hasInvalidRemainingQuota(cartQuota)) {
+        /**
+         * Caveat: We must use a callback within this setState to avoid
+         * having `cart` as a dependency, preventing an infinite loop.
+         */
+        setCart(cart => mergeWithCart(cart, cartQuota, getProduct));
+      } else {
+        setError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
+      }
     }
   }, [
     cartQuota,

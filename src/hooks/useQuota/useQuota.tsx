@@ -3,7 +3,7 @@ import { Sentry } from "../../utils/errorTracking";
 import { getQuota, NotEligibleError } from "../../services/quota";
 import { ProductContext } from "../../context/products";
 import { transform } from "lodash";
-import { Quota, CampaignPolicy } from "../../types";
+import { Quota, CampaignPolicy, ItemQuota } from "../../types";
 import { usePrevious } from "../usePrevious";
 
 type QuotaState = "DEFAULT" | "FETCHING_QUOTA" | "NO_QUOTA" | "NOT_ELIGIBLE";
@@ -68,6 +68,13 @@ const hasInvalidQuota = (quota: Quota): boolean => {
     return true;
   }
   return quota.remainingQuota.some(item => item.quantity < 0);
+};
+
+export const hasInvalidRemainingQuota = (itemQuotas: ItemQuota[]): boolean => {
+  if (!itemQuotas || itemQuotas.length === 0) {
+    return true;
+  }
+  return itemQuotas.some(quota => quota.quantity < 0);
 };
 
 /**

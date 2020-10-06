@@ -2,13 +2,14 @@ import React, { FunctionComponent } from "react";
 import { renderHook, act } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
 import { wait } from "@testing-library/react-native";
-import { Quota, PostTransactionResult } from "../../types";
+import { Quota, PostTransactionResult, CampaignPolicy } from "../../types";
 import { postTransaction } from "../../services/quota";
 import {
   defaultProducts,
   defaultIdentifier
 } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
+import { ERROR_MESSAGE } from "../../context/alert";
 
 jest.mock("../../services/quota");
 const mockPostTransaction = postTransaction as jest.Mock;
@@ -68,36 +69,87 @@ const mockQuotaResMultipleIds: Quota = {
     {
       category: "toilet-paper",
       identifierInputs: [],
-      quantity: 4
+      quantity: 4,
+      transactionTime
     },
     {
       category: "chocolate",
       identifierInputs: [],
-      quantity: 30
+      quantity: 30,
+      transactionTime
     }
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
-      quantity: 4
+      quantity: 4,
+      transactionTime
     },
     {
       category: "chocolate",
       identifierInputs: [],
-      quantity: 30
+      quantity: 30,
+      transactionTime
     }
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
-      quantity: Number.MAX_SAFE_INTEGER
+      quantity: Number.MAX_SAFE_INTEGER,
+      transactionTime
     },
     {
       category: "chocolate",
       identifierInputs: [],
-      quantity: Number.MAX_SAFE_INTEGER
+      quantity: Number.MAX_SAFE_INTEGER,
+      transactionTime
+    }
+  ]
+};
+
+const mockQuotaResSingleIdInvalidQuota: Quota = {
+  remainingQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: -1,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: 15,
+      transactionTime
+    }
+  ],
+  globalQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: -1,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: 15,
+      transactionTime
+    }
+  ],
+  localQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: Number.MAX_SAFE_INTEGER,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: Number.MAX_SAFE_INTEGER,
+      transactionTime
     }
   ]
 };
@@ -202,8 +254,11 @@ const mockQuotaResSingleIdAlert: Quota = {
   ]
 };
 
-const wrapper: FunctionComponent = ({ children }) => (
-  <ProductContextProvider products={defaultProducts}>
+const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
+  children,
+  products = defaultProducts
+}) => (
+  <ProductContextProvider products={products}>
     {children}
   </ProductContextProvider>
 );
@@ -214,18 +269,36 @@ describe("useCart", () => {
   });
 
   describe("update cart quantities", () => {
-    // TODO: Ensure that this test actually tests what it says
     it("should update the cart when quota response changes", () => {
-      expect.assertions(1);
+      expect.assertions(2);
 
       let ids = ["ID1"];
+      let cartQuota = mockQuotaResSingleId.remainingQuota;
       const { rerender, result } = renderHook(
-        () =>
-          useCart(ids, key, endpoint, mockQuotaResMultipleIds.remainingQuota),
+        () => useCart(ids, key, endpoint, cartQuota),
         { wrapper }
       );
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          quantity: 1,
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          quantity: 0,
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15
+        }
+      ]);
 
       ids = ["ID1", "ID2"];
+      cartQuota = mockQuotaResMultipleIds.remainingQuota;
       rerender();
 
       expect(result.current.cart).toStrictEqual([
@@ -233,7 +306,7 @@ describe("useCart", () => {
           category: "toilet-paper",
           descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: undefined,
+          lastTransactionTime: transactionTime,
           maxQuantity: 4,
           quantity: 1
         },
@@ -241,11 +314,31 @@ describe("useCart", () => {
           category: "chocolate",
           descriptionAlert: undefined,
           identifierInputs: [],
-          lastTransactionTime: undefined,
+          lastTransactionTime: transactionTime,
           maxQuantity: 30,
           quantity: 0
         }
       ]);
+    });
+
+    it("should throw error when quota response has negative quantities", () => {
+      expect.assertions(1);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () =>
+          useCart(
+            ids,
+            key,
+            endpoint,
+            mockQuotaResSingleIdInvalidQuota.remainingQuota
+          ),
+        {
+          wrapper
+        }
+      );
+      expect(result.current.error?.message).toBe(
+        ERROR_MESSAGE.INVALID_QUANTITY
+      );
     });
 
     it("should update the cart when quantities change", () => {
@@ -536,30 +629,24 @@ describe("useCart", () => {
       expect.assertions(3);
 
       const ids = ["ID1"];
-      const SingleIdentifierProductWrapper: FunctionComponent = ({
-        children
-      }) => (
-        <ProductContextProvider
-          products={[
-            {
-              ...defaultProducts[0],
-              identifiers: [
-                {
-                  ...defaultIdentifier,
-                  label: "code"
-                }
-              ]
-            }
-          ]}
-        >
-          {children}
-        </ProductContextProvider>
-      );
       const { result } = renderHook(
         () =>
           useCart(ids, key, endpoint, [mockQuotaResSingleId.remainingQuota[0]]),
         {
-          wrapper: SingleIdentifierProductWrapper
+          wrapper,
+          initialProps: {
+            products: [
+              {
+                ...defaultProducts[0],
+                identifiers: [
+                  {
+                    ...defaultIdentifier,
+                    label: "code"
+                  }
+                ]
+              }
+            ]
+          }
         }
       );
 

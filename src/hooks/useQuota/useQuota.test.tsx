@@ -364,6 +364,7 @@ describe("useQuota", () => {
         }
       ]);
     });
+
     it("should have quota state be NO_QUOTA when quota received is invalid", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdInvalidQuota);
@@ -393,13 +394,11 @@ describe("useQuota", () => {
       ]);
     });
 
-    // TODO: Make this clearer
-    it("should set quota state to be NOT_ELIGIBLE when NotEligibleError is thrown, and would not continue with fetching quota", async () => {
-      expect.assertions(1);
+    it("should set quota state to NOT_ELIGIBLE when NotEligibleError is thrown, and does not update quota response", async () => {
+      expect.assertions(3);
 
       const ids = ["ID_NOT_ELIGIBLE"];
-
-      mockGetQuota.mockImplementation(() => {
+      mockGetQuota.mockImplementationOnce(() => {
         mockIdNotEligible(ids[0]);
       });
 
@@ -408,6 +407,38 @@ describe("useQuota", () => {
       });
 
       expect(result.current.quotaState).toBe("NOT_ELIGIBLE");
+      expect(result.current.allQuotaResponse).toBeUndefined();
+      expect(result.current.quotaResponse).toBeUndefined();
+    });
+
+    it("should set quota state to NOT_ELIGIBLE when NotEligibleError is thrown, and does not update existing quota response", async () => {
+      expect.assertions(4);
+
+      let ids = ["ID1"];
+      mockGetQuota.mockResolvedValueOnce(mockQuotaResSingleId);
+      const { result, waitForNextUpdate, rerender } = renderHook(
+        () => useQuota(ids, key, endpoint),
+        {
+          wrapper
+        }
+      );
+      await waitForNextUpdate();
+
+      expect(result.current.quotaState).toBe("DEFAULT");
+      expect(result.current.allQuotaResponse).toStrictEqual(
+        mockQuotaResSingleId
+      );
+
+      ids = ["ID_NOT_ELIGIBLE"];
+      mockGetQuota.mockImplementationOnce(() => {
+        mockIdNotEligible(ids[0]);
+      });
+      rerender();
+
+      expect(result.current.quotaState).toBe("NOT_ELIGIBLE");
+      expect(result.current.allQuotaResponse).toStrictEqual(
+        mockQuotaResSingleId
+      );
     });
   });
 
@@ -456,7 +487,7 @@ describe("useQuota", () => {
     });
 
     it("should update the quota when products change", async () => {
-      expect.assertions(2);
+      expect.assertions(3);
       const ids = ["ID1"];
       mockGetQuota.mockReturnValue(mockQuotaResSingleId);
       const { rerender, result, waitForNextUpdate } = renderHook(
@@ -485,6 +516,38 @@ describe("useQuota", () => {
       });
       await waitForNextUpdate();
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([]);
+      expect(mockGetQuota).toHaveBeenCalledTimes(2);
+    });
+
+    it("should not update the quota when products do not change", async () => {
+      expect.assertions(2);
+      const ids = ["ID1"];
+      mockGetQuota.mockReturnValue(mockQuotaResSingleId);
+      const { rerender, result, waitForNextUpdate } = renderHook(
+        () => useQuota(ids, key, endpoint),
+        {
+          wrapper
+        }
+      );
+      await waitForNextUpdate();
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
+        {
+          category: "toilet-paper",
+          identifierInputs: [],
+          transactionTime,
+          quantity: 2
+        },
+        {
+          category: "chocolate",
+          identifierInputs: [],
+          transactionTime,
+          quantity: 15
+        }
+      ]);
+      act(() => {
+        rerender({ products: defaultProducts });
+      });
+      expect(mockGetQuota).toHaveBeenCalledTimes(1);
     });
   });
 });
