@@ -8,6 +8,7 @@ type SummarisedTransactions = {
     name: string;
     category: string;
     quantityText: string;
+    descriptionAlert?: string;
   }[];
   summarisedTotalCount: number;
 };
@@ -40,7 +41,12 @@ export const countTotalTransactionsAndByCategory = (
               type: "POSTFIX",
               label: " qty"
             }
-          )
+          ),
+          descriptionAlert:
+            policies?.find(item => item.category === key)?.categoryType ===
+            "APPEAL"
+              ? "via appeal"
+              : undefined
         });
         prev.summarisedTotalCount += totalQuantityInCategory;
         return prev;

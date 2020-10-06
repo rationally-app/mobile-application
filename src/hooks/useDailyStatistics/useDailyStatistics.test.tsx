@@ -125,7 +125,8 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
-        quantityText: "9,999,999 qty"
+        quantityText: "9,999,999 qty",
+        descriptionAlert: undefined
       }
     ]);
   });
@@ -176,7 +177,8 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
-        quantityText: "9,999,999 qty"
+        quantityText: "9,999,999 qty",
+        descriptionAlert: undefined
       }
     ]);
 
@@ -212,7 +214,8 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
-          quantityText: "9,999,999 qty"
+          quantityText: "9,999,999 qty",
+          descriptionAlert: undefined
         }
       ]);
     });
@@ -239,7 +242,8 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
-          quantityText: "20 qty"
+          quantityText: "20 qty",
+          descriptionAlert: undefined
         }
       ]);
     });
