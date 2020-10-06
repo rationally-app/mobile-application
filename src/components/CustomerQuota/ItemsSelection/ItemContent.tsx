@@ -1,10 +1,11 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { CampaignPolicy } from "../../../types";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { fontSize, color } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
+import { CampaignConfigContext } from "../../../context/campaignConfig";
 
 const styles = StyleSheet.create({
   name: {
@@ -26,19 +27,26 @@ export const ItemContent: FunctionComponent<{
   descriptionAlert?: string;
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
-}> = ({ name, description, descriptionAlert, unit, maxQuantity }) => (
-  <View>
-    <AppText style={styles.name}>{name}</AppText>
-    {descriptionAlert && descriptionAlert.length > 0 && (
-      <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
-    )}
-    {(description ?? "").length > 0 && (
-      <AppText style={styles.description}>{description}</AppText>
-    )}
-    {maxQuantity === 1 && (
-      <AppText style={sharedStyles.maxQuantityLabel}>
-        <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
-      </AppText>
-    )}
-  </View>
-);
+}> = ({ name, description, descriptionAlert, unit, maxQuantity }) => {
+  const { c13n } = useContext(CampaignConfigContext);
+
+  const translatedName = c13n[name] ?? name;
+  const translatedDescription =
+    (description && c13n[description]) ?? description ?? "";
+  return (
+    <View>
+      <AppText style={styles.name}>{translatedName}</AppText>
+      {descriptionAlert && descriptionAlert.length > 0 && (
+        <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
+      )}
+      {translatedDescription.length > 0 && (
+        <AppText style={styles.description}>{translatedDescription}</AppText>
+      )}
+      {maxQuantity === 1 && (
+        <AppText style={sharedStyles.maxQuantityLabel}>
+          <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
+        </AppText>
+      )}
+    </View>
+  );
+};

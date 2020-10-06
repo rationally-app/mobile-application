@@ -2,6 +2,7 @@ import { IS_MOCK } from "../../config";
 import { CampaignConfig, ConfigHashes } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
+import i18n from "i18n-js";
 
 export class CampaignConfigError extends Error {
   constructor(message: string) {
@@ -16,7 +17,7 @@ const liveGetCampaignConfig = async (
   configHashes?: ConfigHashes
 ): Promise<CampaignConfig> => {
   try {
-    const response = await fetchWithValidator(
+    return await fetchWithValidator(
       CampaignConfig,
       `${endpoint}/client-config`,
       {
@@ -24,10 +25,12 @@ const liveGetCampaignConfig = async (
         headers: {
           Authorization: token
         },
-        body: JSON.stringify(configHashes)
+        body: JSON.stringify({
+          ...configHashes,
+          language: i18n.locale.startsWith("zh") ? "zh" : "en"
+        })
       }
     );
-    return response;
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);

@@ -130,11 +130,20 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     navigation
   ]);
   const authCredentialsWithCampaignName = Object.entries(authCredentials).map(
-    ([key, credentials]) => ({
-      ...credentials,
-      key,
-      name: allCampaignConfigs[key]?.features?.campaignName
-    })
+    ([key, credentials]) => {
+      const { features, c13n } = allCampaignConfigs[key] ?? {
+        features: undefined,
+        c13n: {}
+      };
+      const translatedCampaignName =
+        (features?.campaignName && c13n[features.campaignName]) ??
+        features?.campaignName;
+      return {
+        ...credentials,
+        key,
+        name: translatedCampaignName
+      };
+    }
   );
 
   const sortedAuthCredentialsWithCampaignName = sortBy(

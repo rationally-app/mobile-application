@@ -114,7 +114,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const showHelpModal = useContext(HelpModalContext);
   const checkUpdates = useCheckUpdates();
   const { showErrorAlert } = useContext(AlertModalContext);
-  const { features, policies } = useContext(CampaignConfigContext);
+  const { features, policies, c13n } = useContext(CampaignConfigContext);
   const { selectedIdType, setSelectedIdType } = useContext(
     IdentificationContext
   );
@@ -237,6 +237,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     navigation.navigate("DailyStatisticsScreen");
   };
 
+  const translatedCampaignName =
+    (features?.campaignName && c13n[features.campaignName]) ??
+    features?.campaignName;
+
   return (
     <>
       <Credits style={{ bottom: size(3) }} />
@@ -259,9 +263,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             </View>
           )}
           <Card>
-            {features?.campaignName && (
+            {!!translatedCampaignName && (
               <AppText style={styles.campaignName}>
-                {features.campaignName}
+                {translatedCampaignName}
               </AppText>
             )}
             <AppText>
