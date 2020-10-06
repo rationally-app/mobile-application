@@ -12,7 +12,12 @@ import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
 import { FontAwesome } from "@expo/vector-icons";
-import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
+import {
+  Quota,
+  PastTransactionsResult,
+  CampaignPolicy,
+  CampaignC13N
+} from "../../../types";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
@@ -75,7 +80,8 @@ export interface TransactionsByTimeMap {
  */
 export const groupTransactionsByTime = (
   sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
-  allProducts: CampaignPolicy[]
+  allProducts: CampaignPolicy[],
+  c13n: CampaignC13N
 ): TransactionsByTimeMap => {
   const transactionsByTimeMap: {
     [transactionTimeInSeconds: string]: {
@@ -88,7 +94,8 @@ export const groupTransactionsByTime = (
     const policy = allProducts?.find(
       policy => policy.category === item.category
     );
-    const categoryName = policy?.name ?? item.category;
+    const translatedCategoryName =
+      (policy?.name && c13n[policy.name]) ?? policy?.name ?? item.category;
     const transactionTimeInSeconds = String(
       Math.floor(item.transactionTime.getTime() / 1000)
     );
@@ -100,12 +107,18 @@ export const groupTransactionsByTime = (
         order: -transactionTimeInSeconds
       };
     }
+    const unitWithTranslatedLabel = policy?.quantity.unit && {
+      ...policy?.quantity.unit,
+      ...{
+        label: c13n[policy?.quantity.unit.label] ?? policy?.quantity.unit.label
+      }
+    };
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
-      header: categoryName,
+      header: translatedCategoryName,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        policy?.quantity.unit || {
+        unitWithTranslatedLabel || {
           type: "POSTFIX",
           label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
         }
@@ -137,7 +150,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
 
   const { getProduct } = useContext(ProductContext);
-  const { policies: allProducts } = useContext(CampaignConfigContext);
+  const { policies: allProducts, c13n } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
@@ -156,7 +169,8 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
-    allProducts || []
+    allProducts || [],
+    c13n
   );
   const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
 

@@ -44,7 +44,15 @@ export const ItemContent: FunctionComponent<{
       )}
       {maxQuantity === 1 && (
         <AppText style={sharedStyles.maxQuantityLabel}>
-          <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
+          <ItemMaxUnitLabel
+            unit={
+              unit && {
+                ...unit,
+                ...{ label: c13n[unit.label] ?? unit.label }
+              }
+            }
+            maxQuantity={maxQuantity}
+          />
         </AppText>
       )}
     </View>

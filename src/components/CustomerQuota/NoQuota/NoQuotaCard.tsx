@@ -29,7 +29,12 @@ import {
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
+import {
+  Quota,
+  PastTransactionsResult,
+  CampaignPolicy,
+  CampaignC13N
+} from "../../../types";
 import { AlertModalContext } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
@@ -73,7 +78,8 @@ interface NoQuotaCard {
 export const groupTransactionsByCategory = (
   sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
   allProducts: CampaignPolicy[],
-  latestTransactionTime: Date | undefined
+  latestTransactionTime: Date | undefined,
+  c13n: CampaignC13N
 ): TransactionsByCategoryMap => {
   // Group transactions by category
   const transactionsByCategoryMap: TransactionsByCategoryMap = {};
@@ -81,7 +87,7 @@ export const groupTransactionsByCategory = (
     const policy = allProducts?.find(
       policy => policy.category === item.category
     );
-    const categoryName = policy?.name ?? item.category;
+    const categoryName = (policy?.name && c13n[policy.name]) ?? item.category;
     const formattedDate = formatDateTime(item.transactionTime);
 
     if (!transactionsByCategoryMap.hasOwnProperty(categoryName)) {
@@ -91,12 +97,18 @@ export const groupTransactionsByCategory = (
         order: policy?.order ?? BIG_NUMBER
       };
     }
+    const unitWithTranslatedLabel = policy?.quantity.unit && {
+      ...policy?.quantity.unit,
+      ...{
+        label: c13n[policy?.quantity.unit.label] ?? policy?.quantity.unit.label
+      }
+    };
     transactionsByCategoryMap[categoryName].transactions.push({
       header: formattedDate,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        policy?.quantity.unit || {
+        unitWithTranslatedLabel || {
           type: "POSTFIX",
           label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
         }
@@ -177,7 +189,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   quotaResponse
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
-  const { policies: allProducts } = useContext(CampaignConfigContext);
+  const { policies: allProducts, c13n } = useContext(CampaignConfigContext);
   const { getProduct } = useContext(ProductContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
 
@@ -212,7 +224,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
-    latestTransactionTime
+    latestTransactionTime,
+    c13n
   );
 
   const transactionsByCategoryList = sortTransactions(

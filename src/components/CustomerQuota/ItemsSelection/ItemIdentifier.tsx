@@ -8,6 +8,7 @@ import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
 import { AlertModalContext } from "../../../context/alert";
 import { i18nt } from "../../../utils/translations";
+import { CampaignConfigContext } from "../../../context/campaignConfig";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -33,6 +34,7 @@ export const ItemIdentifier: FunctionComponent<{
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { showErrorAlert } = useContext(AlertModalContext);
+  const { c13n } = useContext(CampaignConfigContext);
 
   const { label, textInput, scanButton } = identifier;
 
@@ -52,20 +54,24 @@ export const ItemIdentifier: FunctionComponent<{
     updateIdentifierValue(index, input);
   };
 
+  const translatedLabel = c13n[label] ?? label;
+  const translatedScanButtonText =
+    (scanButton.text && c13n[scanButton.text]) ?? scanButton.text;
+
   return (
     <>
       <View style={styles.inputAndButtonWrapper}>
         {textInput.visible &&
           (textInput.type === "PHONE_NUMBER" ? (
             <IdentifierPhoneNumberInput
-              label={label}
+              label={translatedLabel}
               onPhoneNumberChange={onManualInput}
             />
           ) : (
             <IdentifierTextInput
               addMarginRight={scanButton.visible}
               editable={!textInput.disabled}
-              label={label}
+              label={translatedLabel}
               onChange={onManualInput}
               type={textInput.type}
               value={inputValue}
@@ -77,7 +83,7 @@ export const ItemIdentifier: FunctionComponent<{
             fullWidth={!textInput.visible}
             onPress={() => setShouldShowCamera(true)}
             text={
-              scanButton.text ||
+              translatedScanButtonText ||
               i18nt("customerQuotaScreen", "quotaIdentifierButtonScan")
             }
           />
