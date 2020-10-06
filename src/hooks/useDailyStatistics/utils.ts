@@ -9,6 +9,7 @@ type SummarisedTransactions = {
     category: string;
     quantityText: string;
     descriptionAlert?: string;
+    order: number;
   }[];
   summarisedTotalCount: number;
 };
@@ -46,7 +47,8 @@ export const countTotalTransactionsAndByCategory = (
             policies?.find(item => item.category === key)?.categoryType ===
             "APPEAL"
               ? "via appeal"
-              : undefined
+              : undefined,
+          order: policies?.find(item => item.category === key)?.order ?? -1
         });
         prev.summarisedTotalCount += totalQuantityInCategory;
         return prev;
