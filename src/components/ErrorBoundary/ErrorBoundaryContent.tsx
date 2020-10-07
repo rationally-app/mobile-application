@@ -54,8 +54,12 @@ export const ErrorBoundaryContent: FunctionComponent<{
   <View style={styles.wrapper}>
     <View style={styles.content}>
       <AlertIcon style={styles.icon} width={size(5)} height={size(5)} />
-      <AppText style={styles.heading}>{i18n.t("systemError.title")}</AppText>
-      <AppText style={styles.body}>{i18n.t("systemError.body")}</AppText>
+      <AppText style={styles.heading}>
+        {i18n.t("errorMessages.systemError.title")}
+      </AppText>
+      <AppText style={styles.body}>
+        {i18n.t("errorMessages.systemError.body")}
+      </AppText>
       {error && <AppText style={styles.errorDescription}>{error}</AppText>}
     </View>
     <View style={styles.restartButton}>
