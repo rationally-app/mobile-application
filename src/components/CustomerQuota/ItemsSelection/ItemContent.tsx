@@ -6,6 +6,10 @@ import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { fontSize, color } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
+import {
+  extractTranslationFromC13N,
+  extractUnitTranslationFromC13N
+} from "../../../utils/translation";
 
 const styles = StyleSheet.create({
   name: {
@@ -30,27 +34,23 @@ export const ItemContent: FunctionComponent<{
 }> = ({ name, description, descriptionAlert, unit, maxQuantity }) => {
   const { c13n } = useContext(CampaignConfigContext);
 
-  const translatedName = c13n[name] ?? name;
-  const translatedDescription =
-    (description && c13n[description]) ?? description ?? "";
+  const translatedName = extractTranslationFromC13N(c13n, name);
+  const translatedDescription = extractTranslationFromC13N(c13n, description);
+  const unitWithTranslatedLabel = extractUnitTranslationFromC13N(c13n, unit);
+
   return (
     <View>
       <AppText style={styles.name}>{translatedName}</AppText>
       {descriptionAlert && descriptionAlert.length > 0 && (
         <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
       )}
-      {translatedDescription.length > 0 && (
+      {!!translatedDescription && (
         <AppText style={styles.description}>{translatedDescription}</AppText>
       )}
       {maxQuantity === 1 && (
         <AppText style={sharedStyles.maxQuantityLabel}>
           <ItemMaxUnitLabel
-            unit={
-              unit && {
-                ...unit,
-                ...{ label: c13n[unit.label] ?? unit.label }
-              }
-            }
+            unit={unitWithTranslatedLabel}
             maxQuantity={maxQuantity}
           />
         </AppText>

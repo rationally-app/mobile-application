@@ -47,6 +47,7 @@ import {
 } from "../../context/identification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { i18nt } from "../../utils/translations";
+import { extractTranslationFromC13N } from "../../utils/translation";
 
 const styles = StyleSheet.create({
   content: {
@@ -237,10 +238,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     navigation.navigate("DailyStatisticsScreen");
   };
 
-  const translatedCampaignName =
-    (features?.campaignName && c13n[features.campaignName]) ??
-    features?.campaignName;
-
+  const translatedCampaignName = extractTranslationFromC13N(
+    c13n,
+    features?.campaignName
+  );
   return (
     <>
       <Credits style={{ bottom: size(3) }} />

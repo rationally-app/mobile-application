@@ -33,6 +33,10 @@ import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisp
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
 import { AlertModalContext } from "../../../context/alert";
 import { i18nt } from "../../../utils/translations";
+import {
+  extractTranslationFromC13N,
+  extractUnitTranslationFromC13N
+} from "../../../utils/translation";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -95,7 +99,7 @@ export const groupTransactionsByTime = (
       policy => policy.category === item.category
     );
     const translatedCategoryName =
-      (policy?.name && c13n[policy.name]) ?? policy?.name ?? item.category;
+      extractTranslationFromC13N(c13n, policy?.name) ?? item.category;
     const transactionTimeInSeconds = String(
       Math.floor(item.transactionTime.getTime() / 1000)
     );
@@ -107,12 +111,10 @@ export const groupTransactionsByTime = (
         order: -transactionTimeInSeconds
       };
     }
-    const unitWithTranslatedLabel = policy?.quantity.unit && {
-      ...policy?.quantity.unit,
-      ...{
-        label: c13n[policy?.quantity.unit.label] ?? policy?.quantity.unit.label
-      }
-    };
+    const unitWithTranslatedLabel = extractUnitTranslationFromC13N(
+      c13n,
+      policy?.quantity.unit
+    );
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
       header: translatedCategoryName,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),

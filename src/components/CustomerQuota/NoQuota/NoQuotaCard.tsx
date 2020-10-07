@@ -41,6 +41,10 @@ import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
 import { i18nt } from "../../../utils/translations";
+import {
+  extractTranslationFromC13N,
+  extractUnitTranslationFromC13N
+} from "../../../utils/translation";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -87,23 +91,22 @@ export const groupTransactionsByCategory = (
     const policy = allProducts?.find(
       policy => policy.category === item.category
     );
-    const categoryName = (policy?.name && c13n[policy.name]) ?? item.category;
+    const translatedCategoryName =
+      extractTranslationFromC13N(c13n, policy?.name) ?? item.category;
     const formattedDate = formatDateTime(item.transactionTime);
 
-    if (!transactionsByCategoryMap.hasOwnProperty(categoryName)) {
-      transactionsByCategoryMap[categoryName] = {
+    if (!transactionsByCategoryMap.hasOwnProperty(translatedCategoryName)) {
+      transactionsByCategoryMap[translatedCategoryName] = {
         transactions: [],
         hasLatestTransaction: false,
         order: policy?.order ?? BIG_NUMBER
       };
     }
-    const unitWithTranslatedLabel = policy?.quantity.unit && {
-      ...policy?.quantity.unit,
-      ...{
-        label: c13n[policy?.quantity.unit.label] ?? policy?.quantity.unit.label
-      }
-    };
-    transactionsByCategoryMap[categoryName].transactions.push({
+    const unitWithTranslatedLabel = extractUnitTranslationFromC13N(
+      c13n,
+      policy?.quantity.unit
+    );
+    transactionsByCategoryMap[translatedCategoryName].transactions.push({
       header: formattedDate,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
@@ -116,8 +119,8 @@ export const groupTransactionsByCategory = (
       isAppeal: policy?.categoryType === "APPEAL",
       order: -1
     });
-    transactionsByCategoryMap[categoryName].hasLatestTransaction =
-      transactionsByCategoryMap[categoryName].hasLatestTransaction ||
+    transactionsByCategoryMap[translatedCategoryName].hasLatestTransaction =
+      transactionsByCategoryMap[translatedCategoryName].hasLatestTransaction ||
       differenceInSeconds(latestTransactionTime || 0, item.transactionTime) ===
         0;
   });

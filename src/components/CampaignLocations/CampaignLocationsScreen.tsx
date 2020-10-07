@@ -27,6 +27,7 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { sortBy } from "lodash";
 import { i18nt } from "../../utils/translations";
+import { extractTranslationFromC13N } from "../../utils/translation";
 
 const styles = StyleSheet.create({
   content: {
@@ -135,9 +136,10 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
         features: undefined,
         c13n: {}
       };
-      const translatedCampaignName =
-        (features?.campaignName && c13n[features.campaignName]) ??
-        features?.campaignName;
+      const translatedCampaignName = extractTranslationFromC13N(
+        c13n,
+        features?.campaignName
+      );
       return {
         ...credentials,
         key,

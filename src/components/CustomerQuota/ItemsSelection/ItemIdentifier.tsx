@@ -9,6 +9,7 @@ import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
 import { AlertModalContext } from "../../../context/alert";
 import { i18nt } from "../../../utils/translations";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
+import { extractTranslationFromC13N } from "../../../utils/translation";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -54,9 +55,11 @@ export const ItemIdentifier: FunctionComponent<{
     updateIdentifierValue(index, input);
   };
 
-  const translatedLabel = c13n[label] ?? label;
-  const translatedScanButtonText =
-    (scanButton.text && c13n[scanButton.text]) ?? scanButton.text;
+  const translatedLabel = extractTranslationFromC13N(c13n, label)!;
+  const translatedScanButtonText = extractTranslationFromC13N(
+    c13n,
+    scanButton.text
+  );
 
   return (
     <>
