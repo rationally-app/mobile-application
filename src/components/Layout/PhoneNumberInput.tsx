@@ -87,9 +87,12 @@ export const PhoneNumberInput: FunctionComponent<{
           style={styles.numberInput}
           keyboardType="phone-pad"
           value={value}
-          onChange={({ nativeEvent: { text } }) =>
-            onChangeMobileNumber(text.replace(" ", ""))
-          }
+          onChange={({ nativeEvent: { text } }) => {
+            const cleanText: string = text.replace(" ", "");
+            if (cleanText.length <= 8) {
+              onChangeMobileNumber(cleanText);
+            }
+          }}
           onSubmitEditing={onSubmit}
         />
       </View>
