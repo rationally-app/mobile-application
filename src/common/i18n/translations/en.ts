@@ -24,7 +24,7 @@ export const en: Translations = {
   collectCustomerDetailsScreen: {
     checkEligibleItems: "Check the number of item(s) eligible for redemption",
     scanIdentification: "Scan identification",
-    or: "Or",
+    or: "OR",
     enterIdNumber: "Enter ID Number",
     check: "Check"
   },
