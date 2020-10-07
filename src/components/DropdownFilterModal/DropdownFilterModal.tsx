@@ -1,18 +1,19 @@
-import React, { useState, useEffect, FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import {
+  Dimensions,
+  FlatList,
   Modal,
   StyleSheet,
   Text,
-  View,
-  Dimensions,
   TextInput,
-  FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from "react-native";
-import { size, fontSize, borderRadius, color } from "../../common/styles";
+import { borderRadius, color, fontSize, size } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { AppMode } from "../../context/config";
+import { AntDesign } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   modalView: {
@@ -43,38 +44,21 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#CED0CE"
   },
-  crossIconLeft: {
-    marginLeft: size(3),
-    marginTop: size(7) + 2,
-    paddingTop: size(1),
-    marginBottom: size(3),
-    position: "absolute",
-    height: size(2.5),
-    borderWidth: 1,
-    borderRadius: borderRadius(1),
-    borderColor: color("grey", 0),
-    backgroundColor: color("grey", 0),
-    transform: [{ rotate: "45deg" }]
-  },
-  crossIconRight: {
-    marginLeft: size(3),
-    marginTop: size(7) + 2,
-    marginBottom: size(3),
-    position: "absolute",
-    height: size(2.5),
-    borderWidth: 1,
-    borderRadius: borderRadius(1),
-    borderColor: color("grey", 0),
-    backgroundColor: color("grey", 0),
-    transform: [{ rotate: "-45deg" }]
-  },
-  crossText: {
-    marginLeft: size(5),
+  closeTouchable: {
     marginTop: size(7),
     marginBottom: size(3),
-    color: color("grey", 0),
+    flexDirection: "row"
+  },
+  emoji: {
+    fontSize: fontSize(3),
+    marginLeft: size(2),
+    marginRight: size(0.5),
+    color: color("grey", 0)
+  },
+  crossText: {
     fontSize: fontSize(0),
-    fontFamily: "brand-regular"
+    marginRight: size(0.5),
+    color: color("grey", 0)
   },
   searchSection: {
     margin: size(3)
@@ -175,11 +159,8 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
     return (
       <View>
         <TopBackground mode={AppMode.production} style={styles.header} />
-        <TouchableOpacity onPress={closeModal}>
-          <View>
-            <Text style={styles.crossIconLeft} />
-            <Text style={styles.crossIconRight} />
-          </View>
+        <TouchableOpacity style={styles.closeTouchable} onPress={closeModal}>
+          <AntDesign name="close" style={styles.emoji} />
           <Text style={styles.crossText}>Close</Text>
         </TouchableOpacity>
       </View>
