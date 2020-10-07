@@ -41,10 +41,6 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
     setSelectedCountry(item);
   };
 
-  const onPassportNumChanged = (passportNo: string): void => {
-    setPassportNum(passportNo.toUpperCase());
-  };
-
   useEffect(() => {
     selectedCountry && passportNum
       ? setIdInput(`${selectedCountry?.id}-${passportNum}`)
@@ -69,7 +65,7 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
           <InputWithLabel
             label="Passport number"
             value={passportNum ? passportNum : undefined}
-            onChange={({ nativeEvent: { text } }) => onPassportNumChanged(text)}
+            onChange={({ nativeEvent: { text } }) => setPassportNum(text)}
             onSubmitEditing={submitId}
             autoCompleteType="off"
             autoCorrect={false}
