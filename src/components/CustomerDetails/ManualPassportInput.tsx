@@ -34,24 +34,22 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
   setIdInput,
   submitId
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState<DropdownItem | null>(
-    null
-  );
-  const [passportNo, setPassportNo] = useState<string | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<DropdownItem>();
+  const [passportNum, setPassportNum] = useState<string>();
 
   const onItemSelection = (item: DropdownItem): void => {
     setSelectedCountry(item);
   };
 
-  const onPassportNoChanged = (passportNo: string): void => {
-    setPassportNo(passportNo.toUpperCase());
+  const onPassportNumChanged = (passportNo: string): void => {
+    setPassportNum(passportNo.toUpperCase());
   };
 
   useEffect(() => {
-    selectedCountry && passportNo
-      ? setIdInput(`${selectedCountry?.id}-${passportNo}`)
+    selectedCountry && passportNum
+      ? setIdInput(`${selectedCountry?.id}-${passportNum}`)
       : setIdInput("");
-  }, [selectedCountry, passportNo, setIdInput]);
+  }, [selectedCountry, passportNum, setIdInput]);
 
   return (
     <View style={styles.centeredView}>
@@ -70,8 +68,8 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
         <View style={styles.inputWrapper}>
           <InputWithLabel
             label="Passport number"
-            value={passportNo ? passportNo : undefined}
-            onChange={({ nativeEvent: { text } }) => onPassportNoChanged(text)}
+            value={passportNum ? passportNum : undefined}
+            onChange={({ nativeEvent: { text } }) => onPassportNumChanged(text)}
             onSubmitEditing={submitId}
             autoCompleteType="off"
             autoCorrect={false}

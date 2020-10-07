@@ -3,7 +3,7 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useCallback
+  useMemo
 } from "react";
 import {
   View,
@@ -119,7 +119,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     IdentificationContext
   );
 
-  const getSelectionArray = useCallback((): IdentificationFlag[] => {
+  const selectionArray = useMemo((): IdentificationFlag[] => {
     const selectionArray = [];
     selectionArray.push(features?.id || defaultSelectedIdType);
     features?.alternateIds &&
@@ -165,16 +165,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   }, [shouldShowCamera]);
 
   useEffect(() => {
-    const selectionDetails = getSelectionArray();
     // in the event the saved selection not found.. will always fall back to the first idType in array
     setSelectedIdType(
-      selectionDetails.some(
-        selection => selection.label === selectedIdType.label
-      )
+      selectionArray.some(selection => selection.label === selectedIdType.label)
         ? selectedIdType
-        : selectionDetails[0]
+        : selectionArray[0]
     );
-  }, [getSelectionArray, selectedIdType, setSelectedIdType]);
+  }, [selectionArray, selectedIdType, setSelectedIdType]);
 
   const onCheck = async (input: string): Promise<void> => {
     try {
@@ -215,7 +212,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const hasMultiInputSelection = (): boolean => {
-    return getSelectionArray().length > 1;
+    return selectionArray.length > 1;
   };
 
   const getInputComponent = (): JSX.Element => {
@@ -251,7 +248,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           </View>
           {hasMultiInputSelection() && (
             <InputSelection
-              selectionArray={getSelectionArray()}
+              selectionArray={selectionArray}
               currentSelection={selectedIdType}
               onInputSelection={onInputSelection}
             />

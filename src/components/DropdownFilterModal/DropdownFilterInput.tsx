@@ -41,6 +41,10 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
+  const openModal = (): void => {
+    setModalVisible(true);
+  };
+
   const closeModal = (): void => {
     setModalVisible(false);
   };
@@ -59,7 +63,7 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
       {/* need a View because Android is not able to response to onTouchStart on a non-editable TextInput*/}
       <View
         onTouchStart={() => {
-          setModalVisible(true);
+          openModal();
         }}
         style={styles.inputView}
       >
