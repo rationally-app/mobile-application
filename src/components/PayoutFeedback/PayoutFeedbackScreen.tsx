@@ -16,7 +16,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Card } from "../Layout/Card";
 import { sharedStyles } from "../CustomerQuota/CheckoutSuccess/sharedStyles";
 import { sharedStyles as sharedCardStyles } from "../CustomerQuota/sharedStyles";
-import i18n from "i18n-js";
+import { i18nString } from "../../utils/i18nString";
 
 const styles = StyleSheet.create({
   content: {
@@ -117,7 +117,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
             <Feather name="user" size={size(3)} color={color("grey", 0)} />
             <View style={styles.cardHeaderTextWrapper}>
               <AppText style={styles.cardHeaderSubText}>
-                {i18n.t("merchantFlowScreen.merchantCode")}
+                {i18nString("merchantFlowScreen", "merchantCode")}
               </AppText>
               <AppText style={styles.cardHeaderText}>{merchantCode}</AppText>
             </View>
@@ -136,16 +136,16 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
               />
               <View style={sharedCardStyles.statusTitleWrapper}>
                 <AppText style={sharedCardStyles.statusTitle}>
-                  {i18n.t("checkoutSuccessScreen.redeemed")}
+                  {i18nString("checkoutSuccessScreen", "redeemed")}
                 </AppText>
               </View>
               <AppText style={{ marginBottom: size(2) }}>
-                {i18n.t("checkoutSuccessScreen.redeemedItems")}
+                {i18nString("checkoutSuccessScreen", "redeemedItems")}
               </AppText>
               <View>
                 <View style={sharedStyles.itemRow}>
                   <AppText style={sharedStyles.itemHeaderText}>
-                    {i18n.t("merchantFlowScreen.quotaCategoryVouchers")}:
+                    {i18nString("merchantFlowScreen", "quotaCategoryVouchers")}:
                   </AppText>
                 </View>
                 <View style={sharedStyles.quantitiesWrapper}>
@@ -169,7 +169,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
         <View style={styles.buttonsWrapper}>
           <DarkButton
             fullWidth={true}
-            text={i18n.t("merchantFlowScreen.nextMerchant")}
+            text={i18nString("merchantFlowScreen", "nextMerchant")}
             onPress={() => {
               navigation.navigate("MerchantPayoutScreen");
             }}

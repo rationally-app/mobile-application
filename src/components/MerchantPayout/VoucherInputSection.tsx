@@ -7,7 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { Voucher } from "../../types";
-import i18n from "i18n-js";
+import { i18nString } from "../../utils/i18nString";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -69,19 +69,19 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
             style={styles.seeAllButton}
           >
             <AppText style={styles.seeAllText}>
-              {i18n.t("merchantFlowScreen.seeAll")}
+              {i18nString("merchantFlowScreen", "seeAll")}
             </AppText>
           </TouchableOpacity>
         </View>
       ) : (
         <AppText>
-          {i18n.t("collectCustomerDetailsScreen.checkEligibleItems")}
+          {i18nString("collectCustomerDetailsScreen", "checkEligibleItems")}
         </AppText>
       )}
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text={i18n.t("merchantFlowScreen.quotaButtonAddVoucher")}
+          text={i18nString("merchantFlowScreen", "quotaButtonAddVoucher")}
           icon={
             <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
           }
@@ -93,7 +93,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
           <View style={styles.horizontalRule} />
           <View style={styles.inputWrapper}>
             <InputWithLabel
-              label={i18n.t("merchantFlowScreen.merchantCode")}
+              label={i18nString("merchantFlowScreen", "merchantCode")}
               value={merchantCode}
               onChange={({ nativeEvent: { text } }) => setMerchantCode(text)}
               onSubmitEditing={redeemVouchers}

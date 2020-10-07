@@ -3,8 +3,8 @@ import { AppText } from "../Layout/AppText";
 import { AuthCredentials } from "../../types";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { fontSize, color, size } from "../../common/styles";
-import i18n from "i18n-js";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
+import { i18nString } from "../../utils/i18nString";
 
 const styles = StyleSheet.create({
   content: {
@@ -53,7 +53,7 @@ export const CampaignLocationsListItem: FunctionComponent<
               hasExpired ? { color: color("grey", 40) } : {}
             ]}
           >
-            {i18n.t("customerQuotaScreen.id")}: {operatorId}
+            {i18nString("customerQuotaScreen", "id")} : {operatorId}
           </AppText>
         ) : null}
         <AppText
@@ -63,10 +63,10 @@ export const CampaignLocationsListItem: FunctionComponent<
           ]}
         >
           {hasExpired
-            ? i18n.t("customerQuotaScreen.campaignExpiredOn", {
+            ? i18nString("customerQuotaScreen", "campaignExpiredOn", {
                 dateTime: formattedExpiry
               })
-            : i18n.t("customerQuotaScreen.campaignValidTo", {
+            : i18nString("customerQuotaScreen", "campaignValidTo", {
                 dateTime: formattedExpiry
               })}
         </AppText>

@@ -25,8 +25,8 @@ import { useDrawerContext } from "../../context/drawer";
 import { LoadingView } from "../Loading";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
-import i18n from "i18n-js";
 import { sortBy } from "lodash";
+import { i18nString } from "../../utils/i18nString";
 
 const styles = StyleSheet.create({
   content: {
@@ -85,14 +85,14 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     setDrawerButtons([
       {
         icon: "map-marker-plus",
-        label: i18n.t("navigationDrawer.addCampaign"),
+        label: i18nString("navigationDrawer", "addCampaign"),
         onPress: () => {
           navigation.navigate("LoginScreen");
         }
       },
       {
         icon: "map-search",
-        label: i18n.t("navigationDrawer.changeChampaign"),
+        label: i18nString("navigationDrawer", "changeChampaign"),
         onPress: () => {
           navigation.navigate("CampaignLocationsScreen");
         }
@@ -160,7 +160,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
           {hasLoadedAuthFromStore && hasLoadedCampaignConfigFromStore ? (
             <Card>
               <AppText style={styles.selectCampaignHeader}>
-                {i18n.t("navigationDrawer.selectCampaign")}
+                {i18nString("navigationDrawer", "selectCampaign")}
               </AppText>
               {sortedAuthCredentialsWithCampaignName.map((credentials, idx) => (
                 <View
@@ -171,7 +171,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
                     {...credentials}
                     name={
                       credentials.name ||
-                      `${i18n.t("navigationDrawer.campaign")} ${idx + 1}`
+                      `${i18nString("navigationDrawer", "campaign")} ${idx + 1}`
                     }
                     onPress={() => navigateToCampaignLocation(credentials)}
                   />

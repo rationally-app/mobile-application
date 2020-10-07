@@ -107,6 +107,10 @@ export const en: Translations = {
     cannot: "Cannot",
     purchase: "purchase"
   },
+  campaignInitialisationScreen: {
+    appleStore: "App Store",
+    androidStore: "Play Store"
+  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "Already used",

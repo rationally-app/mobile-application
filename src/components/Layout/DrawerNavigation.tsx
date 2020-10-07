@@ -11,8 +11,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
-import i18n from "i18n-js";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
+import { i18nString } from "../../utils/i18nString";
 
 const styles = StyleSheet.create({
   container: {
@@ -151,34 +151,34 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         ))}
         <DrawerButtonComponent
           icon="logout"
-          label={i18n.t("navigationDrawer.logout")}
+          label={i18nString("navigationDrawer", "logout")}
           onPress={onPressLogout}
         />
       </View>
       <View style={{ marginTop: "auto", marginBottom: size(4) }}>
         <BottomNavigationLink onPress={showHelpModal}>
-          {i18n.t("navigationDrawer.helpSupport")}
+          {i18nString("navigationDrawer", "helpSupport")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
           }}
         >
-          {i18n.t("navigationDrawer.termsOfUse")}
+          {i18nString("navigationDrawer", "termsOfUse")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/privacy");
           }}
         >
-          {i18n.t("navigationDrawer.privacyStatement")}
+          {i18nString("navigationDrawer", "privacyStatement")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
           }}
         >
-          {i18n.t("navigationDrawer.reportVulnerability")}
+          {i18nString("navigationDrawer", "reportVulnerability")}
         </BottomNavigationLink>
         <AppText style={styles.bottomVersionText}>{version}</AppText>
       </View>

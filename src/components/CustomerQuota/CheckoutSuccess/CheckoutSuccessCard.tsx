@@ -25,9 +25,9 @@ import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import i18n from "i18n-js";
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
 import { AlertModalContext } from "../../../context/alert";
+import { i18nString } from "../../../utils/i18nString";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -50,7 +50,7 @@ const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {`${i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
+      {`${i18nString("checkoutSuccessScreen", "redeemedLimitReached", {
         quantity: quantity,
         date: formatDate(quotaRefreshTime)
       })}`}
@@ -107,7 +107,7 @@ export const groupTransactionsByTime = (
         item.quantity,
         policy?.quantity.unit || {
           type: "POSTFIX",
-          label: ` ${i18n.t("checkoutSuccessScreen.quantity")}`
+          label: ` ${i18nString("checkoutSuccessScreen", "quantity")}`
         }
       ),
       isAppeal: policy?.categoryType === "APPEAL",

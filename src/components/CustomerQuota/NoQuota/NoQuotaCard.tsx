@@ -34,8 +34,8 @@ import { AlertModalContext } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
-import i18n from "i18n-js";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
+import { i18nString } from "../../../utils/i18nString";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -98,7 +98,7 @@ export const groupTransactionsByCategory = (
         item.quantity,
         policy?.quantity.unit || {
           type: "POSTFIX",
-          label: ` ${i18n.t("checkoutSuccessScreen.quantity")}`
+          label: ` ${i18nString("checkoutSuccessScreen", "quantity")}`
         }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
@@ -279,11 +279,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 <View>
                   <AppText style={styles.wrapper}>
                     {policyType === "REDEEM"
-                      ? `${i18n.t(
-                          "checkoutSuccessScreen.previouslyRedeemedItems"
+                      ? `${i18nString(
+                          "checkoutSuccessScreen",
+                          "previouslyRedeemedItems"
                         )}:`
-                      : `${i18n.t(
-                          "checkoutSuccessScreen.previouslyPurchasedItems"
+                      : `${i18nString(
+                          "checkoutSuccessScreen",
+                          "previouslyPurchasedItems"
                         )}:`}
                   </AppText>
                   {transactionsByCategoryList.map(
@@ -318,7 +320,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={i18n.t("checkoutSuccessScreen.redeemedNextIdentity")}
+          text={i18nString("checkoutSuccessScreen", "redeemedNextIdentity")}
           onPress={onCancel}
           fullWidth={true}
         />

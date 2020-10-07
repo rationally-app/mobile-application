@@ -5,7 +5,7 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ModalWithClose } from "../Layout/ModalWithClose";
-import i18n from "i18n-js";
+import { i18nString } from "../../utils/i18nString";
 
 const styles = StyleSheet.create({
   inputWrapper: {
@@ -35,7 +35,7 @@ export const ManualAddVoucherModal: FunctionComponent<ManualInputCard> = ({
     <ModalWithClose isVisible={isVisible} onExit={onExit}>
       <View style={styles.inputWrapper}>
         <InputWithLabel
-          label={i18n.t("idScanner.enterVoucherId")}
+          label={i18nString("idScanner", "enterVoucherId")}
           value={voucherCode}
           onChange={({ nativeEvent: { text } }) => setVoucherCode(text)}
           onSubmitEditing={onSubmit}
@@ -43,7 +43,7 @@ export const ManualAddVoucherModal: FunctionComponent<ManualInputCard> = ({
       </View>
       <DarkButton
         fullWidth={true}
-        text={i18n.t("merchantFlowScreen.quotaButtonAddVoucher")}
+        text={i18nString("merchantFlowScreen", "quotaButtonAddVoucher")}
         icon={
           <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
         }

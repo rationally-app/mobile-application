@@ -6,8 +6,8 @@ import { Card } from "../../Layout/Card";
 import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
-import i18n from "i18n-js";
 import { AlertModalContext, WARNING_MESSAGE } from "../../../context/alert";
+import { i18nString } from "../../../utils/i18nString";
 
 const styles = StyleSheet.create({
   titlePadding: {
@@ -65,7 +65,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
       </CustomerCard>
       <View style={styles.backbuttonComponent}>
         <SecondaryButton
-          text={i18n.t("customerQuotaScreen.quotaAppealCancel")}
+          text={i18nString("customerQuotaScreen", "quotaAppealCancel")}
           onPress={() => {
             showWarnAlert(WARNING_MESSAGE.CANCEL_ENTRY, onCancel);
           }}

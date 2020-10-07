@@ -105,6 +105,10 @@ export const zh: Translations = {
     cannot: "不能",
     purchase: "购买"
   },
+  campaignInitialisationScreen: {
+    appleStore: "谷歌应用商店",
+    androidStore: "苹果应用商店"
+  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "已使用",
@@ -232,7 +236,7 @@ export const zh: Translations = {
     },
     outdatedAppUpdate: {
       title: "应用程序版本已过期",
-      body: "请通过[谷歌应用商店/苹果应用商店]更新应用程序。",
+      body: "请通过%{storeName}更新应用程序。",
       primaryActionText: "更新应用程序"
     },
     systemError: {

@@ -1,24 +1,24 @@
 import React, { FunctionComponent } from "react";
 import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
-import i18n from "i18n-js";
 import {
   formatDateTime,
   formatDate,
   formatTimeDifference
 } from "../../../utils/dateTimeFormatter";
+import { i18nString } from "../../../utils/i18nString";
 
 export const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
   toggleTimeSensitiveTitle: boolean;
 }> = ({ transactionTime, toggleTimeSensitiveTitle }) => {
   const today = toggleTimeSensitiveTitle
-    ? `${i18n.t("checkoutSuccessScreen.today")}`
+    ? `${i18nString("checkoutSuccessScreen", "today")}`
     : "";
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {i18n.t("checkoutSuccessScreen.limitReachedDate", {
+        {i18nString("checkoutSuccessScreen", "limitReachedDate", {
           dateTime: formatDateTime(transactionTime),
           today
         })}
@@ -33,12 +33,12 @@ export const RecentTransactionTitle: FunctionComponent<{
   toggleTimeSensitiveTitle: boolean;
 }> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => {
   const today = toggleTimeSensitiveTitle
-    ? `${i18n.t("checkoutSuccessScreen.today")}`
+    ? `${i18nString("checkoutSuccessScreen", "today")}`
     : "";
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {`${i18n.t("checkoutSuccessScreen.limitReachedRecent", {
+        {`${i18nString("checkoutSuccessScreen", "limitReachedRecent", {
           time: formatTimeDifference(now, transactionTime),
           today
         })}`}
@@ -51,12 +51,12 @@ export const NoPreviousTransactionTitle: FunctionComponent<{
   toggleTimeSensitiveTitle: boolean;
 }> = ({ toggleTimeSensitiveTitle }) => {
   const today = toggleTimeSensitiveTitle
-    ? `${i18n.t("checkoutSuccessScreen.today")}`
+    ? `${i18nString("checkoutSuccessScreen", "today")}`
     : "";
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {i18n.t("checkoutSuccessScreen.limitReached", {
+        {i18nString("checkoutSuccessScreen", "limitReached", {
           today
         })}
       </AppText>
@@ -71,7 +71,7 @@ export const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {`${i18n.t("checkoutSuccessScreen.redeemedLimitReached", {
+      {`${i18nString("checkoutSuccessScreen", "redeemedLimitReached", {
         quantity: quantity,
         date: formatDate(quotaRefreshTime)
       })}`}
