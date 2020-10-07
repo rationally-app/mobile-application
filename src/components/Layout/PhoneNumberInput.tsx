@@ -4,6 +4,8 @@ import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
 
+const MAX_LENGTH_FOR_NSN = 17;
+
 const styles = StyleSheet.create({
   inputsWrapper: {
     flexDirection: "row",
@@ -89,7 +91,7 @@ export const PhoneNumberInput: FunctionComponent<{
           value={value}
           onChange={({ nativeEvent: { text } }) => {
             const cleanText: string = text.replace(" ", "");
-            if (cleanText.length <= 8) {
+            if (cleanText.length <= MAX_LENGTH_FOR_NSN) {
               onChangeMobileNumber(cleanText);
             }
           }}
