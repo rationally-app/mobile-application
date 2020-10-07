@@ -1,4 +1,4 @@
-import { i18nString } from "../../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../../utils/translations";
 
 interface CheckoutMessage {
   title: string;
@@ -10,9 +10,15 @@ export const getCheckoutMessages = (productType?: string): CheckoutMessage => {
   switch (productType) {
     case "REDEEM":
       return {
-        title: `${i18nString("checkoutSuccessScreen", "redeemed")}!`,
-        description: `${i18nString("checkoutSuccessScreen", "redeemedItems")}:`,
-        ctaButtonText: i18nString(
+        title: `${getTranslatedStringWithI18n(
+          "checkoutSuccessScreen",
+          "redeemed"
+        )}!`,
+        description: `${getTranslatedStringWithI18n(
+          "checkoutSuccessScreen",
+          "redeemedItems"
+        )}:`,
+        ctaButtonText: getTranslatedStringWithI18n(
           "checkoutSuccessScreen",
           "redeemedNextIdentity"
         )
@@ -20,12 +26,15 @@ export const getCheckoutMessages = (productType?: string): CheckoutMessage => {
     case "PURCHASE":
     default:
       return {
-        title: `${i18nString("checkoutSuccessScreen", "purchased")}!`,
-        description: `${i18nString(
+        title: `${getTranslatedStringWithI18n(
+          "checkoutSuccessScreen",
+          "purchased"
+        )}!`,
+        description: `${getTranslatedStringWithI18n(
           "checkoutSuccessScreen",
           "purchasedItems"
         )}:`,
-        ctaButtonText: i18nString(
+        ctaButtonText: getTranslatedStringWithI18n(
           "checkoutSuccessScreen",
           "purchasedNextIdentity"
         )

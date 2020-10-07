@@ -15,7 +15,7 @@ import {
   formatDateTime,
   formatTimeDifference
 } from "../../../utils/dateTimeFormatter";
-import { i18nErrorString, i18nString } from "../../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../../utils/translations";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -38,9 +38,14 @@ const DistantTransactionTitle: FunctionComponent<{
 }> = ({ transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {i18nString("checkoutSuccessScreen", "redeemedOn", {
-        time: formatDateTime(transactionTime)
-      })}
+      {getTranslatedStringWithI18n(
+        "checkoutSuccessScreen",
+        "redeemedOn",
+        undefined,
+        {
+          time: formatDateTime(transactionTime)
+        }
+      )}
     </AppText>
   </>
 );
@@ -51,16 +56,21 @@ const RecentTransactionTitle: FunctionComponent<{
 }> = ({ now, transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {i18nString("checkoutSuccessScreen", "redeemedAgo", {
-        time: formatTimeDifference(now, transactionTime)
-      })}
+      {getTranslatedStringWithI18n(
+        "checkoutSuccessScreen",
+        "redeemedAgo",
+        undefined,
+        {
+          time: formatTimeDifference(now, transactionTime)
+        }
+      )}
     </AppText>
   </>
 );
 
 const NoPreviousTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>
-    {i18nString("checkoutSuccessScreen", "previouslyRedeemed")}
+    {getTranslatedStringWithI18n("checkoutSuccessScreen", "previouslyRedeemed")}
   </AppText>
 );
 
@@ -79,8 +89,16 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
 
   let card;
 
-  const title = i18nErrorString("notEligible", "title");
-  const details = i18nErrorString("notEligible", "body");
+  const title = getTranslatedStringWithI18n(
+    "errorMessages",
+    "notEligible",
+    "title"
+  );
+  const details = getTranslatedStringWithI18n(
+    "errorMessages",
+    "notEligible",
+    "body"
+  );
 
   if (error instanceof ScannerError || error instanceof LimitReachedError) {
     return null;

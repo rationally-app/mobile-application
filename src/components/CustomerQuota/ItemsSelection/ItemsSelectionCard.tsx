@@ -18,7 +18,7 @@ import {
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
-import { i18nString } from "../../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../../utils/translations";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -101,8 +101,14 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           <SecondaryButton
             text={
               isAppeal
-                ? i18nString("customerQuotaScreen", "quotaScanButtonBack")
-                : i18nString("customerQuotaScreen", "quotaAppealCancel")
+                ? getTranslatedStringWithI18n(
+                    "customerQuotaScreen",
+                    "quotaScanButtonBack"
+                  )
+                : getTranslatedStringWithI18n(
+                    "customerQuotaScreen",
+                    "quotaAppealCancel"
+                  )
             }
             onPress={
               isAppeal
@@ -120,7 +126,10 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           ]}
         >
           <DarkButton
-            text={i18nString("customerQuotaScreen", "quotaButtonCheckout")}
+            text={getTranslatedStringWithI18n(
+              "customerQuotaScreen",
+              "quotaButtonCheckout"
+            )}
             icon={
               <Feather
                 name="shopping-cart"

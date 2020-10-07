@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { fontSize, size, color } from "../../common/styles";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 export const styles = StyleSheet.create({
   wrapper: {
@@ -74,14 +74,14 @@ const Transaction: FunctionComponent<Transaction> = ({
         </View>
         {isAppeal && (
           <AppText style={{ ...styles.appealLabel, alignSelf: "flex-start" }}>
-            {i18nString("statisticsScreen", "viaAppeal")}
+            {getTranslatedStringWithI18n("statisticsScreen", "viaAppeal")}
           </AppText>
         )}
       </View>
     )}
     {!details && isAppeal && (
       <AppText style={{ ...styles.appealLabel, textAlign: "right" }}>
-        {i18nString("statisticsScreen", "viaAppeal")}
+        {getTranslatedStringWithI18n("statisticsScreen", "viaAppeal")}
       </AppText>
     )}
   </>

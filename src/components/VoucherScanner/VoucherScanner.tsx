@@ -19,7 +19,7 @@ import { Feather } from "@expo/vector-icons";
 import { ManualAddVoucherModal } from "./ManualAddVoucherModal";
 import { SafeAreaView } from "react-navigation";
 import { Voucher } from "../../types";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -113,7 +113,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
                 fontFamily: "brand-bold"
               }}
             >
-              {i18nString("idScanner", "scanToCheck")}
+              {getTranslatedStringWithI18n("idScanner", "scanToCheck")}
             </AppText>
           ) : (
             <ValidVoucherCount
@@ -139,13 +139,16 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
         <View style={styles.bottomSectionWrapper}>
           <View style={styles.manualInputButtonWrapper}>
             <SecondaryButton
-              text={i18nString("idScanner", "enterManually")}
+              text={getTranslatedStringWithI18n("idScanner", "enterManually")}
               onPress={openInputModal}
               fullWidth={true}
             />
           </View>
           <DarkButton
-            text={i18nString("checkoutSuccessScreen", "complete")}
+            text={getTranslatedStringWithI18n(
+              "checkoutSuccessScreen",
+              "complete"
+            )}
             onPress={onCancel}
           />
         </View>

@@ -6,7 +6,7 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { AppText } from "../Layout/AppText";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { size, color, fontSize } from "../../common/styles";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -60,7 +60,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text={i18nString(
+          text={getTranslatedStringWithI18n(
             "collectCustomerDetailsScreen",
             "scanIdentification"
           )}
@@ -74,14 +74,17 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
         <View style={styles.horizontalRule} />
         <View style={styles.orWrapper}>
           <AppText style={styles.orText}>
-            {i18nString("collectCustomerDetailsScreen", "or")}
+            {getTranslatedStringWithI18n("collectCustomerDetailsScreen", "or")}
           </AppText>
         </View>
       </View>
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <InputWithLabel
-            label={i18nString("collectCustomerDetailsScreen", "enterIdNumber")}
+            label={getTranslatedStringWithI18n(
+              "collectCustomerDetailsScreen",
+              "enterIdNumber"
+            )}
             value={idInput}
             onChange={({ nativeEvent: { text } }) => setIdInput(text)}
             onSubmitEditing={submitId}
@@ -91,7 +94,10 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
           />
         </View>
         <SecondaryButton
-          text={i18nString("collectCustomerDetailsScreen", "check")}
+          text={getTranslatedStringWithI18n(
+            "collectCustomerDetailsScreen",
+            "check"
+          )}
           onPress={submitId}
         />
       </View>

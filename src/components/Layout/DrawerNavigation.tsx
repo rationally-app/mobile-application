@@ -12,7 +12,7 @@ import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   container: {
@@ -151,34 +151,37 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         ))}
         <DrawerButtonComponent
           icon="logout"
-          label={i18nString("navigationDrawer", "logout")}
+          label={getTranslatedStringWithI18n("navigationDrawer", "logout")}
           onPress={onPressLogout}
         />
       </View>
       <View style={{ marginTop: "auto", marginBottom: size(4) }}>
         <BottomNavigationLink onPress={showHelpModal}>
-          {i18nString("navigationDrawer", "helpSupport")}
+          {getTranslatedStringWithI18n("navigationDrawer", "helpSupport")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
           }}
         >
-          {i18nString("navigationDrawer", "termsOfUse")}
+          {getTranslatedStringWithI18n("navigationDrawer", "termsOfUse")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/privacy");
           }}
         >
-          {i18nString("navigationDrawer", "privacyStatement")}
+          {getTranslatedStringWithI18n("navigationDrawer", "privacyStatement")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
           }}
         >
-          {i18nString("navigationDrawer", "reportVulnerability")}
+          {getTranslatedStringWithI18n(
+            "navigationDrawer",
+            "reportVulnerability"
+          )}
         </BottomNavigationLink>
         <AppText style={styles.bottomVersionText}>{version}</AppText>
       </View>

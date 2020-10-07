@@ -7,7 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { Voucher } from "../../types";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -69,19 +69,25 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
             style={styles.seeAllButton}
           >
             <AppText style={styles.seeAllText}>
-              {i18nString("merchantFlowScreen", "seeAll")}
+              {getTranslatedStringWithI18n("merchantFlowScreen", "seeAll")}
             </AppText>
           </TouchableOpacity>
         </View>
       ) : (
         <AppText>
-          {i18nString("collectCustomerDetailsScreen", "checkEligibleItems")}
+          {getTranslatedStringWithI18n(
+            "collectCustomerDetailsScreen",
+            "checkEligibleItems"
+          )}
         </AppText>
       )}
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text={i18nString("merchantFlowScreen", "quotaButtonAddVoucher")}
+          text={getTranslatedStringWithI18n(
+            "merchantFlowScreen",
+            "quotaButtonAddVoucher"
+          )}
           icon={
             <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
           }
@@ -93,7 +99,10 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
           <View style={styles.horizontalRule} />
           <View style={styles.inputWrapper}>
             <InputWithLabel
-              label={i18nString("merchantFlowScreen", "merchantCode")}
+              label={getTranslatedStringWithI18n(
+                "merchantFlowScreen",
+                "merchantCode"
+              )}
               value={merchantCode}
               onChange={({ nativeEvent: { text } }) => setMerchantCode(text)}
               onSubmitEditing={redeemVouchers}

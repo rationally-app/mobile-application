@@ -45,7 +45,7 @@ import {
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -336,7 +336,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           onBarCodeScanned={onBarCodeScanned}
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText={i18nString(
+          cancelButtonText={getTranslatedStringWithI18n(
             "customerQuotaScreen",
             "quotaAppealCancel"
           )}

@@ -6,17 +6,17 @@ import { color, size } from "../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { FontAwesome } from "@expo/vector-icons";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const NotEligibleTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>
-    {i18nString("notEligibleScreen", "notEligible")}
+    {getTranslatedStringWithI18n("notEligibleScreen", "notEligible")}
   </AppText>
 );
 
 const NotEligibleTransactionDescription: FunctionComponent = () => (
   <AppText style={{ marginBottom: size(1) }}>
-    {`${i18nString("notEligibleScreen", "logAppeal")}.`}
+    {`${getTranslatedStringWithI18n("notEligibleScreen", "logAppeal")}.`}
   </AppText>
 );
 
@@ -56,7 +56,10 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={i18nString("checkoutSuccessScreen", "redeemedNextIdentity")}
+          text={getTranslatedStringWithI18n(
+            "checkoutSuccessScreen",
+            "redeemedNextIdentity"
+          )}
           onPress={onCancel}
           fullWidth={true}
         />

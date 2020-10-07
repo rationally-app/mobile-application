@@ -38,7 +38,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext } from "../../context/alert";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   content: {
@@ -202,7 +202,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               </AppText>
             )}
             <AppText>
-              {i18nString("collectCustomerDetailsScreen", "checkEligibleItems")}
+              {getTranslatedStringWithI18n(
+                "collectCustomerDetailsScreen",
+                "checkEligibleItems"
+              )}
             </AppText>
             <InputIdSection
               openCamera={() => setShouldShowCamera(true)}
@@ -236,7 +239,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText={i18nString("idScanner", "enterIdManually")}
+          cancelButtonText={getTranslatedStringWithI18n(
+            "idScanner",
+            "enterIdManually"
+          )}
           barCodeTypes={
             features?.id.scannerType === "QR"
               ? [BarCodeScanner.Constants.BarCodeType.qr]

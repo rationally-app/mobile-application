@@ -1,17 +1,26 @@
 import React, { FunctionComponent } from "react";
 import * as Updates from "expo-updates";
 import { AlertModal } from "../AlertModal/AlertModal";
-import { i18nErrorString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 export const UpdateByRestartingAlert: FunctionComponent = () => {
   return (
     <AlertModal
       alertType="INFO"
-      title={i18nErrorString("outdatedAppRestart", "title")}
-      description={i18nErrorString("outdatedAppRestart", "body")}
+      title={getTranslatedStringWithI18n(
+        "errorMessages",
+        "outdatedAppRestart",
+        "title"
+      )}
+      description={getTranslatedStringWithI18n(
+        "errorMessages",
+        "outdatedAppRestart",
+        "body"
+      )}
       visible={true}
       buttonTexts={{
-        primaryActionText: `${i18nErrorString(
+        primaryActionText: `${getTranslatedStringWithI18n(
+          "errorMessages",
           "outdatedAppRestart",
           "primaryActionText"
         )}`

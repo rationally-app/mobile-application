@@ -48,7 +48,7 @@ import {
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { LimitReachedError } from "../../utils/validateVoucherCode";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   content: {
@@ -270,7 +270,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <View style={styles.submitWrapper}>
                 <DarkButton
                   fullWidth={true}
-                  text={i18nString(
+                  text={getTranslatedStringWithI18n(
                     "customerQuotaScreen",
                     "quotaButtonCheckout"
                   )}
@@ -286,7 +286,10 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 />
               </View>
               <SecondaryButton
-                text={i18nString("customerQuotaScreen", "quotaAppealCancel")}
+                text={getTranslatedStringWithI18n(
+                  "customerQuotaScreen",
+                  "quotaAppealCancel"
+                )}
                 onPress={() => {
                   showWarnAlert(WARNING_MESSAGE.DISCARD_TRANSACTION, () => {
                     setMerchantCode("");

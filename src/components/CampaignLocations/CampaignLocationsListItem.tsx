@@ -4,7 +4,7 @@ import { AuthCredentials } from "../../types";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { fontSize, color, size } from "../../common/styles";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   content: {
@@ -53,7 +53,8 @@ export const CampaignLocationsListItem: FunctionComponent<
               hasExpired ? { color: color("grey", 40) } : {}
             ]}
           >
-            {i18nString("customerQuotaScreen", "id")} : {operatorId}
+            {getTranslatedStringWithI18n("customerQuotaScreen", "id")} :{" "}
+            {operatorId}
           </AppText>
         ) : null}
         <AppText
@@ -63,12 +64,22 @@ export const CampaignLocationsListItem: FunctionComponent<
           ]}
         >
           {hasExpired
-            ? i18nString("customerQuotaScreen", "campaignExpiredOn", {
-                dateTime: formattedExpiry
-              })
-            : i18nString("customerQuotaScreen", "campaignValidTo", {
-                dateTime: formattedExpiry
-              })}
+            ? getTranslatedStringWithI18n(
+                "customerQuotaScreen",
+                "campaignExpiredOn",
+                undefined,
+                {
+                  dateTime: formattedExpiry
+                }
+              )
+            : getTranslatedStringWithI18n(
+                "customerQuotaScreen",
+                "campaignValidTo",
+                undefined,
+                {
+                  dateTime: formattedExpiry
+                }
+              )}
         </AppText>
       </View>
     </TouchableOpacity>

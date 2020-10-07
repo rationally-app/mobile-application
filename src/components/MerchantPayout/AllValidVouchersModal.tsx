@@ -5,7 +5,7 @@ import { ValidVoucherCount } from "./ValidVoucherCount";
 import { AppText } from "../Layout/AppText";
 import { ModalWithClose } from "../Layout/ModalWithClose";
 import { Voucher } from "../../types";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   card: {
@@ -72,7 +72,7 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
               onPress={() => onVoucherCodeRemove(voucher.serial)}
             >
               <AppText style={styles.removeText}>
-                {i18nString("merchantFlowScreen", "remove")}
+                {getTranslatedStringWithI18n("merchantFlowScreen", "remove")}
               </AppText>
             </TouchableOpacity>
           </View>

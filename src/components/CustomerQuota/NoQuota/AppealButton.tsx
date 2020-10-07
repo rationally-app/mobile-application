@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { size } from "../../../common/styles";
-import { i18nString } from "../../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../../utils/translations";
 
 const styles = StyleSheet.create({
   appealButtonText: {
@@ -20,7 +20,7 @@ export const AppealButton: FunctionComponent<{
     <TouchableOpacity onPress={onAppeal}>
       <View style={{ alignItems: "center" }}>
         <AppText style={styles.appealButtonText}>
-          {i18nString("customerAppealScreen", "raiseAppeal")}
+          {getTranslatedStringWithI18n("customerAppealScreen", "raiseAppeal")}
         </AppText>
       </View>
     </TouchableOpacity>

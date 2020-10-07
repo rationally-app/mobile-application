@@ -21,7 +21,7 @@ import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { AuthCredentials } from "../../types";
-import { i18nString } from "../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../utils/translations";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -135,10 +135,13 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   return (
     <Card>
-      <AppText>{`${i18nString("loginOTPCard", "sendingOtp")}...`}</AppText>
+      <AppText>{`${getTranslatedStringWithI18n(
+        "loginOTPCard",
+        "sendingOtp"
+      )}...`}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <InputWithLabel
-          label={i18nString("loginOTPCard", "otp")}
+          label={getTranslatedStringWithI18n("loginOTPCard", "otp")}
           value={oTPValue}
           onChange={({ nativeEvent: { text } }) => handleChange(text)}
           onSubmitEditing={onSubmitOTP}
@@ -147,13 +150,18 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         <View style={styles.buttonsWrapper}>
           {resendDisabledTime > 0 ? (
             <AppText style={styles.resendCountdownText}>
-              {i18nString("loginOTPCard", "resendIn", {
-                ss: resendDisabledTime / 1000
-              })}
+              {getTranslatedStringWithI18n(
+                "loginOTPCard",
+                "resendIn",
+                undefined,
+                {
+                  ss: resendDisabledTime / 1000
+                }
+              )}
             </AppText>
           ) : (
             <SecondaryButton
-              text={i18nString("loginOTPCard", "resend")}
+              text={getTranslatedStringWithI18n("loginOTPCard", "resend")}
               onPress={resendOTP}
               isLoading={isResending}
               disabled={isLoading}
@@ -161,7 +169,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           )}
           <View style={styles.submitWrapper}>
             <DarkButton
-              text={i18nString("loginOTPCard", "submit")}
+              text={getTranslatedStringWithI18n("loginOTPCard", "submit")}
               fullWidth={true}
               onPress={onSubmitOTP}
               isLoading={isLoading}

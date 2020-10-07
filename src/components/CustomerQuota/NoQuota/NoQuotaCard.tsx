@@ -35,7 +35,7 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
-import { i18nString } from "../../../utils/i18nString";
+import { getTranslatedStringWithI18n } from "../../../utils/translations";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -98,7 +98,10 @@ export const groupTransactionsByCategory = (
         item.quantity,
         policy?.quantity.unit || {
           type: "POSTFIX",
-          label: ` ${i18nString("checkoutSuccessScreen", "quantity")}`
+          label: ` ${getTranslatedStringWithI18n(
+            "checkoutSuccessScreen",
+            "quantity"
+          )}`
         }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
@@ -279,11 +282,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 <View>
                   <AppText style={styles.wrapper}>
                     {policyType === "REDEEM"
-                      ? `${i18nString(
+                      ? `${getTranslatedStringWithI18n(
                           "checkoutSuccessScreen",
                           "previouslyRedeemedItems"
                         )}:`
-                      : `${i18nString(
+                      : `${getTranslatedStringWithI18n(
                           "checkoutSuccessScreen",
                           "previouslyPurchasedItems"
                         )}:`}
@@ -320,7 +323,10 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={i18nString("checkoutSuccessScreen", "redeemedNextIdentity")}
+          text={getTranslatedStringWithI18n(
+            "checkoutSuccessScreen",
+            "redeemedNextIdentity"
+          )}
           onPress={onCancel}
           fullWidth={true}
         />
