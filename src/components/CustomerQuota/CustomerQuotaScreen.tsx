@@ -87,11 +87,13 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 
-  const { quotaResponse, quotaState, quotaError, updateQuota } = useQuota(
-    ids,
-    sessionToken,
-    endpoint
-  );
+  const {
+    quotaResponse,
+    quotaState,
+    quotaError,
+    updateQuota,
+    clearQuotaError
+  } = useQuota(ids, sessionToken, endpoint);
 
   const {
     cartState,
@@ -161,17 +163,27 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
      * We check for quota errors first because the cart relies on the quota.
      */
     if (quotaError) {
-      throw new Error(quotaError.message);
-    }
-    if (cartError instanceof SessionError) {
-      clearCartError();
-      expireSession();
-      showErrorAlert(cartError, () => {
-        navigation.navigate("CampaignLocationsScreen");
-      });
+      if (quotaError instanceof SessionError) {
+        clearQuotaError();
+        expireSession();
+        showErrorAlert(quotaError, () => {
+          navigation.navigate("CampaignLocationsScreen");
+        });
+        return;
+      }
+      showErrorAlert(quotaError, () => navigation.goBack());
       return;
     }
+
     if (cartError) {
+      if (cartError instanceof SessionError) {
+        clearCartError();
+        expireSession();
+        showErrorAlert(cartError, () => {
+          navigation.navigate("CampaignLocationsScreen");
+        });
+        return;
+      }
       if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
         switch (cartError.message) {
           case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
@@ -202,8 +214,15 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
               clearCartError()
             );
             break;
-          default:
+          case ERROR_MESSAGE.INVALID_QUANTITY:
+          case ERROR_MESSAGE.MISSING_SELECTION:
             showErrorAlert(cartError, () => clearCartError());
+            break;
+          default:
+            showErrorAlert(cartError, () => {
+              clearCartError();
+              navigation.goBack();
+            });
         }
       } else {
         throw new Error(cartError.message);
@@ -217,7 +236,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     expireSession,
     navigation,
     showErrorAlert,
-    quotaError
+    quotaError,
+    clearQuotaError
   ]);
 
   useEffect(() => {
