@@ -1,15 +1,11 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { CampaignPolicy } from "../../../types";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { fontSize, color } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
-import { CampaignConfigContext } from "../../../context/campaignConfig";
-import {
-  extractTranslationFromC13N,
-  extractUnitTranslationFromC13N
-} from "../../../utils/translation";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   name: {
@@ -32,25 +28,22 @@ export const ItemContent: FunctionComponent<{
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
 }> = ({ name, description, descriptionAlert, unit, maxQuantity }) => {
-  const { c13n } = useContext(CampaignConfigContext);
-
-  const translatedName = extractTranslationFromC13N(c13n, name);
-  const translatedDescription = extractTranslationFromC13N(c13n, description);
-  const unitWithTranslatedLabel = extractUnitTranslationFromC13N(c13n, unit);
+  const { c13nt, c13ntForUnit } = useTranslate();
+  const tDescription = c13nt(description ?? "");
 
   return (
     <View>
-      <AppText style={styles.name}>{translatedName}</AppText>
+      <AppText style={styles.name}>{c13nt(name)}</AppText>
       {descriptionAlert && descriptionAlert.length > 0 && (
         <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
       )}
-      {!!translatedDescription && (
-        <AppText style={styles.description}>{translatedDescription}</AppText>
+      {tDescription.length > 0 && (
+        <AppText style={styles.description}>{tDescription}</AppText>
       )}
       {maxQuantity === 1 && (
         <AppText style={sharedStyles.maxQuantityLabel}>
           <ItemMaxUnitLabel
-            unit={unitWithTranslatedLabel}
+            unit={c13ntForUnit(unit)}
             maxQuantity={maxQuantity}
           />
         </AppText>

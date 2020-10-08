@@ -27,7 +27,7 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { sortBy } from "lodash";
 import { i18nt } from "../../utils/translations";
-import { extractTranslationFromC13N } from "../../utils/translation";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -130,20 +130,13 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     navigateToCampaignLocation,
     navigation
   ]);
+  const { c13nt } = useTranslate();
   const authCredentialsWithCampaignName = Object.entries(authCredentials).map(
     ([key, credentials]) => {
-      const { features, c13n } = allCampaignConfigs[key] ?? {
-        features: undefined,
-        c13n: {}
-      };
-      const translatedCampaignName = extractTranslationFromC13N(
-        c13n,
-        features?.campaignName
-      );
       return {
         ...credentials,
         key,
-        name: translatedCampaignName
+        name: c13nt(allCampaignConfigs[key]?.features?.campaignName ?? "")
       };
     }
   );

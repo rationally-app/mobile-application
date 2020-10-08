@@ -29,12 +29,7 @@ import {
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import {
-  Quota,
-  PastTransactionsResult,
-  CampaignPolicy,
-  CampaignC13N
-} from "../../../types";
+import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
 import { AlertModalContext } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
@@ -42,9 +37,9 @@ import { AuthContext } from "../../../context/auth";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
 import { i18nt } from "../../../utils/translations";
 import {
-  extractTranslationFromC13N,
-  extractUnitTranslationFromC13N
-} from "../../../utils/translation";
+  TranslationHook,
+  useTranslate
+} from "../../../hooks/useTranslate/useTranslate";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -83,44 +78,43 @@ export const groupTransactionsByCategory = (
   sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
   allProducts: CampaignPolicy[],
   latestTransactionTime: Date | undefined,
-  c13n: CampaignC13N
+  translationProps: TranslationHook
 ): TransactionsByCategoryMap => {
+  const { c13nt, c13ntForUnit } = translationProps;
+
   // Group transactions by category
   const transactionsByCategoryMap: TransactionsByCategoryMap = {};
   sortedTransactions?.forEach(item => {
     const policy = allProducts?.find(
       policy => policy.category === item.category
     );
-    const translatedCategoryName =
-      extractTranslationFromC13N(c13n, policy?.name) ?? item.category;
+    const tName = (policy?.name && c13nt(policy?.name)) ?? item.category;
     const formattedDate = formatDateTime(item.transactionTime);
 
-    if (!transactionsByCategoryMap.hasOwnProperty(translatedCategoryName)) {
-      transactionsByCategoryMap[translatedCategoryName] = {
+    if (!transactionsByCategoryMap.hasOwnProperty(tName)) {
+      transactionsByCategoryMap[tName] = {
         transactions: [],
         hasLatestTransaction: false,
         order: policy?.order ?? BIG_NUMBER
       };
     }
-    const unitWithTranslatedLabel = extractUnitTranslationFromC13N(
-      c13n,
-      policy?.quantity.unit
-    );
-    transactionsByCategoryMap[translatedCategoryName].transactions.push({
+    transactionsByCategoryMap[tName].transactions.push({
       header: formattedDate,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        unitWithTranslatedLabel || {
-          type: "POSTFIX",
-          label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
-        }
+        policy?.quantity.unit
+          ? c13ntForUnit(policy?.quantity.unit)
+          : {
+              type: "POSTFIX",
+              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
+            }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
       order: -1
     });
-    transactionsByCategoryMap[translatedCategoryName].hasLatestTransaction =
-      transactionsByCategoryMap[translatedCategoryName].hasLatestTransaction ||
+    transactionsByCategoryMap[tName].hasLatestTransaction =
+      transactionsByCategoryMap[tName].hasLatestTransaction ||
       differenceInSeconds(latestTransactionTime || 0, item.transactionTime) ===
         0;
   });
@@ -192,7 +186,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   quotaResponse
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
-  const { policies: allProducts, c13n } = useContext(CampaignConfigContext);
+  const { policies: allProducts } = useContext(CampaignConfigContext);
   const { getProduct } = useContext(ProductContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
 
@@ -224,11 +218,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const hasAppealProduct =
     allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false;
 
+  const translationProps = useTranslate();
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
     latestTransactionTime,
-    c13n
+    translationProps
   );
 
   const transactionsByCategoryList = sortTransactions(

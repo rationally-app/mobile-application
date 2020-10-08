@@ -12,12 +12,7 @@ import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color } from "../../../common/styles";
 import { getCheckoutMessages } from "./checkoutMessages";
 import { FontAwesome } from "@expo/vector-icons";
-import {
-  Quota,
-  PastTransactionsResult,
-  CampaignPolicy,
-  CampaignC13N
-} from "../../../types";
+import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
@@ -34,9 +29,9 @@ import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
 import { AlertModalContext } from "../../../context/alert";
 import { i18nt } from "../../../utils/translations";
 import {
-  extractTranslationFromC13N,
-  extractUnitTranslationFromC13N
-} from "../../../utils/translation";
+  TranslationHook,
+  useTranslate
+} from "../../../hooks/useTranslate/useTranslate";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -85,8 +80,10 @@ export interface TransactionsByTimeMap {
 export const groupTransactionsByTime = (
   sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
   allProducts: CampaignPolicy[],
-  c13n: CampaignC13N
+  translationProps: TranslationHook
 ): TransactionsByTimeMap => {
+  const { c13nt, c13ntForUnit } = translationProps;
+
   const transactionsByTimeMap: {
     [transactionTimeInSeconds: string]: {
       transactionTime: Date;
@@ -98,8 +95,6 @@ export const groupTransactionsByTime = (
     const policy = allProducts?.find(
       policy => policy.category === item.category
     );
-    const translatedCategoryName =
-      extractTranslationFromC13N(c13n, policy?.name) ?? item.category;
     const transactionTimeInSeconds = String(
       Math.floor(item.transactionTime.getTime() / 1000)
     );
@@ -111,19 +106,17 @@ export const groupTransactionsByTime = (
         order: -transactionTimeInSeconds
       };
     }
-    const unitWithTranslatedLabel = extractUnitTranslationFromC13N(
-      c13n,
-      policy?.quantity.unit
-    );
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
-      header: translatedCategoryName,
+      header: (policy?.name && c13nt(policy?.name)) ?? item.category,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        unitWithTranslatedLabel || {
-          type: "POSTFIX",
-          label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
-        }
+        policy?.quantity.unit
+          ? c13ntForUnit(policy?.quantity.unit)
+          : {
+              type: "POSTFIX",
+              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
+            }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
       order: policy?.order ?? BIG_NUMBER
@@ -152,7 +145,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
 
   const { getProduct } = useContext(ProductContext);
-  const { policies: allProducts, c13n } = useContext(CampaignConfigContext);
+  const { policies: allProducts } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
@@ -169,10 +162,11 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     }
   }, [error, showErrorAlert]);
 
+  const translationProps = useTranslate();
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
     allProducts || [],
-    c13n
+    translationProps
   );
   const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
 
