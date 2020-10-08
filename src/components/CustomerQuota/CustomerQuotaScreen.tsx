@@ -98,8 +98,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     cart,
     updateCart,
     checkoutCart,
-    error,
-    clearError
+    cartError,
+    clearCartError
   } = useCart(ids, sessionToken, endpoint, quotaResponse?.remainingQuota);
 
   useEffect(() => {
@@ -154,56 +154,66 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [setAuthCredentials, endpoint, operatorToken, sessionToken]);
 
   useEffect(() => {
-    if (!error || !quotaError) {
+    if (!cartError && !quotaError) {
       return;
     }
-    if (error instanceof SessionError) {
-      clearError();
+    /**
+     * We check for quota errors first because the cart relies on the quota.
+     */
+    if (quotaError) {
+      throw new Error(quotaError.message);
+    }
+    if (cartError instanceof SessionError) {
+      clearCartError();
       expireSession();
-      showErrorAlert(error, () => {
+      showErrorAlert(cartError, () => {
         navigation.navigate("CampaignLocationsScreen");
       });
       return;
     }
-    if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
-      switch (error.message) {
-        case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
-          const missingIdentifierInputError = new Error(
-            campaignFeatures?.campaignName === "TT Tokens"
-              ? ERROR_MESSAGE.MISSING_POD_INPUT
-              : campaignFeatures?.campaignName.includes("Vouchers")
-              ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
-              : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
-          );
-          showErrorAlert(missingIdentifierInputError, () => clearError());
-          break;
-        case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
-          const invalidIdentifierInputError = new Error(
-            campaignFeatures?.campaignName === "TT Tokens"
-              ? ERROR_MESSAGE.INVALID_POD_INPUT
-              : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
-          );
-          showErrorAlert(invalidIdentifierInputError, () => clearError());
-          break;
-        case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
-          const duplicateIdentifierInputError = new Error(
-            campaignFeatures?.campaignName === "TT Tokens"
-              ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
-              : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
-          );
-          showErrorAlert(duplicateIdentifierInputError, () => clearError());
-          break;
-        default:
-          showErrorAlert(error, () => clearError());
+    if (cartError) {
+      if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
+        switch (cartError.message) {
+          case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
+            const missingIdentifierInputError = new Error(
+              campaignFeatures?.campaignName === "TT Tokens"
+                ? ERROR_MESSAGE.MISSING_POD_INPUT
+                : campaignFeatures?.campaignName.includes("Vouchers")
+                ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
+                : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
+            );
+            showErrorAlert(missingIdentifierInputError, () => clearCartError());
+            break;
+          case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
+            const invalidIdentifierInputError = new Error(
+              campaignFeatures?.campaignName === "TT Tokens"
+                ? ERROR_MESSAGE.INVALID_POD_INPUT
+                : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+            );
+            showErrorAlert(invalidIdentifierInputError, () => clearCartError());
+            break;
+          case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
+            const duplicateIdentifierInputError = new Error(
+              campaignFeatures?.campaignName === "TT Tokens"
+                ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
+                : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
+            );
+            showErrorAlert(duplicateIdentifierInputError, () =>
+              clearCartError()
+            );
+            break;
+          default:
+            showErrorAlert(cartError, () => clearCartError());
+        }
+      } else {
+        throw new Error(cartError.message);
       }
-    } else {
-      throw new Error(error.message);
     }
   }, [
     campaignFeatures?.campaignName,
     cartState,
-    clearError,
-    error,
+    clearCartError,
+    cartError,
     expireSession,
     navigation,
     showErrorAlert,

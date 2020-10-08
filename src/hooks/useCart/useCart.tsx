@@ -36,8 +36,8 @@ export type CartHook = {
   ) => void;
   checkoutCart: () => void;
   checkoutResult?: PostTransactionResult;
-  error?: Error;
-  clearError: () => void;
+  cartError?: Error;
+  clearCartError: () => void;
 };
 
 const getItem = (
@@ -121,8 +121,8 @@ export const useCart = (
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
-  const [error, setError] = useState<Error>();
-  const clearError = useCallback((): void => setError(undefined), []);
+  const [cartError, setCartError] = useState<Error>();
+  const clearCartError = useCallback((): void => setCartError(undefined), []);
   const { products, getProduct } = useContext(ProductContext);
   const prevProducts = usePrevious(products);
   const prevIds = usePrevious(ids);
@@ -147,7 +147,7 @@ export const useCart = (
          */
         setCart(cart => mergeWithCart(cart, cartQuota, getProduct));
       } else {
-        setError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
+        setCartError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
       }
     }
   }, [
@@ -170,7 +170,7 @@ export const useCart = (
   const updateCart: CartHook["updateCart"] = useCallback(
     (category, quantity, identifierInputs) => {
       if (quantity < 0) {
-        setError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
+        setCartError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
         return;
       }
       const [item, itemIdx] = getItem(cart, category);
@@ -187,11 +187,11 @@ export const useCart = (
             ...cart.slice(itemIdx + 1)
           ]);
         } else {
-          setError(new Error(ERROR_MESSAGE.INSUFFICIENT_QUOTA));
+          setCartError(new Error(ERROR_MESSAGE.INSUFFICIENT_QUOTA));
           return;
         }
       } else {
-        setError(new Error(ERROR_MESSAGE.INVALID_CATEGORY));
+        setCartError(new Error(ERROR_MESSAGE.INVALID_CATEGORY));
         return;
       }
     },
@@ -221,7 +221,7 @@ export const useCart = (
 
       if (transactions.length === 0) {
         setCartState("DEFAULT");
-        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
+        setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         return;
       }
 
@@ -229,7 +229,7 @@ export const useCart = (
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
         setCartState("DEFAULT");
-        setError(error);
+        setCartError(error);
         return;
       }
 
@@ -247,11 +247,11 @@ export const useCart = (
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
-          setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+          setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
         } else if (e instanceof SessionError) {
-          setError(e);
+          setCartError(e);
         } else {
-          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+          setCartError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
       }
     };
@@ -266,7 +266,7 @@ export const useCart = (
     updateCart,
     checkoutCart,
     checkoutResult,
-    error,
-    clearError
+    cartError,
+    clearCartError
   };
 };

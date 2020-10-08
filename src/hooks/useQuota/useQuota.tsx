@@ -16,6 +16,7 @@ export type QuotaHook = {
   allQuotaResponse?: Quota;
   updateQuota: () => void;
   quotaError?: Error;
+  clearQuotaError: () => void;
 };
 
 const filterQuotaWithAvailableProducts = (
@@ -90,6 +91,7 @@ export const useQuota = (
   const [quotaResponse, setQuotaResponse] = useState<Quota>();
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota>();
   const [quotaError, setQuotaError] = useState<Error>();
+  const clearQuotaError = useCallback((): void => setQuotaError(undefined), []);
   const { products } = useContext(ProductContext);
   const prevIds = usePrevious(ids);
   const prevProducts = usePrevious(products);
@@ -144,6 +146,7 @@ export const useQuota = (
     quotaResponse,
     allQuotaResponse,
     updateQuota,
-    quotaError
+    quotaError,
+    clearQuotaError
   };
 };
