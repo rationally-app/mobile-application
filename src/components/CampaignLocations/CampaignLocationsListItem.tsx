@@ -63,10 +63,10 @@ export const CampaignLocationsListItem: FunctionComponent<
           ]}
         >
           {hasExpired
-            ? i18nt("customerQuotaScreen", "campaignExpiredOn", {
+            ? i18nt("customerQuotaScreen", "campaignExpiredOn", undefined, {
                 dateTime: formattedExpiry
               })
-            : i18nt("customerQuotaScreen", "campaignValidTo", {
+            : i18nt("customerQuotaScreen", "campaignValidTo", undefined, {
                 dateTime: formattedExpiry
               })}
         </AppText>

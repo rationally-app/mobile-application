@@ -147,7 +147,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         <View style={styles.buttonsWrapper}>
           {resendDisabledTime > 0 ? (
             <AppText style={styles.resendCountdownText}>
-              {i18nt("loginOTPCard", "resendIn", {
+              {i18nt("loginOTPCard", "resendIn", undefined, {
                 ss: resendDisabledTime / 1000
               })}
             </AppText>

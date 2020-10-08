@@ -38,7 +38,7 @@ const DistantTransactionTitle: FunctionComponent<{
 }> = ({ transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {i18nt("checkoutSuccessScreen", "redeemedOn", {
+      {i18nt("checkoutSuccessScreen", "redeemedOn", undefined, {
         time: formatDateTime(transactionTime)
       })}
     </AppText>
@@ -51,7 +51,7 @@ const RecentTransactionTitle: FunctionComponent<{
 }> = ({ now, transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {i18nt("checkoutSuccessScreen", "redeemedAgo", {
+      {i18nt("checkoutSuccessScreen", "redeemedAgo", undefined, {
         time: formatTimeDifference(now, transactionTime)
       })}
     </AppText>

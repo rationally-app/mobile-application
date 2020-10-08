@@ -50,7 +50,7 @@ const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", {
+      {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
         quantity: quantity,
         date: formatDate(quotaRefreshTime)
       })}`}

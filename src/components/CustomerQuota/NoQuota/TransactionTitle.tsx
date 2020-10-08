@@ -18,7 +18,7 @@ export const DistantTransactionTitle: FunctionComponent<{
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {i18nt("checkoutSuccessScreen", "limitReachedDate", {
+        {i18nt("checkoutSuccessScreen", "limitReachedDate", undefined, {
           dateTime: formatDateTime(transactionTime),
           today
         })}
@@ -38,7 +38,7 @@ export const RecentTransactionTitle: FunctionComponent<{
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {`${i18nt("checkoutSuccessScreen", "limitReachedRecent", {
+        {`${i18nt("checkoutSuccessScreen", "limitReachedRecent", undefined, {
           time: formatTimeDifference(now, transactionTime),
           today
         })}`}
@@ -56,7 +56,7 @@ export const NoPreviousTransactionTitle: FunctionComponent<{
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {i18nt("checkoutSuccessScreen", "limitReached", {
+        {i18nt("checkoutSuccessScreen", "limitReached", undefined, {
           today
         })}
       </AppText>
@@ -71,7 +71,7 @@ export const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", {
+      {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
         quantity: quantity,
         date: formatDate(quotaRefreshTime)
       })}`}
