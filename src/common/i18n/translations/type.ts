@@ -100,7 +100,8 @@ export type Translations = {
   notEligibleScreen: {
     notEligible: string;
     logAppeal: string;
-    cannotPurchase: string;
+    cannot: string;
+    purchase: string;
   };
   campaignInitialisationScreen: {
     appleStore: string;

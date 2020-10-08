@@ -104,7 +104,8 @@ export const en: Translations = {
   notEligibleScreen: {
     notEligible: "Not eligible",
     logAppeal: "Please log an appeal request.",
-    cannotPurchase: "Cannot purchase"
+    cannot: "Cannot",
+    purchase: "purchase"
   },
   campaignInitialisationScreen: {
     appleStore: "App Store",
