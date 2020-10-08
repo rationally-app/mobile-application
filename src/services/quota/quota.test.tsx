@@ -15,6 +15,7 @@ const mockCaptureException = jest.fn();
 const mockFetch = jest.fn();
 jest.spyOn(global, "fetch").mockImplementation(mockFetch);
 
+const validation = "REGEX";
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
 
@@ -95,6 +96,7 @@ const mockGetQuotaResponseMultipleId = {
 
 const postTransactionParams = {
   ids: ["S0000000J"],
+  validation,
   transactions: [{ category: "product-1", quantity: 1, identifiers: [] }],
   key,
   endpoint
@@ -145,7 +147,7 @@ describe("quota", () => {
         ok: true,
         json: () => Promise.resolve(mockGetQuotaResponseSingleId)
       });
-      const quota = await getQuota(["S0000000J"], key, endpoint);
+      const quota = await getQuota(["S0000000J"], validation, key, endpoint);
       expect(quota).toEqual(mockGetQuotaResultSingleId);
     });
 
@@ -155,7 +157,12 @@ describe("quota", () => {
         ok: true,
         json: () => Promise.resolve(mockGetQuotaResponseMultipleId)
       });
-      const quota = await getQuota(["S0000000J", "S0000001I"], key, endpoint);
+      const quota = await getQuota(
+        ["S0000000J", "S0000001I"],
+        validation,
+        key,
+        endpoint
+      );
       expect(quota).toEqual(mockGetQuotaResponseMultipleId);
     });
 
@@ -166,7 +173,9 @@ describe("quota", () => {
         json: () => Promise.resolve({ message: "No ID was provided" })
       });
 
-      await expect(getQuota([], key, endpoint)).rejects.toThrow(QuotaError);
+      await expect(getQuota([], validation, key, endpoint)).rejects.toThrow(
+        QuotaError
+      );
     });
 
     it("should throw error if quota is malformed", async () => {
@@ -179,9 +188,9 @@ describe("quota", () => {
           })
       });
 
-      await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
-        QuotaError
-      );
+      await expect(
+        getQuota(["S0000000J"], validation, key, endpoint)
+      ).rejects.toThrow(QuotaError);
     });
 
     it("should capture exception through sentry if quota is malformed", async () => {
@@ -194,9 +203,9 @@ describe("quota", () => {
           })
       });
 
-      await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
-        QuotaError
-      );
+      await expect(
+        getQuota(["S0000000J"], validation, key, endpoint)
+      ).rejects.toThrow(QuotaError);
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
 
@@ -207,18 +216,18 @@ describe("quota", () => {
         json: () => Promise.resolve({ message: "Invalid customer ID" })
       });
 
-      await expect(getQuota(["invalid-id"], key, endpoint)).rejects.toThrow(
-        QuotaError
-      );
+      await expect(
+        getQuota(["invalid-id"], validation, key, endpoint)
+      ).rejects.toThrow(QuotaError);
     });
 
     it("should throw error if there were issues fetching", async () => {
       expect.assertions(1);
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
-        "Network error"
-      );
+      await expect(
+        getQuota(["S0000000J"], validation, key, endpoint)
+      ).rejects.toThrow("Network error");
     });
   });
 
@@ -307,6 +316,7 @@ describe("quota", () => {
       });
       const pastTransactionsResult = await getPastTransactions(
         ["S0000000J"],
+        validation,
         key,
         endpoint
       );
@@ -320,9 +330,9 @@ describe("quota", () => {
         json: () => Promise.resolve({ message: "No ID was provided" })
       });
 
-      await expect(getPastTransactions([""], key, endpoint)).rejects.toThrow(
-        PastTransactionError
-      );
+      await expect(
+        getPastTransactions([""], validation, key, endpoint)
+      ).rejects.toThrow(PastTransactionError);
     });
 
     it("should throw error if past transactions are malformed", async () => {
@@ -336,7 +346,7 @@ describe("quota", () => {
       });
 
       await expect(
-        getPastTransactions(["S0000000J"], key, endpoint)
+        getPastTransactions(["S0000000J"], validation, key, endpoint)
       ).rejects.toThrow(PastTransactionError);
     });
   });

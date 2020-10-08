@@ -38,6 +38,7 @@ export class PastTransactionError extends Error {
 
 interface PostTransaction {
   ids: string[];
+  validation: string;
   transactions: Transaction[];
   key: string;
   endpoint: string;
@@ -45,6 +46,7 @@ interface PostTransaction {
 
 export const mockGetQuota = async (
   ids: string[],
+  _validation: string,
   _key: string,
   _endpoint: string
 ): Promise<Quota> => {
@@ -104,6 +106,7 @@ export const mockGetQuota = async (
 
 export const liveGetQuota = async (
   ids: string[],
+  validation: string,
   key: string,
   endpoint: string
 ): Promise<Quota> => {
@@ -118,7 +121,8 @@ export const liveGetQuota = async (
         Authorization: key
       },
       body: JSON.stringify({
-        ids
+        ids,
+        validation
       })
     });
     return response;
@@ -171,6 +175,7 @@ export const mockPostTransaction = async ({
 
 export const livePostTransaction = async ({
   ids,
+  validation,
   endpoint,
   key,
   transactions
@@ -189,6 +194,7 @@ export const livePostTransaction = async ({
         },
         body: JSON.stringify({
           ids,
+          validation,
           transaction: transactions
         })
       }
@@ -242,6 +248,7 @@ export const mockPastTransactions = async (
 
 export const livePastTransactions = async (
   ids: string[],
+  validation: string,
   key: string,
   endpoint: string
 ): Promise<PastTransactionsResult> => {
@@ -259,7 +266,8 @@ export const livePastTransactions = async (
           Authorization: key
         },
         body: JSON.stringify({
-          ids
+          ids,
+          validation
         })
       }
     );
