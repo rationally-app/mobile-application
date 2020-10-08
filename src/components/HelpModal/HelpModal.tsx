@@ -6,7 +6,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { SafeAreaView } from "react-navigation";
-import { getTranslatedStringWithI18n } from "../../utils/translations";
+import { i18nt } from "../../utils/translations";
 
 const BASE_URL = "https://supplyallyhelp.zendesk.com/hc/en-us";
 const FEEDBACK_URL = BASE_URL + "/requests/new";
@@ -121,7 +121,7 @@ export const HelpModal: FunctionComponent<{
       <SafeAreaView style={{ flex: 1 }}>
         <View style={[styles.bar, styles.topBar]}>
           <AppText style={styles.pageTitle}>
-            {getTranslatedStringWithI18n("navigationDrawer", "helpSupport")}
+            {i18nt("navigationDrawer", "helpSupport")}
           </AppText>
           <NavigationButton onPress={onExit}>
             <NavigationIcon name="x" />
@@ -145,7 +145,7 @@ export const HelpModal: FunctionComponent<{
           </View>
           <DarkButton
             onPress={onPressAskQuestion}
-            text={getTranslatedStringWithI18n("loginScanCard", "askQuestion")}
+            text={i18nt("loginScanCard", "askQuestion")}
           />
         </View>
       </SafeAreaView>

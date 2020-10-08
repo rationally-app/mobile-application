@@ -31,7 +31,7 @@ import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { AuthStoreContext } from "../../context/authStore";
-import { getTranslatedStringWithI18n } from "../../utils/translations";
+import { i18nt } from "../../utils/translations";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -206,7 +206,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       <Card>
         <ActivityIndicator size="large" color={color("grey", 40)} />
         <AppText style={{ marginTop: size(1) }}>
-          {getTranslatedStringWithI18n("customerQuotaScreen", "quotaCheck")}...
+          {i18nt("customerQuotaScreen", "quotaCheck")}...
         </AppText>
       </Card>
     </View>

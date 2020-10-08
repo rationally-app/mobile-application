@@ -27,7 +27,7 @@ import { AuthContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { getTranslatedStringWithI18n } from "../../utils/translations";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -137,7 +137,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         )}
         <ReasonSelectionCard
           ids={ids}
-          reasonSelectionHeader={getTranslatedStringWithI18n(
+          reasonSelectionHeader={i18nt(
             "customerAppealScreen",
             "indicateReason"
           )}

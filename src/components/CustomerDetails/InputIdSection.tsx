@@ -6,7 +6,7 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { AppText } from "../Layout/AppText";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { size, color, fontSize } from "../../common/styles";
-import { getTranslatedStringWithI18n } from "../../utils/translations";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -60,10 +60,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text={getTranslatedStringWithI18n(
-            "collectCustomerDetailsScreen",
-            "scanIdentification"
-          )}
+          text={i18nt("collectCustomerDetailsScreen", "scanIdentification")}
           icon={
             <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
           }
@@ -74,17 +71,14 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
         <View style={styles.horizontalRule} />
         <View style={styles.orWrapper}>
           <AppText style={styles.orText}>
-            {getTranslatedStringWithI18n("collectCustomerDetailsScreen", "or")}
+            {i18nt("collectCustomerDetailsScreen", "or")}
           </AppText>
         </View>
       </View>
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <InputWithLabel
-            label={getTranslatedStringWithI18n(
-              "collectCustomerDetailsScreen",
-              "enterIdNumber"
-            )}
+            label={i18nt("collectCustomerDetailsScreen", "enterIdNumber")}
             value={idInput}
             onChange={({ nativeEvent: { text } }) => setIdInput(text)}
             onSubmitEditing={submitId}
@@ -94,10 +88,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
           />
         </View>
         <SecondaryButton
-          text={getTranslatedStringWithI18n(
-            "collectCustomerDetailsScreen",
-            "check"
-          )}
+          text={i18nt("collectCustomerDetailsScreen", "check")}
           onPress={submitId}
         />
       </View>

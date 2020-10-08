@@ -20,7 +20,7 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { getTranslatedStringWithI18n } from "../../utils/translations";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   background: {
@@ -120,10 +120,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
           <IdScanner
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
-            cancelButtonText={getTranslatedStringWithI18n(
-              "idScanner",
-              "enterIdManually"
-            )}
+            cancelButtonText={i18nt("idScanner", "enterIdManually")}
             barCodeTypes={
               features?.id.scannerType === "QR"
                 ? [BarCodeScanner.Constants.BarCodeType.qr]
@@ -142,10 +139,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             <Card style={styles.card}>
               <View style={styles.cardHeader}>
                 <AppText style={{ flex: 1 }}>
-                  {getTranslatedStringWithI18n(
-                    "customerQuotaScreen",
-                    "quotaAddId"
-                  )}
+                  {i18nt("customerQuotaScreen", "quotaAddId")}
                 </AppText>
                 <View style={{ marginLeft: size(1) }}>
                   <CloseButton onPress={() => setIsVisible(false)} />

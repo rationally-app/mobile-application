@@ -1,7 +1,7 @@
 import i18n from "i18n-js";
 import { Translations } from "../common/i18n/translations/type";
 
-export const getTranslatedStringWithI18n = <
+export const i18nt = <
   T extends keyof Translations,
   U extends keyof Translations[T],
   V extends keyof Translations[T][U]

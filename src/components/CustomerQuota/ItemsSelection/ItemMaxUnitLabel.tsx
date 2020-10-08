@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { CampaignPolicy } from "../../../types";
 import { formatQuantityText } from "../utils";
-import { getTranslatedStringWithI18n } from "../../../utils/translations";
+import { i18nt } from "../../../utils/translations";
 
 export const ItemMaxUnitLabel: FunctionComponent<{
   unit: CampaignPolicy["quantity"]["unit"];
@@ -9,7 +9,7 @@ export const ItemMaxUnitLabel: FunctionComponent<{
 }> = ({ unit, maxQuantity }) => {
   return (
     <>
-      {getTranslatedStringWithI18n("customerQuotaScreen", "quotaLimitMax")}{" "}
+      {i18nt("customerQuotaScreen", "quotaLimitMax")}{" "}
       {formatQuantityText(maxQuantity, unit)}
     </>
   );

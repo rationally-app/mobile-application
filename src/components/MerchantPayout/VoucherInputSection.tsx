@@ -7,7 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { Voucher } from "../../types";
-import { getTranslatedStringWithI18n } from "../../utils/translations";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -69,25 +69,19 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
             style={styles.seeAllButton}
           >
             <AppText style={styles.seeAllText}>
-              {getTranslatedStringWithI18n("merchantFlowScreen", "seeAll")}
+              {i18nt("merchantFlowScreen", "seeAll")}
             </AppText>
           </TouchableOpacity>
         </View>
       ) : (
         <AppText>
-          {getTranslatedStringWithI18n(
-            "collectCustomerDetailsScreen",
-            "checkEligibleItems"
-          )}
+          {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
         </AppText>
       )}
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text={getTranslatedStringWithI18n(
-            "merchantFlowScreen",
-            "quotaButtonAddVoucher"
-          )}
+          text={i18nt("merchantFlowScreen", "quotaButtonAddVoucher")}
           icon={
             <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
           }
@@ -99,10 +93,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
           <View style={styles.horizontalRule} />
           <View style={styles.inputWrapper}>
             <InputWithLabel
-              label={getTranslatedStringWithI18n(
-                "merchantFlowScreen",
-                "merchantCode"
-              )}
+              label={i18nt("merchantFlowScreen", "merchantCode")}
               value={merchantCode}
               onChange={({ nativeEvent: { text } }) => setMerchantCode(text)}
               onSubmitEditing={redeemVouchers}

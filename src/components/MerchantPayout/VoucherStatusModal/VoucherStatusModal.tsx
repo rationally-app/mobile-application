@@ -15,7 +15,7 @@ import {
   formatDateTime,
   formatTimeDifference
 } from "../../../utils/dateTimeFormatter";
-import { getTranslatedStringWithI18n } from "../../../utils/translations";
+import { i18nt } from "../../../utils/translations";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -38,14 +38,9 @@ const DistantTransactionTitle: FunctionComponent<{
 }> = ({ transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {getTranslatedStringWithI18n(
-        "checkoutSuccessScreen",
-        "redeemedOn",
-        undefined,
-        {
-          time: formatDateTime(transactionTime)
-        }
-      )}
+      {i18nt("checkoutSuccessScreen", "redeemedOn", undefined, {
+        time: formatDateTime(transactionTime)
+      })}
     </AppText>
   </>
 );
@@ -56,21 +51,16 @@ const RecentTransactionTitle: FunctionComponent<{
 }> = ({ now, transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {getTranslatedStringWithI18n(
-        "checkoutSuccessScreen",
-        "redeemedAgo",
-        undefined,
-        {
-          time: formatTimeDifference(now, transactionTime)
-        }
-      )}
+      {i18nt("checkoutSuccessScreen", "redeemedAgo", undefined, {
+        time: formatTimeDifference(now, transactionTime)
+      })}
     </AppText>
   </>
 );
 
 const NoPreviousTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>
-    {getTranslatedStringWithI18n("checkoutSuccessScreen", "previouslyRedeemed")}
+    {i18nt("checkoutSuccessScreen", "previouslyRedeemed")}
   </AppText>
 );
 
@@ -89,16 +79,8 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
 
   let card;
 
-  const title = getTranslatedStringWithI18n(
-    "errorMessages",
-    "notEligible",
-    "title"
-  );
-  const details = getTranslatedStringWithI18n(
-    "errorMessages",
-    "notEligible",
-    "body"
-  );
+  const title = i18nt("errorMessages", "notEligible", "title");
+  const details = i18nt("errorMessages", "notEligible", "body");
 
   if (error instanceof ScannerError || error instanceof LimitReachedError) {
     return null;

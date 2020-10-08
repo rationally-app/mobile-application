@@ -27,7 +27,7 @@ import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
 import { AlertModalContext } from "../../../context/alert";
-import { getTranslatedStringWithI18n } from "../../../utils/translations";
+import { i18nt } from "../../../utils/translations";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -50,15 +50,10 @@ const UsageQuotaTitle: FunctionComponent<{
   <>
     <AppText style={sharedStyles.statusTitle}>
       {"\n"}
-      {`${getTranslatedStringWithI18n(
-        "checkoutSuccessScreen",
-        "redeemedLimitReached",
-        undefined,
-        {
-          quantity: quantity,
-          date: formatDate(quotaRefreshTime)
-        }
-      )}`}
+      {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
+        quantity: quantity,
+        date: formatDate(quotaRefreshTime)
+      })}`}
     </AppText>
   </>
 );
@@ -112,10 +107,7 @@ export const groupTransactionsByTime = (
         item.quantity,
         policy?.quantity.unit || {
           type: "POSTFIX",
-          label: ` ${getTranslatedStringWithI18n(
-            "checkoutSuccessScreen",
-            "quantity"
-          )}`
+          label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
         }
       ),
       isAppeal: policy?.categoryType === "APPEAL",

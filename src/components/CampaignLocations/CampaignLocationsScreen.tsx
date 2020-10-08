@@ -26,7 +26,7 @@ import { LoadingView } from "../Loading";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { sortBy } from "lodash";
-import { getTranslatedStringWithI18n } from "../../utils/translations";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   content: {
@@ -85,17 +85,14 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     setDrawerButtons([
       {
         icon: "map-marker-plus",
-        label: getTranslatedStringWithI18n("navigationDrawer", "addCampaign"),
+        label: i18nt("navigationDrawer", "addCampaign"),
         onPress: () => {
           navigation.navigate("LoginScreen");
         }
       },
       {
         icon: "map-search",
-        label: getTranslatedStringWithI18n(
-          "navigationDrawer",
-          "changeChampaign"
-        ),
+        label: i18nt("navigationDrawer", "changeChampaign"),
         onPress: () => {
           navigation.navigate("CampaignLocationsScreen");
         }
@@ -163,10 +160,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
           {hasLoadedAuthFromStore && hasLoadedCampaignConfigFromStore ? (
             <Card>
               <AppText style={styles.selectCampaignHeader}>
-                {getTranslatedStringWithI18n(
-                  "navigationDrawer",
-                  "selectCampaign"
-                )}
+                {i18nt("navigationDrawer", "selectCampaign")}
               </AppText>
               {sortedAuthCredentialsWithCampaignName.map((credentials, idx) => (
                 <View
@@ -177,10 +171,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
                     {...credentials}
                     name={
                       credentials.name ||
-                      `${getTranslatedStringWithI18n(
-                        "navigationDrawer",
-                        "campaign"
-                      )} ${idx + 1}`
+                      `${i18nt("navigationDrawer", "campaign")} ${idx + 1}`
                     }
                     onPress={() => navigateToCampaignLocation(credentials)}
                   />
