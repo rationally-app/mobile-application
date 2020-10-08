@@ -12,7 +12,7 @@ export type TranslationHook = {
 export const useTranslate = (): TranslationHook => {
   const { c13n } = useContext(CampaignConfigContext);
 
-  const c13nt = (key: string): string => (!!key ? c13n[key] : key);
+  const c13nt = (key: string): string => (c13n && key ? c13n[key] : key);
 
   const c13ntForUnit = (
     unit: CampaignPolicy["quantity"]["unit"]

@@ -2,7 +2,6 @@ import { getCampaignConfig, CampaignConfigError } from "./campaignConfig";
 import { boolean } from "io-ts";
 import { Sentry } from "../../utils/errorTracking";
 import { SessionError } from "../helpers";
-import { CampaignConfig } from "../../types";
 import "../../common/i18n/i18nMock";
 
 jest.mock("../../utils/errorTracking");
@@ -12,7 +11,7 @@ const mockCaptureException = jest.fn();
 const mockFetch = jest.fn();
 jest.spyOn(global, "fetch").mockImplementation(mockFetch);
 
-const mockValidResponse: CampaignConfig = {
+const mockValidResponse = {
   features: {
     minAppBinaryVersion: "3.0.0",
     minAppBuildVersion: 0,
@@ -59,7 +58,7 @@ const mockValidResponse: CampaignConfig = {
   c13n: {}
 };
 
-const mockValidResponseNewFeature: CampaignConfig = {
+const mockValidResponseNewFeature = {
   features: {
     newFeature: true,
     minAppBinaryVersion: "3.0.0",
@@ -107,7 +106,7 @@ const mockValidResponseNewFeature: CampaignConfig = {
   c13n: {}
 };
 
-const mockValidResponseNoUpdates: CampaignConfig = {
+const mockValidResponseNoUpdates = {
   features: null,
   policies: null,
   c13n: null
