@@ -1,4 +1,10 @@
+import { TranslationHook } from "../../hooks/useTranslate/useTranslate";
 import { PolicyIdentifier, CampaignPolicy } from "../../types";
+
+export const defaultTranslationProps: TranslationHook = {
+  c13nt: (key: string) => key,
+  c13ntForUnit: (unit: CampaignPolicy["quantity"]["unit"]) => unit
+};
 
 export const defaultIdentifier: PolicyIdentifier = {
   label: "identifier",

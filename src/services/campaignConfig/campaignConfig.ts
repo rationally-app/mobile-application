@@ -152,7 +152,8 @@ const mockGetCampaignConfig = async (
           }
         ]
       }
-    ]
+    ],
+    c13n: {}
   };
 };
 

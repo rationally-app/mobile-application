@@ -4,7 +4,10 @@ import {
   groupTransactionsByTime,
   sortTransactions
 } from "./CheckoutSuccessCard";
-import { defaultIdentifier } from "../../../test/helpers/defaults";
+import {
+  defaultIdentifier,
+  defaultTranslationProps
+} from "../../../test/helpers/defaults";
 import "../../../common/i18n/i18nMock";
 
 describe("CheckoutSuccessCard utility functions", () => {
@@ -146,14 +149,20 @@ describe("CheckoutSuccessCard utility functions", () => {
       expect.assertions(1);
 
       expect(
-        groupTransactionsByTime(sortedTransactions, allProducts)
+        groupTransactionsByTime(
+          sortedTransactions,
+          allProducts,
+          defaultTranslationProps
+        )
       ).toStrictEqual(mockTransactionsByTimeMap);
     });
 
     it("should return empty object if sortedTransactions is null", () => {
       expect.assertions(1);
 
-      expect(groupTransactionsByTime(null, allProducts)).toStrictEqual({});
+      expect(
+        groupTransactionsByTime(null, allProducts, defaultTranslationProps)
+      ).toStrictEqual({});
     });
   });
 
