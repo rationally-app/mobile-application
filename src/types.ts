@@ -163,7 +163,7 @@ export const CampaignC13N = t.record(t.string, t.string);
 export const CampaignConfig = t.type({
   features: t.union([CampaignFeatures, t.null]),
   policies: t.union([t.array(CampaignPolicy), t.null]),
-  c13n: CampaignC13N
+  c13n: t.union([CampaignC13N, t.null])
 });
 
 export type TextInputType = t.TypeOf<typeof TextInputType>;
@@ -177,7 +177,7 @@ export type CampaignFeatures = t.TypeOf<typeof CampaignFeatures>;
 export type CampaignC13N = t.TypeOf<typeof CampaignC13N>;
 export type CampaignConfig = t.TypeOf<typeof CampaignConfig>;
 export type ConfigHashes = {
-  [config in keyof Omit<CampaignConfig, "c13n">]: string | undefined;
+  [config in keyof CampaignConfig]: string | undefined;
 };
 
 const ItemQuota = t.intersection([

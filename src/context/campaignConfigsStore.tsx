@@ -77,9 +77,7 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
               ? newConfig.policies
               : prevConfig?.policies ?? null,
           c13n:
-            Object.keys(newConfig.c13n).length > 0
-              ? newConfig.c13n
-              : prevConfig?.c13n ?? {}
+            newConfig.c13n !== null ? newConfig.c13n : prevConfig?.c13n ?? null
         };
 
         return {

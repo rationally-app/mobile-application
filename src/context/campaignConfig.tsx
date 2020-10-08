@@ -9,12 +9,12 @@ import {
 interface CampaignConfigContext {
   readonly features: CampaignFeatures | null;
   readonly policies: CampaignPolicy[] | null;
-  readonly c13n: CampaignC13N;
+  readonly c13n: CampaignC13N | null;
 }
 export const CampaignConfigContext = createContext<CampaignConfigContext>({
   features: null,
   policies: null,
-  c13n: {}
+  c13n: null
 });
 
 export const CampaignConfigContextProvider: FunctionComponent<{
