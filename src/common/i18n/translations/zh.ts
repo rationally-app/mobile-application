@@ -13,7 +13,7 @@ export const zh: Translations = {
     sendOtp: "发送一次性密码"
   },
   loginOTPCard: {
-    sendingOtp: "一次性密码发送中",
+    sendingOtp: "一次性密码发送中...",
     otp: "一次性密码",
     resendIn: "在%{ss}秒内重新发送",
     submit: "提交",
@@ -56,7 +56,7 @@ export const zh: Translations = {
     quotaAddId: "输入另一个证件号码已增加限额",
     quotaIdentifierButtonScan: "扫描",
     quotaScanButtonBack: "返回",
-    quotaCheck: "检查中",
+    quotaCheck: "检查中...",
     id: "编号"
   },
   merchantFlowScreen: {

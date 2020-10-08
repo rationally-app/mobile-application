@@ -135,7 +135,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   return (
     <Card>
-      <AppText>{`${i18nt("loginOTPCard", "sendingOtp")}...`}</AppText>
+      <AppText>{`${i18nt("loginOTPCard", "sendingOtp")}`}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <InputWithLabel
           label={i18nt("loginOTPCard", "otp")}

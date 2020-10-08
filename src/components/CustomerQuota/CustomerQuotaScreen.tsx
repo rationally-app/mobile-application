@@ -206,7 +206,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       <Card>
         <ActivityIndicator size="large" color={color("grey", 40)} />
         <AppText style={{ marginTop: size(1) }}>
-          {i18nt("customerQuotaScreen", "quotaCheck")}...
+          {i18nt("customerQuotaScreen", "quotaCheck")}
         </AppText>
       </Card>
     </View>
