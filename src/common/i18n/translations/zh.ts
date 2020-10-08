@@ -13,7 +13,7 @@ export const zh: Translations = {
     sendOtp: "发送一次性密码"
   },
   loginOTPCard: {
-    sendingOtp: "一次性密码发送中",
+    sendingOtp: "一次性密码发送中...",
     otp: "一次性密码",
     resendIn: "在%{ss}秒内重新发送",
     submit: "提交",
@@ -56,7 +56,7 @@ export const zh: Translations = {
     quotaAddId: "输入另一个证件号码已增加限额",
     quotaIdentifierButtonScan: "扫描",
     quotaScanButtonBack: "返回",
-    quotaCheck: "检查中",
+    quotaCheck: "检查中...",
     id: "编号"
   },
   merchantFlowScreen: {
@@ -101,9 +101,13 @@ export const zh: Translations = {
   },
   notEligibleScreen: {
     notEligible: "不符合资格",
-    logAppeal: "请提出上诉",
+    logAppeal: "请提出上诉。",
     cannot: "不能",
     purchase: "购买"
+  },
+  campaignInitialisationScreen: {
+    appleStore: "谷歌应用商店",
+    androidStore: "苹果应用商店"
   },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
@@ -232,7 +236,7 @@ export const zh: Translations = {
     },
     outdatedAppUpdate: {
       title: "应用程序版本已过期",
-      body: "请通过[谷歌应用商店/苹果应用商店]更新应用程序。",
+      body: "请通过%{storeName}更新应用程序。",
       primaryActionText: "更新应用程序"
     },
     systemError: {
