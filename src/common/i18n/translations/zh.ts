@@ -101,9 +101,8 @@ export const zh: Translations = {
   },
   notEligibleScreen: {
     notEligible: "不符合资格",
-    logAppeal: "请提出上诉",
-    cannot: "不能",
-    purchase: "购买"
+    logAppeal: "请提出上诉。",
+    cannotPurchase: "不能购买"
   },
   campaignInitialisationScreen: {
     appleStore: "谷歌应用商店",

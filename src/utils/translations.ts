@@ -6,17 +6,15 @@ export const i18nt = <
   U extends keyof Translations[T],
   V extends keyof Translations[T][U]
 >(
-  componentName: T,
-  componentString: U,
-  errorMessageContent?: V,
+  component: T,
+  subComponent: U,
+  subSubComponent?: V,
   dynamicContent?: Record<string, string | number>
 ): string => {
-  if (!errorMessageContent) {
-    return i18n.t(`${componentName}.${componentString}`, dynamicContent);
-  } else {
-    return i18n.t(
-      `${componentName}.${componentString}.${errorMessageContent}`,
-      dynamicContent
-    );
-  }
+  return i18n.t(
+    `${component}.${subComponent}${
+      subSubComponent ? `.${subSubComponent}` : ""
+    }`,
+    dynamicContent
+  );
 };

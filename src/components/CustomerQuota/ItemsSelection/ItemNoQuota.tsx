@@ -49,9 +49,7 @@ export const ItemNoQuota: FunctionComponent<{
         <AppText style={styles.feedbackText}>
           {type === "REDEEM"
             ? i18nt("notEligibleScreen", "notEligible")
-            : `${i18nt("notEligibleScreen", "cannot")}
-              \n
-              ${i18nt("notEligibleScreen", "purchase")}`}
+            : i18nt("notEligibleScreen", "cannotPurchase")}
         </AppText>
       </View>
     </View>
