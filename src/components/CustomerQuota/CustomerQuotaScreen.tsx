@@ -32,7 +32,7 @@ import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
-import i18n from "i18n-js";
+import { i18nt } from "../../utils/translations";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -256,7 +256,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       <Card>
         <ActivityIndicator size="large" color={color("grey", 40)} />
         <AppText style={{ marginTop: size(1) }}>
-          {i18n.t("customerQuotaScreen.quotaCheck")}...
+          {i18nt("customerQuotaScreen", "quotaCheck")}
         </AppText>
       </Card>
     </View>
