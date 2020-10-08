@@ -321,7 +321,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should throw error when quota response has negative quantities", () => {
+    it("should throw cartError when quota response has negative quantities", () => {
       expect.assertions(1);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -336,7 +336,7 @@ describe("useCart", () => {
           wrapper
         }
       );
-      expect(result.current.error?.message).toBe(
+      expect(result.current.cartError?.message).toBe(
         ERROR_MESSAGE.INVALID_QUANTITY
       );
     });
@@ -372,7 +372,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when updateCart is given a negative quantity", () => {
+    it("should set cartError when updateCart is given a negative quantity", () => {
       expect.assertions(2);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -386,7 +386,7 @@ describe("useCart", () => {
         result.current.updateCart("chocolate", -5);
       });
 
-      expect(result.current.error?.message).toBe("Invalid quantity.");
+      expect(result.current.cartError?.message).toBe("Invalid quantity.");
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -407,7 +407,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when updateCart is given a quantity over the limit", () => {
+    it("should set cartError when updateCart is given a quantity over the limit", () => {
       expect.assertions(2);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -420,7 +420,7 @@ describe("useCart", () => {
       act(() => {
         result.current.updateCart("chocolate", 100);
       });
-      expect(result.current.error?.message).toBe("Insufficient quota.");
+      expect(result.current.cartError?.message).toBe("Insufficient quota.");
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -441,7 +441,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when updateCart is given a category that does not exist", () => {
+    it("should set cartError when updateCart is given a category that does not exist", () => {
       expect.assertions(2);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -454,7 +454,9 @@ describe("useCart", () => {
       act(() => {
         result.current.updateCart("eggs", 1);
       });
-      expect(result.current.error?.message).toBe("Category does not exist.");
+      expect(result.current.cartError?.message).toBe(
+        "Category does not exist."
+      );
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -523,7 +525,7 @@ describe("useCart", () => {
       );
     });
 
-    it("should set error when no item was selected", async () => {
+    it("should set cartError when no item was selected", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -538,7 +540,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
+      expect(result.current.cartError?.message).toBe(
         "Select at least one item to checkout."
       );
       expect(result.current.cartState).toBe("DEFAULT");
@@ -562,7 +564,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Enter or scan a code' when there are multiple identifiers and at least one is empty", async () => {
+    it("should set cartError with message 'Enter or scan a code' when there are multiple identifiers and at least one is empty", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -590,7 +592,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter or scan a code.");
+      expect(result.current.cartError?.message).toBe("Enter or scan a code.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -625,7 +627,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Enter or scan a code' when there is one identifier and it is empty", async () => {
+    it("should set cartError with message 'Enter or scan a code' when there is one identifier and it is empty", async () => {
       expect.assertions(3);
 
       const ids = ["ID1"];
@@ -662,7 +664,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter or scan a code.");
+      expect(result.current.cartError?.message).toBe("Enter or scan a code.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -683,7 +685,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Enter or scan a different code.' when identifier values are identical in the same category", async () => {
+    it("should set cartError with message 'Enter or scan a different code.' when identifier values are identical in the same category", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -711,7 +713,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
+      expect(result.current.cartError?.message).toBe(
         "Enter or scan a different code."
       );
       expect(result.current.cartState).toBe("DEFAULT");
@@ -748,7 +750,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error with message 'Enter or scan a different code.' when some identifier values are identical across different categories", async () => {
+    it("should set cartError with message 'Enter or scan a different code.' when some identifier values are identical across different categories", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -790,7 +792,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
+      expect(result.current.cartError?.message).toBe(
         "Enter or scan a different code."
       );
       expect(result.current.cartState).toBe("DEFAULT");
@@ -840,7 +842,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when there is an invalid mobile number", async () => {
+    it("should set cartError when there is an invalid mobile number", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const MobileNumberIdentifierProductWrapper: FunctionComponent = ({
@@ -889,7 +891,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
+      expect(result.current.cartError?.message).toBe(
         "Enter a valid country code and contact number."
       );
       expect(result.current.cartState).toBe("DEFAULT");
@@ -911,7 +913,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set error when there is an invalid identifier", async () => {
+    it("should set cartError when there is an invalid identifier", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const InvalidIdentifierProductWrapper: FunctionComponent = ({
@@ -962,7 +964,9 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter or scan a valid code.");
+      expect(result.current.cartError?.message).toBe(
+        "Enter or scan a valid code."
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -983,7 +987,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set general error when transaction does not succeed", async () => {
+    it("should set general cartError when transaction does not succeed", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -1004,7 +1008,7 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
+      expect(result.current.cartError?.message).toBe(
         "We are currently facing server issues. Contact your in-charge if the problem persists."
       );
       expect(result.current.cartState).toBe("DEFAULT");
