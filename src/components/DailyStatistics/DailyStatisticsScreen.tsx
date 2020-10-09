@@ -21,7 +21,7 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
-import { addDays, subDays, getTime } from "date-fns";
+import { addDays, subDays, getTime, isSameDay } from "date-fns";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
@@ -84,8 +84,10 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   };
 
   const onPressNextDay = (): void => {
-    const nextDay = getTime(addDays(currentTimestamp, 1));
-    setCurrentTimestamp(nextDay);
+    if (!isSameDay(currentTimestamp, Date.now())) {
+      const nextDay = getTime(addDays(currentTimestamp, 1));
+      setCurrentTimestamp(nextDay);
+    }
   };
 
   useEffect(() => {
