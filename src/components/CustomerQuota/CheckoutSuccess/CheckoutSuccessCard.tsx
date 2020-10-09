@@ -162,9 +162,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   const productType =
     (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
-  const { title, description, ctaButtonText } = getCheckoutMessages(
-    productType
-  );
+  const { title, description } = getCheckoutMessages(productType);
 
   const showGlobalQuota: boolean =
     !!quotaResponse?.globalQuota &&
@@ -240,7 +238,11 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text={ctaButtonText} onPress={onCancel} fullWidth={true} />
+        <DarkButton
+          text={i18nt("checkoutSuccessScreen", "nextIdentity")}
+          onPress={onCancel}
+          fullWidth={true}
+        />
       </View>
     </View>
   );
