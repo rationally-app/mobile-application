@@ -2,6 +2,7 @@ import React, { FunctionComponent, useState, useEffect } from "react";
 import {
   Dimensions,
   LayoutRectangle,
+  Platform,
   StyleProp,
   StyleSheet,
   View,
@@ -124,10 +125,12 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   isScanningEnabled = true,
   hasLimitedInterestArea = true
 }) => {
+  const [platform] = useState<string>(Platform.OS);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
-  const interestAreaLayout = hasLimitedInterestArea
-    ? getInterestAreaDimensions(barCodeTypes)
-    : undefined;
+  const interestAreaLayout =
+    hasLimitedInterestArea && platform === "android"
+      ? getInterestAreaDimensions(barCodeTypes)
+      : undefined;
   const [interestArea] = useState<LayoutRectangle | undefined>(
     interestAreaLayout
   );
@@ -146,11 +149,6 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   }, [onCancel]);
 
   const checkIfInInterestArea: BarCodeScannedCallback = event => {
-    /**
-     * An issue exists in Expo where `BarCodeScanner.BarCodeBounds`
-     * may not be returned for iOS devices, in such cases, we allow
-     * scanning anywhere on the camera, rather than within the lightbox.
-     */
     const bounds = event.bounds?.origin;
     if (
       bounds &&
@@ -163,17 +161,21 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
         interestArea.y + interestArea.height
     ) {
       onBarCodeScanned(event);
-    } else {
-      onBarCodeScanned(event);
     }
   };
 
+  /**
+   * We only scan codes within the boundary if the user is using Android,
+   * since iOS does not return bounds in Expo.
+   */
   return (
     <View style={styles.cameraWrapper}>
       {hasCameraPermission && isScanningEnabled ? (
         <Camera
           onBarCodeScanned={
-            hasLimitedInterestArea ? checkIfInInterestArea : onBarCodeScanned
+            hasLimitedInterestArea || platform === "android"
+              ? checkIfInInterestArea
+              : onBarCodeScanned
           }
           barCodeTypes={barCodeTypes}
           interestAreaLayout={interestAreaLayout}
