@@ -4,16 +4,20 @@ import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
 
-const singaporeNumberCode = "SG";
 const phoneUtil = PhoneNumberUtil.getInstance();
 
-const phoneNumberFormatted = (mobileNumberValue: string): string => {
-  return mobileNumberValue.length >= 2
-    ? phoneUtil.format(
-        phoneUtil.parse(mobileNumberValue, singaporeNumberCode),
-        PhoneNumberFormat.NATIONAL
-      )
-    : mobileNumberValue;
+const phoneNumberFormatted = (
+  mobileNumberValue: string,
+  region: string
+): string => {
+  try {
+    return phoneUtil.format(
+      phoneUtil.parse(mobileNumberValue, region),
+      PhoneNumberFormat.NATIONAL
+    );
+  } catch (e) {
+    return mobileNumberValue;
+  }
 };
 
 const styles = StyleSheet.create({
@@ -76,7 +80,19 @@ export const PhoneNumberInput: FunctionComponent<{
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit = () => {}
 }) => {
-  const value: string = phoneNumberFormatted(mobileNumberValue);
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const onHandleChangeText = (text: string) => {
+    const cleanText: string = text.replace(" ", "");
+    onChangeMobileNumber(cleanText);
+  };
+
+  const value = phoneNumberFormatted(
+    mobileNumberValue.replace(" ", ""),
+    phoneUtil.getRegionCodeForCountryCode(
+      Number(countryCodeValue.replace("+", ""))
+    )
+  );
+
   return (
     <View style={styles.numberWrapper}>
       <AppText style={styles.label}>{label}</AppText>
@@ -92,13 +108,7 @@ export const PhoneNumberInput: FunctionComponent<{
           style={styles.numberInput}
           keyboardType="phone-pad"
           value={value}
-          onChangeText={text => {
-            try {
-              const cleanText: string = text.replace(" ", "");
-              phoneNumberFormatted(text);
-              onChangeMobileNumber(cleanText);
-            } catch {}
-          }}
+          onChangeText={text => onHandleChangeText(text)}
           onSubmitEditing={onSubmit}
         />
       </View>
