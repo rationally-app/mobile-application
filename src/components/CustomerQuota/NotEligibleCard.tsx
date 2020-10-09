@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent } from "react";
 import { View } from "react-native";
 import { CustomerCard } from "./CustomerCard";
 import { AppText } from "../Layout/AppText";
@@ -22,7 +22,6 @@ const NotEligibleTransactionDescription: FunctionComponent = () => (
 
 interface NotEligibleCard {
   ids: string[];
-  cart: Cart;
   onCancel: () => void;
 }
 
@@ -31,7 +30,6 @@ interface NotEligibleCard {
  */
 export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
   ids,
-  cart,
   onCancel
 }) => {
   return (
@@ -58,7 +56,7 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={i18nt("checkoutSuccessScreen", "redeemedNextIdentity")}
+          text={i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
         />
