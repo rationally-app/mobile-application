@@ -5,7 +5,7 @@ import { AppText } from "../Layout/AppText";
 import * as Updates from "expo-updates";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import AlertIcon from "../../../assets/icons/alert.svg";
-import i18n from "i18n-js";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -54,13 +54,17 @@ export const ErrorBoundaryContent: FunctionComponent<{
   <View style={styles.wrapper}>
     <View style={styles.content}>
       <AlertIcon style={styles.icon} width={size(5)} height={size(5)} />
-      <AppText style={styles.heading}>{i18n.t("systemError.title")}</AppText>
-      <AppText style={styles.body}>{i18n.t("systemError.body")}</AppText>
+      <AppText style={styles.heading}>
+        {i18nt("errorMessages", "systemError", "title")}
+      </AppText>
+      <AppText style={styles.body}>
+        {i18nt("errorMessages", "systemError", "body")}
+      </AppText>
       {error && <AppText style={styles.errorDescription}>{error}</AppText>}
     </View>
     <View style={styles.restartButton}>
       <DarkButton
-        text={i18n.t("systemError.primaryActionText")}
+        text={i18nt("errorMessages", "systemError", "primaryActionText")}
         onPress={() => Updates.reloadAsync()}
         fullWidth={true}
       />

@@ -6,8 +6,8 @@ import { IdentifierPhoneNumberInput } from "./IdentifierLayout/IdentifierPhoneNu
 import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
-import i18n from "i18n-js";
 import { AlertModalContext } from "../../../context/alert";
+import { i18nt } from "../../../utils/translations";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -78,7 +78,7 @@ export const ItemIdentifier: FunctionComponent<{
             onPress={() => setShouldShowCamera(true)}
             text={
               scanButton.text ||
-              i18n.t("customerQuotaScreen.quotaIdentifierButtonScan")
+              i18nt("customerQuotaScreen", "quotaIdentifierButtonScan")
             }
           />
         )}

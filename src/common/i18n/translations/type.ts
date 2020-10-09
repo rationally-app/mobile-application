@@ -106,6 +106,10 @@ export type Translations = {
     cannot: string;
     purchase: string;
   };
+  campaignInitialisationScreen: {
+    appleStore: string;
+    androidStore: string;
+  };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: string;

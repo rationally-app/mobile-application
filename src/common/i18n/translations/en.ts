@@ -15,7 +15,7 @@ export const en: Translations = {
     sendOtp: "Send OTP"
   },
   loginOTPCard: {
-    sendingOtp: "We're sending you the one-time password",
+    sendingOtp: "We're sending you the one-time password...",
     otp: "OTP",
     resendIn: "Resend in %{ss}s",
     submit: "Submit",
@@ -24,7 +24,7 @@ export const en: Translations = {
   collectCustomerDetailsScreen: {
     checkEligibleItems: "Check the number of item(s) eligible for redemption",
     scanIdentification: "Scan identification",
-    or: "Or",
+    or: "OR",
     enterIdNumber: "Enter ID Number",
     check: "Check"
   },
@@ -61,7 +61,7 @@ export const en: Translations = {
     quotaAddId: "Add another ID to combine customer quotas",
     quotaIdentifierButtonScan: "Scan",
     quotaScanButtonBack: "Back",
-    quotaCheck: "Checking",
+    quotaCheck: "Checking...",
     id: "ID"
   },
   merchantFlowScreen: {
@@ -106,9 +106,13 @@ export const en: Translations = {
   },
   notEligibleScreen: {
     notEligible: "Not eligible",
-    logAppeal: "Please log an appeal request",
+    logAppeal: "Please log an appeal request.",
     cannot: "Cannot",
     purchase: "purchase"
+  },
+  campaignInitialisationScreen: {
+    appleStore: "App Store",
+    androidStore: "Play Store"
   },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {

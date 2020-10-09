@@ -20,7 +20,7 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import i18n from "i18n-js";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   background: {
@@ -138,7 +138,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
             <Card style={styles.card}>
               <View style={styles.cardHeader}>
                 <AppText style={{ flex: 1 }}>
-                  {i18n.t("customerQuotaScreen.quotaAddId")}
+                  {i18nt("customerQuotaScreen", "quotaAddId")}
                 </AppText>
                 <View style={{ marginLeft: size(1) }}>
                   <CloseButton onPress={() => setIsVisible(false)} />

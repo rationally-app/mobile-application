@@ -36,9 +36,9 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import i18n from "i18n-js";
 import { AlertModalContext } from "../../context/alert";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   content: {
@@ -202,7 +202,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               </AppText>
             )}
             <AppText>
-              {i18n.t("collectCustomerDetailsScreen.checkEligibleItems")}
+              {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             <InputIdSection
               openCamera={() => setShouldShowCamera(true)}
