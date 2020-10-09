@@ -200,8 +200,14 @@ export const PostTransactionResult = t.type({
   )
 });
 
+export const TransactionIdentifier = t.type({
+  id: t.string,
+  transactionTime: t.number
+});
+
 export type Transaction = t.TypeOf<typeof Transaction>;
 export type PostTransactionResult = t.TypeOf<typeof PostTransactionResult>;
+export type TransactionIdentifier = t.TypeOf<typeof TransactionIdentifier>;
 
 const PastTransaction = t.intersection([
   t.type({
