@@ -3,7 +3,8 @@ import {
   Transaction,
   Quota,
   PostTransactionResult,
-  PastTransactionsResult
+  PastTransactionsResult,
+  TransactionIdentifier
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
@@ -29,6 +30,20 @@ export class PostTransactionError extends Error {
   }
 }
 
+export class ReserveTransactionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ReserveTransactionError";
+  }
+}
+
+export class CommitTransactionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CommitTransactionError";
+  }
+}
+
 export class PastTransactionError extends Error {
   constructor(message: string) {
     super(message);
@@ -41,6 +56,12 @@ interface PostTransaction {
   transactions: Transaction[];
   key: string;
   endpoint: string;
+}
+
+interface CommitTransaction {
+  key: string;
+  endpoint: string;
+  transactionIdentifiers: TransactionIdentifier[];
 }
 
 export const mockGetQuota = async (
@@ -204,6 +225,74 @@ export const livePostTransaction = async ({
   }
 };
 
+export const liveReserveTransaction = async ({
+  ids,
+  endpoint,
+  key,
+  transactions
+}: PostTransaction): Promise<PostTransactionResult> => {
+  if (ids.length === 0) {
+    throw new ReserveTransactionError("No ID was provided");
+  }
+  try {
+    const response = await fetchWithValidator(
+      PostTransactionResult,
+      `${endpoint}/transactions/reserve`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: key
+        },
+        body: JSON.stringify({
+          ids,
+          transaction: transactions
+        })
+      }
+    );
+    return response;
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
+    }
+    throw new ReserveTransactionError(e.message);
+  }
+};
+
+export const liveCommitTransaction = async ({
+  key,
+  endpoint,
+  transactionIdentifiers
+}: CommitTransaction): Promise<PostTransactionResult> => {
+  if (transactionIdentifiers.length === 0) {
+    throw new CommitTransactionError("No transactions to commit");
+  }
+  try {
+    const response = await fetchWithValidator(
+      PostTransactionResult,
+      `${endpoint}/transactions/commit`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: key
+        },
+        body: JSON.stringify({
+          transactionIdentifiers
+        })
+      }
+    );
+    return response;
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
+    }
+    throw new CommitTransactionError(e.message);
+  }
+};
+
 export const mockPastTransactions = async (
   ids: string[],
   _key: string,
@@ -281,3 +370,5 @@ export const postTransaction = IS_MOCK
 export const getPastTransactions = IS_MOCK
   ? mockPastTransactions
   : livePastTransactions;
+export const commitTransaction = liveCommitTransaction;
+export const reserveTransaction = liveReserveTransaction;
