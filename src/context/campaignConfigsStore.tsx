@@ -12,7 +12,7 @@ import { CampaignConfigError } from "../services/campaignConfig";
 
 export const CAMPAIGN_CONFIGS_STORE_KEY = "CAMPAIGN_CONFIGS_STORE";
 
-type CampaignConfigsMap = {
+export type CampaignConfigsMap = {
   [key: string]: CampaignConfig | undefined;
 };
 
