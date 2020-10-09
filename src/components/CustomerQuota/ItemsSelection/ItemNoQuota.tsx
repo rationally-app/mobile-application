@@ -6,7 +6,7 @@ import { ItemContent } from "./ItemContent";
 import { CartItem } from "../../../hooks/useCart/useCart";
 import { ProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
-import { i18nt } from "../../../utils/translations";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   feedbackWrapper: {
@@ -34,6 +34,7 @@ export const ItemNoQuota: FunctionComponent<{
   const { getProduct } = useContext(ProductContext);
   const { name = category, description, quantity, type } =
     getProduct(category) || {};
+  const { i18nt } = useTranslate();
 
   return (
     <View style={[sharedStyles.wrapper, sharedStyles.wrapperDefault]}>

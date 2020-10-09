@@ -35,7 +35,6 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
-import { i18nt } from "../../../utils/translations";
 import {
   TranslationHook,
   useTranslate
@@ -80,7 +79,7 @@ export const groupTransactionsByCategory = (
   latestTransactionTime: Date | undefined,
   translationProps: TranslationHook
 ): TransactionsByCategoryMap => {
-  const { c13nt, c13ntForUnit } = translationProps;
+  const { c13nt, c13ntForUnit, i18nt } = translationProps;
 
   // Group transactions by category
   const transactionsByCategoryMap: TransactionsByCategoryMap = {};
@@ -290,11 +289,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 <View>
                   <AppText style={styles.wrapper}>
                     {policyType === "REDEEM"
-                      ? `${i18nt(
+                      ? `${translationProps.i18nt(
                           "checkoutSuccessScreen",
                           "previouslyRedeemedItems"
                         )}:`
-                      : `${i18nt(
+                      : `${translationProps.i18nt(
                           "checkoutSuccessScreen",
                           "previouslyPurchasedItems"
                         )}:`}
@@ -331,7 +330,10 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={i18nt("checkoutSuccessScreen", "redeemedNextIdentity")}
+          text={translationProps.i18nt(
+            "checkoutSuccessScreen",
+            "redeemedNextIdentity"
+          )}
           onPress={onCancel}
           fullWidth={true}
         />

@@ -6,7 +6,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { SafeAreaView } from "react-navigation";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const BASE_URL = "https://supplyallyhelp.zendesk.com/hc/en-us";
 const FEEDBACK_URL = BASE_URL + "/requests/new";
@@ -74,6 +74,8 @@ export const HelpModal: FunctionComponent<{
   const webViewRef = useRef<WebView>(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
+
+  const { i18nt } = useTranslate();
 
   const onPressAskQuestion = (): void => {
     if (webViewRef.current) {

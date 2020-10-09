@@ -1,9 +1,13 @@
-import { TranslationHook } from "../../hooks/useTranslate/useTranslate";
+import {
+  i18ntWithValidator,
+  TranslationHook
+} from "../../hooks/useTranslate/useTranslate";
 import { PolicyIdentifier, CampaignPolicy } from "../../types";
 
 export const defaultTranslationProps: TranslationHook = {
   c13nt: (key: string) => key,
-  c13ntForUnit: (unit: CampaignPolicy["quantity"]["unit"]) => unit
+  c13ntForUnit: (unit: CampaignPolicy["quantity"]["unit"]) => unit,
+  i18nt: i18ntWithValidator
 };
 
 export const defaultIdentifier: PolicyIdentifier = {

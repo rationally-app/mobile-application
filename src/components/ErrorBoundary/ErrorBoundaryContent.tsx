@@ -5,7 +5,7 @@ import { AppText } from "../Layout/AppText";
 import * as Updates from "expo-updates";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import AlertIcon from "../../../assets/icons/alert.svg";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -50,24 +50,27 @@ const styles = StyleSheet.create({
 
 export const ErrorBoundaryContent: FunctionComponent<{
   error?: string;
-}> = ({ error }) => (
-  <View style={styles.wrapper}>
-    <View style={styles.content}>
-      <AlertIcon style={styles.icon} width={size(5)} height={size(5)} />
-      <AppText style={styles.heading}>
-        {i18nt("errorMessages", "systemError", "title")}
-      </AppText>
-      <AppText style={styles.body}>
-        {i18nt("errorMessages", "systemError", "body")}
-      </AppText>
-      {error && <AppText style={styles.errorDescription}>{error}</AppText>}
+}> = ({ error }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <View style={styles.wrapper}>
+      <View style={styles.content}>
+        <AlertIcon style={styles.icon} width={size(5)} height={size(5)} />
+        <AppText style={styles.heading}>
+          {i18nt("errorMessages", "systemError", "title")}
+        </AppText>
+        <AppText style={styles.body}>
+          {i18nt("errorMessages", "systemError", "body")}
+        </AppText>
+        {error && <AppText style={styles.errorDescription}>{error}</AppText>}
+      </View>
+      <View style={styles.restartButton}>
+        <DarkButton
+          text={i18nt("errorMessages", "systemError", "primaryActionText")}
+          onPress={() => Updates.reloadAsync()}
+          fullWidth={true}
+        />
+      </View>
     </View>
-    <View style={styles.restartButton}>
-      <DarkButton
-        text={i18nt("errorMessages", "systemError", "primaryActionText")}
-        onPress={() => Updates.reloadAsync()}
-        fullWidth={true}
-      />
-    </View>
-  </View>
-);
+  );
+};

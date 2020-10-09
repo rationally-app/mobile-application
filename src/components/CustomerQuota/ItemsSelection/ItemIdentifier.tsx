@@ -7,7 +7,6 @@ import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
 import { AlertModalContext } from "../../../context/alert";
-import { i18nt } from "../../../utils/translations";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
@@ -34,7 +33,7 @@ export const ItemIdentifier: FunctionComponent<{
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { showErrorAlert } = useContext(AlertModalContext);
-  const { c13nt } = useTranslate();
+  const { c13nt, i18nt } = useTranslate();
 
   const { label, textInput, scanButton } = identifier;
 

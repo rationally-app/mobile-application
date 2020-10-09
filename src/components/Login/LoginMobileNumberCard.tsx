@@ -19,7 +19,7 @@ import {
 } from "../../utils/validatePhoneNumbers";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -81,6 +81,8 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       onRequestOTP();
     }
   };
+
+  const { i18nt } = useTranslate();
 
   return (
     <Card>

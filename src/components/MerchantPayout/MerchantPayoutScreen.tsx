@@ -48,7 +48,7 @@ import {
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { LimitReachedError } from "../../utils/validateVoucherCode";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -238,6 +238,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     Keyboard.dismiss();
     setShouldShowCamera(true);
   }, []);
+
+  const { i18nt } = useTranslate();
 
   return (
     <>

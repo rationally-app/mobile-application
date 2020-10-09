@@ -27,7 +27,6 @@ import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
 import { AlertModalContext } from "../../../context/alert";
-import { i18nt } from "../../../utils/translations";
 import {
   TranslationHook,
   useTranslate
@@ -50,17 +49,20 @@ interface CheckoutSuccessCard {
 const UsageQuotaTitle: FunctionComponent<{
   quantity: number;
   quotaRefreshTime: number;
-}> = ({ quantity, quotaRefreshTime }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {"\n"}
-      {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
-        quantity: quantity,
-        date: formatDate(quotaRefreshTime)
-      })}`}
-    </AppText>
-  </>
-);
+}> = ({ quantity, quotaRefreshTime }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <>
+      <AppText style={sharedStyles.statusTitle}>
+        {"\n"}
+        {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
+          quantity: quantity,
+          date: formatDate(quotaRefreshTime)
+        })}`}
+      </AppText>
+    </>
+  );
+};
 
 export interface TransactionsByTimeMap {
   [transactionTimeInSeconds: string]: {
@@ -82,7 +84,7 @@ export const groupTransactionsByTime = (
   allProducts: CampaignPolicy[],
   translationProps: TranslationHook
 ): TransactionsByTimeMap => {
-  const { c13nt, c13ntForUnit } = translationProps;
+  const { c13nt, c13ntForUnit, i18nt } = translationProps;
 
   const transactionsByTimeMap: {
     [transactionTimeInSeconds: string]: {
@@ -173,6 +175,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   const productType =
     (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
   const { title, description, ctaButtonText } = getCheckoutMessages(
+    translationProps.i18nt,
     productType
   );
 

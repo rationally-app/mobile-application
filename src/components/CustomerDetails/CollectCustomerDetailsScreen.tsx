@@ -46,7 +46,6 @@ import {
   defaultSelectedIdType
 } from "../../context/identification";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { i18nt } from "../../utils/translations";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
@@ -116,7 +115,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const checkUpdates = useCheckUpdates();
   const { showErrorAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
-  const { c13nt } = useTranslate();
+  const { i18nt, c13nt } = useTranslate();
   const { selectedIdType, setSelectedIdType } = useContext(
     IdentificationContext
   );

@@ -5,7 +5,7 @@ import { ValidVoucherCount } from "./ValidVoucherCount";
 import { AppText } from "../Layout/AppText";
 import { ModalWithClose } from "../Layout/ModalWithClose";
 import { Voucher } from "../../types";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   card: {
@@ -54,6 +54,8 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
       onExit();
     }
   }, [onExit, vouchers]);
+
+  const { i18nt } = useTranslate();
 
   return (
     <ModalWithClose isVisible={isVisible} onExit={onExit} style={styles.card}>

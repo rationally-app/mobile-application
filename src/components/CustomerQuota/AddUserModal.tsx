@@ -20,7 +20,7 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   background: {
@@ -83,6 +83,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [idInput, setIdInput] = useState("");
   const { features } = useContext(CampaignConfigContext);
+  const { i18nt } = useTranslate();
 
   useEffect(() => {
     if (isVisible) {

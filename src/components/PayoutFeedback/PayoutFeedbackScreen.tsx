@@ -16,7 +16,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Card } from "../Layout/Card";
 import { sharedStyles } from "../CustomerQuota/CheckoutSuccess/sharedStyles";
 import { sharedStyles as sharedCardStyles } from "../CustomerQuota/sharedStyles";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -88,6 +88,8 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
   );
   const itemQuantities = voucherArr.length;
   const merchantCode: string = navigation.getParam("merchantCode");
+
+  const { i18nt } = useTranslate();
 
   return (
     <ScrollView

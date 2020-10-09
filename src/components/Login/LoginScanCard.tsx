@@ -5,7 +5,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -21,19 +21,22 @@ interface LoginScanCard {
 export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   onToggleScanner,
   isLoading
-}) => (
-  <Card>
-    <AppText>{i18nt("loginScanCard", "loginWithQR")}</AppText>
-    <View style={styles.scanButtonWrapper}>
-      <DarkButton
-        text={i18nt("loginScanCard", "scanToLogin")}
-        onPress={onToggleScanner}
-        icon={
-          <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
-        }
-        fullWidth={true}
-        isLoading={isLoading}
-      />
-    </View>
-  </Card>
-);
+}) => {
+  const { i18nt } = useTranslate();
+  return (
+    <Card>
+      <AppText>{i18nt("loginScanCard", "loginWithQR")}</AppText>
+      <View style={styles.scanButtonWrapper}>
+        <DarkButton
+          text={i18nt("loginScanCard", "scanToLogin")}
+          onPress={onToggleScanner}
+          icon={
+            <Feather name="maximize" size={size(2)} color={color("grey", 0)} />
+          }
+          fullWidth={true}
+          isLoading={isLoading}
+        />
+      </View>
+    </Card>
+  );
+};

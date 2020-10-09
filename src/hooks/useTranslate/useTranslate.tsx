@@ -1,12 +1,42 @@
 import { useContext } from "react";
+import { Translations } from "../../common/i18n/translations/type";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { CampaignPolicy } from "../../types";
+import i18n from "i18n-js";
 
 export type TranslationHook = {
   c13nt: (key: string) => string;
   c13ntForUnit: (
     unit: CampaignPolicy["quantity"]["unit"]
   ) => CampaignPolicy["quantity"]["unit"];
+  i18nt: <
+    T extends keyof Translations,
+    U extends keyof Translations[T],
+    V extends keyof Translations[T][U]
+  >(
+    component: T,
+    subComponent: U,
+    subSubComponent?: V,
+    dynamicContent?: Record<string, string | number>
+  ) => string;
+};
+
+export const i18ntWithValidator = <
+  T extends keyof Translations,
+  U extends keyof Translations[T],
+  V extends keyof Translations[T][U]
+>(
+  component: T,
+  subComponent: U,
+  subSubComponent?: V,
+  dynamicContent?: Record<string, string | number>
+): string => {
+  return i18n.t(
+    `${component}.${subComponent}${
+      subSubComponent ? `.${subSubComponent}` : ""
+    }`,
+    dynamicContent
+  );
 };
 
 export const useTranslate = (): TranslationHook => {
@@ -22,5 +52,7 @@ export const useTranslate = (): TranslationHook => {
       label: c13nt(unit.label)
     };
 
-  return { c13nt, c13ntForUnit };
+  const i18nt = i18ntWithValidator;
+
+  return { c13nt, c13ntForUnit, i18nt };
 };

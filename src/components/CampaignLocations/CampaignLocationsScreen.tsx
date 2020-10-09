@@ -26,7 +26,6 @@ import { LoadingView } from "../Loading";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { sortBy } from "lodash";
-import { i18nt } from "../../utils/translations";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
@@ -82,6 +81,8 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
 
   const { setDrawerButtons } = useDrawerContext();
 
+  const { i18nt, c13nt } = useTranslate();
+
   useEffect(() => {
     setDrawerButtons([
       {
@@ -99,7 +100,13 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
         }
       }
     ]);
-  }, [authCredentials, hasLoadedAuthFromStore, navigation, setDrawerButtons]);
+  }, [
+    authCredentials,
+    hasLoadedAuthFromStore,
+    navigation,
+    setDrawerButtons,
+    i18nt
+  ]);
 
   const navigateToCampaignLocation = useCallback(
     (authCredentials: AuthCredentials): void => {
@@ -130,7 +137,6 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     navigateToCampaignLocation,
     navigation
   ]);
-  const { c13nt } = useTranslate();
   const authCredentialsWithCampaignName = Object.entries(authCredentials).map(
     ([key, credentials]) => {
       return {
