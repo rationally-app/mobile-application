@@ -3,7 +3,10 @@ import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
   postTransaction,
-  NotEligibleError
+  reserveTransaction,
+  commitTransaction,
+  NotEligibleError,
+  CommitTransactionError
 } from "../../services/quota";
 import { transform } from "lodash";
 import { ProductContextValue, ProductContext } from "../../context/products";
@@ -13,7 +16,8 @@ import {
   Quota,
   ItemQuota,
   IdentifierInput,
-  CampaignPolicy
+  CampaignPolicy,
+  TransactionIdentifier
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
@@ -38,6 +42,9 @@ type CartState =
   | "FETCHING_QUOTA"
   | "NO_QUOTA"
   | "DEFAULT"
+  | "RESERVING"
+  | "RESERVED"
+  | "COMMITTING"
   | "CHECKING_OUT"
   | "PURCHASED"
   | "NOT_ELIGIBLE";
@@ -51,6 +58,8 @@ export type CartHook = {
     quantity: number,
     identifierInputs?: IdentifierInput[]
   ) => void;
+  reserveCart: () => void;
+  commitCart: () => void;
   checkoutCart: () => void;
   checkoutResult?: PostTransactionResult;
   error?: Error;
@@ -308,6 +317,116 @@ export const useCart = (
   );
 
   /**
+   * Handles the reserving of the cart.
+   * Sets checkoutResult to the response of the post transaction.
+   */
+
+  const reserveCart: CartHook["reserveCart"] = useCallback(() => {
+    const reserve = async (): Promise<void> => {
+      setCartState("RESERVING");
+      const allIdentifierInputs: IdentifierInput[] = [];
+      const transactions = Object.values(cart)
+        .filter(({ quantity }) => quantity)
+        .map(({ category, quantity, identifierInputs }) => {
+          if (
+            identifierInputs.length > 0 &&
+            identifierInputs.some(identifierInput => !identifierInput.value)
+          ) {
+          }
+          allIdentifierInputs.push(...identifierInputs);
+          return { category, quantity, identifierInputs };
+        });
+
+      if (transactions.length === 0) {
+        setCartState("DEFAULT");
+        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
+        return;
+      }
+
+      try {
+        validateIdentifierInputs(allIdentifierInputs);
+      } catch (error) {
+        setCartState("DEFAULT");
+        setError(error);
+        return;
+      }
+
+      try {
+        const transactionResponse = await reserveTransaction({
+          ids,
+          key: authKey,
+          transactions,
+          endpoint
+        });
+        setCheckoutResult(transactionResponse);
+        setCartState("RESERVED");
+      } catch (e) {
+        setCartState("DEFAULT");
+        if (
+          e.message === "Invalid Purchase Request: Duplicate identifier inputs"
+        ) {
+          setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e instanceof SessionError) {
+          setError(e);
+        } else {
+          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+        }
+      }
+    };
+
+    reserve();
+  }, [authKey, cart, endpoint, ids]);
+
+  const commitCart: CartHook["commitCart"] = useCallback(() => {
+    const commit = async (): Promise<void> => {
+      setCartState("COMMITTING");
+      // create array of transaction identifiers
+      const transactionIdentifiers: TransactionIdentifier[] = [];
+      const transactions = checkoutResult?.transactions;
+      if (transactions) {
+        ids.forEach((id: string, index: number) => {
+          const thisIdTransactions = transactions[index];
+          const baseTimestamp = thisIdTransactions.timestamp.valueOf();
+          thisIdTransactions.transaction.forEach((txn, idx) => {
+            transactionIdentifiers.push({
+              id,
+              transactionTime: baseTimestamp + idx
+            });
+          });
+        });
+      }
+
+      //commit the transactions
+      try {
+        const transactionResponse = await commitTransaction({
+          key: authKey,
+          endpoint,
+          transactionIdentifiers
+        });
+        setCheckoutResult(transactionResponse);
+        setCartState("PURCHASED");
+      } catch (e) {
+        setCartState("DEFAULT");
+        if (
+          e.message === "Invalid Purchase Request: Duplicate identifier inputs"
+        ) {
+          setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e instanceof SessionError) {
+          setError(e);
+        } else {
+          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+        }
+      }
+    };
+
+    if (cartState == "RESERVED") {
+      commit();
+    } else {
+      setError(new CommitTransactionError("Nothing to commit."));
+    }
+  }, [cartState, authKey, endpoint, checkoutResult, ids]);
+
+  /**
    * Handles the checking out of the cart.
    * Sets checkoutResult to the response of the post transaction.
    */
@@ -373,6 +492,8 @@ export const useCart = (
     cart,
     emptyCart,
     updateCart,
+    reserveCart,
+    commitCart,
     checkoutCart,
     checkoutResult,
     error,
