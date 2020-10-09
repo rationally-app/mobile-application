@@ -70,10 +70,9 @@ export const zh: Translations = {
   checkoutSuccessScreen: {
     redeemed: "已领取",
     redeemedItems: "已领取物品",
-    redeemedNextIdentity: "下一个证件",
+    nextIdentity: "下一个证件",
     purchased: "已购买",
     purchasedItems: "已购买物品",
-    purchasedNextIdentity: "下一个证件",
     previouslyRedeemedItems: "已领取物品",
     previouslyPurchasedItems: "已购买物品",
     redeemedAgo: "在 %{time} 已领取",
