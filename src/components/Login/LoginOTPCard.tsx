@@ -20,6 +20,8 @@ import {
 import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
+import { AuthCredentials } from "../../types";
+import i18n from "i18n-js";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -41,18 +43,20 @@ const styles = StyleSheet.create({
 
 interface LoginOTPCard {
   resetStage: () => void;
-  mobileNumber: string;
+  fullMobileNumber: string;
   operatorToken: string;
   endpoint: string;
-  handleRequestOTP: () => Promise<boolean>;
+  handleRequestOTP: (fullMobileNumber: string) => Promise<boolean>;
+  onSuccess: (credentials: AuthCredentials) => void;
 }
 
 export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   resetStage,
-  mobileNumber,
+  fullMobileNumber,
   operatorToken,
   endpoint,
-  handleRequestOTP
+  handleRequestOTP,
+  onSuccess
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -61,8 +65,8 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     RESEND_OTP_TIME_LIMIT
   );
 
-  const { addAuthCredentials } = useContext(AuthStoreContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { setAuthCredentials } = useContext(AuthStoreContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   const setState = useState()[1];
 
   useEffect(() => {
@@ -86,23 +90,25 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     try {
       const response = await validateOTP(
         otp,
-        mobileNumber,
+        fullMobileNumber,
         operatorToken,
         endpoint
       );
       setIsLoading(false);
-      addAuthCredentials(`${operatorToken}${endpoint}`, {
+      const credentials = {
         endpoint,
         expiry: response.ttl.getTime(),
         operatorToken: operatorToken,
         sessionToken: response.sessionToken
-      });
+      };
+      setAuthCredentials(`${operatorToken}${endpoint}`, credentials);
+      onSuccess(credentials);
     } catch (e) {
       Sentry.captureException(e);
       if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
-        showAlert(e.alertProps);
+        showErrorAlert(e);
       } else if (e instanceof LoginError) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
+        showErrorAlert(e, () => resetStage());
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -118,7 +124,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   const resendOTP = async (): Promise<void> => {
     setIsResending(true);
-    const isRequestSuccessful = await handleRequestOTP();
+    const isRequestSuccessful = await handleRequestOTP(fullMobileNumber);
     setIsResending(false);
     if (isRequestSuccessful) setResendDisabledTime(RESEND_OTP_TIME_LIMIT);
   };
@@ -129,10 +135,10 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   return (
     <Card>
-      <AppText>We&apos;re sending you the one-time password...</AppText>
+      <AppText>{`${i18n.t("loginOTPCard.sendingOtp")}...`}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <InputWithLabel
-          label="OTP"
+          label={i18n.t("loginOTPCard.otp")}
           value={oTPValue}
           onChange={({ nativeEvent: { text } }) => handleChange(text)}
           onSubmitEditing={onSubmitOTP}
@@ -141,11 +147,13 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         <View style={styles.buttonsWrapper}>
           {resendDisabledTime > 0 ? (
             <AppText style={styles.resendCountdownText}>
-              Resend in {resendDisabledTime / 1000}s
+              {i18n.t("loginOTPCard.resendIn", {
+                ss: resendDisabledTime / 1000
+              })}
             </AppText>
           ) : (
             <SecondaryButton
-              text="Resend"
+              text={i18n.t("loginOTPCard.resend")}
               onPress={resendOTP}
               isLoading={isResending}
               disabled={isLoading}
@@ -153,7 +161,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           )}
           <View style={styles.submitWrapper}>
             <DarkButton
-              text="Submit"
+              text={i18n.t("loginOTPCard.submit")}
               fullWidth={true}
               onPress={onSubmitOTP}
               isLoading={isLoading}

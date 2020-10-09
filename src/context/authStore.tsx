@@ -28,7 +28,7 @@ type AuthCredentialsMap = {
 interface AuthStoreContext {
   hasLoadedFromStore: boolean;
   authCredentials: AuthCredentialsMap;
-  addAuthCredentials: (key: string, authCredentials: AuthCredentials) => void;
+  setAuthCredentials: (key: string, authCredentials: AuthCredentials) => void;
   removeAuthCredentials: (key: string) => void;
   clearAuthCredentials: () => void;
 }
@@ -36,16 +36,16 @@ interface AuthStoreContext {
 export const AuthStoreContext = createContext<AuthStoreContext>({
   hasLoadedFromStore: false,
   authCredentials: {},
-  addAuthCredentials: () => undefined,
+  setAuthCredentials: () => undefined,
   removeAuthCredentials: () => undefined,
   clearAuthCredentials: () => undefined
 });
 
 export const AuthStoreContextProvider: FunctionComponent<{
   shouldMigrate?: boolean; // Temporary toggle to disable migration when testing
-}> = ({ shouldMigrate = false, children }) => {
+}> = ({ shouldMigrate = true, children }) => {
   const [hasLoadedFromStore, setHasLoadedFromStore] = useState(false);
-  const [authCredentials, setAuthCredentials] = useState<AuthCredentialsMap>(
+  const [authCredentials, setAuthCredentialsMap] = useState<AuthCredentialsMap>(
     {}
   );
   const prevAuthCredentials = usePrevious(authCredentials);
@@ -60,9 +60,9 @@ export const AuthStoreContextProvider: FunctionComponent<{
     }
   }, [hasLoadedFromStore, authCredentials, prevAuthCredentials]);
 
-  const addAuthCredentials: AuthStoreContext["addAuthCredentials"] = useCallback(
+  const setAuthCredentials: AuthStoreContext["setAuthCredentials"] = useCallback(
     (key, newAuthCredentials) => {
-      setAuthCredentials(prevCredentials => ({
+      setAuthCredentialsMap(prevCredentials => ({
         ...prevCredentials,
         [key]: newAuthCredentials
       }));
@@ -72,7 +72,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
 
   const removeAuthCredentials: AuthStoreContext["removeAuthCredentials"] = useCallback(
     key => {
-      setAuthCredentials(prevCredentials => {
+      setAuthCredentialsMap(prevCredentials => {
         const {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           [key]: credentialsToBeRemoved,
@@ -85,7 +85,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
   );
 
   const clearAuthCredentials: AuthStoreContext["clearAuthCredentials"] = useCallback(() => {
-    setAuthCredentials({});
+    setAuthCredentialsMap({});
   }, []);
 
   const [, setState] = useState();
@@ -111,7 +111,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
             operatorToken: ""
           }
         };
-        setAuthCredentials(newAuthCredentials);
+        setAuthCredentialsMap(newAuthCredentials);
         AsyncStorage.setItem(
           AUTH_CREDENTIALS_STORE_KEY,
           JSON.stringify(newAuthCredentials)
@@ -123,26 +123,36 @@ export const AuthStoreContextProvider: FunctionComponent<{
     };
 
     const loadAuthCredentialsFromStore = async (): Promise<void> => {
-      if (shouldMigrate) {
-        const migrated = await migrateOldAuthFromStore();
-        if (migrated) {
-          Sentry.addBreadcrumb({
-            category: "migration",
-            message: "success"
-          });
-          setHasLoadedFromStore(true);
-          return;
-        } else {
-          Sentry.addBreadcrumb({
-            category: "migration",
-            message: "failure"
-          });
-        }
-      }
-
       const authCredentialsString = await AsyncStorage.getItem(
         AUTH_CREDENTIALS_STORE_KEY
       );
+
+      if (shouldMigrate) {
+        if (authCredentialsString) {
+          // if there's already the new store, delete old keys
+          AsyncStorage.multiRemove([
+            SESSION_TOKEN_KEY,
+            EXPIRY_KEY,
+            ENDPOINT_KEY
+          ]);
+        } else {
+          const migrated = await migrateOldAuthFromStore();
+          if (migrated) {
+            Sentry.addBreadcrumb({
+              category: "migration",
+              message: "success"
+            });
+            setHasLoadedFromStore(true);
+            return;
+          } else {
+            Sentry.addBreadcrumb({
+              category: "migration",
+              message: "failure"
+            });
+          }
+        }
+      }
+
       if (!authCredentialsString) {
         setHasLoadedFromStore(true);
         return;
@@ -151,7 +161,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
         const authCredentialsFromStore: AuthCredentialsMap = JSON.parse(
           authCredentialsString
         );
-        setAuthCredentials(prev => ({
+        setAuthCredentialsMap(prev => ({
           ...prev,
           ...authCredentialsFromStore
         }));
@@ -171,7 +181,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
       value={{
         hasLoadedFromStore,
         authCredentials,
-        addAuthCredentials,
+        setAuthCredentials,
         removeAuthCredentials,
         clearAuthCredentials
       }}

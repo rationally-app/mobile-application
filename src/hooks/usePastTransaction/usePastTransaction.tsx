@@ -1,42 +1,64 @@
 import { useEffect, useState } from "react";
 import { PastTransactionsResult } from "../../types";
 import { usePrevious } from "../usePrevious";
-import { getPastTransactions } from "../../services/quota";
+import {
+  getPastTransactions,
+  PastTransactionError
+} from "../../services/quota";
 import { Sentry } from "../../utils/errorTracking";
+import { ERROR_MESSAGE } from "../../context/alert";
 
 export type PastTransactionHook = {
-  pastTransactionsResult: PastTransactionsResult | null;
+  pastTransactionsResult: PastTransactionsResult["pastTransactions"] | null;
+  loading: boolean;
+  error: PastTransactionError | null;
 };
 
 export const usePastTransaction = (
-  id: string,
+  ids: string[],
   authKey: string,
   endpoint: string
 ): PastTransactionHook => {
-  const [
-    pastTransactionsResult,
-    setPastTransactionsResult
-  ] = useState<PastTransactionsResult | null>(null);
-  const prevId = usePrevious(id);
+  const [pastTransactionsResult, setPastTransactionsResult] = useState<
+    PastTransactionsResult["pastTransactions"] | null
+  >(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<PastTransactionError | null>(null);
+  const prevIds = usePrevious(ids);
 
   useEffect(() => {
     const fetchPastTransactions = async (): Promise<void> => {
-      const pastTransactionsResponse = await getPastTransactions(
-        id,
-        authKey,
-        endpoint
-      );
-
-      setPastTransactionsResult(pastTransactionsResponse);
+      try {
+        const pastTransactionsResponse = await getPastTransactions(
+          ids,
+          authKey,
+          endpoint
+        );
+        setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
+      } catch (error) {
+        Sentry.captureException(
+          `Unable to fetch past transactions: ${ids.map(id =>
+            id.slice(-4).padStart(id.length, "*")
+          )}`
+        );
+        setError(
+          new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
+        );
+      } finally {
+        setLoading(false);
+      }
     };
 
-    if (prevId != id)
-      fetchPastTransactions().catch(() => {
-        Sentry.captureException(`Unable to fetch past transactions: ${id}`);
-      });
-  }, [authKey, endpoint, id, prevId]);
+    if (prevIds !== ids) {
+      setLoading(true);
+      setError(null);
+      fetchPastTransactions();
+    }
+  }, [authKey, endpoint, ids, prevIds]);
 
   return {
-    pastTransactionsResult
+    pastTransactionsResult,
+    loading,
+    error
   };
 };

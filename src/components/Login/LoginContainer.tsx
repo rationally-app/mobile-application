@@ -2,12 +2,12 @@ import React, {
   useState,
   FunctionComponent,
   useEffect,
-  useLayoutEffect,
   useContext,
   useRef
 } from "react";
 import {
   View,
+  TouchableOpacity,
   StyleSheet,
   TouchableWithoutFeedback,
   Vibration,
@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { NavigationProps, AuthCredentials } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
-import { size } from "../../common/styles";
+import { size, borderRadius, color } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
@@ -39,11 +39,13 @@ import { DOMAIN_FORMAT } from "../../config";
 import { requestOTP, LoginError, AuthError } from "../../services/auth";
 import {
   AlertModalContext,
-  systemAlertProps,
-  ERROR_MESSAGE,
-  defaultConfirmationProps
+  CONFIRMATION_MESSAGE,
+  ERROR_MESSAGE
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
+import { Feather } from "@expo/vector-icons";
+import { createFullNumber } from "../../utils/validatePhoneNumbers";
+import i18n from "i18n-js";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -68,8 +70,27 @@ const styles = StyleSheet.create({
   },
   bannerWrapper: {
     marginBottom: size(1.5)
+  },
+  closeButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: borderRadius(2),
+    padding: size(1),
+    position: "absolute",
+    top: size(3),
+    right: size(1)
   }
 });
+
+const CloseButton: FunctionComponent<{
+  onPress: () => void;
+}> = ({ onPress }) => (
+  <View style={styles.closeButton}>
+    <TouchableOpacity onPress={onPress}>
+      <Feather name="x" size={size(3)} color={color("grey", 0)} />
+    </TouchableOpacity>
+  </View>
+);
 
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation
@@ -83,13 +104,16 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const { config, setConfigValue } = useConfigContext();
   const [loginStage, setLoginStage] = useState<LoginStage>("SCAN");
+  const [countryCode, setCountryCode] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [tempAuthCredentials, setTempAuthCredentials] = useState<
     Pick<AuthCredentials, "endpoint" | "operatorToken">
   >();
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showConfirmationAlert, showErrorAlert } = useContext(
+    AlertModalContext
+  );
   const lastResendWarningMessageRef = useRef("");
 
   useEffect(() => {
@@ -108,30 +132,23 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       if (!lastResendWarningMessageRef.current) {
         resolve(true);
       } else {
-        showAlert({
-          ...defaultConfirmationProps,
-          title: "Resend OTP?",
-          description: lastResendWarningMessageRef.current,
-          buttonTexts: {
-            primaryActionText: "Resend",
-            secondaryActionText: "No"
-          },
-          onOk: () => resolve(true),
-          onCancel: () => resolve(false),
-          visible: true
-        });
+        showConfirmationAlert(
+          CONFIRMATION_MESSAGE.RESEND_OTP,
+          () => resolve(true),
+          () => resolve(false)
+        );
       }
     });
   };
 
   const setState = useState()[1];
   const handleRequestOTP = async (
-    fullNumber = mobileNumber
+    fullMobileNumber: string
   ): Promise<boolean> => {
     try {
       if (!(await getResendConfirmationIfNeeded())) return false;
       const response = await requestOTP(
-        fullNumber,
+        fullMobileNumber,
         tempAuthCredentials?.operatorToken ?? "",
         tempAuthCredentials?.endpoint ?? ""
       );
@@ -139,7 +156,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
+        showErrorAlert(e, () => resetStage(), { minutes: e.message });
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -149,13 +166,14 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     }
   };
 
-  useLayoutEffect(() => {
-    if (hasLoadedFromStore && Object.keys(authCredentials).length === 1) {
-      navigation.navigate("CampaignInitialisationScreen", {
-        authCredentials: Object.values(authCredentials)[0]
-      });
-    }
-  }, [authCredentials, hasLoadedFromStore, navigation]);
+  const onPressClose = (): void => {
+    navigation.navigate("CampaignLocationsScreen");
+  };
+
+  const onSuccess = (authCredentials: AuthCredentials): void => {
+    setConfigValue("fullMobileNumber", { countryCode, mobileNumber });
+    navigation.navigate("CampaignInitialisationScreen", { authCredentials });
+  };
 
   useEffect(() => {
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
@@ -167,10 +185,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
-          showAlert({
-            ...systemAlertProps,
-            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-          });
+          showErrorAlert(error);
           setLoginStage("SCAN");
         } else {
           setTempAuthCredentials({
@@ -182,7 +197,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       }
     };
     skipScanningIfParamsInDeepLink();
-  }, [showAlert]);
+  }, [showErrorAlert]);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
@@ -231,7 +246,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
         if (e instanceof AuthError) {
-          showAlert(e.alertProps);
+          showErrorAlert(e);
         } else {
           setState(() => {
             throw error; // Let ErrorBoundary handle
@@ -257,6 +272,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           style={{ height: "50%", maxHeight: "auto" }}
           mode={config.appMode}
         />
+
         <View style={styles.content}>
           <TouchableWithoutFeedback
             delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
@@ -293,21 +309,26 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
             <LoginMobileNumberCard
               setLoginStage={setLoginStage}
               setMobileNumber={setMobileNumber}
+              setCountryCode={setCountryCode}
               handleRequestOTP={handleRequestOTP}
             />
           )}
           {loginStage === "OTP" && (
             <LoginOTPCard
               resetStage={resetStage}
-              mobileNumber={mobileNumber}
+              fullMobileNumber={createFullNumber(countryCode, mobileNumber)}
               operatorToken={tempAuthCredentials?.operatorToken ?? ""}
               endpoint={tempAuthCredentials?.endpoint ?? ""}
               handleRequestOTP={handleRequestOTP}
+              onSuccess={onSuccess}
             />
           )}
           <FeatureToggler feature="HELP_MODAL">
             <HelpButton onPress={showHelpModal} />
           </FeatureToggler>
+          {hasLoadedFromStore && Object.keys(authCredentials).length >= 1 && (
+            <CloseButton onPress={onPressClose} />
+          )}
         </View>
       </KeyboardAvoidingScrollView>
       {shouldShowCamera && (
@@ -315,7 +336,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           onBarCodeScanned={onBarCodeScanned}
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText="Cancel"
+          cancelButtonText={i18n.t("customerQuotaScreen.quotaAppealCancel")}
         />
       )}
     </>

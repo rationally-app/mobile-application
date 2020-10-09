@@ -8,7 +8,6 @@ import React, {
 import {
   View,
   StyleSheet,
-  Alert,
   Vibration,
   BackHandler,
   Keyboard
@@ -35,16 +34,21 @@ import { VoucherScanner } from "../VoucherScanner/VoucherScanner";
 import { VoucherStatusModal } from "./VoucherStatusModal/VoucherStatusModal";
 import { AllValidVouchersModal } from "./AllValidVouchersModal";
 import { useVoucher } from "../../hooks/useVoucher/useVoucher";
-import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
+import {
+  ScannerError,
+  useCheckVoucherValidity
+} from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { AuthContext } from "../../context/auth";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
-import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
 import {
   AlertModalContext,
-  expiredAlertProps,
-  ERROR_MESSAGE
+  CONFIRMATION_MESSAGE,
+  WARNING_MESSAGE
 } from "../../context/alert";
+import { AuthStoreContext } from "../../context/authStore";
+import i18n from "i18n-js";
+import { LimitReachedError } from "../../utils/validateVoucherCode";
 
 const styles = StyleSheet.create({
   content: {
@@ -85,9 +89,12 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
     false
   );
-  const { sessionToken, endpoint } = useContext(AuthContext);
-  const { logout } = useLogout();
-  const { showAlert } = useContext(AlertModalContext);
+  const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
+  const { showWarnAlert, showErrorAlert, showConfirmationAlert } = useContext(
+    AlertModalContext
+  );
+
+  const { setAuthCredentials } = useContext(AuthStoreContext);
 
   const {
     checkoutVouchersState,
@@ -99,6 +106,15 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     error: merchantError,
     resetState: resetVoucherState
   } = useVoucher(sessionToken, endpoint);
+
+  const handleRemoveVoucher = (voucherSerial: string): void => {
+    showConfirmationAlert(
+      CONFIRMATION_MESSAGE.REMOVE_VOUCHER,
+      () => removeVoucher(voucherSerial),
+      undefined,
+      { voucherSerial: voucherSerial }
+    );
+  };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -153,15 +169,29 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     }
   }, [isFocused, checkValidityState, validityResult, onModalExit, addVoucher]);
 
+  const expireSession = useCallback(() => {
+    const key = `${operatorToken}${endpoint}`;
+    setAuthCredentials(key, {
+      operatorToken,
+      endpoint,
+      sessionToken,
+      expiry: new Date().getTime()
+    });
+  }, [setAuthCredentials, endpoint, operatorToken, sessionToken]);
+
   useEffect(() => {
-    if (validityError instanceof SessionError) {
-      showAlert({
-        ...expiredAlertProps,
-        description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
+    if (
+      validityError instanceof ScannerError ||
+      validityError instanceof LimitReachedError
+    ) {
+      showErrorAlert(validityError, onModalExit);
+    } else if (validityError instanceof SessionError) {
+      expireSession();
+      showErrorAlert(validityError, () => {
+        navigation.navigate("CampaignLocationsScreen");
       });
-      logout(navigation.dispatch);
     }
-  }, [logout, navigation.dispatch, showAlert, validityError]);
+  }, [expireSession, navigation, showErrorAlert, validityError, onModalExit]);
 
   const redeemVouchers = (): void => {
     checkoutVouchers(merchantCode);
@@ -184,30 +214,23 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       Vibration.vibrate(50);
     } else if (merchantError) {
       if (merchantError instanceof SessionError) {
-        showAlert({
-          ...expiredAlertProps,
-          description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-        });
-        logout(navigation.dispatch);
+        expireSession();
       } else {
-        Alert.alert("Error", merchantError.message, [
-          {
-            text: "Dismiss",
-            onPress: () => resetVoucherState(true)
-          }
-        ]);
+        showErrorAlert(new Error(merchantError.message), () =>
+          resetVoucherState(true)
+        );
       }
     }
   }, [
     checkoutResult,
     checkoutVouchersState,
-    logout,
+    expireSession,
     merchantCode,
     merchantError,
     navigation,
     resetState,
     resetVoucherState,
-    showAlert
+    showErrorAlert
   ]);
 
   const closeCamera = useCallback(() => setShouldShowCamera(false), []);
@@ -247,7 +270,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <View style={styles.submitWrapper}>
                 <DarkButton
                   fullWidth={true}
-                  text="Checkout"
+                  text={i18n.t("customerQuotaScreen.quotaButtonCheckout")}
                   icon={
                     <Feather
                       name="shopping-cart"
@@ -260,25 +283,12 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 />
               </View>
               <SecondaryButton
-                text="Cancel"
+                text={i18n.t("customerQuotaScreen.quotaAppealCancel")}
                 onPress={() => {
-                  Alert.alert(
-                    "Discard transaction?",
-                    "This will clear all scanned items",
-                    [
-                      {
-                        text: "Cancel"
-                      },
-                      {
-                        text: "Discard",
-                        onPress: () => {
-                          setMerchantCode("");
-                          resetState();
-                        },
-                        style: "destructive"
-                      }
-                    ]
-                  );
+                  showWarnAlert(WARNING_MESSAGE.DISCARD_TRANSACTION, () => {
+                    setMerchantCode("");
+                    resetState();
+                  });
                 }}
               />
             </View>
@@ -290,7 +300,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         <AllValidVouchersModal
           vouchers={vouchers}
           isVisible={showAllValidVouchersModal}
-          onVoucherCodeRemove={removeVoucher}
+          onVoucherCodeRemove={handleRemoveVoucher}
           onExit={() => setShowAllValidVouchersModal(false)}
         />
       </KeyboardAvoidingScrollView>

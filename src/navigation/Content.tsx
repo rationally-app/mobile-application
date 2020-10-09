@@ -15,6 +15,7 @@ import { createDrawerNavigator } from "react-navigation-drawer";
 import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation";
 import { StackViewTransitionConfigs } from "react-navigation-stack";
 import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
+import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -22,6 +23,7 @@ const SwitchNavigator = createSwitchNavigator(
     CampaignInitialisationScreen,
     DrawerNavigator: createDrawerNavigator(
       {
+        CampaignLocationsScreen,
         CustomerQuotaStack: {
           screen: CustomerQuotaStack
         },
@@ -42,7 +44,7 @@ const SwitchNavigator = createSwitchNavigator(
       }
     )
   },
-  { initialRouteName: "LoginScreen" }
+  { initialRouteName: "DrawerNavigator" }
 );
 
 const AppContainer = createAppContainer(SwitchNavigator);

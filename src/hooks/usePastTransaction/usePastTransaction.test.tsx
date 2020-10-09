@@ -7,19 +7,26 @@ import {
 } from "../../services/quota";
 import { PastTransactionsResult, CampaignPolicy } from "../../types";
 import { defaultIdentifier } from "../../test/helpers/defaults";
-import { toDate } from "date-fns";
 import { ProductContextProvider } from "../../context/products";
+import { ERROR_MESSAGE } from "../../context/alert";
 
-jest.mock("../../services/quota");
+jest.mock("../../services/quota", () => {
+  const actualModule = jest.requireActual("../../services/quota");
+  return {
+    ...actualModule,
+    // Only mock
+    getPastTransactions: jest.fn()
+  };
+});
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
 
-const id = "ID1";
+const ids = ["ID1"];
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
 
 const customProducts: CampaignPolicy[] = [
   {
-    category: "tt-token",
+    category: "specs",
     categoryType: "DEFAULT", // 'DEFAULT' (default) | 'APPEAL'
     name: "TT Token",
     order: 1,
@@ -39,7 +46,7 @@ const customProducts: CampaignPolicy[] = [
     type: "REDEEM"
   },
   {
-    category: "tt-token-lost",
+    category: "specs-lost",
     categoryType: "APPEAL",
     name: "Lost/stolen token",
     order: 1,
@@ -67,7 +74,7 @@ const customProducts: CampaignPolicy[] = [
 const mockPastTransactions: PastTransactionsResult = {
   pastTransactions: [
     {
-      category: "tt-token",
+      category: "specs",
       quantity: 1,
       identifierInputs: [
         {
@@ -76,10 +83,10 @@ const mockPastTransactions: PastTransactionsResult = {
           value: "AAA987654321"
         }
       ],
-      transactionTime: toDate(1596530356430)
+      transactionTime: new Date(1596530356430)
     },
     {
-      category: "tt-token-lost",
+      category: "specs-lost",
       quantity: 1,
       identifierInputs: [
         {
@@ -88,10 +95,10 @@ const mockPastTransactions: PastTransactionsResult = {
           value: "AAA987654322"
         }
       ],
-      transactionTime: toDate(1596530356431)
+      transactionTime: new Date(1596530356431)
     },
     {
-      category: "tt-token-lost",
+      category: "specs-lost",
       quantity: 1,
       identifierInputs: [
         {
@@ -100,18 +107,13 @@ const mockPastTransactions: PastTransactionsResult = {
           value: "AAA987654323"
         }
       ],
-      transactionTime: toDate(1596530356432)
+      transactionTime: new Date(1596530356432)
     }
   ]
 };
 
 const mockEmptyPastTransactions: PastTransactionsResult = {
   pastTransactions: []
-};
-
-const mockSomeUnknownError: any = () => {
-  const errorMessage = "Some random error";
-  throw new PastTransactionError(errorMessage);
 };
 
 const wrapper: FunctionComponent = ({ children }) => (
@@ -127,84 +129,95 @@ describe("usePastTransaction", () => {
 
   describe("fetch past transactions on initialisation", () => {
     it("should populate the past transactions with values", async () => {
-      expect.assertions(1);
-      mockGetPastTransactions.mockReturnValueOnce(mockPastTransactions);
+      expect.assertions(4);
+      mockGetPastTransactions.mockReturnValue(mockPastTransactions);
 
       const { result, waitForNextUpdate } = renderHook(
-        () => usePastTransaction(id, key, endpoint),
+        () => usePastTransaction(ids, key, endpoint),
         { wrapper }
       );
 
+      expect(result.current.loading).toStrictEqual(true);
+
       await waitForNextUpdate();
 
-      expect(result.current.pastTransactionsResult).toStrictEqual({
-        pastTransactions: [
-          {
-            category: "tt-token",
-            quantity: 1,
-            identifierInputs: [
-              {
-                ...defaultIdentifier,
-                label: "first",
-                value: "AAA987654321"
-              }
-            ],
-            transactionTime: toDate(1596530356430)
-          },
-          {
-            category: "tt-token-lost",
-            quantity: 1,
-            identifierInputs: [
-              {
-                ...defaultIdentifier,
-                label: "first",
-                value: "AAA987654322"
-              }
-            ],
-            transactionTime: toDate(1596530356431)
-          },
-          {
-            category: "tt-token-lost",
-            quantity: 1,
-            identifierInputs: [
-              {
-                ...defaultIdentifier,
-                label: "first",
-                value: "AAA987654323"
-              }
-            ],
-            transactionTime: toDate(1596530356432)
-          }
-        ]
-      });
+      expect(result.current.pastTransactionsResult).toStrictEqual([
+        {
+          category: "specs",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654321"
+            }
+          ],
+          transactionTime: new Date(1596530356430)
+        },
+        {
+          category: "specs-lost",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654322"
+            }
+          ],
+          transactionTime: new Date(1596530356431)
+        },
+        {
+          category: "specs-lost",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654323"
+            }
+          ],
+          transactionTime: new Date(1596530356432)
+        }
+      ]);
+      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.error).toBeNull();
     });
 
     it("should populate the past transactions with empty values", async () => {
-      expect.assertions(1);
-      mockGetPastTransactions.mockReturnValueOnce(mockEmptyPastTransactions);
+      expect.assertions(3);
+      mockGetPastTransactions.mockReturnValue(mockEmptyPastTransactions);
 
       const { result, waitForNextUpdate } = renderHook(
-        () => usePastTransaction(id, key, endpoint),
+        () => usePastTransaction(ids, key, endpoint),
         { wrapper }
       );
 
       await waitForNextUpdate();
 
-      expect(result.current.pastTransactionsResult).toStrictEqual({
-        pastTransactions: []
-      });
+      expect(result.current.pastTransactionsResult).toStrictEqual([]);
+      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.error).toBeNull();
     });
 
-    it("should catch error when thrown", async () => {
-      expect.assertions(1);
-      mockGetPastTransactions.mockImplementation(mockSomeUnknownError);
+    it("should return PAST_TRANSACTION_ERROR when error thrown", async () => {
+      expect.assertions(4);
+      mockGetPastTransactions.mockRejectedValue(
+        new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
+      );
 
-      const { result } = renderHook(
-        () => usePastTransaction(id, key, endpoint),
+      const { result, waitForNextUpdate } = renderHook(
+        () => usePastTransaction(ids, key, endpoint),
         { wrapper }
       );
 
+      await waitForNextUpdate();
+
       expect(result.current.pastTransactionsResult).toBeNull();
+      expect(result.current.error).toBeInstanceOf(PastTransactionError);
+      expect(result.current.error?.message).toStrictEqual(
+        ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
+      );
+      expect(result.current.loading).toStrictEqual(false);
     });
   });
 });

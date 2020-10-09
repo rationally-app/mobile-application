@@ -15,7 +15,7 @@ import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
 import { Card } from "../Layout/Card";
 import { ItemsSelectionCard } from "./ItemsSelection/ItemsSelectionCard";
-import { NoQuotaCard } from "./NoQuotaCard";
+import { NoQuotaCard } from "./NoQuota/NoQuotaCard";
 import { CheckoutSuccessCard } from "./CheckoutSuccess/CheckoutSuccessCard";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
@@ -27,18 +27,11 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import {
-  AlertModalContext,
-  wrongFormatAlertProps,
-  incompleteEntryAlertProps,
-  systemAlertProps,
-  ERROR_MESSAGE,
-  expiredAlertProps
-} from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
-import { useLogout } from "../../hooks/useLogout";
 import { SessionError } from "../../services/helpers";
-import { QuotaError } from "../../services/quota";
+import { AuthStoreContext } from "../../context/authStore";
+import i18n from "i18n-js";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -82,27 +75,19 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
-  const { sessionToken, endpoint } = useContext(AuthContext);
+  const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
   const showHelpModal = useContext(HelpModalContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
-  const { logout } = useLogout();
 
-  const forceLogout = useCallback((): void => {
-    showAlert({
-      ...expiredAlertProps,
-      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-    });
-    logout(navigation.dispatch);
-  }, [logout, navigation.dispatch, showAlert]);
+  const { setAuthCredentials } = useContext(AuthStoreContext);
 
   const {
     cartState,
     cart,
     updateCart,
     checkoutCart,
-    checkoutResult,
     error,
     clearError,
     quotaResponse
@@ -149,99 +134,70 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     };
   }, [cartState, navigation]);
 
+  const expireSession = useCallback(() => {
+    const key = `${operatorToken}${endpoint}`;
+    setAuthCredentials(key, {
+      operatorToken,
+      endpoint,
+      sessionToken,
+      expiry: new Date().getTime()
+    });
+  }, [setAuthCredentials, endpoint, operatorToken, sessionToken]);
+
   useEffect(() => {
     if (!error) {
       return;
     }
     if (error instanceof SessionError) {
       clearError();
-      forceLogout();
+      expireSession();
+      showErrorAlert(error, () => {
+        navigation.navigate("CampaignLocationsScreen");
+      });
       return;
     }
     if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
-      if (error instanceof QuotaError) {
-        showAlert({
-          ...error.alertProps,
-          onOk: () => clearError()
-        });
-        return;
-      }
       switch (error.message) {
-        case ERROR_MESSAGE.MISSING_SELECTION:
-          showAlert({
-            ...incompleteEntryAlertProps,
-            description: ERROR_MESSAGE.MISSING_SELECTION,
-            onOk: () => clearError()
-          });
-          break;
-
         case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
-          showAlert({
-            ...incompleteEntryAlertProps,
-            description:
-              campaignFeatures?.campaignName === "TT Tokens"
-                ? ERROR_MESSAGE.MISSING_POD_INPUT
-                : campaignFeatures?.campaignName.includes("Vouchers")
-                ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
-                : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT,
-            onOk: () => clearError()
-          });
+          const missingIdentifierInputError = new Error(
+            campaignFeatures?.campaignName === "TT Tokens"
+              ? ERROR_MESSAGE.MISSING_POD_INPUT
+              : campaignFeatures?.campaignName.includes("Vouchers")
+              ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
+              : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
+          );
+          showErrorAlert(missingIdentifierInputError, () => clearError());
           break;
-
-        case ERROR_MESSAGE.SERVER_ERROR:
-          showAlert({
-            ...systemAlertProps,
-            description: error.message,
-            onOk: () => clearError()
-          });
-          break;
-
-        case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
-          showAlert({
-            ...systemAlertProps,
-            title: "Already used",
-            description:
-              campaignFeatures?.campaignName === "TT Tokens"
-                ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
-                : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT,
-            onOk: () => clearError()
-          });
-          break;
-
         case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
-          showAlert({
-            ...wrongFormatAlertProps,
-            description:
-              campaignFeatures?.campaignName === "TT Tokens"
-                ? ERROR_MESSAGE.INVALID_POD_INPUT
-                : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT,
-            onOk: () => clearError()
-          });
+          const invalidIdentifierInputError = new Error(
+            campaignFeatures?.campaignName === "TT Tokens"
+              ? ERROR_MESSAGE.INVALID_POD_INPUT
+              : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+          );
+          showErrorAlert(invalidIdentifierInputError, () => clearError());
           break;
-
-        case ERROR_MESSAGE.INVALID_PHONE_NUMBER:
-        case ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE:
-          showAlert({
-            ...wrongFormatAlertProps,
-            description: error.message,
-            onOk: () => clearError()
-          });
+        case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
+          const duplicateIdentifierInputError = new Error(
+            campaignFeatures?.campaignName === "TT Tokens"
+              ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
+              : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
+          );
+          showErrorAlert(duplicateIdentifierInputError, () => clearError());
           break;
-
         default:
-          throw new Error(error.message);
+          showErrorAlert(error, () => clearError());
       }
     } else {
       throw new Error(error.message);
     }
   }, [
+    campaignFeatures?.campaignName,
     cartState,
     clearError,
     error,
-    onCancel,
-    showAlert,
-    campaignFeatures,
-    forceLogout
+    expireSession,
+    navigation,
+    showErrorAlert
   ]);
 
   return cartState === "FETCHING_QUOTA" ? (
@@ -249,7 +205,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
       <Card>
         <ActivityIndicator size="large" color={color("grey", 40)} />
-        <AppText style={{ marginTop: size(1) }}>Checking...</AppText>
+        <AppText style={{ marginTop: size(1) }}>
+          {i18n.t("customerQuotaScreen.quotaCheck")}...
+        </AppText>
       </Card>
     </View>
   ) : (
@@ -271,7 +229,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           <CheckoutSuccessCard
             ids={ids}
             onCancel={onNextId}
-            checkoutResult={checkoutResult}
             quotaResponse={quotaResponse}
           />
         ) : cartState === "NO_QUOTA" ? (

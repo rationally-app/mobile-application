@@ -189,7 +189,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     const { queryByTestId, getByText } = render(
       <CampaignConfigsStoreContextProvider>
         <CampaignConfigsStoreContext.Consumer>
-          {({ allCampaignConfigs, addCampaignConfig }) => (
+          {({ allCampaignConfigs, setCampaignConfig }) => (
             <>
               <Text testID="features">
                 {JSON.stringify(allCampaignConfigs[testCampaignKey]?.features)}
@@ -199,7 +199,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
               </Text>
               <Button
                 onPress={() =>
-                  addCampaignConfig(testCampaignKey, {
+                  setCampaignConfig(testCampaignKey, {
                     features: { new: "new" },
                     policies: [{ new: "new" }]
                   } as any)
@@ -256,12 +256,12 @@ describe("CampaignConfigsStoreContextProvider", () => {
     const { queryByTestId, getByText } = render(
       <CampaignConfigsStoreContextProvider>
         <CampaignConfigsStoreContext.Consumer>
-          {({ allCampaignConfigs, addCampaignConfig }) => (
+          {({ allCampaignConfigs, setCampaignConfig }) => (
             <>
               <Text testID="configs">{JSON.stringify(allCampaignConfigs)}</Text>
               <Button
                 onPress={() =>
-                  addCampaignConfig(testCampaignKey, {
+                  setCampaignConfig(testCampaignKey, {
                     features: { new: "new" },
                     policies: [{ new: "new" }]
                   } as any)
@@ -320,7 +320,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     const { queryByTestId, getByText } = render(
       <CampaignConfigsStoreContextProvider>
         <CampaignConfigsStoreContext.Consumer>
-          {({ allCampaignConfigs, addCampaignConfig }) => (
+          {({ allCampaignConfigs, setCampaignConfig }) => (
             <>
               <Text testID="features">
                 {JSON.stringify(allCampaignConfigs[testCampaignKey]?.features)}
@@ -330,7 +330,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
               </Text>
               <Button
                 onPress={() =>
-                  addCampaignConfig(testCampaignKey, {
+                  setCampaignConfig(testCampaignKey, {
                     features: null,
                     policies: [{ new: "new" }]
                   } as any)

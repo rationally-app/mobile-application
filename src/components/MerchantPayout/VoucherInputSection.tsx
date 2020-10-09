@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { size, color } from "../../common/styles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { ValidVoucherCount } from "./ValidVoucherCount";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Voucher } from "../../types";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -68,16 +68,20 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
             onPress={openAllValidVouchersModal}
             style={styles.seeAllButton}
           >
-            <AppText style={styles.seeAllText}>See all</AppText>
+            <AppText style={styles.seeAllText}>
+              {i18n.t("merchantFlowScreen.seeAll")}
+            </AppText>
           </TouchableOpacity>
         </View>
       ) : (
-        <AppText>Check the number of item(s) eligible for redemption</AppText>
+        <AppText>
+          {i18n.t("collectCustomerDetailsScreen.checkEligibleItems")}
+        </AppText>
       )}
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
-          text="Add voucher"
+          text={i18n.t("merchantFlowScreen.quotaButtonAddVoucher")}
           icon={
             <MaterialIcons name="add" size={size(2)} color={color("grey", 0)} />
           }
@@ -89,7 +93,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
           <View style={styles.horizontalRule} />
           <View style={styles.inputWrapper}>
             <InputWithLabel
-              label="Merchant Code"
+              label={i18n.t("merchantFlowScreen.merchantCode")}
               value={merchantCode}
               onChange={({ nativeEvent: { text } }) => setMerchantCode(text)}
               onSubmitEditing={redeemVouchers}
