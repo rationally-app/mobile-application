@@ -146,7 +146,12 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   }, [onCancel]);
 
   const checkIfInInterestArea: BarCodeScannedCallback = event => {
-    const bounds = event.bounds.origin;
+    /**
+     * An issue exists in Expo where `BarCodeScanner.BarCodeBounds`
+     * may not be returned for iOS devices, in such cases, we allow
+     * scanning anywhere on the camera, rather than within the lightbox.
+     */
+    const bounds = event.bounds?.origin;
     if (
       bounds &&
       interestArea &&
@@ -157,6 +162,8 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
       bounds.y + event.bounds.size.height <=
         interestArea.y + interestArea.height
     ) {
+      onBarCodeScanned(event);
+    } else {
       onBarCodeScanned(event);
     }
   };
