@@ -88,6 +88,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     cart,
     updateCart,
     checkoutCart,
+    reserveCart,
+    commitCart,
     error,
     clearError,
     quotaResponse
@@ -247,6 +249,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             addId={addId}
             isLoading={cartState === "CHECKING_OUT"}
             checkoutCart={checkoutCart}
+            reserveCart={reserveCart}
+            commitCart={commitCart}
             onCancel={onCancel}
             onBack={onBack}
             cart={cart}

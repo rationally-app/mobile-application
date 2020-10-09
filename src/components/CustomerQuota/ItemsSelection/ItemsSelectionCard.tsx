@@ -25,6 +25,8 @@ interface ItemsSelectionCard {
   addId: (id: string) => void;
   isLoading: boolean;
   checkoutCart: () => void;
+  reserveCart: () => void;
+  commitCart: () => void;
   onCancel: () => void;
   onBack: () => void;
   cart: Cart;
@@ -36,6 +38,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   addId,
   isLoading,
   checkoutCart,
+  reserveCart,
+  commitCart,
   onCancel,
   onBack,
   cart,
@@ -132,10 +136,15 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               !isChargeable
                 ? checkoutCart
                 : () => {
-                    showConfirmationAlert(
-                      CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
-                      checkoutCart
-                    );
+                    try {
+                      reserveCart();
+                      showConfirmationAlert(
+                        CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
+                        commitCart
+                      );
+                    } catch (e) {
+                      showErrorAlert(e);
+                    }
                   }
             }
             isLoading={isLoading}
