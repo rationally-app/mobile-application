@@ -1,5 +1,6 @@
 import { HookResult, renderHook } from "@testing-library/react-hooks";
 import React, { FunctionComponent } from "react";
+import { en } from "../../common/i18n/translations/en";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import {
   CampaignConfigsMap,
@@ -7,6 +8,7 @@ import {
 } from "../../context/campaignConfigsStore";
 import { defaultFeatures, defaultProducts } from "../../test/helpers/defaults";
 import { TranslationHook, useTranslate } from "./useTranslate";
+import "../../common/i18n/i18nMock";
 
 const mockGetItem = jest.fn();
 jest.mock("react-native/Libraries/Storage/AsyncStorage", () => ({
@@ -132,6 +134,42 @@ describe("useTranslate", () => {
       expect(
         result.current.c13ntForUnit({ label: "some label", type: "POSTFIX" })
       ).toEqual({ label: "some label", type: "POSTFIX" });
+    });
+  });
+
+  describe("i18nt", () => {
+    beforeAll(() => {
+      // eslint-disable-next-line react/display-name
+      wrapper = ({ children }) => (
+        <CampaignConfigsStoreContextProvider>
+          <CampaignConfigContextProvider
+            campaignConfig={allCampaignConfigs.campaignA!}
+          >
+            {children}
+          </CampaignConfigContextProvider>
+        </CampaignConfigsStoreContextProvider>
+      );
+      const { result: translationResult, waitForNextUpdate } = renderHook(
+        () => useTranslate(),
+        {
+          wrapper
+        }
+      );
+      waitForNextUpdate();
+      result = translationResult;
+    });
+
+    it("should return translation from i18n store when given the right keys", () => {
+      expect.assertions(3);
+      expect(result.current.i18nt("loginScanCard", "loginWithQR")).toEqual(
+        en.loginScanCard.loginWithQR
+      );
+      expect(
+        result.current.i18nt("errorMessages", "alreadyUsedCode", "body")
+      ).toEqual(en.errorMessages.alreadyUsedCode.body);
+      expect(
+        result.current.i18nt("loginOTPCard", "resendIn", undefined, { ss: 8 })
+      ).toEqual("Resend in 8s");
     });
   });
 });
