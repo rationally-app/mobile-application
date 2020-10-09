@@ -8,11 +8,11 @@ import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
 import { Feather } from "@expo/vector-icons";
 import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
+import { PaymentConfirmationModal } from "../PaymentConfirmationModal";
 import { Item } from "./Item";
 import { ProductContext } from "../../../context/products";
 import {
   AlertModalContext,
-  CONFIRMATION_MESSAGE,
   ERROR_MESSAGE,
   WARNING_MESSAGE
 } from "../../../context/alert";
@@ -48,9 +48,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { features } = useContext(CampaignConfigContext);
   const { products } = useContext(ProductContext);
-  const { showWarnAlert, showConfirmationAlert, showErrorAlert } = useContext(
-    AlertModalContext
-  );
+  const { showWarnAlert, showErrorAlert } = useContext(AlertModalContext);
+  const [showPaymentAlert, setShowPaymentAlert] = useState<boolean>(false);
 
   const onCheckAddedUsers = async (input: string): Promise<void> => {
     try {
@@ -138,11 +137,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 : () => {
                     try {
                       reserveCart();
-                      showConfirmationAlert(
-                        CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
-                        commitCart
-                      );
+                      setShowPaymentAlert(true);
                     } catch (e) {
+                      setShowPaymentAlert(false);
                       showErrorAlert(e);
                     }
                   }
@@ -156,6 +153,13 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         isVisible={isAddUserModalVisible}
         setIsVisible={setIsAddUserModalVisible}
         validateAndUpdateIds={onCheckAddedUsers}
+      />
+      <PaymentConfirmationModal
+        isVisible={showPaymentAlert}
+        commitCart={commitCart}
+        cancelPayment={() => {
+          setShowPaymentAlert(false);
+        }}
       />
     </View>
   );
