@@ -3,9 +3,10 @@ import { Translations } from "../../common/i18n/translations/type";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { CampaignPolicy } from "../../types";
 import i18n from "i18n-js";
+import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 
 export type TranslationHook = {
-  c13nt: (key: string) => string;
+  c13nt: (key: string, campaignKey?: string) => string;
   c13ntForUnit: (
     unit: CampaignPolicy["quantity"]["unit"]
   ) => CampaignPolicy["quantity"]["unit"];
@@ -41,8 +42,15 @@ export const i18ntWithValidator = <
 
 export const useTranslate = (): TranslationHook => {
   const { c13n } = useContext(CampaignConfigContext);
+  const { allCampaignConfigs } = useContext(CampaignConfigsStoreContext);
 
-  const c13nt = (key: string): string => (c13n && key && c13n[key]) ?? key;
+  const c13nt = (key: string, campaignKey?: string): string => {
+    let c13nStore = c13n;
+    if (campaignKey) {
+      c13nStore = allCampaignConfigs[campaignKey]?.c13n ?? null;
+    }
+    return (c13nStore && key && c13nStore[key]) ?? key;
+  };
 
   const c13ntForUnit = (
     unit: CampaignPolicy["quantity"]["unit"]

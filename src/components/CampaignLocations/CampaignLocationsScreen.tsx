@@ -142,7 +142,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
       return {
         ...credentials,
         key,
-        name: c13nt(allCampaignConfigs[key]?.features?.campaignName ?? "")
+        name: c13nt(allCampaignConfigs[key]?.features?.campaignName ?? "", key)
       };
     }
   );
