@@ -4,7 +4,17 @@ import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
 
-const MAX_LENGTH_FOR_NSN = 17;
+const singaporeNumberCode = "SG";
+const phoneUtil = PhoneNumberUtil.getInstance();
+
+const phoneNumberFormatted = (mobileNumberValue: string): string => {
+  return mobileNumberValue.length >= 2
+    ? phoneUtil.format(
+        phoneUtil.parse(mobileNumberValue, singaporeNumberCode),
+        PhoneNumberFormat.NATIONAL
+      )
+    : mobileNumberValue;
+};
 
 const styles = StyleSheet.create({
   inputsWrapper: {
@@ -66,14 +76,7 @@ export const PhoneNumberInput: FunctionComponent<{
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit = () => {}
 }) => {
-  const phoneUtil = PhoneNumberUtil.getInstance();
-  const value: string =
-    mobileNumberValue.length > 2
-      ? phoneUtil.format(
-          phoneUtil.parse(mobileNumberValue, "SG"),
-          PhoneNumberFormat.NATIONAL
-        )
-      : mobileNumberValue;
+  const value: string = phoneNumberFormatted(mobileNumberValue);
   return (
     <View style={styles.numberWrapper}>
       <AppText style={styles.label}>{label}</AppText>
@@ -82,18 +85,19 @@ export const PhoneNumberInput: FunctionComponent<{
           style={styles.countryCode}
           keyboardType="phone-pad"
           value={countryCodeValue}
-          onChange={({ nativeEvent: { text } }) => onChangeCountryCode(text)}
+          onChangeText={text => onChangeCountryCode(text)}
         />
         <AppText style={styles.hyphen}>-</AppText>
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
           value={value}
-          onChange={({ nativeEvent: { text } }) => {
-            const cleanText: string = text.replace(" ", "");
-            if (cleanText.length <= MAX_LENGTH_FOR_NSN) {
+          onChangeText={text => {
+            try {
+              const cleanText: string = text.replace(" ", "");
+              phoneNumberFormatted(text);
               onChangeMobileNumber(cleanText);
-            }
+            } catch {}
           }}
           onSubmitEditing={onSubmit}
         />
