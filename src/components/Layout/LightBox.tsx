@@ -1,6 +1,6 @@
 import React, { FunctionComponent, ReactElement } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import { color } from "../../common/styles";
+import { size } from "../../common/styles";
 
 const styles = StyleSheet.create({
   lightBoxWrapper: {
@@ -10,8 +10,7 @@ const styles = StyleSheet.create({
   },
   lightBoxBorder: {
     position: "absolute",
-    backgroundColor: color("grey", 100),
-    opacity: 0.6
+    backgroundColor: "rgba(0, 0, 0, 0.6)"
   }
 });
 
@@ -50,9 +49,13 @@ export const LightBox: FunctionComponent<LightBox> = ({
           ...styles.lightBoxBorder,
           top: 0,
           width,
-          height: verticalBorderHeight
+          height: verticalBorderHeight,
+          alignItems: "center",
+          justifyContent: "flex-end"
         }}
-      />
+      >
+        {label && <View style={{ marginBottom: size(4) }}>{label}</View>}
+      </View>
       <View
         style={{
           ...styles.lightBoxBorder,
@@ -61,18 +64,6 @@ export const LightBox: FunctionComponent<LightBox> = ({
           height: windowHeight
         }}
       />
-      {label && (
-        <View
-          style={{
-            position: "relative",
-            bottom: height * 0.65,
-            flexDirection: "row",
-            alignItems: "center"
-          }}
-        >
-          {label}
-        </View>
-      )}
       {children}
       <View
         style={{

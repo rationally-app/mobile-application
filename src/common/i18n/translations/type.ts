@@ -30,7 +30,7 @@ export type Translations = {
     enterVoucherId: string;
     scanToCheck: string;
     continueScanning: string;
-    scanBarCode: string;
+    scanBarcode: string;
     scanQRCode: string;
     back: string;
   };

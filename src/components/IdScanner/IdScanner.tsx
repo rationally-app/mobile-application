@@ -19,7 +19,7 @@ import { LightBox } from "../Layout/LightBox";
 import { Ionicons } from "@expo/vector-icons";
 import { TransparentButton } from "../Layout/Buttons/TransparentButton";
 import { IdScannerLabel } from "./IdScannerLabel";
-import i18n from "i18n-js";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   cameraWrapper: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 
 const interestAreaRatios: Record<string, Record<string, number>> = {
   [BarCodeScanner.Constants.BarCodeType.qr]: { width: 0.7, height: 0.35 },
-  [BarCodeScanner.Constants.BarCodeType.code39]: { width: 0.9, height: 0.2 }
+  [BarCodeScanner.Constants.BarCodeType.code39]: { width: 0.9, height: 0.25 }
 };
 
 const getInterestAreaDimensions = (
@@ -91,12 +91,7 @@ export const Camera: FunctionComponent<Camera> = ({
         <LightBox
           width={interestAreaLayout.width}
           height={interestAreaLayout.height}
-          label={
-            <IdScannerLabel
-              interestAreaHeight={interestAreaLayout.height}
-              barCodeType={barCodeTypes[0]}
-            />
-          }
+          label={<IdScannerLabel barCodeType={barCodeTypes[0]} />}
         />
       )}
     </BarCodeScanner>
@@ -125,7 +120,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   onBarCodeScanned,
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.qr],
   onCancel,
-  cancelButtonText = i18n.t("idScanner.back"),
+  cancelButtonText = i18nt("idScanner", "back"),
   isScanningEnabled = true,
   hasLimitedInterestArea = true
 }) => {
