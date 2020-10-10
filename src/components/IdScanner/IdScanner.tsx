@@ -173,7 +173,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
       {hasCameraPermission && isScanningEnabled ? (
         <Camera
           onBarCodeScanned={
-            hasLimitedInterestArea || platform === "android"
+            hasLimitedInterestArea && platform === "android"
               ? checkIfInInterestArea
               : onBarCodeScanned
           }
