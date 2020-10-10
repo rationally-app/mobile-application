@@ -45,7 +45,6 @@ import {
   IdentificationContext,
   defaultSelectedIdType
 } from "../../context/identification";
-import i18n from "i18n-js";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { i18nt } from "../../utils/translations";
 
