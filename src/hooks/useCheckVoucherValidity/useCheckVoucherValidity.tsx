@@ -109,7 +109,7 @@ export const useCheckVoucherValidity = (
         try {
           const validityResponse = await getQuota(
             [serial],
-            selectedIdType.validation,
+            selectedIdType,
             authKey,
             endpoint
           );
@@ -122,7 +122,7 @@ export const useCheckVoucherValidity = (
       };
       check();
     },
-    [authKey, endpoint, selectedIdType.validation]
+    [authKey, endpoint, selectedIdType]
   );
 
   return {

@@ -33,7 +33,7 @@ export const usePastTransaction = (
       try {
         const pastTransactionsResponse = await getPastTransactions(
           ids,
-          selectedIdType.validation,
+          selectedIdType,
           authKey,
           endpoint
         );
@@ -57,7 +57,7 @@ export const usePastTransaction = (
       setError(null);
       fetchPastTransactions();
     }
-  }, [authKey, endpoint, ids, selectedIdType.validation, prevIds]);
+  }, [authKey, endpoint, ids, selectedIdType, prevIds]);
 
   return {
     pastTransactionsResult,

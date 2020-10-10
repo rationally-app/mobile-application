@@ -7,6 +7,7 @@ import {
   PastTransactionError
 } from "./index";
 import { Sentry } from "../../utils/errorTracking";
+import { defaultSelectedIdType } from "../../context/identification";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -15,7 +16,7 @@ const mockCaptureException = jest.fn();
 const mockFetch = jest.fn();
 jest.spyOn(global, "fetch").mockImplementation(mockFetch);
 
-const validation = "REGEX";
+const identificationFlag = defaultSelectedIdType;
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
 
@@ -96,7 +97,7 @@ const mockGetQuotaResponseMultipleId = {
 
 const postTransactionParams = {
   ids: ["S0000000J"],
-  validation,
+  identificationFlag,
   transactions: [{ category: "product-1", quantity: 1, identifiers: [] }],
   key,
   endpoint
@@ -147,7 +148,12 @@ describe("quota", () => {
         ok: true,
         json: () => Promise.resolve(mockGetQuotaResponseSingleId)
       });
-      const quota = await getQuota(["S0000000J"], validation, key, endpoint);
+      const quota = await getQuota(
+        ["S0000000J"],
+        identificationFlag,
+        key,
+        endpoint
+      );
       expect(quota).toEqual(mockGetQuotaResultSingleId);
     });
 
@@ -159,7 +165,7 @@ describe("quota", () => {
       });
       const quota = await getQuota(
         ["S0000000J", "S0000001I"],
-        validation,
+        identificationFlag,
         key,
         endpoint
       );
@@ -173,9 +179,9 @@ describe("quota", () => {
         json: () => Promise.resolve({ message: "No ID was provided" })
       });
 
-      await expect(getQuota([], validation, key, endpoint)).rejects.toThrow(
-        QuotaError
-      );
+      await expect(
+        getQuota([], identificationFlag, key, endpoint)
+      ).rejects.toThrow(QuotaError);
     });
 
     it("should throw error if quota is malformed", async () => {
@@ -189,7 +195,7 @@ describe("quota", () => {
       });
 
       await expect(
-        getQuota(["S0000000J"], validation, key, endpoint)
+        getQuota(["S0000000J"], identificationFlag, key, endpoint)
       ).rejects.toThrow(QuotaError);
     });
 
@@ -204,7 +210,7 @@ describe("quota", () => {
       });
 
       await expect(
-        getQuota(["S0000000J"], validation, key, endpoint)
+        getQuota(["S0000000J"], identificationFlag, key, endpoint)
       ).rejects.toThrow(QuotaError);
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
@@ -217,7 +223,7 @@ describe("quota", () => {
       });
 
       await expect(
-        getQuota(["invalid-id"], validation, key, endpoint)
+        getQuota(["invalid-id"], identificationFlag, key, endpoint)
       ).rejects.toThrow(QuotaError);
     });
 
@@ -226,7 +232,7 @@ describe("quota", () => {
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
       await expect(
-        getQuota(["S0000000J"], validation, key, endpoint)
+        getQuota(["S0000000J"], identificationFlag, key, endpoint)
       ).rejects.toThrow("Network error");
     });
   });
@@ -316,7 +322,7 @@ describe("quota", () => {
       });
       const pastTransactionsResult = await getPastTransactions(
         ["S0000000J"],
-        validation,
+        identificationFlag,
         key,
         endpoint
       );
@@ -331,7 +337,7 @@ describe("quota", () => {
       });
 
       await expect(
-        getPastTransactions([""], validation, key, endpoint)
+        getPastTransactions([""], identificationFlag, key, endpoint)
       ).rejects.toThrow(PastTransactionError);
     });
 
@@ -346,7 +352,7 @@ describe("quota", () => {
       });
 
       await expect(
-        getPastTransactions(["S0000000J"], validation, key, endpoint)
+        getPastTransactions(["S0000000J"], identificationFlag, key, endpoint)
       ).rejects.toThrow(PastTransactionError);
     });
   });

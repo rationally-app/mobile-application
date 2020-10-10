@@ -76,7 +76,7 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
         try {
           const transactionResponse = await postTransaction({
             ids: vouchers.map(voucher => voucher.serial),
-            validation: selectedIdType.validation,
+            identificationFlag: selectedIdType,
             key: authKey,
             transactions,
             endpoint
@@ -90,7 +90,7 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
 
       checkout();
     },
-    [authKey, endpoint, selectedIdType.validation, vouchers]
+    [authKey, endpoint, selectedIdType, vouchers]
   );
 
   return {

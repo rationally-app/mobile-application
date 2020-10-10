@@ -208,7 +208,7 @@ export const useCart = (
       try {
         const allQuotaResponse = await getQuota(
           ids,
-          selectedIdType.validation,
+          selectedIdType,
           authKey,
           endpoint
         );
@@ -244,15 +244,7 @@ export const useCart = (
     if (prevIds !== ids || prevProducts !== products) {
       fetchQuota();
     }
-  }, [
-    authKey,
-    endpoint,
-    ids,
-    selectedIdType.validation,
-    prevIds,
-    prevProducts,
-    products
-  ]);
+  }, [authKey, endpoint, ids, selectedIdType, prevIds, prevProducts, products]);
 
   /**
    * Merge quota response with current cart whenever quota response or products change.
@@ -279,7 +271,7 @@ export const useCart = (
       const updateQuotaResponse = async (): Promise<void> => {
         const allQuotaResponse = await getQuota(
           ids,
-          selectedIdType.validation,
+          selectedIdType,
           authKey,
           endpoint
         );
@@ -291,7 +283,7 @@ export const useCart = (
       };
       updateQuotaResponse();
     }
-  }, [ids, selectedIdType.validation, authKey, endpoint, cartState, products]);
+  }, [ids, selectedIdType, authKey, endpoint, cartState, products]);
 
   /**
    * Update quantity of an item in the cart.
@@ -365,7 +357,7 @@ export const useCart = (
       try {
         const transactionResponse = await postTransaction({
           ids,
-          validation: selectedIdType.validation,
+          identificationFlag: selectedIdType,
           key: authKey,
           transactions,
           endpoint
@@ -387,7 +379,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [authKey, cart, endpoint, ids, selectedIdType.validation]);
+  }, [authKey, cart, endpoint, ids, selectedIdType]);
 
   return {
     cartState,
