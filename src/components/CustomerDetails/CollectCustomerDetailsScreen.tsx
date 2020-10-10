@@ -47,6 +47,7 @@ import {
 } from "../../context/identification";
 import i18n from "i18n-js";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   content: {
@@ -265,7 +266,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               </AppText>
             )}
             <AppText>
-              {i18n.t("collectCustomerDetailsScreen.checkEligibleItems")}
+              {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             {getInputComponent()}
             <TouchableOpacity
@@ -291,7 +292,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText={i18n.t("idScanner.enterIdManually")}
+          cancelButtonText={i18nt("idScanner", "enterIdManually")}
           barCodeTypes={
             features?.id.scannerType === "QR"
               ? [BarCodeScanner.Constants.BarCodeType.qr]
