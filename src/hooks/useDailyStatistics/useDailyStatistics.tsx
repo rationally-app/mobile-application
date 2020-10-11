@@ -3,6 +3,7 @@ import { usePrevious } from "../usePrevious";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { getDailyStatistics } from "../../services/statistics";
 import { countTotalTransactionsAndByCategory } from "./utils";
+import { sortTransactionsByOrder } from "../../components/CustomerQuota/utils";
 
 export type StatisticsHook = {
   totalCount: number | null;
@@ -11,6 +12,7 @@ export type StatisticsHook = {
     name: string;
     category: string;
     quantityText: string;
+    descriptionAlert?: string;
   }[];
   error?: Error;
   loading: boolean;
@@ -54,7 +56,9 @@ export const useDailyStatistics = (
           response.pastTransactions,
           policies
         );
-        setTransactionHistory(summarisedTransactionHistory);
+        setTransactionHistory(
+          summarisedTransactionHistory.sort(sortTransactionsByOrder)
+        );
         setTotalCount(summarisedTotalCount);
 
         if (summarisedTransactionHistory.length !== 0) {
