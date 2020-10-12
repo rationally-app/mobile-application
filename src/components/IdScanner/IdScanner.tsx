@@ -15,7 +15,6 @@ import {
   BarCodeScanner,
   BarCodeScannerProps
 } from "expo-barcode-scanner";
-import { Camera } from "expo-camera";
 import { LoadingView } from "../Loading";
 import { LightBox } from "../Layout/LightBox";
 import { Ionicons } from "@expo/vector-icons";
@@ -67,7 +66,7 @@ const getInterestAreaDimensions = (
   };
 };
 
-export type CustomCamera = Pick<
+export type IdScannerCamera = Pick<
   BarCodeScannerProps,
   "onBarCodeScanned" | "barCodeTypes"
 > & {
@@ -77,21 +76,7 @@ export type CustomCamera = Pick<
   style?: StyleProp<ViewStyle>;
 };
 
-/**
- * Component that provides a camera for code scanning.
- * This uses Camera for iOS, and BarCodeScanner for Android.
- *
- * iOS: Camera was used because we can resize the viewfinder.
- * Since iOS does not always return the bounds of detected codes,
- * BarCodeScanner is redundant.
- *
- * Android: BarCodeScanner was used because resizing the Camera viewfinder warped
- * the perspective in Android. Since Android returns the bounds of
- * detected codes, BarCodeScanner can be leveraged.
- *
- */
-// TODO: To change BarCodeScanner to Camera in Android when Camera returns BarCodeBounds in Expo
-export const CustomCamera: FunctionComponent<CustomCamera> = ({
+export const IdScannerCamera: FunctionComponent<IdScannerCamera> = ({
   onBarCodeScanned,
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39],
   interestArea,
@@ -101,30 +86,11 @@ export const CustomCamera: FunctionComponent<CustomCamera> = ({
   return (
     <>
       {children}
-      {Platform.OS === "ios" ? (
-        <Camera
-          barCodeScannerSettings={{ barCodeTypes }}
-          onBarCodeScanned={onBarCodeScanned}
-          ratio="4:3"
-          style={
-            style ?? {
-              ...styles.scanner,
-              left: interestArea?.x,
-              top: interestArea?.y,
-              width: interestArea?.width,
-              height: interestArea?.height
-            }
-          }
-        />
-      ) : (
-        <>
-          <BarCodeScanner
-            barCodeTypes={barCodeTypes}
-            onBarCodeScanned={onBarCodeScanned}
-            style={style ?? styles.scanner}
-          />
-        </>
-      )}
+      <BarCodeScanner
+        barCodeTypes={barCodeTypes}
+        onBarCodeScanned={onBarCodeScanned}
+        style={style ?? styles.scanner}
+      />
       {interestArea && (
         <LightBox
           width={interestArea.width}
@@ -136,7 +102,7 @@ export const CustomCamera: FunctionComponent<CustomCamera> = ({
   );
 };
 
-interface IdScanner extends CustomCamera {
+interface IdScanner extends IdScannerCamera {
   onCancel: () => void;
   cancelButtonText?: string;
   isScanningEnabled?: boolean;
@@ -145,14 +111,14 @@ interface IdScanner extends CustomCamera {
 
 /**
  * A fullscreen scanner with a back button on the top left.
- * If you want a scanner that is not fullscreen, use `Camera`.
+ * If you want a scanner that is not fullscreen, use `CustomCamera`.
  *
  * The following components are shown when `hasLimitedInterestArea` is true:
  * - Lightbox in the middle of the screen.
  * - Label on top of the lightbox with an icon and label indicating
  *    what `barCodeType` to scan.
  *
- * Scanning also only occurs within the bounds of the lightbox.
+ * Scanning also only occurs within the bounds of the lightbox for Android.
  */
 export const IdScanner: FunctionComponent<IdScanner> = ({
   onBarCodeScanned,
@@ -198,13 +164,12 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   };
 
   /**
-   * We only scan codes within the boundary if the user is using Android,
-   * since iOS does not return bounds in Expo.
+   * We only scan codes within the lightbox if the user is using Android.
    */
   return (
     <View style={styles.cameraWrapper}>
       {hasCameraPermission && isScanningEnabled ? (
-        <CustomCamera
+        <IdScannerCamera
           onBarCodeScanned={
             hasLimitedInterestArea && platform === "android"
               ? checkIfInInterestArea
@@ -228,7 +193,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
               }
             />
           </View>
-        </CustomCamera>
+        </IdScannerCamera>
       ) : (
         <View style={{ flex: 1 }}>
           <LoadingView />
