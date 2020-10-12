@@ -9,7 +9,7 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
-import { Camera } from "../IdScanner/IdScanner";
+import { CustomCamera } from "../IdScanner/IdScanner";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { LoadingView } from "../Loading";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -68,7 +68,7 @@ interface VoucherScanner {
   onCheckVoucher: (input: string) => void;
   onCancel: () => void;
   isScanningEnabled?: boolean;
-  barCodeTypes?: Camera["barCodeTypes"];
+  barCodeTypes?: CustomCamera["barCodeTypes"];
 }
 
 export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
@@ -132,7 +132,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
         </View>
 
         {hasCameraPermission ? (
-          <Camera
+          <CustomCamera
             onBarCodeScanned={onBarCodeScanned}
             barCodeTypes={barCodeTypes}
             style={styles.camera}

@@ -15,6 +15,7 @@ import {
   BarCodeScanner,
   BarCodeScannerProps
 } from "expo-barcode-scanner";
+import { Camera } from "expo-camera";
 import { LoadingView } from "../Loading";
 import { LightBox } from "../Layout/LightBox";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,7 +29,9 @@ const styles = StyleSheet.create({
     backgroundColor: color("grey", 100)
   },
   backButtonWrapper: {
-    marginTop: size(3)
+    position: "absolute",
+    marginTop: size(3),
+    zIndex: Number.MAX_SAFE_INTEGER
   },
   scanner: {
     ...StyleSheet.absoluteFillObject
@@ -64,42 +67,76 @@ const getInterestAreaDimensions = (
   };
 };
 
-export type Camera = Pick<
+export type CustomCamera = Pick<
   BarCodeScannerProps,
   "onBarCodeScanned" | "barCodeTypes"
 > & {
   cancelButtonText?: string;
   onCancel?: () => void;
-  interestAreaLayout?: LayoutRectangle;
+  interestArea?: LayoutRectangle;
   style?: StyleProp<ViewStyle>;
 };
 
-export const Camera: FunctionComponent<Camera> = ({
+/**
+ * Component that provides a camera for code scanning.
+ * This uses Camera for iOS, and BarCodeScanner for Android.
+ *
+ * iOS: Camera was used because we can resize the viewfinder.
+ * Since iOS does not always return the bounds of detected codes,
+ * BarCodeScanner is redundant.
+ *
+ * Android: BarCodeScanner was used because resizing the Camera viewfinder warped
+ * the perspective in Android. Since Android returns the bounds of
+ * detected codes, BarCodeScanner can be leveraged.
+ *
+ */
+// TODO: To change BarCodeScanner to Camera in Android when Camera returns BarCodeBounds in Expo
+export const CustomCamera: FunctionComponent<CustomCamera> = ({
   onBarCodeScanned,
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39],
-  children,
-  interestAreaLayout,
-  style
+  interestArea,
+  style,
+  children
 }) => {
   return (
-    <BarCodeScanner
-      barCodeTypes={barCodeTypes}
-      onBarCodeScanned={onBarCodeScanned}
-      style={style ?? styles.scanner}
-    >
+    <>
       {children}
-      {interestAreaLayout && (
+      {Platform.OS === "ios" ? (
+        <Camera
+          barCodeScannerSettings={{ barCodeTypes }}
+          onBarCodeScanned={onBarCodeScanned}
+          ratio="4:3"
+          style={
+            style ?? {
+              ...styles.scanner,
+              left: interestArea?.x,
+              top: interestArea?.y,
+              width: interestArea?.width,
+              height: interestArea?.height
+            }
+          }
+        />
+      ) : (
+        <>
+          <BarCodeScanner
+            barCodeTypes={barCodeTypes}
+            onBarCodeScanned={onBarCodeScanned}
+            style={style ?? styles.scanner}
+          />
+        </>
+      )}
+      {interestArea && (
         <LightBox
-          width={interestAreaLayout.width}
-          height={interestAreaLayout.height}
+          width={interestArea.width}
+          height={interestArea.height}
           label={<IdScannerLabel barCodeType={barCodeTypes[0]} />}
         />
       )}
-    </BarCodeScanner>
+    </>
   );
 };
 
-interface IdScanner extends Camera {
+interface IdScanner extends CustomCamera {
   onCancel: () => void;
   cancelButtonText?: string;
   isScanningEnabled?: boolean;
@@ -127,12 +164,8 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
 }) => {
   const [platform] = useState<string>(Platform.OS);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
-  const interestAreaLayout =
-    hasLimitedInterestArea && platform === "android"
-      ? getInterestAreaDimensions(barCodeTypes)
-      : undefined;
   const [interestArea] = useState<LayoutRectangle | undefined>(
-    interestAreaLayout
+    hasLimitedInterestArea ? getInterestAreaDimensions(barCodeTypes) : undefined
   );
 
   useEffect(() => {
@@ -171,14 +204,16 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   return (
     <View style={styles.cameraWrapper}>
       {hasCameraPermission && isScanningEnabled ? (
-        <Camera
+        <CustomCamera
           onBarCodeScanned={
             hasLimitedInterestArea && platform === "android"
               ? checkIfInInterestArea
               : onBarCodeScanned
           }
+          cancelButtonText={cancelButtonText}
+          onCancel={onCancel}
           barCodeTypes={barCodeTypes}
-          interestAreaLayout={interestAreaLayout}
+          interestArea={interestArea}
         >
           <View style={styles.backButtonWrapper}>
             <TransparentButton
@@ -193,7 +228,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
               }
             />
           </View>
-        </Camera>
+        </CustomCamera>
       ) : (
         <View style={{ flex: 1 }}>
           <LoadingView />
