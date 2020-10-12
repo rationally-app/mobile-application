@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
@@ -82,12 +82,14 @@ export const PhoneNumberInput: FunctionComponent<{
 }) => {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onHandleChangeText = (text: string) => {
+    setValue(text);
     const cleanText: string = text.replace(" ", "");
     onChangeMobileNumber(cleanText);
   };
 
-  const value = phoneNumberFormatted(
-    mobileNumberValue.replace(" ", ""),
+  const [value, setValue] = useState<string>("");
+  const formatValue: string = phoneNumberFormatted(
+    value.replace(" ", ""),
     phoneUtil.getRegionCodeForCountryCode(
       Number(countryCodeValue.replace("+", ""))
     )
@@ -107,7 +109,7 @@ export const PhoneNumberInput: FunctionComponent<{
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={value}
+          value={formatValue}
           onChangeText={text => onHandleChangeText(text)}
           onSubmitEditing={onSubmit}
         />
