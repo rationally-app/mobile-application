@@ -52,17 +52,28 @@ const getInterestAreaDimensions = (
   if (!barCodeTypes) {
     return { x: 0, y: 0, width, height };
   }
-  let maxWidthRatio = 0;
-  let maxHeightRatio = 0;
-  barCodeTypes.forEach(type => {
-    maxWidthRatio = Math.max(maxWidthRatio, interestAreaRatios[type].width);
-    maxHeightRatio = Math.max(maxHeightRatio, interestAreaRatios[type].height);
-  });
+
+  const barCodeType = barCodeTypes[0];
+  let widthRatio = interestAreaRatios[barCodeType].width;
+  let heightRatio = interestAreaRatios[barCodeType].height;
+  let areaWidth = width;
+  let areaHeight = height;
+
+  switch (barCodeType) {
+    case BarCodeScanner.Constants.BarCodeType.qr:
+      areaWidth = areaWidth * widthRatio;
+      areaHeight = areaWidth;
+      break;
+    default:
+      areaWidth = areaWidth * widthRatio;
+      areaHeight = areaHeight * heightRatio;
+  }
+
   return {
-    x: (width * (1 - maxWidthRatio)) / 2,
-    y: (height * (1 - maxHeightRatio)) / 2,
-    width: width * maxWidthRatio,
-    height: height * maxHeightRatio
+    x: (width * (1 - widthRatio)) / 2,
+    y: (height * (1 - heightRatio)) / 2,
+    width: areaWidth,
+    height: areaHeight
   };
 };
 
