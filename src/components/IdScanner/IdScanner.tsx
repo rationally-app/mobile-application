@@ -54,8 +54,8 @@ const getInterestAreaDimensions = (
   }
 
   const barCodeType = barCodeTypes[0];
-  let widthRatio = interestAreaRatios[barCodeType].width;
-  let heightRatio = interestAreaRatios[barCodeType].height;
+  const widthRatio = interestAreaRatios[barCodeType].width;
+  const heightRatio = interestAreaRatios[barCodeType].height;
   let areaWidth = width;
   let areaHeight = height;
 
