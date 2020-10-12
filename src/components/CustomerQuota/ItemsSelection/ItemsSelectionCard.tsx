@@ -25,7 +25,7 @@ interface ItemsSelectionCard {
   addId: (id: string) => void;
   isLoading: boolean;
   checkoutCart: () => void;
-  reserveCart: () => void;
+  reserveCart: (onComplete: () => void) => void;
   commitCart: () => void;
   onCancel: () => void;
   onBack: () => void;
@@ -136,8 +136,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 ? checkoutCart
                 : () => {
                     try {
-                      reserveCart();
-                      setShowPaymentAlert(true);
+                      reserveCart(() => {
+                        setShowPaymentAlert(true);
+                      });
                     } catch (e) {
                       setShowPaymentAlert(false);
                       showErrorAlert(e);
