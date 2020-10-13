@@ -17,7 +17,7 @@ import { NavigationProps, AuthCredentials } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { size, borderRadius, color } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
-import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
+import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
 import { decodeQr } from "./utils";
@@ -45,7 +45,6 @@ import {
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
-import { i18nt } from "../../utils/translations";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -334,9 +333,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       {shouldShowCamera && (
         <IdScanner
           onBarCodeScanned={onBarCodeScanned}
-          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText={i18nt("customerQuotaScreen", "quotaAppealCancel")}
         />
       )}
     </>
