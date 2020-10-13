@@ -5,6 +5,7 @@ import { ProductContext } from "../../context/products";
 import { transform } from "lodash";
 import { Quota, CampaignPolicy, ItemQuota } from "../../types";
 import { usePrevious } from "../usePrevious";
+import { IdentificationContext } from "../../context/identification";
 
 type QuotaState = "DEFAULT" | "FETCHING_QUOTA" | "NO_QUOTA" | "NOT_ELIGIBLE";
 
@@ -90,6 +91,7 @@ export const useQuota = (
   authKey: string,
   endpoint: string
 ): QuotaHook => {
+  const { selectedIdType } = useContext(IdentificationContext);
   const [quotaState, setQuotaState] = useState<QuotaState>("DEFAULT");
   const [quotaResponse, setQuotaResponse] = useState<Quota>();
   const [allQuotaResponse, setAllQuotaResponse] = useState<Quota>();
@@ -103,7 +105,7 @@ export const useQuota = (
     const update = async (): Promise<void> => {
       try {
         setQuotaState("FETCHING_QUOTA");
-        const quota = await getQuota(ids, authKey, endpoint);
+        const quota = await getQuota(ids, selectedIdType, authKey, endpoint);
         const filteredQuotas = filterQuotaWithAvailableProducts(
           quota,
           products
@@ -133,7 +135,7 @@ export const useQuota = (
       }
     };
     update();
-  }, [ids, authKey, endpoint, products, quotaResponse]);
+  }, [ids, authKey, endpoint, products, quotaResponse, selectedIdType]);
 
   /**
    * Update the quota whenever the ids or products change

@@ -188,12 +188,11 @@ const ItemQuota = t.intersection([
   })
 ]);
 
-export const Quota = t.intersection([
-  t.type({
-    remainingQuota: t.array(ItemQuota)
-  }),
-  t.partial({ localQuota: t.array(ItemQuota), globalQuota: t.array(ItemQuota) })
-]);
+export const Quota = t.type({
+  remainingQuota: t.array(ItemQuota),
+  localQuota: t.array(ItemQuota),
+  globalQuota: t.array(ItemQuota)
+});
 
 export type ItemQuota = t.TypeOf<typeof ItemQuota>;
 export type Quota = t.TypeOf<typeof Quota>;

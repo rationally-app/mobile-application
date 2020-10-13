@@ -137,7 +137,9 @@ const filterQuotaWithAvailableProducts = (
   products: CampaignPolicy[]
 ): Quota => {
   const filteredQuota: Quota = {
-    remainingQuota: []
+    remainingQuota: [],
+    globalQuota: [],
+    localQuota: []
   };
   transform(
     quota.remainingQuota,
