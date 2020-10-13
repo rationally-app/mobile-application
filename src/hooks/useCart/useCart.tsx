@@ -18,6 +18,7 @@ import {
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
+import { IdentificationContext } from "../../context/identification";
 
 export type CartItem = {
   category: string;
@@ -188,6 +189,7 @@ export const useCart = (
 ): CartHook => {
   const prevIds = usePrevious(ids);
   const { products, getProduct } = useContext(ProductContext);
+  const { selectedIdType } = useContext(IdentificationContext);
   const prevProducts = usePrevious(products);
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
@@ -204,7 +206,12 @@ export const useCart = (
     const fetchQuota = async (): Promise<void> => {
       setCartState("FETCHING_QUOTA");
       try {
-        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        const allQuotaResponse = await getQuota(
+          ids,
+          selectedIdType,
+          authKey,
+          endpoint
+        );
         setAllQuotaResponse(allQuotaResponse);
         const quotaResponse = filterQuotaWithAvailableProducts(
           allQuotaResponse,
@@ -237,7 +244,7 @@ export const useCart = (
     if (prevIds !== ids || prevProducts !== products) {
       fetchQuota();
     }
-  }, [authKey, endpoint, ids, prevIds, prevProducts, products]);
+  }, [authKey, endpoint, ids, selectedIdType, prevIds, prevProducts, products]);
 
   /**
    * Merge quota response with current cart whenever quota response or products change.
@@ -262,7 +269,12 @@ export const useCart = (
   useEffect(() => {
     if (cartState === "PURCHASED") {
       const updateQuotaResponse = async (): Promise<void> => {
-        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        const allQuotaResponse = await getQuota(
+          ids,
+          selectedIdType,
+          authKey,
+          endpoint
+        );
         const quotaResponse = filterQuotaWithAvailableProducts(
           allQuotaResponse,
           products
@@ -271,7 +283,7 @@ export const useCart = (
       };
       updateQuotaResponse();
     }
-  }, [ids, authKey, endpoint, cartState, products]);
+  }, [ids, selectedIdType, authKey, endpoint, cartState, products]);
 
   /**
    * Update quantity of an item in the cart.
@@ -345,6 +357,7 @@ export const useCart = (
       try {
         const transactionResponse = await postTransaction({
           ids,
+          identificationFlag: selectedIdType,
           key: authKey,
           transactions,
           endpoint
@@ -366,7 +379,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [authKey, cart, endpoint, ids]);
+  }, [authKey, cart, endpoint, ids, selectedIdType]);
 
   return {
     cartState,
