@@ -9,8 +9,7 @@ import {
   color,
   fontSize,
   shadow,
-  size,
-  normalize
+  size
 } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 
@@ -37,7 +36,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontFamily: "brand-bold",
-    fontSize: normalize(fontSize(2)),
+    fontSize: fontSize(2),
     color: color("blue", 50),
     textAlign: "center"
   },
