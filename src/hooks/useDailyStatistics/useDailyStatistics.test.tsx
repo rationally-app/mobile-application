@@ -184,11 +184,10 @@ describe("useDailyStatistics", () => {
       }
     ]);
 
-    rerender();
+    rerender([key, endpoint, operatorToken, currentTimestamp]);
 
     await expect(waitForNextUpdate({ timeout: 100 })).rejects.toThrow("");
   });
-
   it("should call fetchDailyStatistics again if timestamp changes", async () => {
     expect.assertions(7);
 
@@ -235,7 +234,7 @@ describe("useDailyStatistics", () => {
 
     currentTimestamp = 19000000000;
 
-    rerender();
+    rerender([key, endpoint, operatorToken, currentTimestamp]);
     await wait(() => {
       expect(mockGetDailyStatistics).toHaveBeenCalledTimes(2);
       expect(result.current.lastTransactionTime).toStrictEqual(

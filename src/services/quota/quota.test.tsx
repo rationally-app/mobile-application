@@ -79,15 +79,6 @@ const mockGetQuotaResponseSingleId = {
   remainingQuota: transactions.map(t => ({
     ...t,
     transactionTime: timestamp.getTime()
-  })),
-  globalQuota: transactions.map(t => ({
-    ...t,
-    transactionTime: timestamp.getTime()
-  })),
-  localQuota: transactions.map(t => ({
-    ...t,
-    quantity: Number.MAX_SAFE_INTEGER,
-    transactionTime: timestamp.getTime()
   }))
 };
 
@@ -95,25 +86,11 @@ const mockGetQuotaResultSingleId = {
   remainingQuota: transactions.map(t => ({
     ...t,
     transactionTime: timestamp
-  })),
-  globalQuota: transactions.map(t => ({
-    ...t,
-    transactionTime: timestamp
-  })),
-  localQuota: transactions.map(t => ({
-    ...t,
-    quantity: Number.MAX_SAFE_INTEGER,
-    transactionTime: timestamp
   }))
 };
 
 const mockGetQuotaResponseMultipleId = {
-  remainingQuota: transactions,
-  globalQuota: transactions,
-  localQuota: transactions.map(t => ({
-    ...t,
-    quantity: Number.MAX_SAFE_INTEGER
-  }))
+  remainingQuota: transactions
 };
 
 const postTransactionParams = {
