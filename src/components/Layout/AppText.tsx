@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { TextProps, Text } from "react-native";
-import { fontSize, color } from "../../common/styles";
+import { fontSize, color, normalize } from "../../common/styles";
 
 export const AppText: FunctionComponent<TextProps> = ({
   children,
@@ -11,7 +11,7 @@ export const AppText: FunctionComponent<TextProps> = ({
     style={[
       {
         fontFamily: "brand-regular",
-        fontSize: fontSize(0),
+        fontSize: normalize(fontSize(0)),
         color: color("blue", 50)
       },
       style

@@ -31,7 +31,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 console.log(Dimensions.get("window"));
 
 // based on iphone 6s's scale
-const scale = SCREEN_WIDTH / 375;
+const scale = SCREEN_WIDTH / 575;
 
 export const normalize = (size: number): number => {
   const newSize = size * scale;
