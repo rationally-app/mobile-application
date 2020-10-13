@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
@@ -76,21 +76,23 @@ export const PhoneNumberInput: FunctionComponent<{
         PhoneNumberFormat.NATIONAL
       );
     } catch (e) {
-      if (value && value?.length < mobileNumberValue.length) {
-        return value;
+      if (mobileNumber && mobileNumber?.length < mobileNumberValue.length) {
+        return mobileNumber;
       }
       return mobileNumberValue;
     }
   };
-  const [value, setValue] = useState<string>(
+  const [mobileNumber, setMobileNumber] = useState<string>(
     formatPhoneNumber(mobileNumberValue.replace(" ", ""))
   );
-  useEffect(() => {
-    if (value) {
-      onChangeMobileNumber(value.replace(" ", ""));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const onHandleChangePhoneNumber = (text: string) => {
+    const newMobileValue = formatPhoneNumber(text);
+    setMobileNumber(newMobileValue);
+    const cleanText: string = newMobileValue.replace(" ", "");
+    onChangeMobileNumber(cleanText);
+  };
   return (
     <View style={styles.numberWrapper}>
       <AppText style={styles.label}>{label}</AppText>
@@ -105,8 +107,8 @@ export const PhoneNumberInput: FunctionComponent<{
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={value}
-          onChangeText={text => setValue(formatPhoneNumber(text))}
+          value={mobileNumber}
+          onChangeText={text => onHandleChangePhoneNumber(text)}
           onSubmitEditing={onSubmit}
         />
       </View>
