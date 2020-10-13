@@ -403,12 +403,27 @@ export const useCart = (
 
       //commit the transactions
       try {
-        const transactionResponse = await commitTransaction({
+        const commitResponse = await commitTransaction({
           key: authKey,
           endpoint,
           transactionIdentifiers
         });
-        setCheckoutResult(transactionResponse);
+
+        if (checkoutResult) {
+          const newCheckoutResult: PostTransactionResult = {
+            ...checkoutResult
+          };
+          let timestampPointer = 0;
+          newCheckoutResult.transactions.forEach(id_txn => {
+            id_txn.timestamp =
+              commitResponse.transactions[timestampPointer].timestamp;
+            id_txn.transaction.forEach(txn => {
+              timestampPointer++;
+            });
+          });
+          setCheckoutResult(newCheckoutResult);
+        }
+
         setCartState("PURCHASED");
       } catch (e) {
         setCartState("DEFAULT");

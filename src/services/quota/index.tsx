@@ -4,7 +4,8 @@ import {
   Quota,
   PostTransactionResult,
   PastTransactionsResult,
-  TransactionIdentifier
+  TransactionIdentifier,
+  CommitTransactionResult
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
@@ -264,13 +265,13 @@ export const liveCommitTransaction = async ({
   key,
   endpoint,
   transactionIdentifiers
-}: CommitTransaction): Promise<PostTransactionResult> => {
+}: CommitTransaction): Promise<CommitTransactionResult> => {
   if (transactionIdentifiers.length === 0) {
     throw new CommitTransactionError("No transactions to commit");
   }
   try {
     const response = await fetchWithValidator(
-      PostTransactionResult,
+      CommitTransactionResult,
       `${endpoint}/transactions/commit`,
       {
         method: "POST",

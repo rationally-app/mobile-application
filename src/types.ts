@@ -205,9 +205,19 @@ export const TransactionIdentifier = t.type({
   transactionTime: t.number
 });
 
+export const CommitTransactionResult = t.type({
+  transactions: t.array(
+    t.type({
+      identifier: TransactionIdentifier,
+      timestamp: DateFromNumber
+    })
+  )
+});
+
 export type Transaction = t.TypeOf<typeof Transaction>;
 export type PostTransactionResult = t.TypeOf<typeof PostTransactionResult>;
 export type TransactionIdentifier = t.TypeOf<typeof TransactionIdentifier>;
+export type CommitTransactionResult = t.TypeOf<typeof CommitTransactionResult>;
 
 const PastTransaction = t.intersection([
   t.type({
