@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
-  quotaResponse: Quota | null;
+  quotaResponse: Quota | undefined;
 }
 
 const UsageQuotaTitle: FunctionComponent<{
@@ -179,7 +179,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     !!allProducts[0].quantity.usage;
 
   const firstGlobalQuota = showGlobalQuota
-    ? quotaResponse!.globalQuota![0]
+    ? quotaResponse!.globalQuota[0]
     : undefined;
 
   return (
