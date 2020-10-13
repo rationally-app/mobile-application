@@ -10,9 +10,12 @@ type QuotaState = "DEFAULT" | "FETCHING_QUOTA" | "NO_QUOTA" | "NOT_ELIGIBLE";
 
 export type QuotaHook = {
   quotaState: string;
-  // Contains only quota of products with categories available in the current campaign policy
+  /**
+   * Contains only quota of products with categories available in the current campaign policy.
+   * Appeal products do not exist in `quotaResponse`.
+   */
   quotaResponse?: Quota;
-  // Contains quota of all products
+  // Contains quota of all products, even appeal products
   allQuotaResponse?: Quota;
   updateQuota: () => void;
   quotaError?: Error;
@@ -101,23 +104,23 @@ export const useQuota = (
       try {
         setQuotaState("FETCHING_QUOTA");
         const quota = await getQuota(ids, authKey, endpoint);
-        if (hasInvalidQuota(quota)) {
+        const filteredQuotas = filterQuotaWithAvailableProducts(
+          quota,
+          products
+        );
+        if (hasInvalidQuota(filteredQuotas)) {
           Sentry.captureException(
             `Negative Quota Received: ${JSON.stringify(
               quotaResponse?.remainingQuota
             )}`
           );
           setQuotaState("NO_QUOTA");
-        } else if (hasNoQuota(quota)) {
+        } else if (hasNoQuota(filteredQuotas)) {
           setQuotaState("NO_QUOTA");
         } else {
           setQuotaState("DEFAULT");
         }
         setAllQuotaResponse(quota);
-        const filteredQuotas = filterQuotaWithAvailableProducts(
-          quota,
-          products
-        );
         setQuotaResponse(filteredQuotas);
       } catch (e) {
         if (e instanceof NotEligibleError) {
