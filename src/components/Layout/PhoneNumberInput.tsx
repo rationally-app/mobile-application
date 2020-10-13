@@ -1,24 +1,10 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
-
-const phoneNumberFormatted = (
-  mobileNumberValue: string,
-  region: string
-): string => {
-  try {
-    return phoneUtil.format(
-      phoneUtil.parse(mobileNumberValue, region),
-      PhoneNumberFormat.NATIONAL
-    );
-  } catch (e) {
-    return mobileNumberValue;
-  }
-};
 
 const styles = StyleSheet.create({
   inputsWrapper: {
@@ -80,21 +66,31 @@ export const PhoneNumberInput: FunctionComponent<{
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit = () => {}
 }) => {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const onHandleChangeText = (text: string) => {
-    setValue(text);
-    const cleanText: string = text.replace(" ", "");
-    onChangeMobileNumber(cleanText);
+  const formatPhoneNumber = (
+    mobileNumberValue: string,
+    region = "SG"
+  ): string => {
+    try {
+      return phoneUtil.format(
+        phoneUtil.parse(mobileNumberValue, region),
+        PhoneNumberFormat.NATIONAL
+      );
+    } catch (e) {
+      if (value && value?.length < mobileNumberValue.length) {
+        return value;
+      }
+      return mobileNumberValue;
+    }
   };
-
-  const [value, setValue] = useState<string>("");
-  const formatValue: string = phoneNumberFormatted(
-    value.replace(" ", ""),
-    phoneUtil.getRegionCodeForCountryCode(
-      Number(countryCodeValue.replace("+", ""))
-    )
+  const [value, setValue] = useState<string>(
+    formatPhoneNumber(mobileNumberValue.replace(" ", ""))
   );
-
+  useEffect(() => {
+    if (value) {
+      onChangeMobileNumber(value.replace(" ", ""));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
   return (
     <View style={styles.numberWrapper}>
       <AppText style={styles.label}>{label}</AppText>
@@ -109,8 +105,8 @@ export const PhoneNumberInput: FunctionComponent<{
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={formatValue}
-          onChangeText={text => onHandleChangeText(text)}
+          value={value}
+          onChangeText={text => setValue(formatPhoneNumber(text))}
           onSubmitEditing={onSubmit}
         />
       </View>
