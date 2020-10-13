@@ -86,8 +86,7 @@ export const PhoneNumberInput: FunctionComponent<{
     formatPhoneNumber(mobileNumberValue.replace(" ", ""))
   );
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const onHandleChangePhoneNumber = (text: string) => {
+  const onHandleChangePhoneNumber = (text: string): void => {
     const newMobileValue = formatPhoneNumber(text);
     setMobileNumber(newMobileValue);
     const cleanText: string = newMobileValue.replace(" ", "");
