@@ -236,7 +236,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText={i18nt("idScanner", "enterIdManually")}
           barCodeTypes={
             features?.id.scannerType === "QR"
               ? [BarCodeScanner.Constants.BarCodeType.qr]

@@ -3,7 +3,7 @@ import { size, fontSize } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AppText } from "../Layout/AppText";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 
 interface TitleStatisticComponent {
   totalCount: number | null;
@@ -90,7 +90,9 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
             <MaterialCommunityIcons
               name="chevron-right"
               size={size(4)}
-              color="white"
+              color={
+                isSameDay(currentTimestamp, Date.now()) ? "#597585" : "white"
+              }
               style={styles.chevron}
             />
           </View>
