@@ -52,7 +52,7 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <DropdownFilterInput
-            label="Nationality (non-SGP)"
+            label="Nationality (non-Singaporean)"
             placeholder="Search country"
             value={selectedCountry?.name}
             dropdownItems={nationalityItems}
