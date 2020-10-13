@@ -540,7 +540,7 @@ describe("useQuota", () => {
     it("should set quota state to DEFAULT if non-appeal products quantities are non-zero", async () => {
       expect.assertions(1);
 
-      let ids = ["ID1"];
+      const ids = ["ID1"];
       mockGetQuota.mockResolvedValueOnce(
         mockQuotaResSingleIdWithAppealProducts
       );
@@ -561,7 +561,7 @@ describe("useQuota", () => {
     it("should set quota state to NO_QUOTA if non-appeal products quantities are zero", async () => {
       expect.assertions(1);
 
-      let ids = ["ID1"];
+      const ids = ["ID1"];
       mockGetQuota.mockResolvedValueOnce(
         mockQuotaResSingleIdNoQuotaWithAppealProducts
       );
