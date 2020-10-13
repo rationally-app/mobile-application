@@ -52,8 +52,8 @@ export const mockGetQuota = async (
   _endpoint: string
 ): Promise<Quota> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
+  const transactionTime = new Date(2020, 3, 5);
   if (ids.length === 1) {
-    const transactionTime = new Date(2020, 3, 5);
     return {
       remainingQuota: [
         {
