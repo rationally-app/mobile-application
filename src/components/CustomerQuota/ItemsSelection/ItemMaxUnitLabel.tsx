@@ -7,11 +7,12 @@ export const ItemMaxUnitLabel: FunctionComponent<{
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
 }> = ({ unit, maxQuantity }) => {
-  const { i18nt } = useTranslate();
+  const { i18nt, c13ntForUnit } = useTranslate();
+  const tUnit = c13ntForUnit(unit);
   return (
     <>
       {i18nt("customerQuotaScreen", "quotaLimitMax")}{" "}
-      {formatQuantityText(maxQuantity, unit)}
+      {formatQuantityText(maxQuantity, tUnit)}
     </>
   );
 };

@@ -19,6 +19,7 @@ import { clamp, debounce } from "lodash";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppText } from "./AppText";
 import { useIsMounted } from "../../hooks/useIsMounted";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -236,6 +237,9 @@ export const Stepper: FunctionComponent<Stepper> = ({
     setInternalValue(`${num}`);
   };
 
+  const { c13ntForUnit } = useTranslate();
+  const tUnit = c13ntForUnit(unit);
+
   return (
     <View
       style={[
@@ -249,8 +253,8 @@ export const Stepper: FunctionComponent<Stepper> = ({
         disabled={value === bounds.min}
       />
       <View style={styles.inputAndSuffixWrapper}>
-        {unit?.type === "PREFIX" && (
-          <AppText style={styles.suffix}>{unit?.label}</AppText>
+        {tUnit?.type === "PREFIX" && (
+          <AppText style={styles.suffix}>{tUnit?.label}</AppText>
         )}
         <TextInput
           style={styles.input}
@@ -261,8 +265,8 @@ export const Stepper: FunctionComponent<Stepper> = ({
           keyboardType="number-pad"
           maxLength={Math.ceil(Math.log10(bounds.max + 1))}
         />
-        {unit?.type === "POSTFIX" && (
-          <AppText style={styles.suffix}>{unit?.label}</AppText>
+        {tUnit?.type === "POSTFIX" && (
+          <AppText style={styles.suffix}>{tUnit?.label}</AppText>
         )}
       </View>
       <StepperButton

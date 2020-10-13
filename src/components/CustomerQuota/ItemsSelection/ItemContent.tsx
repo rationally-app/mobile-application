@@ -28,7 +28,7 @@ export const ItemContent: FunctionComponent<{
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
 }> = ({ name, description, descriptionAlert, unit, maxQuantity }) => {
-  const { c13nt, c13ntForUnit } = useTranslate();
+  const { c13nt } = useTranslate();
   const tDescription = c13nt(description ?? "");
 
   return (
@@ -42,10 +42,7 @@ export const ItemContent: FunctionComponent<{
       )}
       {maxQuantity === 1 && (
         <AppText style={sharedStyles.maxQuantityLabel}>
-          <ItemMaxUnitLabel
-            unit={c13ntForUnit(unit)}
-            maxQuantity={maxQuantity}
-          />
+          <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
         </AppText>
       )}
     </View>
