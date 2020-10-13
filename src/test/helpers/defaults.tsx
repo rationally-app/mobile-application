@@ -57,3 +57,31 @@ export const defaultProducts: CampaignPolicy[] = [
     ]
   }
 ];
+
+export const defaultAppealProducts: CampaignPolicy[] = [
+  {
+    category: "toilet-paper",
+    name: "Toilet Paper",
+    description: "",
+    order: 1,
+    quantity: {
+      period: 7,
+      limit: 2,
+      default: 1,
+      unit: {
+        type: "POSTFIX",
+        label: " roll"
+      }
+    },
+    identifiers: [
+      {
+        ...defaultIdentifier,
+        label: "first"
+      },
+      {
+        ...defaultIdentifier,
+        label: "last"
+      }
+    ]
+  }
+];

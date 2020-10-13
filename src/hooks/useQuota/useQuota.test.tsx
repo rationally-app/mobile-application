@@ -3,7 +3,10 @@ import { act, renderHook } from "@testing-library/react-hooks";
 import { useQuota } from "./useQuota";
 import { CampaignPolicy, Quota } from "../../types";
 import { NotEligibleError, getQuota } from "../../services/quota";
-import { defaultProducts } from "../../test/helpers/defaults";
+import {
+  defaultAppealProducts,
+  defaultProducts
+} from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 
 jest.mock("../../services/quota");
@@ -182,6 +185,7 @@ const mockQuotaResSingleIdWithIdentifiers: Quota = {
     }
   ]
 };
+
 const mockQuotaResSingleIdNoQuota: Quota = {
   remainingQuota: [
     {
@@ -253,6 +257,96 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
+      transactionTime
+    }
+  ],
+  localQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: Number.MAX_SAFE_INTEGER,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: Number.MAX_SAFE_INTEGER,
+      transactionTime
+    }
+  ]
+};
+
+const mockQuotaResSingleIdWithAppealProducts: Quota = {
+  remainingQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: 1,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: 0,
+      transactionTime
+    }
+  ],
+  globalQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: 1,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: 0,
+      transactionTime
+    }
+  ],
+  localQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: Number.MAX_SAFE_INTEGER,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: Number.MAX_SAFE_INTEGER,
+      transactionTime
+    }
+  ]
+};
+
+const mockQuotaResSingleIdNoQuotaWithAppealProducts: Quota = {
+  remainingQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: 0,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: 1,
+      transactionTime
+    }
+  ],
+  globalQuota: [
+    {
+      category: "toilet-paper",
+      identifierInputs: [],
+      quantity: 0,
+      transactionTime
+    },
+    {
+      category: "chocolate",
+      identifierInputs: [],
+      quantity: 1,
       transactionTime
     }
   ],
@@ -439,6 +533,50 @@ describe("useQuota", () => {
       expect(result.current.allQuotaResponse).toStrictEqual(
         mockQuotaResSingleId
       );
+    });
+  });
+
+  describe("quota should check only non-appeal products", () => {
+    it("should set quota state to DEFAULT if non-appeal products quantities are non-zero", async () => {
+      expect.assertions(1);
+
+      let ids = ["ID1"];
+      mockGetQuota.mockResolvedValueOnce(
+        mockQuotaResSingleIdWithAppealProducts
+      );
+      const { result, waitForNextUpdate } = renderHook(
+        () => useQuota(ids, key, endpoint),
+        {
+          wrapper,
+          initialProps: {
+            products: defaultAppealProducts
+          }
+        }
+      );
+      await waitForNextUpdate();
+
+      expect(result.current.quotaState).toStrictEqual("DEFAULT");
+    });
+
+    it("should set quota state to NO_QUOTA if non-appeal products quantities are zero", async () => {
+      expect.assertions(1);
+
+      let ids = ["ID1"];
+      mockGetQuota.mockResolvedValueOnce(
+        mockQuotaResSingleIdNoQuotaWithAppealProducts
+      );
+      const { result, waitForNextUpdate } = renderHook(
+        () => useQuota(ids, key, endpoint),
+        {
+          wrapper,
+          initialProps: {
+            products: defaultAppealProducts
+          }
+        }
+      );
+      await waitForNextUpdate();
+
+      expect(result.current.quotaState).toStrictEqual("NO_QUOTA");
     });
   });
 
