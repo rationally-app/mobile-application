@@ -60,7 +60,7 @@ interface NoQuotaCard {
   cart: Cart;
   onCancel: () => void;
   onAppeal?: () => void;
-  quotaResponse?: Quota;
+  quotaResponse: Quota | null;
 }
 
 /**
@@ -229,7 +229,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     !!allProducts[0].quantity.usage;
 
   const firstGlobalQuota = showGlobalQuota
-    ? quotaResponse!.globalQuota[0]
+    ? quotaResponse!.globalQuota![0]
     : undefined;
 
   return (

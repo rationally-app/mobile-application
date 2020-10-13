@@ -3,7 +3,8 @@ import {
   Transaction,
   Quota,
   PostTransactionResult,
-  PastTransactionsResult
+  PastTransactionsResult,
+  IdentificationFlag
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
@@ -38,6 +39,7 @@ export class PastTransactionError extends Error {
 
 interface PostTransaction {
   ids: string[];
+  identificationFlag: IdentificationFlag;
   transactions: Transaction[];
   key: string;
   endpoint: string;
@@ -45,12 +47,13 @@ interface PostTransaction {
 
 export const mockGetQuota = async (
   ids: string[],
+  _identificationFlag: IdentificationFlag,
   _key: string,
   _endpoint: string
 ): Promise<Quota> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
-  const transactionTime = new Date(2020, 3, 5);
   if (ids.length === 1) {
+    const transactionTime = new Date(2020, 3, 5);
     return {
       remainingQuota: [
         {
@@ -76,60 +79,6 @@ export const mockGetQuota = async (
         {
           category: "voucher",
           quantity: 1,
-          transactionTime
-        }
-      ],
-      globalQuota: [
-        {
-          category: "toilet-paper",
-          quantity: 0,
-          transactionTime
-        },
-        {
-          category: "instant-noodles",
-          quantity: 1,
-          transactionTime
-        },
-        {
-          category: "chocolate",
-          quantity: 30,
-          transactionTime
-        },
-        {
-          category: "vouchers",
-          quantity: 1,
-          transactionTime
-        },
-        {
-          category: "voucher",
-          quantity: 1,
-          transactionTime
-        }
-      ],
-      localQuota: [
-        {
-          category: "toilet-paper",
-          quantity: Number.MAX_SAFE_INTEGER,
-          transactionTime
-        },
-        {
-          category: "instant-noodles",
-          quantity: Number.MAX_SAFE_INTEGER,
-          transactionTime
-        },
-        {
-          category: "chocolate",
-          quantity: Number.MAX_SAFE_INTEGER,
-          transactionTime
-        },
-        {
-          category: "vouchers",
-          quantity: Number.MAX_SAFE_INTEGER,
-          transactionTime
-        },
-        {
-          category: "voucher",
-          quantity: Number.MAX_SAFE_INTEGER,
           transactionTime
         }
       ]
@@ -151,38 +100,6 @@ export const mockGetQuota = async (
         },
         { category: "vouchers", quantity: 1 },
         { category: "voucher", quantity: 1 }
-      ],
-      globalQuota: [
-        {
-          category: "toilet-paper",
-          quantity: 2
-        },
-        {
-          category: "instant-noodles",
-          quantity: 2
-        },
-        {
-          category: "chocolate",
-          quantity: 60
-        },
-        { category: "vouchers", quantity: 1 },
-        { category: "voucher", quantity: 1 }
-      ],
-      localQuota: [
-        {
-          category: "toilet-paper",
-          quantity: Number.MAX_SAFE_INTEGER
-        },
-        {
-          category: "instant-noodles",
-          quantity: Number.MAX_SAFE_INTEGER
-        },
-        {
-          category: "chocolate",
-          quantity: Number.MAX_SAFE_INTEGER
-        },
-        { category: "vouchers", quantity: Number.MAX_SAFE_INTEGER },
-        { category: "voucher", quantity: Number.MAX_SAFE_INTEGER }
       ]
     };
   }
@@ -190,6 +107,7 @@ export const mockGetQuota = async (
 
 export const liveGetQuota = async (
   ids: string[],
+  identificationFlag: IdentificationFlag,
   key: string,
   endpoint: string
 ): Promise<Quota> => {
@@ -204,7 +122,8 @@ export const liveGetQuota = async (
         Authorization: key
       },
       body: JSON.stringify({
-        ids
+        ids,
+        identificationFlag
       })
     });
     return response;
@@ -257,6 +176,7 @@ export const mockPostTransaction = async ({
 
 export const livePostTransaction = async ({
   ids,
+  identificationFlag,
   endpoint,
   key,
   transactions
@@ -275,6 +195,7 @@ export const livePostTransaction = async ({
         },
         body: JSON.stringify({
           ids,
+          identificationFlag,
           transaction: transactions
         })
       }
@@ -292,6 +213,7 @@ export const livePostTransaction = async ({
 
 export const mockPastTransactions = async (
   ids: string[],
+  _identificationFlag: IdentificationFlag,
   _key: string,
   _endpoint: string
 ): Promise<PastTransactionsResult> => {
@@ -328,6 +250,7 @@ export const mockPastTransactions = async (
 
 export const livePastTransactions = async (
   ids: string[],
+  identificationFlag: IdentificationFlag,
   key: string,
   endpoint: string
 ): Promise<PastTransactionsResult> => {
@@ -345,7 +268,8 @@ export const livePastTransactions = async (
           Authorization: key
         },
         body: JSON.stringify({
-          ids
+          ids,
+          identificationFlag
         })
       }
     );

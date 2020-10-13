@@ -127,22 +127,36 @@ const CampaignPolicy = t.intersection([
 const IdentificationFlag = t.intersection([
   t.type({
     type: t.union([t.literal("STRING"), t.literal("NUMBER")]),
-    scannerType: t.union([t.literal("CODE_39"), t.literal("QR")]),
-    validation: t.union([t.literal("NRIC"), t.literal("REGEX")])
+    scannerType: t.union([
+      t.literal("CODE_39"),
+      t.literal("QR"),
+      t.literal("NONE")
+    ]),
+    validation: t.union([
+      t.literal("NRIC"),
+      t.literal("PASSPORT"),
+      t.literal("REGEX")
+    ])
   }),
   t.partial({
+    label: t.string,
     validationRegex: t.string
   })
 ]);
 
-const CampaignFeatures = t.type({
-  minAppBinaryVersion: t.string,
-  minAppBuildVersion: t.number,
-  campaignName: t.string,
-  transactionGrouping: t.boolean,
-  flowType: t.string,
-  id: IdentificationFlag
-});
+const CampaignFeatures = t.intersection([
+  t.type({
+    minAppBinaryVersion: t.string,
+    minAppBuildVersion: t.number,
+    campaignName: t.string,
+    transactionGrouping: t.boolean,
+    flowType: t.string,
+    id: IdentificationFlag
+  }),
+  t.partial({
+    alternateIds: t.array(IdentificationFlag)
+  })
+]);
 
 export const CampaignConfig = t.type({
   features: t.union([CampaignFeatures, t.null]),
@@ -153,6 +167,7 @@ export type TextInputType = t.TypeOf<typeof TextInputType>;
 export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
 export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
+export type IdentificationFlag = t.TypeOf<typeof IdentificationFlag>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type CampaignPolicy = t.TypeOf<typeof CampaignPolicy>;
 export type CampaignFeatures = t.TypeOf<typeof CampaignFeatures>;
@@ -173,11 +188,12 @@ const ItemQuota = t.intersection([
   })
 ]);
 
-export const Quota = t.type({
-  remainingQuota: t.array(ItemQuota),
-  localQuota: t.array(ItemQuota),
-  globalQuota: t.array(ItemQuota)
-});
+export const Quota = t.intersection([
+  t.type({
+    remainingQuota: t.array(ItemQuota)
+  }),
+  t.partial({ localQuota: t.array(ItemQuota), globalQuota: t.array(ItemQuota) })
+]);
 
 export type ItemQuota = t.TypeOf<typeof ItemQuota>;
 export type Quota = t.TypeOf<typeof Quota>;

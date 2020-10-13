@@ -2,7 +2,8 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useContext
+  useContext,
+  useMemo
 } from "react";
 import {
   View,
@@ -37,6 +38,13 @@ import { useCheckUpdates } from "../../hooks/useCheckUpdates";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext } from "../../context/alert";
+import { InputSelection } from "./InputSelection";
+import { ManualPassportInput } from "./ManualPassportInput";
+import { IdentificationFlag } from "../../types";
+import {
+  IdentificationContext,
+  defaultSelectedIdType
+} from "../../context/identification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { i18nt } from "../../utils/translations";
 
@@ -107,6 +115,19 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const checkUpdates = useCheckUpdates();
   const { showErrorAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
+  const { selectedIdType, setSelectedIdType } = useContext(
+    IdentificationContext
+  );
+
+  const selectionArray = useMemo((): IdentificationFlag[] => {
+    const selectionArray = [];
+    selectionArray.push(features?.id || defaultSelectedIdType);
+    features?.alternateIds &&
+      features.alternateIds.map(alternateId =>
+        selectionArray.push(alternateId)
+      );
+    return selectionArray;
+  }, [features]);
 
   useEffect(() => {
     if (isFocused) {
@@ -143,6 +164,15 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   }, [shouldShowCamera]);
 
+  useEffect(() => {
+    // in the event the saved selection not found.. will always fall back to the first idType in array
+    setSelectedIdType(
+      selectionArray.some(selection => selection.label === selectedIdType.label)
+        ? selectedIdType
+        : selectionArray[0]
+    );
+  }, [selectionArray, selectedIdType, setSelectedIdType]);
+
   const onCheck = async (input: string): Promise<void> => {
     try {
       setIsScanningEnabled(false);
@@ -151,8 +181,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       }
       const id = validateAndCleanId(
         input,
-        features.id.validation,
-        features.id.validationRegex
+        selectedIdType.validation,
+        selectedIdType.validationRegex
       );
       Vibration.vibrate(50);
       const defaultProducts = policies?.filter(
@@ -177,6 +207,32 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
+  const onInputSelection = (inputType: IdentificationFlag): void => {
+    setSelectedIdType(inputType);
+  };
+
+  const hasMultiInputSelection = (): boolean => {
+    return selectionArray.length > 1;
+  };
+
+  const getInputComponent = (): JSX.Element => {
+    return selectedIdType.label === "Passport" &&
+      selectedIdType.scannerType === "NONE" ? (
+      <ManualPassportInput
+        setIdInput={setIdInput}
+        submitId={() => onCheck(idInput)}
+      />
+    ) : (
+      <InputIdSection
+        openCamera={() => setShouldShowCamera(true)}
+        idInput={idInput}
+        setIdInput={setIdInput}
+        submitId={() => onCheck(idInput)}
+        keyboardType={features?.id.type === "NUMBER" ? "numeric" : "default"}
+      />
+    );
+  };
+
   const onPressStatistics = (): void => {
     navigation.navigate("DailyStatisticsScreen");
   };
@@ -190,6 +246,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           <View style={styles.headerText}>
             <AppHeader mode={config.appMode} />
           </View>
+          {hasMultiInputSelection() && (
+            <InputSelection
+              selectionArray={selectionArray}
+              currentSelection={selectedIdType}
+              onInputSelection={onInputSelection}
+            />
+          )}
           {messageContent && (
             <View style={styles.bannerWrapper}>
               <Banner {...messageContent} />
@@ -204,15 +267,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             <AppText>
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
-            <InputIdSection
-              openCamera={() => setShouldShowCamera(true)}
-              idInput={idInput}
-              setIdInput={setIdInput}
-              submitId={() => onCheck(idInput)}
-              keyboardType={
-                features?.id.type === "NUMBER" ? "numeric" : "default"
-              }
-            />
+            {getInputComponent()}
             <TouchableOpacity
               onPress={onPressStatistics}
               style={styles.statsButton}
