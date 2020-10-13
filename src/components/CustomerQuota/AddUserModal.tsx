@@ -120,7 +120,6 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
           <IdScanner
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
-            cancelButtonText={i18nt("idScanner", "enterIdManually")}
             barCodeTypes={
               features?.id.scannerType === "QR"
                 ? [BarCodeScanner.Constants.BarCodeType.qr]

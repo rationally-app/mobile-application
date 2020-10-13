@@ -85,11 +85,6 @@ export const ItemIdentifier: FunctionComponent<{
       </View>
       {shouldShowCamera && (
         <IdentifierScanModal
-          cancelButtonText={
-            textInput.disabled
-              ? i18nt("customerQuotaScreen", "quotaScanButtonBack")
-              : i18nt("idScanner", "enterManually")
-          }
           setShouldShowCamera={setShouldShowCamera}
           shouldShowCamera={shouldShowCamera}
           onScanInput={onScanInput}

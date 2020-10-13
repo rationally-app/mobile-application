@@ -33,7 +33,10 @@ export const en: Translations = {
     enterManually: "Enter manually",
     enterVoucherId: "Enter voucher ID",
     scanToCheck: "Scan to check validity",
-    continueScanning: "Continue scanning"
+    continueScanning: "Continue scanning",
+    scanBarcode: "Scan Barcode",
+    scanQRCode: "Scan QR Code",
+    back: "Back"
   },
   navigationDrawer: {
     logout: "Logout",
