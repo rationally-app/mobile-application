@@ -1,4 +1,4 @@
-import { i18nt } from "../../../utils/translations";
+import { TranslationHook } from "../../../hooks/useTranslate/useTranslate";
 
 interface CheckoutMessage {
   title: string;
@@ -6,7 +6,10 @@ interface CheckoutMessage {
   ctaButtonText: string;
 }
 
-export const getCheckoutMessages = (productType?: string): CheckoutMessage => {
+export const getCheckoutMessages = (
+  i18nt: TranslationHook["i18nt"],
+  productType?: string
+): CheckoutMessage => {
   switch (productType) {
     case "REDEEM":
       return {

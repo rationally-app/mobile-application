@@ -1,11 +1,14 @@
 import React, { FunctionComponent } from "react";
 import { Platform, Linking } from "react-native";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { AlertModal } from "../AlertModal/AlertModal";
-import { i18nt } from "../../utils/translations";
 
 export const UpdateFromAppStoreAlert: FunctionComponent = () => {
   let storeName: string;
   let storeLink: string;
+
+  const { i18nt } = useTranslate();
+
   switch (Platform.OS) {
     case "ios":
       storeName = i18nt("campaignInitialisationScreen", "appleStore");

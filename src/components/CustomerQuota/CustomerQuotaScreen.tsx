@@ -31,7 +31,7 @@ import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { AuthStoreContext } from "../../context/authStore";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -199,6 +199,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     navigation,
     showErrorAlert
   ]);
+
+  const { i18nt } = useTranslate();
 
   return cartState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>

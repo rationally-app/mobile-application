@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   validText: {
@@ -47,6 +47,7 @@ export const ValidVoucherCount: FunctionComponent<ValidVoucherCount> = ({
   numVouchers,
   denomination
 }) => {
+  const { i18nt } = useTranslate();
   return (
     <View>
       <View style={styles.validTextWrapper}>

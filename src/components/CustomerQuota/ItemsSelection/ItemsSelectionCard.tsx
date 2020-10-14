@@ -18,7 +18,7 @@ import {
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
-import { i18nt } from "../../../utils/translations";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -47,6 +47,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const { showWarnAlert, showConfirmationAlert, showErrorAlert } = useContext(
     AlertModalContext
   );
+
+  const { i18nt } = useTranslate();
 
   const onCheckAddedUsers = async (input: string): Promise<void> => {
     try {

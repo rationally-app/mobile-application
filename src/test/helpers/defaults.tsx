@@ -1,9 +1,32 @@
-import { PolicyIdentifier, CampaignPolicy } from "../../types";
+import {
+  i18ntWithValidator,
+  TranslationHook
+} from "../../hooks/useTranslate/useTranslate";
+import {
+  PolicyIdentifier,
+  CampaignPolicy,
+  CampaignFeatures
+} from "../../types";
+
+export const defaultTranslationProps: TranslationHook = {
+  c13nt: (key: string) => key,
+  c13ntForUnit: (unit: CampaignPolicy["quantity"]["unit"]) => unit,
+  i18nt: i18ntWithValidator
+};
 
 export const defaultIdentifier: PolicyIdentifier = {
   label: "identifier",
   textInput: { visible: true, disabled: false, type: "STRING" },
   scanButton: { visible: true, disabled: false, type: "BARCODE" }
+};
+
+export const defaultFeatures: CampaignFeatures = {
+  minAppBinaryVersion: "version",
+  minAppBuildVersion: 0,
+  campaignName: "Campaign Name",
+  transactionGrouping: true,
+  flowType: "DEFAULT",
+  id: { type: "STRING", scannerType: "QR", validation: "NRIC" }
 };
 
 export const defaultProducts: CampaignPolicy[] = [

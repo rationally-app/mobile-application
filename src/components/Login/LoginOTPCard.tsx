@@ -21,7 +21,7 @@ import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { AuthCredentials } from "../../types";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -132,6 +132,8 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const handleChange = (text: string): void => {
     /^\d*$/.test(text) && setOTPValue(text);
   };
+
+  const { i18nt } = useTranslate();
 
   return (
     <Card>

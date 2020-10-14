@@ -2,6 +2,7 @@ import { getCampaignConfig, CampaignConfigError } from "./campaignConfig";
 import { boolean } from "io-ts";
 import { Sentry } from "../../utils/errorTracking";
 import { SessionError } from "../helpers";
+import "../../common/i18n/i18nMock";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -53,7 +54,8 @@ const mockValidResponse = {
         }
       }
     }
-  ]
+  ],
+  c13n: {}
 };
 
 const mockValidResponseNewFeature = {
@@ -100,12 +102,14 @@ const mockValidResponseNewFeature = {
         }
       }
     }
-  ]
+  ],
+  c13n: {}
 };
 
 const mockValidResponseNoUpdates = {
   features: null,
-  policies: null
+  policies: null,
+  c13n: null
 };
 
 const mockInvalidResponseIncorrectType = {
@@ -144,7 +148,8 @@ describe("campaignConfig", () => {
 
         const config = await getCampaignConfig(key, endpoint, {
           features: undefined,
-          policies: undefined
+          policies: undefined,
+          c13n: undefined
         });
         expect(config).toStrictEqual(response);
       }
@@ -159,7 +164,8 @@ describe("campaignConfig", () => {
 
       const config = await getCampaignConfig(key, endpoint, {
         features: "latest-hash",
-        policies: "latest-hash"
+        policies: "latest-hash",
+        c13n: "latest-hash"
       });
       expect(config).toStrictEqual(mockValidResponseNoUpdates);
     });
@@ -176,7 +182,8 @@ describe("campaignConfig", () => {
         await expect(
           getCampaignConfig(key, endpoint, {
             features: undefined,
-            policies: undefined
+            policies: undefined,
+            c13n: undefined
           })
         ).rejects.toThrow(CampaignConfigError);
       }
@@ -194,7 +201,8 @@ describe("campaignConfig", () => {
         await expect(
           getCampaignConfig(key, endpoint, {
             features: undefined,
-            policies: undefined
+            policies: undefined,
+            c13n: undefined
           })
         ).rejects.toThrow(CampaignConfigError);
         expect(mockCaptureException).toHaveBeenCalledTimes(1);
@@ -212,7 +220,8 @@ describe("campaignConfig", () => {
       await expect(
         getCampaignConfig(key, endpoint, {
           features: undefined,
-          policies: undefined
+          policies: undefined,
+          c13n: undefined
         })
       ).rejects.toThrow(SessionError);
     });
@@ -224,7 +233,8 @@ describe("campaignConfig", () => {
       await expect(
         getCampaignConfig(key, endpoint, {
           features: undefined,
-          policies: undefined
+          policies: undefined,
+          c13n: undefined
         })
       ).rejects.toThrow("Network error");
     });

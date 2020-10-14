@@ -1,9 +1,10 @@
 import React, { FunctionComponent } from "react";
 import * as Updates from "expo-updates";
 import { AlertModal } from "../AlertModal/AlertModal";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 export const UpdateByRestartingAlert: FunctionComponent = () => {
+  const { i18nt } = useTranslate();
   return (
     <AlertModal
       alertType="INFO"

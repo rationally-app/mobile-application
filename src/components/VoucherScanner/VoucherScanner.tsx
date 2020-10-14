@@ -19,7 +19,7 @@ import { Feather } from "@expo/vector-icons";
 import { ManualAddVoucherModal } from "./ManualAddVoucherModal";
 import { SafeAreaView } from "react-navigation";
 import { Voucher } from "../../types";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -107,6 +107,8 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
       onCheckVoucher(event.data);
     }
   };
+
+  const { i18nt } = useTranslate();
 
   return (
     <View style={styles.wrapper}>

@@ -6,7 +6,7 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { AppText } from "../Layout/AppText";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { size, color, fontSize } from "../../common/styles";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -55,6 +55,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
   submitId,
   keyboardType
 }) => {
+  const { i18nt } = useTranslate();
   return (
     <>
       <View style={styles.scanButtonWrapper}>
