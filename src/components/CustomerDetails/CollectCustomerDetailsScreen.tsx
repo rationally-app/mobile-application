@@ -209,6 +209,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const onInputSelection = (inputType: IdentificationFlag): void => {
+    if (inputType.label !== selectedIdType.label) setIdInput("");
     setSelectedIdType(inputType);
   };
 
