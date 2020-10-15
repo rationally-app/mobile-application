@@ -1,5 +1,3 @@
-import { Dimensions, PixelRatio, Platform } from "react-native";
-
 export type FontSizeLevel = -4 | -3 | -2 | -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 /**
@@ -26,12 +24,14 @@ export type LetterSpacingLevel = 1 | 2;
  */
 export const letterSpacing = (level: LetterSpacingLevel): number =>
   [0.5, 0.7][level - 1];
+<<<<<<< HEAD
+<<<<<<< HEAD
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 console.log(Dimensions.get("window"));
 
 // based on iphone 6s's scale
-const scale = SCREEN_WIDTH / 375;
+const scale = SCREEN_WIDTH / 575;
 
 export const normalize = (size: number): number => {
   const newSize = size * scale;
@@ -41,3 +41,7 @@ export const normalize = (size: number): number => {
     return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
   }
 };
+=======
+>>>>>>> parent of 36bef30... fix: cancel alert fix based on scaling
+=======
+>>>>>>> parent of 36bef30... fix: cancel alert fix based on scaling
