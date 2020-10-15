@@ -27,11 +27,11 @@ export type LetterSpacingLevel = 1 | 2;
 export const letterSpacing = (level: LetterSpacingLevel): number =>
   [0.5, 0.7][level - 1];
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 console.log(Dimensions.get("window"));
 
 // based on iphone 6s's scale
-const scale = SCREEN_WIDTH / 475;
+const scale = SCREEN_WIDTH / 575;
 
 export const normalize = (size: number): number => {
   const newSize = size * scale;
