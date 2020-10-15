@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
@@ -66,32 +66,28 @@ export const PhoneNumberInput: FunctionComponent<{
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit = () => {}
 }) => {
-  const formatPhoneNumber = (
-    mobileNumberValue: string,
-    region = "SG"
-  ): string => {
+  const formatPhoneNumber = (mobileNumber: string, region = "SG"): string => {
     try {
       return phoneUtil.format(
-        phoneUtil.parse(mobileNumberValue, region),
+        phoneUtil.parse(mobileNumber, region),
         PhoneNumberFormat.NATIONAL
       );
     } catch (e) {
-      if (mobileNumber && mobileNumber?.length < mobileNumberValue.length) {
+      if (
+        mobileNumberValue.length === 0 ||
+        mobileNumber.length < mobileNumberValue.length
+      ) {
         return mobileNumber;
       }
       return mobileNumberValue;
     }
   };
-  const [mobileNumber, setMobileNumber] = useState<string>(
-    formatPhoneNumber(mobileNumberValue.replace(" ", ""))
-  );
 
   const onHandleChangePhoneNumber = (text: string): void => {
-    const newMobileValue = formatPhoneNumber(text);
-    setMobileNumber(newMobileValue);
-    const cleanText: string = newMobileValue.replace(" ", "");
+    const cleanText: string = formatPhoneNumber(text).replace(" ", "");
     onChangeMobileNumber(cleanText);
   };
+
   return (
     <View style={styles.numberWrapper}>
       <AppText style={styles.label}>{label}</AppText>
@@ -106,7 +102,7 @@ export const PhoneNumberInput: FunctionComponent<{
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={mobileNumber}
+          value={formatPhoneNumber(mobileNumberValue)}
           onChangeText={text => onHandleChangePhoneNumber(text)}
           onSubmitEditing={onSubmit}
         />
