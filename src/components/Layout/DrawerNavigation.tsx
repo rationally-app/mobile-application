@@ -6,7 +6,7 @@ import {
 } from "react-navigation-drawer";
 import { useLogout } from "../../hooks/useLogout";
 import { AppText } from "./AppText";
-import { size, color, fontSize, normalize } from "../../common/styles";
+import { size, color, fontSize } from "../../common/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
@@ -42,10 +42,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: size(4),
     marginTop: size(3),
     paddingVertical: size(1),
-    fontSize: normalize(fontSize(-4))
+    fontSize: fontSize(-4)
   },
   bottomNavContainerText: {
-    fontSize: normalize(fontSize(-1))
+    fontSize: fontSize(-1)
   }
 });
 
