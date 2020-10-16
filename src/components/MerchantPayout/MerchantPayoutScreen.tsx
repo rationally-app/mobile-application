@@ -47,8 +47,8 @@ import {
   WARNING_MESSAGE
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
-import i18n from "i18n-js";
 import { LimitReachedError } from "../../utils/validateVoucherCode";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -239,6 +239,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     setShouldShowCamera(true);
   }, []);
 
+  const { i18nt } = useTranslate();
+
   return (
     <>
       <KeyboardAvoidingScrollView>
@@ -270,7 +272,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <View style={styles.submitWrapper}>
                 <DarkButton
                   fullWidth={true}
-                  text={i18n.t("customerQuotaScreen.quotaButtonCheckout")}
+                  text={i18nt("customerQuotaScreen", "quotaButtonCheckout")}
                   icon={
                     <Feather
                       name="shopping-cart"
@@ -283,7 +285,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 />
               </View>
               <SecondaryButton
-                text={i18n.t("customerQuotaScreen.quotaAppealCancel")}
+                text={i18nt("customerQuotaScreen", "quotaAppealCancel")}
                 onPress={() => {
                   showWarnAlert(WARNING_MESSAGE.DISCARD_TRANSACTION, () => {
                     setMerchantCode("");

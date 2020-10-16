@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import {
   validateVoucherCode,
   LimitReachedError
@@ -6,6 +6,7 @@ import {
 import { getQuota } from "../../services/quota";
 import { Quota, Voucher } from "../../types";
 import { differenceInSeconds, compareDesc } from "date-fns";
+import { IdentificationContext } from "../../context/identification";
 
 export class ScannerError extends Error {
   constructor(message: string) {
@@ -60,6 +61,7 @@ export const useCheckVoucherValidity = (
   >("DEFAULT");
   const [validityResult, setValidityResult] = useState<Voucher>();
   const [error, setError] = useState<Error>();
+  const { selectedIdType } = useContext(IdentificationContext);
 
   const resetValidityState = useCallback((): void => {
     setError(undefined);
@@ -105,7 +107,12 @@ export const useCheckVoucherValidity = (
         }
         // Send to backend to check if valid
         try {
-          const validityResponse = await getQuota([serial], authKey, endpoint);
+          const validityResponse = await getQuota(
+            [serial],
+            selectedIdType,
+            authKey,
+            endpoint
+          );
           const voucher = getVoucherValidity(validityResponse, serial);
           setValidityResult(voucher);
           setCheckValidityState("RESULT_RETURNED");
@@ -115,7 +122,7 @@ export const useCheckVoucherValidity = (
       };
       check();
     },
-    [authKey, endpoint]
+    [authKey, endpoint, selectedIdType]
   );
 
   return {

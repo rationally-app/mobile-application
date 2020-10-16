@@ -1,4 +1,7 @@
-import { defaultIdentifier } from "../../../test/helpers/defaults";
+import {
+  defaultIdentifier,
+  defaultTranslationProps
+} from "../../../test/helpers/defaults";
 import { PastTransactionsResult, CampaignPolicy } from "../../../types";
 import {
   groupTransactionsByCategory,
@@ -151,7 +154,8 @@ describe("NoQuotaCard utility functions", () => {
         groupTransactionsByCategory(
           sortedTransactions,
           allProducts,
-          latestTransactionTime
+          latestTransactionTime,
+          defaultTranslationProps
         )
       ).toStrictEqual(mockTransactionsByCategoryMap);
     });
@@ -160,7 +164,12 @@ describe("NoQuotaCard utility functions", () => {
       expect.assertions(1);
 
       expect(
-        groupTransactionsByCategory(null, allProducts, undefined)
+        groupTransactionsByCategory(
+          null,
+          allProducts,
+          undefined,
+          defaultTranslationProps
+        )
       ).toStrictEqual({});
     });
   });

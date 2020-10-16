@@ -15,7 +15,7 @@ import {
   formatDateTime,
   formatTimeDifference
 } from "../../../utils/dateTimeFormatter";
-import i18n from "i18n-js";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -35,34 +35,43 @@ const styles = StyleSheet.create({
 
 const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
-}> = ({ transactionTime }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {i18n.t("checkoutSuccessScreen.redeemedOn", {
-        time: formatDateTime(transactionTime)
-      })}
-    </AppText>
-  </>
-);
+}> = ({ transactionTime }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <>
+      <AppText style={sharedStyles.statusTitle}>
+        {i18nt("checkoutSuccessScreen", "redeemedOn", undefined, {
+          time: formatDateTime(transactionTime)
+        })}
+      </AppText>
+    </>
+  );
+};
 
 const RecentTransactionTitle: FunctionComponent<{
   now: Date;
   transactionTime: Date;
-}> = ({ now, transactionTime }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {i18n.t("checkoutSuccessScreen.redeemedAgo", {
-        time: formatTimeDifference(now, transactionTime)
-      })}
-    </AppText>
-  </>
-);
+}> = ({ now, transactionTime }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <>
+      <AppText style={sharedStyles.statusTitle}>
+        {i18nt("checkoutSuccessScreen", "redeemedAgo", undefined, {
+          time: formatTimeDifference(now, transactionTime)
+        })}
+      </AppText>
+    </>
+  );
+};
 
-const NoPreviousTransactionTitle: FunctionComponent = () => (
-  <AppText style={sharedStyles.statusTitle}>
-    {i18n.t("checkoutSuccessScreen.previouslyRedeemed")}
-  </AppText>
-);
+const NoPreviousTransactionTitle: FunctionComponent = () => {
+  const { i18nt } = useTranslate();
+  return (
+    <AppText style={sharedStyles.statusTitle}>
+      {i18nt("checkoutSuccessScreen", "previouslyRedeemed")}
+    </AppText>
+  );
+};
 
 interface VoucherStatusModal {
   checkValidityState: useCheckVoucherValidity["checkValidityState"];
@@ -79,8 +88,10 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
 
   let card;
 
-  const title = i18n.t(`errorMessages.notEligible.title`);
-  const details = i18n.t(`errorMessages.notEligible.body`);
+  const { i18nt } = useTranslate();
+
+  const title = i18nt("errorMessages", "notEligible", "title");
+  const details = i18nt("errorMessages", "notEligible", "body");
 
   if (error instanceof ScannerError || error instanceof LimitReachedError) {
     return null;

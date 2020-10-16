@@ -127,35 +127,54 @@ const CampaignPolicy = t.intersection([
 const IdentificationFlag = t.intersection([
   t.type({
     type: t.union([t.literal("STRING"), t.literal("NUMBER")]),
-    scannerType: t.union([t.literal("CODE_39"), t.literal("QR")]),
-    validation: t.union([t.literal("NRIC"), t.literal("REGEX")])
+    scannerType: t.union([
+      t.literal("CODE_39"),
+      t.literal("QR"),
+      t.literal("NONE")
+    ]),
+    validation: t.union([
+      t.literal("NRIC"),
+      t.literal("PASSPORT"),
+      t.literal("REGEX")
+    ])
   }),
   t.partial({
+    label: t.string,
     validationRegex: t.string
   })
 ]);
 
-const CampaignFeatures = t.type({
-  minAppBinaryVersion: t.string,
-  minAppBuildVersion: t.number,
-  campaignName: t.string,
-  transactionGrouping: t.boolean,
-  flowType: t.string,
-  id: IdentificationFlag
-});
+const CampaignFeatures = t.intersection([
+  t.type({
+    minAppBinaryVersion: t.string,
+    minAppBuildVersion: t.number,
+    campaignName: t.string,
+    transactionGrouping: t.boolean,
+    flowType: t.string,
+    id: IdentificationFlag
+  }),
+  t.partial({
+    alternateIds: t.array(IdentificationFlag)
+  })
+]);
+
+export const CampaignC13N = t.record(t.string, t.string);
 
 export const CampaignConfig = t.type({
   features: t.union([CampaignFeatures, t.null]),
-  policies: t.union([t.array(CampaignPolicy), t.null])
+  policies: t.union([t.array(CampaignPolicy), t.null]),
+  c13n: t.union([CampaignC13N, t.null])
 });
 
 export type TextInputType = t.TypeOf<typeof TextInputType>;
 export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
 export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
+export type IdentificationFlag = t.TypeOf<typeof IdentificationFlag>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type CampaignPolicy = t.TypeOf<typeof CampaignPolicy>;
 export type CampaignFeatures = t.TypeOf<typeof CampaignFeatures>;
+export type CampaignC13N = t.TypeOf<typeof CampaignC13N>;
 export type CampaignConfig = t.TypeOf<typeof CampaignConfig>;
 export type ConfigHashes = {
   [config in keyof CampaignConfig]: string | undefined;

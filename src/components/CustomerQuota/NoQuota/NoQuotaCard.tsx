@@ -34,8 +34,11 @@ import { AlertModalContext } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
-import i18n from "i18n-js";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
+import {
+  TranslationHook,
+  useTranslate
+} from "../../../hooks/useTranslate/useTranslate";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -73,39 +76,44 @@ interface NoQuotaCard {
 export const groupTransactionsByCategory = (
   sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
   allProducts: CampaignPolicy[],
-  latestTransactionTime: Date | undefined
+  latestTransactionTime: Date | undefined,
+  translationProps: TranslationHook
 ): TransactionsByCategoryMap => {
+  const { c13nt, c13ntForUnit, i18nt } = translationProps;
+
   // Group transactions by category
   const transactionsByCategoryMap: TransactionsByCategoryMap = {};
   sortedTransactions?.forEach(item => {
     const policy = allProducts?.find(
       policy => policy.category === item.category
     );
-    const categoryName = policy?.name ?? item.category;
+    const tName = (policy?.name && c13nt(policy?.name)) ?? item.category;
     const formattedDate = formatDateTime(item.transactionTime);
 
-    if (!transactionsByCategoryMap.hasOwnProperty(categoryName)) {
-      transactionsByCategoryMap[categoryName] = {
+    if (!transactionsByCategoryMap.hasOwnProperty(tName)) {
+      transactionsByCategoryMap[tName] = {
         transactions: [],
         hasLatestTransaction: false,
         order: policy?.order ?? BIG_NUMBER
       };
     }
-    transactionsByCategoryMap[categoryName].transactions.push({
+    transactionsByCategoryMap[tName].transactions.push({
       header: formattedDate,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        policy?.quantity.unit || {
-          type: "POSTFIX",
-          label: ` ${i18n.t("checkoutSuccessScreen.quantity")}`
-        }
+        policy?.quantity.unit
+          ? c13ntForUnit(policy?.quantity.unit)
+          : {
+              type: "POSTFIX",
+              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
+            }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
       order: -1
     });
-    transactionsByCategoryMap[categoryName].hasLatestTransaction =
-      transactionsByCategoryMap[categoryName].hasLatestTransaction ||
+    transactionsByCategoryMap[tName].hasLatestTransaction =
+      transactionsByCategoryMap[tName].hasLatestTransaction ||
       differenceInSeconds(latestTransactionTime || 0, item.transactionTime) ===
         0;
   });
@@ -209,10 +217,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const hasAppealProduct =
     allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false;
 
+  const translationProps = useTranslate();
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
-    latestTransactionTime
+    latestTransactionTime,
+    translationProps
   );
 
   const transactionsByCategoryList = sortTransactions(
@@ -279,11 +289,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 <View>
                   <AppText style={styles.wrapper}>
                     {policyType === "REDEEM"
-                      ? `${i18n.t(
-                          "checkoutSuccessScreen.previouslyRedeemedItems"
+                      ? `${translationProps.i18nt(
+                          "checkoutSuccessScreen",
+                          "previouslyRedeemedItems"
                         )}:`
-                      : `${i18n.t(
-                          "checkoutSuccessScreen.previouslyPurchasedItems"
+                      : `${translationProps.i18nt(
+                          "checkoutSuccessScreen",
+                          "previouslyPurchasedItems"
                         )}:`}
                   </AppText>
                   {transactionsByCategoryList.map(
@@ -318,7 +330,10 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={i18n.t("checkoutSuccessScreen.redeemedNextIdentity")}
+          text={translationProps.i18nt(
+            "checkoutSuccessScreen",
+            "redeemedNextIdentity"
+          )}
           onPress={onCancel}
           fullWidth={true}
         />

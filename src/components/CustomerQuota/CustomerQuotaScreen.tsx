@@ -31,7 +31,7 @@ import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { AuthStoreContext } from "../../context/authStore";
-import i18n from "i18n-js";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -203,13 +203,15 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     showErrorAlert
   ]);
 
+  const { i18nt } = useTranslate();
+
   return cartState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
       <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
       <Card>
         <ActivityIndicator size="large" color={color("grey", 40)} />
         <AppText style={{ marginTop: size(1) }}>
-          {i18n.t("customerQuotaScreen.quotaCheck")}...
+          {i18nt("customerQuotaScreen", "quotaCheck")}
         </AppText>
       </Card>
     </View>

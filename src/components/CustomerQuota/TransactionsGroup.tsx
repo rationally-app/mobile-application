@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { fontSize, size, color } from "../../common/styles";
-import i18n from "i18n-js";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 export const styles = StyleSheet.create({
   wrapper: {
@@ -60,32 +60,35 @@ const Transaction: FunctionComponent<Transaction> = ({
   details,
   quantity,
   isAppeal
-}) => (
-  <>
-    <View style={styles.itemRow}>
-      <AppText style={styles.itemSubheader}>{transactionDate}</AppText>
-      <AppText style={styles.itemSubheader}>{quantity}</AppText>
-    </View>
-    {!!details && (
+}) => {
+  const { i18nt } = useTranslate();
+  return (
+    <>
       <View style={styles.itemRow}>
-        <View style={styles.itemDetailWrapper}>
-          <View style={styles.itemDetailBorder} />
-          <AppText style={styles.itemDetail}>{details}</AppText>
-        </View>
-        {isAppeal && (
-          <AppText style={{ ...styles.appealLabel, alignSelf: "flex-start" }}>
-            {i18n.t("statisticsScreen.viaAppeal")}
-          </AppText>
-        )}
+        <AppText style={styles.itemSubheader}>{transactionDate}</AppText>
+        <AppText style={styles.itemSubheader}>{quantity}</AppText>
       </View>
-    )}
-    {!details && isAppeal && (
-      <AppText style={{ ...styles.appealLabel, textAlign: "right" }}>
-        {i18n.t("statisticsScreen.viaAppeal")}
-      </AppText>
-    )}
-  </>
-);
+      {!!details && (
+        <View style={styles.itemRow}>
+          <View style={styles.itemDetailWrapper}>
+            <View style={styles.itemDetailBorder} />
+            <AppText style={styles.itemDetail}>{details}</AppText>
+          </View>
+          {isAppeal && (
+            <AppText style={{ ...styles.appealLabel, alignSelf: "flex-start" }}>
+              {i18nt("statisticsScreen", "viaAppeal")}
+            </AppText>
+          )}
+        </View>
+      )}
+      {!details && isAppeal && (
+        <AppText style={{ ...styles.appealLabel, textAlign: "right" }}>
+          {i18nt("statisticsScreen", "viaAppeal")}
+        </AppText>
+      )}
+    </>
+  );
+};
 
 export const TransactionsGroup: FunctionComponent<
   TransactionsGroup & {

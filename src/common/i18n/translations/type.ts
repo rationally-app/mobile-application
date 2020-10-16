@@ -30,6 +30,9 @@ export type Translations = {
     enterVoucherId: string;
     scanToCheck: string;
     continueScanning: string;
+    scanBarcode: string;
+    scanQRCode: string;
+    back: string;
   };
   navigationDrawer: {
     logout: string;
@@ -102,6 +105,10 @@ export type Translations = {
     logAppeal: string;
     cannot: string;
     purchase: string;
+  };
+  campaignInitialisationScreen: {
+    appleStore: string;
+    androidStore: string;
   };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {

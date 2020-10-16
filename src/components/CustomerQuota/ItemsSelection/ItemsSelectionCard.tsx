@@ -18,7 +18,7 @@ import {
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
-import i18n from "i18n-js";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -52,6 +52,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const { products } = useContext(ProductContext);
   const { showWarnAlert, showErrorAlert } = useContext(AlertModalContext);
   const [showPaymentAlert, setShowPaymentAlert] = useState<boolean>(false);
+
+  const { i18nt } = useTranslate();
 
   const onCheckAddedUsers = async (input: string): Promise<void> => {
     try {
@@ -106,8 +108,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           <SecondaryButton
             text={
               isAppeal
-                ? i18n.t("customerQuotaScreen.quotaScanButtonBack")
-                : i18n.t("customerQuotaScreen.quotaAppealCancel")
+                ? i18nt("customerQuotaScreen", "quotaScanButtonBack")
+                : i18nt("customerQuotaScreen", "quotaAppealCancel")
             }
             onPress={
               isAppeal
@@ -125,7 +127,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           ]}
         >
           <DarkButton
-            text={i18n.t("customerQuotaScreen.quotaButtonCheckout")}
+            text={i18nt("customerQuotaScreen", "quotaButtonCheckout")}
             icon={
               <Feather
                 name="shopping-cart"

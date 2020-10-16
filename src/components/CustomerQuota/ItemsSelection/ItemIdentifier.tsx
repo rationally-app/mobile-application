@@ -6,8 +6,8 @@ import { IdentifierPhoneNumberInput } from "./IdentifierLayout/IdentifierPhoneNu
 import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
-import i18n from "i18n-js";
 import { AlertModalContext } from "../../../context/alert";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -33,6 +33,7 @@ export const ItemIdentifier: FunctionComponent<{
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { showErrorAlert } = useContext(AlertModalContext);
+  const { c13nt, i18nt } = useTranslate();
 
   const { label, textInput, scanButton } = identifier;
 
@@ -58,14 +59,14 @@ export const ItemIdentifier: FunctionComponent<{
         {textInput.visible &&
           (textInput.type === "PHONE_NUMBER" ? (
             <IdentifierPhoneNumberInput
-              label={label}
+              label={c13nt(label)}
               onPhoneNumberChange={onManualInput}
             />
           ) : (
             <IdentifierTextInput
               addMarginRight={scanButton.visible}
               editable={!textInput.disabled}
-              label={label}
+              label={c13nt(label)}
               onChange={onManualInput}
               type={textInput.type}
               value={inputValue}
@@ -77,19 +78,14 @@ export const ItemIdentifier: FunctionComponent<{
             fullWidth={!textInput.visible}
             onPress={() => setShouldShowCamera(true)}
             text={
-              scanButton.text ||
-              i18n.t("customerQuotaScreen.quotaIdentifierButtonScan")
+              (scanButton.text && c13nt(scanButton.text)) ??
+              i18nt("customerQuotaScreen", "quotaIdentifierButtonScan")
             }
           />
         )}
       </View>
       {shouldShowCamera && (
         <IdentifierScanModal
-          cancelButtonText={
-            textInput.disabled
-              ? i18n.t("customerQuotaScreen.quotaScanButtonBack")
-              : i18n.t("idScanner.enterManually")
-          }
           setShouldShowCamera={setShouldShowCamera}
           shouldShowCamera={shouldShowCamera}
           onScanInput={onScanInput}
