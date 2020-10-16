@@ -15,14 +15,17 @@ export const PaymentConfirmationModal: FunctionComponent<PaymentConfirmationModa
   return (
     <AlertModal
       alertType="CONFIRM"
-      title="Collected Payment?"
+      title="Payment collected?"
       onOk={commitCart}
       onCancel={cancelPayment}
       visible={isVisible}
       buttonTexts={{
-        primaryActionText: "Confirm",
-        secondaryActionText: "Cancel"
+        primaryActionText: "Collected",
+        secondaryActionText: "No"
       }}
+      description={
+        "This action cannot be undone. Proceed only when payment has been collected."
+      }
     />
   );
 };
