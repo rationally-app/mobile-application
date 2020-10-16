@@ -6,7 +6,8 @@ import {
   reserveTransaction,
   commitTransaction,
   NotEligibleError,
-  CommitTransactionError
+  CommitTransactionError,
+  cancelTransaction
 } from "../../services/quota";
 import { transform } from "lodash";
 import { ProductContextValue, ProductContext } from "../../context/products";
@@ -45,6 +46,7 @@ type CartState =
   | "RESERVING"
   | "RESERVED"
   | "COMMITTING"
+  | "CANCELLING"
   | "CHECKING_OUT"
   | "PURCHASED"
   | "NOT_ELIGIBLE";
@@ -61,6 +63,7 @@ export type CartHook = {
   reserveCart: (onComplete: () => void) => void;
   commitCart: () => void;
   checkoutCart: () => void;
+  cancelCart: (onComplete: () => void) => void;
   checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
@@ -446,6 +449,64 @@ export const useCart = (
     }
   }, [cartState, authKey, endpoint, checkoutResult, ids]);
 
+  const cancelCart: CartHook["cancelCart"] = useCallback(
+    (onComplete: () => void) => {
+      const cancel = async (): Promise<void> => {
+        setCartState("CANCELLING");
+        // create array of transaction identifiers
+        const transactionIdentifiers: TransactionIdentifier[] = [];
+        const transactions = checkoutResult?.transactions;
+        if (transactions) {
+          ids.forEach((id: string, index: number) => {
+            const thisIdTransactions = transactions[index];
+            const baseTimestamp = thisIdTransactions.timestamp.valueOf();
+            thisIdTransactions.transaction.forEach((txn, idx) => {
+              transactionIdentifiers.push({
+                id,
+                transactionTime: baseTimestamp + idx
+              });
+            });
+          });
+        }
+
+        try {
+          const cancelResponse = await cancelTransaction({
+            key: authKey,
+            endpoint,
+            transactionIdentifiers
+          });
+          Sentry.addBreadcrumb({
+            category: "useCart",
+            message: `deleted transactions: ${cancelResponse}`
+          });
+
+          setCheckoutResult(undefined);
+          setCartState("DEFAULT");
+          onComplete();
+        } catch (e) {
+          setCartState("DEFAULT");
+          if (
+            e.message ===
+            "Invalid Purchase Request: Duplicate identifier inputs"
+          ) {
+            setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+          } else if (e instanceof SessionError) {
+            setError(e);
+          } else {
+            setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+          }
+        }
+      };
+
+      if (cartState == "RESERVED") {
+        cancel();
+      } else {
+        setError(new CommitTransactionError("Nothing to commit."));
+      }
+    },
+    [cartState, authKey, endpoint, checkoutResult, ids]
+  );
+
   /**
    * Handles the checking out of the cart.
    * Sets checkoutResult to the response of the post transaction.
@@ -515,6 +576,7 @@ export const useCart = (
     reserveCart,
     commitCart,
     checkoutCart,
+    cancelCart,
     checkoutResult,
     error,
     clearError,

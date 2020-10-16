@@ -90,6 +90,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     checkoutCart,
     reserveCart,
     commitCart,
+    cancelCart,
     error,
     clearError,
     quotaResponse
@@ -252,6 +253,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             reserveCart={reserveCart}
             commitCart={commitCart}
             onCancel={onCancel}
+            cancelCart={cancelCart}
             onBack={onBack}
             cart={cart}
             updateCart={updateCart}

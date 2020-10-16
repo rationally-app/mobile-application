@@ -4,6 +4,7 @@ import {
   Quota,
   PostTransactionResult,
   PastTransactionsResult,
+  DeleteTransactionResult,
   TransactionIdentifier,
   CommitTransactionResult
 } from "../../types";
@@ -42,6 +43,13 @@ export class CommitTransactionError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "CommitTransactionError";
+  }
+}
+
+export class CancelTransactionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CancelTransactionError";
   }
 }
 
@@ -294,6 +302,38 @@ export const liveCommitTransaction = async ({
   }
 };
 
+export const liveCancelTransaction = async ({
+  key,
+  endpoint,
+  transactionIdentifiers
+}: CommitTransaction): Promise<void> => {
+  if (transactionIdentifiers.length === 0) {
+    throw new CommitTransactionError("No transactions to commit");
+  }
+  try {
+    await fetchWithValidator(
+      DeleteTransactionResult,
+      `${endpoint}/transactions/cancel`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: key
+        },
+        body: JSON.stringify({
+          transactionIdentifiers
+        })
+      }
+    );
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
+    }
+    throw new CancelTransactionError(e.message);
+  }
+};
+
 export const mockPastTransactions = async (
   ids: string[],
   _key: string,
@@ -371,5 +411,6 @@ export const postTransaction = IS_MOCK
 export const getPastTransactions = IS_MOCK
   ? mockPastTransactions
   : livePastTransactions;
-export const commitTransaction = liveCommitTransaction;
 export const reserveTransaction = liveReserveTransaction;
+export const commitTransaction = liveCommitTransaction;
+export const cancelTransaction = liveCancelTransaction;

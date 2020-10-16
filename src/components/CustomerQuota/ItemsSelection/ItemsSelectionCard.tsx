@@ -24,13 +24,14 @@ interface ItemsSelectionCard {
   ids: string[];
   addId: (id: string) => void;
   isLoading: boolean;
-  checkoutCart: () => void;
-  reserveCart: (onComplete: () => void) => void;
-  commitCart: () => void;
+  checkoutCart: CartHook["checkoutCart"];
+  reserveCart: CartHook["reserveCart"];
+  commitCart: CartHook["commitCart"];
   onCancel: () => void;
   onBack: () => void;
   cart: Cart;
   updateCart: CartHook["updateCart"];
+  cancelCart: CartHook["cancelCart"];
 }
 
 export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
@@ -40,6 +41,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   checkoutCart,
   reserveCart,
   commitCart,
+  cancelCart,
   onCancel,
   onBack,
   cart,
@@ -159,7 +161,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         isVisible={showPaymentAlert}
         commitCart={commitCart}
         cancelPayment={() => {
-          setShowPaymentAlert(false);
+          cancelCart(() => setShowPaymentAlert(false));
         }}
       />
     </View>

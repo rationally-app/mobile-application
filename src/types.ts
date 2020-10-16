@@ -231,7 +231,17 @@ export const PastTransactionsResult = t.type({
   pastTransactions: t.array(PastTransaction)
 });
 
+export const DeleteTransactionItem = t.type({
+  id: t.string,
+  quantity: t.number,
+  category: t.string,
+  transactionTime: DateFromNumber
+});
+
+export const DeleteTransactionResult = t.array(DeleteTransactionItem);
+
 export type PastTransactionsResult = t.TypeOf<typeof PastTransactionsResult>;
+export type DeleteTransactionResult = t.TypeOf<typeof DeleteTransactionResult>;
 
 export type Voucher = {
   serial: string;
