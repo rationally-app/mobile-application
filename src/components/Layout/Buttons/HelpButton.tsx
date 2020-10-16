@@ -3,7 +3,7 @@ import { Feather } from "@expo/vector-icons";
 import { AppText } from "../AppText";
 import { size, fontSize, color } from "../../../common/styles";
 import { TouchableOpacity } from "react-native";
-import { i18nt } from "../../../utils/translations";
+import i18n from "i18n-js";
 
 export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
   onPress
@@ -26,7 +26,7 @@ export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
       }}
     >
       <Feather name="compass" size={size(1.5)} color={color("blue", 40)} />
-      {` ${i18nt("loginScanCard", "needHelp")}? `}
+      {` ${i18n.t("loginScanCard.needHelp")}? `}
     </AppText>
   </TouchableOpacity>
 );

@@ -1,4 +1,4 @@
-import { i18nt } from "../../../utils/translations";
+import i18n from "i18n-js";
 
 interface CheckoutMessage {
   title: string;
@@ -10,16 +10,16 @@ export const getCheckoutMessages = (productType?: string): CheckoutMessage => {
   switch (productType) {
     case "REDEEM":
       return {
-        title: `${i18nt("checkoutSuccessScreen", "redeemed")}!`,
-        description: `${i18nt("checkoutSuccessScreen", "redeemedItems")}:`,
-        ctaButtonText: i18nt("checkoutSuccessScreen", "redeemedNextIdentity")
+        title: `${i18n.t("checkoutSuccessScreen.redeemed")}!`,
+        description: `${i18n.t("checkoutSuccessScreen.redeemedItems")}:`,
+        ctaButtonText: i18n.t("checkoutSuccessScreen.redeemedNextIdentity")
       };
     case "PURCHASE":
     default:
       return {
-        title: `${i18nt("checkoutSuccessScreen", "purchased")}!`,
-        description: `${i18nt("checkoutSuccessScreen", "purchasedItems")}:`,
-        ctaButtonText: i18nt("checkoutSuccessScreen", "purchasedNextIdentity")
+        title: `${i18n.t("checkoutSuccessScreen.purchased")}!`,
+        description: `${i18n.t("checkoutSuccessScreen.purchasedItems")}:`,
+        ctaButtonText: i18n.t("checkoutSuccessScreen.purchasedNextIdentity")
       };
   }
 };

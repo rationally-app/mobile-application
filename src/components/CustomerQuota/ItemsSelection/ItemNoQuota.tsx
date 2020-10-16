@@ -6,7 +6,7 @@ import { ItemContent } from "./ItemContent";
 import { CartItem } from "../../../hooks/useCart/useCart";
 import { ProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
-import { i18nt } from "../../../utils/translations";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   feedbackWrapper: {
@@ -48,10 +48,9 @@ export const ItemNoQuota: FunctionComponent<{
       <View style={styles.feedbackWrapper}>
         <AppText style={styles.feedbackText}>
           {type === "REDEEM"
-            ? i18nt("notEligibleScreen", "notEligible")
-            : `${i18nt("notEligibleScreen", "cannot")}\n${i18nt(
-                "notEligibleScreen",
-                "purchase"
+            ? i18n.t("notEligibleScreen.notEligible")
+            : `${i18n.t("notEligibleScreen.cannot")}\n${i18n.t(
+                "notEligibleScreen.purchase"
               )}`}
         </AppText>
       </View>

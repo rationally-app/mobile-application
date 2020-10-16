@@ -6,8 +6,8 @@ import { IdentifierPhoneNumberInput } from "./IdentifierLayout/IdentifierPhoneNu
 import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
+import i18n from "i18n-js";
 import { AlertModalContext } from "../../../context/alert";
-import { i18nt } from "../../../utils/translations";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -78,7 +78,7 @@ export const ItemIdentifier: FunctionComponent<{
             onPress={() => setShouldShowCamera(true)}
             text={
               scanButton.text ||
-              i18nt("customerQuotaScreen", "quotaIdentifierButtonScan")
+              i18n.t("customerQuotaScreen.quotaIdentifierButtonScan")
             }
           />
         )}
@@ -87,8 +87,8 @@ export const ItemIdentifier: FunctionComponent<{
         <IdentifierScanModal
           cancelButtonText={
             textInput.disabled
-              ? i18nt("customerQuotaScreen", "quotaScanButtonBack")
-              : i18nt("idScanner", "enterManually")
+              ? i18n.t("customerQuotaScreen.quotaScanButtonBack")
+              : i18n.t("idScanner.enterManually")
           }
           setShouldShowCamera={setShouldShowCamera}
           shouldShowCamera={shouldShowCamera}

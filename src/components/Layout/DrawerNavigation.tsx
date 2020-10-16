@@ -11,8 +11,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
+import i18n from "i18n-js";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
-import { i18nt } from "../../utils/translations";
 
 const styles = StyleSheet.create({
   container: {
@@ -151,34 +151,34 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         ))}
         <DrawerButtonComponent
           icon="logout"
-          label={i18nt("navigationDrawer", "logout")}
+          label={i18n.t("navigationDrawer.logout")}
           onPress={onPressLogout}
         />
       </View>
       <View style={{ marginTop: "auto", marginBottom: size(4) }}>
         <BottomNavigationLink onPress={showHelpModal}>
-          {i18nt("navigationDrawer", "helpSupport")}
+          {i18n.t("navigationDrawer.helpSupport")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
           }}
         >
-          {i18nt("navigationDrawer", "termsOfUse")}
+          {i18n.t("navigationDrawer.termsOfUse")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/privacy");
           }}
         >
-          {i18nt("navigationDrawer", "privacyStatement")}
+          {i18n.t("navigationDrawer.privacyStatement")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
           }}
         >
-          {i18nt("navigationDrawer", "reportVulnerability")}
+          {i18n.t("navigationDrawer.reportVulnerability")}
         </BottomNavigationLink>
         <AppText style={styles.bottomVersionText}>{version}</AppText>
       </View>

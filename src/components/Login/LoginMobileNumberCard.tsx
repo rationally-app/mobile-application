@@ -19,7 +19,7 @@ import {
 } from "../../utils/validatePhoneNumbers";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
-import { i18nt } from "../../utils/translations";
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -84,11 +84,11 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   return (
     <Card>
-      <AppText>{i18nt("loginMobileNumberCard", "enterMobileNumber")}</AppText>
+      <AppText>{i18n.t("loginMobileNumberCard.enterMobileNumber")}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <PhoneNumberInput
           countryCodeValue={countryCode}
-          label={i18nt("loginMobileNumberCard", "mobileNumber")}
+          label={i18n.t("loginMobileNumberCard.mobileNumber")}
           mobileNumberValue={mobileNumberValue}
           onChangeCountryCode={onChangeCountryCode}
           onChangeMobileNumber={onChangeMobileNumber}
@@ -96,7 +96,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
         />
 
         <DarkButton
-          text={i18nt("loginMobileNumberCard", "sendOtp")}
+          text={i18n.t("loginMobileNumberCard.sendOtp")}
           onPress={onSubmitMobileNumber}
           fullWidth={true}
           isLoading={isLoading}

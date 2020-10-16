@@ -15,7 +15,7 @@ import {
   formatDateTime,
   formatTimeDifference
 } from "../../../utils/dateTimeFormatter";
-import { i18nt } from "../../../utils/translations";
+import i18n from "i18n-js";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -38,7 +38,7 @@ const DistantTransactionTitle: FunctionComponent<{
 }> = ({ transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {i18nt("checkoutSuccessScreen", "redeemedOn", undefined, {
+      {i18n.t("checkoutSuccessScreen.redeemedOn", {
         time: formatDateTime(transactionTime)
       })}
     </AppText>
@@ -51,7 +51,7 @@ const RecentTransactionTitle: FunctionComponent<{
 }> = ({ now, transactionTime }) => (
   <>
     <AppText style={sharedStyles.statusTitle}>
-      {i18nt("checkoutSuccessScreen", "redeemedAgo", undefined, {
+      {i18n.t("checkoutSuccessScreen.redeemedAgo", {
         time: formatTimeDifference(now, transactionTime)
       })}
     </AppText>
@@ -60,7 +60,7 @@ const RecentTransactionTitle: FunctionComponent<{
 
 const NoPreviousTransactionTitle: FunctionComponent = () => (
   <AppText style={sharedStyles.statusTitle}>
-    {i18nt("checkoutSuccessScreen", "previouslyRedeemed")}
+    {i18n.t("checkoutSuccessScreen.previouslyRedeemed")}
   </AppText>
 );
 
@@ -79,8 +79,8 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
 
   let card;
 
-  const title = i18nt("errorMessages", "notEligible", "title");
-  const details = i18nt("errorMessages", "notEligible", "body");
+  const title = i18n.t(`errorMessages.notEligible.title`);
+  const details = i18n.t(`errorMessages.notEligible.body`);
 
   if (error instanceof ScannerError || error instanceof LimitReachedError) {
     return null;
