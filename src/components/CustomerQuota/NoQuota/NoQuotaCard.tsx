@@ -11,7 +11,7 @@ import { AppText } from "../../Layout/AppText";
 import { color, size } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
-import { Cart, useCart } from "../../../hooks/useCart/useCart";
+import { Cart } from "../../../hooks/useCart/useCart";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { FontAwesome } from "@expo/vector-icons";
 import {
@@ -190,7 +190,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { getProduct } = useContext(ProductContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
-  console.log(allQuotaResponse);
+
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
   const { pastTransactionsResult, loading, error } = usePastTransaction(
@@ -215,8 +215,6 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const secondsFromLatestTransaction = latestTransactionTime
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
-
-  console.log("All products:", allProducts);
 
   // ['tt-token-batt', 'tt-token-stolen']
   const filterProducts = allProducts
