@@ -20,7 +20,7 @@ import { LightBox } from "../Layout/LightBox";
 import { Ionicons } from "@expo/vector-icons";
 import { TransparentButton } from "../Layout/Buttons/TransparentButton";
 import { IdScannerLabel } from "./IdScannerLabel";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   cameraWrapper: {
@@ -135,7 +135,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   onBarCodeScanned,
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.qr],
   onCancel,
-  cancelButtonText = i18nt("idScanner", "back"),
+  cancelButtonText,
   isScanningEnabled = true,
   hasLimitedInterestArea = true
 }) => {
@@ -174,6 +174,9 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
     }
   };
 
+  const { i18nt } = useTranslate();
+  const tCancelButtonText = cancelButtonText ?? i18nt("idScanner", "back");
+
   /**
    * We only scan codes within the lightbox if the user is using Android.
    */
@@ -186,7 +189,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
               ? checkIfInInterestArea
               : onBarCodeScanned
           }
-          cancelButtonText={cancelButtonText}
+          cancelButtonText={tCancelButtonText}
           onCancel={onCancel}
           barCodeTypes={barCodeTypes}
           interestArea={interestArea}
@@ -194,7 +197,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
           <View style={styles.backButtonWrapper}>
             <TransparentButton
               onPress={onCancel}
-              text={cancelButtonText}
+              text={tCancelButtonText}
               icon={
                 <Ionicons
                   name="ios-arrow-back"

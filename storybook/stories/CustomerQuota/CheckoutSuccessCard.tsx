@@ -57,7 +57,8 @@ storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
   <CampaignConfigContext.Provider
     value={{
       policies: products,
-      features: null
+      features: null,
+      c13n: {}
     }}
   >
     <View style={{ margin: size(3) }}>

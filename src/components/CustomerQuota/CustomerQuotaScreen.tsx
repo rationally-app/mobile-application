@@ -32,7 +32,7 @@ import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -249,6 +249,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       setUpdateAfterPurchased(true);
     }
   }, [cartState, updateQuota, updateAfterPurchased]);
+
+  const { i18nt } = useTranslate();
 
   return quotaState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>

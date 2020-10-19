@@ -29,12 +29,13 @@ describe("CampaignConfigsStoreContextProvider", () => {
   });
 
   it("should load the campaign configs from the store if it exists", async () => {
-    expect.assertions(6);
+    expect.assertions(7);
     mockGetItem.mockImplementationOnce(() =>
       JSON.stringify({
         [testCampaignKey]: {
           features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }]
+          policies: [{ sdf: "sdf" }],
+          c13n: { asdi: "asdi" }
         }
       })
     );
@@ -53,6 +54,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
               <Text testID="policies">
                 {JSON.stringify(allCampaignConfigs[testCampaignKey]?.policies)}
               </Text>
+              <Text testID="c13n">
+                {JSON.stringify(allCampaignConfigs[testCampaignKey]?.c13n)}
+              </Text>
             </>
           )}
         </CampaignConfigsStoreContext.Consumer>
@@ -66,12 +70,13 @@ describe("CampaignConfigsStoreContextProvider", () => {
     await wait(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
       expect(queryByTestId("loaded")).toHaveTextContent("true");
     });
   });
 
   it("should not set configs if it doesn't exist in the store", async () => {
-    expect.assertions(4);
+    expect.assertions(5);
 
     const { queryByTestId } = render(
       <CampaignConfigsStoreContextProvider>
@@ -83,6 +88,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
               </Text>
               <Text testID="policies">
                 {JSON.stringify(allCampaignConfigs[testCampaignKey]?.policies)}
+              </Text>
+              <Text testID="c13n">
+                {JSON.stringify(allCampaignConfigs[testCampaignKey]?.c13n)}
               </Text>
             </>
           )}
@@ -96,6 +104,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     await wait(() => {
       expect(queryByTestId("features")).toHaveTextContent("");
       expect(queryByTestId("policies")).toHaveTextContent("");
+      expect(queryByTestId("c13n")).toHaveTextContent("");
     });
   });
 
@@ -126,12 +135,13 @@ describe("CampaignConfigsStoreContextProvider", () => {
   });
 
   it("should clear the campaign configs and from asyncstorage when clear function is called", async () => {
-    expect.assertions(8);
+    expect.assertions(10);
     mockGetItem.mockImplementationOnce(() =>
       JSON.stringify({
         [testCampaignKey]: {
           features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }]
+          policies: [{ sdf: "sdf" }],
+          c13n: { asdi: "asdi" }
         }
       })
     );
@@ -146,6 +156,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
               </Text>
               <Text testID="policies">
                 {JSON.stringify(allCampaignConfigs[testCampaignKey]?.policies)}
+              </Text>
+              <Text testID="c13n">
+                {JSON.stringify(allCampaignConfigs[testCampaignKey]?.c13n)}
               </Text>
               <Button
                 onPress={() => clearCampaignConfigs()}
@@ -163,6 +176,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     await wait(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
     });
 
     const button = getByText("test button");
@@ -172,16 +186,18 @@ describe("CampaignConfigsStoreContextProvider", () => {
       expect(mockSetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE", "{}");
       expect(queryByTestId("features")).toHaveTextContent("");
       expect(queryByTestId("policies")).toHaveTextContent("");
+      expect(queryByTestId("c13n")).toHaveTextContent("");
     });
   });
 
   it("should add a campaign config properly", async () => {
-    expect.assertions(8);
+    expect.assertions(10);
     mockGetItem.mockImplementationOnce(() =>
       JSON.stringify({
         [testCampaignKey]: {
           features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }]
+          policies: [{ sdf: "sdf" }],
+          c13n: { asdi: "asdi" }
         }
       })
     );
@@ -197,11 +213,15 @@ describe("CampaignConfigsStoreContextProvider", () => {
               <Text testID="policies">
                 {JSON.stringify(allCampaignConfigs[testCampaignKey]?.policies)}
               </Text>
+              <Text testID="c13n">
+                {JSON.stringify(allCampaignConfigs[testCampaignKey]?.c13n)}
+              </Text>
               <Button
                 onPress={() =>
                   setCampaignConfig(testCampaignKey, {
                     features: { new: "new" },
-                    policies: [{ new: "new" }]
+                    policies: [{ new: "new" }],
+                    c13n: { new: "new" }
                   } as any)
                 }
                 title="test button"
@@ -218,6 +238,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     await wait(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
     });
 
     const button = getByText("test button");
@@ -229,12 +250,14 @@ describe("CampaignConfigsStoreContextProvider", () => {
         JSON.stringify({
           [testCampaignKey]: {
             features: { new: "new" },
-            policies: [{ new: "new" }]
+            policies: [{ new: "new" }],
+            c13n: { new: "new" }
           }
         })
       );
       expect(queryByTestId("features")).toHaveTextContent(`{"new":"new"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"new":"new"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"new":"new"}`);
     });
   });
 
@@ -244,11 +267,13 @@ describe("CampaignConfigsStoreContextProvider", () => {
       JSON.stringify({
         [testCampaignKey]: {
           features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }]
+          policies: [{ sdf: "sdf" }],
+          c13n: { asdi: "asdi" }
         },
         "another-test-campaign": {
           features: { dfg: "dfg" },
-          policies: [{ sdf: "sdf" }]
+          policies: [{ sdf: "sdf" }],
+          c13n: { asdi: "asdi" }
         }
       })
     );
@@ -263,7 +288,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
                 onPress={() =>
                   setCampaignConfig(testCampaignKey, {
                     features: { new: "new" },
-                    policies: [{ new: "new" }]
+                    policies: [{ new: "new" }],
+                    c13n: { new: "new" }
                   } as any)
                 }
                 title="test button"
@@ -279,7 +305,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     await wait(() => {
       expect(queryByTestId("configs")).toHaveTextContent(
-        `{"test-campaign":{"features":{"asd":"asd"},"policies":[{"sdf":"sdf"}]},"another-test-campaign":{"features":{"dfg":"dfg"},"policies":[{"sdf":"sdf"}]}}`
+        `{"test-campaign":{"features":{"asd":"asd"},"policies":[{"sdf":"sdf"}],"c13n":{"asdi":"asdi"}},"another-test-campaign":{"features":{"dfg":"dfg"},"policies":[{"sdf":"sdf"}],"c13n":{"asdi":"asdi"}}}`
       );
     });
 
@@ -292,27 +318,30 @@ describe("CampaignConfigsStoreContextProvider", () => {
         JSON.stringify({
           [testCampaignKey]: {
             features: { new: "new" },
-            policies: [{ new: "new" }]
+            policies: [{ new: "new" }],
+            c13n: { new: "new" }
           },
           "another-test-campaign": {
             features: { dfg: "dfg" },
-            policies: [{ sdf: "sdf" }]
+            policies: [{ sdf: "sdf" }],
+            c13n: { asdi: "asdi" }
           }
         })
       );
       expect(queryByTestId("configs")).toHaveTextContent(
-        `{"test-campaign":{"features":{"new":"new"},"policies":[{"new":"new"}]},"another-test-campaign":{"features":{"dfg":"dfg"},"policies":[{"sdf":"sdf"}]}}`
+        `{"test-campaign":{"features":{"new":"new"},"policies":[{"new":"new"}],"c13n":{"new":"new"}},"another-test-campaign":{"features":{"dfg":"dfg"},"policies":[{"sdf":"sdf"}],"c13n":{"asdi":"asdi"}}}`
       );
     });
   });
 
   it("should add the campaign config properly when some null keys are input", async () => {
-    expect.assertions(8);
+    expect.assertions(10);
     mockGetItem.mockImplementationOnce(() =>
       JSON.stringify({
         [testCampaignKey]: {
           features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }]
+          policies: [{ sdf: "sdf" }],
+          c13n: { asdi: "asdi" }
         }
       })
     );
@@ -328,11 +357,15 @@ describe("CampaignConfigsStoreContextProvider", () => {
               <Text testID="policies">
                 {JSON.stringify(allCampaignConfigs[testCampaignKey]?.policies)}
               </Text>
+              <Text testID="c13n">
+                {JSON.stringify(allCampaignConfigs[testCampaignKey]?.c13n)}
+              </Text>
               <Button
                 onPress={() =>
                   setCampaignConfig(testCampaignKey, {
                     features: null,
-                    policies: [{ new: "new" }]
+                    policies: [{ new: "new" }],
+                    c13n: { asdi: "asdi" }
                   } as any)
                 }
                 title="test button"
@@ -349,6 +382,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     await wait(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
     });
 
     const button = getByText("test button");
@@ -360,22 +394,25 @@ describe("CampaignConfigsStoreContextProvider", () => {
         JSON.stringify({
           [testCampaignKey]: {
             features: { asd: "asd" },
-            policies: [{ new: "new" }]
+            policies: [{ new: "new" }],
+            c13n: { asdi: "asdi" }
           }
         })
       );
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"new":"new"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
     });
   });
 
   it("should remove a campaign config properly", async () => {
-    expect.assertions(8);
+    expect.assertions(10);
     mockGetItem.mockImplementationOnce(() =>
       JSON.stringify({
         [testCampaignKey]: {
           features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }]
+          policies: [{ sdf: "sdf" }],
+          c13n: { asdi: "asdi" }
         }
       })
     );
@@ -391,6 +428,10 @@ describe("CampaignConfigsStoreContextProvider", () => {
               <Text testID="policies">
                 {JSON.stringify(allCampaignConfigs[testCampaignKey]?.policies)}
               </Text>
+              <Text testID="c13n">
+                {JSON.stringify(allCampaignConfigs[testCampaignKey]?.c13n)}
+              </Text>
+
               <Button
                 onPress={() => removeCampaignConfig(testCampaignKey)}
                 title="test button"
@@ -407,6 +448,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     await wait(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
     });
 
     const button = getByText("test button");
@@ -416,6 +458,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
       expect(mockSetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE", "{}");
       expect(queryByTestId("features")).toHaveTextContent("");
       expect(queryByTestId("policies")).toHaveTextContent("");
+      expect(queryByTestId("c13n")).toHaveTextContent("");
     });
   });
 });

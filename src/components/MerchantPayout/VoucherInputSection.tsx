@@ -7,7 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { Voucher } from "../../types";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -56,6 +56,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
   redeemVouchers,
   openAllValidVouchersModal
 }) => {
+  const { i18nt } = useTranslate();
   return (
     <>
       {vouchers.length > 0 ? (

@@ -12,7 +12,8 @@ const generateConfigHashes = async (
   }
   const configHashes: ConfigHashes = {
     features: undefined,
-    policies: undefined
+    policies: undefined,
+    c13n: undefined
   };
   for (const [key, value] of Object.entries(config)) {
     if (value !== null) {

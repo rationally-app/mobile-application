@@ -12,7 +12,7 @@ import { CampaignConfigError } from "../services/campaignConfig";
 
 export const CAMPAIGN_CONFIGS_STORE_KEY = "CAMPAIGN_CONFIGS_STORE";
 
-type CampaignConfigsMap = {
+export type CampaignConfigsMap = {
   [key: string]: CampaignConfig | undefined;
 };
 
@@ -75,7 +75,9 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
           policies:
             newConfig.policies !== null
               ? newConfig.policies
-              : prevConfig?.policies ?? null
+              : prevConfig?.policies ?? null,
+          c13n:
+            newConfig.c13n !== null ? newConfig.c13n : prevConfig?.c13n ?? null
         };
 
         return {

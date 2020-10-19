@@ -46,7 +46,7 @@ import {
   defaultSelectedIdType
 } from "../../context/identification";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -115,6 +115,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const checkUpdates = useCheckUpdates();
   const { showErrorAlert } = useContext(AlertModalContext);
   const { features, policies } = useContext(CampaignConfigContext);
+  const { i18nt, c13nt } = useTranslate();
   const { selectedIdType, setSelectedIdType } = useContext(
     IdentificationContext
   );
@@ -208,6 +209,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const onInputSelection = (inputType: IdentificationFlag): void => {
+    if (inputType.label !== selectedIdType.label) setIdInput("");
     setSelectedIdType(inputType);
   };
 
@@ -237,6 +239,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     navigation.navigate("DailyStatisticsScreen");
   };
 
+  const tCampaignName = c13nt(features?.campaignName ?? "");
+
   return (
     <>
       <Credits style={{ bottom: size(3) }} />
@@ -259,10 +263,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             </View>
           )}
           <Card>
-            {features?.campaignName && (
-              <AppText style={styles.campaignName}>
-                {features.campaignName}
-              </AppText>
+            {!!tCampaignName && (
+              <AppText style={styles.campaignName}>{tCampaignName}</AppText>
             )}
             <AppText>
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}

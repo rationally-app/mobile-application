@@ -27,7 +27,7 @@ import { AuthContext } from "../../context/auth";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { useQuota } from "../../hooks/useQuota/useQuota";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -79,6 +79,8 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { allQuotaResponse } = useQuota(ids, sessionToken, endpoint);
+
+  const { i18nt } = useTranslate();
 
   const getReasons = (): Reason[] => {
     return transform(

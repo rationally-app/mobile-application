@@ -7,7 +7,7 @@ import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
 import { AlertModalContext, WARNING_MESSAGE } from "../../../context/alert";
-import { i18nt } from "../../../utils/translations";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   titlePadding: {
@@ -43,6 +43,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   onReasonSelection
 }) => {
   const { showWarnAlert } = useContext(AlertModalContext);
+  const { i18nt } = useTranslate();
   return (
     <View>
       <CustomerCard ids={ids}>

@@ -5,7 +5,7 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ModalWithClose } from "../Layout/ModalWithClose";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   inputWrapper: {
@@ -24,6 +24,8 @@ export const ManualAddVoucherModal: FunctionComponent<ManualInputCard> = ({
   onVoucherCodeSubmit
 }) => {
   const [voucherCode, setVoucherCode] = useState("");
+
+  const { i18nt } = useTranslate();
 
   const onSubmit = (): void => {
     onVoucherCodeSubmit(voucherCode);

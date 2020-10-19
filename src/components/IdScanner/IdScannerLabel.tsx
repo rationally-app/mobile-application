@@ -4,7 +4,10 @@ import { color, fontSize, size } from "../../common/styles";
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import { i18nt } from "../../utils/translations";
+import {
+  TranslationHook,
+  useTranslate
+} from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   labelWrapper: {
@@ -18,7 +21,10 @@ const styles = StyleSheet.create({
   }
 });
 
-const getBarCodeTypeLabel = (barCodeType: string): string => {
+const getBarCodeTypeLabel = (
+  barCodeType: string,
+  i18nt: TranslationHook["i18nt"]
+): string => {
   switch (barCodeType) {
     case BarCodeScanner.Constants.BarCodeType.qr:
       return i18nt("idScanner", "scanQRCode");
@@ -59,11 +65,12 @@ type IdScannerLabel = {
 export const IdScannerLabel: FunctionComponent<IdScannerLabel> = ({
   barCodeType
 }) => {
+  const { i18nt } = useTranslate();
   return (
     <View style={styles.labelWrapper}>
       {getBarCodeTypeIcon(barCodeType)}
       <AppText style={styles.labelText}>
-        {getBarCodeTypeLabel(barCodeType)}
+        {getBarCodeTypeLabel(barCodeType, i18nt)}
       </AppText>
     </View>
   );

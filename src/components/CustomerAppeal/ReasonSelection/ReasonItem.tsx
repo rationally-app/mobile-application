@@ -2,6 +2,7 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import React, { FunctionComponent } from "react";
 import { size, color } from "../../../common/styles";
 import { AppText } from "../../Layout/AppText";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   reasonComponent: {
@@ -29,6 +30,7 @@ export const ReasonItem: FunctionComponent<{
   isLast: boolean;
   onReasonSelection: (productName: string) => void;
 }> = ({ description, descriptionAlert, isLast, onReasonSelection }) => {
+  const { c13nt } = useTranslate();
   return (
     <TouchableOpacity
       style={[styles.reasonComponent, isLast ? { marginBottom: 0 } : {}]}
@@ -37,7 +39,7 @@ export const ReasonItem: FunctionComponent<{
       }}
     >
       <View style={styles.reasonLayout}>
-        <AppText>{description}</AppText>
+        <AppText>{c13nt(description)}</AppText>
         <AppText style={styles.reasonAlert}>{descriptionAlert ?? ""}</AppText>
       </View>
     </TouchableOpacity>
