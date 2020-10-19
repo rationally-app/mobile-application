@@ -216,16 +216,18 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
 
-  // ['tt-token-batt', 'tt-token-stolen']
-  const filterProducts = allProducts
-    ?.filter(i => i.categoryType === "APPEAL")
-    .map(x => x.category);
+  const appealProductsCategories = allProducts
+    ?.filter(product => product.categoryType === "APPEAL")
+    .map(product => product.category);
 
   const hasAppealProduct =
-    allQuotaResponse?.remainingQuota.some(
-      policy =>
-        policy.quantity !== 0 && filterProducts?.includes(policy.category)
-    ) ?? false;
+    (appealProductsCategories &&
+      allQuotaResponse?.remainingQuota.some(
+        quota =>
+          appealProductsCategories.includes(quota.category) &&
+          quota.quantity !== 0
+      )) ??
+    false;
 
   const translationProps = useTranslate();
   const transactionsByCategoryMap = groupTransactionsByCategory(

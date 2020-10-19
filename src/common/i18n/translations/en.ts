@@ -106,7 +106,8 @@ export const en: Translations = {
   },
   notEligibleScreen: {
     notEligible: "Not eligible",
-    logAppeal: "Please log an appeal request.",
+    logAppeal:
+      "Not eligible to collect any item. Contact your in-charge to find out about the appeal guideline.",
     cannot: "Cannot",
     purchase: "purchase"
   },
