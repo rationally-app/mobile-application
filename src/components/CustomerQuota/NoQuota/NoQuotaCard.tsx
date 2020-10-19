@@ -11,7 +11,7 @@ import { AppText } from "../../Layout/AppText";
 import { color, size } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
-import { Cart } from "../../../hooks/useCart/useCart";
+import { Cart, useCart } from "../../../hooks/useCart/useCart";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { FontAwesome } from "@expo/vector-icons";
 import {
@@ -188,6 +188,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { getProduct } = useContext(ProductContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
+  const { allQuotaResponse } = useCart(ids, sessionToken, endpoint);
 
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
@@ -215,7 +216,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     : -1;
 
   const hasAppealProduct =
-    allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false;
+    allQuotaResponse?.remainingQuota.some(policy => policy.quantity !== 0) ??
+    false;
 
   const translationProps = useTranslate();
   const transactionsByCategoryMap = groupTransactionsByCategory(
@@ -228,26 +230,6 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const transactionsByCategoryList = sortTransactions(
     transactionsByCategoryMap
   );
-
-  const hasBeenRedeemed =
-    transactionsByCategoryList?.some(
-      transaction =>
-        transaction?.transactions.some(transaction => transaction.isAppeal) ??
-        false
-    ) ?? false;
-
-  // Check if it is TT Token
-  const canReplaceOnce =
-    allProducts?.some(
-      policy => policy.category === "replacement-appreciation-gift"
-    ) ?? false;
-
-  let canRaiseAppeal = hasAppealProduct;
-  if (canReplaceOnce) {
-    if (hasBeenRedeemed) {
-      canRaiseAppeal = false;
-    }
-  }
 
   const showGlobalQuota =
     !!quotaResponse?.globalQuota &&
@@ -358,7 +340,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           fullWidth={true}
         />
       </View>
-      {onAppeal && canRaiseAppeal ? (
+      {onAppeal && hasAppealProduct ? (
         <AppealButton onAppeal={onAppeal} />
       ) : undefined}
     </View>
