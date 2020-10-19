@@ -64,6 +64,7 @@ interface NoQuotaCard {
   onCancel: () => void;
   onAppeal?: () => void;
   quotaResponse: Quota | null;
+  allQuotaResponse: Quota | null;
 }
 
 /**
@@ -182,14 +183,14 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   cart,
   onCancel,
   onAppeal,
+  allQuotaResponse,
   quotaResponse
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { getProduct } = useContext(ProductContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
-  const { allQuotaResponse } = useCart(ids, sessionToken, endpoint);
-
+  console.log(allQuotaResponse);
   const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
   const { pastTransactionsResult, loading, error } = usePastTransaction(
@@ -215,9 +216,18 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
 
+  console.log("All products:", allProducts);
+
+  // ['tt-token-batt', 'tt-token-stolen']
+  const filterProducts = allProducts
+    ?.filter(i => i.categoryType === "APPEAL")
+    .map(x => x.category);
+
   const hasAppealProduct =
-    allQuotaResponse?.remainingQuota.some(policy => policy.quantity !== 0) ??
-    false;
+    allQuotaResponse?.remainingQuota.some(
+      policy =>
+        policy.quantity !== 0 && filterProducts?.includes(policy.category)
+    ) ?? false;
 
   const translationProps = useTranslate();
   const transactionsByCategoryMap = groupTransactionsByCategory(
