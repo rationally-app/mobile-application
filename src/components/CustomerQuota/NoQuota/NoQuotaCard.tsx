@@ -229,6 +229,26 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     transactionsByCategoryMap
   );
 
+  const hasBeenRedeemed =
+    transactionsByCategoryList?.some(
+      transaction =>
+        transaction?.transactions.some(transaction => transaction.isAppeal) ??
+        false
+    ) ?? false;
+
+  // Check if it is TT Token
+  const canReplaceOnce =
+    allProducts?.some(
+      policy => policy.category === "replacement-appreciation-gift"
+    ) ?? false;
+
+  let canRaiseAppeal = hasAppealProduct;
+  if (canReplaceOnce) {
+    if (hasBeenRedeemed) {
+      canRaiseAppeal = false;
+    }
+  }
+
   const showGlobalQuota =
     !!quotaResponse?.globalQuota &&
     cart.length > 0 &&
@@ -338,7 +358,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           fullWidth={true}
         />
       </View>
-      {onAppeal && hasAppealProduct ? (
+      {onAppeal && canRaiseAppeal ? (
         <AppealButton onAppeal={onAppeal} />
       ) : undefined}
     </View>
