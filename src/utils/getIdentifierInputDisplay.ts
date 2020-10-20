@@ -10,10 +10,10 @@ export const getIdentifierInputDisplay = (
   identifierInputs: IdentifierInput[]
 ): string => {
   const filteredInputs = identifierInputs.filter(
-    identifierInput => !!identifierInput.value
+    (identifierInput) => !!identifierInput.value
   );
 
   return filteredInputs
-    .map(input => processIdentifierInputValue(input))
+    .map((input) => processIdentifierInputValue(input))
     .join("\n");
 };

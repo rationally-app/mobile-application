@@ -3,7 +3,7 @@ import * as Font from "expo-font";
 import { LoadingView } from "../Loading";
 
 export const FontLoader = ({
-  children
+  children,
 }: {
   children: ReactElement;
 }): ReactElement => {
@@ -13,7 +13,7 @@ export const FontLoader = ({
       await Font.loadAsync({
         "brand-regular": require("../../../assets/fonts/IBMPlexSans-Regular.ttf"),
         "brand-italic": require("../../../assets/fonts/IBMPlexSans-Italic.ttf"),
-        "brand-bold": require("../../../assets/fonts/IBMPlexSans-Bold.ttf")
+        "brand-bold": require("../../../assets/fonts/IBMPlexSans-Bold.ttf"),
       });
       setFontsLoaded(true);
     };

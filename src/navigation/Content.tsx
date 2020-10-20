@@ -2,7 +2,7 @@ import React, { ReactElement, useRef, useEffect } from "react";
 import {
   createAppContainer,
   createSwitchNavigator,
-  NavigationContainerComponent
+  NavigationContainerComponent,
 } from "react-navigation";
 import CustomerQuotaStack from "./CustomerQuotaStack";
 import MerchantPayoutStack from "./MerchantPayoutStack";
@@ -25,11 +25,11 @@ const SwitchNavigator = createSwitchNavigator(
       {
         CampaignLocationsScreen,
         CustomerQuotaStack: {
-          screen: CustomerQuotaStack
+          screen: CustomerQuotaStack,
         },
         MerchantPayoutStack: {
-          screen: MerchantPayoutStack
-        }
+          screen: MerchantPayoutStack,
+        },
       },
       {
         drawerPosition: "right",
@@ -38,11 +38,11 @@ const SwitchNavigator = createSwitchNavigator(
         navigationOptions: {
           transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
           navigationOptions: {
-            gesturesEnabled: true
-          }
-        }
+            gesturesEnabled: true,
+          },
+        },
       }
-    )
+    ),
   },
   { initialRouteName: "DrawerNavigator" }
 );
@@ -68,7 +68,7 @@ export const Content = (): ReactElement => {
         style={{
           flex: 1,
           paddingTop:
-            Platform.OS === "android" && !__DEV__ ? StatusBar.currentHeight : 0 // padding is used to prevent content from going behind the status bar on Android production builds
+            Platform.OS === "android" && !__DEV__ ? StatusBar.currentHeight : 0, // padding is used to prevent content from going behind the status bar on Android production builds
         }}
       >
         <AppContainer ref={navigatorRef} uriPrefix={prefix} />

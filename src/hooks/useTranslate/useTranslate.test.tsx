@@ -4,7 +4,7 @@ import { en } from "../../common/i18n/translations/en";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import {
   CampaignConfigsMap,
-  CampaignConfigsStoreContextProvider
+  CampaignConfigsStoreContextProvider,
 } from "../../context/campaignConfigsStore";
 import { defaultFeatures, defaultProducts } from "../../test/helpers/defaults";
 import { TranslationHook, useTranslate } from "./useTranslate";
@@ -12,7 +12,7 @@ import "../../common/i18n/i18nMock";
 
 const mockGetItem = jest.fn();
 jest.mock("react-native/Libraries/Storage/AsyncStorage", () => ({
-  getItem: mockGetItem
+  getItem: mockGetItem,
 }));
 
 describe("useTranslate", () => {
@@ -28,21 +28,21 @@ describe("useTranslate", () => {
         c13n: {
           "Some Campaign Name": "某个活动名称",
           "Toilet Paper": "厕纸",
-          first: "第一"
-        }
+          first: "第一",
+        },
       },
       campaignB: {
         features: {
           ...defaultFeatures,
-          campaignName: "Another Campaign Name"
+          campaignName: "Another Campaign Name",
         },
         policies: [defaultProducts[1]],
         c13n: {
           "Another Campaign Name": "另一个活动名称",
           Chocolate: "巧克力",
-          bar: "块"
-        }
-      }
+          bar: "块",
+        },
+      },
     };
     mockGetItem.mockImplementation(() => JSON.stringify(allCampaignConfigs));
   });
@@ -62,7 +62,7 @@ describe("useTranslate", () => {
       const { result: translationResult, waitForNextUpdate } = renderHook(
         () => useTranslate(),
         {
-          wrapper
+          wrapper,
         }
       );
       waitForNextUpdate();
@@ -115,7 +115,7 @@ describe("useTranslate", () => {
       const { result: translationResult, waitForNextUpdate } = renderHook(
         () => useTranslate(),
         {
-          wrapper
+          wrapper,
         }
       );
       waitForNextUpdate();
@@ -152,7 +152,7 @@ describe("useTranslate", () => {
       const { result: translationResult, waitForNextUpdate } = renderHook(
         () => useTranslate(),
         {
-          wrapper
+          wrapper,
         }
       );
       waitForNextUpdate();

@@ -39,7 +39,7 @@ export const useLogout = (): LogoutHook => {
       setIsLoggingOut(false);
       navigationDispatch?.(
         NavigationActions.navigate({
-          routeName: "LoginScreen"
+          routeName: "LoginScreen",
         })
       );
       if (alert) {
@@ -53,12 +53,12 @@ export const useLogout = (): LogoutHook => {
       setConfigValue,
       clearAuthCredentials,
       clearCampaignConfigs,
-      setMessageContent
+      setMessageContent,
     ]
   );
 
   return {
     isLoggingOut,
-    logout
+    logout,
   };
 };

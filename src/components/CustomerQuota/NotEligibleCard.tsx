@@ -36,7 +36,7 @@ interface NotEligibleCard {
  */
 export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
   ids,
-  onCancel
+  onCancel,
 }) => {
   const { i18nt } = useTranslate();
   return (
@@ -45,7 +45,7 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
         <View
           style={[
             sharedStyles.resultWrapper,
-            sharedStyles.failureResultWrapper
+            sharedStyles.failureResultWrapper,
           ]}
         >
           <FontAwesome

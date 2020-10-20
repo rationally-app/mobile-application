@@ -3,7 +3,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  useContext
+  useContext,
 } from "react";
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
 import { NavigationProps } from "../../types";
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   content: {
     position: "relative",
@@ -52,24 +52,24 @@ const styles = StyleSheet.create({
     paddingBottom: size(10),
     height: "100%",
     width: 512,
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   headerText: {
-    marginBottom: size(4)
+    marginBottom: size(4),
   },
   bannerWrapper: {
-    marginBottom: size(1.5)
-  }
+    marginBottom: size(1.5),
+  },
 });
 
 export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   navigation,
-  navIds
+  navIds,
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "CustomerQuotaScreen"
+      message: "CustomerQuotaScreen",
     });
   }, []);
 
@@ -91,13 +91,13 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     error,
     clearError,
     allQuotaResponse,
-    quotaResponse
+    quotaResponse,
   } = useCart(ids, sessionToken, endpoint);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "cartState",
-      message: cartState
+      message: cartState,
     });
   }, [cartState]);
 
@@ -110,7 +110,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [navigation]);
 
   const addId = useCallback((id: string): void => {
-    setIds(ids => [...ids, id]);
+    setIds((ids) => [...ids, id]);
   }, []);
 
   const onAppeal = useCallback((): void => {
@@ -141,7 +141,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       operatorToken,
       endpoint,
       sessionToken,
-      expiry: new Date().getTime()
+      expiry: new Date().getTime(),
     });
   }, [setAuthCredentials, endpoint, operatorToken, sessionToken]);
 
@@ -198,7 +198,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     error,
     expireSession,
     navigation,
-    showErrorAlert
+    showErrorAlert,
   ]);
 
   const { i18nt } = useTranslate();
