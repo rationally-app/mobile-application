@@ -241,8 +241,43 @@ export const livePostTransaction = async ({
   }
 };
 
+export const mockReserveTransaction = async ({
+  ids,
+  transactions
+}: PostTransaction): Promise<PostTransactionResult> => {
+  if (ids[0] === "S0000000J") throw new Error("Something broke");
+  const timestamp = new Date();
+  if (transactions[0].category === "voucher") {
+    const transactionArr = [];
+    for (let i = 0; i < transactions[0].quantity; i++) {
+      const transaction: Transaction[] = [
+        {
+          category: "voucher",
+          quantity: 1
+        }
+      ];
+      transactionArr.push({
+        timestamp: timestamp,
+        transaction
+      });
+    }
+    return {
+      transactions: transactionArr
+    };
+  }
+  return {
+    transactions: [
+      {
+        transaction: transactions,
+        timestamp
+      }
+    ]
+  };
+};
+
 export const liveReserveTransaction = async ({
   ids,
+  identificationFlag,
   endpoint,
   key,
   transactions
@@ -261,6 +296,7 @@ export const liveReserveTransaction = async ({
         },
         body: JSON.stringify({
           ids,
+          identificationFlag,
           transaction: transactions
         })
       }
@@ -274,6 +310,23 @@ export const liveReserveTransaction = async ({
     }
     throw new ReserveTransactionError(e.message);
   }
+};
+
+export const mockCommitTransaction = async ({
+  transactionIdentifiers
+}: CommitTransaction): Promise<CommitTransactionResult> => {
+  if (transactionIdentifiers.length === 0) {
+    throw new CommitTransactionError("No transactions to commit");
+  }
+  const timestamp = Date.now();
+  const transactions = transactionIdentifiers.map((identifier, i) => {
+    return {
+      identifier,
+      timestamp: new Date(timestamp + i)
+    };
+  });
+
+  return { transactions };
 };
 
 export const liveCommitTransaction = async ({
@@ -306,6 +359,14 @@ export const liveCommitTransaction = async ({
       throw e;
     }
     throw new CommitTransactionError(e.message);
+  }
+};
+
+export const mockCancelTransaction = async ({
+  transactionIdentifiers
+}: CommitTransaction): Promise<void> => {
+  if (transactionIdentifiers.length === 0) {
+    throw new CommitTransactionError("No transactions to commit");
   }
 };
 
@@ -421,6 +482,12 @@ export const postTransaction = IS_MOCK
 export const getPastTransactions = IS_MOCK
   ? mockPastTransactions
   : livePastTransactions;
-export const reserveTransaction = liveReserveTransaction;
-export const commitTransaction = liveCommitTransaction;
-export const cancelTransaction = liveCancelTransaction;
+export const reserveTransaction = IS_MOCK
+  ? mockReserveTransaction
+  : liveReserveTransaction;
+export const commitTransaction = IS_MOCK
+  ? mockCommitTransaction
+  : liveCommitTransaction;
+export const cancelTransaction = IS_MOCK
+  ? mockCancelTransaction
+  : liveCancelTransaction;
