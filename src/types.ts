@@ -224,16 +224,16 @@ export const PostTransactionResult = t.type({
 
 export const TransactionIdentifier = t.type({
   id: t.string,
-  transactionTime: t.number
+  transactionTime: t.number,
 });
 
 export const CommitTransactionResult = t.type({
   transactions: t.array(
     t.type({
       identifier: TransactionIdentifier,
-      timestamp: DateFromNumber
+      timestamp: DateFromNumber,
     })
-  )
+  ),
 });
 
 export type Transaction = t.TypeOf<typeof Transaction>;
@@ -257,7 +257,7 @@ export const DeleteTransactionItem = t.type({
   id: t.string,
   quantity: t.number,
   category: t.string,
-  transactionTime: DateFromNumber
+  transactionTime: DateFromNumber,
 });
 
 export const DeleteTransactionResult = t.array(DeleteTransactionItem);

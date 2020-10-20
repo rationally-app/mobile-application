@@ -10,7 +10,7 @@ export interface PaymentConfirmationModalProps {
 export const PaymentConfirmationModal: FunctionComponent<PaymentConfirmationModalProps> = ({
   commitCart,
   cancelPayment,
-  isVisible
+  isVisible,
 }) => {
   return (
     <AlertModal
@@ -21,7 +21,7 @@ export const PaymentConfirmationModal: FunctionComponent<PaymentConfirmationModa
       visible={isVisible}
       buttonTexts={{
         primaryActionText: "Collected",
-        secondaryActionText: "No"
+        secondaryActionText: "No",
       }}
       description={
         "This action cannot be undone. Proceed only when payment has been collected."
