@@ -184,7 +184,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   onCancel,
   onAppeal,
   allQuotaResponse,
-  quotaResponse
+  quotaResponse,
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
@@ -217,13 +217,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     : -1;
 
   const appealProductsCategories = allProducts
-    ?.filter(product => product.categoryType === "APPEAL")
-    .map(product => product.category);
+    ?.filter((product) => product.categoryType === "APPEAL")
+    .map((product) => product.category);
 
   const hasAppealProduct =
     (appealProductsCategories &&
       allQuotaResponse?.remainingQuota.some(
-        quota =>
+        (quota) =>
           appealProductsCategories.includes(quota.category) &&
           quota.quantity !== 0
       )) ??
