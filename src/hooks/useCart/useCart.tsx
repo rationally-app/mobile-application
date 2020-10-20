@@ -6,7 +6,6 @@ import {
   reserveTransaction,
   commitTransaction,
   NotEligibleError,
-  CommitTransactionError,
   cancelTransaction
 } from "../../services/quota";
 import { transform } from "lodash";
@@ -370,6 +369,7 @@ export const useCart = (
         try {
           const transactionResponse = await reserveTransaction({
             ids,
+            identificationFlag: selectedIdType,
             key: authKey,
             transactions,
             endpoint
@@ -394,7 +394,7 @@ export const useCart = (
 
       reserve();
     },
-    [authKey, cart, endpoint, ids]
+    [authKey, cart, endpoint, ids, selectedIdType]
   );
 
   const commitCart: CartHook["commitCart"] = useCallback(() => {
@@ -415,7 +415,6 @@ export const useCart = (
           });
         });
       }
-
       //commit the transactions
       try {
         const commitResponse = await commitTransaction({
@@ -429,8 +428,8 @@ export const useCart = (
             ...checkoutResult
           };
           let timestampPointer = 0;
-          newCheckoutResult.transactions.forEach(id_txn => {
-            id_txn.timestamp =
+          checkoutResult.transactions.forEach((id_txn, idx) => {
+            newCheckoutResult.transactions[idx].timestamp =
               commitResponse.transactions[timestampPointer].timestamp;
             id_txn.transaction.forEach(txn => {
               timestampPointer++;
@@ -441,6 +440,7 @@ export const useCart = (
 
         setCartState("PURCHASED");
       } catch (e) {
+        console.log(e);
         setCartState("DEFAULT");
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
@@ -457,7 +457,7 @@ export const useCart = (
     if (cartState == "RESERVED") {
       commit();
     } else {
-      setError(new CommitTransactionError("Nothing to commit."));
+      setError(new Error("Nothing to commit."));
     }
   }, [cartState, authKey, endpoint, checkoutResult, ids]);
 
@@ -497,12 +497,7 @@ export const useCart = (
           onComplete();
         } catch (e) {
           setCartState("DEFAULT");
-          if (
-            e.message ===
-            "Invalid Purchase Request: Duplicate identifier inputs"
-          ) {
-            setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
-          } else if (e instanceof SessionError) {
+          if (e instanceof SessionError) {
             setError(e);
           } else {
             setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
@@ -513,7 +508,7 @@ export const useCart = (
       if (cartState == "RESERVED") {
         cancel();
       } else {
-        setError(new CommitTransactionError("Nothing to commit."));
+        setError(new Error("Nothing to cancel."));
       }
     },
     [cartState, authKey, endpoint, checkoutResult, ids]
