@@ -87,7 +87,7 @@ export const en: Translations = {
     showMore: "Show more",
     showLess: "Show less",
     today: "for today",
-    limitReachedRecent: "Limit reached %{time} ago %{today}.",
+    limitReachedRecent: "Limit reached %{time} ago%{today}.",
     limitReachedDate: "Limit reached on %{dateTime} %{today}.",
     limitReached: "Limit reached %{today}.",
     redeemedLimitReached: "%{quantity} item(s) more till %{date}.",
