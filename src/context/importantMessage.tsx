@@ -3,7 +3,7 @@ import React, {
   FunctionComponent,
   useState,
   Dispatch,
-  SetStateAction
+  SetStateAction,
 } from "react";
 
 type MessageContent = {
@@ -25,7 +25,7 @@ export const ImportantMessageSetterContext = createContext<
 >(() => {});
 
 export const ImportantMessageContextProvider: FunctionComponent = ({
-  children
+  children,
 }) => {
   const [message, setMessage] = useState<MessageContent | null>(null);
 

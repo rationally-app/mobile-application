@@ -15,14 +15,14 @@ export const getCheckoutMessages = (
       return {
         title: `${i18nt("checkoutSuccessScreen", "redeemed")}!`,
         description: `${i18nt("checkoutSuccessScreen", "redeemedItems")}:`,
-        ctaButtonText: i18nt("checkoutSuccessScreen", "redeemedNextIdentity")
+        ctaButtonText: i18nt("checkoutSuccessScreen", "redeemedNextIdentity"),
       };
     case "PURCHASE":
     default:
       return {
         title: `${i18nt("checkoutSuccessScreen", "purchased")}!`,
         description: `${i18nt("checkoutSuccessScreen", "purchasedItems")}:`,
-        ctaButtonText: i18nt("checkoutSuccessScreen", "purchasedNextIdentity")
+        ctaButtonText: i18nt("checkoutSuccessScreen", "purchasedNextIdentity"),
       };
   }
 };

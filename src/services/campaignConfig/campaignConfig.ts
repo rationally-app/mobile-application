@@ -23,12 +23,12 @@ const liveGetCampaignConfig = async (
       {
         method: "POST",
         headers: {
-          Authorization: token
+          Authorization: token,
         },
         body: JSON.stringify({
           ...configHashes,
-          language: i18n.locale.startsWith("zh") ? "zh" : "en"
-        })
+          language: i18n.locale.startsWith("zh") ? "zh" : "en",
+        }),
       }
     );
   } catch (e) {
@@ -56,8 +56,8 @@ const mockGetCampaignConfig = async (
       id: {
         type: "STRING",
         scannerType: "CODE_39",
-        validation: "NRIC"
-      }
+        validation: "NRIC",
+      },
     },
     policies: [
       {
@@ -71,9 +71,9 @@ const mockGetCampaignConfig = async (
           limit: 2,
           unit: {
             type: "POSTFIX",
-            label: " pack(s)"
-          }
-        }
+            label: " pack(s)",
+          },
+        },
       },
       {
         category: "instant-noodles",
@@ -86,9 +86,9 @@ const mockGetCampaignConfig = async (
           limit: 1,
           unit: {
             type: "POSTFIX",
-            label: " pack(s)"
-          }
-        }
+            label: " pack(s)",
+          },
+        },
       },
       {
         category: "chocolate",
@@ -102,9 +102,9 @@ const mockGetCampaignConfig = async (
           step: 5,
           unit: {
             type: "PREFIX",
-            label: "$"
-          }
-        }
+            label: "$",
+          },
+        },
       },
       {
         category: "vouchers",
@@ -120,8 +120,8 @@ const mockGetCampaignConfig = async (
               visible: true,
               disabled: false,
               type: "BARCODE",
-              text: "Scan"
-            }
+              text: "Scan",
+            },
           },
           {
             label: "Token",
@@ -130,10 +130,10 @@ const mockGetCampaignConfig = async (
               visible: true,
               disabled: false,
               type: "QR",
-              text: "Scan"
-            }
-          }
-        ]
+              text: "Scan",
+            },
+          },
+        ],
       },
       {
         category: "voucher",
@@ -147,13 +147,13 @@ const mockGetCampaignConfig = async (
             textInput: { visible: true, disabled: true, type: "PHONE_NUMBER" },
             scanButton: {
               visible: false,
-              disabled: false
-            }
-          }
-        ]
-      }
+              disabled: false,
+            },
+          },
+        ],
+      },
     ],
-    c13n: {}
+    c13n: {},
   };
 };
 

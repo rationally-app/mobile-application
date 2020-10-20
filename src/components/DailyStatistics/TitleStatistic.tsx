@@ -19,12 +19,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingTop: size(4),
     width: "100%",
-    alignItems: "center"
+    alignItems: "center",
   },
   smallText: {
     textAlign: "center",
     width: "100%",
-    color: "white"
+    color: "white",
   },
   statText: {
     fontFamily: "brand-bold",
@@ -32,26 +32,26 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     color: "white",
-    fontSize: fontSize(7)
+    fontSize: fontSize(7),
   },
   dateText: {
     marginTop: size(1),
     fontSize: size(2),
     fontFamily: "brand-bold",
     textAlign: "center",
-    color: "white"
+    color: "white",
   },
   dateToggle: {
     marginTop: size(1),
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   chevron: {
     marginTop: size(1),
     marginRight: size(7),
-    marginLeft: size(7)
-  }
+    marginLeft: size(7),
+  },
 });
 
 export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent> = ({
@@ -59,7 +59,7 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
   currentTimestamp,
   lastTransactionTime,
   onPressPrevDay,
-  onPressNextDay
+  onPressNextDay,
 }) => {
   return (
     <View style={styles.appHeaderWrapper}>
