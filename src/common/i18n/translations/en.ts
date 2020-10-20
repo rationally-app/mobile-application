@@ -87,9 +87,9 @@ export const en: Translations = {
     showMore: "Show more",
     showLess: "Show less",
     today: " for today",
-    limitReachedRecent: "Limit reached %{time} ago%{today}.",
-    limitReachedDate: "Limit reached on %{dateTime}%{today}.",
-    limitReached: "Limit reached%{today}.",
+    limitReachedRecent: "Limit reached %{time} ago %{today}.",
+    limitReachedDate: "Limit reached on %{dateTime} %{today}.",
+    limitReached: "Limit reached %{today}.",
     redeemedLimitReached: "%{quantity} item(s) more till %{date}.",
     valid: "Valid",
     complete: "Complete",
@@ -107,7 +107,7 @@ export const en: Translations = {
   notEligibleScreen: {
     notEligible: "Not eligible",
     logAppeal:
-      "Not eligible to collect any item. Contact your in-charge to find out about the appeal guideline.",
+      "Not eligible to collect any item. Contact your in-charge to find out about the appeal guidelines.",
     cannot: "Cannot",
     purchase: "purchase",
   },
