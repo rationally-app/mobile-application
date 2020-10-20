@@ -2,7 +2,7 @@ import React, {
   createContext,
   FunctionComponent,
   useState,
-  useCallback
+  useCallback,
 } from "react";
 import { HelpModal } from "../components/HelpModal/HelpModal";
 

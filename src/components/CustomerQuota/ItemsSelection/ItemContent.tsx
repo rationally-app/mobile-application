@@ -10,15 +10,15 @@ import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   name: {
     fontSize: fontSize(1),
-    fontFamily: "brand-bold"
+    fontFamily: "brand-bold",
   },
   description: {
-    fontSize: fontSize(0)
+    fontSize: fontSize(0),
   },
   descriptionAlert: {
     fontFamily: "brand-italic",
-    color: color("red", 50)
-  }
+    color: color("red", 50),
+  },
 });
 
 export const ItemContent: FunctionComponent<{

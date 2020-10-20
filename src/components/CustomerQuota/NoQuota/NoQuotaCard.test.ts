@@ -1,13 +1,13 @@
 import {
   defaultIdentifier,
-  defaultTranslationProps
+  defaultTranslationProps,
 } from "../../../test/helpers/defaults";
 import { PastTransactionsResult, CampaignPolicy } from "../../../types";
 import {
   groupTransactionsByCategory,
   sortTransactions,
   TransactionsByCategoryMap,
-  getLatestTransactionTime
+  getLatestTransactionTime,
 } from "./NoQuotaCard";
 import { Cart } from "../../../hooks/useCart/useCart";
 import "../../../common/i18n/i18nMock";
@@ -29,15 +29,15 @@ describe("NoQuotaCard utility functions", () => {
           {
             ...defaultIdentifier,
             label: "Device code",
-            value: "AAA987654321"
-          }
+            value: "AAA987654321",
+          },
         ],
-        transactionTime: latestTransactionTime
+        transactionTime: latestTransactionTime,
       },
       {
         category: "meal-credits",
         quantity: 10,
-        transactionTime: latestTransactionTime
+        transactionTime: latestTransactionTime,
       },
       {
         category: "vouchers",
@@ -46,23 +46,27 @@ describe("NoQuotaCard utility functions", () => {
           {
             ...defaultIdentifier,
             label: "Voucher code",
-            value: "AAA987654322"
-          }
+            value: "AAA987654322",
+          },
         ],
-        transactionTime: new Date(latestTransactionTimeMs - 10000)
+        transactionTime: new Date(latestTransactionTimeMs - 10000),
       },
       {
         category: "meal-credits",
         quantity: 5,
-        transactionTime: new Date(latestTransactionTimeMs - 20000)
-      }
+        transactionTime: new Date(latestTransactionTimeMs - 20000),
+      },
     ];
     allProducts = [
       {
         category: "meal-credits",
         name: "Meal credits",
         order: 0,
-        quantity: { period: 1, limit: 20, unit: { type: "PREFIX", label: "$" } }
+        quantity: {
+          period: 1,
+          limit: 20,
+          unit: { type: "PREFIX", label: "$" },
+        },
       },
       {
         category: "tt-token",
@@ -73,9 +77,9 @@ describe("NoQuotaCard utility functions", () => {
           {
             label: "Device code",
             textInput: { disabled: true, visible: true, type: "STRING" },
-            scanButton: { disabled: false, visible: true, type: "QR" }
-          }
-        ]
+            scanButton: { disabled: false, visible: true, type: "QR" },
+          },
+        ],
       },
       {
         category: "vouchers",
@@ -84,16 +88,16 @@ describe("NoQuotaCard utility functions", () => {
         quantity: {
           period: 1,
           limit: 1,
-          unit: { type: "POSTFIX", label: " book" }
+          unit: { type: "POSTFIX", label: " book" },
         },
         identifiers: [
           {
             label: "Voucher code",
             textInput: { disabled: false, visible: true, type: "STRING" },
-            scanButton: { disabled: false, visible: true, type: "BARCODE" }
-          }
-        ]
-      }
+            scanButton: { disabled: false, visible: true, type: "BARCODE" },
+          },
+        ],
+      },
     ];
 
     mockTransactionsByCategoryMap = {
@@ -104,11 +108,11 @@ describe("NoQuotaCard utility functions", () => {
             details: "AAA987654321",
             quantity: "1 qty",
             isAppeal: false,
-            order: -1
-          }
+            order: -1,
+          },
         ],
         hasLatestTransaction: true,
-        order: 1
+        order: 1,
       },
       "Meal credits": {
         transactions: [
@@ -117,18 +121,18 @@ describe("NoQuotaCard utility functions", () => {
             details: "",
             quantity: "$10",
             isAppeal: false,
-            order: -1
+            order: -1,
           },
           {
             header: "4 Aug 2020, 4:38PM",
             details: "",
             quantity: "$5",
             isAppeal: false,
-            order: -1
-          }
+            order: -1,
+          },
         ],
         hasLatestTransaction: true,
-        order: 0
+        order: 0,
       },
       "CDC Vouchers": {
         transactions: [
@@ -137,12 +141,12 @@ describe("NoQuotaCard utility functions", () => {
             details: "AAA987654322",
             quantity: "1 book",
             isAppeal: false,
-            order: -1
-          }
+            order: -1,
+          },
         ],
         hasLatestTransaction: false,
-        order: 2
-      }
+        order: 2,
+      },
     };
   });
 
@@ -186,17 +190,17 @@ describe("NoQuotaCard utility functions", () => {
               details: "",
               quantity: "$10",
               isAppeal: false,
-              order: 0
+              order: 0,
             },
             {
               header: "4 Aug 2020, 4:38PM",
               details: "",
               quantity: "$5",
               isAppeal: false,
-              order: 1
-            }
+              order: 1,
+            },
           ],
-          order: 0
+          order: 0,
         },
         {
           header: "TT token",
@@ -206,10 +210,10 @@ describe("NoQuotaCard utility functions", () => {
               details: "AAA987654321",
               quantity: "1 qty",
               isAppeal: false,
-              order: 2
-            }
+              order: 2,
+            },
           ],
-          order: 1
+          order: 1,
         },
         {
           header: "CDC Vouchers",
@@ -219,11 +223,11 @@ describe("NoQuotaCard utility functions", () => {
               details: "AAA987654322",
               quantity: "1 book",
               isAppeal: false,
-              order: 3
-            }
+              order: 3,
+            },
           ],
-          order: 2
-        }
+          order: 2,
+        },
       ]);
     });
   });
@@ -237,29 +241,29 @@ describe("NoQuotaCard utility functions", () => {
           quantity: 1,
           maxQuantity: 1,
           lastTransactionTime: new Date(latestTransactionTimeMs - 5000),
-          identifierInputs: []
+          identifierInputs: [],
         },
         {
           category: "category-b",
           quantity: 1,
           maxQuantity: 1,
           lastTransactionTime: new Date(latestTransactionTimeMs - 2000),
-          identifierInputs: []
+          identifierInputs: [],
         },
         {
           category: "category-c",
           quantity: 1,
           maxQuantity: 1,
           lastTransactionTime: latestTransactionTime,
-          identifierInputs: []
+          identifierInputs: [],
         },
         {
           category: "category-d",
           quantity: 1,
           maxQuantity: 1,
           lastTransactionTime: new Date(latestTransactionTimeMs - 3000),
-          identifierInputs: []
-        }
+          identifierInputs: [],
+        },
       ];
       expect(getLatestTransactionTime(cart)).toStrictEqual(
         latestTransactionTime

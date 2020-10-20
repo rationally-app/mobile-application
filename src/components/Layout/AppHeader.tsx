@@ -16,13 +16,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });
 
 export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   mode = AppMode.production,
-  navigation
+  navigation,
 }) => {
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();

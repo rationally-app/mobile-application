@@ -7,7 +7,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { borderRadius, color, fontSize, size } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
@@ -23,37 +23,37 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
     backgroundColor: "white",
-    borderRadius: 20
+    borderRadius: 20,
   },
   header: {
     height: "100%",
     top: 0,
-    position: "absolute"
+    position: "absolute",
   },
   separator: {
     marginVertical: size(1),
     height: 1,
     width: "100%",
-    backgroundColor: "#CED0CE"
+    backgroundColor: "#CED0CE",
   },
   closeTouchable: {
     marginTop: size(7),
     marginBottom: size(3),
-    flexDirection: "row"
+    flexDirection: "row",
   },
   emoji: {
     fontSize: fontSize(3),
     marginLeft: size(2),
     marginRight: size(0.5),
-    color: color("grey", 0)
+    color: color("grey", 0),
   },
   crossText: {
     fontSize: fontSize(0),
     marginRight: size(0.5),
-    color: color("grey", 0)
+    color: color("grey", 0),
   },
   searchSection: {
-    margin: size(3)
+    margin: size(3),
   },
   searchTextInput: {
     minHeight: size(6),
@@ -65,25 +65,25 @@ const styles = StyleSheet.create({
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
     color: color("blue", 50),
-    fontFamily: "brand-regular"
+    fontFamily: "brand-regular",
   },
   listItemView: {
-    paddingVertical: size(1)
+    paddingVertical: size(1),
   },
   listItemContent: {
     paddingVertical: size(3),
-    backgroundColor: color("grey", 10)
+    backgroundColor: color("grey", 10),
   },
   listItemTag: {
     marginLeft: size(3),
     fontFamily: "brand-bold",
     color: color("blue", 50),
-    fontSize: fontSize(1)
+    fontSize: fontSize(1),
   },
   listItemText: {
     marginLeft: size(3),
-    fontFamily: "brand-regular"
-  }
+    fontFamily: "brand-regular",
+  },
 });
 
 export interface DropdownItem {
@@ -132,7 +132,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   label,
   placeholder,
   onItemSelection,
-  closeModal
+  closeModal,
 }) => {
   const [filterState, setFilterState] = useState<DropdownItem[]>(dropdownItems);
 
@@ -141,7 +141,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   }, [dropdownItems, isVisible]);
 
   const searchFilterFunction = (text: string): void => {
-    const newData = dropdownItems.filter(item => {
+    const newData = dropdownItems.filter((item) => {
       return item.name.toUpperCase().includes(text.toUpperCase());
     });
     setFilterState(newData);
@@ -165,7 +165,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
         <AppText style={{ fontFamily: "brand-bold" }}>{label}</AppText>
         <TextInput
           style={styles.searchTextInput}
-          onChangeText={text => searchFilterFunction(text)}
+          onChangeText={(text) => searchFilterFunction(text)}
           underlineColorAndroid="transparent"
           placeholder={placeholder}
           autoCorrect={false}
@@ -199,7 +199,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
                 onItemSelection={onItemSelection}
               />
             )}
-            keyExtractor={item => item.name}
+            keyExtractor={(item) => item.name}
           />
         </View>
       </View>

@@ -20,7 +20,7 @@ if (__DEV__) {
     captureException: (e: unknown): string => {
       console.warn(`${SENTRY_LOG_PREFIX} captureException: ${e}`);
       return "eventId";
-    }
+    },
   };
 } else {
   Sentry = SentryExpo;

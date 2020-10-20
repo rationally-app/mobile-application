@@ -1,7 +1,7 @@
 import {
   validate,
   checkDuplicate,
-  checkLimitReached
+  checkLimitReached,
 } from "./validateVoucherCode";
 
 describe("validate", () => {

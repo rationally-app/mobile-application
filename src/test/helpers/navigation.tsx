@@ -7,8 +7,8 @@ export const mockNavigation: any = {
   getParam: (key: string) => params[key],
   addListener: jest.fn(),
   state: {
-    routeName: "routeName"
-  }
+    routeName: "routeName",
+  },
 };
 
 export const resetNavigation = (): void => {
