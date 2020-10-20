@@ -41,6 +41,37 @@ describe("validateIdentifierInputs", () => {
     ).toBe(true);
   });
 
+  it("should throw error if input is phone number and fails default regex", () => {
+    expect.assertions(3);
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "input without +",
+          value: "1234567",
+          textInputType: "PHONE_NUMBER"
+        }
+      ])
+    ).toThrow("Enter a valid country code and contact number.");
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "input with invalid characters",
+          value: "+1234567~",
+          textInputType: "PHONE_NUMBER"
+        }
+      ])
+    ).toThrow("Enter a valid country code and contact number.");
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "input with spaces",
+          value: "+1234567 890",
+          textInputType: "PHONE_NUMBER"
+        }
+      ])
+    ).toThrow("Enter a valid country code and contact number.");
+  });
+
   it("should throw error if at least one of the identifiers does not match the given regex pattern", () => {
     expect.assertions(2);
     expect(() =>
@@ -52,7 +83,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toThrow("Enter or scan valid code details.");
+    ).toThrow("Enter or scan a valid code.");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -62,7 +93,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING"
         }
       ])
-    ).toThrow("Enter or scan valid code details.");
+    ).toThrow("Enter or scan a valid code.");
   });
 
   it("should throw error if at least one of the identifiers is an invalid number", () => {
@@ -75,7 +106,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toThrow("Enter or scan valid code details.");
+    ).toThrow("Enter or scan a valid code.");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -84,7 +115,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER"
         }
       ])
-    ).toThrow("Enter or scan valid code details.");
+    ).toThrow("Enter or scan a valid code.");
   });
 
   it("should throw error if at least one of the identifiers is an invalid phone number", () => {
@@ -97,7 +128,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER"
         }
       ])
-    ).toThrow("Enter valid country code and contact number.");
+    ).toThrow("Enter a valid country code and contact number.");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -106,7 +137,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER"
         }
       ])
-    ).toThrow("Enter valid country code and contact number.");
+    ).toThrow("Enter a valid country code and contact number.");
   });
 
   it("should throw error if identifier has empty value", () => {
@@ -119,7 +150,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING"
         }
       ])
-    ).toThrow("Enter or scan code details");
+    ).toThrow("Enter or scan a code.");
     expect(() =>
       validateIdentifierInputs([
         {
@@ -133,7 +164,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING"
         }
       ])
-    ).toThrow("Enter or scan code details");
+    ).toThrow("Enter or scan a code.");
   });
 
   it("should throw error if there are duplicate values", () => {
@@ -156,6 +187,6 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING"
         }
       ])
-    ).toThrow("Enter unique code details");
+    ).toThrow("Enter or scan a different code.");
   });
 });

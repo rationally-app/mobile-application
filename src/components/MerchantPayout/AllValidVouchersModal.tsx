@@ -1,16 +1,11 @@
 import React, { FunctionComponent, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Alert,
-  ScrollView
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 import { size, fontSize, color } from "../../common/styles";
 import { ValidVoucherCount } from "./ValidVoucherCount";
 import { AppText } from "../Layout/AppText";
 import { ModalWithClose } from "../Layout/ModalWithClose";
 import { Voucher } from "../../types";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   card: {
@@ -60,6 +55,8 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
     }
   }, [onExit, vouchers]);
 
+  const { i18nt } = useTranslate();
+
   return (
     <ModalWithClose isVisible={isVisible} onExit={onExit} style={styles.card}>
       <View style={styles.counterWrapper}>
@@ -74,26 +71,11 @@ export const AllValidVouchersModal: FunctionComponent<ManualInputCard> = ({
             <AppText style={styles.serialNumber}>{voucher.serial}</AppText>
             <View style={styles.guideline}></View>
             <TouchableOpacity
-              onPress={() => {
-                Alert.alert(
-                  "Remove item?",
-                  `Do you want to remove this item: ${voucher.serial}?`,
-                  [
-                    {
-                      text: "Cancel"
-                    },
-                    {
-                      text: "Remove",
-                      onPress: () => {
-                        onVoucherCodeRemove(voucher.serial);
-                      },
-                      style: "destructive"
-                    }
-                  ]
-                );
-              }}
+              onPress={() => onVoucherCodeRemove(voucher.serial)}
             >
-              <AppText style={styles.removeText}>Remove</AppText>
+              <AppText style={styles.removeText}>
+                {i18nt("merchantFlowScreen", "remove")}
+              </AppText>
             </TouchableOpacity>
           </View>
         ))}

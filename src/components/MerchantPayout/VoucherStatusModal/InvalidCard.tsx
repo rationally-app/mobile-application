@@ -5,6 +5,7 @@ import { AppText } from "../../Layout/AppText";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color, fontSize } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   card: {
@@ -34,8 +35,12 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
   title,
   details,
   closeModal,
-  ctaButtonText = "Continue scanning"
+  ctaButtonText
 }) => {
+  const { i18nt } = useTranslate();
+  const tCtaButtonText =
+    ctaButtonText ??
+    i18nt("errorMessages", "errorScanning", "primaryActionText");
   return (
     <Card style={styles.card}>
       <Text style={styles.emoji}>❌</Text>
@@ -49,7 +54,7 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
       <AppText style={styles.details}>{details}</AppText>
       <DarkButton
         fullWidth={true}
-        text={ctaButtonText}
+        text={tCtaButtonText}
         onPress={() => {
           closeModal();
         }}

@@ -4,7 +4,7 @@ import {
 } from "react-navigation-stack";
 import MerchantPayoutScreen from "./MerchantPayoutScreen";
 import PayoutFeedbackScreen from "./PayoutFeedbackScreen";
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext, useEffect } from "react";
 import { NavigationInjectedProps } from "react-navigation";
 import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
@@ -39,22 +39,22 @@ const MerchantPayoutStack: FunctionComponent<NavigationInjectedProps> & {
   const key = `${operatorToken}${endpoint}`;
 
   const { authCredentials } = useContext(AuthStoreContext);
-  if (!authCredentials[key]) {
-    throw new Error("No auth credentials found");
-  }
-
   const { allCampaignConfigs } = useContext(CampaignConfigsStoreContext);
-  if (!allCampaignConfigs[key]) {
-    throw new Error("No campaign config found");
-  }
+  const hasDataFromStore = authCredentials[key] && allCampaignConfigs[key];
 
-  return (
+  useEffect(() => {
+    if (!hasDataFromStore) {
+      navigation.navigate("CampaignLocationsScreen");
+    }
+  }, [hasDataFromStore, navigation]);
+
+  return hasDataFromStore ? (
     <AuthContextProvider authCredentials={authCredentials[key]!}>
       <CampaignConfigContextProvider campaignConfig={allCampaignConfigs[key]!}>
         <Stack navigation={navigation} />
       </CampaignConfigContextProvider>
     </AuthContextProvider>
-  );
+  ) : null;
 };
 
 MerchantPayoutStack.router = Stack.router;

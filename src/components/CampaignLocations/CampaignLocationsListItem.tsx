@@ -4,6 +4,7 @@ import { AuthCredentials } from "../../types";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { fontSize, color, size } from "../../common/styles";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -29,6 +30,8 @@ const styles = StyleSheet.create({
 export const CampaignLocationsListItem: FunctionComponent<
   AuthCredentials & { name: string; onPress: () => void }
 > = ({ name, expiry, operatorToken, onPress }) => {
+  const { i18nt } = useTranslate();
+
   const operatorId = operatorToken.slice(0, 6); // May be blank for existing users because we didn't store operatorToken previously
   const formattedExpiry = formatDateTime(expiry);
 
@@ -52,7 +55,7 @@ export const CampaignLocationsListItem: FunctionComponent<
               hasExpired ? { color: color("grey", 40) } : {}
             ]}
           >
-            ID: {operatorId}
+            {i18nt("customerQuotaScreen", "id")} : {operatorId}
           </AppText>
         ) : null}
         <AppText
@@ -61,8 +64,13 @@ export const CampaignLocationsListItem: FunctionComponent<
             hasExpired ? { color: color("grey", 40) } : {}
           ]}
         >
-          {hasExpired ? "Expired on " : "Valid till "}
-          {formattedExpiry}
+          {hasExpired
+            ? i18nt("customerQuotaScreen", "campaignExpiredOn", undefined, {
+                dateTime: formattedExpiry
+              })
+            : i18nt("customerQuotaScreen", "campaignValidTo", undefined, {
+                dateTime: formattedExpiry
+              })}
         </AppText>
       </View>
     </TouchableOpacity>

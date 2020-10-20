@@ -1,4 +1,7 @@
-import { defaultIdentifier } from "../../../test/helpers/defaults";
+import {
+  defaultIdentifier,
+  defaultTranslationProps
+} from "../../../test/helpers/defaults";
 import { PastTransactionsResult, CampaignPolicy } from "../../../types";
 import {
   groupTransactionsByCategory,
@@ -7,6 +10,7 @@ import {
   getLatestTransactionTime
 } from "./NoQuotaCard";
 import { Cart } from "../../../hooks/useCart/useCart";
+import "../../../common/i18n/i18nMock";
 
 describe("NoQuotaCard utility functions", () => {
   let sortedTransactions: PastTransactionsResult["pastTransactions"];
@@ -150,7 +154,8 @@ describe("NoQuotaCard utility functions", () => {
         groupTransactionsByCategory(
           sortedTransactions,
           allProducts,
-          latestTransactionTime
+          latestTransactionTime,
+          defaultTranslationProps
         )
       ).toStrictEqual(mockTransactionsByCategoryMap);
     });
@@ -159,7 +164,12 @@ describe("NoQuotaCard utility functions", () => {
       expect.assertions(1);
 
       expect(
-        groupTransactionsByCategory(null, allProducts, undefined)
+        groupTransactionsByCategory(
+          null,
+          allProducts,
+          undefined,
+          defaultTranslationProps
+        )
       ).toStrictEqual({});
     });
   });

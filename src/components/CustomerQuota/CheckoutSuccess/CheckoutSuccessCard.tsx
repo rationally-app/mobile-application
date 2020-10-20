@@ -26,7 +26,11 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
-import { AlertModalContext, systemAlertProps } from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
+import {
+  TranslationHook,
+  useTranslate
+} from "../../../hooks/useTranslate/useTranslate";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -45,14 +49,20 @@ interface CheckoutSuccessCard {
 const UsageQuotaTitle: FunctionComponent<{
   quantity: number;
   quotaRefreshTime: number;
-}> = ({ quantity, quotaRefreshTime }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {"\n"}
-      {quantity} item(s) more till {formatDate(quotaRefreshTime)}.
-    </AppText>
-  </>
-);
+}> = ({ quantity, quotaRefreshTime }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <>
+      <AppText style={sharedStyles.statusTitle}>
+        {"\n"}
+        {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
+          quantity: quantity,
+          date: formatDate(quotaRefreshTime)
+        })}`}
+      </AppText>
+    </>
+  );
+};
 
 export interface TransactionsByTimeMap {
   [transactionTimeInSeconds: string]: {
@@ -71,8 +81,11 @@ export interface TransactionsByTimeMap {
  */
 export const groupTransactionsByTime = (
   sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
-  allProducts: CampaignPolicy[]
+  allProducts: CampaignPolicy[],
+  translationProps: TranslationHook
 ): TransactionsByTimeMap => {
+  const { c13nt, c13ntForUnit, i18nt } = translationProps;
+
   const transactionsByTimeMap: {
     [transactionTimeInSeconds: string]: {
       transactionTime: Date;
@@ -84,7 +97,6 @@ export const groupTransactionsByTime = (
     const policy = allProducts?.find(
       policy => policy.category === item.category
     );
-    const categoryName = policy?.name ?? item.category;
     const transactionTimeInSeconds = String(
       Math.floor(item.transactionTime.getTime() / 1000)
     );
@@ -97,11 +109,16 @@ export const groupTransactionsByTime = (
       };
     }
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
-      header: categoryName,
+      header: (policy?.name && c13nt(policy?.name)) ?? item.category,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
+        policy?.quantity.unit
+          ? c13ntForUnit(policy?.quantity.unit)
+          : {
+              type: "POSTFIX",
+              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
+            }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
       order: policy?.order ?? BIG_NUMBER
@@ -140,25 +157,25 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
 
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
     if (error) {
-      showAlert({
-        ...systemAlertProps,
-        description: error.message || ""
-      });
+      showErrorAlert(error);
     }
-  }, [error, showAlert]);
+  }, [error, showErrorAlert]);
 
+  const translationProps = useTranslate();
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
-    allProducts || []
+    allProducts || [],
+    translationProps
   );
   const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
 
   const productType =
     (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
   const { title, description, ctaButtonText } = getCheckoutMessages(
+    translationProps.i18nt,
     productType
   );
 

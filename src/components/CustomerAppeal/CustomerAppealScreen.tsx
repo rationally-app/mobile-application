@@ -27,6 +27,7 @@ import { AuthContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -78,6 +79,8 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { allQuotaResponse } = useCart(ids, sessionToken, endpoint);
+
+  const { i18nt } = useTranslate();
 
   const getReasons = (): Reason[] => {
     return transform(
@@ -136,7 +139,10 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         )}
         <ReasonSelectionCard
           ids={ids}
-          reasonSelectionHeader={"Indicate reason for appeal"}
+          reasonSelectionHeader={i18nt(
+            "customerAppealScreen",
+            "indicateReason"
+          )}
           reasons={getReasons()}
           onCancel={onCancel}
           onReasonSelection={onReasonSelection}

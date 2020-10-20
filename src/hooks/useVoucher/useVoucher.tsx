@@ -1,7 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import { validateMerchantCode } from "../../utils/validateMerchantCode";
 import { Voucher, PostTransactionResult, Transaction } from "../../types";
 import { postTransaction } from "../../services/quota";
+import { IdentificationContext } from "../../context/identification";
 
 type CheckoutVouchersState =
   | "DEFAULT"
@@ -26,6 +27,7 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
   >("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
+  const { selectedIdType } = useContext(IdentificationContext);
 
   const resetState = useCallback((keepVouchers = false): void => {
     setError(undefined);
@@ -74,6 +76,7 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
         try {
           const transactionResponse = await postTransaction({
             ids: vouchers.map(voucher => voucher.serial),
+            identificationFlag: selectedIdType,
             key: authKey,
             transactions,
             endpoint
@@ -87,7 +90,7 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
 
       checkout();
     },
-    [authKey, endpoint, vouchers]
+    [authKey, endpoint, selectedIdType, vouchers]
   );
 
   return {

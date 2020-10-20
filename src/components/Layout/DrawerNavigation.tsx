@@ -11,10 +11,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
-import {
-  AlertModalContext,
-  defaultConfirmationProps
-} from "../../context/alert";
+import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   container: {
@@ -90,24 +88,17 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   navigation
 }) => {
   const { logout } = useLogout();
-  const { showAlert } = useContext(AlertModalContext);
+  const { showConfirmationAlert } = useContext(AlertModalContext);
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch]);
 
+  const { i18nt } = useTranslate();
+
   const onPressLogout = (): void => {
-    showAlert({
-      ...defaultConfirmationProps,
-      title: "Confirm logout?",
-      buttonTexts: {
-        primaryActionText: "Logout",
-        secondaryActionText: "Cancel"
-      },
-      visible: true,
-      onOk: handleLogout
-    });
+    showConfirmationAlert(CONFIRMATION_MESSAGE.CONFIRM_LOGOUT, handleLogout);
   };
 
   const onPressCloseDrawer = (): void => {
@@ -162,34 +153,34 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         ))}
         <DrawerButtonComponent
           icon="logout"
-          label="Logout"
+          label={i18nt("navigationDrawer", "logout")}
           onPress={onPressLogout}
         />
       </View>
       <View style={{ marginTop: "auto", marginBottom: size(4) }}>
         <BottomNavigationLink onPress={showHelpModal}>
-          Help & Support
+          {i18nt("navigationDrawer", "helpSupport")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
           }}
         >
-          Terms of use
+          {i18nt("navigationDrawer", "termsOfUse")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.supplyally.gov.sg/privacy");
           }}
         >
-          Privacy Statement
+          {i18nt("navigationDrawer", "privacyStatement")}
         </BottomNavigationLink>
         <BottomNavigationLink
           onPress={() => {
             Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
           }}
         >
-          Report vulnerability
+          {i18nt("navigationDrawer", "reportVulnerability")}
         </BottomNavigationLink>
         <AppText style={styles.bottomVersionText}>{version}</AppText>
       </View>

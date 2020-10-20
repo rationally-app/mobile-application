@@ -25,6 +25,8 @@ import { useDrawerContext } from "../../context/drawer";
 import { LoadingView } from "../Loading";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
+import { sortBy } from "lodash";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -79,24 +81,32 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
 
   const { setDrawerButtons } = useDrawerContext();
 
+  const { i18nt, c13nt } = useTranslate();
+
   useEffect(() => {
     setDrawerButtons([
       {
         icon: "map-marker-plus",
-        label: "Add campaign",
+        label: i18nt("navigationDrawer", "addCampaign"),
         onPress: () => {
           navigation.navigate("LoginScreen");
         }
       },
       {
         icon: "map-search",
-        label: "Change campaign",
+        label: i18nt("navigationDrawer", "changeChampaign"),
         onPress: () => {
           navigation.navigate("CampaignLocationsScreen");
         }
       }
     ]);
-  }, [authCredentials, hasLoadedAuthFromStore, navigation, setDrawerButtons]);
+  }, [
+    authCredentials,
+    hasLoadedAuthFromStore,
+    navigation,
+    setDrawerButtons,
+    i18nt
+  ]);
 
   const navigateToCampaignLocation = useCallback(
     (authCredentials: AuthCredentials): void => {
@@ -127,6 +137,20 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     navigateToCampaignLocation,
     navigation
   ]);
+  const authCredentialsWithCampaignName = Object.entries(authCredentials).map(
+    ([key, credentials]) => {
+      return {
+        ...credentials,
+        key,
+        name: c13nt(allCampaignConfigs[key]?.features?.campaignName ?? "", key)
+      };
+    }
+  );
+
+  const sortedAuthCredentialsWithCampaignName = sortBy(
+    authCredentialsWithCampaignName,
+    "name"
+  );
 
   return (
     <>
@@ -146,22 +170,23 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
           {hasLoadedAuthFromStore && hasLoadedCampaignConfigFromStore ? (
             <Card>
               <AppText style={styles.selectCampaignHeader}>
-                Select campaign
+                {i18nt("navigationDrawer", "selectCampaign")}
               </AppText>
-              {Object.entries(authCredentials).map(
-                ([key, credentials], idx) => (
-                  <View key={key} style={styles.campaignLocationWrapper}>
-                    <CampaignLocationsListItem
-                      {...credentials}
-                      name={
-                        allCampaignConfigs[key]?.features?.campaignName ||
-                        `Campaign ${idx + 1}`
-                      }
-                      onPress={() => navigateToCampaignLocation(credentials)}
-                    />
-                  </View>
-                )
-              )}
+              {sortedAuthCredentialsWithCampaignName.map((credentials, idx) => (
+                <View
+                  key={credentials.key}
+                  style={styles.campaignLocationWrapper}
+                >
+                  <CampaignLocationsListItem
+                    {...credentials}
+                    name={
+                      credentials.name ||
+                      `${i18nt("navigationDrawer", "campaign")} ${idx + 1}`
+                    }
+                    onPress={() => navigateToCampaignLocation(credentials)}
+                  />
+                </View>
+              ))}
             </Card>
           ) : (
             <Card style={styles.loadingViewWrapper}>

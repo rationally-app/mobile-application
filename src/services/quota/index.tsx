@@ -3,11 +3,11 @@ import {
   Transaction,
   Quota,
   PostTransactionResult,
-  PastTransactionsResult
+  PastTransactionsResult,
+  IdentificationFlag
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
-import { systemAlertProps, ERROR_MESSAGE } from "../../context/alert";
 
 export class NotEligibleError extends Error {
   constructor(message: string) {
@@ -21,11 +21,6 @@ export class QuotaError extends Error {
     super(message);
     this.name = "QuotaError";
   }
-  alertProps = {
-    ...systemAlertProps,
-    description: ERROR_MESSAGE.QUOTA_ERROR as string,
-    visible: true
-  };
 }
 
 export class PostTransactionError extends Error {
@@ -44,6 +39,7 @@ export class PastTransactionError extends Error {
 
 interface PostTransaction {
   ids: string[];
+  identificationFlag: IdentificationFlag;
   transactions: Transaction[];
   key: string;
   endpoint: string;
@@ -51,6 +47,7 @@ interface PostTransaction {
 
 export const mockGetQuota = async (
   ids: string[],
+  _identificationFlag: IdentificationFlag,
   _key: string,
   _endpoint: string
 ): Promise<Quota> => {
@@ -110,6 +107,7 @@ export const mockGetQuota = async (
 
 export const liveGetQuota = async (
   ids: string[],
+  identificationFlag: IdentificationFlag,
   key: string,
   endpoint: string
 ): Promise<Quota> => {
@@ -124,7 +122,8 @@ export const liveGetQuota = async (
         Authorization: key
       },
       body: JSON.stringify({
-        ids
+        ids,
+        identificationFlag
       })
     });
     return response;
@@ -177,6 +176,7 @@ export const mockPostTransaction = async ({
 
 export const livePostTransaction = async ({
   ids,
+  identificationFlag,
   endpoint,
   key,
   transactions
@@ -195,6 +195,7 @@ export const livePostTransaction = async ({
         },
         body: JSON.stringify({
           ids,
+          identificationFlag,
           transaction: transactions
         })
       }
@@ -212,6 +213,7 @@ export const livePostTransaction = async ({
 
 export const mockPastTransactions = async (
   ids: string[],
+  _identificationFlag: IdentificationFlag,
   _key: string,
   _endpoint: string
 ): Promise<PastTransactionsResult> => {
@@ -248,6 +250,7 @@ export const mockPastTransactions = async (
 
 export const livePastTransactions = async (
   ids: string[],
+  identificationFlag: IdentificationFlag,
   key: string,
   endpoint: string
 ): Promise<PastTransactionsResult> => {
@@ -265,7 +268,8 @@ export const livePastTransactions = async (
           Authorization: key
         },
         body: JSON.stringify({
-          ids
+          ids,
+          identificationFlag
         })
       }
     );
