@@ -16,7 +16,7 @@ export const IdentifierTextInput: FunctionComponent<{
   <View
     style={[
       sharedStyles.inputWrapper,
-      ...(addMarginRight ? [{ marginRight: size(1) }] : [])
+      ...(addMarginRight ? [{ marginRight: size(1) }] : []),
     ]}
   >
     <InputWithLabel

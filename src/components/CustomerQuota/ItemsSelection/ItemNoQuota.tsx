@@ -16,15 +16,15 @@ const styles = StyleSheet.create({
     borderColor: color("yellow", 20),
     borderRadius: borderRadius(3),
     paddingHorizontal: size(1.5),
-    justifyContent: "center"
+    justifyContent: "center",
   },
   feedbackText: {
     textAlign: "center",
     textAlignVertical: "center",
     color: color("yellow", 50),
     fontSize: fontSize(-2),
-    fontFamily: "brand-bold"
-  }
+    fontFamily: "brand-bold",
+  },
 });
 
 export const ItemNoQuota: FunctionComponent<{

@@ -7,12 +7,12 @@ export const sharedStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     width: "100%",
-    marginTop: size(2)
+    marginTop: size(2),
   },
   inputWrapper: {
-    flex: 2
+    flex: 2,
   },
   buttonWrapper: {
-    flexShrink: 1
-  }
+    flexShrink: 1,
+  },
 });

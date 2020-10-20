@@ -6,7 +6,7 @@ describe("checkVersion", () => {
     it.each([
       ["3.0.0", "2.0.0"],
       ["2.0.10", "2.0.3"],
-      ["4.3.0", "4.0.2"]
+      ["4.3.0", "4.0.2"],
     ])(
       "should return OK when binary version (%s) is greater than the minimum binary version (%s)",
       (current, minimum) => {
@@ -16,7 +16,7 @@ describe("checkVersion", () => {
             currentBinaryVersion: current,
             minBinaryVersion: minimum,
             currentBuildVersion: 0,
-            minBuildVersion: 0
+            minBuildVersion: 0,
           })
         ).toBe("OK");
       }
@@ -25,7 +25,7 @@ describe("checkVersion", () => {
     it.each([
       ["2.0.0", "3.0.0"],
       ["1.0.10", "1.0.12"],
-      ["4.0.3", "4.12.0"]
+      ["4.0.3", "4.12.0"],
     ])(
       "should return OUTDATED_BINARY when binary version (%s) is less than the minimum binary version (%s)",
       (current, minimum) => {
@@ -36,7 +36,7 @@ describe("checkVersion", () => {
             currentBinaryVersion: current,
             minBinaryVersion: minimum,
             currentBuildVersion: 0,
-            minBuildVersion: 0
+            minBuildVersion: 0,
           })
         ).toBe("OUTDATED_BINARY");
       }
@@ -51,7 +51,7 @@ describe("checkVersion", () => {
           currentBinaryVersion: "2.0.0",
           minBinaryVersion: "2.0.0",
           currentBuildVersion: 3,
-          minBuildVersion: 3
+          minBuildVersion: 3,
         })
       ).toBe("OK");
     });
@@ -59,7 +59,7 @@ describe("checkVersion", () => {
     it.each([
       [3, 2],
       [10, 9],
-      [333, 300]
+      [333, 300],
     ])(
       "should return OK when build version (%s) is greater than the minimum build version (%s)",
       (current, minimum) => {
@@ -69,7 +69,7 @@ describe("checkVersion", () => {
             currentBinaryVersion: "2.0.0",
             minBinaryVersion: "2.0.0",
             currentBuildVersion: current,
-            minBuildVersion: minimum
+            minBuildVersion: minimum,
           })
         ).toBe("OK");
       }
@@ -78,7 +78,7 @@ describe("checkVersion", () => {
     it.each([
       [0, 3],
       [8, 20],
-      [200, 290]
+      [200, 290],
     ])(
       "should return OUTDATED_BUILD when build version (%s) is less than the minimum build version (%s)",
       (current, minimum) => {
@@ -88,7 +88,7 @@ describe("checkVersion", () => {
             currentBinaryVersion: "2.0.0",
             minBinaryVersion: "2.0.0",
             currentBuildVersion: current,
-            minBuildVersion: minimum
+            minBuildVersion: minimum,
           })
         ).toBe("OUTDATED_BUILD");
       }
@@ -103,7 +103,7 @@ describe("checkVersion", () => {
           currentBinaryVersion: "2.0.0",
           minBinaryVersion: undefined,
           currentBuildVersion: 0,
-          minBuildVersion: undefined
+          minBuildVersion: undefined,
         })
       ).toThrow("Campaign config not loaded");
     });
@@ -115,7 +115,7 @@ describe("checkVersion", () => {
           currentBinaryVersion: "3.0.0",
           minBinaryVersion: "3.0.0",
           currentBuildVersion: 0,
-          minBuildVersion: undefined
+          minBuildVersion: undefined,
         })
       ).toThrow("Campaign config not loaded");
     });

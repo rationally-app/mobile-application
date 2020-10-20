@@ -27,7 +27,7 @@ export const mobileNumberValidator = (
 export const countryCodeValidator = (code: string): boolean => {
   const phoneNumberUtil = new PhoneNumberUtil();
   const regions = phoneNumberUtil.getSupportedRegions();
-  const countryCodesList = regions.map(region =>
+  const countryCodesList = regions.map((region) =>
     phoneNumberUtil.getCountryCodeForRegion(region).toString()
   );
   return code[0] === "+" && countryCodesList.includes(code.substring(1));

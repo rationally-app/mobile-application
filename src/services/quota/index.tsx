@@ -7,7 +7,7 @@ import {
   DeleteTransactionResult,
   TransactionIdentifier,
   CommitTransactionResult,
-  IdentificationFlag
+  IdentificationFlag,
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
@@ -89,48 +89,48 @@ export const mockGetQuota = async (
         {
           category: "toilet-paper",
           quantity: 0,
-          transactionTime
+          transactionTime,
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "chocolate",
           quantity: 30,
-          transactionTime
+          transactionTime,
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "voucher",
           quantity: 1,
-          transactionTime
-        }
-      ]
+          transactionTime,
+        },
+      ],
     };
   } else {
     return {
       remainingQuota: [
         {
           category: "toilet-paper",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "instant-noodles",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
-          quantity: 60
+          quantity: 60,
         },
         { category: "vouchers", quantity: 1 },
-        { category: "voucher", quantity: 1 }
-      ]
+        { category: "voucher", quantity: 1 },
+      ],
     };
   }
 };
@@ -149,12 +149,12 @@ export const liveGetQuota = async (
     response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
       method: "POST",
       headers: {
-        Authorization: key
+        Authorization: key,
       },
       body: JSON.stringify({
         ids,
-        identificationFlag
-      })
+        identificationFlag,
+      }),
     });
     return response;
   } catch (e) {
@@ -172,7 +172,7 @@ export const liveGetQuota = async (
 
 export const mockPostTransaction = async ({
   ids,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
   const timestamp = new Date();
@@ -182,25 +182,25 @@ export const mockPostTransaction = async ({
       const transaction: Transaction[] = [
         {
           category: "voucher",
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ];
       transactionArr.push({
         timestamp: timestamp,
-        transaction
+        transaction,
       });
     }
     return {
-      transactions: transactionArr
+      transactions: transactionArr,
     };
   }
   return {
     transactions: [
       {
         transaction: transactions,
-        timestamp
-      }
-    ]
+        timestamp,
+      },
+    ],
   };
 };
 
@@ -209,7 +209,7 @@ export const livePostTransaction = async ({
   identificationFlag,
   endpoint,
   key,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids.length === 0) {
     throw new PostTransactionError("No ID was provided");
@@ -221,13 +221,13 @@ export const livePostTransaction = async ({
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
           ids,
           identificationFlag,
-          transaction: transactions
-        })
+          transaction: transactions,
+        }),
       }
     );
     return response;
@@ -243,7 +243,7 @@ export const livePostTransaction = async ({
 
 export const mockReserveTransaction = async ({
   ids,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
   const timestamp = new Date();
@@ -253,25 +253,25 @@ export const mockReserveTransaction = async ({
       const transaction: Transaction[] = [
         {
           category: "voucher",
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ];
       transactionArr.push({
         timestamp: timestamp,
-        transaction
+        transaction,
       });
     }
     return {
-      transactions: transactionArr
+      transactions: transactionArr,
     };
   }
   return {
     transactions: [
       {
         transaction: transactions,
-        timestamp
-      }
-    ]
+        timestamp,
+      },
+    ],
   };
 };
 
@@ -280,7 +280,7 @@ export const liveReserveTransaction = async ({
   identificationFlag,
   endpoint,
   key,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids.length === 0) {
     throw new ReserveTransactionError("No ID was provided");
@@ -292,13 +292,13 @@ export const liveReserveTransaction = async ({
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
           ids,
           identificationFlag,
-          transaction: transactions
-        })
+          transaction: transactions,
+        }),
       }
     );
     return response;
@@ -313,7 +313,7 @@ export const liveReserveTransaction = async ({
 };
 
 export const mockCommitTransaction = async ({
-  transactionIdentifiers
+  transactionIdentifiers,
 }: CommitTransaction): Promise<CommitTransactionResult> => {
   if (transactionIdentifiers.length === 0) {
     throw new CommitTransactionError("No transactions to commit");
@@ -322,7 +322,7 @@ export const mockCommitTransaction = async ({
   const transactions = transactionIdentifiers.map((identifier, i) => {
     return {
       identifier,
-      timestamp: new Date(timestamp + i)
+      timestamp: new Date(timestamp + i),
     };
   });
 
@@ -332,7 +332,7 @@ export const mockCommitTransaction = async ({
 export const liveCommitTransaction = async ({
   key,
   endpoint,
-  transactionIdentifiers
+  transactionIdentifiers,
 }: CommitTransaction): Promise<CommitTransactionResult> => {
   if (transactionIdentifiers.length === 0) {
     throw new CommitTransactionError("No transactions to commit");
@@ -344,11 +344,11 @@ export const liveCommitTransaction = async ({
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
-          transactionIdentifiers
-        })
+          transactionIdentifiers,
+        }),
       }
     );
     return response;
@@ -363,7 +363,7 @@ export const liveCommitTransaction = async ({
 };
 
 export const mockCancelTransaction = async ({
-  transactionIdentifiers
+  transactionIdentifiers,
 }: CommitTransaction): Promise<void> => {
   if (transactionIdentifiers.length === 0) {
     throw new CommitTransactionError("No transactions to commit");
@@ -373,7 +373,7 @@ export const mockCancelTransaction = async ({
 export const liveCancelTransaction = async ({
   key,
   endpoint,
-  transactionIdentifiers
+  transactionIdentifiers,
 }: CommitTransaction): Promise<void> => {
   if (transactionIdentifiers.length === 0) {
     throw new CommitTransactionError("No transactions to commit");
@@ -385,11 +385,11 @@ export const liveCancelTransaction = async ({
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
-          transactionIdentifiers
-        })
+          transactionIdentifiers,
+        }),
       }
     );
   } catch (e) {
@@ -418,24 +418,24 @@ export const mockPastTransactions = async (
       {
         category: "toilet-paper",
         quantity: 1,
-        transactionTime
+        transactionTime,
       },
       {
         category: "instant-noodles",
         quantity: 1,
-        transactionTime
+        transactionTime,
       },
       {
         category: "chocolate",
         quantity: 30,
-        transactionTime
+        transactionTime,
       },
       {
         category: "vouchers",
         quantity: 5,
-        transactionTime
-      }
-    ]
+        transactionTime,
+      },
+    ],
   };
 };
 
@@ -456,12 +456,12 @@ export const livePastTransactions = async (
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
           ids,
-          identificationFlag
-        })
+          identificationFlag,
+        }),
       }
     );
     return response;

@@ -26,7 +26,7 @@ const App = (): ReactElement => {
             AlertModalContextProvider,
             ImportantMessageContextProvider,
             DrawerContextProvider,
-            IdentificationContextProvider
+            IdentificationContextProvider,
           ]}
         >
           <Content />

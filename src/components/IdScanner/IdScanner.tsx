@@ -6,14 +6,14 @@ import {
   StyleProp,
   StyleSheet,
   View,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
 import {
   BarCodeScannedCallback,
   BarCodeScanner,
-  BarCodeScannerProps
+  BarCodeScannerProps,
 } from "expo-barcode-scanner";
 import { LoadingView } from "../Loading";
 import { LightBox } from "../Layout/LightBox";
@@ -25,24 +25,24 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   cameraWrapper: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: color("grey", 100)
+    backgroundColor: color("grey", 100),
   },
   backButtonWrapper: {
     position: "absolute",
     marginTop: size(3),
-    zIndex: Number.MAX_SAFE_INTEGER
+    zIndex: Number.MAX_SAFE_INTEGER,
   },
   scanner: {
-    ...StyleSheet.absoluteFillObject
+    ...StyleSheet.absoluteFillObject,
   },
   interestArea: {
-    position: "absolute"
-  }
+    position: "absolute",
+  },
 });
 
 const interestAreaRatios: Record<string, Record<string, number>> = {
   [BarCodeScanner.Constants.BarCodeType.qr]: { width: 0.7, height: 0.35 },
-  [BarCodeScanner.Constants.BarCodeType.code39]: { width: 0.9, height: 0.25 }
+  [BarCodeScanner.Constants.BarCodeType.code39]: { width: 0.9, height: 0.25 },
 };
 
 const getInterestAreaDimensions = (
@@ -73,7 +73,7 @@ const getInterestAreaDimensions = (
     x: (width * (1 - widthRatio)) / 2,
     y: (height * (1 - heightRatio)) / 2,
     width: areaWidth,
-    height: areaHeight
+    height: areaHeight,
   };
 };
 
@@ -92,7 +92,7 @@ export const IdScannerCamera: FunctionComponent<IdScannerCamera> = ({
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39],
   interestArea,
   style,
-  children
+  children,
 }) => {
   return (
     <>
@@ -137,7 +137,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   onCancel,
   cancelButtonText,
   isScanningEnabled = true,
-  hasLimitedInterestArea = true
+  hasLimitedInterestArea = true,
 }) => {
   const [platform] = useState<string>(Platform.OS);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
@@ -158,7 +158,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
     askForCameraPermission();
   }, [onCancel]);
 
-  const checkIfInInterestArea: BarCodeScannedCallback = event => {
+  const checkIfInInterestArea: BarCodeScannedCallback = (event) => {
     const bounds = event.bounds?.origin;
     if (
       bounds &&

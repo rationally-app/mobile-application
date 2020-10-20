@@ -18,19 +18,19 @@ const transactions = [
     identifierInputs: [
       {
         label: "Merchant Code",
-        value: "CDC-0001"
-      }
-    ]
-  }
+        value: "CDC-0001",
+      },
+    ],
+  },
 ];
 
 const mockPostTransactionResult = {
   transactions: [
     {
       transaction: transactions,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 describe("useVoucher", () => {
@@ -48,7 +48,7 @@ describe("useVoucher", () => {
       });
 
       expect(result.current.vouchers).toStrictEqual([
-        { serial: "123456789", denomination: 2 }
+        { serial: "123456789", denomination: 2 },
       ]);
 
       await wait(() => {
@@ -69,14 +69,14 @@ describe("useVoucher", () => {
 
       expect(result.current.vouchers).toStrictEqual([
         { serial: "123456789", denomination: 2 },
-        { serial: "123456788", denomination: 2 }
+        { serial: "123456788", denomination: 2 },
       ]);
 
       await wait(() => {
         result.current.removeVoucher("123456788");
       });
       expect(result.current.vouchers).toStrictEqual([
-        { serial: "123456789", denomination: 2 }
+        { serial: "123456789", denomination: 2 },
       ]);
     });
 
@@ -91,7 +91,7 @@ describe("useVoucher", () => {
 
       expect(result.current.vouchers).toStrictEqual([
         { serial: "123456789", denomination: 2 },
-        { serial: "123456788", denomination: 2 }
+        { serial: "123456788", denomination: 2 },
       ]);
 
       await wait(() => {
@@ -99,7 +99,7 @@ describe("useVoucher", () => {
       });
       expect(result.current.vouchers).toStrictEqual([
         { serial: "123456789", denomination: 2 },
-        { serial: "123456788", denomination: 2 }
+        { serial: "123456788", denomination: 2 },
       ]);
     });
 
@@ -114,7 +114,7 @@ describe("useVoucher", () => {
 
       expect(result.current.vouchers).toStrictEqual([
         { serial: "123456789", denomination: 2 },
-        { serial: "123456788", denomination: 2 }
+        { serial: "123456788", denomination: 2 },
       ]);
 
       await wait(() => {
@@ -122,11 +122,11 @@ describe("useVoucher", () => {
       });
 
       expect(result.current.vouchers).toStrictEqual([
-        { serial: "123456789", denomination: 2 }
+        { serial: "123456789", denomination: 2 },
       ]);
       rerender([key, endpoint]);
       expect(result.current.vouchers).toStrictEqual([
-        { serial: "123456789", denomination: 2 }
+        { serial: "123456789", denomination: 2 },
       ]);
     });
   });
@@ -141,7 +141,7 @@ describe("useVoucher", () => {
       });
 
       expect(result.current.vouchers).toStrictEqual([
-        { serial: "123456789", denomination: 2 }
+        { serial: "123456789", denomination: 2 },
       ]);
     });
 
@@ -154,11 +154,11 @@ describe("useVoucher", () => {
       });
 
       expect(result.current.vouchers).toStrictEqual([
-        { serial: "123456789", denomination: 2 }
+        { serial: "123456789", denomination: 2 },
       ]);
       rerender([key, endpoint]);
       expect(result.current.vouchers).toStrictEqual([
-        { serial: "123456789", denomination: 2 }
+        { serial: "123456789", denomination: 2 },
       ]);
     });
   });
@@ -186,12 +186,12 @@ describe("useVoucher", () => {
       expect(result.current.vouchers).toStrictEqual([
         {
           serial: "123456789",
-          denomination: 2
+          denomination: 2,
         },
         {
           serial: "123456788",
-          denomination: 2
-        }
+          denomination: 2,
+        },
       ]);
       expect(result.current.checkoutResult).toStrictEqual(
         mockPostTransactionResult
@@ -214,8 +214,8 @@ describe("useVoucher", () => {
       expect(result.current.vouchers).toStrictEqual([
         {
           serial: "123456789",
-          denomination: 2
-        }
+          denomination: 2,
+        },
       ]);
     });
 
@@ -244,12 +244,12 @@ describe("useVoucher", () => {
       expect(result.current.vouchers).toStrictEqual([
         {
           serial: "123456789",
-          denomination: 2
+          denomination: 2,
         },
         {
           serial: "123456788",
-          denomination: 2
-        }
+          denomination: 2,
+        },
       ]);
     });
   });

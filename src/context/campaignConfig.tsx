@@ -3,7 +3,7 @@ import {
   CampaignFeatures,
   CampaignConfig,
   CampaignPolicy,
-  CampaignC13N
+  CampaignC13N,
 } from "../types";
 
 interface CampaignConfigContext {
@@ -14,7 +14,7 @@ interface CampaignConfigContext {
 export const CampaignConfigContext = createContext<CampaignConfigContext>({
   features: null,
   policies: null,
-  c13n: null
+  c13n: null,
 });
 
 export const CampaignConfigContextProvider: FunctionComponent<{
