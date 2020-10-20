@@ -4,13 +4,13 @@ import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import {
   formatPhoneNumber,
-  stripPhoneNumberFormatting
+  stripPhoneNumberFormatting,
 } from "../../utils/phoneNumberFormatter";
 
 const styles = StyleSheet.create({
   inputsWrapper: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   countryCode: {
     minHeight: size(6),
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize(0),
     color: color("blue", 50),
     minWidth: size(7),
-    fontFamily: "brand-regular"
+    fontFamily: "brand-regular",
   },
   numberInput: {
     flex: 1,
@@ -36,19 +36,19 @@ const styles = StyleSheet.create({
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
     color: color("blue", 50),
-    fontFamily: "brand-regular"
+    fontFamily: "brand-regular",
   },
   hyphen: {
     marginRight: size(1),
     marginLeft: size(1),
-    fontSize: fontSize(3)
+    fontSize: fontSize(3),
   },
   numberWrapper: {
-    marginBottom: size(2)
+    marginBottom: size(2),
   },
   label: {
-    fontFamily: "brand-bold"
-  }
+    fontFamily: "brand-bold",
+  },
 });
 
 export const PhoneNumberInput: FunctionComponent<{
@@ -65,7 +65,7 @@ export const PhoneNumberInput: FunctionComponent<{
   onChangeCountryCode,
   onChangeMobileNumber,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onSubmit = () => {}
+  onSubmit = () => {},
 }) => {
   return (
     <View style={styles.numberWrapper}>
@@ -75,7 +75,7 @@ export const PhoneNumberInput: FunctionComponent<{
           style={styles.countryCode}
           keyboardType="phone-pad"
           value={countryCodeValue}
-          onChangeText={text => onChangeCountryCode(text)}
+          onChangeText={(text) => onChangeCountryCode(text)}
         />
         <AppText style={styles.hyphen}>-</AppText>
         <TextInput
@@ -85,7 +85,7 @@ export const PhoneNumberInput: FunctionComponent<{
             mobileNumberValue,
             countryCodeValue.substr(1)
           )}
-          onChangeText={text =>
+          onChangeText={(text) =>
             onChangeMobileNumber(stripPhoneNumberFormatting(text))
           }
           onSubmitEditing={onSubmit}
