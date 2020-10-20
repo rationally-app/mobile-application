@@ -16,6 +16,7 @@ import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation
 import { StackViewTransitionConfigs } from "react-navigation-stack";
 import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
+import { updateI18nLocale } from "../common/i18n/i18nSetup";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -55,9 +56,11 @@ export const Content = (): ReactElement => {
   const prefix = Linking.makeUrl("/");
 
   const checkUpdates = useCheckUpdates();
+
   useEffect(() => {
     if (appState === "active") {
       checkUpdates();
+      updateI18nLocale();
     }
   }, [appState, checkUpdates]);
 
