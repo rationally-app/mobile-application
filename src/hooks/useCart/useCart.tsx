@@ -440,7 +440,6 @@ export const useCart = (
 
         setCartState("PURCHASED");
       } catch (e) {
-        console.log(e);
         setCartState("DEFAULT");
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
