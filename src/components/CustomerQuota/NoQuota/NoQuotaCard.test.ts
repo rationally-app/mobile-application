@@ -384,15 +384,73 @@ const allQuotaResponseHasAppeal: Quota | null = {
   ],
 };
 
-describe("checkifAppealAvailable", () => {
-  it("should not return appeal because product has been appealed", () => {
+const allProductsNoAppealCategory: CampaignPolicy[] | null = [
+  {
+    category: "meal-credits",
+    name: "🍚 Meal Credit(s)",
+    order: 1,
+    quantity: {
+      checkoutLimit: 1,
+      default: 1,
+      limit: 3,
+      period: -1,
+      periodExpression: "0/20 * * * *",
+      periodType: "CRON",
+      usage: {
+        limit: 1,
+        periodExpression: "0/5 * * * *",
+        periodType: "CRON",
+      },
+    },
+    type: "REDEEM",
+  },
+];
+
+const allQuotaResponseCategoryNoAppeal: Quota | null = {
+  globalQuota: [
+    {
+      category: "meal-credits",
+      quantity: 2,
+      quotaRefreshTime: 1603274400000,
+      transactionTime: new Date("2020-10-21T09:45:04.648Z"),
+    },
+  ],
+  localQuota: [
+    {
+      category: "meal-credits",
+      quantity: 0,
+      quotaRefreshTime: 1603273800000,
+      transactionTime: new Date("2020-10-21T09:45:04.648Z"),
+    },
+  ],
+  remainingQuota: [
+    {
+      category: "meal-credits",
+      quantity: 0,
+      transactionTime: new Date("2020-10-21T09:45:04.648Z"),
+    },
+  ],
+};
+
+describe("checkHasAppealProduct", () => {
+  it("should return false when product has no appeal category type", () => {
+    expect.assertions(1);
+    expect(
+      checkHasAppealProduct(
+        allProductsNoAppealCategory,
+        allQuotaResponseCategoryNoAppeal
+      )
+    ).toBe(false);
+  });
+
+  it("should return false when quota for the appeal category is zero", () => {
     expect.assertions(1);
     expect(checkHasAppealProduct(allProducts, allQuotaResponseNoAppeal)).toBe(
       false
     );
   });
 
-  it("should return that has enough appeal quota to request for appeal", () => {
+  it("should return true when quota for the appeal category is more than zero", () => {
     expect.assertions(1);
     expect(checkHasAppealProduct(allProducts, allQuotaResponseHasAppeal)).toBe(
       true
