@@ -18,10 +18,170 @@ describe("NoQuotaCard utility functions", () => {
   let allProducts: CampaignPolicy[];
   let mockTransactionsByCategoryMap: TransactionsByCategoryMap;
 
+  let allQuotaResponseNoAppeal: Quota | null;
+  let allProductsAppealCategory: CampaignPolicy[] | null;
+  let allQuotaResponseHasAppeal: Quota | null;
+  let allQuotaResponseCategoryNoAppeal: Quota | null;
+  let allProductsNoAppealCategory: CampaignPolicy[] | null;
+
   const latestTransactionTimeMs = 1596530350000;
   const latestTransactionTime = new Date(latestTransactionTimeMs);
 
   beforeAll(() => {
+    allQuotaResponseNoAppeal = {
+      globalQuota: [
+        {
+          category: "appreciation-gift",
+          quantity: 0,
+          quotaRefreshTime: 1634800083079,
+          transactionTime: new Date("2020-10-21T07:08:03.079Z"),
+        },
+        {
+          category: "replacement-appreciation-gift",
+          quantity: 0,
+          quotaRefreshTime: 1634800102815,
+          transactionTime: new Date("2020-10-21T07:08:22.815Z"),
+        },
+      ],
+      localQuota: [
+        {
+          category: "appreciation-gift",
+          quantity: 9007199254740991,
+          quotaRefreshTime: 1634800083079,
+        },
+        {
+          category: "replacement-appreciation-gift",
+          quantity: 9007199254740991,
+          quotaRefreshTime: 1634800102815,
+        },
+      ],
+      remainingQuota: [
+        {
+          category: "appreciation-gift",
+          quantity: 0,
+          transactionTime: new Date("2020-10-21T07:08:03.079Z"),
+        },
+        {
+          category: "replacement-appreciation-gift",
+          quantity: 0,
+          transactionTime: new Date("2020-10-21T07:08:22.815Z"),
+        },
+      ],
+    };
+
+    allProductsAppealCategory = [
+      {
+        category: "appreciation-gift",
+        name: "🎁 Appreciation gift",
+        order: 1,
+        quantity: {
+          default: 1,
+          limit: 1,
+          period: 365,
+        },
+        type: "REDEEM",
+      },
+      {
+        category: "replacement-appreciation-gift",
+        categoryType: "APPEAL",
+        name: "🎁 Replacement",
+        order: 1,
+        quantity: {
+          default: 1,
+          limit: 1,
+          period: 365,
+        },
+        type: "REDEEM",
+      },
+    ];
+
+    allQuotaResponseHasAppeal = {
+      globalQuota: [
+        {
+          category: "appreciation-gift",
+          quantity: 0,
+          quotaRefreshTime: 1634803468038,
+          transactionTime: new Date("2020-10-21T08:04:28.038Z"),
+        },
+        {
+          category: "replacement-appreciation-gift",
+          quantity: 1,
+          quotaRefreshTime: 1634803476822,
+        },
+      ],
+      localQuota: [
+        {
+          category: "appreciation-gift",
+          quantity: 9007199254740991,
+          quotaRefreshTime: 1634803468038,
+        },
+        {
+          category: "replacement-appreciation-gift",
+          quantity: 9007199254740991,
+          quotaRefreshTime: 1634803476822,
+        },
+      ],
+      remainingQuota: [
+        {
+          category: "appreciation-gift",
+          quantity: 0,
+          transactionTime: new Date("2020-10-21T08:04:28.038Z"),
+        },
+        {
+          category: "replacement-appreciation-gift",
+          quantity: 1,
+        },
+      ],
+    };
+
+    allProductsNoAppealCategory = [
+      {
+        category: "meal-credits",
+        name: "🍚 Meal Credit(s)",
+        order: 1,
+        quantity: {
+          checkoutLimit: 1,
+          default: 1,
+          limit: 3,
+          period: -1,
+          periodExpression: "0/20 * * * *",
+          periodType: "CRON",
+          usage: {
+            limit: 1,
+            periodExpression: "0/5 * * * *",
+            periodType: "CRON",
+          },
+        },
+        type: "REDEEM",
+      },
+    ];
+
+    allQuotaResponseCategoryNoAppeal = {
+      globalQuota: [
+        {
+          category: "meal-credits",
+          quantity: 2,
+          quotaRefreshTime: 1603274400000,
+          transactionTime: new Date("2020-10-21T09:45:04.648Z"),
+        },
+      ],
+      localQuota: [
+        {
+          category: "meal-credits",
+          quantity: 0,
+          quotaRefreshTime: 1603273800000,
+          transactionTime: new Date("2020-10-21T09:45:04.648Z"),
+        },
+      ],
+      remainingQuota: [
+        {
+          category: "meal-credits",
+          quantity: 0,
+          transactionTime: new Date("2020-10-21T09:45:04.648Z"),
+        },
+      ],
+    };
+
     sortedTransactions = [
       {
         category: "tt-token",
@@ -150,7 +310,37 @@ describe("NoQuotaCard utility functions", () => {
       },
     };
   });
+  describe("checkHasAppealProduct", () => {
+    it("should return false when product has no appeal category type", () => {
+      expect.assertions(1);
+      expect(
+        checkHasAppealProduct(
+          allProductsNoAppealCategory,
+          allQuotaResponseCategoryNoAppeal
+        )
+      ).toBe(false);
+    });
 
+    it("should return false when quota for the appeal category is zero", () => {
+      expect.assertions(1);
+      expect(
+        checkHasAppealProduct(
+          allProductsAppealCategory,
+          allQuotaResponseNoAppeal
+        )
+      ).toBe(false);
+    });
+
+    it("should return true when quota for the appeal category is more than zero", () => {
+      expect.assertions(1);
+      expect(
+        checkHasAppealProduct(
+          allProductsAppealCategory,
+          allQuotaResponseHasAppeal
+        )
+      ).toBe(true);
+    });
+  });
   describe("groupTransactionsByCategory", () => {
     it("should return categories with latest transactions and other categories", () => {
       expect.assertions(1);
@@ -275,185 +465,5 @@ describe("NoQuotaCard utility functions", () => {
       expect.assertions(1);
       expect(getLatestTransactionTime([])).toBeUndefined();
     });
-  });
-});
-
-const allQuotaResponseNoAppeal: Quota | null = {
-  globalQuota: [
-    {
-      category: "appreciation-gift",
-      quantity: 0,
-      quotaRefreshTime: 1634800083079,
-      transactionTime: new Date("2020-10-21T07:08:03.079Z"),
-    },
-    {
-      category: "replacement-appreciation-gift",
-      quantity: 0,
-      quotaRefreshTime: 1634800102815,
-      transactionTime: new Date("2020-10-21T07:08:22.815Z"),
-    },
-  ],
-  localQuota: [
-    {
-      category: "appreciation-gift",
-      quantity: 9007199254740991,
-      quotaRefreshTime: 1634800083079,
-    },
-    {
-      category: "replacement-appreciation-gift",
-      quantity: 9007199254740991,
-      quotaRefreshTime: 1634800102815,
-    },
-  ],
-  remainingQuota: [
-    {
-      category: "appreciation-gift",
-      quantity: 0,
-      transactionTime: new Date("2020-10-21T07:08:03.079Z"),
-    },
-    {
-      category: "replacement-appreciation-gift",
-      quantity: 0,
-      transactionTime: new Date("2020-10-21T07:08:22.815Z"),
-    },
-  ],
-};
-
-const allProducts: CampaignPolicy[] | null = [
-  {
-    category: "appreciation-gift",
-    name: "🎁 Appreciation gift",
-    order: 1,
-    quantity: {
-      default: 1,
-      limit: 1,
-      period: 365,
-    },
-    type: "REDEEM",
-  },
-  {
-    category: "replacement-appreciation-gift",
-    categoryType: "APPEAL",
-    name: "🎁 Replacement",
-    order: 1,
-    quantity: {
-      default: 1,
-      limit: 1,
-      period: 365,
-    },
-    type: "REDEEM",
-  },
-];
-
-const allQuotaResponseHasAppeal: Quota | null = {
-  globalQuota: [
-    {
-      category: "appreciation-gift",
-      quantity: 0,
-      quotaRefreshTime: 1634803468038,
-      transactionTime: new Date("2020-10-21T08:04:28.038Z"),
-    },
-    {
-      category: "replacement-appreciation-gift",
-      quantity: 1,
-      quotaRefreshTime: 1634803476822,
-    },
-  ],
-  localQuota: [
-    {
-      category: "appreciation-gift",
-      quantity: 9007199254740991,
-      quotaRefreshTime: 1634803468038,
-    },
-    {
-      category: "replacement-appreciation-gift",
-      quantity: 9007199254740991,
-      quotaRefreshTime: 1634803476822,
-    },
-  ],
-  remainingQuota: [
-    {
-      category: "appreciation-gift",
-      quantity: 0,
-      transactionTime: new Date("2020-10-21T08:04:28.038Z"),
-    },
-    {
-      category: "replacement-appreciation-gift",
-      quantity: 1,
-    },
-  ],
-};
-
-const allProductsNoAppealCategory: CampaignPolicy[] | null = [
-  {
-    category: "meal-credits",
-    name: "🍚 Meal Credit(s)",
-    order: 1,
-    quantity: {
-      checkoutLimit: 1,
-      default: 1,
-      limit: 3,
-      period: -1,
-      periodExpression: "0/20 * * * *",
-      periodType: "CRON",
-      usage: {
-        limit: 1,
-        periodExpression: "0/5 * * * *",
-        periodType: "CRON",
-      },
-    },
-    type: "REDEEM",
-  },
-];
-
-const allQuotaResponseCategoryNoAppeal: Quota | null = {
-  globalQuota: [
-    {
-      category: "meal-credits",
-      quantity: 2,
-      quotaRefreshTime: 1603274400000,
-      transactionTime: new Date("2020-10-21T09:45:04.648Z"),
-    },
-  ],
-  localQuota: [
-    {
-      category: "meal-credits",
-      quantity: 0,
-      quotaRefreshTime: 1603273800000,
-      transactionTime: new Date("2020-10-21T09:45:04.648Z"),
-    },
-  ],
-  remainingQuota: [
-    {
-      category: "meal-credits",
-      quantity: 0,
-      transactionTime: new Date("2020-10-21T09:45:04.648Z"),
-    },
-  ],
-};
-
-describe("checkHasAppealProduct", () => {
-  it("should return false when product has no appeal category type", () => {
-    expect.assertions(1);
-    expect(
-      checkHasAppealProduct(
-        allProductsNoAppealCategory,
-        allQuotaResponseCategoryNoAppeal
-      )
-    ).toBe(false);
-  });
-
-  it("should return false when quota for the appeal category is zero", () => {
-    expect.assertions(1);
-    expect(checkHasAppealProduct(allProducts, allQuotaResponseNoAppeal)).toBe(
-      false
-    );
-  });
-
-  it("should return true when quota for the appeal category is more than zero", () => {
-    expect.assertions(1);
-    expect(checkHasAppealProduct(allProducts, allQuotaResponseHasAppeal)).toBe(
-      true
-    );
   });
 });
