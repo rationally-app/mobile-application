@@ -14,21 +14,60 @@ import { Cart } from "../../../hooks/useCart/useCart";
 import "../../../common/i18n/i18nMock";
 
 describe("NoQuotaCard utility functions", () => {
-  let sortedTransactions: PastTransactionsResult["pastTransactions"];
-  let allProducts: CampaignPolicy[];
-  let mockTransactionsByCategoryMap: TransactionsByCategoryMap;
-
-  let allQuotaResponseNoAppeal: Quota | null;
-  let allProductsAppealCategory: CampaignPolicy[] | null;
-  let allQuotaResponseHasAppeal: Quota | null;
-  let allQuotaResponseCategoryNoAppeal: Quota | null;
-  let allProductsNoAppealCategory: CampaignPolicy[] | null;
+  const mockTransactionsByCategoryMap: TransactionsByCategoryMap = {
+    "TT token": {
+      transactions: [
+        {
+          header: "4 Aug 2020, 4:39PM",
+          details: "AAA987654321",
+          quantity: "1 qty",
+          isAppeal: false,
+          order: -1,
+        },
+      ],
+      hasLatestTransaction: true,
+      order: 1,
+    },
+    "Meal credits": {
+      transactions: [
+        {
+          header: "4 Aug 2020, 4:39PM",
+          details: "",
+          quantity: "$10",
+          isAppeal: false,
+          order: -1,
+        },
+        {
+          header: "4 Aug 2020, 4:38PM",
+          details: "",
+          quantity: "$5",
+          isAppeal: false,
+          order: -1,
+        },
+      ],
+      hasLatestTransaction: true,
+      order: 0,
+    },
+    "CDC Vouchers": {
+      transactions: [
+        {
+          header: "4 Aug 2020, 4:39PM",
+          details: "AAA987654322",
+          quantity: "1 book",
+          isAppeal: false,
+          order: -1,
+        },
+      ],
+      hasLatestTransaction: false,
+      order: 2,
+    },
+  };
 
   const latestTransactionTimeMs = 1596530350000;
   const latestTransactionTime = new Date(latestTransactionTimeMs);
 
-  beforeAll(() => {
-    allQuotaResponseNoAppeal = {
+  describe("checkHasAppealProduct", () => {
+    const allQuotaResponseNoAppeal: Quota = {
       globalQuota: [
         {
           category: "appreciation-gift",
@@ -69,7 +108,7 @@ describe("NoQuotaCard utility functions", () => {
       ],
     };
 
-    allProductsAppealCategory = [
+    const allProductsAppealCategory: CampaignPolicy[] = [
       {
         category: "appreciation-gift",
         name: "🎁 Appreciation gift",
@@ -95,7 +134,7 @@ describe("NoQuotaCard utility functions", () => {
       },
     ];
 
-    allQuotaResponseHasAppeal = {
+    const allQuotaResponseHasAppeal: Quota = {
       globalQuota: [
         {
           category: "appreciation-gift",
@@ -134,7 +173,7 @@ describe("NoQuotaCard utility functions", () => {
       ],
     };
 
-    allProductsNoAppealCategory = [
+    const allProductsNoAppealCategory: CampaignPolicy[] = [
       {
         category: "meal-credits",
         name: "🍚 Meal Credit(s)",
@@ -156,7 +195,7 @@ describe("NoQuotaCard utility functions", () => {
       },
     ];
 
-    allQuotaResponseCategoryNoAppeal = {
+    const allQuotaResponseCategoryNoAppeal: Quota = {
       globalQuota: [
         {
           category: "meal-credits",
@@ -182,43 +221,39 @@ describe("NoQuotaCard utility functions", () => {
       ],
     };
 
-    sortedTransactions = [
-      {
-        category: "tt-token",
-        quantity: 1,
-        identifierInputs: [
-          {
-            ...defaultIdentifier,
-            label: "Device code",
-            value: "AAA987654321",
-          },
-        ],
-        transactionTime: latestTransactionTime,
-      },
-      {
-        category: "meal-credits",
-        quantity: 10,
-        transactionTime: latestTransactionTime,
-      },
-      {
-        category: "vouchers",
-        quantity: 1,
-        identifierInputs: [
-          {
-            ...defaultIdentifier,
-            label: "Voucher code",
-            value: "AAA987654322",
-          },
-        ],
-        transactionTime: new Date(latestTransactionTimeMs - 10000),
-      },
-      {
-        category: "meal-credits",
-        quantity: 5,
-        transactionTime: new Date(latestTransactionTimeMs - 20000),
-      },
-    ];
-    allProducts = [
+    it("should return false when product has no appeal category type", () => {
+      expect.assertions(1);
+      expect(
+        checkHasAppealProduct(
+          allProductsNoAppealCategory,
+          allQuotaResponseCategoryNoAppeal
+        )
+      ).toBe(false);
+    });
+
+    it("should return false when quota for the appeal category is zero", () => {
+      expect.assertions(1);
+      expect(
+        checkHasAppealProduct(
+          allProductsAppealCategory,
+          allQuotaResponseNoAppeal
+        )
+      ).toBe(false);
+    });
+
+    it("should return true when quota for the appeal category is more than zero", () => {
+      expect.assertions(1);
+      expect(
+        checkHasAppealProduct(
+          allProductsAppealCategory,
+          allQuotaResponseHasAppeal
+        )
+      ).toBe(true);
+    });
+  });
+
+  describe("groupTransactionsByCategory", () => {
+    const allProducts: CampaignPolicy[] = [
       {
         category: "meal-credits",
         name: "Meal credits",
@@ -261,87 +296,43 @@ describe("NoQuotaCard utility functions", () => {
       },
     ];
 
-    mockTransactionsByCategoryMap = {
-      "TT token": {
-        transactions: [
+    const sortedTransactions: PastTransactionsResult["pastTransactions"] = [
+      {
+        category: "tt-token",
+        quantity: 1,
+        identifierInputs: [
           {
-            header: "4 Aug 2020, 4:39PM",
-            details: "AAA987654321",
-            quantity: "1 qty",
-            isAppeal: false,
-            order: -1,
+            ...defaultIdentifier,
+            label: "Device code",
+            value: "AAA987654321",
           },
         ],
-        hasLatestTransaction: true,
-        order: 1,
+        transactionTime: latestTransactionTime,
       },
-      "Meal credits": {
-        transactions: [
+      {
+        category: "meal-credits",
+        quantity: 10,
+        transactionTime: latestTransactionTime,
+      },
+      {
+        category: "vouchers",
+        quantity: 1,
+        identifierInputs: [
           {
-            header: "4 Aug 2020, 4:39PM",
-            details: "",
-            quantity: "$10",
-            isAppeal: false,
-            order: -1,
-          },
-          {
-            header: "4 Aug 2020, 4:38PM",
-            details: "",
-            quantity: "$5",
-            isAppeal: false,
-            order: -1,
+            ...defaultIdentifier,
+            label: "Voucher code",
+            value: "AAA987654322",
           },
         ],
-        hasLatestTransaction: true,
-        order: 0,
+        transactionTime: new Date(latestTransactionTimeMs - 10000),
       },
-      "CDC Vouchers": {
-        transactions: [
-          {
-            header: "4 Aug 2020, 4:39PM",
-            details: "AAA987654322",
-            quantity: "1 book",
-            isAppeal: false,
-            order: -1,
-          },
-        ],
-        hasLatestTransaction: false,
-        order: 2,
+      {
+        category: "meal-credits",
+        quantity: 5,
+        transactionTime: new Date(latestTransactionTimeMs - 20000),
       },
-    };
-  });
-  describe("checkHasAppealProduct", () => {
-    it("should return false when product has no appeal category type", () => {
-      expect.assertions(1);
-      expect(
-        checkHasAppealProduct(
-          allProductsNoAppealCategory,
-          allQuotaResponseCategoryNoAppeal
-        )
-      ).toBe(false);
-    });
+    ];
 
-    it("should return false when quota for the appeal category is zero", () => {
-      expect.assertions(1);
-      expect(
-        checkHasAppealProduct(
-          allProductsAppealCategory,
-          allQuotaResponseNoAppeal
-        )
-      ).toBe(false);
-    });
-
-    it("should return true when quota for the appeal category is more than zero", () => {
-      expect.assertions(1);
-      expect(
-        checkHasAppealProduct(
-          allProductsAppealCategory,
-          allQuotaResponseHasAppeal
-        )
-      ).toBe(true);
-    });
-  });
-  describe("groupTransactionsByCategory", () => {
     it("should return categories with latest transactions and other categories", () => {
       expect.assertions(1);
 
