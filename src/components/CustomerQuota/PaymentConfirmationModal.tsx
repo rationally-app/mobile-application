@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { AlertModal } from "../AlertModal/AlertModal";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 export interface PaymentConfirmationModalProps {
   commitCart: () => void;
@@ -12,20 +13,27 @@ export const PaymentConfirmationModal: FunctionComponent<PaymentConfirmationModa
   cancelPayment,
   isVisible,
 }) => {
+  const { i18nt } = useTranslate();
   return (
     <AlertModal
       alertType="CONFIRM"
-      title="Payment collected?"
+      title={i18nt("errorMessages", "paymentCollected", "title")}
       onOk={commitCart}
       onCancel={cancelPayment}
       visible={isVisible}
       buttonTexts={{
-        primaryActionText: "Collected",
-        secondaryActionText: "No",
+        primaryActionText: i18nt(
+          "errorMessages",
+          "paymentCollected",
+          "primaryActionText"
+        ),
+        secondaryActionText: i18nt(
+          "errorMessages",
+          "paymentCollected",
+          "secondaryActionText"
+        ),
       }}
-      description={
-        "This action cannot be undone. Proceed only when payment has been collected."
-      }
+      description={i18nt("errorMessages", "paymentCollected", "body")}
     />
   );
 };
