@@ -173,6 +173,25 @@ export const getLatestTransactionTime = (cart: Cart): Date | undefined =>
     compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
   )[0]?.lastTransactionTime;
 
+export const checkHasAppealProduct = (
+  allProducts: CampaignPolicy[] | null,
+  allQuotaResponse: Quota | null
+): boolean => {
+  const appealProductsCategories = allProducts
+    ?.filter((product) => product.categoryType === "APPEAL")
+    .map((product) => product.category);
+
+  const hasAppealProduct =
+    (appealProductsCategories &&
+      allQuotaResponse?.remainingQuota.some(
+        (quota) =>
+          appealProductsCategories.includes(quota.category) &&
+          quota.quantity !== 0
+      )) ??
+    false;
+  return hasAppealProduct;
+};
+
 /**
  * Shows when the user cannot purchase anything
  *
@@ -216,18 +235,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
 
-  const appealProductsCategories = allProducts
-    ?.filter((product) => product.categoryType === "APPEAL")
-    .map((product) => product.category);
-
-  const hasAppealProduct =
-    (appealProductsCategories &&
-      allQuotaResponse?.remainingQuota.some(
-        (quota) =>
-          appealProductsCategories.includes(quota.category) &&
-          quota.quantity !== 0
-      )) ??
-    false;
+  const hasAppealProduct = checkHasAppealProduct(allProducts, allQuotaResponse);
 
   const translationProps = useTranslate();
   const transactionsByCategoryMap = groupTransactionsByCategory(
