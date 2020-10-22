@@ -1,6 +1,16 @@
 import { Translations } from "./type";
 
 export const zh: Translations = {
+  redemptionStats: {
+    youDistributed: "您已分发",
+    lastDistributedAt: "最后在时:分",
+    distributedTime: "分发",
+    back: "返回",
+    statistics: "统计",
+    goToStatistics: "前往统计",
+    noItemsScanned: "没有扫描项目",
+    viaAppeal: "通过上诉",
+  },
   loginScanCard: {
     loginWithQR: "请使用您专属的QR码登录",
     scanToLogin: "扫描QR码",

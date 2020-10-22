@@ -2,6 +2,7 @@ import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
 import { formatQuantityText } from "../../components/CustomerQuota/utils";
 import { Sentry } from "../../utils/errorTracking";
+import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
 type SummarisedTransactions = {
   summarisedTransactionHistory: {
@@ -46,9 +47,10 @@ export const countTotalTransactionsAndByCategory = (
               label: " qty",
             }
           ),
+
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"
-              ? "via appeal"
+              ? i18ntWithValidator("redemptionStats", "viaAppeal")
               : undefined,
           order: findItemByCategory?.order ?? -1,
         });

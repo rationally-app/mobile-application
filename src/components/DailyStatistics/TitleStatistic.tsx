@@ -4,6 +4,7 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AppText } from "../Layout/AppText";
 import { format, isSameDay } from "date-fns";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 interface TitleStatisticComponent {
   totalCount: number | null;
@@ -61,15 +62,19 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
   onPressPrevDay,
   onPressNextDay,
 }) => {
+  const { i18nt } = useTranslate();
   return (
     <View style={styles.appHeaderWrapper}>
-      <AppText style={styles.smallText}>You distributed</AppText>
+      <AppText style={styles.smallText}>
+        {i18nt("redemptionStats", "youDistributed")}
+      </AppText>
       <AppText style={styles.statText}>{totalCount?.toLocaleString()}</AppText>
       <AppText style={styles.smallText}>
-        Last distributed at{" "}
+        {i18nt("redemptionStats", "lastDistributedAt")}{" "}
         {lastTransactionTime !== null
           ? format(lastTransactionTime, "h:mma")
-          : "-"}
+          : "-"}{" "}
+        {i18nt("redemptionStats", "distributedTime")}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>

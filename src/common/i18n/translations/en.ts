@@ -1,6 +1,16 @@
 import { Translations } from "./type";
 
 export const en: Translations = {
+  redemptionStats: {
+    youDistributed: "You distributed",
+    lastDistributedAt: "Last distributed at",
+    distributedTime: "",
+    back: "Back",
+    statistics: "Statistics",
+    goToStatistics: "Go to statistics",
+    noItemsScanned: "No items scanned",
+    viaAppeal: "via appeal",
+  },
   loginScanCard: {
     loginWithQR:
       "Please log in with your unique QR code provided by your supervisor",

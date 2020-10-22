@@ -1,4 +1,14 @@
 export type Translations = {
+  redemptionStats: {
+    youDistributed: string;
+    lastDistributedAt: string;
+    distributedTime: string;
+    back: string;
+    statistics: string;
+    goToStatistics: string;
+    noItemsScanned: string;
+    viaAppeal: string;
+  };
   loginScanCard: {
     loginWithQR: string;
     scanToLogin: string;
