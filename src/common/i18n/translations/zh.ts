@@ -104,7 +104,7 @@ export const zh: Translations = {
   },
   notEligibleScreen: {
     notEligible: "不符合资格",
-    logAppeal: "请提出上诉。",
+    logAppeal: "不符合资格收集任何物品。请联系您的负责人，了解上诉准则。",
     cannot: "不能",
     purchase: "购买",
   },

@@ -90,6 +90,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     checkoutCart,
     error,
     clearError,
+    allQuotaResponse,
     quotaResponse,
   } = useCart(ids, sessionToken, endpoint);
 
@@ -240,6 +241,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             onCancel={onCancel}
             onAppeal={onAppeal}
             quotaResponse={quotaResponse}
+            allQuotaResponse={allQuotaResponse}
           />
         ) : cartState === "NOT_ELIGIBLE" ? (
           <NotEligibleCard ids={ids} onCancel={onCancel} />
