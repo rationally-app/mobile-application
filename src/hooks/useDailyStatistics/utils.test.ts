@@ -1,5 +1,6 @@
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
+import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
 describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics[];
@@ -231,6 +232,12 @@ describe("countTotalTransactionsAndByCategory", () => {
 
   it("should have appeal alertDescription 'via appeal' if product is from an appeal flow", () => {
     expect.assertions(1);
+    console.log(
+      countTotalTransactionsAndByCategory(
+        pastTransactionsWithAppeal,
+        campaignPolicy
+      )
+    );
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactionsWithAppeal,
@@ -243,7 +250,7 @@ describe("countTotalTransactionsAndByCategory", () => {
           category: "appeal-product",
           name: "This Product is for Appeal",
           quantityText: "200 qty",
-          descriptionAlert: "via appeal",
+          descriptionAlert: i18ntWithValidator("redemptionStats", "viaAppeal"),
           order: 6,
         },
       ],
