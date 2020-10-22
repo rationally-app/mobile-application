@@ -1,11 +1,14 @@
 import React, { FunctionComponent } from "react";
 import { Platform, Linking } from "react-native";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { AlertModal } from "../AlertModal/AlertModal";
-import { i18nt } from "../../utils/translations";
 
 export const UpdateFromAppStoreAlert: FunctionComponent = () => {
   let storeName: string;
   let storeLink: string;
+
+  const { i18nt } = useTranslate();
+
   switch (Platform.OS) {
     case "ios":
       storeName = i18nt("campaignInitialisationScreen", "appleStore");
@@ -26,7 +29,7 @@ export const UpdateFromAppStoreAlert: FunctionComponent = () => {
       alertType="INFO"
       title={i18nt("errorMessages", "outdatedAppUpdate", "title")}
       description={i18nt("errorMessages", "outdatedAppUpdate", "body", {
-        storeName: `${storeName}`
+        storeName: `${storeName}`,
       })}
       visible={true}
       buttonTexts={{
@@ -34,7 +37,7 @@ export const UpdateFromAppStoreAlert: FunctionComponent = () => {
           "errorMessages",
           "outdatedAppUpdate",
           "primaryActionText"
-        )}`
+        )}`,
       }}
       onOk={() => Linking.openURL(storeLink)}
     />

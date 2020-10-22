@@ -3,7 +3,7 @@ import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
   postTransaction,
-  NotEligibleError
+  NotEligibleError,
 } from "../../services/quota";
 import { transform } from "lodash";
 import { ProductContextValue, ProductContext } from "../../context/products";
@@ -13,11 +13,12 @@ import {
   Quota,
   ItemQuota,
   IdentifierInput,
-  CampaignPolicy
+  CampaignPolicy,
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
+import { IdentificationContext } from "../../context/identification";
 
 export type CartItem = {
   category: string;
@@ -63,7 +64,7 @@ const getItem = (
   cart: Cart,
   category: string
 ): [CartItem | undefined, number] => {
-  const idx = cart.findIndex(item => item.category === category);
+  const idx = cart.findIndex((item) => item.category === category);
   return [cart[idx], idx];
 };
 
@@ -84,7 +85,7 @@ const mergeWithCart = (
         category,
         quantity: remainingQuantity,
         transactionTime,
-        identifierInputs
+        identifierInputs,
       }) => {
         remainingQuantity = Math.max(remainingQuantity, 0);
         const [existingItem] = getItem(cart, category);
@@ -98,7 +99,7 @@ const mergeWithCart = (
               value: "",
               ...(textInput.type ? { textInputType: textInput.type } : {}),
               ...(scanButton.type ? { scanButtonType: scanButton.type } : {}),
-              ...(validationRegex ? { validationRegex } : {})
+              ...(validationRegex ? { validationRegex } : {}),
             })
           ) || [];
 
@@ -125,7 +126,7 @@ const mergeWithCart = (
           maxQuantity,
           descriptionAlert,
           lastTransactionTime: transactionTime,
-          identifierInputs: identifierInputs || defaultIdentifierInputs
+          identifierInputs: identifierInputs || defaultIdentifierInputs,
         };
       }
     );
@@ -136,12 +137,12 @@ const filterQuotaWithAvailableProducts = (
   products: CampaignPolicy[]
 ): Quota => {
   const filteredQuota: Quota = {
-    remainingQuota: []
+    remainingQuota: [],
   };
   transform(
     quota.remainingQuota,
     (result: Quota, itemQuota) => {
-      if (products.some(policy => policy.category === itemQuota.category))
+      if (products.some((policy) => policy.category === itemQuota.category))
         result.remainingQuota.push(itemQuota);
     },
     filteredQuota
@@ -152,7 +153,7 @@ const filterQuotaWithAvailableProducts = (
     transform(
       quota.globalQuota!,
       (result: Quota, itemQuota) => {
-        if (products.some(policy => policy.category === itemQuota.category))
+        if (products.some((policy) => policy.category === itemQuota.category))
           result.globalQuota!.push(itemQuota);
       },
       filteredQuota
@@ -164,7 +165,7 @@ const filterQuotaWithAvailableProducts = (
     transform(
       quota.localQuota!,
       (result: Quota, itemQuota) => {
-        if (products.some(policy => policy.category === itemQuota.category))
+        if (products.some((policy) => policy.category === itemQuota.category))
           result.localQuota!.push(itemQuota);
       },
       filteredQuota
@@ -175,11 +176,11 @@ const filterQuotaWithAvailableProducts = (
 };
 
 const hasNoQuota = (quota: Quota): boolean =>
-  quota.remainingQuota.every(item => item.quantity === 0);
+  quota.remainingQuota.every((item) => item.quantity === 0);
 
 const hasInvalidQuota = (quota: Quota): boolean =>
   // Note: Invalid quota refers to negative quota received
-  quota.remainingQuota.some(item => item.quantity < 0);
+  quota.remainingQuota.some((item) => item.quantity < 0);
 
 export const useCart = (
   ids: string[],
@@ -188,6 +189,7 @@ export const useCart = (
 ): CartHook => {
   const prevIds = usePrevious(ids);
   const { products, getProduct } = useContext(ProductContext);
+  const { selectedIdType } = useContext(IdentificationContext);
   const prevProducts = usePrevious(products);
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
@@ -204,7 +206,12 @@ export const useCart = (
     const fetchQuota = async (): Promise<void> => {
       setCartState("FETCHING_QUOTA");
       try {
-        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        const allQuotaResponse = await getQuota(
+          ids,
+          selectedIdType,
+          authKey,
+          endpoint
+        );
         setAllQuotaResponse(allQuotaResponse);
         const quotaResponse = filterQuotaWithAvailableProducts(
           allQuotaResponse,
@@ -237,7 +244,7 @@ export const useCart = (
     if (prevIds !== ids || prevProducts !== products) {
       fetchQuota();
     }
-  }, [authKey, endpoint, ids, prevIds, prevProducts, products]);
+  }, [authKey, endpoint, ids, selectedIdType, prevIds, prevProducts, products]);
 
   /**
    * Merge quota response with current cart whenever quota response or products change.
@@ -246,7 +253,7 @@ export const useCart = (
     if (quotaResponse) {
       // Note that we must use a callback within this setState to avoid
       // having cart as a dependency which causes an infinite loop.
-      setCart(cart =>
+      setCart((cart) =>
         mergeWithCart(cart, quotaResponse.remainingQuota, getProduct)
       );
     }
@@ -262,7 +269,12 @@ export const useCart = (
   useEffect(() => {
     if (cartState === "PURCHASED") {
       const updateQuotaResponse = async (): Promise<void> => {
-        const allQuotaResponse = await getQuota(ids, authKey, endpoint);
+        const allQuotaResponse = await getQuota(
+          ids,
+          selectedIdType,
+          authKey,
+          endpoint
+        );
         const quotaResponse = filterQuotaWithAvailableProducts(
           allQuotaResponse,
           products
@@ -271,7 +283,7 @@ export const useCart = (
       };
       updateQuotaResponse();
     }
-  }, [ids, authKey, endpoint, cartState, products]);
+  }, [ids, selectedIdType, authKey, endpoint, cartState, products]);
 
   /**
    * Update quantity of an item in the cart.
@@ -291,9 +303,9 @@ export const useCart = (
               ...item,
               quantity,
               identifierInputs:
-                identifierInputs || cart[itemIdx].identifierInputs
+                identifierInputs || cart[itemIdx].identifierInputs,
             },
-            ...cart.slice(itemIdx + 1)
+            ...cart.slice(itemIdx + 1),
           ]);
         } else {
           setError(new Error(ERROR_MESSAGE.INSUFFICIENT_QUOTA));
@@ -321,7 +333,7 @@ export const useCart = (
         .map(({ category, quantity, identifierInputs }) => {
           if (
             identifierInputs.length > 0 &&
-            identifierInputs.some(identifierInput => !identifierInput.value)
+            identifierInputs.some((identifierInput) => !identifierInput.value)
           ) {
           }
           allIdentifierInputs.push(...identifierInputs);
@@ -345,9 +357,10 @@ export const useCart = (
       try {
         const transactionResponse = await postTransaction({
           ids,
+          identificationFlag: selectedIdType,
           key: authKey,
           transactions,
-          endpoint
+          endpoint,
         });
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
@@ -366,7 +379,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [authKey, cart, endpoint, ids]);
+  }, [authKey, cart, endpoint, ids, selectedIdType]);
 
   return {
     cartState,
@@ -378,6 +391,6 @@ export const useCart = (
     error,
     clearError,
     allQuotaResponse,
-    quotaResponse
+    quotaResponse,
   };
 };

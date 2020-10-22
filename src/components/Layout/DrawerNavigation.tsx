@@ -2,7 +2,7 @@ import React, { FunctionComponent, useCallback, useContext } from "react";
 import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   DrawerContentComponentProps,
-  DrawerActions
+  DrawerActions,
 } from "react-navigation-drawer";
 import { useLogout } from "../../hooks/useLogout";
 import { AppText } from "./AppText";
@@ -12,12 +12,12 @@ import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative"
+    position: "relative",
   },
   navLink: {
     flexDirection: "row",
@@ -25,26 +25,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: size(4),
     paddingVertical: size(2.5),
     borderBottomColor: color("grey", 20),
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   navLinkText: {
-    fontFamily: "brand-bold"
+    fontFamily: "brand-bold",
   },
   bottomNavContainerLink: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: size(4),
-    paddingVertical: size(1)
+    paddingVertical: size(1),
   },
   bottomVersionText: {
     paddingHorizontal: size(4),
     marginTop: size(3),
     paddingVertical: size(1),
-    fontSize: fontSize(-4)
+    fontSize: fontSize(-4),
   },
   bottomNavContainerText: {
-    fontSize: fontSize(-1)
-  }
+    fontSize: fontSize(-1),
+  },
 });
 
 interface BottomNavigationLink {
@@ -53,7 +53,7 @@ interface BottomNavigationLink {
 
 export const BottomNavigationLink: FunctionComponent<BottomNavigationLink> = ({
   children,
-  onPress
+  onPress,
 }) => {
   return (
     <View style={styles.bottomNavContainerLink}>
@@ -67,7 +67,7 @@ export const BottomNavigationLink: FunctionComponent<BottomNavigationLink> = ({
 export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
   icon,
   label,
-  onPress
+  onPress,
 }) => {
   return (
     <TouchableOpacity onPress={onPress}>
@@ -85,7 +85,7 @@ export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
 };
 
 export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponentProps> = ({
-  navigation
+  navigation,
 }) => {
   const { logout } = useLogout();
   const { showConfirmationAlert } = useContext(AlertModalContext);
@@ -94,6 +94,8 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch]);
+
+  const { i18nt } = useTranslate();
 
   const onPressLogout = (): void => {
     showConfirmationAlert(CONFIRMATION_MESSAGE.CONFIRM_LOGOUT, handleLogout);
@@ -123,13 +125,13 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         style={{
           marginTop: size(8),
           marginRight: size(2),
-          alignItems: "flex-end"
+          alignItems: "flex-end",
         }}
       >
         <TouchableOpacity
           onPress={onPressCloseDrawer}
           style={{
-            padding: size(1)
+            padding: size(1),
           }}
         >
           <MaterialCommunityIcons
@@ -143,10 +145,10 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         style={{
           marginTop: size(3),
           borderTopColor: color("grey", 20),
-          borderTopWidth: 1
+          borderTopWidth: 1,
         }}
       >
-        {drawerButtons.map(button => (
+        {drawerButtons.map((button) => (
           <DrawerButtonComponent {...button} key={button.label} />
         ))}
         <DrawerButtonComponent

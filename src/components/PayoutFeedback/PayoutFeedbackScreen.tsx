@@ -16,7 +16,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { Card } from "../Layout/Card";
 import { sharedStyles } from "../CustomerQuota/CheckoutSuccess/sharedStyles";
 import { sharedStyles as sharedCardStyles } from "../CustomerQuota/sharedStyles";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -26,13 +26,13 @@ const styles = StyleSheet.create({
     paddingBottom: size(10),
     height: "100%",
     width: 512,
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   headerText: {
-    marginBottom: size(4)
+    marginBottom: size(4),
   },
   bannerWrapper: {
-    marginBottom: size(1.5)
+    marginBottom: size(1.5),
   },
   header: {
     borderTopLeftRadius: borderRadius(3),
@@ -41,39 +41,39 @@ const styles = StyleSheet.create({
     paddingVertical: size(2),
     backgroundColor: color("blue-green", 40),
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   cardHeaderTextWrapper: {
     marginLeft: size(1.5),
-    flex: 1
+    flex: 1,
   },
   cardHeaderSubText: {
     color: color("grey", 0),
     fontSize: fontSize(-2),
-    marginBottom: 2
+    marginBottom: 2,
   },
   cardHeaderText: {
     color: color("grey", 0),
     fontSize: fontSize(1),
     lineHeight: 1.2 * fontSize(1),
-    fontFamily: "brand-bold"
+    fontFamily: "brand-bold",
   },
   cardContextWrapper: {
     overflow: "hidden",
     borderBottomLeftRadius: borderRadius(2),
-    borderBottomRightRadius: borderRadius(2)
+    borderBottomRightRadius: borderRadius(2),
   },
   resultWrapper: {
     padding: size(3),
-    paddingBottom: size(4)
+    paddingBottom: size(4),
   },
   buttonsWrapper: {
-    marginTop: size(5)
-  }
+    marginTop: size(5),
+  },
 });
 
 export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+  navigation,
 }) => {
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
@@ -82,12 +82,14 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
     "checkoutResult"
   );
   const voucherArr = checkoutResult.transactions.filter(
-    transaction =>
-      transaction.transaction.filter(obj => obj.category === "voucher").length >
-      0
+    (transaction) =>
+      transaction.transaction.filter((obj) => obj.category === "voucher")
+        .length > 0
   );
   const itemQuantities = voucherArr.length;
   const merchantCode: string = navigation.getParam("merchantCode");
+
+  const { i18nt } = useTranslate();
 
   return (
     <ScrollView
@@ -110,7 +112,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
           style={{
             paddingTop: 0,
             paddingBottom: 0,
-            paddingHorizontal: 0
+            paddingHorizontal: 0,
           }}
         >
           <View style={styles.header}>
@@ -126,7 +128,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
             <View
               style={[
                 styles.resultWrapper,
-                sharedCardStyles.successfulResultWrapper
+                sharedCardStyles.successfulResultWrapper,
               ]}
             >
               <FontAwesome

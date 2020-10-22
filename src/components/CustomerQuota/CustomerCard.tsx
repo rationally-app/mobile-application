@@ -4,13 +4,13 @@ import {
   View,
   ViewStyle,
   TouchableOpacity,
-  TouchableOpacityProps
+  TouchableOpacityProps,
 } from "react-native";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   header: {
@@ -20,28 +20,28 @@ const styles = StyleSheet.create({
     paddingVertical: size(2),
     backgroundColor: color("blue-green", 40),
     flexDirection: "row",
-    alignItems: "flex-start"
+    alignItems: "flex-start",
   },
   headerText: {
     marginLeft: size(1.5),
-    flex: 1
+    flex: 1,
   },
   idLabel: {
     color: color("grey", 0),
     fontSize: fontSize(-2),
-    marginBottom: 2
+    marginBottom: 2,
   },
   idText: {
     color: color("grey", 0),
     fontSize: fontSize(1),
     lineHeight: 1.2 * fontSize(1),
-    fontFamily: "brand-bold"
+    fontFamily: "brand-bold",
   },
   childrenWrapper: {
     overflow: "hidden",
     borderBottomLeftRadius: borderRadius(4),
-    borderBottomRightRadius: borderRadius(4)
-  }
+    borderBottomRightRadius: borderRadius(4),
+  },
 });
 
 interface AddButton {
@@ -62,13 +62,13 @@ export const AddButton: FunctionComponent<AddButton> = ({ text, onPress }) => {
           justifyContent: "center",
           paddingVertical: size(1),
           paddingHorizontal: size(2),
-          borderRadius: borderRadius(2)
+          borderRadius: borderRadius(2),
         }}
       >
         <AppText
           style={{
             fontFamily: "brand-bold",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           {text}
@@ -82,40 +82,45 @@ export const CustomerCard: FunctionComponent<{
   ids: string[];
   onAddId?: () => void;
   headerBackgroundColor?: ViewStyle["backgroundColor"];
-}> = ({ ids, onAddId, headerBackgroundColor, children }) => (
-  <Card
-    style={{
-      paddingTop: 0,
-      paddingBottom: 0,
-      paddingHorizontal: 0
-    }}
-  >
-    <View
-      style={[
-        styles.header,
-        headerBackgroundColor ? { backgroundColor: headerBackgroundColor } : {}
-      ]}
+}> = ({ ids, onAddId, headerBackgroundColor, children }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <Card
+      style={{
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingHorizontal: 0,
+      }}
     >
-      <Feather name="user" size={size(3)} color={color("grey", 0)} />
-      <View style={styles.headerText}>
-        <AppText style={styles.idLabel}>
-          {ids.length > 1
-            ? i18nt("customerQuotaScreen", "idNumbers")
-            : i18nt("customerQuotaScreen", "idNumber")}
-        </AppText>
-        {ids.map(id => (
-          <AppText key={id} style={styles.idText}>
-            {id}
+      <View
+        style={[
+          styles.header,
+          headerBackgroundColor
+            ? { backgroundColor: headerBackgroundColor }
+            : {},
+        ]}
+      >
+        <Feather name="user" size={size(3)} color={color("grey", 0)} />
+        <View style={styles.headerText}>
+          <AppText style={styles.idLabel}>
+            {ids.length > 1
+              ? i18nt("customerQuotaScreen", "idNumbers")
+              : i18nt("customerQuotaScreen", "idNumber")}
           </AppText>
-        ))}
+          {ids.map((id) => (
+            <AppText key={id} style={styles.idText}>
+              {id}
+            </AppText>
+          ))}
+        </View>
+        {onAddId && (
+          <AddButton
+            onPress={onAddId}
+            text={`+ ${i18nt("customerQuotaScreen", "quotaButtonAdd")}`}
+          ></AddButton>
+        )}
       </View>
-      {onAddId && (
-        <AddButton
-          onPress={onAddId}
-          text={`+ ${i18nt("customerQuotaScreen", "quotaButtonAdd")}`}
-        ></AddButton>
-      )}
-    </View>
-    <View style={styles.childrenWrapper}>{children}</View>
-  </Card>
-);
+      <View style={styles.childrenWrapper}>{children}</View>
+    </Card>
+  );
+};

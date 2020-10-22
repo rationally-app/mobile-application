@@ -34,17 +34,17 @@ const customProducts: CampaignPolicy[] = [
     identifiers: [
       {
         ...defaultIdentifier,
-        label: "first"
-      }
+        label: "first",
+      },
     ],
     quantity: {
       period: -1,
       periodType: "ROLLING",
       periodExpression: 365,
       limit: 1,
-      default: 1
+      default: 1,
     },
-    type: "REDEEM"
+    type: "REDEEM",
   },
   {
     category: "specs-lost",
@@ -53,23 +53,23 @@ const customProducts: CampaignPolicy[] = [
     order: 1,
     alert: {
       threshold: 2,
-      label: "*chargeable"
+      label: "*chargeable",
     },
     quantity: {
       period: -1,
       periodType: "ROLLING",
       periodExpression: 365,
       limit: 9999,
-      default: 1
+      default: 1,
     },
     identifiers: [
       {
         ...defaultIdentifier,
-        label: "first"
-      }
+        label: "first",
+      },
     ],
-    type: "REDEEM"
-  }
+    type: "REDEEM",
+  },
 ];
 
 describe("useDailyStatistics", () => {
@@ -105,9 +105,9 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           quantity: 9999999,
-          transactionTime: new Date(12000000000)
-        }
-      ]
+          transactionTime: new Date(12000000000),
+        },
+      ],
     });
 
     const { result, waitForNextUpdate } = renderHook(
@@ -125,8 +125,10 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
-        quantityText: "9,999,999 qty"
-      }
+        quantityText: "9,999,999 qty",
+        descriptionAlert: undefined,
+        order: -1,
+      },
     ]);
   });
 
@@ -134,7 +136,7 @@ describe("useDailyStatistics", () => {
     expect.assertions(2);
 
     mockGetDailyStatistics.mockResolvedValue({
-      pastTransactions: []
+      pastTransactions: [],
     });
 
     const { result, waitForNextUpdate } = renderHook(
@@ -156,9 +158,9 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           quantity: 9999999,
-          transactionTime: new Date(12000000000)
-        }
-      ]
+          transactionTime: new Date(12000000000),
+        },
+      ],
     });
     const currentTimestamp = 12000000000;
     const { result, waitForNextUpdate, rerender } = renderHook(
@@ -176,8 +178,10 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
-        quantityText: "9,999,999 qty"
-      }
+        quantityText: "9,999,999 qty",
+        descriptionAlert: undefined,
+        order: -1,
+      },
     ]);
 
     rerender([key, endpoint, operatorToken, currentTimestamp]);
@@ -192,9 +196,9 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           quantity: 9999999,
-          transactionTime: new Date(12000000000)
-        }
-      ]
+          transactionTime: new Date(12000000000),
+        },
+      ],
     });
 
     let currentTimestamp = 12000000000;
@@ -212,8 +216,10 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
-          quantityText: "9,999,999 qty"
-        }
+          quantityText: "9,999,999 qty",
+          descriptionAlert: undefined,
+          order: -1,
+        },
       ]);
     });
     mockGetDailyStatistics.mockResolvedValueOnce({
@@ -221,9 +227,9 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           quantity: 20,
-          transactionTime: new Date(19000000000)
-        }
-      ]
+          transactionTime: new Date(19000000000),
+        },
+      ],
     });
 
     currentTimestamp = 19000000000;
@@ -239,8 +245,10 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
-          quantityText: "20 qty"
-        }
+          quantityText: "20 qty",
+          descriptionAlert: undefined,
+          order: -1,
+        },
       ]);
     });
   });

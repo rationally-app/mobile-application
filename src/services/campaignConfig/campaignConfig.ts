@@ -2,6 +2,7 @@ import { IS_MOCK } from "../../config";
 import { CampaignConfig, ConfigHashes } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
+import i18n from "i18n-js";
 
 export class CampaignConfigError extends Error {
   constructor(message: string) {
@@ -16,18 +17,20 @@ const liveGetCampaignConfig = async (
   configHashes?: ConfigHashes
 ): Promise<CampaignConfig> => {
   try {
-    const response = await fetchWithValidator(
+    return await fetchWithValidator(
       CampaignConfig,
       `${endpoint}/client-config`,
       {
         method: "POST",
         headers: {
-          Authorization: token
+          Authorization: token,
         },
-        body: JSON.stringify(configHashes)
+        body: JSON.stringify({
+          ...configHashes,
+          language: i18n.locale.startsWith("zh") ? "zh" : "en",
+        }),
       }
     );
-    return response;
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
@@ -53,8 +56,8 @@ const mockGetCampaignConfig = async (
       id: {
         type: "STRING",
         scannerType: "CODE_39",
-        validation: "NRIC"
-      }
+        validation: "NRIC",
+      },
     },
     policies: [
       {
@@ -68,9 +71,9 @@ const mockGetCampaignConfig = async (
           limit: 2,
           unit: {
             type: "POSTFIX",
-            label: " pack(s)"
-          }
-        }
+            label: " pack(s)",
+          },
+        },
       },
       {
         category: "instant-noodles",
@@ -83,9 +86,9 @@ const mockGetCampaignConfig = async (
           limit: 1,
           unit: {
             type: "POSTFIX",
-            label: " pack(s)"
-          }
-        }
+            label: " pack(s)",
+          },
+        },
       },
       {
         category: "chocolate",
@@ -99,9 +102,9 @@ const mockGetCampaignConfig = async (
           step: 5,
           unit: {
             type: "PREFIX",
-            label: "$"
-          }
-        }
+            label: "$",
+          },
+        },
       },
       {
         category: "vouchers",
@@ -117,8 +120,8 @@ const mockGetCampaignConfig = async (
               visible: true,
               disabled: false,
               type: "BARCODE",
-              text: "Scan"
-            }
+              text: "Scan",
+            },
           },
           {
             label: "Token",
@@ -127,10 +130,10 @@ const mockGetCampaignConfig = async (
               visible: true,
               disabled: false,
               type: "QR",
-              text: "Scan"
-            }
-          }
-        ]
+              text: "Scan",
+            },
+          },
+        ],
       },
       {
         category: "voucher",
@@ -144,12 +147,13 @@ const mockGetCampaignConfig = async (
             textInput: { visible: true, disabled: true, type: "PHONE_NUMBER" },
             scanButton: {
               visible: false,
-              disabled: false
-            }
-          }
-        ]
-      }
-    ]
+              disabled: false,
+            },
+          },
+        ],
+      },
+    ],
+    c13n: {},
   };
 };
 

@@ -4,7 +4,7 @@ import { AuthCredentials } from "../../types";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { fontSize, color, size } from "../../common/styles";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -12,24 +12,26 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     paddingHorizontal: size(3),
     paddingVertical: size(2.5),
-    backgroundColor: color("grey", 10)
+    backgroundColor: color("grey", 10),
   },
   campaignName: {
     fontFamily: "brand-bold",
-    fontSize: fontSize(1)
+    fontSize: fontSize(1),
   },
   operatorId: {
     marginTop: size(1.5),
-    fontSize: fontSize(-2)
+    fontSize: fontSize(-2),
   },
   expiry: {
-    fontSize: fontSize(-2)
-  }
+    fontSize: fontSize(-2),
+  },
 });
 
 export const CampaignLocationsListItem: FunctionComponent<
   AuthCredentials & { name: string; onPress: () => void }
 > = ({ name, expiry, operatorToken, onPress }) => {
+  const { i18nt } = useTranslate();
+
   const operatorId = operatorToken.slice(0, 6); // May be blank for existing users because we didn't store operatorToken previously
   const formattedExpiry = formatDateTime(expiry);
 
@@ -41,7 +43,7 @@ export const CampaignLocationsListItem: FunctionComponent<
         <AppText
           style={[
             styles.campaignName,
-            hasExpired ? { color: color("grey", 40) } : {}
+            hasExpired ? { color: color("grey", 40) } : {},
           ]}
         >
           {name}
@@ -50,7 +52,7 @@ export const CampaignLocationsListItem: FunctionComponent<
           <AppText
             style={[
               styles.operatorId,
-              hasExpired ? { color: color("grey", 40) } : {}
+              hasExpired ? { color: color("grey", 40) } : {},
             ]}
           >
             {i18nt("customerQuotaScreen", "id")} : {operatorId}
@@ -59,15 +61,15 @@ export const CampaignLocationsListItem: FunctionComponent<
         <AppText
           style={[
             styles.expiry,
-            hasExpired ? { color: color("grey", 40) } : {}
+            hasExpired ? { color: color("grey", 40) } : {},
           ]}
         >
           {hasExpired
             ? i18nt("customerQuotaScreen", "campaignExpiredOn", undefined, {
-                dateTime: formattedExpiry
+                dateTime: formattedExpiry,
               })
             : i18nt("customerQuotaScreen", "campaignValidTo", undefined, {
-                dateTime: formattedExpiry
+                dateTime: formattedExpiry,
               })}
         </AppText>
       </View>

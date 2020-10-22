@@ -5,7 +5,7 @@ import { color, size } from "../../../common/styles";
 import {
   useCheckVoucherValidity,
   InvalidVoucherError,
-  ScannerError
+  ScannerError,
 } from "../../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { NotEligibleError } from "../../../services/quota";
 import { AppText } from "../../Layout/AppText";
@@ -13,9 +13,9 @@ import { sharedStyles } from "./sharedStyles";
 import { LimitReachedError } from "../../../utils/validateVoucherCode";
 import {
   formatDateTime,
-  formatTimeDifference
+  formatTimeDifference,
 } from "../../../utils/dateTimeFormatter";
-import { i18nt } from "../../../utils/translations";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 
@@ -23,46 +23,55 @@ const styles = StyleSheet.create({
   background: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: color("grey", 100),
-    opacity: 0.8
+    opacity: 0.8,
   },
   cardWrapper: {
     padding: size(3),
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
 
 const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
-}> = ({ transactionTime }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {i18nt("checkoutSuccessScreen", "redeemedOn", undefined, {
-        time: formatDateTime(transactionTime)
-      })}
-    </AppText>
-  </>
-);
+}> = ({ transactionTime }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <>
+      <AppText style={sharedStyles.statusTitle}>
+        {i18nt("checkoutSuccessScreen", "redeemedOn", undefined, {
+          time: formatDateTime(transactionTime),
+        })}
+      </AppText>
+    </>
+  );
+};
 
 const RecentTransactionTitle: FunctionComponent<{
   now: Date;
   transactionTime: Date;
-}> = ({ now, transactionTime }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {i18nt("checkoutSuccessScreen", "redeemedAgo", undefined, {
-        time: formatTimeDifference(now, transactionTime)
-      })}
-    </AppText>
-  </>
-);
+}> = ({ now, transactionTime }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <>
+      <AppText style={sharedStyles.statusTitle}>
+        {i18nt("checkoutSuccessScreen", "redeemedAgo", undefined, {
+          time: formatTimeDifference(now, transactionTime),
+        })}
+      </AppText>
+    </>
+  );
+};
 
-const NoPreviousTransactionTitle: FunctionComponent = () => (
-  <AppText style={sharedStyles.statusTitle}>
-    {i18nt("checkoutSuccessScreen", "previouslyRedeemed")}
-  </AppText>
-);
+const NoPreviousTransactionTitle: FunctionComponent = () => {
+  const { i18nt } = useTranslate();
+  return (
+    <AppText style={sharedStyles.statusTitle}>
+      {i18nt("checkoutSuccessScreen", "previouslyRedeemed")}
+    </AppText>
+  );
+};
 
 interface VoucherStatusModal {
   checkValidityState: useCheckVoucherValidity["checkValidityState"];
@@ -73,11 +82,13 @@ interface VoucherStatusModal {
 export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   checkValidityState,
   error,
-  onExit
+  onExit,
 }) => {
   const isVisible = checkValidityState === "CHECKING_VALIDITY";
 
   let card;
+
+  const { i18nt } = useTranslate();
 
   const title = i18nt("errorMessages", "notEligible", "title");
   const details = i18nt("errorMessages", "notEligible", "body");

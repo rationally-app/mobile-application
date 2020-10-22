@@ -2,14 +2,14 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useContext
+  useContext,
 } from "react";
 import {
   View,
   StyleSheet,
   Modal,
   TouchableOpacity,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native";
 import { InputIdSection } from "../CustomerDetails/InputIdSection";
 import { IdScanner } from "../IdScanner/IdScanner";
@@ -20,36 +20,36 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   background: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: color("grey", 100),
-    opacity: 0.8
+    opacity: 0.8,
   },
   scrollWrapper: {
     alignItems: "center",
-    minHeight: "100%"
+    minHeight: "100%",
   },
   cardWrapper: {
     padding: size(3),
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   card: {
     width: 512,
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   cardHeader: { flexDirection: "row", width: "100%" },
   cameraWrapper: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
 const CloseButton: FunctionComponent<{ onPress: () => void }> = ({
-  onPress
+  onPress,
 }) => (
   <TouchableOpacity
     onPress={onPress}
@@ -61,7 +61,7 @@ const CloseButton: FunctionComponent<{ onPress: () => void }> = ({
       justifyContent: "center",
       padding: size(0.5),
       minHeight: size(5),
-      minWidth: size(5)
+      minWidth: size(5),
     }}
   >
     <Feather name="x" size={size(3)} color={color("blue", 50)} />
@@ -77,12 +77,13 @@ interface AddUserModal {
 export const AddUserModal: FunctionComponent<AddUserModal> = ({
   isVisible,
   setIsVisible,
-  validateAndUpdateIds
+  validateAndUpdateIds,
 }) => {
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [idInput, setIdInput] = useState("");
   const { features } = useContext(CampaignConfigContext);
+  const { i18nt } = useTranslate();
 
   useEffect(() => {
     if (isVisible) {
@@ -96,7 +97,7 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
     setIdInput("");
   };
 
-  const onBarCodeScanned: BarCodeScannedCallback = event => {
+  const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (isScanningEnabled && event.data) {
       onCheck(event.data);
     }
@@ -120,7 +121,6 @@ export const AddUserModal: FunctionComponent<AddUserModal> = ({
           <IdScanner
             onBarCodeScanned={onBarCodeScanned}
             onCancel={() => setShouldShowCamera(false)}
-            cancelButtonText={i18nt("idScanner", "enterIdManually")}
             barCodeTypes={
               features?.id.scannerType === "QR"
                 ? [BarCodeScanner.Constants.BarCodeType.qr]

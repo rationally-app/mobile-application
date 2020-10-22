@@ -7,7 +7,7 @@ import { IdentifierTextInput } from "./IdentifierLayout/IdentifierTextInput";
 import { IdentifierScanButton } from "./IdentifierLayout/IdentifierScanButton";
 import { IdentifierScanModal } from "./IdentifierLayout/IdentifierScanModal";
 import { AlertModalContext } from "../../../context/alert";
-import { i18nt } from "../../../utils/translations";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -15,14 +15,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     width: "100%",
-    marginTop: size(2)
+    marginTop: size(2),
   },
   inputWrapper: {
-    flex: 2
+    flex: 2,
   },
   buttonWrapper: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
 export const ItemIdentifier: FunctionComponent<{
@@ -33,6 +33,7 @@ export const ItemIdentifier: FunctionComponent<{
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { showErrorAlert } = useContext(AlertModalContext);
+  const { c13nt, i18nt } = useTranslate();
 
   const { label, textInput, scanButton } = identifier;
 
@@ -58,14 +59,14 @@ export const ItemIdentifier: FunctionComponent<{
         {textInput.visible &&
           (textInput.type === "PHONE_NUMBER" ? (
             <IdentifierPhoneNumberInput
-              label={label}
+              label={c13nt(label)}
               onPhoneNumberChange={onManualInput}
             />
           ) : (
             <IdentifierTextInput
               addMarginRight={scanButton.visible}
               editable={!textInput.disabled}
-              label={label}
+              label={c13nt(label)}
               onChange={onManualInput}
               type={textInput.type}
               value={inputValue}
@@ -77,7 +78,7 @@ export const ItemIdentifier: FunctionComponent<{
             fullWidth={!textInput.visible}
             onPress={() => setShouldShowCamera(true)}
             text={
-              scanButton.text ||
+              (scanButton.text && c13nt(scanButton.text)) ??
               i18nt("customerQuotaScreen", "quotaIdentifierButtonScan")
             }
           />
@@ -85,11 +86,6 @@ export const ItemIdentifier: FunctionComponent<{
       </View>
       {shouldShowCamera && (
         <IdentifierScanModal
-          cancelButtonText={
-            textInput.disabled
-              ? i18nt("customerQuotaScreen", "quotaScanButtonBack")
-              : i18nt("idScanner", "enterManually")
-          }
           setShouldShowCamera={setShouldShowCamera}
           shouldShowCamera={shouldShowCamera}
           onScanInput={onScanInput}

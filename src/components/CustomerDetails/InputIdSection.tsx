@@ -6,38 +6,38 @@ import { InputWithLabel } from "../Layout/InputWithLabel";
 import { AppText } from "../Layout/AppText";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { size, color, fontSize } from "../../common/styles";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
     marginTop: size(3),
-    marginBottom: size(6)
+    marginBottom: size(6),
   },
   horizontalRule: {
     borderBottomColor: color("grey", 30),
     marginHorizontal: -size(3),
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   orWrapper: {
     position: "absolute",
     top: -fontSize(0),
     alignSelf: "center",
     backgroundColor: color("grey", 0),
-    padding: size(1)
+    padding: size(1),
   },
   orText: {
     fontSize: fontSize(-1),
-    fontFamily: "brand-bold"
+    fontFamily: "brand-bold",
   },
   inputAndButtonWrapper: {
     marginTop: size(5),
     flexDirection: "row",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
   inputWrapper: {
     flex: 1,
-    marginRight: size(1)
-  }
+    marginRight: size(1),
+  },
 });
 
 interface InputIdSection {
@@ -53,8 +53,9 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
   idInput,
   setIdInput,
   submitId,
-  keyboardType
+  keyboardType,
 }) => {
+  const { i18nt } = useTranslate();
   return (
     <>
       <View style={styles.scanButtonWrapper}>

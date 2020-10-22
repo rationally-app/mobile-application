@@ -3,7 +3,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { usePastTransaction } from "./usePastTransaction";
 import {
   getPastTransactions,
-  PastTransactionError
+  PastTransactionError,
 } from "../../services/quota";
 import { PastTransactionsResult, CampaignPolicy } from "../../types";
 import { defaultIdentifier } from "../../test/helpers/defaults";
@@ -15,7 +15,7 @@ jest.mock("../../services/quota", () => {
   return {
     ...actualModule,
     // Only mock
-    getPastTransactions: jest.fn()
+    getPastTransactions: jest.fn(),
   };
 });
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
@@ -33,17 +33,17 @@ const customProducts: CampaignPolicy[] = [
     identifiers: [
       {
         ...defaultIdentifier,
-        label: "first"
-      }
+        label: "first",
+      },
     ],
     quantity: {
       period: -1,
       periodType: "ROLLING",
       periodExpression: 365,
       limit: 1,
-      default: 1
+      default: 1,
     },
-    type: "REDEEM"
+    type: "REDEEM",
   },
   {
     category: "specs-lost",
@@ -52,23 +52,23 @@ const customProducts: CampaignPolicy[] = [
     order: 1,
     alert: {
       threshold: 2,
-      label: "*chargeable"
+      label: "*chargeable",
     },
     quantity: {
       period: -1,
       periodType: "ROLLING", // ROLLING | CRON;
       periodExpression: 365, // TBD
       limit: 9999,
-      default: 1
+      default: 1,
     },
     identifiers: [
       {
         ...defaultIdentifier,
-        label: "first"
-      }
+        label: "first",
+      },
     ],
-    type: "REDEEM"
-  }
+    type: "REDEEM",
+  },
 ];
 
 const mockPastTransactions: PastTransactionsResult = {
@@ -80,10 +80,10 @@ const mockPastTransactions: PastTransactionsResult = {
         {
           ...defaultIdentifier,
           label: "first",
-          value: "AAA987654321"
-        }
+          value: "AAA987654321",
+        },
       ],
-      transactionTime: new Date(1596530356430)
+      transactionTime: new Date(1596530356430),
     },
     {
       category: "specs-lost",
@@ -92,10 +92,10 @@ const mockPastTransactions: PastTransactionsResult = {
         {
           ...defaultIdentifier,
           label: "first",
-          value: "AAA987654322"
-        }
+          value: "AAA987654322",
+        },
       ],
-      transactionTime: new Date(1596530356431)
+      transactionTime: new Date(1596530356431),
     },
     {
       category: "specs-lost",
@@ -104,16 +104,16 @@ const mockPastTransactions: PastTransactionsResult = {
         {
           ...defaultIdentifier,
           label: "first",
-          value: "AAA987654323"
-        }
+          value: "AAA987654323",
+        },
       ],
-      transactionTime: new Date(1596530356432)
-    }
-  ]
+      transactionTime: new Date(1596530356432),
+    },
+  ],
 };
 
 const mockEmptyPastTransactions: PastTransactionsResult = {
-  pastTransactions: []
+  pastTransactions: [],
 };
 
 const wrapper: FunctionComponent = ({ children }) => (
@@ -149,10 +149,10 @@ describe("usePastTransaction", () => {
             {
               ...defaultIdentifier,
               label: "first",
-              value: "AAA987654321"
-            }
+              value: "AAA987654321",
+            },
           ],
-          transactionTime: new Date(1596530356430)
+          transactionTime: new Date(1596530356430),
         },
         {
           category: "specs-lost",
@@ -161,10 +161,10 @@ describe("usePastTransaction", () => {
             {
               ...defaultIdentifier,
               label: "first",
-              value: "AAA987654322"
-            }
+              value: "AAA987654322",
+            },
           ],
-          transactionTime: new Date(1596530356431)
+          transactionTime: new Date(1596530356431),
         },
         {
           category: "specs-lost",
@@ -173,11 +173,11 @@ describe("usePastTransaction", () => {
             {
               ...defaultIdentifier,
               label: "first",
-              value: "AAA987654323"
-            }
+              value: "AAA987654323",
+            },
           ],
-          transactionTime: new Date(1596530356432)
-        }
+          transactionTime: new Date(1596530356432),
+        },
       ]);
       expect(result.current.loading).toStrictEqual(false);
       expect(result.current.error).toBeNull();

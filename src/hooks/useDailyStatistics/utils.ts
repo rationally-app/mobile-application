@@ -8,6 +8,8 @@ type SummarisedTransactions = {
     name: string;
     category: string;
     quantityText: string;
+    descriptionAlert?: string;
+    order: number;
   }[];
   summarisedTotalCount: number;
 };
@@ -20,13 +22,16 @@ export const countTotalTransactionsAndByCategory = (
     .groupBy("category")
     .reduce<SummarisedTransactions>(
       (prev, transactionsByCategory, key) => {
+        const findItemByCategory = policies?.find(
+          (item) => item.category === key
+        );
         const totalQuantityInCategory = sumBy(
           transactionsByCategory,
           "quantity"
         );
         prev.summarisedTransactionHistory.push({
           name:
-            policies?.find(item => item.category === key)?.name ??
+            findItemByCategory?.name ??
             (() => {
               Sentry.captureException(
                 `Unable to find item category in policies: ${key}}`
@@ -36,11 +41,16 @@ export const countTotalTransactionsAndByCategory = (
           category: key,
           quantityText: formatQuantityText(
             totalQuantityInCategory,
-            policies?.find(item => item.category === key)?.quantity.unit || {
+            findItemByCategory?.quantity.unit || {
               type: "POSTFIX",
-              label: " qty"
+              label: " qty",
             }
-          )
+          ),
+          descriptionAlert:
+            findItemByCategory?.categoryType === "APPEAL"
+              ? "via appeal"
+              : undefined,
+          order: findItemByCategory?.order ?? -1,
         });
         prev.summarisedTotalCount += totalQuantityInCategory;
         return prev;

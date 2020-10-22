@@ -6,7 +6,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { SafeAreaView } from "react-navigation";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const BASE_URL = "https://supplyallyhelp.zendesk.com/hc/en-us";
 const FEEDBACK_URL = BASE_URL + "/requests/new";
@@ -18,33 +18,33 @@ const styles = StyleSheet.create({
     paddingVertical: size(1),
     paddingHorizontal: size(1),
     backgroundColor: color("grey", 0),
-    alignItems: "center"
+    alignItems: "center",
   },
   topBar: {
     borderBottomWidth: 1,
-    borderBottomColor: color("grey", 30)
+    borderBottomColor: color("grey", 30),
   },
   bottomBar: {
     borderTopWidth: 1,
-    borderTopColor: color("grey", 30)
+    borderTopColor: color("grey", 30),
   },
   pageTitle: {
     fontFamily: "brand-bold",
     fontSize: fontSize(2),
-    marginLeft: size(2)
+    marginLeft: size(2),
   },
   navigationButtons: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   navigationButton: {
     alignItems: "center",
     justifyContent: "center",
     borderRadius: borderRadius(2),
-    padding: size(1)
+    padding: size(1),
   },
   disabledNavigationButton: {
-    opacity: 0.5
-  }
+    opacity: 0.5,
+  },
 });
 
 const NavigationIcon: FunctionComponent<{ name: string }> = ({ name }) => (
@@ -59,7 +59,7 @@ const NavigationButton: FunctionComponent<{
     <View
       style={[
         styles.navigationButton,
-        disabled ? styles.disabledNavigationButton : {}
+        disabled ? styles.disabledNavigationButton : {},
       ]}
     >
       {children}
@@ -74,6 +74,8 @@ export const HelpModal: FunctionComponent<{
   const webViewRef = useRef<WebView>(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
+
+  const { i18nt } = useTranslate();
 
   const onPressAskQuestion = (): void => {
     if (webViewRef.current) {
@@ -94,7 +96,9 @@ export const HelpModal: FunctionComponent<{
     }
   };
 
-  const onNavigationStateChange: WebViewProps["onNavigationStateChange"] = navState => {
+  const onNavigationStateChange: WebViewProps["onNavigationStateChange"] = (
+    navState
+  ) => {
     setCanGoBack(navState.canGoBack ?? false);
     setCanGoForward(navState.canGoForward ?? false);
   };

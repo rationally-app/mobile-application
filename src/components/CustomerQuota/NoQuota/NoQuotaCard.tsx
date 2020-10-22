@@ -2,7 +2,7 @@ import React, {
   FunctionComponent,
   useState,
   useContext,
-  useEffect
+  useEffect,
 } from "react";
 import { differenceInSeconds, compareDesc } from "date-fns";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
@@ -17,7 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import {
   formatQuantityText,
   BIG_NUMBER,
-  sortTransactionsByOrder
+  sortTransactionsByOrder,
 } from "../utils";
 import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { ShowFullListToggle } from "../ShowFullListToggle";
@@ -25,7 +25,7 @@ import {
   DistantTransactionTitle,
   RecentTransactionTitle,
   NoPreviousTransactionTitle,
-  UsageQuotaTitle
+  UsageQuotaTitle,
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
@@ -35,7 +35,10 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
-import { i18nt } from "../../../utils/translations";
+import {
+  TranslationHook,
+  useTranslate,
+} from "../../../hooks/useTranslate/useTranslate";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -43,8 +46,8 @@ const MAX_TRANSACTIONS_TO_DISPLAY = 5;
 export const styles = StyleSheet.create({
   wrapper: {
     marginTop: size(2),
-    marginBottom: size(2)
-  }
+    marginBottom: size(2),
+  },
 });
 
 export interface TransactionsByCategoryMap {
@@ -73,39 +76,44 @@ interface NoQuotaCard {
 export const groupTransactionsByCategory = (
   sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
   allProducts: CampaignPolicy[],
-  latestTransactionTime: Date | undefined
+  latestTransactionTime: Date | undefined,
+  translationProps: TranslationHook
 ): TransactionsByCategoryMap => {
+  const { c13nt, c13ntForUnit, i18nt } = translationProps;
+
   // Group transactions by category
   const transactionsByCategoryMap: TransactionsByCategoryMap = {};
-  sortedTransactions?.forEach(item => {
+  sortedTransactions?.forEach((item) => {
     const policy = allProducts?.find(
-      policy => policy.category === item.category
+      (policy) => policy.category === item.category
     );
-    const categoryName = policy?.name ?? item.category;
+    const tName = (policy?.name && c13nt(policy?.name)) ?? item.category;
     const formattedDate = formatDateTime(item.transactionTime);
 
-    if (!transactionsByCategoryMap.hasOwnProperty(categoryName)) {
-      transactionsByCategoryMap[categoryName] = {
+    if (!transactionsByCategoryMap.hasOwnProperty(tName)) {
+      transactionsByCategoryMap[tName] = {
         transactions: [],
         hasLatestTransaction: false,
-        order: policy?.order ?? BIG_NUMBER
+        order: policy?.order ?? BIG_NUMBER,
       };
     }
-    transactionsByCategoryMap[categoryName].transactions.push({
+    transactionsByCategoryMap[tName].transactions.push({
       header: formattedDate,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        policy?.quantity.unit || {
-          type: "POSTFIX",
-          label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
-        }
+        policy?.quantity.unit
+          ? c13ntForUnit(policy?.quantity.unit)
+          : {
+              type: "POSTFIX",
+              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`,
+            }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
-      order: -1
+      order: -1,
     });
-    transactionsByCategoryMap[categoryName].hasLatestTransaction =
-      transactionsByCategoryMap[categoryName].hasLatestTransaction ||
+    transactionsByCategoryMap[tName].hasLatestTransaction =
+      transactionsByCategoryMap[tName].hasLatestTransaction ||
       differenceInSeconds(latestTransactionTime || 0, item.transactionTime) ===
         0;
   });
@@ -134,7 +142,7 @@ export const sortTransactions = (
       latestTransactionsByCategory.push({
         header: key,
         transactions,
-        order
+        order,
       });
     } else {
       otherTransactionsByCategory.push({ header: key, transactions, order });
@@ -147,9 +155,9 @@ export const sortTransactions = (
   let transactionCounter = 0;
   return latestTransactionsByCategory
     .concat(otherTransactionsByCategory)
-    .map(transactionsByCategory => {
+    .map((transactionsByCategory) => {
       const orderedTransactions = transactionsByCategory.transactions.map(
-        transaction => {
+        (transaction) => {
           const result = { ...transaction, order: transactionCounter };
           transactionCounter += 1;
           return result;
@@ -174,7 +182,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   cart,
   onCancel,
   onAppeal,
-  quotaResponse
+  quotaResponse,
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
@@ -207,12 +215,14 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     : -1;
 
   const hasAppealProduct =
-    allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false;
+    allProducts?.some((policy) => policy.categoryType === "APPEAL") ?? false;
 
+  const translationProps = useTranslate();
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
-    latestTransactionTime
+    latestTransactionTime,
+    translationProps
   );
 
   const transactionsByCategoryList = sortTransactions(
@@ -279,11 +289,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 <View>
                   <AppText style={styles.wrapper}>
                     {policyType === "REDEEM"
-                      ? `${i18nt(
+                      ? `${translationProps.i18nt(
                           "checkoutSuccessScreen",
                           "previouslyRedeemedItems"
                         )}:`
-                      : `${i18nt(
+                      : `${translationProps.i18nt(
                           "checkoutSuccessScreen",
                           "previouslyPurchasedItems"
                         )}:`}
@@ -320,7 +330,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={i18nt("checkoutSuccessScreen", "nextIdentity")}
+          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
         />

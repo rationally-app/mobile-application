@@ -12,7 +12,8 @@ const generateConfigHashes = async (
   }
   const configHashes: ConfigHashes = {
     features: undefined,
-    policies: undefined
+    policies: undefined,
+    c13n: undefined,
   };
   for (const [key, value] of Object.entries(config)) {
     if (value !== null) {
@@ -65,7 +66,7 @@ export const useUpdateCampaignConfig = (
             configHashes
           );
           const configs = Object.values(campaignConfigResponse);
-          if (configs.some(c => !!c)) {
+          if (configs.some((c) => !!c)) {
             setCampaignConfig(
               `${operatorToken}${endpoint}`,
               campaignConfigResponse
@@ -94,6 +95,6 @@ export const useUpdateCampaignConfig = (
     updateCampaignConfig,
     error,
     clearError,
-    result
+    result,
   };
 };

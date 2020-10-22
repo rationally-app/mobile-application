@@ -7,19 +7,19 @@ import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
 import { AlertModalContext, WARNING_MESSAGE } from "../../../context/alert";
-import { i18nt } from "../../../utils/translations";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   titlePadding: {
     padding: size(2),
-    paddingTop: size(0.5)
+    paddingTop: size(0.5),
   },
   reasonPadding: {
-    paddingTop: size(0.5)
+    paddingTop: size(0.5),
   },
   backbuttonComponent: {
-    marginTop: size(5)
-  }
+    marginTop: size(5),
+  },
 });
 
 export type Reason = {
@@ -40,9 +40,10 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   reasonSelectionHeader,
   reasons,
   onCancel,
-  onReasonSelection
+  onReasonSelection,
 }) => {
   const { showWarnAlert } = useContext(AlertModalContext);
+  const { i18nt } = useTranslate();
   return (
     <View>
       <CustomerCard ids={ids}>
@@ -51,7 +52,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
             <ReasonSelectionHeader title={reasonSelectionHeader} />
           </View>
           <View style={styles.reasonPadding}>
-            {reasons.map(reason => (
+            {reasons.map((reason) => (
               <ReasonItem
                 key={reason.description}
                 description={reason.description}

@@ -4,14 +4,15 @@ import { sharedStyles } from "../sharedStyles";
 import {
   formatDateTime,
   formatDate,
-  formatTimeDifference
+  formatTimeDifference,
 } from "../../../utils/dateTimeFormatter";
-import { i18nt } from "../../../utils/translations";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 export const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
   toggleTimeSensitiveTitle: boolean;
 }> = ({ transactionTime, toggleTimeSensitiveTitle }) => {
+  const { i18nt } = useTranslate();
   const today = toggleTimeSensitiveTitle
     ? `${i18nt("checkoutSuccessScreen", "today")}`
     : "";
@@ -20,7 +21,7 @@ export const DistantTransactionTitle: FunctionComponent<{
       <AppText style={sharedStyles.statusTitle}>
         {i18nt("checkoutSuccessScreen", "limitReachedDate", undefined, {
           dateTime: formatDateTime(transactionTime),
-          today
+          today,
         })}
       </AppText>
     </>
@@ -32,6 +33,7 @@ export const RecentTransactionTitle: FunctionComponent<{
   transactionTime: Date;
   toggleTimeSensitiveTitle: boolean;
 }> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => {
+  const { i18nt } = useTranslate();
   const today = toggleTimeSensitiveTitle
     ? `${i18nt("checkoutSuccessScreen", "today")}`
     : "";
@@ -40,7 +42,7 @@ export const RecentTransactionTitle: FunctionComponent<{
       <AppText style={sharedStyles.statusTitle}>
         {`${i18nt("checkoutSuccessScreen", "limitReachedRecent", undefined, {
           time: formatTimeDifference(now, transactionTime),
-          today
+          today,
         })}`}
       </AppText>
     </>
@@ -50,6 +52,7 @@ export const RecentTransactionTitle: FunctionComponent<{
 export const NoPreviousTransactionTitle: FunctionComponent<{
   toggleTimeSensitiveTitle: boolean;
 }> = ({ toggleTimeSensitiveTitle }) => {
+  const { i18nt } = useTranslate();
   const today = toggleTimeSensitiveTitle
     ? `${i18nt("checkoutSuccessScreen", "today")}`
     : "";
@@ -57,7 +60,7 @@ export const NoPreviousTransactionTitle: FunctionComponent<{
     <>
       <AppText style={sharedStyles.statusTitle}>
         {i18nt("checkoutSuccessScreen", "limitReached", undefined, {
-          today
+          today,
         })}
       </AppText>
     </>
@@ -67,14 +70,17 @@ export const NoPreviousTransactionTitle: FunctionComponent<{
 export const UsageQuotaTitle: FunctionComponent<{
   quantity: number;
   quotaRefreshTime: number;
-}> = ({ quantity, quotaRefreshTime }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {"\n"}
-      {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
-        quantity: quantity,
-        date: formatDate(quotaRefreshTime)
-      })}`}
-    </AppText>
-  </>
-);
+}> = ({ quantity, quotaRefreshTime }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <>
+      <AppText style={sharedStyles.statusTitle}>
+        {"\n"}
+        {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
+          quantity: quantity,
+          date: formatDate(quotaRefreshTime),
+        })}`}
+      </AppText>
+    </>
+  );
+};

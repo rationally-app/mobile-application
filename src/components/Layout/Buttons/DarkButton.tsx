@@ -19,7 +19,7 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
   fullWidth = false,
   isLoading = false,
   icon,
-  disabled
+  disabled,
 }) => (
   <BaseButton
     onPress={onPress}
@@ -37,7 +37,7 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
           style={{
             color: color("grey", 0),
             fontFamily: "brand-bold",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           {text}

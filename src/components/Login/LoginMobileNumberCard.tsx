@@ -3,7 +3,7 @@ import React, {
   FunctionComponent,
   Dispatch,
   SetStateAction,
-  useContext
+  useContext,
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -15,16 +15,16 @@ import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 import {
   createFullNumber,
   countryCodeValidator,
-  mobileNumberValidator
+  mobileNumberValidator,
 } from "../../utils/validatePhoneNumbers";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
-    marginTop: size(3)
-  }
+    marginTop: size(3),
+  },
 });
 
 interface LoginMobileNumberCard {
@@ -38,7 +38,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   setLoginStage,
   setMobileNumber,
   setCountryCode,
-  handleRequestOTP
+  handleRequestOTP,
 }) => {
   const { config } = useContext(ConfigContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,6 +81,8 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       onRequestOTP();
     }
   };
+
+  const { i18nt } = useTranslate();
 
   return (
     <Card>

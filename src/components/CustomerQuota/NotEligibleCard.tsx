@@ -6,19 +6,25 @@ import { color, size } from "../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { FontAwesome } from "@expo/vector-icons";
-import { i18nt } from "../../utils/translations";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
-const NotEligibleTransactionTitle: FunctionComponent = () => (
-  <AppText style={sharedStyles.statusTitle}>
-    {i18nt("notEligibleScreen", "notEligible")}
-  </AppText>
-);
+const NotEligibleTransactionTitle: FunctionComponent = () => {
+  const { i18nt } = useTranslate();
+  return (
+    <AppText style={sharedStyles.statusTitle}>
+      {i18nt("notEligibleScreen", "notEligible")}
+    </AppText>
+  );
+};
 
-const NotEligibleTransactionDescription: FunctionComponent = () => (
-  <AppText style={{ marginBottom: size(1) }}>
-    {`${i18nt("notEligibleScreen", "logAppeal")}`}
-  </AppText>
-);
+const NotEligibleTransactionDescription: FunctionComponent = () => {
+  const { i18nt } = useTranslate();
+  return (
+    <AppText style={{ marginBottom: size(1) }}>
+      {`${i18nt("notEligibleScreen", "logAppeal")}`}
+    </AppText>
+  );
+};
 
 interface NotEligibleCard {
   ids: string[];
@@ -30,15 +36,16 @@ interface NotEligibleCard {
  */
 export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
   ids,
-  onCancel
+  onCancel,
 }) => {
+  const { i18nt } = useTranslate();
   return (
     <View>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
         <View
           style={[
             sharedStyles.resultWrapper,
-            sharedStyles.failureResultWrapper
+            sharedStyles.failureResultWrapper,
           ]}
         >
           <FontAwesome

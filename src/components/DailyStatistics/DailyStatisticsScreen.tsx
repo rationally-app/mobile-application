@@ -2,7 +2,7 @@ import React, {
   FunctionComponent,
   useEffect,
   useContext,
-  useState
+  useState,
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
@@ -21,7 +21,7 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
-import { addDays, subDays, getTime } from "date-fns";
+import { addDays, subDays, getTime, isSameDay } from "date-fns";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
@@ -33,28 +33,28 @@ const styles = StyleSheet.create({
     paddingVertical: size(6),
     height: "100%",
     width: 512,
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   headerText: {
-    marginBottom: size(4)
+    marginBottom: size(4),
   },
   bannerWrapper: {
-    marginBottom: size(1.5)
+    marginBottom: size(1.5),
   },
   categoryName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
-    marginBottom: size(3)
-  }
+    marginBottom: size(3),
+  },
 });
 
 const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+  navigation,
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "DailyStatisticsScreen"
+      message: "DailyStatisticsScreen",
     });
   }, []);
 
@@ -70,7 +70,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     totalCount,
     transactionHistory,
     error,
-    loading
+    loading,
   } = useDailyStatistics(
     sessionToken,
     endpoint,
@@ -84,8 +84,10 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   };
 
   const onPressNextDay = (): void => {
-    const nextDay = getTime(addDays(currentTimestamp, 1));
-    setCurrentTimestamp(nextDay);
+    if (!isSameDay(currentTimestamp, Date.now())) {
+      const nextDay = getTime(addDays(currentTimestamp, 1));
+      setCurrentTimestamp(nextDay);
+    }
   };
 
   useEffect(() => {
@@ -104,7 +106,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
         scrollViewContentContainerStyle={{
           flexGrow: 1,
           alignItems: "center",
-          paddingBottom: size(2)
+          paddingBottom: size(1),
         }}
       >
         <TopBackground
