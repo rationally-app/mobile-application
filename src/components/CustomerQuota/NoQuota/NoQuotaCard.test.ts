@@ -70,13 +70,13 @@ describe("NoQuotaCard utility functions", () => {
     const allQuotaResponseNoAppeal: Quota = {
       globalQuota: [
         {
-          category: "appreciation-gift",
+          category: "gift",
           quantity: 0,
           quotaRefreshTime: 1634800083079,
           transactionTime: new Date("2020-10-21T07:08:03.079Z"),
         },
         {
-          category: "replacement-appreciation-gift",
+          category: "replacement-gift",
           quantity: 0,
           quotaRefreshTime: 1634800102815,
           transactionTime: new Date("2020-10-21T07:08:22.815Z"),
@@ -84,24 +84,24 @@ describe("NoQuotaCard utility functions", () => {
       ],
       localQuota: [
         {
-          category: "appreciation-gift",
+          category: "gift",
           quantity: 9007199254740991,
           quotaRefreshTime: 1634800083079,
         },
         {
-          category: "replacement-appreciation-gift",
+          category: "replacement-gift",
           quantity: 9007199254740991,
           quotaRefreshTime: 1634800102815,
         },
       ],
       remainingQuota: [
         {
-          category: "appreciation-gift",
+          category: "gift",
           quantity: 0,
           transactionTime: new Date("2020-10-21T07:08:03.079Z"),
         },
         {
-          category: "replacement-appreciation-gift",
+          category: "replacement-gift",
           quantity: 0,
           transactionTime: new Date("2020-10-21T07:08:22.815Z"),
         },
@@ -110,7 +110,7 @@ describe("NoQuotaCard utility functions", () => {
 
     const allProductsAppealCategory: CampaignPolicy[] = [
       {
-        category: "appreciation-gift",
+        category: "gift",
         name: "🎁 Appreciation gift",
         order: 1,
         quantity: {
@@ -121,7 +121,7 @@ describe("NoQuotaCard utility functions", () => {
         type: "REDEEM",
       },
       {
-        category: "replacement-appreciation-gift",
+        category: "replacement-gift",
         categoryType: "APPEAL",
         name: "🎁 Replacement",
         order: 1,
@@ -137,37 +137,37 @@ describe("NoQuotaCard utility functions", () => {
     const allQuotaResponseHasAppeal: Quota = {
       globalQuota: [
         {
-          category: "appreciation-gift",
+          category: "gift",
           quantity: 0,
           quotaRefreshTime: 1634803468038,
           transactionTime: new Date("2020-10-21T08:04:28.038Z"),
         },
         {
-          category: "replacement-appreciation-gift",
+          category: "replacement-gift",
           quantity: 1,
           quotaRefreshTime: 1634803476822,
         },
       ],
       localQuota: [
         {
-          category: "appreciation-gift",
+          category: "gift",
           quantity: 9007199254740991,
           quotaRefreshTime: 1634803468038,
         },
         {
-          category: "replacement-appreciation-gift",
+          category: "replacement-gift",
           quantity: 9007199254740991,
           quotaRefreshTime: 1634803476822,
         },
       ],
       remainingQuota: [
         {
-          category: "appreciation-gift",
+          category: "gift",
           quantity: 0,
           transactionTime: new Date("2020-10-21T08:04:28.038Z"),
         },
         {
-          category: "replacement-appreciation-gift",
+          category: "replacement-gift",
           quantity: 1,
         },
       ],
