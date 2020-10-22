@@ -79,7 +79,7 @@ describe("NoQuotaCard utility functions", () => {
           category: "replacement-gift",
           quantity: 0,
           quotaRefreshTime: 1634800102815,
-          transactionTime: new Date("2020-10-21T07:08:22.815Z"),
+          transactionTime: latestTransactionTime,
         },
       ],
       localQuota: [
