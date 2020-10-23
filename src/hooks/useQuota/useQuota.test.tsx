@@ -4,7 +4,7 @@ import { useQuota } from "./useQuota";
 import { CampaignPolicy, Quota } from "../../types";
 import { NotEligibleError, getQuota } from "../../services/quota";
 import {
-  defaultAppealProducts,
+  defaultNonAppealProducts,
   defaultProducts
 } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
@@ -321,6 +321,11 @@ const mockQuotaResSingleIdWithAppealProducts: Quota = {
   ]
 };
 
+/**
+ * This should be used alongside `defaultNonAppealProducts`,
+ * which assumes that `toilet-paper` is a non-appeal product,
+ * and `chocolate` is an appeal product.
+ */
 const mockQuotaResSingleIdNoQuotaWithAppealProducts: Quota = {
   remainingQuota: [
     {
@@ -549,7 +554,7 @@ describe("useQuota", () => {
         {
           wrapper,
           initialProps: {
-            products: defaultAppealProducts
+            products: defaultNonAppealProducts
           }
         }
       );
@@ -570,7 +575,7 @@ describe("useQuota", () => {
         {
           wrapper,
           initialProps: {
-            products: defaultAppealProducts
+            products: defaultNonAppealProducts
           }
         }
       );

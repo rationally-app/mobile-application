@@ -81,7 +81,7 @@ export const defaultProducts: CampaignPolicy[] = [
   }
 ];
 
-export const defaultAppealProducts: CampaignPolicy[] = [
+export const defaultNonAppealProducts: CampaignPolicy[] = [
   {
     category: "toilet-paper",
     name: "Toilet Paper",
