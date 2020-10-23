@@ -80,6 +80,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { showErrorAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
+  const { i18nt } = useTranslate();
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 
@@ -200,8 +201,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     navigation,
     showErrorAlert,
   ]);
-
-  const { i18nt } = useTranslate();
 
   return cartState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
