@@ -2,7 +2,7 @@ import React, {
   FunctionComponent,
   useState,
   useContext,
-  useEffect
+  useEffect,
 } from "react";
 import { differenceInSeconds, compareDesc } from "date-fns";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
@@ -17,7 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import {
   formatQuantityText,
   BIG_NUMBER,
-  sortTransactionsByOrder
+  sortTransactionsByOrder,
 } from "../utils";
 import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { ShowFullListToggle } from "../ShowFullListToggle";
@@ -25,7 +25,7 @@ import {
   DistantTransactionTitle,
   RecentTransactionTitle,
   NoPreviousTransactionTitle,
-  UsageQuotaTitle
+  UsageQuotaTitle,
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
@@ -37,7 +37,7 @@ import { AuthContext } from "../../../context/auth";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
 import {
   TranslationHook,
-  useTranslate
+  useTranslate,
 } from "../../../hooks/useTranslate/useTranslate";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
@@ -46,8 +46,8 @@ const MAX_TRANSACTIONS_TO_DISPLAY = 5;
 export const styles = StyleSheet.create({
   wrapper: {
     marginTop: size(2),
-    marginBottom: size(2)
-  }
+    marginBottom: size(2),
+  },
 });
 
 export interface TransactionsByCategoryMap {
@@ -64,6 +64,7 @@ interface NoQuotaCard {
   onCancel: () => void;
   onAppeal?: () => void;
   quotaResponse?: Quota;
+  allQuotaResponse?: Quota;
 }
 
 /**
@@ -83,9 +84,9 @@ export const groupTransactionsByCategory = (
 
   // Group transactions by category
   const transactionsByCategoryMap: TransactionsByCategoryMap = {};
-  sortedTransactions?.forEach(item => {
+  sortedTransactions?.forEach((item) => {
     const policy = allProducts?.find(
-      policy => policy.category === item.category
+      (policy) => policy.category === item.category
     );
     const tName = (policy?.name && c13nt(policy?.name)) ?? item.category;
     const formattedDate = formatDateTime(item.transactionTime);
@@ -94,7 +95,7 @@ export const groupTransactionsByCategory = (
       transactionsByCategoryMap[tName] = {
         transactions: [],
         hasLatestTransaction: false,
-        order: policy?.order ?? BIG_NUMBER
+        order: policy?.order ?? BIG_NUMBER,
       };
     }
     transactionsByCategoryMap[tName].transactions.push({
@@ -106,11 +107,11 @@ export const groupTransactionsByCategory = (
           ? c13ntForUnit(policy?.quantity.unit)
           : {
               type: "POSTFIX",
-              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
+              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`,
             }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
-      order: -1
+      order: -1,
     });
     transactionsByCategoryMap[tName].hasLatestTransaction =
       transactionsByCategoryMap[tName].hasLatestTransaction ||
@@ -142,7 +143,7 @@ export const sortTransactions = (
       latestTransactionsByCategory.push({
         header: key,
         transactions,
-        order
+        order,
       });
     } else {
       otherTransactionsByCategory.push({ header: key, transactions, order });
@@ -155,9 +156,9 @@ export const sortTransactions = (
   let transactionCounter = 0;
   return latestTransactionsByCategory
     .concat(otherTransactionsByCategory)
-    .map(transactionsByCategory => {
+    .map((transactionsByCategory) => {
       const orderedTransactions = transactionsByCategory.transactions.map(
-        transaction => {
+        (transaction) => {
           const result = { ...transaction, order: transactionCounter };
           transactionCounter += 1;
           return result;
@@ -172,6 +173,25 @@ export const getLatestTransactionTime = (cart: Cart): Date | undefined =>
     compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
   )[0]?.lastTransactionTime;
 
+export const checkHasAppealProduct = (
+  allProducts: CampaignPolicy[] | null,
+  allQuotaResponse: Quota | undefined
+): boolean => {
+  const appealProductsCategories = allProducts
+    ?.filter((product) => product.categoryType === "APPEAL")
+    .map((product) => product.category);
+
+  const hasAppealProduct =
+    (appealProductsCategories &&
+      allQuotaResponse?.remainingQuota.some(
+        (quota) =>
+          appealProductsCategories.includes(quota.category) &&
+          quota.quantity !== 0
+      )) ??
+    false;
+  return hasAppealProduct;
+};
+
 /**
  * Shows when the user cannot purchase anything
  *
@@ -182,7 +202,8 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   cart,
   onCancel,
   onAppeal,
-  quotaResponse
+  allQuotaResponse,
+  quotaResponse,
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
@@ -214,8 +235,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
 
-  const hasAppealProduct =
-    allProducts?.some(policy => policy.categoryType === "APPEAL") ?? false;
+  const hasAppealProduct = checkHasAppealProduct(allProducts, allQuotaResponse);
 
   const translationProps = useTranslate();
   const transactionsByCategoryMap = groupTransactionsByCategory(

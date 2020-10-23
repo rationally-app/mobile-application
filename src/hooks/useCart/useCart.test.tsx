@@ -6,7 +6,7 @@ import { Quota, PostTransactionResult, CampaignPolicy } from "../../types";
 import { postTransaction } from "../../services/quota";
 import {
   defaultProducts,
-  defaultIdentifier
+  defaultIdentifier,
 } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 import { ERROR_MESSAGE } from "../../context/alert";
@@ -25,43 +25,43 @@ const mockQuotaResSingleId: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 2,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 2,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockQuotaResMultipleIds: Quota = {
@@ -70,43 +70,43 @@ const mockQuotaResMultipleIds: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 4,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 30,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 4,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 30,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockQuotaResSingleIdInvalidQuota: Quota = {
@@ -115,43 +115,43 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: -1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: -1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockPostTransactionResult: PostTransactionResult = {
@@ -162,12 +162,12 @@ const mockPostTransactionResult: PostTransactionResult = {
         {
           category: "chocolate",
           identifierInputs: [],
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ],
-      timestamp: transactionTime
-    }
-  ]
+      timestamp: transactionTime,
+    },
+  ],
 };
 
 const mockQuotaResSingleIdAlert: Quota = {
@@ -179,24 +179,24 @@ const mockQuotaResSingleIdAlert: Quota = {
           label: "first",
           value: "first identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
+          scanButtonType: "BARCODE",
         },
         {
           label: "last",
           value: "last identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        }
+          scanButtonType: "BARCODE",
+        },
       ],
       quantity: 8,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
@@ -206,24 +206,24 @@ const mockQuotaResSingleIdAlert: Quota = {
           label: "first",
           value: "first identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
+          scanButtonType: "BARCODE",
         },
         {
           label: "last",
           value: "last identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        }
+          scanButtonType: "BARCODE",
+        },
       ],
       quantity: 8,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
@@ -233,30 +233,30 @@ const mockQuotaResSingleIdAlert: Quota = {
           label: "first",
           value: "first identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
+          scanButtonType: "BARCODE",
         },
         {
           label: "last",
           value: "last identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        }
+          scanButtonType: "BARCODE",
+        },
       ],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
   children,
-  products = defaultProducts
+  products = defaultProducts,
 }) => (
   <ProductContextProvider products={products}>
     {children}
@@ -285,7 +285,7 @@ describe("useCart", () => {
           identifierInputs: [],
           quantity: 1,
           lastTransactionTime: transactionTime,
-          maxQuantity: 2
+          maxQuantity: 2,
         },
         {
           category: "chocolate",
@@ -293,8 +293,8 @@ describe("useCart", () => {
           identifierInputs: [],
           quantity: 0,
           lastTransactionTime: transactionTime,
-          maxQuantity: 15
-        }
+          maxQuantity: 15,
+        },
       ]);
 
       ids = ["ID1", "ID2"];
@@ -308,7 +308,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 4,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -316,8 +316,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 30,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -333,7 +333,7 @@ describe("useCart", () => {
             mockQuotaResSingleIdInvalidQuota.remainingQuota
           ),
         {
-          wrapper
+          wrapper,
         }
       );
       expect(result.current.cartError?.message).toBe(
@@ -347,7 +347,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -359,7 +359,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -367,8 +367,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ]);
     });
 
@@ -378,7 +378,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -394,7 +394,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -402,8 +402,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -413,7 +413,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -428,7 +428,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -436,8 +436,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -447,7 +447,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -464,7 +464,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -472,8 +472,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
   });
@@ -485,7 +485,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -509,7 +509,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
@@ -517,8 +517,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ]);
       expect(result.current.checkoutResult).toStrictEqual(
         mockPostTransactionResult
@@ -531,7 +531,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -551,7 +551,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 0
+          quantity: 0,
         },
         {
           category: "chocolate",
@@ -559,8 +559,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -570,7 +570,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -580,14 +580,14 @@ describe("useCart", () => {
             value: "",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
+            scanButtonType: "BARCODE",
           },
           {
             value: "value",
             label: "last",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.checkoutCart();
       });
@@ -603,18 +603,18 @@ describe("useCart", () => {
               value: "",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               value: "value",
               label: "last",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -622,8 +622,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -643,12 +643,12 @@ describe("useCart", () => {
                 identifiers: [
                   {
                     ...defaultIdentifier,
-                    label: "code"
-                  }
-                ]
-              }
-            ]
-          }
+                    label: "code",
+                  },
+                ],
+              },
+            ],
+          },
         }
       );
 
@@ -658,8 +658,8 @@ describe("useCart", () => {
             value: "",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.checkoutCart();
       });
@@ -675,13 +675,13 @@ describe("useCart", () => {
               value: "",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ]);
     });
 
@@ -691,7 +691,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -701,14 +701,14 @@ describe("useCart", () => {
             value: "identical",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
+            scanButtonType: "BARCODE",
           },
           {
             value: "identical",
             label: "last",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.checkoutCart();
       });
@@ -726,18 +726,18 @@ describe("useCart", () => {
               value: "identical",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               value: "identical",
               label: "last",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -745,8 +745,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -756,7 +756,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -766,28 +766,28 @@ describe("useCart", () => {
             value: "identical",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
+            scanButtonType: "BARCODE",
           },
           {
             value: "not identical",
             label: "last",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.updateCart("chocolate", 1, [
           {
             value: "also not identical",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
+            scanButtonType: "BARCODE",
           },
           {
             value: "identical",
             label: "last",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.checkoutCart();
       });
@@ -805,18 +805,18 @@ describe("useCart", () => {
               value: "identical",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               value: "not identical",
               label: "last",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -826,19 +826,19 @@ describe("useCart", () => {
               value: "also not identical",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               value: "identical",
               label: "last",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ]);
     });
 
@@ -846,7 +846,7 @@ describe("useCart", () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const MobileNumberIdentifierProductWrapper: FunctionComponent = ({
-        children
+        children,
       }) => (
         <ProductContextProvider
           products={[
@@ -858,15 +858,15 @@ describe("useCart", () => {
                   textInput: {
                     visible: true,
                     disabled: false,
-                    type: "PHONE_NUMBER"
+                    type: "PHONE_NUMBER",
                   },
                   scanButton: {
                     visible: false,
-                    disabled: true
-                  }
-                }
-              ]
-            }
+                    disabled: true,
+                  },
+                },
+              ],
+            },
           ]}
         >
           {children}
@@ -876,7 +876,7 @@ describe("useCart", () => {
         () =>
           useCart(ids, key, endpoint, [mockQuotaResSingleId.remainingQuota[0]]),
         {
-          wrapper: MobileNumberIdentifierProductWrapper
+          wrapper: MobileNumberIdentifierProductWrapper,
         }
       );
 
@@ -885,8 +885,8 @@ describe("useCart", () => {
           {
             value: "+659",
             label: "code",
-            textInputType: "PHONE_NUMBER"
-          }
+            textInputType: "PHONE_NUMBER",
+          },
         ]);
         result.current.checkoutCart();
       });
@@ -903,13 +903,13 @@ describe("useCart", () => {
             {
               value: "+659",
               label: "code",
-              textInputType: "PHONE_NUMBER"
-            }
+              textInputType: "PHONE_NUMBER",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ]);
     });
 
@@ -917,7 +917,7 @@ describe("useCart", () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const InvalidIdentifierProductWrapper: FunctionComponent = ({
-        children
+        children,
       }) => (
         <ProductContextProvider
           products={[
@@ -930,15 +930,15 @@ describe("useCart", () => {
                   textInput: {
                     visible: true,
                     disabled: false,
-                    type: "STRING"
+                    type: "STRING",
                   },
                   scanButton: {
                     visible: false,
-                    disabled: true
-                  }
-                }
-              ]
-            }
+                    disabled: true,
+                  },
+                },
+              ],
+            },
           ]}
         >
           {children}
@@ -948,7 +948,7 @@ describe("useCart", () => {
         () =>
           useCart(ids, key, endpoint, [mockQuotaResSingleId.remainingQuota[0]]),
         {
-          wrapper: InvalidIdentifierProductWrapper
+          wrapper: InvalidIdentifierProductWrapper,
         }
       );
 
@@ -958,8 +958,8 @@ describe("useCart", () => {
             value: "01234",
             label: "code",
             textInputType: "STRING",
-            validationRegex: "^[a-z]{5}$"
-          }
+            validationRegex: "^[a-z]{5}$",
+          },
         ]);
         result.current.checkoutCart();
       });
@@ -977,13 +977,13 @@ describe("useCart", () => {
               value: "01234",
               label: "code",
               textInputType: "STRING",
-              validationRegex: "^[a-z]{5}$"
-            }
+              validationRegex: "^[a-z]{5}$",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ]);
     });
 
@@ -993,7 +993,7 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -1019,7 +1019,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
@@ -1027,8 +1027,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ]);
     });
 
@@ -1039,7 +1039,7 @@ describe("useCart", () => {
         () =>
           useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
         {
-          wrapper
+          wrapper,
         }
       );
 
@@ -1062,16 +1062,16 @@ describe("useCart", () => {
               ...defaultProducts[0],
               alert: {
                 threshold: 1,
-                label: "*chargeable"
+                label: "*chargeable",
               },
               quantity: {
                 period: 7,
                 limit: 10,
                 default: 0,
-                checkoutLimit: 1
-              }
+                checkoutLimit: 1,
+              },
             },
-            { ...defaultProducts[1] }
+            { ...defaultProducts[1] },
           ]}
         >
           {children}
@@ -1081,7 +1081,7 @@ describe("useCart", () => {
         () =>
           useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
         {
-          wrapper: AlertProductWrapper
+          wrapper: AlertProductWrapper,
         }
       );
 
@@ -1095,18 +1095,18 @@ describe("useCart", () => {
               label: "first",
               value: "first identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               label: "last",
               value: "last identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 1,
-          quantity: 0
+          quantity: 0,
         },
         {
           category: "chocolate",
@@ -1114,8 +1114,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -1129,16 +1129,16 @@ describe("useCart", () => {
               ...defaultProducts[0],
               alert: {
                 threshold: 1,
-                label: "*chargeable"
+                label: "*chargeable",
               },
               quantity: {
                 period: 7,
                 limit: 9,
                 default: 0,
-                checkoutLimit: 1
-              }
+                checkoutLimit: 1,
+              },
             },
-            { ...defaultProducts[1] }
+            { ...defaultProducts[1] },
           ]}
         >
           {children}
@@ -1148,7 +1148,7 @@ describe("useCart", () => {
         () =>
           useCart(ids, key, endpoint, mockQuotaResSingleIdAlert.remainingQuota),
         {
-          wrapper: AlertProductWrapper
+          wrapper: AlertProductWrapper,
         }
       );
       expect(result.current.cartState).toBe("DEFAULT");
@@ -1161,18 +1161,18 @@ describe("useCart", () => {
               label: "first",
               value: "first identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               label: "last",
               value: "last identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 1,
-          quantity: 0
+          quantity: 0,
         },
         {
           category: "chocolate",
@@ -1180,8 +1180,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
   });

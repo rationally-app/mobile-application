@@ -4,7 +4,7 @@ import {
   Quota,
   PostTransactionResult,
   PastTransactionsResult,
-  IdentificationFlag
+  IdentificationFlag,
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
@@ -59,134 +59,134 @@ export const mockGetQuota = async (
         {
           category: "toilet-paper",
           quantity: 0,
-          transactionTime
+          transactionTime,
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "chocolate",
           quantity: 30,
-          transactionTime
+          transactionTime,
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "voucher",
           quantity: 1,
-          transactionTime
-        }
+          transactionTime,
+        },
       ],
       globalQuota: [
         {
           category: "toilet-paper",
           quantity: 0,
-          transactionTime
+          transactionTime,
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "chocolate",
           quantity: 30,
-          transactionTime
+          transactionTime,
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "voucher",
           quantity: 1,
-          transactionTime
-        }
+          transactionTime,
+        },
       ],
       localQuota: [
         {
           category: "toilet-paper",
           quantity: Number.MAX_SAFE_INTEGER,
-          transactionTime
+          transactionTime,
         },
         {
           category: "instant-noodles",
           quantity: Number.MAX_SAFE_INTEGER,
-          transactionTime
+          transactionTime,
         },
         {
           category: "chocolate",
           quantity: Number.MAX_SAFE_INTEGER,
-          transactionTime
+          transactionTime,
         },
         {
           category: "vouchers",
           quantity: Number.MAX_SAFE_INTEGER,
-          transactionTime
+          transactionTime,
         },
         {
           category: "voucher",
           quantity: Number.MAX_SAFE_INTEGER,
-          transactionTime
-        }
-      ]
+          transactionTime,
+        },
+      ],
     };
   } else {
     return {
       remainingQuota: [
         {
           category: "toilet-paper",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "instant-noodles",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
-          quantity: 60
+          quantity: 60,
         },
         { category: "vouchers", quantity: 1 },
-        { category: "voucher", quantity: 1 }
+        { category: "voucher", quantity: 1 },
       ],
       globalQuota: [
         {
           category: "toilet-paper",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "instant-noodles",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
-          quantity: 60
+          quantity: 60,
         },
         { category: "vouchers", quantity: 1 },
-        { category: "voucher", quantity: 1 }
+        { category: "voucher", quantity: 1 },
       ],
       localQuota: [
         {
           category: "toilet-paper",
-          quantity: Number.MAX_SAFE_INTEGER
+          quantity: Number.MAX_SAFE_INTEGER,
         },
         {
           category: "instant-noodles",
-          quantity: Number.MAX_SAFE_INTEGER
+          quantity: Number.MAX_SAFE_INTEGER,
         },
         {
           category: "chocolate",
-          quantity: Number.MAX_SAFE_INTEGER
+          quantity: Number.MAX_SAFE_INTEGER,
         },
         { category: "vouchers", quantity: Number.MAX_SAFE_INTEGER },
-        { category: "voucher", quantity: Number.MAX_SAFE_INTEGER }
-      ]
+        { category: "voucher", quantity: Number.MAX_SAFE_INTEGER },
+      ],
     };
   }
 };
@@ -205,12 +205,12 @@ export const liveGetQuota = async (
     response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
       method: "POST",
       headers: {
-        Authorization: key
+        Authorization: key,
       },
       body: JSON.stringify({
         ids,
-        identificationFlag
-      })
+        identificationFlag,
+      }),
     });
     return response;
   } catch (e) {
@@ -228,7 +228,7 @@ export const liveGetQuota = async (
 
 export const mockPostTransaction = async ({
   ids,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
   const timestamp = new Date();
@@ -238,25 +238,25 @@ export const mockPostTransaction = async ({
       const transaction: Transaction[] = [
         {
           category: "voucher",
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ];
       transactionArr.push({
         timestamp: timestamp,
-        transaction
+        transaction,
       });
     }
     return {
-      transactions: transactionArr
+      transactions: transactionArr,
     };
   }
   return {
     transactions: [
       {
         transaction: transactions,
-        timestamp
-      }
-    ]
+        timestamp,
+      },
+    ],
   };
 };
 
@@ -265,7 +265,7 @@ export const livePostTransaction = async ({
   identificationFlag,
   endpoint,
   key,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids.length === 0) {
     throw new PostTransactionError("No ID was provided");
@@ -277,13 +277,13 @@ export const livePostTransaction = async ({
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
           ids,
           identificationFlag,
-          transaction: transactions
-        })
+          transaction: transactions,
+        }),
       }
     );
     return response;
@@ -313,24 +313,24 @@ export const mockPastTransactions = async (
       {
         category: "toilet-paper",
         quantity: 1,
-        transactionTime
+        transactionTime,
       },
       {
         category: "instant-noodles",
         quantity: 1,
-        transactionTime
+        transactionTime,
       },
       {
         category: "chocolate",
         quantity: 30,
-        transactionTime
+        transactionTime,
       },
       {
         category: "vouchers",
         quantity: 5,
-        transactionTime
-      }
-    ]
+        transactionTime,
+      },
+    ],
   };
 };
 
@@ -351,12 +351,12 @@ export const livePastTransactions = async (
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
           ids,
-          identificationFlag
-        })
+          identificationFlag,
+        }),
       }
     );
     return response;

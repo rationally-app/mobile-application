@@ -15,7 +15,7 @@ export class ErrorBoundary extends Component<unknown, State> {
   componentDidCatch(error: Error): void {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "ErrorBoundary"
+      message: "ErrorBoundary",
     });
     Sentry.captureException(error);
   }

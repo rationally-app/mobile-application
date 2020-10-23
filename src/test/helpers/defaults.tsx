@@ -1,23 +1,23 @@
 import {
   i18ntWithValidator,
-  TranslationHook
+  TranslationHook,
 } from "../../hooks/useTranslate/useTranslate";
 import {
   PolicyIdentifier,
   CampaignPolicy,
-  CampaignFeatures
+  CampaignFeatures,
 } from "../../types";
 
 export const defaultTranslationProps: TranslationHook = {
   c13nt: (key: string) => key,
   c13ntForUnit: (unit: CampaignPolicy["quantity"]["unit"]) => unit,
-  i18nt: i18ntWithValidator
+  i18nt: i18ntWithValidator,
 };
 
 export const defaultIdentifier: PolicyIdentifier = {
   label: "identifier",
   textInput: { visible: true, disabled: false, type: "STRING" },
-  scanButton: { visible: true, disabled: false, type: "BARCODE" }
+  scanButton: { visible: true, disabled: false, type: "BARCODE" },
 };
 
 export const defaultFeatures: CampaignFeatures = {
@@ -26,7 +26,7 @@ export const defaultFeatures: CampaignFeatures = {
   campaignName: "Campaign Name",
   transactionGrouping: true,
   flowType: "DEFAULT",
-  id: { type: "STRING", scannerType: "QR", validation: "NRIC" }
+  id: { type: "STRING", scannerType: "QR", validation: "NRIC" },
 };
 
 export const defaultProducts: CampaignPolicy[] = [
@@ -41,19 +41,19 @@ export const defaultProducts: CampaignPolicy[] = [
       default: 1,
       unit: {
         type: "POSTFIX",
-        label: " roll"
-      }
+        label: " roll",
+      },
     },
     identifiers: [
       {
         ...defaultIdentifier,
-        label: "first"
+        label: "first",
       },
       {
         ...defaultIdentifier,
-        label: "last"
-      }
-    ]
+        label: "last",
+      },
+    ],
   },
   {
     category: "chocolate",
@@ -65,20 +65,20 @@ export const defaultProducts: CampaignPolicy[] = [
       default: 0,
       unit: {
         type: "POSTFIX",
-        label: "bar"
-      }
+        label: "bar",
+      },
     },
     identifiers: [
       {
         ...defaultIdentifier,
-        label: "first"
+        label: "first",
       },
       {
         ...defaultIdentifier,
-        label: "last"
-      }
-    ]
-  }
+        label: "last",
+      },
+    ],
+  },
 ];
 
 export const defaultNonAppealProducts: CampaignPolicy[] = [
@@ -93,18 +93,18 @@ export const defaultNonAppealProducts: CampaignPolicy[] = [
       default: 1,
       unit: {
         type: "POSTFIX",
-        label: " roll"
-      }
+        label: " roll",
+      },
     },
     identifiers: [
       {
         ...defaultIdentifier,
-        label: "first"
+        label: "first",
       },
       {
         ...defaultIdentifier,
-        label: "last"
-      }
-    ]
-  }
+        label: "last",
+      },
+    ],
+  },
 ];

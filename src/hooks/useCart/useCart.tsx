@@ -45,7 +45,7 @@ const getItem = (
   cart: Cart,
   category: string
 ): [CartItem | undefined, number] => {
-  const idx = cart.findIndex(item => item.category === category);
+  const idx = cart.findIndex((item) => item.category === category);
   return [cart[idx], idx];
 };
 
@@ -66,7 +66,7 @@ const mergeWithCart = (
         category,
         quantity: remainingQuantity,
         transactionTime,
-        identifierInputs
+        identifierInputs,
       }) => {
         remainingQuantity = Math.max(remainingQuantity, 0);
         const [existingItem] = getItem(cart, category);
@@ -80,7 +80,7 @@ const mergeWithCart = (
               value: "",
               ...(textInput.type ? { textInputType: textInput.type } : {}),
               ...(scanButton.type ? { scanButtonType: scanButton.type } : {}),
-              ...(validationRegex ? { validationRegex } : {})
+              ...(validationRegex ? { validationRegex } : {}),
             })
           ) || [];
 
@@ -107,7 +107,7 @@ const mergeWithCart = (
           maxQuantity,
           descriptionAlert,
           lastTransactionTime: transactionTime,
-          identifierInputs: identifierInputs || defaultIdentifierInputs
+          identifierInputs: identifierInputs || defaultIdentifierInputs,
         };
       }
     );
@@ -147,7 +147,7 @@ export const useCart = (
          * Caveat: We must use a callback within this setState to avoid
          * having `cart` as a dependency, preventing an infinite loop.
          */
-        setCart(cart => mergeWithCart(cart, cartQuota, getProduct));
+        setCart((cart) => mergeWithCart(cart, cartQuota, getProduct));
       } else {
         setCartError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
       }
@@ -159,7 +159,7 @@ export const useCart = (
     ids,
     prevIds,
     products,
-    prevProducts
+    prevProducts,
   ]);
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
@@ -184,9 +184,9 @@ export const useCart = (
               ...item,
               quantity,
               identifierInputs:
-                identifierInputs || cart[itemIdx].identifierInputs
+                identifierInputs || cart[itemIdx].identifierInputs,
             },
-            ...cart.slice(itemIdx + 1)
+            ...cart.slice(itemIdx + 1),
           ]);
         } else {
           setCartError(new Error(ERROR_MESSAGE.INSUFFICIENT_QUOTA));
@@ -214,7 +214,7 @@ export const useCart = (
         .map(({ category, quantity, identifierInputs }) => {
           if (
             identifierInputs.length > 0 &&
-            identifierInputs.some(identifierInput => !identifierInput.value)
+            identifierInputs.some((identifierInput) => !identifierInput.value)
           ) {
           }
           allIdentifierInputs.push(...identifierInputs);
@@ -241,7 +241,7 @@ export const useCart = (
           identificationFlag: selectedIdType,
           key: authKey,
           transactions,
-          endpoint
+          endpoint,
         });
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
@@ -270,6 +270,6 @@ export const useCart = (
     checkoutCart,
     checkoutResult,
     cartError,
-    clearCartError
+    clearCartError,
   };
 };

@@ -30,13 +30,13 @@ const filterQuotaWithAvailableProducts = (
   const filteredQuota: Quota = {
     remainingQuota: [],
     globalQuota: [],
-    localQuota: []
+    localQuota: [],
   };
 
   transform(
     quota.remainingQuota,
     (result: Quota, itemQuota) => {
-      if (products.some(policy => policy.category === itemQuota.category))
+      if (products.some((policy) => policy.category === itemQuota.category))
         result.remainingQuota.push(itemQuota);
     },
     filteredQuota
@@ -45,7 +45,7 @@ const filterQuotaWithAvailableProducts = (
   transform(
     quota.globalQuota,
     (result: Quota, itemQuota) => {
-      if (products.some(policy => policy.category === itemQuota.category))
+      if (products.some((policy) => policy.category === itemQuota.category))
         result.globalQuota.push(itemQuota);
     },
     filteredQuota
@@ -54,7 +54,7 @@ const filterQuotaWithAvailableProducts = (
   transform(
     quota.localQuota,
     (result: Quota, itemQuota) => {
-      if (products.some(policy => policy.category === itemQuota.category))
+      if (products.some((policy) => policy.category === itemQuota.category))
         result.localQuota.push(itemQuota);
     },
     filteredQuota
@@ -64,7 +64,7 @@ const filterQuotaWithAvailableProducts = (
 };
 
 const hasNoQuota = (quota: Quota): boolean => {
-  return quota.remainingQuota.every(item => item.quantity === 0);
+  return quota.remainingQuota.every((item) => item.quantity === 0);
 };
 
 const hasInvalidQuota = (quota: Quota): boolean => {
@@ -72,14 +72,14 @@ const hasInvalidQuota = (quota: Quota): boolean => {
   if (quota === null) {
     return true;
   }
-  return quota.remainingQuota.some(item => item.quantity < 0);
+  return quota.remainingQuota.some((item) => item.quantity < 0);
 };
 
 export const hasInvalidRemainingQuota = (itemQuotas: ItemQuota[]): boolean => {
   if (!itemQuotas || itemQuotas.length === 0) {
     return true;
   }
-  return itemQuotas.some(quota => quota.quantity < 0);
+  return itemQuotas.some((quota) => quota.quantity < 0);
 };
 
 /**
@@ -152,6 +152,6 @@ export const useQuota = (
     allQuotaResponse,
     updateQuota,
     quotaError,
-    clearQuotaError
+    clearQuotaError,
   };
 };

@@ -6,7 +6,7 @@ import { DropdownFilterModal, DropdownItem } from "./DropdownFilterModal";
 
 const styles = StyleSheet.create({
   label: {
-    fontFamily: "brand-bold"
+    fontFamily: "brand-bold",
   },
   inputView: {
     marginTop: size(1),
@@ -14,15 +14,15 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     borderWidth: 1,
     backgroundColor: color("grey", 0),
-    borderColor: color("blue", 50)
+    borderColor: color("blue", 50),
   },
   inputText: {
     minHeight: size(6),
     paddingHorizontal: size(1),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
-    color: color("blue", 50)
-  }
+    color: color("blue", 50),
+  },
 });
 
 export interface DropdownFilterInput {
@@ -38,7 +38,7 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
   placeholder,
   value,
   dropdownItems,
-  onItemSelection
+  onItemSelection,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 

@@ -21,7 +21,7 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
   isLoading = false,
   icon,
   disabled,
-  size = "medium"
+  size = "medium",
 }) => (
   <BaseButton
     onPress={onPress}
@@ -40,7 +40,7 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
           style={{
             color: disabled ? color("grey", 40) : color("blue", 50),
             fontFamily: "brand-bold",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           {text}

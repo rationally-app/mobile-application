@@ -4,7 +4,7 @@ import React, {
   SetStateAction,
   useRef,
   useEffect,
-  useState
+  useState,
 } from "react";
 import {
   View,
@@ -12,7 +12,7 @@ import {
   StyleSheet,
   TextInput,
   Platform,
-  Vibration
+  Vibration,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { clamp, debounce } from "lodash";
@@ -28,24 +28,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     minHeight: size(7),
     borderWidth: 1,
-    borderRadius: borderRadius(2)
+    borderRadius: borderRadius(2),
   },
   wrapperDefault: {
-    borderColor: color("grey", 30)
+    borderColor: color("grey", 30),
   },
   wrapperHighlighted: {
-    borderColor: color("green", 50)
+    borderColor: color("green", 50),
   },
   stepButton: {
     minWidth: size(7),
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   inputAndSuffixWrapper: {
     flexGrow: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   input: {
     marginHorizontal: 2,
@@ -60,15 +60,15 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold",
     ...Platform.select({
       android: {
-        marginTop: -2
-      }
-    })
+        marginTop: -2,
+      },
+    }),
   },
   suffix: {
     marginTop: -2,
     fontFamily: "brand-regular",
-    fontSize: fontSize(0)
-  }
+    fontSize: fontSize(0),
+  },
 });
 
 const parseNumber = (value: string): number => Number(value.replace(/\s/g, ""));
@@ -94,7 +94,7 @@ interface StepperButton {
 const StepperButton: FunctionComponent<StepperButton> = ({
   onPress,
   variant,
-  disabled = false
+  disabled = false,
 }) => {
   const [isPressedIn, setIsPressedIn] = useState(false);
   const [longPressStartTime, setLongPressStartTime] = useState(0);
@@ -168,10 +168,10 @@ export const Stepper: FunctionComponent<Stepper> = ({
   setValue,
   bounds = {
     min: Number.MIN_SAFE_INTEGER,
-    max: Number.MAX_SAFE_INTEGER
+    max: Number.MAX_SAFE_INTEGER,
   },
   step = 1,
-  unit
+  unit,
 }) => {
   const isMounted = useIsMounted();
   const [internalValue, setInternalValue] = useState<string>(`${value}`);
@@ -244,7 +244,7 @@ export const Stepper: FunctionComponent<Stepper> = ({
     <View
       style={[
         styles.wrapper,
-        value > 0 ? styles.wrapperHighlighted : styles.wrapperDefault
+        value > 0 ? styles.wrapperHighlighted : styles.wrapperDefault,
       ]}
     >
       <StepperButton

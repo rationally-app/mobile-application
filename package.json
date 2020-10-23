@@ -86,10 +86,5 @@
     "react-test-renderer": "^16.12.0",
     "typescript": "~3.9.5"
   },
-  "private": true,
-  "prettier": {
-    "trailingComma": "none",
-    "arrowParens": "avoid",
-    "endOfLine": "auto"
-  }
+  "private": true
 }

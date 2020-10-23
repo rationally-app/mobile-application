@@ -4,7 +4,7 @@ import { ProductContextProvider } from "../../context/products";
 import { CustomerQuotaScreen } from "./CustomerQuotaScreen";
 
 export const CustomerQuotaProxy: FunctionComponent<NavigationProps> = ({
-  navigation
+  navigation,
 }) => {
   // coming from NRIC screen, it will be a string
   // coming from appeal, it can be an array if group appeal is supported

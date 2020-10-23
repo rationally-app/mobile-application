@@ -44,7 +44,7 @@ export const validateIdentifierInputs = (
 
   if (
     !isUniqueList(
-      identifierInputs.map(identifierInput => identifierInput.value)
+      identifierInputs.map((identifierInput) => identifierInput.value)
     )
   ) {
     throw new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT);

@@ -3,7 +3,7 @@ import React, {
   useContext,
   FunctionComponent,
   useState,
-  useCallback
+  useCallback,
 } from "react";
 
 export interface DrawerButton {
@@ -23,7 +23,7 @@ const DEFAULT_BUTTONS: DrawerButton[] = [];
 const DrawerContext = createContext<DrawerContext>({
   drawerButtons: DEFAULT_BUTTONS,
   setDrawerButtons: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  clearDrawerButtons: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
+  clearDrawerButtons: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
 export const useDrawerContext = (): DrawerContext =>

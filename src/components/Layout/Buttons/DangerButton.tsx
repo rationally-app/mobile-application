@@ -15,7 +15,7 @@ export const DangerButton: FunctionComponent<DangerButton> = ({
   onPress,
   text,
   fullWidth = false,
-  isLoading = false
+  isLoading = false,
 }) => (
   <BaseButton
     onPress={onPress}
@@ -31,7 +31,7 @@ export const DangerButton: FunctionComponent<DangerButton> = ({
         style={{
           color: color("grey", 0),
           fontFamily: "brand-bold",
-          textAlign: "center"
+          textAlign: "center",
         }}
       >
         {text}

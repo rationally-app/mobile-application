@@ -13,7 +13,7 @@ export interface TransparentButton {
 export const TransparentButton: FunctionComponent<TransparentButton> = ({
   onPress,
   text,
-  icon
+  icon,
 }) => (
   <BaseButton onPress={onPress} backgroundColor="transparent">
     <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -22,7 +22,7 @@ export const TransparentButton: FunctionComponent<TransparentButton> = ({
         style={{
           color: color("grey", 0),
           fontFamily: "brand-bold",
-          textAlign: "center"
+          textAlign: "center",
         }}
       >
         {text}

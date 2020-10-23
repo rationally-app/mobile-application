@@ -2,7 +2,7 @@ import React, {
   FunctionComponent,
   useContext,
   useState,
-  useEffect
+  useEffect,
 } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
@@ -19,7 +19,7 @@ import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTra
 import {
   formatQuantityText,
   BIG_NUMBER,
-  sortTransactionsByOrder
+  sortTransactionsByOrder,
 } from "../utils";
 import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
@@ -29,15 +29,15 @@ import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
 import { AlertModalContext } from "../../../context/alert";
 import {
   TranslationHook,
-  useTranslate
+  useTranslate,
 } from "../../../hooks/useTranslate/useTranslate";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
-    marginTop: size(2)
-  }
+    marginTop: size(2),
+  },
 });
 
 interface CheckoutSuccessCard {
@@ -57,7 +57,7 @@ const UsageQuotaTitle: FunctionComponent<{
         {"\n"}
         {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
           quantity: quantity,
-          date: formatDate(quotaRefreshTime)
+          date: formatDate(quotaRefreshTime),
         })}`}
       </AppText>
     </>
@@ -93,9 +93,9 @@ export const groupTransactionsByTime = (
       order: number;
     };
   } = {};
-  sortedTransactions?.forEach(item => {
+  sortedTransactions?.forEach((item) => {
     const policy = allProducts?.find(
-      policy => policy.category === item.category
+      (policy) => policy.category === item.category
     );
     const transactionTimeInSeconds = String(
       Math.floor(item.transactionTime.getTime() / 1000)
@@ -105,7 +105,7 @@ export const groupTransactionsByTime = (
       transactionsByTimeMap[transactionTimeInSeconds] = {
         transactionTime: item.transactionTime,
         transactions: [],
-        order: -transactionTimeInSeconds
+        order: -transactionTimeInSeconds,
       };
     }
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
@@ -117,11 +117,11 @@ export const groupTransactionsByTime = (
           ? c13ntForUnit(policy?.quantity.unit)
           : {
               type: "POSTFIX",
-              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`
+              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`,
             }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
-      order: policy?.order ?? BIG_NUMBER
+      order: policy?.order ?? BIG_NUMBER,
     });
   });
   return transactionsByTimeMap;
@@ -135,14 +135,14 @@ export const sortTransactions = (
     .map(([, { transactionTime, transactions, order }]) => ({
       header: formatDateTime(transactionTime.getTime()),
       transactions: transactions.sort(sortTransactionsByOrder),
-      order
+      order,
     }));
 };
 
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   ids,
   onCancel,
-  quotaResponse
+  quotaResponse,
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
 

@@ -5,7 +5,7 @@ import { CampaignPolicy, Quota } from "../../types";
 import { NotEligibleError, getQuota } from "../../services/quota";
 import {
   defaultNonAppealProducts,
-  defaultProducts
+  defaultProducts,
 } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 
@@ -24,43 +24,43 @@ const mockQuotaResSingleId: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 2,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 2,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockQuotaResMultipleIds: Quota = {
@@ -68,38 +68,38 @@ const mockQuotaResMultipleIds: Quota = {
     {
       category: "toilet-paper",
       identifierInputs: [],
-      quantity: 4
+      quantity: 4,
     },
     {
       category: "chocolate",
       identifierInputs: [],
-      quantity: 30
-    }
+      quantity: 30,
+    },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
-      quantity: 4
+      quantity: 4,
     },
     {
       category: "chocolate",
       identifierInputs: [],
-      quantity: 30
-    }
+      quantity: 30,
+    },
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
-      quantity: Number.MAX_SAFE_INTEGER
+      quantity: Number.MAX_SAFE_INTEGER,
     },
     {
       category: "chocolate",
       identifierInputs: [],
-      quantity: Number.MAX_SAFE_INTEGER
-    }
-  ]
+      quantity: Number.MAX_SAFE_INTEGER,
+    },
+  ],
 };
 
 const mockQuotaResSingleIdWithIdentifiers: Quota = {
@@ -111,24 +111,24 @@ const mockQuotaResSingleIdWithIdentifiers: Quota = {
           label: "first",
           value: "first identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
+          scanButtonType: "BARCODE",
         },
         {
           label: "last",
           value: "last identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        }
+          scanButtonType: "BARCODE",
+        },
       ],
       quantity: 1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
@@ -138,24 +138,24 @@ const mockQuotaResSingleIdWithIdentifiers: Quota = {
           label: "first",
           value: "first identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
+          scanButtonType: "BARCODE",
         },
         {
           label: "last",
           value: "last identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        }
+          scanButtonType: "BARCODE",
+        },
       ],
       quantity: 1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
@@ -165,25 +165,25 @@ const mockQuotaResSingleIdWithIdentifiers: Quota = {
           label: "first",
           value: "first identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
+          scanButtonType: "BARCODE",
         },
         {
           label: "last",
           value: "last identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        }
+          scanButtonType: "BARCODE",
+        },
       ],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockQuotaResSingleIdNoQuota: Quota = {
@@ -192,43 +192,43 @@ const mockQuotaResSingleIdNoQuota: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockQuotaResSingleIdInvalidQuota: Quota = {
@@ -237,43 +237,43 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: -1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: -1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockQuotaResSingleIdWithAppealProducts: Quota = {
@@ -282,43 +282,43 @@ const mockQuotaResSingleIdWithAppealProducts: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 /**
@@ -332,43 +332,43 @@ const mockQuotaResSingleIdNoQuotaWithAppealProducts: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 1,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 1,
-      transactionTime
-    }
+      transactionTime,
+    },
   ],
   localQuota: [
     {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockIdNotEligible: any = (id: string) => {
@@ -380,7 +380,7 @@ const mockIdNotEligible: any = (id: string) => {
 
 const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
   products = defaultProducts,
-  children
+  children,
 }) => (
   <ProductContextProvider products={products}>
     {children}
@@ -414,24 +414,24 @@ describe("useQuota", () => {
               label: "first",
               value: "first identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               label: "last",
               value: "last identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           transactionTime,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
           identifierInputs: [],
           transactionTime,
-          quantity: 15
-        }
+          quantity: 15,
+        },
       ]);
     });
 
@@ -453,14 +453,14 @@ describe("useQuota", () => {
           category: "toilet-paper",
           identifierInputs: [],
           transactionTime,
-          quantity: 0
+          quantity: 0,
         },
         {
           category: "chocolate",
           identifierInputs: [],
           transactionTime,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -482,14 +482,14 @@ describe("useQuota", () => {
           category: "toilet-paper",
           identifierInputs: [],
           transactionTime,
-          quantity: -1
+          quantity: -1,
         },
         {
           category: "chocolate",
           identifierInputs: [],
           transactionTime,
-          quantity: 15
-        }
+          quantity: 15,
+        },
       ]);
     });
 
@@ -502,7 +502,7 @@ describe("useQuota", () => {
       });
 
       const { result } = renderHook(() => useQuota(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       expect(result.current.quotaState).toBe("NOT_ELIGIBLE");
@@ -518,7 +518,7 @@ describe("useQuota", () => {
       const { result, waitForNextUpdate, rerender } = renderHook(
         () => useQuota(ids, key, endpoint),
         {
-          wrapper
+          wrapper,
         }
       );
       await waitForNextUpdate();
@@ -554,8 +554,8 @@ describe("useQuota", () => {
         {
           wrapper,
           initialProps: {
-            products: defaultNonAppealProducts
-          }
+            products: defaultNonAppealProducts,
+          },
         }
       );
       await waitForNextUpdate();
@@ -575,8 +575,8 @@ describe("useQuota", () => {
         {
           wrapper,
           initialProps: {
-            products: defaultNonAppealProducts
-          }
+            products: defaultNonAppealProducts,
+          },
         }
       );
       await waitForNextUpdate();
@@ -601,14 +601,14 @@ describe("useQuota", () => {
           category: "toilet-paper",
           identifierInputs: [],
           transactionTime,
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
           identifierInputs: [],
           transactionTime,
-          quantity: 15
-        }
+          quantity: 15,
+        },
       ]);
 
       mockGetQuota.mockReturnValueOnce(mockQuotaResMultipleIds);
@@ -619,13 +619,13 @@ describe("useQuota", () => {
         {
           category: "toilet-paper",
           identifierInputs: [],
-          quantity: 4
+          quantity: 4,
         },
         {
           category: "chocolate",
           identifierInputs: [],
-          quantity: 30
-        }
+          quantity: 30,
+        },
       ]);
     });
 
@@ -636,7 +636,7 @@ describe("useQuota", () => {
       const { rerender, result, waitForNextUpdate } = renderHook(
         () => useQuota(ids, key, endpoint),
         {
-          wrapper
+          wrapper,
         }
       );
       await waitForNextUpdate();
@@ -645,14 +645,14 @@ describe("useQuota", () => {
           category: "toilet-paper",
           identifierInputs: [],
           transactionTime,
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
           identifierInputs: [],
           transactionTime,
-          quantity: 15
-        }
+          quantity: 15,
+        },
       ]);
       act(() => {
         rerender({ products: [] });
@@ -669,7 +669,7 @@ describe("useQuota", () => {
       const { rerender, result, waitForNextUpdate } = renderHook(
         () => useQuota(ids, key, endpoint),
         {
-          wrapper
+          wrapper,
         }
       );
       await waitForNextUpdate();
@@ -678,14 +678,14 @@ describe("useQuota", () => {
           category: "toilet-paper",
           identifierInputs: [],
           transactionTime,
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
           identifierInputs: [],
           transactionTime,
-          quantity: 15
-        }
+          quantity: 15,
+        },
       ]);
       act(() => {
         rerender({ products: defaultProducts });
