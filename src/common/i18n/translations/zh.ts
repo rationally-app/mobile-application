@@ -3,7 +3,7 @@ import { Translations } from "./type";
 export const zh: Translations = {
   redemptionStats: {
     youDistributed: "您已分发",
-    lastDistributedAt: "最后在时:分",
+    lastDistributedAt: "最后在",
     distributedTime: "分发",
     back: "返回",
     statistics: "统计",
