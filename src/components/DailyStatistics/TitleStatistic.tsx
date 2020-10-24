@@ -70,10 +70,10 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
       </AppText>
       <AppText style={styles.statText}>{totalCount?.toLocaleString()}</AppText>
       <AppText style={styles.smallText}>
-        {i18nt("redemptionStats", "lastDistributedAt")}{" "}
+        {i18nt("redemptionStats", "lastDistributedAt")}
         {lastTransactionTime !== null
           ? format(lastTransactionTime, "h:mma")
-          : "-"}{" "}
+          : "-"}
         {i18nt("redemptionStats", "distributedTime")}
       </AppText>
       <View style={styles.dateToggle}>

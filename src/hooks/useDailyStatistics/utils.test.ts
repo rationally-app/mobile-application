@@ -232,12 +232,6 @@ describe("countTotalTransactionsAndByCategory", () => {
 
   it("should have appeal alertDescription 'via appeal' if product is from an appeal flow", () => {
     expect.assertions(1);
-    console.log(
-      countTotalTransactionsAndByCategory(
-        pastTransactionsWithAppeal,
-        campaignPolicy
-      )
-    );
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactionsWithAppeal,

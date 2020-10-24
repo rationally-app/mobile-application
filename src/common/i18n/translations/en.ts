@@ -3,8 +3,8 @@ import { Translations } from "./type";
 export const en: Translations = {
   redemptionStats: {
     youDistributed: "You distributed",
-    lastDistributedAt: "Last distributed at",
-    distributedTime: "",
+    lastDistributedAt: "Last distributed at ",
+    distributedTime: " ",
     back: "Back",
     statistics: "Statistics",
     goToStatistics: "Go to statistics",
