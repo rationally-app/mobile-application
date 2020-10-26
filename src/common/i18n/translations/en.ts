@@ -4,7 +4,7 @@ export const en: Translations = {
   redemptionStats: {
     youDistributed: "You distributed",
     lastDistributedAt: "Last distributed at ",
-    distributedTime: " ",
+    distributedTime: "%{distributionTime} ",
     back: "Back",
     statistics: "Statistics",
     goToStatistics: "Go to statistics",
