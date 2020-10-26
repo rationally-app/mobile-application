@@ -174,7 +174,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   const productType =
     (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
-  const { title, description, ctaButtonText } = getCheckoutMessages(
+  const { title, description } = getCheckoutMessages(
     translationProps.i18nt,
     productType
   );
@@ -253,7 +253,11 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text={ctaButtonText} onPress={onCancel} fullWidth={true} />
+        <DarkButton
+          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
+          onPress={onCancel}
+          fullWidth={true}
+        />
       </View>
     </View>
   );

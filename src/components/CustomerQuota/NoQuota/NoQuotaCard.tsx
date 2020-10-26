@@ -350,10 +350,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={translationProps.i18nt(
-            "checkoutSuccessScreen",
-            "redeemedNextIdentity"
-          )}
+          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
         />
