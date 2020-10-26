@@ -8,6 +8,7 @@ export type Translations = {
     goToStatistics: string;
     noItemsScanned: string;
     viaAppeal: string;
+    noDistributedTime: string;
   };
   loginScanCard: {
     loginWithQR: string;

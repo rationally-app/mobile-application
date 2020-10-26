@@ -75,7 +75,7 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
           ? i18nt("redemptionStats", "distributedTime", undefined, {
               distributionTime: format(lastTransactionTime, "h:mma"),
             })
-          : "-"}
+          : i18nt("redemptionStats", "noDistributedTime")}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>
