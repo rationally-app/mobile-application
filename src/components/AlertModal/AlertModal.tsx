@@ -108,6 +108,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
                     onExit?.();
                     onCancel?.();
                   }}
+                  accessibilityLabel="alert-modal-secondary-button"
                 />
               </View>
             )}
@@ -119,6 +120,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
                   onExit?.();
                   onOk();
                 }}
+                accessibilityLabel="alert-modal-primary-button"
               />
             </View>
           </View>
