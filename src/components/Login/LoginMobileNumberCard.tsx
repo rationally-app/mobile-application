@@ -95,6 +95,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
           onChangeCountryCode={onChangeCountryCode}
           onChangeMobileNumber={onChangeMobileNumber}
           onSubmit={onSubmitMobileNumber}
+          accessibilityLabel="login-phone-number"
         />
 
         <DarkButton
