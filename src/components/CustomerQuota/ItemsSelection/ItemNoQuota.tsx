@@ -44,6 +44,7 @@ export const ItemNoQuota: FunctionComponent<{
           description={description}
           unit={quantity?.unit}
           maxQuantity={maxQuantity}
+          accessibilityLabel="item-no-quota"
         />
       </View>
       <View style={styles.feedbackWrapper}>

@@ -27,13 +27,28 @@ export const ItemContent: FunctionComponent<{
   descriptionAlert?: string;
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
-}> = ({ name, description, descriptionAlert, unit, maxQuantity }) => {
+  accessibilityLabel?: string;
+}> = ({
+  name,
+  description,
+  descriptionAlert,
+  unit,
+  maxQuantity,
+  accessibilityLabel = "item-content",
+}) => {
   const { c13nt } = useTranslate();
   const tDescription = c13nt(description ?? "");
 
   return (
     <View>
-      <AppText style={styles.name}>{c13nt(name)}</AppText>
+      <AppText
+        style={styles.name}
+        accessibilityLabel={`${accessibilityLabel}-name`}
+        testID={`${accessibilityLabel}-name`}
+        accessible={true}
+      >
+        {c13nt(name)}
+      </AppText>
       {descriptionAlert && descriptionAlert.length > 0 && (
         <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
       )}
