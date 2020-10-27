@@ -20,6 +20,7 @@ import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppText } from "./AppText";
 import { useIsMounted } from "../../hooks/useIsMounted";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { access } from "fs";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -88,12 +89,14 @@ const clampAndRoundDown = (
 interface StepperButton {
   onPress: () => void;
   variant: "PLUS" | "MINUS";
+  accessibilityLabel: string;
   disabled?: boolean;
 }
 
 const StepperButton: FunctionComponent<StepperButton> = ({
   onPress,
   variant,
+  accessibilityLabel,
   disabled = false,
 }) => {
   const [isPressedIn, setIsPressedIn] = useState(false);
@@ -139,6 +142,9 @@ const StepperButton: FunctionComponent<StepperButton> = ({
       onLongPress={() => {
         setLongPressStartTime(Date.now());
       }}
+      accessibilityLabel={`${accessibilityLabel}-${
+        variant === "PLUS" ? "plus" : "minus"
+      }-button`}
     >
       <Feather
         name={variant === "PLUS" ? "plus" : "minus"}
@@ -161,6 +167,7 @@ export interface Stepper {
     type: "PREFIX" | "POSTFIX";
     label: string;
   };
+  accessibilityLabel?: string;
 }
 
 export const Stepper: FunctionComponent<Stepper> = ({
@@ -172,6 +179,7 @@ export const Stepper: FunctionComponent<Stepper> = ({
   },
   step = 1,
   unit,
+  accessibilityLabel = "stepper",
 }) => {
   const isMounted = useIsMounted();
   const [internalValue, setInternalValue] = useState<string>(`${value}`);
@@ -250,6 +258,7 @@ export const Stepper: FunctionComponent<Stepper> = ({
       <StepperButton
         variant="MINUS"
         onPress={decrement}
+        accessibilityLabel={accessibilityLabel}
         disabled={value === bounds.min}
       />
       <View style={styles.inputAndSuffixWrapper}>
