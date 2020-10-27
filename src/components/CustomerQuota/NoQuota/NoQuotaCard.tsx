@@ -353,6 +353,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
+          accessibilityLabel="no-quota-next-identity-button"
         />
       </View>
       {onAppeal && hasAppealProduct ? (

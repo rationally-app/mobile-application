@@ -102,6 +102,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
           onPress={onSubmitMobileNumber}
           fullWidth={true}
           isLoading={isLoading}
+          accessibilityLabel="login-send-otp-button"
         />
       </View>
     </Card>

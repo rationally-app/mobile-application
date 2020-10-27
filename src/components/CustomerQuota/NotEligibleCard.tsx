@@ -66,6 +66,7 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
           text={i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
+          accessibilityLabel="not-eligible-next-identity-button"
         />
       </View>
     </View>

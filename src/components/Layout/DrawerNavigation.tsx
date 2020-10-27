@@ -68,9 +68,14 @@ export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
   icon,
   label,
   onPress,
+  accessibilityLabel = "drawer-navigation-button",
 }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      onPress={onPress}
+      accessibilityLabel={accessibilityLabel}
+      testID={accessibilityLabel}
+    >
       <View style={styles.navLink}>
         <MaterialCommunityIcons
           name={icon}
@@ -155,6 +160,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
           icon="logout"
           label={i18nt("navigationDrawer", "logout")}
           onPress={onPressLogout}
+          accessibilityLabel="drawer-navigation-logout-button"
         />
       </View>
       <View style={{ marginTop: "auto", marginBottom: size(4) }}>

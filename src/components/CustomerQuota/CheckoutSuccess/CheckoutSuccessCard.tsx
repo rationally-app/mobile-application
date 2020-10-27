@@ -257,6 +257,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
           text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
+          accessibilityLabel="checkout-success-next-identity-button"
         />
       </View>
     </View>

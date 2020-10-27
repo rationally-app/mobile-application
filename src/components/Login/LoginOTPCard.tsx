@@ -168,6 +168,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
               onPress={onSubmitOTP}
               isLoading={isLoading}
               disabled={isResending}
+              accessibilityLabel="login-submit-otp-button"
             />
           </View>
         </View>
