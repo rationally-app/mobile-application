@@ -46,15 +46,16 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   modalButtonRow: {
-    marginTop: size(4),
+    marginTop: size(5),
     flexDirection: "row",
-    alignSelf: "stretch"
-    //flexWrap:"wrap"
+    alignSelf: "stretch",
+    flexWrap: "wrap",
+    marginBottom: size(1)
   },
   modalSecondaryButton: {
     marginRight: size(1),
-    flexGrow: 1
-    //padding:10
+    flexGrow: 1,
+    marginBottom: size(1)
   },
   modalPrimaryButton: {
     flexGrow: 1
