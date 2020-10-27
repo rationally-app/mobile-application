@@ -86,6 +86,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
             autoCompleteType="off"
             autoCorrect={false}
             keyboardType={keyboardType}
+            accessibilityLabel="identity-details"
           />
         </View>
         <SecondaryButton

@@ -145,6 +145,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           onChange={({ nativeEvent: { text } }) => handleChange(text)}
           onSubmitEditing={onSubmitOTP}
           keyboardType="numeric"
+          accessibilityLabel="login-otp"
         />
         <View style={styles.buttonsWrapper}>
           {resendDisabledTime > 0 ? (
