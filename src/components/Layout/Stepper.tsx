@@ -20,7 +20,6 @@ import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppText } from "./AppText";
 import { useIsMounted } from "../../hooks/useIsMounted";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { access } from "fs";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -273,6 +272,9 @@ export const Stepper: FunctionComponent<Stepper> = ({
           onBlur={onBlur}
           keyboardType="number-pad"
           maxLength={Math.ceil(Math.log10(bounds.max + 1))}
+          accessibilityLabel={`${accessibilityLabel}-value`}
+          testID={`${accessibilityLabel}-value`}
+          accessible={true}
         />
         {tUnit?.type === "POSTFIX" && (
           <AppText style={styles.suffix}>{tUnit?.label}</AppText>
@@ -281,6 +283,7 @@ export const Stepper: FunctionComponent<Stepper> = ({
       <StepperButton
         variant="PLUS"
         onPress={increment}
+        accessibilityLabel={accessibilityLabel}
         disabled={value === bounds.max}
       />
     </View>
