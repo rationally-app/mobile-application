@@ -206,7 +206,14 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               style={sharedStyles.icon}
             />
             <AppText style={sharedStyles.statusTitleWrapper}>
-              <AppText style={sharedStyles.statusTitle}>{title}</AppText>
+              <AppText
+                style={sharedStyles.statusTitle}
+                accessibilityLabel="checkout-success-title"
+                testID="checkout-success-title"
+                accessible={true}
+              >
+                {title}
+              </AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
                 <UsageQuotaTitle
                   quantity={firstGlobalQuota!.quantity}
