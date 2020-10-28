@@ -63,10 +63,8 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
   onPressNextDay,
 }) => {
   const { i18nt } = useTranslate();
-  const formatTime =
-    lastTransactionTime !== null
-      ? { distributionTime: format(lastTransactionTime, "h:mma") }
-      : { distributionTime: "-" };
+  const formattedLastTransactionTime =
+      { lastTransactionTime: lastTransactionTime !== null ? format(lastTransactionTime, "h:mma") : "-" }
 
   return (
     <View style={styles.appHeaderWrapper}>
