@@ -66,9 +66,8 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
   const formatTime =
     lastTransactionTime !== null
       ? { distributionTime: format(lastTransactionTime, "h:mma") }
-      : undefined;
-  const text =
-    lastTransactionTime != null ? "distributedTime" : "noDistributedTime";
+      : { distributionTime: "-" };
+
   return (
     <View style={styles.appHeaderWrapper}>
       <AppText style={styles.smallText}>
@@ -77,7 +76,7 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
       <AppText style={styles.statText}>{totalCount?.toLocaleString()}</AppText>
       <AppText style={styles.smallText}>
         {i18nt("redemptionStats", "lastDistributedAt")}
-        {i18nt("redemptionStats", text, undefined, formatTime)}
+        {i18nt("redemptionStats", "distributedTime", undefined, formatTime)}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>

@@ -5,7 +5,7 @@ export const zh: Translations = {
     youDistributed: "您已分发",
     lastDistributedAt: "最后在 ",
     distributedTime: "%{distributionTime} 分发",
-    noDistributedTime: "- 分发",
+
     back: "返回",
     statistics: "统计",
     goToStatistics: "前往统计",
