@@ -14,7 +14,6 @@ interface TransactionHistoryCardComponent {
   }[];
   loading: boolean;
 }
-
 const styles = StyleSheet.create({
   stats: {
     flexDirection: "column",
@@ -59,7 +58,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
   transactionHistory,
   loading,
 }) => {
-  const { i18nt } = useTranslate();
+  const { c13nt, i18nt } = useTranslate();
   return (
     <Card style={styles.stats}>
       {!loading ? (
@@ -67,7 +66,9 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
           transactionHistory.map((item) => (
             <View key={item.category}>
               <View style={styles.transactionText}>
-                <AppText style={styles.categoryName}>{item.name}</AppText>
+                <AppText style={styles.categoryName}>
+                  {c13nt(item.name)}
+                </AppText>
                 <View style={styles.transactionText}>
                   <AppText style={styles.quantityText}>
                     {item.quantityText}
@@ -76,7 +77,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
               </View>
               <View style={styles.descriptionAlertText}>
                 <AppText style={styles.reasonAlert}>
-                  {item.descriptionAlert ?? ""}
+                  {c13nt(item.descriptionAlert ?? "")}
                 </AppText>
               </View>
             </View>
