@@ -10,7 +10,7 @@ import {
   fontSize,
   shadow,
   size,
-  normalize
+  normalize,
 } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 
@@ -49,18 +49,18 @@ const styles = StyleSheet.create({
     marginTop: size(5),
     flexDirection: "row",
     alignSelf: "stretch",
-
     flexWrap: "wrap",
     marginBottom: size(1),
-    marginRight: size(1)
+    marginLeft: size(1),
   },
   modalSecondaryButton: {
     marginRight: size(1),
     flexGrow: 1,
-    marginBottom: size(1)
+    marginBottom: size(1),
   },
   modalPrimaryButton: {
     flexGrow: 1,
+    marginRight: size(1),
   },
 });
 
