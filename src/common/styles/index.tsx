@@ -11,5 +11,5 @@ export {
   letterSpacing,
   fontSize,
   borderRadius,
-  normalize
+  normalize,
 };
