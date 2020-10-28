@@ -2,7 +2,6 @@ export type Translations = {
   redemptionStats: {
     youDistributed: string;
     lastDistributedAt: string;
-    distributedTime: string;
     back: string;
     statistics: string;
     goToStatistics: string;

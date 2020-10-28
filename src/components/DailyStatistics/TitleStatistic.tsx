@@ -63,8 +63,10 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
   onPressNextDay,
 }) => {
   const { i18nt } = useTranslate();
-  const formattedLastTransactionTime =
-      { lastTransactionTime: lastTransactionTime !== null ? format(lastTransactionTime, "h:mma") : "-" }
+  const formattedLastTransactionTime = {
+    lastTransactionTime:
+      lastTransactionTime !== null ? format(lastTransactionTime, "h:mma") : "-",
+  };
 
   return (
     <View style={styles.appHeaderWrapper}>
@@ -73,7 +75,12 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
       </AppText>
       <AppText style={styles.statText}>{totalCount?.toLocaleString()}</AppText>
       <AppText style={styles.smallText}>
-        {i18nt("redemptionStats", "lastDistributedAt", undefined, formattedLastTransactionTime)}
+        {i18nt(
+          "redemptionStats",
+          "lastDistributedAt",
+          undefined,
+          formattedLastTransactionTime
+        )}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>
