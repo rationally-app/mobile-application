@@ -3,9 +3,7 @@ import { Translations } from "./type";
 export const en: Translations = {
   redemptionStats: {
     youDistributed: "You distributed",
-    lastDistributedAt: "Last distributed at ",
-    distributedTime: "%{distributionTime} ",
-
+    lastDistributedAt: "Last distributed at %{lastTransactionTime}",
     back: "Back",
     statistics: "Statistics",
     goToStatistics: "Go to statistics",
