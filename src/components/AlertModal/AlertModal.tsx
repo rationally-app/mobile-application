@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "stretch",
     flexWrap: "wrap",
-    marginBottom: size(1)
+    marginBottom: size(1),
+    marginRight: size(1)
   },
   modalSecondaryButton: {
     marginRight: size(1),
