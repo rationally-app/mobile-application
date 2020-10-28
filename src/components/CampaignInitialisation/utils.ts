@@ -33,7 +33,7 @@ export const checkVersion = ({
   currentBinaryVersion,
   minBinaryVersion,
   currentBuildVersion,
-  minBuildVersion
+  minBuildVersion,
 }: CheckVersionProps): CheckVersionResult => {
   if (currentBinaryVersion === "dev") {
     return "OK";

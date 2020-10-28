@@ -1,0 +1,60 @@
+name: E2E Tests
+
+on:
+  # Runs E2E every day at 9am and 5pm (0100, 0900 UTC)
+  schedule:
+    - cron: "0 1,9 * * *"
+  # Runs after staging is redeployed
+  workflow_run:
+    workflows:
+      - "Deploy Staging"
+    branches:
+      - master
+    types:
+      - completed
+
+jobs:
+  e2e_test:
+    name: E2E PCloudy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: "rationally-app/mobile-e2e"
+          token: ${{ secrets.MUSKET_DEV_GITHUB_ACCESS_TOKEN }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: Setup Appium
+        run: npm install appium -g
+      - name: Setup E2E Environment
+        run: pip3 install -r requirements.txt
+      - name: Run E2E Tests
+        run: ./e2e_run_all_tests_pCloudy.sh
+      - name: Get Current Date
+        if: always()
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - name: Upload Appium Logs
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Combined-Output-${{ steps.date.outputs.date }}
+          path: |
+            ./result
+      - name: xUnit Slack Reporter
+        if: always()
+        uses: ivanklee86/xunit-slack-reporter@v1.0.1
+        env:
+          SLACK_CHANNEL: ${{ secrets.E2E_CHATBOT_CHANNELID }}
+          SLACK_TOKEN: ${{ secrets.E2E_CHATBOT_TOKEN }}
+          XUNIT_PATH: ./result/allresults.xml
+      - name: Upload Report to Slack
+        if: always()
+        run: >
+          curl -F token=${{ secrets.E2E_CHATBOT_TOKEN }} -F channels=${{ secrets.E2E_CHATBOT_CHANNELID }} -F file=@./result/report.html -F
+          initial_comment="Full report attached! Please download the artifact for more details: https://github.com/rationally-app/mobile-application/actions/runs/${{ github.run_id }}"
+          https://slack.com/api/files.upload

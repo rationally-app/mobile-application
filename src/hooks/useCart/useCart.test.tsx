@@ -6,11 +6,11 @@ import { Quota, PostTransactionResult } from "../../types";
 import {
   getQuota,
   postTransaction,
-  NotEligibleError
+  NotEligibleError,
 } from "../../services/quota";
 import {
   defaultProducts,
-  defaultIdentifier
+  defaultIdentifier,
 } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 
@@ -30,15 +30,15 @@ const mockQuotaResSingleId: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 2,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 const mockQuotaResSingleIdWithIdentifiers: Quota = {
   remainingQuota: [
@@ -49,25 +49,25 @@ const mockQuotaResSingleIdWithIdentifiers: Quota = {
           label: "first",
           value: "first identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
+          scanButtonType: "BARCODE",
         },
         {
           label: "last",
           value: "last identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        }
+          scanButtonType: "BARCODE",
+        },
       ],
       quantity: 1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 const mockQuotaResSingleIdNoQuota: Quota = {
   remainingQuota: [
@@ -75,15 +75,15 @@ const mockQuotaResSingleIdNoQuota: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 0,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockQuotaResSingleIdInvalidQuota: Quota = {
@@ -92,15 +92,15 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
       category: "toilet-paper",
       identifierInputs: [],
       quantity: -1,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockQuotaResMultipleIds: Quota = {
@@ -108,14 +108,14 @@ const mockQuotaResMultipleIds: Quota = {
     {
       category: "toilet-paper",
       identifierInputs: [],
-      quantity: 4
+      quantity: 4,
     },
     {
       category: "chocolate",
       identifierInputs: [],
-      quantity: 30
-    }
-  ]
+      quantity: 30,
+    },
+  ],
 };
 
 const mockPostTransactionResult: PostTransactionResult = {
@@ -126,12 +126,12 @@ const mockPostTransactionResult: PostTransactionResult = {
         {
           category: "chocolate",
           identifierInputs: [],
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ],
-      timestamp: transactionTime
-    }
-  ]
+      timestamp: transactionTime,
+    },
+  ],
 };
 
 const mockIdNotEligible: any = (id: string) => {
@@ -150,25 +150,25 @@ const mockQuotaResSingleIdAlert: Quota = {
           label: "first",
           value: "first identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
+          scanButtonType: "BARCODE",
         },
         {
           label: "last",
           value: "last identifier",
           textInputType: "STRING",
-          scanButtonType: "BARCODE"
-        }
+          scanButtonType: "BARCODE",
+        },
       ],
       quantity: 8,
-      transactionTime
+      transactionTime,
     },
     {
       category: "chocolate",
       identifierInputs: [],
       quantity: 15,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const wrapper: FunctionComponent = ({ children }) => (
@@ -205,18 +205,18 @@ describe("useCart", () => {
               label: "first",
               value: "first identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               label: "last",
               value: "last identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 1,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -224,8 +224,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -249,7 +249,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 0,
-          quantity: 0
+          quantity: 0,
         },
         {
           category: "chocolate",
@@ -257,8 +257,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 0,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
     it("should have cart state be NO_QUOTA when quota received is invalid", async () => {
@@ -281,7 +281,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 0,
-          quantity: 0
+          quantity: 0,
         },
         {
           category: "chocolate",
@@ -289,8 +289,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
     it("should set cart state to be NOT_ELIGIBLE when NotEligibleError is thrown, and would not continue with fetching quota", async () => {
@@ -303,7 +303,7 @@ describe("useCart", () => {
       });
 
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       expect(result.current.cartState).toBe("NOT_ELIGIBLE");
@@ -335,7 +335,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 4,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -343,8 +343,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 30,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -366,7 +366,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -374,8 +374,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ]);
     });
 
@@ -397,7 +397,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -405,8 +405,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ]);
 
       mockGetQuota.mockReturnValueOnce(mockQuotaResMultipleIds);
@@ -420,7 +420,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 4,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -428,8 +428,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: undefined,
           maxQuantity: 30,
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ]);
     });
 
@@ -438,7 +438,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -453,7 +453,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -461,8 +461,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -471,7 +471,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -485,7 +485,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -493,8 +493,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -503,7 +503,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -517,7 +517,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -525,8 +525,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
   });
@@ -537,7 +537,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -560,7 +560,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
@@ -568,8 +568,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ]);
       expect(result.current.checkoutResult).toStrictEqual(
         mockPostTransactionResult
@@ -581,7 +581,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -600,7 +600,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 0
+          quantity: 0,
         },
         {
           category: "chocolate",
@@ -608,17 +608,17 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
-    it("should set error with message 'Enter or scan code details' when there are multiple identifiers and at least one is empty", async () => {
+    it("should set error with message 'Enter or scan a code' when there are multiple identifiers and at least one is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -627,19 +627,19 @@ describe("useCart", () => {
             value: "",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
+            scanButtonType: "BARCODE",
           },
           {
             value: "value",
             label: "last",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter or scan code details.");
+      expect(result.current.error?.message).toBe("Enter or scan a code.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -650,18 +650,18 @@ describe("useCart", () => {
               value: "",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               value: "value",
               label: "last",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -669,19 +669,19 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
-    it("should set error with message 'Enter or scan code details' when there is one identifier and it is empty", async () => {
+    it("should set error with message 'Enter or scan a code' when there is one identifier and it is empty", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce({
-        remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
+        remainingQuota: [mockQuotaResSingleId.remainingQuota[0]],
       });
       const ids = ["ID1"];
       const SingleIdentifierProductWrapper: FunctionComponent = ({
-        children
+        children,
       }) => (
         <ProductContextProvider
           products={[
@@ -690,17 +690,17 @@ describe("useCart", () => {
               identifiers: [
                 {
                   ...defaultIdentifier,
-                  label: "code"
-                }
-              ]
-            }
+                  label: "code",
+                },
+              ],
+            },
           ]}
         >
           {children}
         </ProductContextProvider>
       );
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: SingleIdentifierProductWrapper
+        wrapper: SingleIdentifierProductWrapper,
       });
 
       await wait(() => {
@@ -709,13 +709,13 @@ describe("useCart", () => {
             value: "",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter or scan code details.");
+      expect(result.current.error?.message).toBe("Enter or scan a code.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -726,22 +726,22 @@ describe("useCart", () => {
               value: "",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ]);
     });
 
-    it("should set error with message 'Enter unique code details' when identifier values are identical in the same category", async () => {
+    it("should set error with message 'Enter or scan a different code.' when identifier values are identical in the same category", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -750,19 +750,21 @@ describe("useCart", () => {
             value: "identical",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
+            scanButtonType: "BARCODE",
           },
           {
             value: "identical",
             label: "last",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter unique code details.");
+      expect(result.current.error?.message).toBe(
+        "Enter or scan a different code."
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -773,18 +775,18 @@ describe("useCart", () => {
               value: "identical",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               value: "identical",
               label: "last",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -792,17 +794,17 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
-    it("should set error with message 'Enter unique code details' when some identifier values are identical across different categories", async () => {
+    it("should set error with message 'Enter or scan a different code.' when some identifier values are identical across different categories", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -811,33 +813,35 @@ describe("useCart", () => {
             value: "identical",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
+            scanButtonType: "BARCODE",
           },
           {
             value: "not identical",
             label: "last",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.updateCart("chocolate", 1, [
           {
             value: "also not identical",
             label: "first",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
+            scanButtonType: "BARCODE",
           },
           {
             value: "identical",
             label: "last",
             textInputType: "STRING",
-            scanButtonType: "BARCODE"
-          }
+            scanButtonType: "BARCODE",
+          },
         ]);
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe("Enter unique code details.");
+      expect(result.current.error?.message).toBe(
+        "Enter or scan a different code."
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -848,18 +852,18 @@ describe("useCart", () => {
               value: "identical",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               value: "not identical",
               label: "last",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
+          quantity: 1,
         },
         {
           category: "chocolate",
@@ -869,30 +873,30 @@ describe("useCart", () => {
               value: "also not identical",
               label: "first",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               value: "identical",
               label: "last",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ]);
     });
 
     it("should set error when there is an invalid mobile number", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce({
-        remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
+        remainingQuota: [mockQuotaResSingleId.remainingQuota[0]],
       });
       const ids = ["ID1"];
       const MobileNumberIdentifierProductWrapper: FunctionComponent = ({
-        children
+        children,
       }) => (
         <ProductContextProvider
           products={[
@@ -904,22 +908,22 @@ describe("useCart", () => {
                   textInput: {
                     visible: true,
                     disabled: false,
-                    type: "PHONE_NUMBER"
+                    type: "PHONE_NUMBER",
                   },
                   scanButton: {
                     visible: false,
-                    disabled: true
-                  }
-                }
-              ]
-            }
+                    disabled: true,
+                  },
+                },
+              ],
+            },
           ]}
         >
           {children}
         </ProductContextProvider>
       );
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: MobileNumberIdentifierProductWrapper
+        wrapper: MobileNumberIdentifierProductWrapper,
       });
 
       await wait(() => {
@@ -927,14 +931,14 @@ describe("useCart", () => {
           {
             value: "+659",
             label: "code",
-            textInputType: "PHONE_NUMBER"
-          }
+            textInputType: "PHONE_NUMBER",
+          },
         ]);
         result.current.checkoutCart();
       });
 
       expect(result.current.error?.message).toBe(
-        "Enter valid country code and contact number."
+        "Enter a valid country code and contact number."
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -945,24 +949,24 @@ describe("useCart", () => {
             {
               value: "+659",
               label: "code",
-              textInputType: "PHONE_NUMBER"
-            }
+              textInputType: "PHONE_NUMBER",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ]);
     });
 
     it("should set error when there is an invalid identifier", async () => {
       expect.assertions(3);
       mockGetQuota.mockReturnValueOnce({
-        remainingQuota: [mockQuotaResSingleId.remainingQuota[0]]
+        remainingQuota: [mockQuotaResSingleId.remainingQuota[0]],
       });
       const ids = ["ID1"];
       const InvalidIdentifierProductWrapper: FunctionComponent = ({
-        children
+        children,
       }) => (
         <ProductContextProvider
           products={[
@@ -975,22 +979,22 @@ describe("useCart", () => {
                   textInput: {
                     visible: true,
                     disabled: false,
-                    type: "STRING"
+                    type: "STRING",
                   },
                   scanButton: {
                     visible: false,
-                    disabled: true
-                  }
-                }
-              ]
-            }
+                    disabled: true,
+                  },
+                },
+              ],
+            },
           ]}
         >
           {children}
         </ProductContextProvider>
       );
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper: InvalidIdentifierProductWrapper
+        wrapper: InvalidIdentifierProductWrapper,
       });
 
       await wait(() => {
@@ -999,15 +1003,13 @@ describe("useCart", () => {
             value: "01234",
             label: "code",
             textInputType: "STRING",
-            validationRegex: "^[a-z]{5}$"
-          }
+            validationRegex: "^[a-z]{5}$",
+          },
         ]);
         result.current.checkoutCart();
       });
 
-      expect(result.current.error?.message).toBe(
-        "Enter or scan valid code details."
-      );
+      expect(result.current.error?.message).toBe("Enter or scan a valid code.");
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -1018,13 +1020,13 @@ describe("useCart", () => {
               value: "01234",
               label: "code",
               textInputType: "STRING",
-              validationRegex: "^[a-z]{5}$"
-            }
+              validationRegex: "^[a-z]{5}$",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ]);
     });
 
@@ -1033,7 +1035,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -1048,7 +1050,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.error?.message).toBe(
-        "We are currently facing server issues. Try again later or contact your in-charge if the problem persists."
+        "We are currently facing server issues. Contact your in-charge if the problem persists."
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -1058,7 +1060,7 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
@@ -1066,8 +1068,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 5
-        }
+          quantity: 5,
+        },
       ]);
     });
 
@@ -1076,7 +1078,7 @@ describe("useCart", () => {
       mockGetQuota.mockReturnValueOnce(mockQuotaResSingleId);
       const ids = ["ID1"];
       const { result } = renderHook(() => useCart(ids, key, endpoint), {
-        wrapper
+        wrapper,
       });
 
       await wait(() => {
@@ -1100,16 +1102,16 @@ describe("useCart", () => {
               ...defaultProducts[0],
               alert: {
                 threshold: 1,
-                label: "*chargeable"
+                label: "*chargeable",
               },
               quantity: {
                 period: 7,
                 limit: 10,
                 default: 0,
-                checkoutLimit: 1
-              }
+                checkoutLimit: 1,
+              },
             },
-            { ...defaultProducts[1] }
+            { ...defaultProducts[1] },
           ]}
         >
           {children}
@@ -1132,18 +1134,18 @@ describe("useCart", () => {
               label: "first",
               value: "first identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               label: "last",
               value: "last identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 1,
-          quantity: 0
+          quantity: 0,
         },
         {
           category: "chocolate",
@@ -1151,8 +1153,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
 
@@ -1168,16 +1170,16 @@ describe("useCart", () => {
               ...defaultProducts[0],
               alert: {
                 threshold: 1,
-                label: "*chargeable"
+                label: "*chargeable",
               },
               quantity: {
                 period: 7,
                 limit: 9,
                 default: 0,
-                checkoutLimit: 1
-              }
+                checkoutLimit: 1,
+              },
             },
-            { ...defaultProducts[1] }
+            { ...defaultProducts[1] },
           ]}
         >
           {children}
@@ -1200,18 +1202,18 @@ describe("useCart", () => {
               label: "first",
               value: "first identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
+              scanButtonType: "BARCODE",
             },
             {
               label: "last",
               value: "last identifier",
               textInputType: "STRING",
-              scanButtonType: "BARCODE"
-            }
+              scanButtonType: "BARCODE",
+            },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 1,
-          quantity: 0
+          quantity: 0,
         },
         {
           category: "chocolate",
@@ -1219,8 +1221,8 @@ describe("useCart", () => {
           identifierInputs: [],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0
-        }
+          quantity: 0,
+        },
       ]);
     });
   });

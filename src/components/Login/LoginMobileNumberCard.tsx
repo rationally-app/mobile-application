@@ -3,7 +3,7 @@ import React, {
   FunctionComponent,
   Dispatch,
   SetStateAction,
-  useContext
+  useContext,
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -15,19 +15,16 @@ import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 import {
   createFullNumber,
   countryCodeValidator,
-  mobileNumberValidator
+  mobileNumberValidator,
 } from "../../utils/validatePhoneNumbers";
-import {
-  AlertModalContext,
-  wrongFormatAlertProps,
-  ERROR_MESSAGE
-} from "../../context/alert";
+import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
-    marginTop: size(3)
-  }
+    marginTop: size(3),
+  },
 });
 
 interface LoginMobileNumberCard {
@@ -41,7 +38,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   setLoginStage,
   setMobileNumber,
   setCountryCode,
-  handleRequestOTP
+  handleRequestOTP,
 }) => {
   const { config } = useContext(ConfigContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +48,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   const [mobileNumberValue, setMobileNumberValue] = useState(
     config.fullMobileNumber?.mobileNumber ?? ""
   );
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
 
   const onChangeCountryCode = (value: string): void => {
     if (value.length <= 4) {
@@ -59,7 +56,6 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
       setCountryCodeValue(valueWithPlusSign);
     }
   };
-
   const onChangeMobileNumber = (text: string): void => {
     /^\d*$/.test(text) && setMobileNumberValue(text);
   };
@@ -78,29 +74,23 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   const onSubmitMobileNumber = (): void => {
     if (!countryCodeValidator(countryCode)) {
-      showAlert({
-        ...wrongFormatAlertProps,
-        description: ERROR_MESSAGE.INVALID_COUNTRY_CODE
-      });
+      showErrorAlert(new Error(ERROR_MESSAGE.INVALID_COUNTRY_CODE));
     } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
-      showAlert({
-        ...wrongFormatAlertProps,
-        description: ERROR_MESSAGE.INVALID_PHONE_NUMBER
-      });
+      showErrorAlert(new Error(ERROR_MESSAGE.INVALID_PHONE_NUMBER));
     } else {
       onRequestOTP();
     }
   };
 
+  const { i18nt } = useTranslate();
+
   return (
     <Card>
-      <AppText>
-        Please enter your mobile phone number to receive a one-time password.
-      </AppText>
+      <AppText>{i18nt("loginMobileNumberCard", "enterMobileNumber")}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <PhoneNumberInput
           countryCodeValue={countryCode}
-          label="Mobile phone number"
+          label={i18nt("loginMobileNumberCard", "mobileNumber")}
           mobileNumberValue={mobileNumberValue}
           onChangeCountryCode={onChangeCountryCode}
           onChangeMobileNumber={onChangeMobileNumber}
@@ -108,7 +98,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
         />
 
         <DarkButton
-          text="Send OTP"
+          text={i18nt("loginMobileNumberCard", "sendOtp")}
           onPress={onSubmitMobileNumber}
           fullWidth={true}
           isLoading={isLoading}

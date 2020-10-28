@@ -6,6 +6,7 @@ import { ItemContent } from "./ItemContent";
 import { CartItem } from "../../../hooks/useCart/useCart";
 import { ProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   feedbackWrapper: {
@@ -15,15 +16,15 @@ const styles = StyleSheet.create({
     borderColor: color("yellow", 20),
     borderRadius: borderRadius(3),
     paddingHorizontal: size(1.5),
-    justifyContent: "center"
+    justifyContent: "center",
   },
   feedbackText: {
     textAlign: "center",
     textAlignVertical: "center",
     color: color("yellow", 50),
     fontSize: fontSize(-2),
-    fontFamily: "brand-bold"
-  }
+    fontFamily: "brand-bold",
+  },
 });
 
 export const ItemNoQuota: FunctionComponent<{
@@ -33,6 +34,7 @@ export const ItemNoQuota: FunctionComponent<{
   const { getProduct } = useContext(ProductContext);
   const { name = category, description, quantity, type } =
     getProduct(category) || {};
+  const { i18nt } = useTranslate();
 
   return (
     <View style={[sharedStyles.wrapper, sharedStyles.wrapperDefault]}>
@@ -46,7 +48,12 @@ export const ItemNoQuota: FunctionComponent<{
       </View>
       <View style={styles.feedbackWrapper}>
         <AppText style={styles.feedbackText}>
-          {type === "REDEEM" ? "Not eligible" : "Cannot\npurchase"}
+          {type === "REDEEM"
+            ? i18nt("notEligibleScreen", "notEligible")
+            : `${i18nt("notEligibleScreen", "cannot")}\n${i18nt(
+                "notEligibleScreen",
+                "purchase"
+              )}`}
         </AppText>
       </View>
     </View>

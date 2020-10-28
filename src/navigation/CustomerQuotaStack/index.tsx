@@ -1,6 +1,6 @@
 import {
   createStackNavigator,
-  StackViewTransitionConfigs
+  StackViewTransitionConfigs,
 } from "react-navigation-stack";
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerAppealScreen from "./CustomerAppealScreen";
@@ -11,25 +11,29 @@ import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
+import DailyStatisticsScreen from "./DailyStatisticsScreen";
 
 const Stack = createStackNavigator(
   {
     CollectCustomerDetailsScreen: {
-      screen: CollectCustomerDetailsScreen
+      screen: CollectCustomerDetailsScreen,
     },
     CustomerQuotaProxy: {
-      screen: CustomerQuotaProxy
+      screen: CustomerQuotaProxy,
     },
     CustomerAppealScreen: {
-      screen: CustomerAppealScreen
-    }
+      screen: CustomerAppealScreen,
+    },
+    DailyStatisticsScreen: {
+      screen: DailyStatisticsScreen,
+    },
   },
   {
     headerMode: "none",
     transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
     navigationOptions: {
-      gesturesEnabled: true
-    }
+      gesturesEnabled: true,
+    },
   }
 );
 

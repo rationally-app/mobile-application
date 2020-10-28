@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
     position: "relative",
     padding: size(2),
     width: 512,
-    maxWidth: "100%"
-  }
+    maxWidth: "100%",
+  },
 });
 
 export const ItemIdentifiersCard: FunctionComponent<{
@@ -27,7 +27,7 @@ export const ItemIdentifiersCard: FunctionComponent<{
     setIdentifierInputs([
       ...identifierInputs.slice(0, index),
       { ...identifierInputs[index], value },
-      ...identifierInputs.slice(index + 1)
+      ...identifierInputs.slice(index + 1),
     ]);
   };
 

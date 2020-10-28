@@ -6,19 +6,20 @@ import { Card } from "../../Layout/Card";
 import { ReasonSelectionHeader } from "./ReasonSelectionHeader";
 import { ReasonItem } from "./ReasonItem";
 import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
-import { AlertModalContext, defaultWarningProps } from "../../../context/alert";
+import { AlertModalContext, WARNING_MESSAGE } from "../../../context/alert";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   titlePadding: {
     padding: size(2),
-    paddingTop: size(0.5)
+    paddingTop: size(0.5),
   },
   reasonPadding: {
-    paddingTop: size(0.5)
+    paddingTop: size(0.5),
   },
   backbuttonComponent: {
-    marginTop: size(5)
-  }
+    marginTop: size(5),
+  },
 });
 
 export type Reason = {
@@ -39,9 +40,10 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   reasonSelectionHeader,
   reasons,
   onCancel,
-  onReasonSelection
+  onReasonSelection,
 }) => {
-  const { showAlert } = useContext(AlertModalContext);
+  const { showWarnAlert } = useContext(AlertModalContext);
+  const { i18nt } = useTranslate();
   return (
     <View>
       <CustomerCard ids={ids}>
@@ -50,7 +52,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
             <ReasonSelectionHeader title={reasonSelectionHeader} />
           </View>
           <View style={styles.reasonPadding}>
-            {reasons.map(reason => (
+            {reasons.map((reason) => (
               <ReasonItem
                 key={reason.description}
                 description={reason.description}
@@ -64,18 +66,9 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
       </CustomerCard>
       <View style={styles.backbuttonComponent}>
         <SecondaryButton
-          text="Cancel"
+          text={i18nt("customerQuotaScreen", "quotaAppealCancel")}
           onPress={() => {
-            showAlert({
-              ...defaultWarningProps,
-              title: "Cancel entry and scan another ID number?",
-              buttonTexts: {
-                primaryActionText: "Cancel entry",
-                secondaryActionText: "Keep"
-              },
-              visible: true,
-              onOk: onCancel
-            });
+            showWarnAlert(WARNING_MESSAGE.CANCEL_ENTRY, onCancel);
           }}
           fullWidth={true}
         />

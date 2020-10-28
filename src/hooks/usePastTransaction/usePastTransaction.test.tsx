@@ -3,14 +3,21 @@ import { renderHook } from "@testing-library/react-hooks";
 import { usePastTransaction } from "./usePastTransaction";
 import {
   getPastTransactions,
-  PastTransactionError
+  PastTransactionError,
 } from "../../services/quota";
 import { PastTransactionsResult, CampaignPolicy } from "../../types";
 import { defaultIdentifier } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 import { ERROR_MESSAGE } from "../../context/alert";
 
-jest.mock("../../services/quota");
+jest.mock("../../services/quota", () => {
+  const actualModule = jest.requireActual("../../services/quota");
+  return {
+    ...actualModule,
+    // Only mock
+    getPastTransactions: jest.fn(),
+  };
+});
 const mockGetPastTransactions = getPastTransactions as jest.Mock;
 
 const ids = ["ID1"];
@@ -19,94 +26,94 @@ const endpoint = "https://myendpoint.com";
 
 const customProducts: CampaignPolicy[] = [
   {
-    category: "tt-token",
+    category: "specs",
     categoryType: "DEFAULT", // 'DEFAULT' (default) | 'APPEAL'
     name: "TT Token",
     order: 1,
     identifiers: [
       {
         ...defaultIdentifier,
-        label: "first"
-      }
+        label: "first",
+      },
     ],
     quantity: {
       period: -1,
       periodType: "ROLLING",
       periodExpression: 365,
       limit: 1,
-      default: 1
+      default: 1,
     },
-    type: "REDEEM"
+    type: "REDEEM",
   },
   {
-    category: "tt-token-lost",
+    category: "specs-lost",
     categoryType: "APPEAL",
     name: "Lost/stolen token",
     order: 1,
     alert: {
       threshold: 2,
-      label: "*chargeable"
+      label: "*chargeable",
     },
     quantity: {
       period: -1,
       periodType: "ROLLING", // ROLLING | CRON;
       periodExpression: 365, // TBD
       limit: 9999,
-      default: 1
+      default: 1,
     },
     identifiers: [
       {
         ...defaultIdentifier,
-        label: "first"
-      }
+        label: "first",
+      },
     ],
-    type: "REDEEM"
-  }
+    type: "REDEEM",
+  },
 ];
 
 const mockPastTransactions: PastTransactionsResult = {
   pastTransactions: [
     {
-      category: "tt-token",
+      category: "specs",
       quantity: 1,
       identifierInputs: [
         {
           ...defaultIdentifier,
           label: "first",
-          value: "AAA987654321"
-        }
+          value: "AAA987654321",
+        },
       ],
-      transactionTime: new Date(1596530356430)
+      transactionTime: new Date(1596530356430),
     },
     {
-      category: "tt-token-lost",
+      category: "specs-lost",
       quantity: 1,
       identifierInputs: [
         {
           ...defaultIdentifier,
           label: "first",
-          value: "AAA987654322"
-        }
+          value: "AAA987654322",
+        },
       ],
-      transactionTime: new Date(1596530356431)
+      transactionTime: new Date(1596530356431),
     },
     {
-      category: "tt-token-lost",
+      category: "specs-lost",
       quantity: 1,
       identifierInputs: [
         {
           ...defaultIdentifier,
           label: "first",
-          value: "AAA987654323"
-        }
+          value: "AAA987654323",
+        },
       ],
-      transactionTime: new Date(1596530356432)
-    }
-  ]
+      transactionTime: new Date(1596530356432),
+    },
+  ],
 };
 
 const mockEmptyPastTransactions: PastTransactionsResult = {
-  pastTransactions: []
+  pastTransactions: [],
 };
 
 const wrapper: FunctionComponent = ({ children }) => (
@@ -136,41 +143,41 @@ describe("usePastTransaction", () => {
 
       expect(result.current.pastTransactionsResult).toStrictEqual([
         {
-          category: "tt-token",
+          category: "specs",
           quantity: 1,
           identifierInputs: [
             {
               ...defaultIdentifier,
               label: "first",
-              value: "AAA987654321"
-            }
+              value: "AAA987654321",
+            },
           ],
-          transactionTime: new Date(1596530356430)
+          transactionTime: new Date(1596530356430),
         },
         {
-          category: "tt-token-lost",
+          category: "specs-lost",
           quantity: 1,
           identifierInputs: [
             {
               ...defaultIdentifier,
               label: "first",
-              value: "AAA987654322"
-            }
+              value: "AAA987654322",
+            },
           ],
-          transactionTime: new Date(1596530356431)
+          transactionTime: new Date(1596530356431),
         },
         {
-          category: "tt-token-lost",
+          category: "specs-lost",
           quantity: 1,
           identifierInputs: [
             {
               ...defaultIdentifier,
               label: "first",
-              value: "AAA987654323"
-            }
+              value: "AAA987654323",
+            },
           ],
-          transactionTime: new Date(1596530356432)
-        }
+          transactionTime: new Date(1596530356432),
+        },
       ]);
       expect(result.current.loading).toStrictEqual(false);
       expect(result.current.error).toBeNull();
@@ -195,7 +202,7 @@ describe("usePastTransaction", () => {
     it("should return PAST_TRANSACTION_ERROR when error thrown", async () => {
       expect.assertions(4);
       mockGetPastTransactions.mockRejectedValue(
-        new PastTransactionError("Some random error")
+        new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
       );
 
       const { result, waitForNextUpdate } = renderHook(
@@ -206,7 +213,7 @@ describe("usePastTransaction", () => {
       await waitForNextUpdate();
 
       expect(result.current.pastTransactionsResult).toBeNull();
-      expect(result.current.error instanceof Error).toStrictEqual(true);
+      expect(result.current.error).toBeInstanceOf(PastTransactionError);
       expect(result.current.error?.message).toStrictEqual(
         ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
       );

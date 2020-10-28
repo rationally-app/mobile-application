@@ -3,7 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useState
+  useState,
 } from "react";
 import { transform } from "lodash";
 import { StyleSheet, View } from "react-native";
@@ -20,13 +20,14 @@ import { ImportantMessageContentContext } from "../../context/importantMessage";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import {
   ReasonSelectionCard,
-  Reason
+  Reason,
 } from "./ReasonSelection/ReasonSelectionCard";
 import { pushRoute, navigateHome } from "../../common/navigation";
 import { AuthContext } from "../../context/auth";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   content: {
     position: "relative",
@@ -45,23 +46,23 @@ const styles = StyleSheet.create({
     paddingBottom: size(10),
     height: "100%",
     width: 512,
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   headerText: {
-    marginBottom: size(4)
+    marginBottom: size(4),
   },
   bannerWrapper: {
-    marginBottom: size(1.5)
-  }
+    marginBottom: size(1.5),
+  },
 });
 
 export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+  navigation,
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "CustomerAppealScreen"
+      message: "CustomerAppealScreen",
     });
   }, []);
 
@@ -79,6 +80,8 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { allQuotaResponse } = useCart(ids, sessionToken, endpoint);
 
+  const { i18nt } = useTranslate();
+
   const getReasons = (): Reason[] => {
     return transform(
       allProducts ?? [],
@@ -86,7 +89,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         if (policy.categoryType === "APPEAL") {
           const policyLimit = policy.quantity.limit;
           const quotaResponse = allQuotaResponse?.remainingQuota.find(
-            quota => quota.category === policy.category
+            (quota) => quota.category === policy.category
           );
           let descriptionAlert: string | undefined = undefined;
           if (
@@ -98,7 +101,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
           }
           result.push({
             description: policy.name,
-            descriptionAlert: descriptionAlert
+            descriptionAlert: descriptionAlert,
           });
         }
       },
@@ -108,7 +111,8 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 
   const onReasonSelection = (productName: string): void => {
     const appealProduct = allProducts?.find(
-      policy => policy.categoryType === "APPEAL" && policy.name === productName
+      (policy) =>
+        policy.categoryType === "APPEAL" && policy.name === productName
     );
     if (appealProduct === undefined) {
       Sentry.captureException(`Unable to find appeal product: ${productName}}`);
@@ -116,7 +120,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     }
     pushRoute(navigation, "CustomerQuotaProxy", {
       id: ids,
-      products: [appealProduct]
+      products: [appealProduct],
     });
   };
 
@@ -136,7 +140,10 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         )}
         <ReasonSelectionCard
           ids={ids}
-          reasonSelectionHeader={"Indicate reason for appeal"}
+          reasonSelectionHeader={i18nt(
+            "customerAppealScreen",
+            "indicateReason"
+          )}
           reasons={getReasons()}
           onCancel={onCancel}
           onReasonSelection={onReasonSelection}

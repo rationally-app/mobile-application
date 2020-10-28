@@ -16,16 +16,16 @@ export type AuthCredentials = {
 
 export const SessionCredentials = t.type({
   sessionToken: t.string,
-  ttl: DateFromNumber
+  ttl: DateFromNumber,
 });
 
 export const OTPResponse = t.intersection([
   t.type({
-    status: t.string
+    status: t.string,
   }),
   t.partial({
-    warning: t.string
-  })
+    warning: t.string,
+  }),
 ]);
 
 export type SessionCredentials = t.TypeOf<typeof SessionCredentials>;
@@ -33,13 +33,13 @@ export type OTPResponse = t.TypeOf<typeof OTPResponse>;
 
 const PolicyAlert = t.type({
   threshold: t.number,
-  label: t.string
+  label: t.string,
 });
 
 const PolicyQuantity = t.intersection([
   t.type({
     period: t.number,
-    limit: t.number
+    limit: t.number,
   }),
   t.partial({
     periodType: t.union([t.literal("ROLLING"), t.literal("CRON")]),
@@ -48,21 +48,21 @@ const PolicyQuantity = t.intersection([
     step: t.number,
     unit: t.type({
       type: t.union([t.literal("PREFIX"), t.literal("POSTFIX")]),
-      label: t.string
+      label: t.string,
     }),
     checkoutLimit: t.number,
     usage: t.type({
       periodType: t.union([t.literal("ROLLING"), t.literal("CRON")]),
       periodExpression: t.union([t.number, t.string]),
-      limit: t.number
-    })
-  })
+      limit: t.number,
+    }),
+  }),
 ]);
 
 const TextInputType = t.union([
   t.literal("STRING"),
   t.literal("NUMBER"),
-  t.literal("PHONE_NUMBER")
+  t.literal("PHONE_NUMBER"),
 ]);
 
 const ScanButtonType = t.union([t.literal("QR"), t.literal("BARCODE")]);
@@ -73,36 +73,36 @@ const PolicyIdentifier = t.intersection([
     textInput: t.intersection([
       t.type({
         visible: t.boolean,
-        disabled: t.boolean
+        disabled: t.boolean,
       }),
       t.partial({
-        type: TextInputType
-      })
+        type: TextInputType,
+      }),
     ]),
     scanButton: t.intersection([
       t.type({
         visible: t.boolean,
-        disabled: t.boolean
+        disabled: t.boolean,
       }),
       t.partial({
         type: ScanButtonType,
-        text: t.string
-      })
-    ])
+        text: t.string,
+      }),
+    ]),
   }),
-  t.partial({ validationRegex: t.string })
+  t.partial({ validationRegex: t.string }),
 ]);
 
 const IdentifierInput = t.intersection([
   t.type({
     label: t.string,
-    value: t.string
+    value: t.string,
   }),
   t.partial({
     textInputType: TextInputType,
     scanButtonType: ScanButtonType,
-    validationRegex: t.string
-  })
+    validationRegex: t.string,
+  }),
 ]);
 
 const CategoryType = t.union([t.literal("DEFAULT"), t.literal("APPEAL")]);
@@ -112,7 +112,7 @@ const CampaignPolicy = t.intersection([
     category: t.string,
     name: t.string,
     order: t.number,
-    quantity: PolicyQuantity
+    quantity: PolicyQuantity,
   }),
   t.partial({
     categoryType: CategoryType,
@@ -120,42 +120,61 @@ const CampaignPolicy = t.intersection([
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
     type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")]),
-    alert: PolicyAlert
-  })
+    alert: PolicyAlert,
+  }),
 ]);
 
 const IdentificationFlag = t.intersection([
   t.type({
     type: t.union([t.literal("STRING"), t.literal("NUMBER")]),
-    scannerType: t.union([t.literal("CODE_39"), t.literal("QR")]),
-    validation: t.union([t.literal("NRIC"), t.literal("REGEX")])
+    scannerType: t.union([
+      t.literal("CODE_39"),
+      t.literal("QR"),
+      t.literal("NONE"),
+    ]),
+    validation: t.union([
+      t.literal("NRIC"),
+      t.literal("PASSPORT"),
+      t.literal("REGEX"),
+    ]),
   }),
   t.partial({
-    validationRegex: t.string
-  })
+    label: t.string,
+    validationRegex: t.string,
+  }),
 ]);
 
-const CampaignFeatures = t.type({
-  minAppBinaryVersion: t.string,
-  minAppBuildVersion: t.number,
-  campaignName: t.string,
-  transactionGrouping: t.boolean,
-  flowType: t.string,
-  id: IdentificationFlag
-});
+const CampaignFeatures = t.intersection([
+  t.type({
+    minAppBinaryVersion: t.string,
+    minAppBuildVersion: t.number,
+    campaignName: t.string,
+    transactionGrouping: t.boolean,
+    flowType: t.string,
+    id: IdentificationFlag,
+  }),
+  t.partial({
+    alternateIds: t.array(IdentificationFlag),
+  }),
+]);
+
+export const CampaignC13N = t.record(t.string, t.string);
 
 export const CampaignConfig = t.type({
   features: t.union([CampaignFeatures, t.null]),
-  policies: t.union([t.array(CampaignPolicy), t.null])
+  policies: t.union([t.array(CampaignPolicy), t.null]),
+  c13n: t.union([CampaignC13N, t.null]),
 });
 
 export type TextInputType = t.TypeOf<typeof TextInputType>;
 export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
 export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
+export type IdentificationFlag = t.TypeOf<typeof IdentificationFlag>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
 export type CampaignPolicy = t.TypeOf<typeof CampaignPolicy>;
 export type CampaignFeatures = t.TypeOf<typeof CampaignFeatures>;
+export type CampaignC13N = t.TypeOf<typeof CampaignC13N>;
 export type CampaignConfig = t.TypeOf<typeof CampaignConfig>;
 export type ConfigHashes = {
   [config in keyof CampaignConfig]: string | undefined;
@@ -164,20 +183,23 @@ export type ConfigHashes = {
 const ItemQuota = t.intersection([
   t.type({
     category: t.string,
-    quantity: t.number
+    quantity: t.number,
   }),
   t.partial({
     quotaRefreshTime: t.number,
     transactionTime: DateFromNumber,
-    identifierInputs: t.array(IdentifierInput)
-  })
+    identifierInputs: t.array(IdentifierInput),
+  }),
 ]);
 
 export const Quota = t.intersection([
   t.type({
-    remainingQuota: t.array(ItemQuota)
+    remainingQuota: t.array(ItemQuota),
   }),
-  t.partial({ localQuota: t.array(ItemQuota), globalQuota: t.array(ItemQuota) })
+  t.partial({
+    localQuota: t.array(ItemQuota),
+    globalQuota: t.array(ItemQuota),
+  }),
 ]);
 
 export type ItemQuota = t.TypeOf<typeof ItemQuota>;
@@ -186,18 +208,18 @@ export type Quota = t.TypeOf<typeof Quota>;
 const Transaction = t.intersection([
   t.type({
     category: t.string,
-    quantity: t.number
+    quantity: t.number,
   }),
-  t.partial({ identifierInputs: t.array(IdentifierInput) })
+  t.partial({ identifierInputs: t.array(IdentifierInput) }),
 ]);
 
 export const PostTransactionResult = t.type({
   transactions: t.array(
     t.type({
       transaction: t.array(Transaction),
-      timestamp: DateFromNumber
+      timestamp: DateFromNumber,
     })
-  )
+  ),
 });
 
 export type Transaction = t.TypeOf<typeof Transaction>;
@@ -207,12 +229,12 @@ const PastTransaction = t.intersection([
   t.type({
     category: t.string,
     quantity: t.number,
-    transactionTime: DateFromNumber
+    transactionTime: DateFromNumber,
   }),
-  t.partial({ identifierInputs: t.array(IdentifierInput) })
+  t.partial({ identifierInputs: t.array(IdentifierInput) }),
 ]);
 export const PastTransactionsResult = t.type({
-  pastTransactions: t.array(PastTransaction)
+  pastTransactions: t.array(PastTransaction),
 });
 
 export type PastTransactionsResult = t.TypeOf<typeof PastTransactionsResult>;
@@ -221,3 +243,21 @@ export type Voucher = {
   serial: string;
   denomination: number;
 };
+
+const DailyStatistics = t.intersection([
+  t.type({
+    category: t.string,
+    quantity: t.number,
+    transactionTime: DateFromNumber,
+  }),
+  t.partial({
+    identifierInputs: t.array(IdentifierInput),
+  }),
+]);
+
+export const DailyStatisticsResult = t.type({
+  pastTransactions: t.array(DailyStatistics),
+});
+
+export type DailyStatistics = t.TypeOf<typeof DailyStatistics>;
+export type DailyStatisticsResult = t.TypeOf<typeof DailyStatisticsResult>;

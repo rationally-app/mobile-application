@@ -1,16 +1,17 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import {
   validateVoucherCode,
-  LimitReachedError
+  LimitReachedError,
 } from "../../utils/validateVoucherCode";
 import { getQuota } from "../../services/quota";
 import { Quota, Voucher } from "../../types";
 import { differenceInSeconds, compareDesc } from "date-fns";
+import { IdentificationContext } from "../../context/identification";
 
 export class ScannerError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "ScanningError";
+    this.name = "ScannerError";
   }
 }
 
@@ -60,6 +61,7 @@ export const useCheckVoucherValidity = (
   >("DEFAULT");
   const [validityResult, setValidityResult] = useState<Voucher>();
   const [error, setError] = useState<Error>();
+  const { selectedIdType } = useContext(IdentificationContext);
 
   const resetValidityState = useCallback((): void => {
     setError(undefined);
@@ -68,7 +70,7 @@ export const useCheckVoucherValidity = (
 
   const getVoucherValidity = (response: Quota, serial: string): Voucher => {
     const voucherQuota = response.remainingQuota.filter(
-      quota => quota.category === "voucher"
+      (quota) => quota.category === "voucher"
     );
     if (voucherQuota[0].quantity === 0) {
       const latestTransactionTime = getLatestTransactionTime(voucherQuota);
@@ -79,7 +81,7 @@ export const useCheckVoucherValidity = (
     }
     return {
       serial,
-      denomination: 2
+      denomination: 2,
     };
   };
 
@@ -93,7 +95,7 @@ export const useCheckVoucherValidity = (
         }
 
         try {
-          const serialArr = vouchers.map(voucher => voucher.serial);
+          const serialArr = vouchers.map((voucher) => voucher.serial);
           validateVoucherCode(serial, serialArr);
         } catch (e) {
           if (e instanceof LimitReachedError) {
@@ -105,7 +107,12 @@ export const useCheckVoucherValidity = (
         }
         // Send to backend to check if valid
         try {
-          const validityResponse = await getQuota([serial], authKey, endpoint);
+          const validityResponse = await getQuota(
+            [serial],
+            selectedIdType,
+            authKey,
+            endpoint
+          );
           const voucher = getVoucherValidity(validityResponse, serial);
           setValidityResult(voucher);
           setCheckValidityState("RESULT_RETURNED");
@@ -115,7 +122,7 @@ export const useCheckVoucherValidity = (
       };
       check();
     },
-    [authKey, endpoint]
+    [authKey, endpoint, selectedIdType]
   );
 
   return {
@@ -123,6 +130,6 @@ export const useCheckVoucherValidity = (
     checkValidity,
     validityResult,
     error,
-    resetValidityState
+    resetValidityState,
   };
 };

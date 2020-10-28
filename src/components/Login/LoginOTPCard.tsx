@@ -2,7 +2,7 @@ import React, {
   useState,
   useContext,
   useEffect,
-  FunctionComponent
+  FunctionComponent,
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -15,29 +15,30 @@ import {
   validateOTP,
   LoginError,
   OTPWrongError,
-  OTPExpiredError
+  OTPExpiredError,
 } from "../../services/auth";
 import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { AuthCredentials } from "../../types";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
-    marginTop: size(3)
+    marginTop: size(3),
   },
   buttonsWrapper: {
     marginTop: size(2),
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   resendCountdownText: { marginRight: size(1), fontSize: fontSize(-2) },
   submitWrapper: {
     flex: 1,
-    marginLeft: size(1)
-  }
+    marginLeft: size(1),
+  },
 });
 
 interface LoginOTPCard {
@@ -55,7 +56,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   operatorToken,
   endpoint,
   handleRequestOTP,
-  onSuccess
+  onSuccess,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -65,7 +66,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   );
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   const setState = useState()[1];
 
   useEffect(() => {
@@ -98,16 +99,16 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         endpoint,
         expiry: response.ttl.getTime(),
         operatorToken: operatorToken,
-        sessionToken: response.sessionToken
+        sessionToken: response.sessionToken,
       };
       setAuthCredentials(`${operatorToken}${endpoint}`, credentials);
       onSuccess(credentials);
     } catch (e) {
       Sentry.captureException(e);
       if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
-        showAlert(e.alertProps);
+        showErrorAlert(e);
       } else if (e instanceof LoginError) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
+        showErrorAlert(e, () => resetStage());
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -132,12 +133,14 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     /^\d*$/.test(text) && setOTPValue(text);
   };
 
+  const { i18nt } = useTranslate();
+
   return (
     <Card>
-      <AppText>We&apos;re sending you the one-time password...</AppText>
+      <AppText>{`${i18nt("loginOTPCard", "sendingOtp")}`}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <InputWithLabel
-          label="OTP"
+          label={i18nt("loginOTPCard", "otp")}
           value={oTPValue}
           onChange={({ nativeEvent: { text } }) => handleChange(text)}
           onSubmitEditing={onSubmitOTP}
@@ -146,11 +149,13 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         <View style={styles.buttonsWrapper}>
           {resendDisabledTime > 0 ? (
             <AppText style={styles.resendCountdownText}>
-              Resend in {resendDisabledTime / 1000}s
+              {i18nt("loginOTPCard", "resendIn", undefined, {
+                ss: resendDisabledTime / 1000,
+              })}
             </AppText>
           ) : (
             <SecondaryButton
-              text="Resend"
+              text={i18nt("loginOTPCard", "resend")}
               onPress={resendOTP}
               isLoading={isResending}
               disabled={isLoading}
@@ -158,7 +163,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           )}
           <View style={styles.submitWrapper}>
             <DarkButton
-              text="Submit"
+              text={i18nt("loginOTPCard", "submit")}
               fullWidth={true}
               onPress={onSubmitOTP}
               isLoading={isLoading}

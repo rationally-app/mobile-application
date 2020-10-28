@@ -3,11 +3,11 @@ import {
   Transaction,
   Quota,
   PostTransactionResult,
-  PastTransactionsResult
+  PastTransactionsResult,
+  IdentificationFlag,
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
-import { systemAlertProps, ERROR_MESSAGE } from "../../context/alert";
 
 export class NotEligibleError extends Error {
   constructor(message: string) {
@@ -21,11 +21,6 @@ export class QuotaError extends Error {
     super(message);
     this.name = "QuotaError";
   }
-  alertProps = {
-    ...systemAlertProps,
-    description: ERROR_MESSAGE.QUOTA_ERROR as string,
-    visible: true
-  };
 }
 
 export class PostTransactionError extends Error {
@@ -44,6 +39,7 @@ export class PastTransactionError extends Error {
 
 interface PostTransaction {
   ids: string[];
+  identificationFlag: IdentificationFlag;
   transactions: Transaction[];
   key: string;
   endpoint: string;
@@ -51,6 +47,7 @@ interface PostTransaction {
 
 export const mockGetQuota = async (
   ids: string[],
+  _identificationFlag: IdentificationFlag,
   _key: string,
   _endpoint: string
 ): Promise<Quota> => {
@@ -62,54 +59,55 @@ export const mockGetQuota = async (
         {
           category: "toilet-paper",
           quantity: 0,
-          transactionTime
+          transactionTime,
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "chocolate",
           quantity: 30,
-          transactionTime
+          transactionTime,
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "voucher",
           quantity: 1,
-          transactionTime
-        }
-      ]
+          transactionTime,
+        },
+      ],
     };
   } else {
     return {
       remainingQuota: [
         {
           category: "toilet-paper",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "instant-noodles",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
-          quantity: 60
+          quantity: 60,
         },
         { category: "vouchers", quantity: 1 },
-        { category: "voucher", quantity: 1 }
-      ]
+        { category: "voucher", quantity: 1 },
+      ],
     };
   }
 };
 
 export const liveGetQuota = async (
   ids: string[],
+  identificationFlag: IdentificationFlag,
   key: string,
   endpoint: string
 ): Promise<Quota> => {
@@ -118,28 +116,16 @@ export const liveGetQuota = async (
     throw new QuotaError("No ID was provided");
   }
   try {
-    if (ids.length === 1) {
-      response = await fetchWithValidator(
-        Quota,
-        `${endpoint}/quota/${ids[0]}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: key
-          }
-        }
-      );
-    } else {
-      response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
-        method: "POST",
-        headers: {
-          Authorization: key
-        },
-        body: JSON.stringify({
-          ids
-        })
-      });
-    }
+    response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
+      method: "POST",
+      headers: {
+        Authorization: key,
+      },
+      body: JSON.stringify({
+        ids,
+        identificationFlag,
+      }),
+    });
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
@@ -156,7 +142,7 @@ export const liveGetQuota = async (
 
 export const mockPostTransaction = async ({
   ids,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
   const timestamp = new Date();
@@ -166,33 +152,34 @@ export const mockPostTransaction = async ({
       const transaction: Transaction[] = [
         {
           category: "voucher",
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ];
       transactionArr.push({
         timestamp: timestamp,
-        transaction
+        transaction,
       });
     }
     return {
-      transactions: transactionArr
+      transactions: transactionArr,
     };
   }
   return {
     transactions: [
       {
         transaction: transactions,
-        timestamp
-      }
-    ]
+        timestamp,
+      },
+    ],
   };
 };
 
 export const livePostTransaction = async ({
   ids,
+  identificationFlag,
   endpoint,
   key,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids.length === 0) {
     throw new PostTransactionError("No ID was provided");
@@ -204,12 +191,13 @@ export const livePostTransaction = async ({
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
           ids,
-          transaction: transactions
-        })
+          identificationFlag,
+          transaction: transactions,
+        }),
       }
     );
     return response;
@@ -225,6 +213,7 @@ export const livePostTransaction = async ({
 
 export const mockPastTransactions = async (
   ids: string[],
+  _identificationFlag: IdentificationFlag,
   _key: string,
   _endpoint: string
 ): Promise<PastTransactionsResult> => {
@@ -238,29 +227,30 @@ export const mockPastTransactions = async (
       {
         category: "toilet-paper",
         quantity: 1,
-        transactionTime
+        transactionTime,
       },
       {
         category: "instant-noodles",
         quantity: 1,
-        transactionTime
+        transactionTime,
       },
       {
         category: "chocolate",
         quantity: 30,
-        transactionTime
+        transactionTime,
       },
       {
         category: "vouchers",
         quantity: 5,
-        transactionTime
-      }
-    ]
+        transactionTime,
+      },
+    ],
   };
 };
 
 export const livePastTransactions = async (
   ids: string[],
+  identificationFlag: IdentificationFlag,
   key: string,
   endpoint: string
 ): Promise<PastTransactionsResult> => {
@@ -275,11 +265,12 @@ export const livePastTransactions = async (
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
-          ids
-        })
+          ids,
+          identificationFlag,
+        }),
       }
     );
     return response;

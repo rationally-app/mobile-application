@@ -3,20 +3,19 @@ import React, {
   useContext,
   useState,
   useEffect,
-  useCallback
+  useCallback,
 } from "react";
 import {
   View,
   StyleSheet,
-  Alert,
   Vibration,
   BackHandler,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import { size, color } from "../../common/styles";
 import {
   withNavigationFocus,
-  NavigationFocusInjectedProps
+  NavigationFocusInjectedProps,
 } from "react-navigation";
 import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
@@ -35,16 +34,21 @@ import { VoucherScanner } from "../VoucherScanner/VoucherScanner";
 import { VoucherStatusModal } from "./VoucherStatusModal/VoucherStatusModal";
 import { AllValidVouchersModal } from "./AllValidVouchersModal";
 import { useVoucher } from "../../hooks/useVoucher/useVoucher";
-import { useCheckVoucherValidity } from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
+import {
+  ScannerError,
+  useCheckVoucherValidity,
+} from "../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { AuthContext } from "../../context/auth";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { SessionError } from "../../services/helpers";
 import {
   AlertModalContext,
-  expiredAlertProps,
-  ERROR_MESSAGE
+  CONFIRMATION_MESSAGE,
+  WARNING_MESSAGE,
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
+import { LimitReachedError } from "../../utils/validateVoucherCode";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   content: {
@@ -53,28 +57,28 @@ const styles = StyleSheet.create({
     paddingVertical: size(8),
     height: "100%",
     width: 512,
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   headerText: {
-    marginBottom: size(4)
+    marginBottom: size(4),
   },
   bannerWrapper: {
-    marginBottom: size(1.5)
+    marginBottom: size(1.5),
   },
   buttonsWrapper: {
     marginTop: size(5),
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   submitWrapper: {
     flex: 1,
-    marginRight: size(1)
-  }
+    marginRight: size(1),
+  },
 });
 
 export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   navigation,
-  isFocused
+  isFocused,
 }) => {
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
@@ -86,7 +90,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     false
   );
   const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showWarnAlert, showErrorAlert, showConfirmationAlert } = useContext(
+    AlertModalContext
+  );
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 
@@ -98,8 +104,17 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     checkoutVouchers,
     checkoutResult,
     error: merchantError,
-    resetState: resetVoucherState
+    resetState: resetVoucherState,
   } = useVoucher(sessionToken, endpoint);
+
+  const handleRemoveVoucher = (voucherSerial: string): void => {
+    showConfirmationAlert(
+      CONFIRMATION_MESSAGE.REMOVE_VOUCHER,
+      () => removeVoucher(voucherSerial),
+      undefined,
+      { voucherSerial: voucherSerial }
+    );
+  };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -128,7 +143,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     checkValidity,
     validityResult,
     error: validityError,
-    resetValidityState
+    resetValidityState,
   } = useCheckVoucherValidity(sessionToken, endpoint);
 
   const onCheckVoucher = (input: string): void => {
@@ -160,29 +175,23 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       operatorToken,
       endpoint,
       sessionToken,
-      expiry: new Date().getTime()
+      expiry: new Date().getTime(),
     });
-    showAlert({
-      ...expiredAlertProps,
-      description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN,
-      onOk: () => {
-        navigation.navigate("CampaignLocationsScreen");
-      }
-    });
-  }, [
-    setAuthCredentials,
-    endpoint,
-    navigation,
-    operatorToken,
-    sessionToken,
-    showAlert
-  ]);
+  }, [setAuthCredentials, endpoint, operatorToken, sessionToken]);
 
   useEffect(() => {
-    if (validityError instanceof SessionError) {
+    if (
+      validityError instanceof ScannerError ||
+      validityError instanceof LimitReachedError
+    ) {
+      showErrorAlert(validityError, onModalExit);
+    } else if (validityError instanceof SessionError) {
       expireSession();
+      showErrorAlert(validityError, () => {
+        navigation.navigate("CampaignLocationsScreen");
+      });
     }
-  }, [expireSession, validityError]);
+  }, [expireSession, navigation, showErrorAlert, validityError, onModalExit]);
 
   const redeemVouchers = (): void => {
     checkoutVouchers(merchantCode);
@@ -199,7 +208,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     if (checkoutVouchersState === "RESULT_RETURNED" && checkoutResult) {
       navigation.navigate("PayoutFeedbackScreen", {
         merchantCode,
-        checkoutResult
+        checkoutResult,
       });
       resetState();
       Vibration.vibrate(50);
@@ -207,12 +216,9 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
       if (merchantError instanceof SessionError) {
         expireSession();
       } else {
-        Alert.alert("Error", merchantError.message, [
-          {
-            text: "Dismiss",
-            onPress: () => resetVoucherState(true)
-          }
-        ]);
+        showErrorAlert(new Error(merchantError.message), () =>
+          resetVoucherState(true)
+        );
       }
     }
   }, [
@@ -223,7 +229,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     merchantError,
     navigation,
     resetState,
-    resetVoucherState
+    resetVoucherState,
+    showErrorAlert,
   ]);
 
   const closeCamera = useCallback(() => setShouldShowCamera(false), []);
@@ -231,6 +238,8 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
     Keyboard.dismiss();
     setShouldShowCamera(true);
   }, []);
+
+  const { i18nt } = useTranslate();
 
   return (
     <>
@@ -263,7 +272,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
               <View style={styles.submitWrapper}>
                 <DarkButton
                   fullWidth={true}
-                  text="Checkout"
+                  text={i18nt("customerQuotaScreen", "quotaButtonCheckout")}
                   icon={
                     <Feather
                       name="shopping-cart"
@@ -276,25 +285,12 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
                 />
               </View>
               <SecondaryButton
-                text="Cancel"
+                text={i18nt("customerQuotaScreen", "quotaAppealCancel")}
                 onPress={() => {
-                  Alert.alert(
-                    "Discard transaction?",
-                    "This will clear all scanned items",
-                    [
-                      {
-                        text: "Cancel"
-                      },
-                      {
-                        text: "Discard",
-                        onPress: () => {
-                          setMerchantCode("");
-                          resetState();
-                        },
-                        style: "destructive"
-                      }
-                    ]
-                  );
+                  showWarnAlert(WARNING_MESSAGE.DISCARD_TRANSACTION, () => {
+                    setMerchantCode("");
+                    resetState();
+                  });
                 }}
               />
             </View>
@@ -306,7 +302,7 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
         <AllValidVouchersModal
           vouchers={vouchers}
           isVisible={showAllValidVouchersModal}
-          onVoucherCodeRemove={removeVoucher}
+          onVoucherCodeRemove={handleRemoveVoucher}
           onExit={() => setShowAllValidVouchersModal(false)}
         />
       </KeyboardAvoidingScrollView>

@@ -11,23 +11,23 @@ export const sharedStyles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
     paddingHorizontal: size(2),
-    paddingVertical: size(1.5)
+    paddingVertical: size(1.5),
   },
   wrapperDefault: {
     backgroundColor: color("grey", 10),
-    borderColor: color("grey", 20)
+    borderColor: color("grey", 20),
   },
   wrapperHighlighted: {
     backgroundColor: color("green", 10),
-    borderColor: color("green", 40)
+    borderColor: color("green", 40),
   },
   contentWrapper: {
     marginRight: size(1.5),
-    flexShrink: 1
+    flexShrink: 1,
   },
   maxQuantityLabel: {
     marginTop: 2,
     fontFamily: "brand-italic",
-    fontSize: fontSize(-2)
-  }
+    fontSize: fontSize(-2),
+  },
 });

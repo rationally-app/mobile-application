@@ -3,7 +3,7 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useCallback
+  useCallback,
 } from "react";
 import { AsyncStorage } from "react-native";
 import { CampaignConfig } from "../types";
@@ -12,7 +12,7 @@ import { CampaignConfigError } from "../services/campaignConfig";
 
 export const CAMPAIGN_CONFIGS_STORE_KEY = "CAMPAIGN_CONFIGS_STORE";
 
-type CampaignConfigsMap = {
+export type CampaignConfigsMap = {
   [key: string]: CampaignConfig | undefined;
 };
 
@@ -34,11 +34,11 @@ export const CampaignConfigsStoreContext = createContext<
   allCampaignConfigs: {},
   setCampaignConfig: () => undefined,
   removeCampaignConfig: () => undefined,
-  clearCampaignConfigs: () => undefined
+  clearCampaignConfigs: () => undefined,
 });
 
 export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
-  children
+  children,
 }) => {
   const [hasLoadedFromStore, setHasLoadedFromStore] = useState(false);
   const [allConfigs, setAllConfigs] = useState<
@@ -63,7 +63,7 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
         return;
       }
 
-      setAllConfigs(prevConfigs => {
+      setAllConfigs((prevConfigs) => {
         const prevConfig: CampaignConfig | undefined = prevConfigs[key];
         // Tried to use Object.entries to loop rather than directly accessing
         // as below. But ran into type mismatches.
@@ -75,12 +75,14 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
           policies:
             newConfig.policies !== null
               ? newConfig.policies
-              : prevConfig?.policies ?? null
+              : prevConfig?.policies ?? null,
+          c13n:
+            newConfig.c13n !== null ? newConfig.c13n : prevConfig?.c13n ?? null,
         };
 
         return {
           ...prevConfigs,
-          [key]: mergedConfig
+          [key]: mergedConfig,
         };
       });
     },
@@ -88,11 +90,11 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
   );
 
   const removeCampaignConfig: CampaignConfigsStoreContext["removeCampaignConfig"] = useCallback(
-    async key => {
+    async (key) => {
       if (!key) {
         return;
       }
-      setAllConfigs(prevConfigs => {
+      setAllConfigs((prevConfigs) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { [key]: configToBeRemoved, ...remainingConfigs } = prevConfigs;
         return remainingConfigs;
@@ -136,7 +138,7 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
     allCampaignConfigs: allConfigs,
     setCampaignConfig,
     removeCampaignConfig,
-    clearCampaignConfigs
+    clearCampaignConfigs,
   };
 
   return (
