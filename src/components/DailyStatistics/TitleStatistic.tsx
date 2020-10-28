@@ -75,8 +75,7 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
       </AppText>
       <AppText style={styles.statText}>{totalCount?.toLocaleString()}</AppText>
       <AppText style={styles.smallText}>
-        {i18nt("redemptionStats", "lastDistributedAt")}
-        {i18nt("redemptionStats", "distributedTime", undefined, formatTime)}
+        {i18nt("redemptionStats", "lastDistributedAt", undefined, formattedLastTransactionTime)}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>
