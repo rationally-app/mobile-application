@@ -4,6 +4,7 @@ import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Card } from "../Layout/Card";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { formatQuantityText } from "../CustomerQuota/utils";
 
 interface TransactionHistoryCardComponent {
   transactionHistory: {
@@ -22,11 +23,6 @@ const styles = StyleSheet.create({
     minHeight: "20%",
   },
   categoryName: {
-    fontFamily: "brand-bold",
-    fontSize: fontSize(0),
-    marginBottom: size(3),
-  },
-  quantity: {
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
     marginBottom: size(3),
@@ -76,9 +72,8 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
                   {c13nt(item.name)}
                 </AppText>
                 <View style={styles.transactionText}>
-                  <AppText style={styles.quantity}>{item.quantity}</AppText>
                   <AppText style={styles.unit}>
-                    {c13ntForUnit(item.unit)?.label}
+                    {formatQuantityText(item.quantity, c13ntForUnit(item.unit))}
                   </AppText>
                 </View>
               </View>
