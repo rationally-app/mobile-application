@@ -7,6 +7,7 @@ import { defaultIdentifier } from "../../test/helpers/defaults";
 import { CampaignPolicy } from "../../types";
 import { Sentry } from "../../utils/errorTracking";
 import { wait } from "@testing-library/react-native";
+import "../../common/i18n/i18nMock";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -104,7 +105,7 @@ describe("useDailyStatistics", () => {
       pastTransactions: [
         {
           category: "vouchers",
-          quantity: 9999999,
+          quantity: "9999999",
           transactionTime: new Date(12000000000),
         },
       ],
@@ -125,7 +126,11 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
-        quantityText: "9,999,999 qty",
+        quantity: 9999999,
+        unit: {
+          label: " qty",
+          type: "POSTFIX",
+        },
         descriptionAlert: undefined,
         order: -1,
       },
@@ -178,7 +183,11 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
-        quantityText: "9,999,999 qty",
+        quantity: 9999999,
+        unit: {
+          label: " qty",
+          type: "POSTFIX",
+        },
         descriptionAlert: undefined,
         order: -1,
       },
@@ -216,7 +225,11 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
-          quantityText: "9,999,999 qty",
+          quantity: 9999999,
+          unit: {
+            label: " pack(s)",
+            type: "POSTFIX",
+          },
           descriptionAlert: undefined,
           order: -1,
         },
@@ -245,7 +258,11 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
-          quantityText: "20 qty",
+          quantity: 20,
+          unit: {
+            label: " pack(s)",
+            type: "POSTFIX",
+          },
           descriptionAlert: undefined,
           order: -1,
         },

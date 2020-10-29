@@ -1,5 +1,6 @@
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
+import "../../common/i18n/i18nMock";
 import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
 describe("countTotalTransactionsAndByCategory", () => {
@@ -166,21 +167,33 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 pack(s)",
+          quantity: 999,
+          unit: {
+            label: " pack(s)",
+            type: "POSTFIX",
+          },
           descriptionAlert: undefined,
           order: 2,
         },
         {
           category: "chocolate",
           name: "🍫 Chocolate",
-          quantityText: "$3,000",
+          quantity: "3,000",
+          unit: {
+            label: "$",
+            type: "PREFIX",
+          },
           descriptionAlert: undefined,
           order: 3,
         },
         {
           category: "vouchers",
           name: "Funfair Vouchers",
-          quantityText: "20 qty",
+          quantity: 20,
+          unit: {
+            label: " qty",
+            type: "POSTFIX",
+          },
           descriptionAlert: undefined,
           order: 4,
         },
@@ -201,7 +214,11 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 pack(s)",
+          quantity: 999,
+          unit: {
+            label: " pack(s)",
+            type: "POSTFIX",
+          },
           descriptionAlert: undefined,
           order: 2,
         },
@@ -222,7 +239,11 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "funny-category",
           name: "funny-category",
-          quantityText: "999 qty",
+          quantity: 999,
+          unit: {
+            label: " qty",
+            type: "POSTFIX",
+          },
           descriptionAlert: undefined,
           order: -1,
         },
@@ -243,7 +264,11 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "appeal-product",
           name: "This Product is for Appeal",
-          quantityText: "200 qty",
+          quantity: 200,
+          unit: {
+            label: " qty",
+            type: "POSTFIX",
+          },
           descriptionAlert: i18ntWithValidator("redemptionStats", "viaAppeal"),
           order: 6,
         },
