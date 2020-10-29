@@ -75,8 +75,11 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     sessionToken,
     endpoint,
     operatorToken,
-    currentTimestamp
+    12000000000
+    //currentTimestamp
   );
+  console.log("Here");
+  console.log(transactionHistory);
 
   const onPressPrevDay = (): void => {
     const prevDay = getTime(subDays(currentTimestamp, 1));

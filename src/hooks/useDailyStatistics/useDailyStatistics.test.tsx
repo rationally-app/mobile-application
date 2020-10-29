@@ -105,7 +105,7 @@ describe("useDailyStatistics", () => {
       pastTransactions: [
         {
           category: "vouchers",
-          quantity: "9999999",
+          quantity: 9999999,
           transactionTime: new Date(12000000000),
         },
       ],
