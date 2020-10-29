@@ -1,6 +1,6 @@
 import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
-import { formatQuantityText } from "../../components/CustomerQuota/utils";
+
 import { Sentry } from "../../utils/errorTracking";
 import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
@@ -8,7 +8,8 @@ type SummarisedTransactions = {
   summarisedTransactionHistory: {
     name: string;
     category: string;
-    quantityText: string;
+    quantity: number;
+    unit: { type: "PREFIX" | "POSTFIX"; label: string };
     descriptionAlert?: string;
     order: number;
   }[];
@@ -40,13 +41,15 @@ export const countTotalTransactionsAndByCategory = (
               return key;
             })(),
           category: key,
-          quantityText: formatQuantityText(
-            totalQuantityInCategory,
-            findItemByCategory?.quantity.unit || {
-              type: "POSTFIX",
-              label: " qty",
-            }
-          ),
+
+          quantity: totalQuantityInCategory,
+          unit: findItemByCategory?.quantity.unit || {
+            type: "POSTFIX",
+            label: ` ${i18ntWithValidator(
+              "checkoutSuccessScreen",
+              "quantity"
+            )}`,
+          },
 
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"

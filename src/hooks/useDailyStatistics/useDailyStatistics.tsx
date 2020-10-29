@@ -11,7 +11,8 @@ export type StatisticsHook = {
   transactionHistory: {
     name: string;
     category: string;
-    quantityText: string;
+    quantity: number;
+    unit: { type: "PREFIX" | "POSTFIX"; label: string };
     descriptionAlert?: string;
   }[];
   error?: Error;

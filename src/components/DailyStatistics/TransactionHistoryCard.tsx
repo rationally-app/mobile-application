@@ -9,7 +9,8 @@ interface TransactionHistoryCardComponent {
   transactionHistory: {
     name: string;
     category: string;
-    quantityText: string;
+    quantity: number;
+    unit: { type: "PREFIX" | "POSTFIX"; label: string };
     descriptionAlert?: string;
   }[];
   loading: boolean;
@@ -25,7 +26,12 @@ const styles = StyleSheet.create({
     fontSize: fontSize(0),
     marginBottom: size(3),
   },
-  quantityText: {
+  quantity: {
+    fontFamily: "brand-bold",
+    fontSize: fontSize(0),
+    marginBottom: size(3),
+  },
+  unit: {
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
     marginBottom: size(3),
@@ -58,7 +64,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
   transactionHistory,
   loading,
 }) => {
-  const { c13nt, i18nt } = useTranslate();
+  const { c13nt, i18nt, c13ntForUnit } = useTranslate();
   return (
     <Card style={styles.stats}>
       {!loading ? (
@@ -70,8 +76,9 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
                   {c13nt(item.name)}
                 </AppText>
                 <View style={styles.transactionText}>
-                  <AppText style={styles.quantityText}>
-                    {item.quantityText}
+                  <AppText style={styles.quantity}>{item.quantity}</AppText>
+                  <AppText style={styles.unit}>
+                    {c13ntForUnit(item.unit)?.label}
                   </AppText>
                 </View>
               </View>
