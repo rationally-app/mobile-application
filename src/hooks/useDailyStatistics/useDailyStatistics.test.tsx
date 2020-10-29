@@ -227,7 +227,7 @@ describe("useDailyStatistics", () => {
           name: "vouchers",
           quantity: 9999999,
           unit: {
-            label: " pack(s)",
+            label: " qty",
             type: "POSTFIX",
           },
           descriptionAlert: undefined,
@@ -260,7 +260,7 @@ describe("useDailyStatistics", () => {
           name: "vouchers",
           quantity: 20,
           unit: {
-            label: " pack(s)",
+            label: " qty",
             type: "POSTFIX",
           },
           descriptionAlert: undefined,

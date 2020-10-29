@@ -178,7 +178,7 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "chocolate",
           name: "🍫 Chocolate",
-          quantity: "3,000",
+          quantity: 3000,
           unit: {
             label: "$",
             type: "PREFIX",
