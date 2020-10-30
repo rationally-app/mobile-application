@@ -1,4 +1,5 @@
 import { chain, sumBy } from "lodash";
+import { formatQuantityText } from "../../components/CustomerQuota/utils";
 import { DailyStatistics, CampaignPolicy } from "../../types";
 
 import { Sentry } from "../../utils/errorTracking";
@@ -8,8 +9,7 @@ type SummarisedTransactions = {
   summarisedTransactionHistory: {
     name: string;
     category: string;
-    quantity: number;
-    unit: { type: "PREFIX" | "POSTFIX"; label: string };
+    quantityText: string;
     descriptionAlert?: string;
     order: number;
   }[];
@@ -18,7 +18,10 @@ type SummarisedTransactions = {
 
 export const countTotalTransactionsAndByCategory = (
   transactions: DailyStatistics[],
-  policies: CampaignPolicy[] | null
+  policies: CampaignPolicy[] | null,
+  c13ntForUnit: (
+    unit: CampaignPolicy["quantity"]["unit"]
+  ) => CampaignPolicy["quantity"]["unit"]
 ): SummarisedTransactions => {
   return chain(transactions)
     .groupBy("category")
@@ -42,14 +45,16 @@ export const countTotalTransactionsAndByCategory = (
             })(),
           category: key,
 
-          quantity: totalQuantityInCategory,
-          unit: findItemByCategory?.quantity.unit || {
-            type: "POSTFIX",
-            label: ` ${i18ntWithValidator(
-              "checkoutSuccessScreen",
-              "quantity"
-            )}`,
-          },
+          quantityText: formatQuantityText(
+            totalQuantityInCategory,
+            c13ntForUnit(findItemByCategory?.quantity.unit) || {
+              type: "POSTFIX",
+              label: ` ${i18ntWithValidator(
+                "checkoutSuccessScreen",
+                "quantity"
+              )}`,
+            }
+          ),
 
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"

@@ -9,6 +9,9 @@ describe("countTotalTransactionsAndByCategory", () => {
   let pastInstantNoodleTransactions: DailyStatistics[];
   let invalidPastTransactions: DailyStatistics[];
   let pastTransactionsWithAppeal: DailyStatistics[];
+  let c13ntForUnit: (
+    unit: CampaignPolicy["quantity"]["unit"]
+  ) => CampaignPolicy["quantity"]["unit"];
 
   beforeAll(() => {
     pastTransactions = [
@@ -160,7 +163,11 @@ describe("countTotalTransactionsAndByCategory", () => {
   it("should return multiple summarised transactions categories with total count and count per category and the name to be displayed on the stats page, as well as ordered by ascending order number", () => {
     expect.assertions(1);
     expect(
-      countTotalTransactionsAndByCategory(pastTransactions, campaignPolicy)
+      countTotalTransactionsAndByCategory(
+        pastTransactions,
+        campaignPolicy,
+        c13ntForUnit
+      )
     ).toStrictEqual({
       summarisedTotalCount: 4019,
       summarisedTransactionHistory: [
@@ -206,7 +213,8 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         pastInstantNoodleTransactions,
-        campaignPolicy
+        campaignPolicy,
+        c13ntForUnit
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -231,7 +239,8 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         invalidPastTransactions,
-        campaignPolicy
+        campaignPolicy,
+        c13ntForUnit
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -256,7 +265,8 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactionsWithAppeal,
-        campaignPolicy
+        campaignPolicy,
+        c13ntForUnit
       )
     ).toStrictEqual({
       summarisedTotalCount: 200,

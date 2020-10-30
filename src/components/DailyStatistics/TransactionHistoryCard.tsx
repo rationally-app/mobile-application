@@ -9,8 +9,7 @@ interface TransactionHistoryCardComponent {
   transactionHistory: {
     name: string;
     category: string;
-    quantity: number;
-    formattedTranslation: string;
+    quantityText: string;
     descriptionAlert?: string;
   }[];
   loading: boolean;
@@ -71,9 +70,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
                   {c13nt(item.name)}
                 </AppText>
                 <View style={styles.transactionText}>
-                  <AppText style={styles.unit}>
-                    {item.formattedTranslation}
-                  </AppText>
+                  <AppText style={styles.unit}>{item.quantityText}</AppText>
                 </View>
               </View>
               <View style={styles.descriptionAlertText}>

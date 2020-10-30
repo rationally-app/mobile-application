@@ -3,10 +3,7 @@ import { usePrevious } from "../usePrevious";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { getDailyStatistics } from "../../services/statistics";
 import { countTotalTransactionsAndByCategory } from "./utils";
-import {
-  formatQuantityText,
-  sortTransactionsByOrder,
-} from "../../components/CustomerQuota/utils";
+import { sortTransactionsByOrder } from "../../components/CustomerQuota/utils";
 import { useTranslate } from "../useTranslate/useTranslate";
 
 export type StatisticsHook = {
@@ -16,9 +13,7 @@ export type StatisticsHook = {
   transactionHistory: {
     name: string;
     category: string;
-    quantity: number;
-    formattedTranslation: string;
-
+    quantityText: string;
     descriptionAlert?: string;
   }[];
   error?: Error;
@@ -42,10 +37,9 @@ export const useDailyStatistics = (
   const [transactionHistory, setTransactionHistory] = useState<
     StatisticsHook["transactionHistory"]
   >([]);
-
+  const { c13ntForUnit } = useTranslate();
   const { policies } = useContext(CampaignConfigContext);
   const prevTimestamp = usePrevious(currentTimestamp);
-  const { c13ntForUnit } = useTranslate();
   useEffect(() => {
     const fetchDailyStatistics = async (): Promise<void> => {
       try {
@@ -61,18 +55,12 @@ export const useDailyStatistics = (
           summarisedTotalCount,
         } = countTotalTransactionsAndByCategory(
           response.pastTransactions,
-          policies
+          policies,
+          c13ntForUnit
         );
+
         setTransactionHistory(
-          summarisedTransactionHistory
-            .sort(sortTransactionsByOrder)
-            .map((item) => ({
-              ...item,
-              formattedTranslation: `${formatQuantityText(
-                item.quantity,
-                c13ntForUnit(item.unit)
-              )}`,
-            }))
+          summarisedTransactionHistory.sort(sortTransactionsByOrder)
         );
         setTotalCount(summarisedTotalCount);
 

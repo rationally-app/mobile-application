@@ -126,12 +126,7 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
-        formattedTranslation: "9,999,999 qty",
-        quantity: 9999999,
-        unit: {
-          label: " qty",
-          type: "POSTFIX",
-        },
+        quantityText: "9,999,999 qty",
         descriptionAlert: undefined,
         order: -1,
       },
@@ -184,12 +179,7 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
-        formattedTranslation: "9,999,999 qty",
-        quantity: 9999999,
-        unit: {
-          label: " qty",
-          type: "POSTFIX",
-        },
+        quantityText: "9,999,999 qty",
         descriptionAlert: undefined,
         order: -1,
       },
@@ -227,12 +217,7 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
-          formattedTranslation: "9,999,999 qty",
-          quantity: 9999999,
-          unit: {
-            label: " qty",
-            type: "POSTFIX",
-          },
+          quantityText: "9,999,999 qty",
           descriptionAlert: undefined,
           order: -1,
         },
@@ -261,12 +246,7 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
-          formattedTranslation: "20 qty",
-          quantity: 20,
-          unit: {
-            label: " qty",
-            type: "POSTFIX",
-          },
+          quantityText: "20 qty",
           descriptionAlert: undefined,
           order: -1,
         },
