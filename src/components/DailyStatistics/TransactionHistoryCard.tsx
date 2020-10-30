@@ -4,14 +4,13 @@ import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Card } from "../Layout/Card";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { formatQuantityText } from "../CustomerQuota/utils";
 
 interface TransactionHistoryCardComponent {
   transactionHistory: {
     name: string;
     category: string;
     quantity: number;
-    unit: { type: "PREFIX" | "POSTFIX"; label: string };
+    formattedTranslation: string;
     descriptionAlert?: string;
   }[];
   loading: boolean;
@@ -60,7 +59,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
   transactionHistory,
   loading,
 }) => {
-  const { c13nt, i18nt, c13ntForUnit } = useTranslate();
+  const { c13nt, i18nt } = useTranslate();
   return (
     <Card style={styles.stats}>
       {!loading ? (
@@ -73,7 +72,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
                 </AppText>
                 <View style={styles.transactionText}>
                   <AppText style={styles.unit}>
-                    {formatQuantityText(item.quantity, c13ntForUnit(item.unit))}
+                    {item.formattedTranslation}
                   </AppText>
                 </View>
               </View>

@@ -3,16 +3,22 @@ import { usePrevious } from "../usePrevious";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { getDailyStatistics } from "../../services/statistics";
 import { countTotalTransactionsAndByCategory } from "./utils";
-import { sortTransactionsByOrder } from "../../components/CustomerQuota/utils";
+import {
+  formatQuantityText,
+  sortTransactionsByOrder,
+} from "../../components/CustomerQuota/utils";
+import { useTranslate } from "../useTranslate/useTranslate";
 
 export type StatisticsHook = {
   totalCount: number | null;
   lastTransactionTime: Date | null;
+
   transactionHistory: {
     name: string;
     category: string;
     quantity: number;
-    unit: { type: "PREFIX" | "POSTFIX"; label: string };
+    formattedTranslation: string;
+
     descriptionAlert?: string;
   }[];
   error?: Error;
@@ -39,7 +45,7 @@ export const useDailyStatistics = (
 
   const { policies } = useContext(CampaignConfigContext);
   const prevTimestamp = usePrevious(currentTimestamp);
-
+  const { c13ntForUnit } = useTranslate();
   useEffect(() => {
     const fetchDailyStatistics = async (): Promise<void> => {
       try {
@@ -58,7 +64,15 @@ export const useDailyStatistics = (
           policies
         );
         setTransactionHistory(
-          summarisedTransactionHistory.sort(sortTransactionsByOrder)
+          summarisedTransactionHistory
+            .sort(sortTransactionsByOrder)
+            .map((item) => ({
+              ...item,
+              formattedTranslation: `${formatQuantityText(
+                item.quantity,
+                c13ntForUnit(item.unit)
+              )}`,
+            }))
         );
         setTotalCount(summarisedTotalCount);
 
@@ -84,6 +98,7 @@ export const useDailyStatistics = (
     sessionToken,
     currentTimestamp,
     prevTimestamp,
+    c13ntForUnit,
   ]);
 
   return {

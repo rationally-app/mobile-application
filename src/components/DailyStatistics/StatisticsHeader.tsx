@@ -68,7 +68,6 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
           color={color("grey", 0)}
         />
         <AppText style={styles.backText}>
-          {" "}
           {i18nt("redemptionStats", "back")}
         </AppText>
       </TouchableOpacity>
