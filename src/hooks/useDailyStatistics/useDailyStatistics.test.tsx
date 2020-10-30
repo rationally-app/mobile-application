@@ -126,6 +126,7 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
+        formattedTranslation: "9,999,999 qty",
         quantity: 9999999,
         unit: {
           label: " qty",
@@ -183,6 +184,7 @@ describe("useDailyStatistics", () => {
       {
         category: "vouchers",
         name: "vouchers",
+        formattedTranslation: "9,999,999 qty",
         quantity: 9999999,
         unit: {
           label: " qty",
@@ -225,6 +227,7 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
+          formattedTranslation: "9,999,999 qty",
           quantity: 9999999,
           unit: {
             label: " qty",
@@ -258,6 +261,7 @@ describe("useDailyStatistics", () => {
         {
           category: "vouchers",
           name: "vouchers",
+          formattedTranslation: "20 qty",
           quantity: 20,
           unit: {
             label: " qty",
