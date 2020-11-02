@@ -53,7 +53,12 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
             color={color("red", 60)}
             style={sharedStyles.icon}
           />
-          <AppText style={sharedStyles.statusTitleWrapper}>
+          <AppText
+            style={sharedStyles.statusTitleWrapper}
+            accessibilityLabel="not-eligible-title"
+            testID="not-eligible-title"
+            accessible={true}
+          >
             <NotEligibleTransactionTitle />
           </AppText>
           <View>
@@ -66,6 +71,7 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
           text={i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
+          accessibilityLabel="not-eligible-next-identity-button"
         />
       </View>
     </View>

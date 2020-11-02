@@ -37,6 +37,9 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
           name="menu"
           size={size(4)}
           color={color("grey", 0)}
+          accessibilityLabel="drawer-nav-open-button"
+          testID="drawer-nav-open-button"
+          accessible={true}
         />
       </TouchableOpacity>
     </View>

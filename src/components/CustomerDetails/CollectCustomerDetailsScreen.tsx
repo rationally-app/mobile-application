@@ -266,7 +266,14 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           )}
           <Card>
             {!!tCampaignName && (
-              <AppText style={styles.campaignName}>{tCampaignName}</AppText>
+              <AppText
+                style={styles.campaignName}
+                accessibilityLabel="identity-details-campaign-name"
+                testID="identity-details-campaign-name"
+                accessible={true}
+              >
+                {tCampaignName}
+              </AppText>
             )}
             <AppText>
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}

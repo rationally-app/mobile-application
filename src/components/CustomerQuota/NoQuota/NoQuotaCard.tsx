@@ -272,7 +272,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               color={color("red", 60)}
               style={sharedStyles.icon}
             />
-            <AppText style={sharedStyles.statusTitleWrapper}>
+            <AppText
+              style={sharedStyles.statusTitleWrapper}
+              accessibilityLabel="no-quota-title"
+              testID="no-quota-title"
+              accessible={true}
+            >
               {secondsFromLatestTransaction > 0 ? (
                 secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
                   <DistantTransactionTitle
@@ -353,6 +358,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
           text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
+          accessibilityLabel="no-quota-next-identity-button"
         />
       </View>
       {onAppeal && hasAppealProduct ? (
