@@ -14,7 +14,7 @@ import {
   AlertModalContext,
   CONFIRMATION_MESSAGE,
   ERROR_MESSAGE,
-  WARNING_MESSAGE
+  WARNING_MESSAGE,
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
@@ -39,7 +39,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   onCancel,
   onBack,
   cart,
-  updateCart
+  updateCart,
 }) => {
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { features } = useContext(CampaignConfigContext);
@@ -74,9 +74,11 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   // TODO:
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
-  const isAppeal = products.some(product => product.categoryType === "APPEAL");
+  const isAppeal = products.some(
+    (product) => product.categoryType === "APPEAL"
+  );
   const isChargeable = cart.some(
-    cartItem => cartItem.descriptionAlert === "*chargeable"
+    (cartItem) => cartItem.descriptionAlert === "*chargeable"
   );
   return (
     <View>
@@ -89,7 +91,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         }
       >
         <View style={sharedStyles.resultWrapper}>
-          {cart.map(cartItem => (
+          {cart.map((cartItem) => (
             <Item
               key={cartItem.category}
               cartItem={cartItem}
@@ -118,7 +120,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         <View
           style={[
             sharedStyles.submitButton,
-            !isLoading && { marginLeft: size(2) }
+            !isLoading && { marginLeft: size(2) },
           ]}
         >
           <DarkButton
@@ -142,6 +144,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             }
             isLoading={isLoading}
             fullWidth={true}
+            accessibilityLabel="items-selection-checkout-button"
           />
         </View>
       </View>

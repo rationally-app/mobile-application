@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState } from "react";
 import { storiesOf } from "@storybook/react-native";
 import {
   AlertModal,
-  AlertModalProps
+  AlertModalProps,
 } from "../../../src/components/AlertModal/AlertModal";
 import { size } from "../../../src/common/styles";
 import { View } from "react-native";
@@ -44,7 +44,7 @@ storiesOf("Modals", module).add("Alerts", () => (
       title="Title"
       description="Description and how to recover"
       buttonTexts={{
-        primaryActionText: "OK"
+        primaryActionText: "OK",
       }}
     />
     <AlertModalItem
@@ -53,7 +53,7 @@ storiesOf("Modals", module).add("Alerts", () => (
       description="Confirm a destructive choice"
       buttonTexts={{
         primaryActionText: "Delete",
-        secondaryActionText: "Cancel"
+        secondaryActionText: "Cancel",
       }}
     />
     <AlertModalItem
@@ -61,7 +61,7 @@ storiesOf("Modals", module).add("Alerts", () => (
       title="Are you sure?"
       buttonTexts={{
         primaryActionText: "Yes",
-        secondaryActionText: "No"
+        secondaryActionText: "No",
       }}
     />
     <AlertModalItem
@@ -70,7 +70,7 @@ storiesOf("Modals", module).add("Alerts", () => (
       description="Confirm a choice"
       buttonTexts={{
         primaryActionText: "Confirm",
-        secondaryActionText: "Cancel"
+        secondaryActionText: "Cancel",
       }}
     />
     <AlertModalItem
@@ -78,7 +78,7 @@ storiesOf("Modals", module).add("Alerts", () => (
       title="Info Title"
       description="Communicate important info"
       buttonTexts={{
-        primaryActionText: "Go to Play Store"
+        primaryActionText: "Go to Play Store",
       }}
     />
   </View>

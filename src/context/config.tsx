@@ -3,14 +3,14 @@ import React, {
   useContext,
   FunctionComponent,
   useState,
-  useEffect
+  useEffect,
 } from "react";
 import { AsyncStorage } from "react-native";
 import { LoadingView } from "../components/Loading";
 
 export enum AppMode {
   production = "production",
-  staging = "staging"
+  staging = "staging",
 }
 
 interface Config {
@@ -31,7 +31,7 @@ const DEFAULT_CONFIG: Config = { appMode: AppMode.production };
 
 export const ConfigContext = createContext<ConfigContext>({
   config: DEFAULT_CONFIG,
-  setConfigValue: () => {} // eslint-disable-line @typescript-eslint/no-empty-function
+  setConfigValue: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
 export const useConfigContext = (): ConfigContext =>
@@ -43,7 +43,7 @@ export const ConfigContextProvider: FunctionComponent = ({ children }) => {
   const setConfigValue: ConfigContext["setConfigValue"] = (key, value) => {
     const nextConfig = {
       ...config,
-      [key]: value
+      [key]: value,
     };
     setConfig(nextConfig);
     AsyncStorage.setItem(CONFIG_KEY, JSON.stringify(nextConfig));
@@ -54,7 +54,7 @@ export const ConfigContextProvider: FunctionComponent = ({ children }) => {
     if (configStr) {
       setConfig({
         ...DEFAULT_CONFIG,
-        ...JSON.parse(configStr)
+        ...JSON.parse(configStr),
       });
     } else {
       await AsyncStorage.setItem(CONFIG_KEY, JSON.stringify(DEFAULT_CONFIG));

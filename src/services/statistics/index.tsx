@@ -40,29 +40,29 @@ export const mockGetStatistics = async (
         {
           category: "toilet-paper",
           quantity: 100,
-          transactionTime: new Date(today)
+          transactionTime: new Date(today),
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime: new Date(today)
+          transactionTime: new Date(today),
         },
         {
           category: "chocolate",
           quantity: 30,
-          transactionTime: new Date(today)
+          transactionTime: new Date(today),
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime: new Date(today)
+          transactionTime: new Date(today),
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime: new Date(today)
-        }
-      ]
+          transactionTime: new Date(today),
+        },
+      ],
     };
   } else if (isSameDay(_currentTimestamp, yesterday)) {
     return {
@@ -70,19 +70,19 @@ export const mockGetStatistics = async (
         {
           category: "instant-noodles",
           quantity: 999,
-          transactionTime: new Date(yesterday)
+          transactionTime: new Date(yesterday),
         },
         {
           category: "chocolate",
           quantity: 3000,
-          transactionTime: new Date(yesterday)
+          transactionTime: new Date(yesterday),
         },
         {
           category: "vouchers",
           quantity: 20,
-          transactionTime: new Date(yesterday)
-        }
-      ]
+          transactionTime: new Date(yesterday),
+        },
+      ],
     };
   } else if (isSameDay(_currentTimestamp, tomorrow)) {
     return {
@@ -90,13 +90,13 @@ export const mockGetStatistics = async (
         {
           category: "vouchers",
           quantity: 9999999,
-          transactionTime: new Date(tomorrow)
-        }
-      ]
+          transactionTime: new Date(tomorrow),
+        },
+      ],
     };
   } else {
     return {
-      pastTransactions: []
+      pastTransactions: [],
     };
   }
 };
@@ -109,7 +109,7 @@ export const liveGetStatistics = async (
 ): Promise<DailyStatisticsResult> => {
   const {
     startTransactionTime,
-    endTransactionTime
+    endTransactionTime,
   } = getDailyTransactionTimestampRange(currentTimestamp);
 
   try {
@@ -119,13 +119,13 @@ export const liveGetStatistics = async (
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
           operatorTokens,
           startTransactionTime,
-          endTransactionTime
-        })
+          endTransactionTime,
+        }),
       }
     );
   } catch (e) {

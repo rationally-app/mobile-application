@@ -12,14 +12,14 @@ import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   titlePadding: {
     padding: size(2),
-    paddingTop: size(0.5)
+    paddingTop: size(0.5),
   },
   reasonPadding: {
-    paddingTop: size(0.5)
+    paddingTop: size(0.5),
   },
   backbuttonComponent: {
-    marginTop: size(5)
-  }
+    marginTop: size(5),
+  },
 });
 
 export type Reason = {
@@ -40,7 +40,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   reasonSelectionHeader,
   reasons,
   onCancel,
-  onReasonSelection
+  onReasonSelection,
 }) => {
   const { showWarnAlert } = useContext(AlertModalContext);
   const { i18nt } = useTranslate();
@@ -52,7 +52,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
             <ReasonSelectionHeader title={reasonSelectionHeader} />
           </View>
           <View style={styles.reasonPadding}>
-            {reasons.map(reason => (
+            {reasons.map((reason) => (
               <ReasonItem
                 key={reason.description}
                 description={reason.description}

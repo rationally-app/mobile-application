@@ -4,7 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollViewProps,
-  KeyboardAvoidingViewProps
+  KeyboardAvoidingViewProps,
 } from "react-native";
 
 interface KeyboardAvoidingScrollView {
@@ -15,7 +15,7 @@ interface KeyboardAvoidingScrollView {
 export const KeyboardAvoidingScrollView: FunctionComponent<KeyboardAvoidingScrollView> = ({
   keyboardAvoidingViewStyle = {},
   scrollViewContentContainerStyle = { alignItems: "center" },
-  children
+  children,
 }) => (
   <KeyboardAvoidingView
     behavior={Platform.select({ ios: "padding" })}

@@ -15,14 +15,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     width: "100%",
-    marginTop: size(2)
+    marginTop: size(2),
   },
   inputWrapper: {
-    flex: 2
+    flex: 2,
   },
   buttonWrapper: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
 export const ItemIdentifier: FunctionComponent<{

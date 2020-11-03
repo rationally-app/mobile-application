@@ -3,7 +3,7 @@ import React, {
   FunctionComponent,
   Dispatch,
   SetStateAction,
-  useContext
+  useContext,
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -15,7 +15,7 @@ import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 import {
   createFullNumber,
   countryCodeValidator,
-  mobileNumberValidator
+  mobileNumberValidator,
 } from "../../utils/validatePhoneNumbers";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
@@ -23,8 +23,8 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
-    marginTop: size(3)
-  }
+    marginTop: size(3),
+  },
 });
 
 interface LoginMobileNumberCard {
@@ -38,7 +38,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   setLoginStage,
   setMobileNumber,
   setCountryCode,
-  handleRequestOTP
+  handleRequestOTP,
 }) => {
   const { config } = useContext(ConfigContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -95,6 +95,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
           onChangeCountryCode={onChangeCountryCode}
           onChangeMobileNumber={onChangeMobileNumber}
           onSubmit={onSubmitMobileNumber}
+          accessibilityLabel="login-phone-number"
         />
 
         <DarkButton
@@ -102,6 +103,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
           onPress={onSubmitMobileNumber}
           fullWidth={true}
           isLoading={isLoading}
+          accessibilityLabel="login-send-otp-button"
         />
       </View>
     </Card>

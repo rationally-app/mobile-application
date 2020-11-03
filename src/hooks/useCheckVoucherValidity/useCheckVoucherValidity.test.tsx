@@ -15,9 +15,9 @@ const mockValidQuotaRes = {
       category: "voucher",
       identifiers: [],
       quantity: 1,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockInvalidQuotaRes = {
@@ -26,14 +26,14 @@ const mockInvalidQuotaRes = {
       category: "voucher",
       identifiers: [],
       quantity: 0,
-      transactionTime
-    }
-  ]
+      transactionTime,
+    },
+  ],
 };
 
 const mockVoucherResult = {
   serial: "123456789",
-  denomination: 2
+  denomination: 2,
 };
 
 const key = "KEY";
@@ -104,7 +104,7 @@ describe("useCheckVoucherValidity", () => {
         useCheckVoucherValidity(key, endpoint)
       );
       const mockVouchersArr: Voucher[] = [
-        { serial: "123456789", denomination: 2 }
+        { serial: "123456789", denomination: 2 },
       ];
 
       await wait(() => {
