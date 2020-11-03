@@ -9,34 +9,34 @@ describe("validateIdentifierInputs", () => {
           label: "number with regex",
           value: "1234567",
           validationRegex: "^[0-9]{7}$",
-          textInputType: "NUMBER",
+          textInputType: "NUMBER"
         },
         {
           label: "number without regex",
           value: "12345678",
-          textInputType: "NUMBER",
+          textInputType: "NUMBER"
         },
         {
           label: "string with regex",
           value: "AA:BB:CC",
           validationRegex: "^[a-zA-Z:]+$",
-          textInputType: "STRING",
+          textInputType: "STRING"
         },
         {
           label: "string without regex",
           value: "AA:BB",
-          textInputType: "STRING",
+          textInputType: "STRING"
         },
         {
           label: "valid phone number",
           value: "+6591234567",
-          textInputType: "PHONE_NUMBER",
+          textInputType: "PHONE_NUMBER"
         },
         {
           label: "another valid phone number",
           value: "+13475679064",
-          textInputType: "PHONE_NUMBER",
-        },
+          textInputType: "PHONE_NUMBER"
+        }
       ])
     ).toBe(true);
   });
@@ -48,8 +48,8 @@ describe("validateIdentifierInputs", () => {
         {
           label: "input without +",
           value: "1234567",
-          textInputType: "PHONE_NUMBER",
-        },
+          textInputType: "PHONE_NUMBER"
+        }
       ])
     ).toThrow("Enter a valid country code and contact number.");
     expect(() =>
@@ -57,8 +57,8 @@ describe("validateIdentifierInputs", () => {
         {
           label: "input with invalid characters",
           value: "+1234567~",
-          textInputType: "PHONE_NUMBER",
-        },
+          textInputType: "PHONE_NUMBER"
+        }
       ])
     ).toThrow("Enter a valid country code and contact number.");
     expect(() =>
@@ -66,8 +66,8 @@ describe("validateIdentifierInputs", () => {
         {
           label: "input with spaces",
           value: "+1234567 890",
-          textInputType: "PHONE_NUMBER",
-        },
+          textInputType: "PHONE_NUMBER"
+        }
       ])
     ).toThrow("Enter a valid country code and contact number.");
   });
@@ -80,8 +80,8 @@ describe("validateIdentifierInputs", () => {
           label: "number identifier with regex",
           value: "1234567",
           validationRegex: "^[0-9]{8}$",
-          textInputType: "NUMBER",
-        },
+          textInputType: "NUMBER"
+        }
       ])
     ).toThrow("Enter or scan a valid code.");
     expect(() =>
@@ -90,8 +90,8 @@ describe("validateIdentifierInputs", () => {
           label: "string identifier with regex",
           value: "-HELLO-",
           validationRegex: "^[0-9A-Z]$",
-          textInputType: "STRING",
-        },
+          textInputType: "STRING"
+        }
       ])
     ).toThrow("Enter or scan a valid code.");
   });
@@ -103,8 +103,8 @@ describe("validateIdentifierInputs", () => {
         {
           label: "number identifier",
           value: "this is not a number",
-          textInputType: "NUMBER",
-        },
+          textInputType: "NUMBER"
+        }
       ])
     ).toThrow("Enter or scan a valid code.");
     expect(() =>
@@ -112,8 +112,8 @@ describe("validateIdentifierInputs", () => {
         {
           label: "number identifier",
           value: "123string",
-          textInputType: "NUMBER",
-        },
+          textInputType: "NUMBER"
+        }
       ])
     ).toThrow("Enter or scan a valid code.");
   });
@@ -125,8 +125,8 @@ describe("validateIdentifierInputs", () => {
         {
           label: "invalid phone number",
           value: "+659",
-          textInputType: "PHONE_NUMBER",
-        },
+          textInputType: "PHONE_NUMBER"
+        }
       ])
     ).toThrow("Enter a valid country code and contact number.");
     expect(() =>
@@ -134,8 +134,8 @@ describe("validateIdentifierInputs", () => {
         {
           label: "another invalid phone number",
           value: "+191234567",
-          textInputType: "PHONE_NUMBER",
-        },
+          textInputType: "PHONE_NUMBER"
+        }
       ])
     ).toThrow("Enter a valid country code and contact number.");
   });
@@ -147,8 +147,8 @@ describe("validateIdentifierInputs", () => {
         {
           label: "empty string",
           value: "",
-          textInputType: "STRING",
-        },
+          textInputType: "STRING"
+        }
       ])
     ).toThrow("Enter or scan a code.");
     expect(() =>
@@ -156,13 +156,13 @@ describe("validateIdentifierInputs", () => {
         {
           label: "empty number",
           value: "",
-          textInputType: "NUMBER",
+          textInputType: "NUMBER"
         },
         {
           label: "string identifier",
           value: "random string",
-          textInputType: "STRING",
-        },
+          textInputType: "STRING"
+        }
       ])
     ).toThrow("Enter or scan a code.");
   });
@@ -174,18 +174,18 @@ describe("validateIdentifierInputs", () => {
         {
           label: "identifier 1",
           value: "same value",
-          textInputType: "STRING",
+          textInputType: "STRING"
         },
         {
           label: "identifier 2",
           value: "same value",
-          textInputType: "STRING",
+          textInputType: "STRING"
         },
         {
           label: "identifier 3",
           value: "not same value",
-          textInputType: "STRING",
-        },
+          textInputType: "STRING"
+        }
       ])
     ).toThrow("Enter or scan a different code.");
   });

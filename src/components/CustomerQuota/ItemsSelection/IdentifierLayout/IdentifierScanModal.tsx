@@ -10,7 +10,7 @@ export const IdentifierScanModal: FunctionComponent<{
   shouldShowCamera: boolean;
   type: ScanButtonType;
 }> = ({ onScanInput, setShouldShowCamera, shouldShowCamera, type }) => {
-  const onScan: BarCodeScannedCallback = (event) => {
+  const onScan: BarCodeScannedCallback = event => {
     if (event.data) {
       onScanInput(event.data);
     }

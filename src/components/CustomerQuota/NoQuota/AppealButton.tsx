@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
     marginTop: size(1),
     marginBottom: 0,
     fontFamily: "brand-bold",
-    fontSize: size(2),
-  },
+    fontSize: size(2)
+  }
 });
 
 export const AppealButton: FunctionComponent<{
@@ -18,11 +18,7 @@ export const AppealButton: FunctionComponent<{
 }> = ({ onAppeal }) => {
   const { i18nt } = useTranslate();
   return (
-    <TouchableOpacity
-      onPress={onAppeal}
-      accessibilityLabel="raise-appeal-button"
-      testID="raise-appeal-button"
-    >
+    <TouchableOpacity onPress={onAppeal}>
       <View style={{ alignItems: "center" }}>
         <AppText style={styles.appealButtonText}>
           {i18nt("customerAppealScreen", "raiseAppeal")}

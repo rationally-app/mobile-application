@@ -5,7 +5,7 @@ import { color, size } from "../../../common/styles";
 import {
   useCheckVoucherValidity,
   InvalidVoucherError,
-  ScannerError,
+  ScannerError
 } from "../../../hooks/useCheckVoucherValidity/useCheckVoucherValidity";
 import { NotEligibleError } from "../../../services/quota";
 import { AppText } from "../../Layout/AppText";
@@ -13,7 +13,7 @@ import { sharedStyles } from "./sharedStyles";
 import { LimitReachedError } from "../../../utils/validateVoucherCode";
 import {
   formatDateTime,
-  formatTimeDifference,
+  formatTimeDifference
 } from "../../../utils/dateTimeFormatter";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
@@ -23,14 +23,14 @@ const styles = StyleSheet.create({
   background: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: color("grey", 100),
-    opacity: 0.8,
+    opacity: 0.8
   },
   cardWrapper: {
     padding: size(3),
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-  },
+    justifyContent: "center"
+  }
 });
 
 const DistantTransactionTitle: FunctionComponent<{
@@ -41,7 +41,7 @@ const DistantTransactionTitle: FunctionComponent<{
     <>
       <AppText style={sharedStyles.statusTitle}>
         {i18nt("checkoutSuccessScreen", "redeemedOn", undefined, {
-          time: formatDateTime(transactionTime),
+          time: formatDateTime(transactionTime)
         })}
       </AppText>
     </>
@@ -57,7 +57,7 @@ const RecentTransactionTitle: FunctionComponent<{
     <>
       <AppText style={sharedStyles.statusTitle}>
         {i18nt("checkoutSuccessScreen", "redeemedAgo", undefined, {
-          time: formatTimeDifference(now, transactionTime),
+          time: formatTimeDifference(now, transactionTime)
         })}
       </AppText>
     </>
@@ -82,7 +82,7 @@ interface VoucherStatusModal {
 export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   checkValidityState,
   error,
-  onExit,
+  onExit
 }) => {
   const isVisible = checkValidityState === "CHECKING_VALIDITY";
 

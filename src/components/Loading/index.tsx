@@ -3,7 +3,7 @@ import { View, ActivityIndicator, ViewStyle } from "react-native";
 import { color } from "../../common/styles";
 
 export const LoadingView: FunctionComponent<{ wrapperStyle?: ViewStyle }> = ({
-  wrapperStyle,
+  wrapperStyle
 }) => {
   return (
     <View
@@ -13,9 +13,9 @@ export const LoadingView: FunctionComponent<{ wrapperStyle?: ViewStyle }> = ({
           width: "100%",
           height: "100%",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "center"
         },
-        wrapperStyle,
+        wrapperStyle
       ]}
     >
       <ActivityIndicator size="large" color={color("grey", 40)} />

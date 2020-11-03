@@ -9,15 +9,13 @@ export interface DangerButton {
   text: string;
   fullWidth?: boolean;
   isLoading?: boolean;
-  accessibilityLabel?: string;
 }
 
 export const DangerButton: FunctionComponent<DangerButton> = ({
   onPress,
   text,
   fullWidth = false,
-  isLoading = false,
-  accessibilityLabel,
+  isLoading = false
 }) => (
   <BaseButton
     onPress={onPress}
@@ -25,7 +23,6 @@ export const DangerButton: FunctionComponent<DangerButton> = ({
     backgroundColor={color("red", 60)}
     fullWidth={fullWidth}
     disabled={isLoading}
-    accessibilityLabel={accessibilityLabel}
   >
     {isLoading ? (
       <ActivityIndicator size="small" color={color("grey", 0)} />
@@ -34,7 +31,7 @@ export const DangerButton: FunctionComponent<DangerButton> = ({
         style={{
           color: color("grey", 0),
           fontFamily: "brand-bold",
-          textAlign: "center",
+          textAlign: "center"
         }}
       >
         {text}

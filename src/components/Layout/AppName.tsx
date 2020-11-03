@@ -18,7 +18,7 @@ export const AppName: FunctionComponent<AppName> = (
         style={{
           color: color("red", 50),
           fontFamily: "brand-bold",
-          fontSize: fontSize(2),
+          fontSize: fontSize(2)
         }}
       >
         TESTING MODE

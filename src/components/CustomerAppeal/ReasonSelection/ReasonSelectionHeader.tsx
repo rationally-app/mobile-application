@@ -6,12 +6,12 @@ import { AppText } from "../../Layout/AppText";
 const styles = StyleSheet.create({
   reasonSelectionComponent: {
     marginBottom: size(0.5),
-    marginHorizontal: -size(2),
+    marginHorizontal: -size(2)
   },
   reasonSelectionDescription: {
     fontFamily: "brand-bold",
-    fontSize: fontSize(1),
-  },
+    fontSize: fontSize(1)
+  }
 });
 
 export const ReasonSelectionHeader: FunctionComponent<{

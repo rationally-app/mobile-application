@@ -13,30 +13,30 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: size(4),
-    paddingTop: "20%",
+    paddingTop: "20%"
   },
   content: {
     width: 512,
     maxWidth: "100%",
     alignItems: "center",
-    flex: 1,
+    flex: 1
   },
   icon: {
-    marginBottom: size(3),
+    marginBottom: size(3)
   },
   heading: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
-    textAlign: "center",
+    textAlign: "center"
   },
   body: {
     marginTop: size(1.5),
-    textAlign: "center",
+    textAlign: "center"
   },
   errorDescription: {
     textAlign: "center",
     marginTop: size(4),
-    fontSize: fontSize(-3),
+    fontSize: fontSize(-3)
   },
   restartButton: {
     position: "absolute",
@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
     marginHorizontal: size(4),
     marginTop: size(5),
     maxWidth: 512,
-    width: "100%",
-  },
+    width: "100%"
+  }
 });
 
 export const ErrorBoundaryContent: FunctionComponent<{

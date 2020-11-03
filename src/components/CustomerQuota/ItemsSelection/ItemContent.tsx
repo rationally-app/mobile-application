@@ -10,15 +10,15 @@ import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   name: {
     fontSize: fontSize(1),
-    fontFamily: "brand-bold",
+    fontFamily: "brand-bold"
   },
   description: {
-    fontSize: fontSize(0),
+    fontSize: fontSize(0)
   },
   descriptionAlert: {
     fontFamily: "brand-italic",
-    color: color("red", 50),
-  },
+    color: color("red", 50)
+  }
 });
 
 export const ItemContent: FunctionComponent<{
@@ -27,28 +27,13 @@ export const ItemContent: FunctionComponent<{
   descriptionAlert?: string;
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
-  accessibilityLabel?: string;
-}> = ({
-  name,
-  description,
-  descriptionAlert,
-  unit,
-  maxQuantity,
-  accessibilityLabel = "item-content",
-}) => {
+}> = ({ name, description, descriptionAlert, unit, maxQuantity }) => {
   const { c13nt } = useTranslate();
   const tDescription = c13nt(description ?? "");
 
   return (
     <View>
-      <AppText
-        style={styles.name}
-        accessibilityLabel={`${accessibilityLabel}-name`}
-        testID={`${accessibilityLabel}-name`}
-        accessible={true}
-      >
-        {c13nt(name)}
-      </AppText>
+      <AppText style={styles.name}>{c13nt(name)}</AppText>
       {descriptionAlert && descriptionAlert.length > 0 && (
         <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
       )}

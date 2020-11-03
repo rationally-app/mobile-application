@@ -28,33 +28,33 @@ export const Easing = {
   bezier: (): any => NOOP,
   in: (): any => NOOP,
   out: (): any => NOOP,
-  inOut: (): any => NOOP,
+  inOut: (): any => NOOP
 };
 
 export default {
   SpringUtils: {
     makeDefaultConfig: NOOP,
     makeConfigFromBouncinessAndSpeed: NOOP,
-    makeConfigFromOrigamiTensionAndFriction: NOOP,
+    makeConfigFromOrigamiTensionAndFriction: NOOP
   },
   View,
   Text,
   Image,
   ScrollView: Animated.ScrollView,
   Code: (): any => ({
-    render: NOOP,
+    render: NOOP
   }),
 
   Clock: NOOP,
   Node: NOOP,
   Value: (): any => ({
-    setValue: NOOP,
+    setValue: NOOP
   }),
 
   Extrapolate: {
     EXTEND: "extend",
     CLAMP: "clamp",
-    IDENTITY: "identity",
+    IDENTITY: "identity"
   },
 
   add: NOOP,
@@ -112,5 +112,5 @@ export default {
   proc: (): any => NOOP,
 
   useCode: NOOP,
-  createAnimatedComponent: (component: React.Component): any => React.Component,
+  createAnimatedComponent: (component: React.Component): any => React.Component
 };

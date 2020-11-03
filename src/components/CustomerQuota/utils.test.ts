@@ -34,12 +34,12 @@ describe("sortTransactionsByOrder", () => {
     const arr = [
       { order: 2, someField: "ok", someOtherField: "yeah" },
       { order: 0, anotherField: "nah" },
-      { order: 1, someField: "right" },
+      { order: 1, someField: "right" }
     ];
     expect(arr.sort(sortTransactionsByOrder)).toStrictEqual([
       { order: 0, anotherField: "nah" },
       { order: 1, someField: "right" },
-      { order: 2, someField: "ok", someOtherField: "yeah" },
+      { order: 2, someField: "ok", someOtherField: "yeah" }
     ]);
   });
 });

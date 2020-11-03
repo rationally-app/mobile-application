@@ -2,7 +2,7 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useContext,
+  useContext
 } from "react";
 import { CartItem, CartHook } from "../../../hooks/useCart/useCart";
 import { View } from "react-native";
@@ -32,7 +32,7 @@ export const ItemStepper: FunctionComponent<{
 
   // Sync internal and external quantity
   useEffect(() => {
-    setStepperValue((v) => (v !== quantity ? quantity : v));
+    setStepperValue(v => (v !== quantity ? quantity : v));
   }, [quantity]);
 
   return (
@@ -41,7 +41,7 @@ export const ItemStepper: FunctionComponent<{
         sharedStyles.wrapper,
         quantity > 0
           ? sharedStyles.wrapperHighlighted
-          : sharedStyles.wrapperDefault,
+          : sharedStyles.wrapperDefault
       ]}
     >
       <View style={sharedStyles.contentWrapper}>
@@ -50,7 +50,6 @@ export const ItemStepper: FunctionComponent<{
           description={description}
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
-          accessibilityLabel="item-stepper"
         />
       </View>
       <View>
@@ -64,7 +63,6 @@ export const ItemStepper: FunctionComponent<{
               ? productQuantity?.unit
               : undefined
           }
-          accessibilityLabel="item-stepper"
         />
         <AppText
           style={[sharedStyles.maxQuantityLabel, { textAlign: "center" }]}

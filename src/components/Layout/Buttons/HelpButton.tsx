@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
-  onPress,
+  onPress
 }) => {
   const { i18nt } = useTranslate();
   return (
@@ -15,7 +15,7 @@ export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
         alignSelf: "center",
         flexDirection: "row",
         paddingHorizontal: size(4),
-        paddingVertical: size(3),
+        paddingVertical: size(3)
       }}
       onPress={onPress}
     >
@@ -24,7 +24,7 @@ export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
           textAlign: "center",
           fontFamily: "brand-italic",
           fontSize: fontSize(-1),
-          color: color("blue", 40),
+          color: color("blue", 40)
         }}
       >
         <Feather name="compass" size={size(1.5)} color={color("blue", 40)} />

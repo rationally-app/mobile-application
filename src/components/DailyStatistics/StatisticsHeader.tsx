@@ -16,24 +16,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    alignItems: "center",
+    alignItems: "center"
   },
   backButton: {
     flexDirection: "row",
     alignSelf: "center",
     marginLeft: -size(2),
-    marginRight: -size(0.5),
+    marginRight: -size(0.5)
   },
   backIcon: {
     alignSelf: "center",
-    marginRight: size(0.5),
+    marginRight: size(0.5)
   },
   backText: {
     color: "white",
     alignSelf: "center",
     fontSize: fontSize(0),
     marginRight: size(0.5),
-    marginLeft: -size(1.5),
+    marginLeft: -size(1.5)
   },
   header: {
     fontFamily: "brand-bold",
@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
     color: "white",
     flexDirection: "row",
     textAlign: "center",
-    marginLeft: -size(1.5),
-  },
+    marginLeft: -size(1.5)
+  }
 });
 
 export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
-  navigation,
+  navigation
 }) => {
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();

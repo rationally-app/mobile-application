@@ -22,7 +22,7 @@ export const useCheckUpdates = (): ((
   const checkForUpdates = useCallback(
     async (forceCheck = false) => {
       if (__DEV__) {
-        await new Promise((res) => setTimeout(res, 2000));
+        await new Promise(res => setTimeout(res, 2000));
         return "NO_UPDATE";
       }
       try {
@@ -37,12 +37,12 @@ export const useCheckUpdates = (): ((
           if (update.isAvailable) {
             await Promise.all([
               AsyncStorage.setItem(LAST_UPDATE_KEY, `${new Date().getTime()}`),
-              Updates.fetchUpdateAsync(),
+              Updates.fetchUpdateAsync()
             ]);
 
             // Update message only if there's no other important message
             // i.e. token expiry is of higher priority
-            setMessageContent((msg) =>
+            setMessageContent(msg =>
               msg
                 ? msg
                 : {
@@ -51,9 +51,9 @@ export const useCheckUpdates = (): ((
                       "Simply tap on update to apply the latest updates!",
                     action: {
                       label: "Update",
-                      callback: () => Updates.reloadAsync(),
+                      callback: () => Updates.reloadAsync()
                     },
-                    featherIconName: "gift",
+                    featherIconName: "gift"
                   }
             );
             return "UPDATE_READY";
@@ -66,7 +66,7 @@ export const useCheckUpdates = (): ((
       } catch (e) {
         Sentry.addBreadcrumb({
           category: "action",
-          message: "Check for updates",
+          message: "Check for updates"
         });
         Sentry.captureException(e);
         return "UPDATE_ERROR";

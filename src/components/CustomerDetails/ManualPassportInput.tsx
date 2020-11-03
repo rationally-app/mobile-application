@@ -12,17 +12,17 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   inputAndButtonWrapper: {
     marginTop: size(3),
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "flex-end"
   },
   inputWrapper: {
     flex: 1,
-    marginRight: size(1),
-  },
+    marginRight: size(1)
+  }
 });
 
 interface ManualPassportInput {
@@ -32,7 +32,7 @@ interface ManualPassportInput {
 
 export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
   setIdInput,
-  submitId,
+  submitId
 }) => {
   const [selectedCountry, setSelectedCountry] = useState<DropdownItem>();
   const [passportNum, setPassportNum] = useState<string>();

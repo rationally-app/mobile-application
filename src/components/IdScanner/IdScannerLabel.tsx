@@ -6,19 +6,19 @@ import { AppText } from "../Layout/AppText";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import {
   TranslationHook,
-  useTranslate,
+  useTranslate
 } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   labelWrapper: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "center"
   },
   labelText: {
     fontWeight: "bold",
     color: color("grey", 0),
-    fontSize: fontSize(1),
-  },
+    fontSize: fontSize(1)
+  }
 });
 
 const getBarCodeTypeLabel = (
@@ -63,7 +63,7 @@ type IdScannerLabel = {
 };
 
 export const IdScannerLabel: FunctionComponent<IdScannerLabel> = ({
-  barCodeType,
+  barCodeType
 }) => {
   const { i18nt } = useTranslate();
   return (

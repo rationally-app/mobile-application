@@ -6,12 +6,12 @@ const styles = StyleSheet.create({
   lightBoxWrapper: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   lightBoxBorder: {
     position: "absolute",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-  },
+    backgroundColor: "rgba(0, 0, 0, 0.6)"
+  }
 });
 
 interface LightBox {
@@ -30,7 +30,7 @@ export const LightBox: FunctionComponent<LightBox> = ({
   width,
   height,
   label,
-  children,
+  children
 }) => {
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
@@ -41,7 +41,7 @@ export const LightBox: FunctionComponent<LightBox> = ({
       style={{
         ...styles.lightBoxWrapper,
         width: windowWidth,
-        height: windowHeight,
+        height: windowHeight
       }}
     >
       <View
@@ -51,7 +51,7 @@ export const LightBox: FunctionComponent<LightBox> = ({
           width,
           height: verticalBorderHeight,
           alignItems: "center",
-          justifyContent: "flex-end",
+          justifyContent: "flex-end"
         }}
       >
         {label && <View style={{ marginBottom: size(4) }}>{label}</View>}
@@ -61,7 +61,7 @@ export const LightBox: FunctionComponent<LightBox> = ({
           ...styles.lightBoxBorder,
           left: 0,
           width: horizontalBorderWidth,
-          height: windowHeight,
+          height: windowHeight
         }}
       />
       {children}
@@ -70,7 +70,7 @@ export const LightBox: FunctionComponent<LightBox> = ({
           ...styles.lightBoxBorder,
           right: 0,
           width: horizontalBorderWidth,
-          height: windowHeight,
+          height: windowHeight
         }}
       />
       <View
@@ -78,7 +78,7 @@ export const LightBox: FunctionComponent<LightBox> = ({
           ...styles.lightBoxBorder,
           bottom: 0,
           width,
-          height: verticalBorderHeight,
+          height: verticalBorderHeight
         }}
       />
     </View>

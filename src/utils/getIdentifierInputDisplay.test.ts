@@ -6,7 +6,7 @@ describe("getIdentifierInputDisplay", () => {
     expect.assertions(1);
     const mockIdentifierInput: IdentifierInput = {
       label: "label",
-      value: "value",
+      value: "value"
     };
     expect(getIdentifierInputDisplay([mockIdentifierInput])).toBe(
       mockIdentifierInput.value
@@ -18,16 +18,16 @@ describe("getIdentifierInputDisplay", () => {
     const mockIdentifierInputs: IdentifierInput[] = [
       {
         label: "label1",
-        value: "value1",
+        value: "value1"
       },
       {
         label: "label2",
-        value: "value2",
+        value: "value2"
       },
       {
         label: "label3",
-        value: "value3",
-      },
+        value: "value3"
+      }
     ];
     expect(getIdentifierInputDisplay(mockIdentifierInputs)).toBe(
       "value1\nvalue2\nvalue3"
@@ -44,16 +44,16 @@ describe("getIdentifierInputDisplay", () => {
     const mockIdentifierInputs: IdentifierInput[] = [
       {
         label: "label1",
-        value: "",
+        value: ""
       },
       {
         label: "label2",
-        value: "",
+        value: ""
       },
       {
         label: "label3",
-        value: "",
-      },
+        value: ""
+      }
     ];
 
     expect(getIdentifierInputDisplay(mockIdentifierInputs)).toBe("");
@@ -61,7 +61,7 @@ describe("getIdentifierInputDisplay", () => {
     expect(
       getIdentifierInputDisplay([
         ...mockIdentifierInputs,
-        { label: "label4", value: "value4" },
+        { label: "label4", value: "value4" }
       ])
     ).toBe("value4");
 
@@ -70,7 +70,7 @@ describe("getIdentifierInputDisplay", () => {
         ...mockIdentifierInputs,
         { label: "label4", value: "value4" },
         { label: "label5", value: "value5" },
-        { label: "label6", value: "" },
+        { label: "label6", value: "" }
       ])
     ).toBe("value4\nvalue5");
   });

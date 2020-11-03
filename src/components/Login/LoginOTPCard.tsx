@@ -2,7 +2,7 @@ import React, {
   useState,
   useContext,
   useEffect,
-  FunctionComponent,
+  FunctionComponent
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -15,7 +15,7 @@ import {
   validateOTP,
   LoginError,
   OTPWrongError,
-  OTPExpiredError,
+  OTPExpiredError
 } from "../../services/auth";
 import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContext } from "../../context/alert";
@@ -27,18 +27,18 @@ const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
-    marginTop: size(3),
+    marginTop: size(3)
   },
   buttonsWrapper: {
     marginTop: size(2),
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "center"
   },
   resendCountdownText: { marginRight: size(1), fontSize: fontSize(-2) },
   submitWrapper: {
     flex: 1,
-    marginLeft: size(1),
-  },
+    marginLeft: size(1)
+  }
 });
 
 interface LoginOTPCard {
@@ -56,7 +56,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   operatorToken,
   endpoint,
   handleRequestOTP,
-  onSuccess,
+  onSuccess
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -99,7 +99,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         endpoint,
         expiry: response.ttl.getTime(),
         operatorToken: operatorToken,
-        sessionToken: response.sessionToken,
+        sessionToken: response.sessionToken
       };
       setAuthCredentials(`${operatorToken}${endpoint}`, credentials);
       onSuccess(credentials);
@@ -145,13 +145,12 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           onChange={({ nativeEvent: { text } }) => handleChange(text)}
           onSubmitEditing={onSubmitOTP}
           keyboardType="numeric"
-          accessibilityLabel="login-otp"
         />
         <View style={styles.buttonsWrapper}>
           {resendDisabledTime > 0 ? (
             <AppText style={styles.resendCountdownText}>
               {i18nt("loginOTPCard", "resendIn", undefined, {
-                ss: resendDisabledTime / 1000,
+                ss: resendDisabledTime / 1000
               })}
             </AppText>
           ) : (
@@ -169,7 +168,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
               onPress={onSubmitOTP}
               isLoading={isLoading}
               disabled={isResending}
-              accessibilityLabel="login-submit-otp-button"
             />
           </View>
         </View>

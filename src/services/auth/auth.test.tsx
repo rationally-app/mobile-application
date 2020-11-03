@@ -28,7 +28,7 @@ describe("auth", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ status }),
+        json: () => Promise.resolve({ status })
       });
       const response = await requestOTP(phone, code, endpoint);
       expect(response).toEqual({ status });
@@ -38,7 +38,7 @@ describe("auth", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ warning, status }),
+        json: () => Promise.resolve({ warning, status })
       });
       const response = await requestOTP(phone, code, endpoint);
       expect(response).toEqual({ warning, status });
@@ -48,7 +48,7 @@ describe("auth", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({}),
+        json: () => Promise.resolve({})
       });
       await expect(requestOTP(phone, code, endpoint)).rejects.toThrow(
         LoginError
@@ -61,8 +61,8 @@ describe("auth", () => {
         ok: false,
         json: () =>
           Promise.resolve({
-            message: "Cannot register another phone number to this code",
-          }),
+            message: "Cannot register another phone number to this code"
+          })
       });
 
       await expect(requestOTP(phone, code, endpoint)).rejects.toThrow(
@@ -84,7 +84,7 @@ describe("auth", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ sessionToken, ttl: ttl.getTime() }),
+        json: () => Promise.resolve({ sessionToken, ttl: ttl.getTime() })
       });
       const credentials = await validateOTP(otp, phone, code, endpoint);
       expect(credentials).toEqual({ sessionToken, ttl });
@@ -97,8 +97,8 @@ describe("auth", () => {
         json: () =>
           Promise.resolve({
             session: sessionToken,
-            ttl: ttl.getTime(),
-          }),
+            ttl: ttl.getTime()
+          })
       });
 
       await expect(validateOTP(otp, phone, code, endpoint)).rejects.toThrow(
@@ -113,8 +113,8 @@ describe("auth", () => {
         json: () =>
           Promise.resolve({
             session: sessionToken,
-            ttl: ttl.getTime(),
-          }),
+            ttl: ttl.getTime()
+          })
       });
 
       await expect(validateOTP(otp, phone, code, endpoint)).rejects.toThrow(
@@ -129,8 +129,8 @@ describe("auth", () => {
         ok: false,
         json: () =>
           Promise.resolve({
-            message: "OTP does not match",
-          }),
+            message: "OTP does not match"
+          })
       });
 
       await expect(validateOTP(otp, phone, code, endpoint)).rejects.toThrow(

@@ -1,7 +1,7 @@
 import { useState, useCallback, useContext } from "react";
 import {
   validateVoucherCode,
-  LimitReachedError,
+  LimitReachedError
 } from "../../utils/validateVoucherCode";
 import { getQuota } from "../../services/quota";
 import { Quota, Voucher } from "../../types";
@@ -70,7 +70,7 @@ export const useCheckVoucherValidity = (
 
   const getVoucherValidity = (response: Quota, serial: string): Voucher => {
     const voucherQuota = response.remainingQuota.filter(
-      (quota) => quota.category === "voucher"
+      quota => quota.category === "voucher"
     );
     if (voucherQuota[0].quantity === 0) {
       const latestTransactionTime = getLatestTransactionTime(voucherQuota);
@@ -81,7 +81,7 @@ export const useCheckVoucherValidity = (
     }
     return {
       serial,
-      denomination: 2,
+      denomination: 2
     };
   };
 
@@ -95,7 +95,7 @@ export const useCheckVoucherValidity = (
         }
 
         try {
-          const serialArr = vouchers.map((voucher) => voucher.serial);
+          const serialArr = vouchers.map(voucher => voucher.serial);
           validateVoucherCode(serial, serialArr);
         } catch (e) {
           if (e instanceof LimitReachedError) {
@@ -130,6 +130,6 @@ export const useCheckVoucherValidity = (
     checkValidity,
     validityResult,
     error,
-    resetValidityState,
+    resetValidityState
   };
 };

@@ -10,8 +10,8 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   inputWrapper: {
     marginTop: size(1),
-    marginBottom: size(2),
-  },
+    marginBottom: size(2)
+  }
 });
 
 interface ManualInputCard extends ModalWithClose {
@@ -21,7 +21,7 @@ interface ManualInputCard extends ModalWithClose {
 export const ManualAddVoucherModal: FunctionComponent<ManualInputCard> = ({
   isVisible,
   onExit,
-  onVoucherCodeSubmit,
+  onVoucherCodeSubmit
 }) => {
   const [voucherCode, setVoucherCode] = useState("");
 

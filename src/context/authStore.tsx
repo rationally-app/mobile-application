@@ -3,7 +3,7 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
-  useCallback,
+  useCallback
 } from "react";
 import { AsyncStorage } from "react-native";
 import { usePrevious } from "../hooks/usePrevious";
@@ -38,7 +38,7 @@ export const AuthStoreContext = createContext<AuthStoreContext>({
   authCredentials: {},
   setAuthCredentials: () => undefined,
   removeAuthCredentials: () => undefined,
-  clearAuthCredentials: () => undefined,
+  clearAuthCredentials: () => undefined
 });
 
 export const AuthStoreContextProvider: FunctionComponent<{
@@ -62,17 +62,17 @@ export const AuthStoreContextProvider: FunctionComponent<{
 
   const setAuthCredentials: AuthStoreContext["setAuthCredentials"] = useCallback(
     (key, newAuthCredentials) => {
-      setAuthCredentialsMap((prevCredentials) => ({
+      setAuthCredentialsMap(prevCredentials => ({
         ...prevCredentials,
-        [key]: newAuthCredentials,
+        [key]: newAuthCredentials
       }));
     },
     []
   );
 
   const removeAuthCredentials: AuthStoreContext["removeAuthCredentials"] = useCallback(
-    (key) => {
-      setAuthCredentialsMap((prevCredentials) => {
+    key => {
+      setAuthCredentialsMap(prevCredentials => {
         const {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           [key]: credentialsToBeRemoved,
@@ -94,22 +94,22 @@ export const AuthStoreContextProvider: FunctionComponent<{
       const values = await AsyncStorage.multiGet([
         SESSION_TOKEN_KEY,
         EXPIRY_KEY,
-        ENDPOINT_KEY,
+        ENDPOINT_KEY
       ]);
-      const [sessionToken, expiry, endpoint] = values.map((value) => value[1]);
+      const [sessionToken, expiry, endpoint] = values.map(value => value[1]);
       if (sessionToken && endpoint && expiry) {
         await AsyncStorage.multiRemove([
           SESSION_TOKEN_KEY,
           EXPIRY_KEY,
-          ENDPOINT_KEY,
+          ENDPOINT_KEY
         ]);
         const newAuthCredentials = {
           [endpoint]: {
             endpoint,
             sessionToken,
             expiry: Number(expiry),
-            operatorToken: "",
-          },
+            operatorToken: ""
+          }
         };
         setAuthCredentialsMap(newAuthCredentials);
         AsyncStorage.setItem(
@@ -133,21 +133,21 @@ export const AuthStoreContextProvider: FunctionComponent<{
           AsyncStorage.multiRemove([
             SESSION_TOKEN_KEY,
             EXPIRY_KEY,
-            ENDPOINT_KEY,
+            ENDPOINT_KEY
           ]);
         } else {
           const migrated = await migrateOldAuthFromStore();
           if (migrated) {
             Sentry.addBreadcrumb({
               category: "migration",
-              message: "success",
+              message: "success"
             });
             setHasLoadedFromStore(true);
             return;
           } else {
             Sentry.addBreadcrumb({
               category: "migration",
-              message: "failure",
+              message: "failure"
             });
           }
         }
@@ -161,9 +161,9 @@ export const AuthStoreContextProvider: FunctionComponent<{
         const authCredentialsFromStore: AuthCredentialsMap = JSON.parse(
           authCredentialsString
         );
-        setAuthCredentialsMap((prev) => ({
+        setAuthCredentialsMap(prev => ({
           ...prev,
-          ...authCredentialsFromStore,
+          ...authCredentialsFromStore
         }));
         setHasLoadedFromStore(true);
       } catch (e) {
@@ -183,7 +183,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
         authCredentials,
         setAuthCredentials,
         removeAuthCredentials,
-        clearAuthCredentials,
+        clearAuthCredentials
       }}
     >
       {children}

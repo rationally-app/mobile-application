@@ -6,7 +6,7 @@ jest.mock("@expo/vector-icons", () => ({
   Feather: "Feather Icons",
   Ionicons: "Ionicons Icons",
   AntDesign: "AntDesign Icons",
-  FontAwesome: "FontAwesome Icons",
+  FontAwesome: "FontAwesome Icons"
 }));
 
 jest.mock("expo-constants", () => ({ manifest: { revisionId: "BUILD NO" } }));
@@ -19,5 +19,5 @@ import { NativeModules } from "react-native";
 NativeModules.RNCNetInfo = {
   getCurrentState: jest.fn(),
   addListener: jest.fn(),
-  removeListeners: jest.fn(),
+  removeListeners: jest.fn()
 };

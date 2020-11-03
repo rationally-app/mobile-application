@@ -10,18 +10,18 @@ const styles = StyleSheet.create({
     marginBottom: size(2),
     marginHorizontal: -size(3),
     paddingVertical: size(2.5),
-    backgroundColor: color("grey", 10),
+    backgroundColor: color("grey", 10)
   },
   reasonLayout: {
     flexDirection: "row",
     marginHorizontal: size(3),
-    marginBottom: 0,
+    marginBottom: 0
   },
   reasonAlert: {
     marginLeft: size(1.5),
     fontFamily: "brand-italic",
-    color: color("red", 50),
-  },
+    color: color("red", 50)
+  }
 });
 
 export const ReasonItem: FunctionComponent<{

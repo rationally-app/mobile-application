@@ -11,7 +11,7 @@ export const AuthContext = createContext<AuthContext>({
   operatorToken: "",
   sessionToken: "",
   endpoint: "",
-  expiry: 0,
+  expiry: 0
 });
 
 export const AuthContextProvider: FunctionComponent<{

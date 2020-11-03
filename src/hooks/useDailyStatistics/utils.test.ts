@@ -13,42 +13,42 @@ describe("countTotalTransactionsAndByCategory", () => {
       {
         category: "instant-noodles",
         quantity: 999,
-        transactionTime: new Date(12000000000),
+        transactionTime: new Date(12000000000)
       },
       {
         category: "chocolate",
         quantity: 3000,
-        transactionTime: new Date(12000000000),
+        transactionTime: new Date(12000000000)
       },
       {
         category: "vouchers",
         quantity: 20,
-        transactionTime: new Date(12000000000),
-      },
+        transactionTime: new Date(12000000000)
+      }
     ];
 
     pastInstantNoodleTransactions = [
       {
         category: "instant-noodles",
         quantity: 999,
-        transactionTime: new Date(12000000000),
-      },
+        transactionTime: new Date(12000000000)
+      }
     ];
 
     invalidPastTransactions = [
       {
         category: "funny-category",
         quantity: 999,
-        transactionTime: new Date(12000000000),
-      },
+        transactionTime: new Date(12000000000)
+      }
     ];
 
     pastTransactionsWithAppeal = [
       {
         category: "appeal-product",
         quantity: 200,
-        transactionTime: new Date(12000000000),
-      },
+        transactionTime: new Date(12000000000)
+      }
     ];
 
     campaignPolicy = [
@@ -63,9 +63,9 @@ describe("countTotalTransactionsAndByCategory", () => {
           limit: 2,
           unit: {
             type: "POSTFIX",
-            label: " pack(s)",
-          },
-        },
+            label: " pack(s)"
+          }
+        }
       },
       {
         category: "instant-noodles",
@@ -78,9 +78,9 @@ describe("countTotalTransactionsAndByCategory", () => {
           limit: 1,
           unit: {
             type: "POSTFIX",
-            label: " pack(s)",
-          },
-        },
+            label: " pack(s)"
+          }
+        }
       },
       {
         category: "chocolate",
@@ -94,9 +94,9 @@ describe("countTotalTransactionsAndByCategory", () => {
           step: 5,
           unit: {
             type: "PREFIX",
-            label: "$",
-          },
-        },
+            label: "$"
+          }
+        }
       },
       {
         category: "vouchers",
@@ -112,8 +112,8 @@ describe("countTotalTransactionsAndByCategory", () => {
               visible: true,
               disabled: false,
               type: "BARCODE",
-              text: "Scan",
-            },
+              text: "Scan"
+            }
           },
           {
             label: "Token",
@@ -122,10 +122,10 @@ describe("countTotalTransactionsAndByCategory", () => {
               visible: true,
               disabled: false,
               type: "QR",
-              text: "Scan",
-            },
-          },
-        ],
+              text: "Scan"
+            }
+          }
+        ]
       },
       {
         category: "voucher",
@@ -139,10 +139,10 @@ describe("countTotalTransactionsAndByCategory", () => {
             textInput: { visible: true, disabled: true, type: "PHONE_NUMBER" },
             scanButton: {
               visible: false,
-              disabled: false,
-            },
-          },
-        ],
+              disabled: false
+            }
+          }
+        ]
       },
       {
         category: "appeal-product",
@@ -150,8 +150,8 @@ describe("countTotalTransactionsAndByCategory", () => {
         order: 6,
         type: "REDEEM",
         categoryType: "APPEAL",
-        quantity: { period: 1, limit: 1, default: 1 },
-      },
+        quantity: { period: 1, limit: 1, default: 1 }
+      }
     ];
   });
 
@@ -167,23 +167,23 @@ describe("countTotalTransactionsAndByCategory", () => {
           name: "🍜 Instant Noodles",
           quantityText: "999 pack(s)",
           descriptionAlert: undefined,
-          order: 2,
+          order: 2
         },
         {
           category: "chocolate",
           name: "🍫 Chocolate",
           quantityText: "$3,000",
           descriptionAlert: undefined,
-          order: 3,
+          order: 3
         },
         {
           category: "vouchers",
           name: "Funfair Vouchers",
           quantityText: "20 qty",
           descriptionAlert: undefined,
-          order: 4,
-        },
-      ],
+          order: 4
+        }
+      ]
     });
   });
 
@@ -202,9 +202,9 @@ describe("countTotalTransactionsAndByCategory", () => {
           name: "🍜 Instant Noodles",
           quantityText: "999 pack(s)",
           descriptionAlert: undefined,
-          order: 2,
-        },
-      ],
+          order: 2
+        }
+      ]
     });
   });
 
@@ -223,9 +223,9 @@ describe("countTotalTransactionsAndByCategory", () => {
           name: "funny-category",
           quantityText: "999 qty",
           descriptionAlert: undefined,
-          order: -1,
-        },
-      ],
+          order: -1
+        }
+      ]
     });
   });
 
@@ -244,9 +244,9 @@ describe("countTotalTransactionsAndByCategory", () => {
           name: "This Product is for Appeal",
           quantityText: "200 qty",
           descriptionAlert: "via appeal",
-          order: 6,
-        },
-      ],
+          order: 6
+        }
+      ]
     });
   });
 });

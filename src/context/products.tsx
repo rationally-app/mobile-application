@@ -8,7 +8,7 @@ export interface ProductContextValue {
 
 export const ProductContext = createContext<ProductContextValue>({
   products: [],
-  getProduct: () => undefined,
+  getProduct: () => undefined
 });
 
 export const ProductContextProvider: FunctionComponent<{
@@ -16,7 +16,7 @@ export const ProductContextProvider: FunctionComponent<{
 }> = ({ products, children }) => {
   const getProduct = useCallback(
     (category: string): CampaignPolicy | undefined =>
-      products.find((product) => product.category === category),
+      products.find(product => product.category === category),
     [products]
   );
 
@@ -24,7 +24,7 @@ export const ProductContextProvider: FunctionComponent<{
     <ProductContext.Provider
       value={{
         products,
-        getProduct,
+        getProduct
       }}
     >
       {children}

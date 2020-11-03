@@ -13,15 +13,15 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     borderTopWidth: size(2),
     backgroundColor: color("red", 10),
-    borderColor: color("red", 50),
+    borderColor: color("red", 50)
   },
   emoji: {
     fontSize: fontSize(3),
-    marginBottom: size(2),
+    marginBottom: size(2)
   },
   details: {
-    marginBottom: size(4),
-  },
+    marginBottom: size(4)
+  }
 });
 
 interface InvalidCard {
@@ -35,7 +35,7 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
   title,
   details,
   closeModal,
-  ctaButtonText,
+  ctaButtonText
 }) => {
   const { i18nt } = useTranslate();
   const tCtaButtonText =

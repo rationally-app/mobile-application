@@ -9,8 +9,8 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
-    marginTop: size(3),
-  },
+    marginTop: size(3)
+  }
 });
 
 interface LoginScanCard {
@@ -20,7 +20,7 @@ interface LoginScanCard {
 
 export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   onToggleScanner,
-  isLoading,
+  isLoading
 }) => {
   const { i18nt } = useTranslate();
   return (

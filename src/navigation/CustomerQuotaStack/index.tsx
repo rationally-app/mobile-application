@@ -1,6 +1,6 @@
 import {
   createStackNavigator,
-  StackViewTransitionConfigs,
+  StackViewTransitionConfigs
 } from "react-navigation-stack";
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerAppealScreen from "./CustomerAppealScreen";
@@ -16,24 +16,24 @@ import DailyStatisticsScreen from "./DailyStatisticsScreen";
 const Stack = createStackNavigator(
   {
     CollectCustomerDetailsScreen: {
-      screen: CollectCustomerDetailsScreen,
+      screen: CollectCustomerDetailsScreen
     },
     CustomerQuotaProxy: {
-      screen: CustomerQuotaProxy,
+      screen: CustomerQuotaProxy
     },
     CustomerAppealScreen: {
-      screen: CustomerAppealScreen,
+      screen: CustomerAppealScreen
     },
     DailyStatisticsScreen: {
-      screen: DailyStatisticsScreen,
-    },
+      screen: DailyStatisticsScreen
+    }
   },
   {
     headerMode: "none",
     transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
     navigationOptions: {
-      gesturesEnabled: true,
-    },
+      gesturesEnabled: true
+    }
   }
 );
 

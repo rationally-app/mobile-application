@@ -6,5 +6,5 @@ i18n.fallbacks = true;
 i18n.locale = "en";
 i18n.translations = {
   zh,
-  en,
+  en
 };
