@@ -1,6 +1,6 @@
 import {
   formatPhoneNumber,
-  stripPhoneNumberFormatting,
+  stripPhoneNumberFormatting
 } from "./phoneNumberFormatter";
 
 const testPhoneNumber = "88888888";
