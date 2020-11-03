@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize(0),
     marginBottom: size(3),
   },
-  unit: {
+  quantityText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
     marginBottom: size(3),
@@ -70,7 +70,9 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
                   {c13nt(item.name)}
                 </AppText>
                 <View style={styles.transactionText}>
-                  <AppText style={styles.unit}>{item.quantityText}</AppText>
+                  <AppText style={styles.quantityText}>
+                    {item.quantityText}
+                  </AppText>
                 </View>
               </View>
               <View style={styles.descriptionAlertText}>
