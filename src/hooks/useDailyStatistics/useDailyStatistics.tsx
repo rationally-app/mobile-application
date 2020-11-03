@@ -51,7 +51,7 @@ export const useDailyStatistics = (
         );
         const {
           summarisedTransactionHistory,
-          summarisedTotalCount
+          summarisedTotalCount,
         } = countTotalTransactionsAndByCategory(
           response.pastTransactions,
           policies
@@ -82,7 +82,7 @@ export const useDailyStatistics = (
     policies,
     sessionToken,
     currentTimestamp,
-    prevTimestamp
+    prevTimestamp,
   ]);
 
   return {
@@ -90,6 +90,6 @@ export const useDailyStatistics = (
     lastTransactionTime,
     transactionHistory,
     error,
-    loading
+    loading,
   };
 };

@@ -40,7 +40,7 @@ storiesOf("Layout", module).add("Stepper", () => (
         bounds={{ min: 10, max: 30 }}
         unit={{
           type: "POSTFIX",
-          label: "kg"
+          label: "kg",
         }}
       />
     </View>
@@ -51,7 +51,7 @@ storiesOf("Layout", module).add("Stepper", () => (
         bounds={{ min: 10, max: 30 }}
         unit={{
           type: "PREFIX",
-          label: "$"
+          label: "$",
         }}
       />
     </View>

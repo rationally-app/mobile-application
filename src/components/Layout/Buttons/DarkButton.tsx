@@ -11,6 +11,7 @@ export interface DarkButton {
   isLoading?: boolean;
   icon?: ReactElement;
   disabled?: boolean;
+  accessibilityLabel?: string;
 }
 
 export const DarkButton: FunctionComponent<DarkButton> = ({
@@ -19,7 +20,8 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
   fullWidth = false,
   isLoading = false,
   icon,
-  disabled
+  disabled,
+  accessibilityLabel,
 }) => (
   <BaseButton
     onPress={onPress}
@@ -27,6 +29,7 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
     backgroundColor={disabled ? color("grey", 40) : color("blue", 50)}
     fullWidth={fullWidth}
     disabled={disabled || isLoading}
+    accessibilityLabel={accessibilityLabel}
   >
     {isLoading ? (
       <ActivityIndicator size="small" color={color("grey", 0)} />
@@ -37,7 +40,7 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
           style={{
             color: color("grey", 0),
             fontFamily: "brand-bold",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           {text}

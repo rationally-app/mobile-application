@@ -12,7 +12,7 @@ storiesOf("CustomerAppeal", module).add("ReasonSelectionCard", () => (
       reasons={[
         { description: "Lost/stolen token", descriptionAlert: "*chargeable" },
         { description: "Dead battery", descriptionAlert: undefined },
-        { description: "Damaged token", descriptionAlert: undefined }
+        { description: "Damaged token", descriptionAlert: undefined },
       ]}
       onCancel={() => undefined}
       onReasonSelection={(productName: string, descriptionAlert?: string) =>

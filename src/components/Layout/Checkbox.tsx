@@ -4,7 +4,7 @@ import {
   View,
   StyleSheet,
   Vibration,
-  Platform
+  Platform,
 } from "react-native";
 import { size, color, borderRadius } from "../../common/styles";
 import { Feather } from "@expo/vector-icons";
@@ -18,19 +18,19 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
     paddingHorizontal: size(2),
-    paddingVertical: size(1.5)
+    paddingVertical: size(1.5),
   },
   wrapperUnchecked: {
     backgroundColor: color("grey", 10),
-    borderColor: color("grey", 20)
+    borderColor: color("grey", 20),
   },
   wrapperChecked: {
     backgroundColor: color("green", 10),
-    borderColor: color("green", 40)
+    borderColor: color("green", 40),
   },
   labelWrapper: {
     marginRight: size(1),
-    flex: 1
+    flex: 1,
   },
   toggle: {
     borderWidth: 1,
@@ -39,14 +39,14 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: color("grey", 0)
+    backgroundColor: color("grey", 0),
   },
   toggleUnchecked: {
-    borderColor: color("grey", 30)
+    borderColor: color("grey", 30),
   },
   toggleChecked: {
-    borderColor: color("green", 50)
-  }
+    borderColor: color("green", 50),
+  },
 });
 
 interface Toggle {
@@ -58,7 +58,7 @@ const Toggle: FunctionComponent<Toggle> = ({ isChecked }) => {
     <View
       style={[
         styles.toggle,
-        isChecked ? styles.toggleChecked : styles.toggleUnchecked
+        isChecked ? styles.toggleChecked : styles.toggleUnchecked,
       ]}
     >
       {isChecked && (
@@ -76,7 +76,7 @@ interface Checkbox extends Toggle {
 export const Checkbox: FunctionComponent<Checkbox> = ({
   label,
   isChecked,
-  onToggle
+  onToggle,
 }) => {
   return (
     <TouchableHighlight
@@ -92,7 +92,7 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
       <View
         style={[
           styles.wrapper,
-          isChecked ? styles.wrapperChecked : styles.wrapperUnchecked
+          isChecked ? styles.wrapperChecked : styles.wrapperUnchecked,
         ]}
       >
         <View style={styles.labelWrapper}>{label}</View>

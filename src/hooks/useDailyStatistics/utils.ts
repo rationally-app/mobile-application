@@ -23,7 +23,7 @@ export const countTotalTransactionsAndByCategory = (
     .reduce<SummarisedTransactions>(
       (prev, transactionsByCategory, key) => {
         const findItemByCategory = policies?.find(
-          item => item.category === key
+          (item) => item.category === key
         );
         const totalQuantityInCategory = sumBy(
           transactionsByCategory,
@@ -43,14 +43,14 @@ export const countTotalTransactionsAndByCategory = (
             totalQuantityInCategory,
             findItemByCategory?.quantity.unit || {
               type: "POSTFIX",
-              label: " qty"
+              label: " qty",
             }
           ),
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"
               ? "via appeal"
               : undefined,
-          order: findItemByCategory?.order ?? -1
+          order: findItemByCategory?.order ?? -1,
         });
         prev.summarisedTotalCount += totalQuantityInCategory;
         return prev;

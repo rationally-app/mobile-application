@@ -58,6 +58,7 @@ export const PhoneNumberInput: FunctionComponent<{
   onChangeCountryCode: (text: string) => void;
   onChangeMobileNumber: (text: string) => void;
   onSubmit?: () => void;
+  accessibilityLabel?: string;
 }> = ({
   countryCodeValue,
   label,
@@ -66,10 +67,20 @@ export const PhoneNumberInput: FunctionComponent<{
   onChangeMobileNumber,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit = () => {},
+
+  accessibilityLabel = "phone-number",
+
 }) => {
   return (
     <View style={styles.numberWrapper}>
-      <AppText style={styles.label}>{label}</AppText>
+      <AppText
+        style={styles.label}
+        accessibilityLabel={`${accessibilityLabel}-label`}
+        testID={`${accessibilityLabel}-label`}
+        accessible={true}
+      >
+        {label}
+      </AppText>
       <View style={styles.inputsWrapper}>
         <TextInput
           style={styles.countryCode}
@@ -89,6 +100,9 @@ export const PhoneNumberInput: FunctionComponent<{
             onChangeMobileNumber(stripPhoneNumberFormatting(text))
           }
           onSubmitEditing={onSubmit}
+          accessibilityLabel={`${accessibilityLabel}-input`}
+          testID={`${accessibilityLabel}-input`}
+          accessible={true}
         />
       </View>
     </View>
