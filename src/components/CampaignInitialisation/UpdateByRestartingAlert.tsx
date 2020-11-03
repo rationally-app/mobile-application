@@ -16,7 +16,7 @@ export const UpdateByRestartingAlert: FunctionComponent = () => {
           "errorMessages",
           "outdatedAppRestart",
           "primaryActionText"
-        )}`
+        )}`,
       }}
       onOk={() => Updates.reloadAsync()}
     />

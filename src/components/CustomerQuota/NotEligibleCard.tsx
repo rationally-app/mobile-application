@@ -36,7 +36,7 @@ interface NotEligibleCard {
  */
 export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
   ids,
-  onCancel
+  onCancel,
 }) => {
   const { i18nt } = useTranslate();
   return (
@@ -45,7 +45,7 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
         <View
           style={[
             sharedStyles.resultWrapper,
-            sharedStyles.failureResultWrapper
+            sharedStyles.failureResultWrapper,
           ]}
         >
           <FontAwesome
@@ -53,7 +53,12 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
             color={color("red", 60)}
             style={sharedStyles.icon}
           />
-          <AppText style={sharedStyles.statusTitleWrapper}>
+          <AppText
+            style={sharedStyles.statusTitleWrapper}
+            accessibilityLabel="not-eligible-title"
+            testID="not-eligible-title"
+            accessible={true}
+          >
             <NotEligibleTransactionTitle />
           </AppText>
           <View>
@@ -63,9 +68,10 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={i18nt("checkoutSuccessScreen", "redeemedNextIdentity")}
+          text={i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
+          accessibilityLabel="not-eligible-next-identity-button"
         />
       </View>
     </View>

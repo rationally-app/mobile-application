@@ -9,7 +9,8 @@ import {
   color,
   fontSize,
   shadow,
-  size
+  size,
+  normalize,
 } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.6)",
-    paddingHorizontal: size(4)
+    paddingHorizontal: size(4),
   },
   modalView: {
     alignItems: "center",
@@ -29,33 +30,38 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     backgroundColor: "white",
     borderRadius: borderRadius(3),
-    ...shadow(1)
+    ...shadow(1),
   },
   alertIcon: {
-    marginBottom: size(1.5)
+    marginBottom: size(1.5),
   },
   modalTitle: {
     fontFamily: "brand-bold",
-    fontSize: fontSize(2),
+    fontSize: normalize(fontSize(2)),
     color: color("blue", 50),
-    textAlign: "center"
+    textAlign: "center",
   },
   modalDescription: {
     marginTop: size(1),
-    textAlign: "center"
+    textAlign: "center",
   },
   modalButtonRow: {
-    marginTop: size(4),
+    marginTop: size(5),
     flexDirection: "row",
-    alignSelf: "stretch"
+    alignSelf: "stretch",
+    flexWrap: "wrap",
+    marginBottom: size(1),
+    marginLeft: size(1),
   },
   modalSecondaryButton: {
     marginRight: size(1),
-    flexGrow: 1
+    flexGrow: 1,
+    marginBottom: size(1),
   },
   modalPrimaryButton: {
-    flexGrow: 1
-  }
+    flexGrow: 1,
+    marginRight: size(1),
+  },
 });
 
 export interface AlertModalProps {
@@ -86,7 +92,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
   visible,
   onOk,
   onCancel,
-  onExit
+  onExit,
 }) => {
   const PrimaryButton = alertType === "WARN" ? DangerButton : DarkButton;
   return (
@@ -108,6 +114,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
                     onExit?.();
                     onCancel?.();
                   }}
+                  accessibilityLabel="alert-modal-secondary-button"
                 />
               </View>
             )}
@@ -119,6 +126,7 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
                   onExit?.();
                   onOk();
                 }}
+                accessibilityLabel="alert-modal-primary-button"
               />
             </View>
           </View>

@@ -9,7 +9,7 @@ const mockGetItem = jest.fn();
 const mockSetItem = jest.fn();
 jest.mock("react-native/Libraries/Storage/AsyncStorage", () => ({
   getItem: mockGetItem,
-  setItem: mockSetItem
+  setItem: mockSetItem,
 }));
 
 jest.mock("../utils/errorTracking");
@@ -33,8 +33,8 @@ describe("AuthStoreContextProvider", () => {
           operatorToken: "operatorToken",
           sessionToken: "sessionToken",
           endpoint: "endpoint",
-          expiry: 0
-        }
+          expiry: 0,
+        },
       })
     );
 
@@ -124,8 +124,8 @@ describe("AuthStoreContextProvider", () => {
           operatorToken: "operatorToken",
           sessionToken: "sessionToken",
           endpoint: "endpoint",
-          expiry: 0
-        }
+          expiry: 0,
+        },
       })
     );
 
@@ -173,8 +173,8 @@ describe("AuthStoreContextProvider", () => {
           operatorToken: "operatorToken",
           sessionToken: "sessionToken",
           endpoint: "endpoint",
-          expiry: 0
-        }
+          expiry: 0,
+        },
       })
     );
 
@@ -192,7 +192,7 @@ describe("AuthStoreContextProvider", () => {
                     operatorToken: "newOperatorToken",
                     sessionToken: "newSessionToken",
                     endpoint: "newEndpoint",
-                    expiry: 0
+                    expiry: 0,
                   })
                 }
                 title="test button"
@@ -223,8 +223,8 @@ describe("AuthStoreContextProvider", () => {
             operatorToken: "newOperatorToken",
             sessionToken: "newSessionToken",
             endpoint: "newEndpoint",
-            expiry: 0
-          }
+            expiry: 0,
+          },
         })
       );
       expect(queryByTestId("credentials")).toHaveTextContent(
@@ -241,14 +241,14 @@ describe("AuthStoreContextProvider", () => {
           operatorToken: "operatorToken",
           sessionToken: "sessionToken",
           endpoint: "endpoint",
-          expiry: 0
+          expiry: 0,
         },
         "another-test-campaign": {
           operatorToken: "operatorTokenA",
           sessionToken: "sessionTokenA",
           endpoint: "endpointA",
-          expiry: 0
-        }
+          expiry: 0,
+        },
       })
     );
 
@@ -266,7 +266,7 @@ describe("AuthStoreContextProvider", () => {
                     operatorToken: "newOperatorToken",
                     sessionToken: "newSessionToken",
                     endpoint: "newEndpoint",
-                    expiry: 0
+                    expiry: 0,
                   })
                 }
                 title="test button"
@@ -297,14 +297,14 @@ describe("AuthStoreContextProvider", () => {
             operatorToken: "newOperatorToken",
             sessionToken: "newSessionToken",
             endpoint: "newEndpoint",
-            expiry: 0
+            expiry: 0,
           },
           "another-test-campaign": {
             operatorToken: "operatorTokenA",
             sessionToken: "sessionTokenA",
             endpoint: "endpointA",
-            expiry: 0
-          }
+            expiry: 0,
+          },
         })
       );
       expect(queryByTestId("credentials")).toHaveTextContent(
@@ -321,8 +321,8 @@ describe("AuthStoreContextProvider", () => {
           operatorToken: "operatorToken",
           sessionToken: "sessionToken",
           endpoint: "endpoint",
-          expiry: 0
-        }
+          expiry: 0,
+        },
       })
     );
 

@@ -3,14 +3,14 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useMemo
+  useMemo,
 } from "react";
 import {
   View,
   StyleSheet,
   Keyboard,
   Vibration,
-  BackHandler
+  BackHandler,
 } from "react-native";
 import { size, fontSize, borderRadius, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -20,7 +20,7 @@ import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
 import {
   withNavigationFocus,
-  NavigationFocusInjectedProps
+  NavigationFocusInjectedProps,
 } from "react-navigation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IdScanner } from "../IdScanner/IdScanner";
@@ -43,7 +43,7 @@ import { ManualPassportInput } from "./ManualPassportInput";
 import { IdentificationFlag } from "../../types";
 import {
   IdentificationContext,
-  defaultSelectedIdType
+  defaultSelectedIdType,
 } from "../../context/identification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
@@ -55,20 +55,20 @@ const styles = StyleSheet.create({
     paddingVertical: size(8),
     height: "100%",
     width: 512,
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   headerText: {
-    marginBottom: size(4)
+    marginBottom: size(4),
   },
   bannerWrapper: {
-    marginBottom: size(1.5)
+    marginBottom: size(1.5),
   },
   campaignName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
     marginBottom: size(3),
     flexGrow: 1,
-    flexShrink: 1
+    flexShrink: 1,
   },
   manageButton: {
     alignItems: "center",
@@ -77,32 +77,32 @@ const styles = StyleSheet.create({
     padding: size(1),
     marginRight: -size(1),
     marginTop: -size(0.5),
-    marginBottom: size(3)
+    marginBottom: size(3),
   },
   statsButton: {
     marginTop: size(4),
     flexDirection: "row",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   statsText: {
     marginTop: size(4),
-    fontSize: fontSize(0)
+    fontSize: fontSize(0),
   },
   statsIcon: {
     marginTop: size(4),
     alignSelf: "center",
-    marginRight: size(0.5)
-  }
+    marginRight: size(0.5),
+  },
 });
 
 const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
   navigation,
-  isFocused
+  isFocused,
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "CollectCustomerDetailsScreen"
+      message: "CollectCustomerDetailsScreen",
     });
   }, []);
 
@@ -124,7 +124,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     const selectionArray = [];
     selectionArray.push(features?.id || defaultSelectedIdType);
     features?.alternateIds &&
-      features.alternateIds.map(alternateId =>
+      features.alternateIds.map((alternateId) =>
         selectionArray.push(alternateId)
       );
     return selectionArray;
@@ -168,7 +168,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   useEffect(() => {
     // in the event the saved selection not found.. will always fall back to the first idType in array
     setSelectedIdType(
-      selectionArray.some(selection => selection.label === selectedIdType.label)
+      selectionArray.some(
+        (selection) => selection.label === selectedIdType.label
+      )
         ? selectedIdType
         : selectionArray[0]
     );
@@ -187,13 +189,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       );
       Vibration.vibrate(50);
       const defaultProducts = policies?.filter(
-        policy =>
+        (policy) =>
           policy.categoryType === undefined || policy.categoryType === "DEFAULT"
       );
 
       navigation.navigate("CustomerQuotaProxy", {
         id,
-        products: defaultProducts
+        products: defaultProducts,
       });
       setIdInput("");
     } catch (e) {
@@ -202,7 +204,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
-  const onBarCodeScanned: BarCodeScannedCallback = event => {
+  const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (isFocused && isScanningEnabled && event.data) {
       onCheck(event.data);
     }
@@ -264,7 +266,14 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           )}
           <Card>
             {!!tCampaignName && (
-              <AppText style={styles.campaignName}>{tCampaignName}</AppText>
+              <AppText
+                style={styles.campaignName}
+                accessibilityLabel="identity-details-campaign-name"
+                testID="identity-details-campaign-name"
+                accessible={true}
+              >
+                {tCampaignName}
+              </AppText>
             )}
             <AppText>
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}

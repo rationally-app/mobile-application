@@ -16,13 +16,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });
 
 export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   mode = AppMode.production,
-  navigation
+  navigation,
 }) => {
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();
@@ -37,6 +37,9 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
           name="menu"
           size={size(4)}
           color={color("grey", 0)}
+          accessibilityLabel="drawer-nav-open-button"
+          testID="drawer-nav-open-button"
+          accessible={true}
         />
       </TouchableOpacity>
     </View>

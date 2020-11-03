@@ -11,8 +11,8 @@ import { ItemIdentifiersCard } from "./ItemIdentifiersCard";
 const styles = StyleSheet.create({
   cartItemComponent: {
     marginBottom: size(0.5),
-    marginHorizontal: -size(2)
-  }
+    marginHorizontal: -size(2),
+  },
 });
 
 export const Item: FunctionComponent<{

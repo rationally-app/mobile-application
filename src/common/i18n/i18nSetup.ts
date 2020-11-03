@@ -8,12 +8,17 @@ i18n.fallbacks = true;
 i18n.locale = Localization.locale;
 i18n.translations = {
   zh,
-  en
+  en,
 };
 i18n.missingTranslation = (scope: string) => {
   Sentry.addBreadcrumb({
     category: "translation",
-    message: `A missing translation of scope ${scope} was found.`
+    message: `A missing translation of scope ${scope} was found.`,
   });
   return undefined;
+};
+
+export const updateI18nLocale = async (): Promise<void> => {
+  const { locale } = await Localization.getLocalizationAsync();
+  i18n.locale = locale;
 };

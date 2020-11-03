@@ -2,7 +2,7 @@ import React, {
   FunctionComponent,
   useEffect,
   useContext,
-  useState
+  useState,
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
@@ -33,28 +33,28 @@ const styles = StyleSheet.create({
     paddingVertical: size(6),
     height: "100%",
     width: 512,
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   headerText: {
-    marginBottom: size(4)
+    marginBottom: size(4),
   },
   bannerWrapper: {
-    marginBottom: size(1.5)
+    marginBottom: size(1.5),
   },
   categoryName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
-    marginBottom: size(3)
-  }
+    marginBottom: size(3),
+  },
 });
 
 const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
-  navigation
+  navigation,
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "DailyStatisticsScreen"
+      message: "DailyStatisticsScreen",
     });
   }, []);
 
@@ -70,7 +70,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     totalCount,
     transactionHistory,
     error,
-    loading
+    loading,
   } = useDailyStatistics(
     sessionToken,
     endpoint,
@@ -106,7 +106,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
         scrollViewContentContainerStyle={{
           flexGrow: 1,
           alignItems: "center",
-          paddingBottom: size(1)
+          paddingBottom: size(1),
         }}
       >
         <TopBackground
