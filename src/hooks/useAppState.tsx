@@ -6,7 +6,7 @@ export const useAppState = (): AppStateStatus => {
   const prevAppState = useRef<AppStateStatus>("inactive");
 
   const onChange = (newState: AppStateStatus): void => {
-    setAppState((appState) => {
+    setAppState(appState => {
       prevAppState.current = appState;
       return newState;
     });

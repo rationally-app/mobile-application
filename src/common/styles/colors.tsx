@@ -16,16 +16,16 @@ const palette: { [color in ColorName]: { [tone: string]: string } } = {
     "30": "#CBD2D9",
     "40": "#9AA5B1",
     "80": "#3E4C59",
-    "100": "#000000",
+    "100": "#000000"
   },
   yellow: {
     "10": "#FFFBEA",
     "20": "#FFF3C4",
     "30": "#F8E495",
-    "50": "#CB6E17",
+    "50": "#CB6E17"
   },
   orange: {
-    "30": "#F9DBAF",
+    "30": "#F9DBAF"
   },
   blue: {
     "10": "#D6DDE1",
@@ -33,10 +33,10 @@ const palette: { [color in ColorName]: { [tone: string]: string } } = {
     "30": "#8398A4",
     "40": "#597585",
     "50": "#305367",
-    "60": "#264252",
+    "60": "#264252"
   },
   "blue-green": {
-    "40": "#0E8086",
+    "40": "#0E8086"
   },
   green: {
     "10": "#F2FDF3",
@@ -44,7 +44,7 @@ const palette: { [color in ColorName]: { [tone: string]: string } } = {
     "30": "#C8F4CD",
     "40": "#B1EFB5",
     "50": "#51CA58",
-    "60": "#0F8613",
+    "60": "#0F8613"
   },
   red: {
     "10": "#FFF5F5",
@@ -52,8 +52,8 @@ const palette: { [color in ColorName]: { [tone: string]: string } } = {
     "30": "#FFD1D1",
     "40": "#FB8383",
     "50": "#F94343",
-    "60": "#D14541",
-  },
+    "60": "#D14541"
+  }
 };
 
 export function color(

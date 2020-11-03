@@ -8,20 +8,20 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   validText: {
     fontFamily: "brand-bold",
-    fontSize: fontSize(-1),
+    fontSize: fontSize(-1)
   },
   validIcon: {
-    marginRight: size(1),
+    marginRight: size(1)
   },
   validTextWrapper: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "center"
   },
   numVouchers: {
     color: color("grey", 0),
     fontFamily: "brand-bold",
     fontSize: fontSize(2),
-    lineHeight: fontSize(3),
+    lineHeight: fontSize(3)
   },
   numVouchersWrapper: {
     flexDirection: "row",
@@ -29,13 +29,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: size(1.5),
     paddingVertical: size(1),
     borderRadius: borderRadius(2),
-    backgroundColor: color("blue-green", 40),
+    backgroundColor: color("blue-green", 40)
   },
   divider: {
     borderRightWidth: 1,
     borderRightColor: color("grey", 30),
-    marginHorizontal: size(1.5),
-  },
+    marginHorizontal: size(1.5)
+  }
 });
 
 interface ValidVoucherCount {
@@ -45,7 +45,7 @@ interface ValidVoucherCount {
 
 export const ValidVoucherCount: FunctionComponent<ValidVoucherCount> = ({
   numVouchers,
-  denomination,
+  denomination
 }) => {
   const { i18nt } = useTranslate();
   return (

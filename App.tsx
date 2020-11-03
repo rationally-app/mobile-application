@@ -7,7 +7,7 @@ import { IS_STORYBOOK_VIEW, SENTRY_DSN } from "./src/config";
 Sentry.init({
   dsn: SENTRY_DSN,
   // enableInExpoDevelopment: true,
-  debug: __DEV__,
+  debug: __DEV__
 });
 Sentry.setRelease(Constants.manifest.revisionId!);
 

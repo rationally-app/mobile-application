@@ -1,6 +1,6 @@
 import {
   createStackNavigator,
-  StackViewTransitionConfigs,
+  StackViewTransitionConfigs
 } from "react-navigation-stack";
 import MerchantPayoutScreen from "./MerchantPayoutScreen";
 import PayoutFeedbackScreen from "./PayoutFeedbackScreen";
@@ -14,19 +14,19 @@ import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 const Stack = createStackNavigator(
   {
     MerchantPayoutScreen: {
-      screen: MerchantPayoutScreen,
+      screen: MerchantPayoutScreen
     },
     PayoutFeedbackScreen: {
-      screen: PayoutFeedbackScreen,
-    },
+      screen: PayoutFeedbackScreen
+    }
   },
   {
     headerMode: "none",
     transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
     navigationOptions: {
-      gesturesEnabled: true,
+      gesturesEnabled: true
     },
-    initialRouteName: "MerchantPayoutScreen",
+    initialRouteName: "MerchantPayoutScreen"
   }
 );
 

@@ -10,7 +10,7 @@ interface TopBackground extends ViewProps {
 
 export const TopBackground: FunctionComponent<TopBackground> = ({
   style,
-  mode = AppMode.production,
+  mode = AppMode.production
 }) => {
   const isProduction = mode === AppMode.production;
   const primaryColor = isProduction ? color("blue", 50) : color("red", 40);
@@ -25,9 +25,9 @@ export const TopBackground: FunctionComponent<TopBackground> = ({
           width: "100%",
           height: "40%",
           maxHeight: 360,
-          position: "absolute",
+          position: "absolute"
         },
-        style,
+        style
       ]}
       colors={[primaryColor, secondaryColor]}
       start={[0.5, 0]}

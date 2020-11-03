@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useCallback,
   useState,
-  useContext,
+  useContext
 } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { StyleSheet, View } from "react-native";
@@ -27,13 +27,13 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: size(5),
+    paddingHorizontal: size(5)
   },
   content: {
     width: 512,
     maxWidth: "100%",
-    marginTop: -size(4),
-  },
+    marginTop: -size(4)
+  }
 });
 
 const RETRY_UPDATE_TIMES = 3;
@@ -46,12 +46,12 @@ export class UpdateError extends Error {
 }
 
 export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = ({
-  navigation,
+  navigation
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
-      message: "CampaignInitialisationScreen",
+      message: "CampaignInitialisationScreen"
     });
   }, []);
 
@@ -62,13 +62,13 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     hasLoadedFromStore,
     allCampaignConfigs,
     setCampaignConfig,
-    removeCampaignConfig,
+    removeCampaignConfig
   } = useContext(CampaignConfigsStoreContext);
   const { setAuthCredentials } = useContext(AuthStoreContext);
   const {
     fetchingState,
     updateCampaignConfig,
-    error: updateCampaignConfigError,
+    error: updateCampaignConfigError
   } = useUpdateCampaignConfig(
     authCredentials.operatorToken,
     authCredentials.sessionToken,
@@ -93,7 +93,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     campaignConfig,
     hasAttemptedToUpdateConfig,
     hasLoadedFromStore,
-    updateCampaignConfig,
+    updateCampaignConfig
   ]);
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
       } else if (updateCampaignConfigError instanceof SessionError) {
         setAuthCredentials(key, {
           ...authCredentials,
-          expiry: new Date().getTime(),
+          expiry: new Date().getTime()
         });
         showErrorAlert(updateCampaignConfigError, () =>
           navigation.navigate("CampaignLocationsScreen")
@@ -120,7 +120,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     navigation,
     removeCampaignConfig,
     showErrorAlert,
-    updateCampaignConfigError,
+    updateCampaignConfigError
   ]);
 
   const continueToNormalFlow = useCallback(() => {
@@ -129,13 +129,13 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
         case "DEFAULT":
           navigation.navigate("CustomerQuotaStack", {
             operatorToken: authCredentials.operatorToken,
-            endpoint: authCredentials.endpoint,
+            endpoint: authCredentials.endpoint
           });
           break;
         case "MERCHANT":
           navigation.navigate("MerchantPayoutStack", {
             operatorToken: authCredentials.operatorToken,
-            endpoint: authCredentials.endpoint,
+            endpoint: authCredentials.endpoint
           });
           break;
       }
@@ -144,7 +144,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     authCredentials.endpoint,
     authCredentials.operatorToken,
     campaignConfig?.features?.flowType,
-    navigation,
+    navigation
   ]);
 
   const [outdatedType, setOutdatedType] = useState<"BINARY" | "BUILD">();
@@ -160,7 +160,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     for (let i = 0; i < RETRY_UPDATE_TIMES; i++) {
       Sentry.addBreadcrumb({
         category: "checkUpdates",
-        message: `attempt ${i + 1}`,
+        message: `attempt ${i + 1}`
       });
       const updateResult = await checkUpdates(true);
       if (updateResult === "UPDATE_READY") {
@@ -195,7 +195,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
         currentBinaryVersion: config.APP_BINARY_VERSION,
         currentBuildVersion: config.APP_BUILD_VERSION,
         minBinaryVersion: campaignConfig?.features?.minAppBinaryVersion,
-        minBuildVersion: campaignConfig?.features?.minAppBuildVersion,
+        minBuildVersion: campaignConfig?.features?.minAppBuildVersion
       });
       switch (versionCheckResult) {
         case "OK":
@@ -218,7 +218,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     campaignConfig?.features?.minAppBinaryVersion,
     campaignConfig?.features?.minAppBuildVersion,
     continueToNormalFlow,
-    getNewBuildIfAny,
+    getNewBuildIfAny
   ]);
 
   /**

@@ -5,7 +5,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  ViewProps,
+  ViewProps
 } from "react-native";
 import { size, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -15,18 +15,18 @@ const styles = StyleSheet.create({
   background: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: color("grey", 100),
-    opacity: 0.8,
+    opacity: 0.8
   },
   cardWrapper: {
     padding: size(3),
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   card: {
     width: 512,
-    maxWidth: "100%",
-  },
+    maxWidth: "100%"
+  }
 });
 
 export interface ModalWithClose extends ViewProps {
@@ -38,7 +38,7 @@ export const ModalWithClose: FunctionComponent<ModalWithClose> = ({
   isVisible,
   onExit,
   children,
-  style,
+  style
 }) => {
   return (
     <Modal
@@ -58,7 +58,7 @@ export const ModalWithClose: FunctionComponent<ModalWithClose> = ({
               position: "absolute",
               right: size(1.5),
               top: size(1.5),
-              padding: size(1),
+              padding: size(1)
             }}
           >
             <Feather name="x" size={size(3)} color={color("blue", 50)} />

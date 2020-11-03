@@ -4,7 +4,7 @@ import { sharedStyles } from "../sharedStyles";
 import {
   formatDateTime,
   formatDate,
-  formatTimeDifference,
+  formatTimeDifference
 } from "../../../utils/dateTimeFormatter";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
@@ -21,7 +21,7 @@ export const DistantTransactionTitle: FunctionComponent<{
       <AppText style={sharedStyles.statusTitle}>
         {i18nt("checkoutSuccessScreen", "limitReachedDate", undefined, {
           dateTime: formatDateTime(transactionTime),
-          today,
+          today
         })}
       </AppText>
     </>
@@ -42,7 +42,7 @@ export const RecentTransactionTitle: FunctionComponent<{
       <AppText style={sharedStyles.statusTitle}>
         {`${i18nt("checkoutSuccessScreen", "limitReachedRecent", undefined, {
           time: formatTimeDifference(now, transactionTime),
-          today,
+          today
         })}`}
       </AppText>
     </>
@@ -60,7 +60,7 @@ export const NoPreviousTransactionTitle: FunctionComponent<{
     <>
       <AppText style={sharedStyles.statusTitle}>
         {i18nt("checkoutSuccessScreen", "limitReached", undefined, {
-          today,
+          today
         })}
       </AppText>
     </>
@@ -78,7 +78,7 @@ export const UsageQuotaTitle: FunctionComponent<{
         {"\n"}
         {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
           quantity: quantity,
-          date: formatDate(quotaRefreshTime),
+          date: formatDate(quotaRefreshTime)
         })}`}
       </AppText>
     </>

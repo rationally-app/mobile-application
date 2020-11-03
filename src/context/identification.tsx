@@ -6,7 +6,7 @@ export const defaultSelectedIdType: IdentificationFlag = {
   label: "",
   scannerType: "NONE",
   validation: "REGEX",
-  validationRegex: "",
+  validationRegex: ""
 };
 
 interface IdentificationContext {
@@ -16,11 +16,11 @@ interface IdentificationContext {
 
 export const IdentificationContext = createContext<IdentificationContext>({
   selectedIdType: defaultSelectedIdType,
-  setSelectedIdType: (selectedIdType: IdentificationFlag) => undefined,
+  setSelectedIdType: (selectedIdType: IdentificationFlag) => undefined
 });
 
 export const IdentificationContextProvider: FunctionComponent = ({
-  children,
+  children
 }) => {
   const [selectedIdType, setSelectedIdType] = useState<IdentificationFlag>(
     defaultSelectedIdType

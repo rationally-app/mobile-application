@@ -2,7 +2,7 @@ import {
   createFullNumber,
   mobileNumberValidator,
   countryCodeValidator,
-  fullPhoneNumberValidator,
+  fullPhoneNumberValidator
 } from "./validatePhoneNumbers";
 
 describe("createFullNumber", () => {

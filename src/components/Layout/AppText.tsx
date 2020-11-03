@@ -12,9 +12,9 @@ export const AppText: FunctionComponent<TextProps> = ({
       {
         fontFamily: "brand-regular",
         fontSize: fontSize(0),
-        color: color("blue", 50),
+        color: color("blue", 50)
       },
-      style,
+      style
     ]}
     {...props}
   >

@@ -3,7 +3,7 @@ import { PastTransactionsResult } from "../../types";
 import { usePrevious } from "../usePrevious";
 import {
   getPastTransactions,
-  PastTransactionError,
+  PastTransactionError
 } from "../../services/quota";
 import { Sentry } from "../../utils/errorTracking";
 import { ERROR_MESSAGE } from "../../context/alert";
@@ -40,7 +40,7 @@ export const usePastTransaction = (
         setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
       } catch (error) {
         Sentry.captureException(
-          `Unable to fetch past transactions: ${ids.map((id) =>
+          `Unable to fetch past transactions: ${ids.map(id =>
             id.slice(-4).padStart(id.length, "*")
           )}`
         );
@@ -62,6 +62,6 @@ export const usePastTransaction = (
   return {
     pastTransactionsResult,
     loading,
-    error,
+    error
   };
 };

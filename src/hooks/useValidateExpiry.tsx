@@ -19,12 +19,12 @@ export const useValidateExpiry = (
   const onExpired = useCallback(() => {
     logout(navigationDispatch, {
       title: "Session expired",
-      description: "You have been logged out",
+      description: "You have been logged out"
     });
   }, [logout, navigationDispatch]);
 
   const onAboutToExpire = useCallback(
-    (secondsLeft) => {
+    secondsLeft => {
       const duration =
         secondsLeft > 60
           ? `less than ${Math.ceil(secondsLeft / 60)} minutes`
@@ -36,8 +36,8 @@ export const useValidateExpiry = (
         featherIconName: "clock",
         action: {
           callback: () => logout(navigationDispatch),
-          label: "Logout",
-        },
+          label: "Logout"
+        }
       });
     },
     [logout, navigationDispatch, setMessageContent]

@@ -11,9 +11,9 @@ export const Card: FunctionComponent<ViewProps> = ({ children, style }) => (
         paddingHorizontal: size(3),
         backgroundColor: color("grey", 0),
         borderRadius: borderRadius(3),
-        ...shadow(2),
+        ...shadow(2)
       },
-      style,
+      style
     ]}
   >
     {children}

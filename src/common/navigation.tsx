@@ -2,7 +2,7 @@ import { NavigationProps } from "../types";
 import {
   StackActions,
   NavigationActions,
-  NavigationReplaceActionPayload,
+  NavigationReplaceActionPayload
 } from "react-navigation";
 
 export const replaceRoute = (
@@ -24,8 +24,8 @@ export const resetRoute = (
     index: 1,
     actions: [
       NavigationActions.navigate({ routeName: "CollectCustomerDetailsScreen" }),
-      NavigationActions.navigate({ routeName, params }),
-    ],
+      NavigationActions.navigate({ routeName, params })
+    ]
   });
   return navigation.dispatch(action);
 };
@@ -37,7 +37,7 @@ export const pushRoute = (
 ): boolean => {
   const action = StackActions.push({
     routeName: routeName,
-    params: params,
+    params: params
   });
   return navigation.dispatch(action);
 };
@@ -48,8 +48,8 @@ export const navigateHome = (
   const action = StackActions.reset({
     index: 0,
     actions: [
-      NavigationActions.navigate({ routeName: "CollectCustomerDetailsScreen" }),
-    ],
+      NavigationActions.navigate({ routeName: "CollectCustomerDetailsScreen" })
+    ]
   });
   return navigation.dispatch(action);
 };

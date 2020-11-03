@@ -2,7 +2,7 @@ import React, {
   forwardRef,
   Ref,
   useImperativeHandle,
-  useLayoutEffect,
+  useLayoutEffect
 } from "react";
 import { View } from "react-native";
 
@@ -17,7 +17,7 @@ import { View } from "react-native";
 export const Camera = forwardRef<View, { onCameraReady?: () => void }>(
   ({ onCameraReady, ...props }, ref: Ref<any>) => {
     useImperativeHandle(ref, () => ({
-      getSupportedRatiosAsync: () => Promise.resolve(["4:3", "16:9"]),
+      getSupportedRatiosAsync: () => Promise.resolve(["4:3", "16:9"])
     }));
 
     useLayoutEffect(() => {

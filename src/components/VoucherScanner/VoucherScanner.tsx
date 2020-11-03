@@ -3,7 +3,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  useRef,
+  useRef
 } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
@@ -28,39 +28,39 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: color("grey", 0),
+    backgroundColor: color("grey", 0)
   },
   content: {
-    flex: 1,
+    flex: 1
   },
   topSectionWrapper: {
     marginTop: size(1),
     marginBottom: size(3),
     marginHorizontal: size(2),
-    alignItems: "flex-start",
+    alignItems: "flex-start"
   },
   closeButton: {
     position: "absolute",
     right: -size(1),
     top: -size(1),
-    padding: size(1),
+    padding: size(1)
   },
   bottomSectionWrapper: {
     flexDirection: "row",
     marginVertical: size(3),
     marginHorizontal: size(2),
     maxWidth: 512,
-    alignSelf: "center",
+    alignSelf: "center"
   },
   manualInputButtonWrapper: {
     marginRight: size(1),
-    flexGrow: 1,
+    flexGrow: 1
   },
   camera: {
     flex: 1,
     backgroundColor: color("grey", 0),
-    width: "100%",
-  },
+    width: "100%"
+  }
 });
 
 interface VoucherScanner {
@@ -76,7 +76,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   onCheckVoucher,
   onCancel,
   isScanningEnabled = true,
-  barCodeTypes,
+  barCodeTypes
 }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showManualInput, setShowManualInput] = useState(false);
@@ -96,7 +96,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   const openInputModal = useCallback(() => setShowManualInput(true), []);
 
   const currentBarcode = useRef<string>();
-  const onBarCodeScanned: BarCodeScannedCallback = (event) => {
+  const onBarCodeScanned: BarCodeScannedCallback = event => {
     if (
       isScanningEnabled &&
       !showManualInput &&
@@ -117,7 +117,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
           {vouchers.length === 0 ? (
             <AppText
               style={{
-                fontFamily: "brand-bold",
+                fontFamily: "brand-bold"
               }}
             >
               {i18nt("idScanner", "scanToCheck")}

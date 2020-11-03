@@ -28,44 +28,44 @@ export const shadow = (
         shadowColor,
         shadowOffset: {
           width: 0,
-          height: 2,
+          height: 2
         },
         shadowOpacity: 0.13,
         shadowRadius: 2.62,
-        elevation: 4,
+        elevation: 4
       };
     case 2:
       return {
         shadowColor,
         shadowOffset: {
           width: 0,
-          height: 4,
+          height: 4
         },
         shadowOpacity: 0.2,
         shadowRadius: 4.65,
-        elevation: 8,
+        elevation: 8
       };
     case 3:
       return {
         shadowColor,
         shadowOffset: {
           width: 0,
-          height: 8,
+          height: 8
         },
         shadowOpacity: 0.34,
         shadowRadius: 10.32,
-        elevation: 16,
+        elevation: 16
       };
     case 4:
       return {
         shadowColor,
         shadowOffset: {
           width: 0,
-          height: 10,
+          height: 10
         },
         shadowOpacity: 0.41,
         shadowRadius: 13.16,
-        elevation: 20,
+        elevation: 20
       };
   }
 };

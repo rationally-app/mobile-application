@@ -17,7 +17,7 @@ const items: DropdownItem[] = [
   { id: "G2", name: "github" },
   { id: "G3", name: "gitlab" },
   { id: "I", name: "I", tag: true },
-  { id: "I1", name: "instagram" },
+  { id: "I1", name: "instagram" }
 ];
 
 storiesOf("Layout", module).add("Dropdown", () => (
@@ -26,7 +26,7 @@ storiesOf("Layout", module).add("Dropdown", () => (
       label="Dropdown label"
       placeholder="placeholder"
       dropdownItems={items}
-      onItemSelection={(item) => alert(JSON.stringify(item))}
+      onItemSelection={item => alert(JSON.stringify(item))}
     />
   </View>
 ));

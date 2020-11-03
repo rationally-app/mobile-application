@@ -7,8 +7,8 @@ export const navigation: any = {
   getParam: (key: string) => params[key],
   addListener: () => alert(`addListener`),
   state: {
-    routeName: "routeName",
-  },
+    routeName: "routeName"
+  }
 };
 
 export const resetNavigation = (): void => {

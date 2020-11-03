@@ -3,23 +3,23 @@ import React, {
   createContext,
   FunctionComponent,
   useState,
-  useCallback,
+  useCallback
 } from "react";
 import {
   AlertModal,
-  AlertModalProps,
+  AlertModalProps
 } from "../components/AlertModal/AlertModal";
 import i18n from "i18n-js";
 
 export enum WARNING_MESSAGE {
   CANCEL_ENTRY = "cancelEntry",
-  DISCARD_TRANSACTION = "discardTransaction",
+  DISCARD_TRANSACTION = "discardTransaction"
 }
 export enum CONFIRMATION_MESSAGE {
   PAYMENT_COLLECTION = "paymentCollected",
   CONFIRM_LOGOUT = "confirmLogout",
   RESEND_OTP = "resendOTP",
-  REMOVE_VOUCHER = "removeVoucher",
+  REMOVE_VOUCHER = "removeVoucher"
 }
 
 export enum ERROR_MESSAGE {
@@ -52,7 +52,7 @@ export enum ERROR_MESSAGE {
   LOGIN_ERROR = "We are currently facing login issues. Get a new QR code from your in-charge.",
   PAST_TRANSACTIONS_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists.",
   VALIDATE_INPUT_REGEX_ERROR = "Please check that the ID is in the correct format",
-  INVALID_MERCHANT_CODE = "Invalid merchant code",
+  INVALID_MERCHANT_CODE = "Invalid merchant code"
 }
 
 const errorNameToTranslationKeyMappings: Record<string, string> = {
@@ -71,7 +71,7 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   AuthInvalidError: "wrongFormatQRScanAgain",
   ScannerError: "errorScanning",
   LimitReachedError: "scanLimitReached",
-  NotEligibleError: "notEligible",
+  NotEligibleError: "notEligible"
 };
 
 const getTranslationKeyFromError = (error: Error): string => {
@@ -118,7 +118,7 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [CONFIRMATION_MESSAGE.RESEND_OTP]: CONFIRMATION_MESSAGE.RESEND_OTP,
   [CONFIRMATION_MESSAGE.REMOVE_VOUCHER]: CONFIRMATION_MESSAGE.REMOVE_VOUCHER,
   [WARNING_MESSAGE.CANCEL_ENTRY]: WARNING_MESSAGE.CANCEL_ENTRY,
-  [WARNING_MESSAGE.DISCARD_TRANSACTION]: WARNING_MESSAGE.DISCARD_TRANSACTION,
+  [WARNING_MESSAGE.DISCARD_TRANSACTION]: WARNING_MESSAGE.DISCARD_TRANSACTION
 };
 
 const getTranslationKeyFromErrorMessage = (message: string): string => {
@@ -129,12 +129,12 @@ const defaultAlertProps: AlertModalProps = {
   alertType: "ERROR",
   title: "",
   buttonTexts: {
-    primaryActionText: "OK",
+    primaryActionText: "OK"
   },
   visible: false,
   onOk: () => {},
   onCancel: () => {},
-  onExit: () => {},
+  onExit: () => {}
 };
 
 interface AlertModalContext {
@@ -161,7 +161,7 @@ export const AlertModalContext = createContext<AlertModalContext>({
   showConfirmationAlert: () => null,
   showErrorAlert: () => null,
   showWarnAlert: () => null,
-  clearAlert: () => null,
+  clearAlert: () => null
 });
 
 export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
@@ -198,12 +198,12 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
           ),
           secondaryActionText: i18n.t(
             `errorMessages.${translationKey}.secondaryActionText`
-          ),
+          )
         },
         visible: true,
         onOk: onClickPrimaryAction,
         onCancel: onClickSecondaryAction ?? (() => {}),
-        onExit: () => {},
+        onExit: () => {}
       });
     },
     [showAlert]
@@ -228,12 +228,12 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
             i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",
           secondaryActionText: i18n.t(
             `errorMessages.${translationKey}.secondaryActionText`
-          ),
+          )
         },
         visible: true,
         onOk: !!onClickPrimaryAction ? onClickPrimaryAction : () => {},
         onCancel: () => {},
-        onExit: () => {},
+        onExit: () => {}
       });
     },
     [showAlert]
@@ -259,12 +259,12 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
           ),
           secondaryActionText: i18n.t(
             `errorMessages.${translationKey}.secondaryActionText`
-          ),
+          )
         },
         visible: true,
         onOk: onClickPrimaryAction,
         onCancel: () => {},
-        onExit: () => {},
+        onExit: () => {}
       });
     },
     [showAlert]
@@ -280,7 +280,7 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
         showConfirmationAlert,
         showErrorAlert,
         showWarnAlert,
-        clearAlert,
+        clearAlert
       }}
     >
       {children}

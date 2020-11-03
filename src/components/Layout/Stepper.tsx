@@ -4,7 +4,7 @@ import React, {
   SetStateAction,
   useRef,
   useEffect,
-  useState,
+  useState
 } from "react";
 import {
   View,
@@ -12,7 +12,7 @@ import {
   StyleSheet,
   TextInput,
   Platform,
-  Vibration,
+  Vibration
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { clamp, debounce } from "lodash";
@@ -28,24 +28,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     minHeight: size(7),
     borderWidth: 1,
-    borderRadius: borderRadius(2),
+    borderRadius: borderRadius(2)
   },
   wrapperDefault: {
-    borderColor: color("grey", 30),
+    borderColor: color("grey", 30)
   },
   wrapperHighlighted: {
-    borderColor: color("green", 50),
+    borderColor: color("green", 50)
   },
   stepButton: {
     minWidth: size(7),
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   inputAndSuffixWrapper: {
     flexGrow: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   input: {
     marginHorizontal: 2,
@@ -60,15 +60,15 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold",
     ...Platform.select({
       android: {
-        marginTop: -2,
-      },
-    }),
+        marginTop: -2
+      }
+    })
   },
   suffix: {
     marginTop: -2,
     fontFamily: "brand-regular",
-    fontSize: fontSize(0),
-  },
+    fontSize: fontSize(0)
+  }
 });
 
 const parseNumber = (value: string): number => Number(value.replace(/\s/g, ""));
@@ -88,15 +88,13 @@ const clampAndRoundDown = (
 interface StepperButton {
   onPress: () => void;
   variant: "PLUS" | "MINUS";
-  accessibilityLabel: string;
   disabled?: boolean;
 }
 
 const StepperButton: FunctionComponent<StepperButton> = ({
   onPress,
   variant,
-  accessibilityLabel,
-  disabled = false,
+  disabled = false
 }) => {
   const [isPressedIn, setIsPressedIn] = useState(false);
   const [longPressStartTime, setLongPressStartTime] = useState(0);
@@ -141,9 +139,6 @@ const StepperButton: FunctionComponent<StepperButton> = ({
       onLongPress={() => {
         setLongPressStartTime(Date.now());
       }}
-      accessibilityLabel={`${accessibilityLabel}-${
-        variant === "PLUS" ? "plus" : "minus"
-      }-button`}
     >
       <Feather
         name={variant === "PLUS" ? "plus" : "minus"}
@@ -166,7 +161,6 @@ export interface Stepper {
     type: "PREFIX" | "POSTFIX";
     label: string;
   };
-  accessibilityLabel?: string;
 }
 
 export const Stepper: FunctionComponent<Stepper> = ({
@@ -174,11 +168,10 @@ export const Stepper: FunctionComponent<Stepper> = ({
   setValue,
   bounds = {
     min: Number.MIN_SAFE_INTEGER,
-    max: Number.MAX_SAFE_INTEGER,
+    max: Number.MAX_SAFE_INTEGER
   },
   step = 1,
-  unit,
-  accessibilityLabel = "stepper",
+  unit
 }) => {
   const isMounted = useIsMounted();
   const [internalValue, setInternalValue] = useState<string>(`${value}`);
@@ -251,13 +244,12 @@ export const Stepper: FunctionComponent<Stepper> = ({
     <View
       style={[
         styles.wrapper,
-        value > 0 ? styles.wrapperHighlighted : styles.wrapperDefault,
+        value > 0 ? styles.wrapperHighlighted : styles.wrapperDefault
       ]}
     >
       <StepperButton
         variant="MINUS"
         onPress={decrement}
-        accessibilityLabel={accessibilityLabel}
         disabled={value === bounds.min}
       />
       <View style={styles.inputAndSuffixWrapper}>
@@ -272,9 +264,6 @@ export const Stepper: FunctionComponent<Stepper> = ({
           onBlur={onBlur}
           keyboardType="number-pad"
           maxLength={Math.ceil(Math.log10(bounds.max + 1))}
-          accessibilityLabel={`${accessibilityLabel}-value`}
-          testID={`${accessibilityLabel}-value`}
-          accessible={true}
         />
         {tUnit?.type === "POSTFIX" && (
           <AppText style={styles.suffix}>{tUnit?.label}</AppText>
@@ -283,7 +272,6 @@ export const Stepper: FunctionComponent<Stepper> = ({
       <StepperButton
         variant="PLUS"
         onPress={increment}
-        accessibilityLabel={accessibilityLabel}
         disabled={value === bounds.max}
       />
     </View>

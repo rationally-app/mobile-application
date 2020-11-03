@@ -29,7 +29,7 @@ export const UpdateFromAppStoreAlert: FunctionComponent = () => {
       alertType="INFO"
       title={i18nt("errorMessages", "outdatedAppUpdate", "title")}
       description={i18nt("errorMessages", "outdatedAppUpdate", "body", {
-        storeName: `${storeName}`,
+        storeName: `${storeName}`
       })}
       visible={true}
       buttonTexts={{
@@ -37,7 +37,7 @@ export const UpdateFromAppStoreAlert: FunctionComponent = () => {
           "errorMessages",
           "outdatedAppUpdate",
           "primaryActionText"
-        )}`,
+        )}`
       }}
       onOk={() => Linking.openURL(storeLink)}
     />

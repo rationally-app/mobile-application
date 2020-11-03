@@ -12,25 +12,25 @@ const styles = StyleSheet.create({
     backgroundColor: color("yellow", 30),
     paddingHorizontal: size(2),
     paddingVertical: size(1.5),
-    borderRadius: borderRadius(3),
+    borderRadius: borderRadius(3)
   },
   iconWrapper: {
-    marginRight: size(1),
+    marginRight: size(1)
   },
   contentWrapper: {
-    flex: 1,
+    flex: 1
   },
   title: {
     fontFamily: "brand-bold",
-    fontSize: fontSize(-1),
+    fontSize: fontSize(-1)
   },
   description: {
-    fontSize: fontSize(-2),
+    fontSize: fontSize(-2)
   },
   buttonWrapper: {
     alignSelf: "center",
-    marginLeft: size(1),
-  },
+    marginLeft: size(1)
+  }
 });
 
 interface Banner {
@@ -47,7 +47,7 @@ export const Banner: FunctionComponent<Banner> = ({
   title,
   description,
   featherIconName,
-  action,
+  action
 }) => (
   <View style={styles.wrapper}>
     {featherIconName && (

@@ -229,5 +229,5 @@ export const nationalityItems: {
   { id: "YEM", name: "Yemen" },
   { id: "Z", name: "Z", tag: true },
   { id: "ZMB", name: "Zambia" },
-  { id: "ZIM", name: "Zimbabwe" },
+  { id: "ZIM", name: "Zimbabwe" }
 ];

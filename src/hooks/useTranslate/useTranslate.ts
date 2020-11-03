@@ -57,7 +57,7 @@ export const useTranslate = (): TranslationHook => {
   ): CampaignPolicy["quantity"]["unit"] =>
     unit && {
       ...unit,
-      label: c13nt(unit.label),
+      label: c13nt(unit.label)
     };
 
   const i18nt = i18ntWithValidator;

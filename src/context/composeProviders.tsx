@@ -5,7 +5,7 @@ interface Providers {
 }
 export const Providers: FunctionComponent<Providers> = ({
   providers,
-  children,
+  children
 }): ReactElement => (
   <>
     {providers.reduceRight(

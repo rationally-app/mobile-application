@@ -30,39 +30,39 @@ describe("statistics", () => {
         {
           category: "toilet-paper",
           quantity: 100,
-          transactionTime: 120000000000,
+          transactionTime: 120000000000
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime: 120000000000,
+          transactionTime: 120000000000
         },
         {
           category: "chocolate",
           quantity: 30,
-          transactionTime: 120000000000,
+          transactionTime: 120000000000
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime: 120000000000,
-        },
+          transactionTime: 120000000000
+        }
       ];
 
       timestamp = new Date(2020, 3, 1);
 
       mockDailyStatsResult = {
-        pastTransactions: dailyStatsResult.map((t) => ({
+        pastTransactions: dailyStatsResult.map(t => ({
           ...t,
-          transactionTime: new Date(120000000000),
-        })),
+          transactionTime: new Date(120000000000)
+        }))
       };
 
       mockDailyStatsResponse = {
-        pastTransactions: dailyStatsResult.map((t) => ({
+        pastTransactions: dailyStatsResult.map(t => ({
           ...t,
-          transactionTime: 120000000000,
-        })),
+          transactionTime: 120000000000
+        }))
       };
     });
 
@@ -70,7 +70,7 @@ describe("statistics", () => {
       expect.assertions(1);
       mockFetch.mockReturnValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockDailyStatsResponse),
+        json: () => Promise.resolve(mockDailyStatsResponse)
       });
       const dailyStatsResult = await getDailyStatistics(
         Date.now(),
@@ -86,7 +86,7 @@ describe("statistics", () => {
       mockFetch.mockReturnValueOnce({
         ok: false,
         json: () =>
-          Promise.resolve({ message: "No operatorToken was provided" }),
+          Promise.resolve({ message: "No operatorToken was provided" })
       });
 
       await expect(

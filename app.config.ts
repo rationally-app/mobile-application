@@ -26,11 +26,11 @@ export default ({ config }: any): any => {
     ),
     android: {
       ...config.android,
-      versionCode: appBuildVersion,
+      versionCode: appBuildVersion
     },
     ios: {
       ...config.ios,
-      buildNumber: appBuildVersion.toString(),
+      buildNumber: appBuildVersion.toString()
     },
     extra: {
       mock: process.env.MOCK === "true",
@@ -43,7 +43,7 @@ export default ({ config }: any): any => {
       domainFormat: getValue(
         process.env.DOMAIN_FORMAT,
         "Please specify a DOMAIN_FORMAT env variable"
-      ),
+      )
     },
     hooks: {
       postPublish: [
@@ -61,10 +61,10 @@ export default ({ config }: any): any => {
             authToken: getValue(
               process.env.SENTRY_AUTH_TOKEN,
               "Please specify a SENTRY_AUTH_TOKEN env variable"
-            ),
-          },
-        },
-      ],
-    },
+            )
+          }
+        }
+      ]
+    }
   };
 };

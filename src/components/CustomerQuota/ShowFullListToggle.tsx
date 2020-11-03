@@ -8,18 +8,18 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   toggleText: {
     lineHeight: 1.5 * fontSize(0),
-    fontFamily: "brand-bold",
+    fontFamily: "brand-bold"
   },
   showFullListToggleBorder: {
     borderBottomWidth: 1,
     borderBottomColor: color("grey", 30),
-    flex: 1,
+    flex: 1
   },
   showFullListToggleWrapper: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-  },
+    alignItems: "center"
+  }
 });
 
 export const ShowFullListToggle: FunctionComponent<{
@@ -33,7 +33,7 @@ export const ShowFullListToggle: FunctionComponent<{
         display: "flex",
         justifyContent: "center",
         marginTop: size(2),
-        marginBottom: size(2),
+        marginBottom: size(2)
       }}
     >
       <TouchableOpacity

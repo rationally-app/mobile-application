@@ -3,7 +3,7 @@ import { View, ViewStyle, SafeAreaView } from "react-native";
 
 const styles = {
   flex: 1,
-  justifyContent: "center",
+  justifyContent: "center"
 } as ViewStyle;
 
 export const CenterDecorator = (storyFn: () => ReactNode): ReactElement => (

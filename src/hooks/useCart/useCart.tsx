@@ -3,7 +3,7 @@ import { Sentry } from "../../utils/errorTracking";
 import {
   getQuota,
   postTransaction,
-  NotEligibleError,
+  NotEligibleError
 } from "../../services/quota";
 import { transform } from "lodash";
 import { ProductContextValue, ProductContext } from "../../context/products";
@@ -13,7 +13,7 @@ import {
   Quota,
   ItemQuota,
   IdentifierInput,
-  CampaignPolicy,
+  CampaignPolicy
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
@@ -64,7 +64,7 @@ const getItem = (
   cart: Cart,
   category: string
 ): [CartItem | undefined, number] => {
-  const idx = cart.findIndex((item) => item.category === category);
+  const idx = cart.findIndex(item => item.category === category);
   return [cart[idx], idx];
 };
 
@@ -85,7 +85,7 @@ const mergeWithCart = (
         category,
         quantity: remainingQuantity,
         transactionTime,
-        identifierInputs,
+        identifierInputs
       }) => {
         remainingQuantity = Math.max(remainingQuantity, 0);
         const [existingItem] = getItem(cart, category);
@@ -99,7 +99,7 @@ const mergeWithCart = (
               value: "",
               ...(textInput.type ? { textInputType: textInput.type } : {}),
               ...(scanButton.type ? { scanButtonType: scanButton.type } : {}),
-              ...(validationRegex ? { validationRegex } : {}),
+              ...(validationRegex ? { validationRegex } : {})
             })
           ) || [];
 
@@ -126,7 +126,7 @@ const mergeWithCart = (
           maxQuantity,
           descriptionAlert,
           lastTransactionTime: transactionTime,
-          identifierInputs: identifierInputs || defaultIdentifierInputs,
+          identifierInputs: identifierInputs || defaultIdentifierInputs
         };
       }
     );
@@ -137,12 +137,12 @@ const filterQuotaWithAvailableProducts = (
   products: CampaignPolicy[]
 ): Quota => {
   const filteredQuota: Quota = {
-    remainingQuota: [],
+    remainingQuota: []
   };
   transform(
     quota.remainingQuota,
     (result: Quota, itemQuota) => {
-      if (products.some((policy) => policy.category === itemQuota.category))
+      if (products.some(policy => policy.category === itemQuota.category))
         result.remainingQuota.push(itemQuota);
     },
     filteredQuota
@@ -153,7 +153,7 @@ const filterQuotaWithAvailableProducts = (
     transform(
       quota.globalQuota!,
       (result: Quota, itemQuota) => {
-        if (products.some((policy) => policy.category === itemQuota.category))
+        if (products.some(policy => policy.category === itemQuota.category))
           result.globalQuota!.push(itemQuota);
       },
       filteredQuota
@@ -165,7 +165,7 @@ const filterQuotaWithAvailableProducts = (
     transform(
       quota.localQuota!,
       (result: Quota, itemQuota) => {
-        if (products.some((policy) => policy.category === itemQuota.category))
+        if (products.some(policy => policy.category === itemQuota.category))
           result.localQuota!.push(itemQuota);
       },
       filteredQuota
@@ -176,11 +176,11 @@ const filterQuotaWithAvailableProducts = (
 };
 
 const hasNoQuota = (quota: Quota): boolean =>
-  quota.remainingQuota.every((item) => item.quantity === 0);
+  quota.remainingQuota.every(item => item.quantity === 0);
 
 const hasInvalidQuota = (quota: Quota): boolean =>
   // Note: Invalid quota refers to negative quota received
-  quota.remainingQuota.some((item) => item.quantity < 0);
+  quota.remainingQuota.some(item => item.quantity < 0);
 
 export const useCart = (
   ids: string[],
@@ -253,7 +253,7 @@ export const useCart = (
     if (quotaResponse) {
       // Note that we must use a callback within this setState to avoid
       // having cart as a dependency which causes an infinite loop.
-      setCart((cart) =>
+      setCart(cart =>
         mergeWithCart(cart, quotaResponse.remainingQuota, getProduct)
       );
     }
@@ -303,9 +303,9 @@ export const useCart = (
               ...item,
               quantity,
               identifierInputs:
-                identifierInputs || cart[itemIdx].identifierInputs,
+                identifierInputs || cart[itemIdx].identifierInputs
             },
-            ...cart.slice(itemIdx + 1),
+            ...cart.slice(itemIdx + 1)
           ]);
         } else {
           setError(new Error(ERROR_MESSAGE.INSUFFICIENT_QUOTA));
@@ -333,7 +333,7 @@ export const useCart = (
         .map(({ category, quantity, identifierInputs }) => {
           if (
             identifierInputs.length > 0 &&
-            identifierInputs.some((identifierInput) => !identifierInput.value)
+            identifierInputs.some(identifierInput => !identifierInput.value)
           ) {
           }
           allIdentifierInputs.push(...identifierInputs);
@@ -360,7 +360,7 @@ export const useCart = (
           identificationFlag: selectedIdType,
           key: authKey,
           transactions,
-          endpoint,
+          endpoint
         });
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
@@ -391,6 +391,6 @@ export const useCart = (
     error,
     clearError,
     allQuotaResponse,
-    quotaResponse,
+    quotaResponse
   };
 };

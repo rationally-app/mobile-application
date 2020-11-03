@@ -1,7 +1,7 @@
 import React from "react";
 import {
   CampaignConfigsStoreContextProvider,
-  CampaignConfigsStoreContext,
+  CampaignConfigsStoreContext
 } from "./campaignConfigsStore";
 import { render, wait, fireEvent } from "@testing-library/react-native";
 import { Text, Button } from "react-native";
@@ -12,7 +12,7 @@ const mockGetItem = jest.fn();
 const mockSetItem = jest.fn();
 jest.mock("react-native/Libraries/Storage/AsyncStorage", () => ({
   getItem: mockGetItem,
-  setItem: mockSetItem,
+  setItem: mockSetItem
 }));
 
 jest.mock("../utils/errorTracking");
@@ -35,8 +35,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
         [testCampaignKey]: {
           features: { asd: "asd" },
           policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
-        },
+          c13n: { asdi: "asdi" }
+        }
       })
     );
 
@@ -141,8 +141,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
         [testCampaignKey]: {
           features: { asd: "asd" },
           policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
-        },
+          c13n: { asdi: "asdi" }
+        }
       })
     );
 
@@ -197,8 +197,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
         [testCampaignKey]: {
           features: { asd: "asd" },
           policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
-        },
+          c13n: { asdi: "asdi" }
+        }
       })
     );
 
@@ -221,7 +221,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
                   setCampaignConfig(testCampaignKey, {
                     features: { new: "new" },
                     policies: [{ new: "new" }],
-                    c13n: { new: "new" },
+                    c13n: { new: "new" }
                   } as any)
                 }
                 title="test button"
@@ -251,8 +251,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
           [testCampaignKey]: {
             features: { new: "new" },
             policies: [{ new: "new" }],
-            c13n: { new: "new" },
-          },
+            c13n: { new: "new" }
+          }
         })
       );
       expect(queryByTestId("features")).toHaveTextContent(`{"new":"new"}`);
@@ -268,13 +268,13 @@ describe("CampaignConfigsStoreContextProvider", () => {
         [testCampaignKey]: {
           features: { asd: "asd" },
           policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
+          c13n: { asdi: "asdi" }
         },
         "another-test-campaign": {
           features: { dfg: "dfg" },
           policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
-        },
+          c13n: { asdi: "asdi" }
+        }
       })
     );
 
@@ -289,7 +289,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
                   setCampaignConfig(testCampaignKey, {
                     features: { new: "new" },
                     policies: [{ new: "new" }],
-                    c13n: { new: "new" },
+                    c13n: { new: "new" }
                   } as any)
                 }
                 title="test button"
@@ -319,13 +319,13 @@ describe("CampaignConfigsStoreContextProvider", () => {
           [testCampaignKey]: {
             features: { new: "new" },
             policies: [{ new: "new" }],
-            c13n: { new: "new" },
+            c13n: { new: "new" }
           },
           "another-test-campaign": {
             features: { dfg: "dfg" },
             policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
-          },
+            c13n: { asdi: "asdi" }
+          }
         })
       );
       expect(queryByTestId("configs")).toHaveTextContent(
@@ -341,8 +341,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
         [testCampaignKey]: {
           features: { asd: "asd" },
           policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
-        },
+          c13n: { asdi: "asdi" }
+        }
       })
     );
 
@@ -365,7 +365,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
                   setCampaignConfig(testCampaignKey, {
                     features: null,
                     policies: [{ new: "new" }],
-                    c13n: { asdi: "asdi" },
+                    c13n: { asdi: "asdi" }
                   } as any)
                 }
                 title="test button"
@@ -395,8 +395,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
           [testCampaignKey]: {
             features: { asd: "asd" },
             policies: [{ new: "new" }],
-            c13n: { asdi: "asdi" },
-          },
+            c13n: { asdi: "asdi" }
+          }
         })
       );
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
@@ -412,8 +412,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
         [testCampaignKey]: {
           features: { asd: "asd" },
           policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
-        },
+          c13n: { asdi: "asdi" }
+        }
       })
     );
 

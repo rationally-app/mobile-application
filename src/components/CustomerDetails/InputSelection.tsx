@@ -6,34 +6,34 @@ import { IdentificationFlag } from "../../types";
 const styles = StyleSheet.create({
   selectionContainer: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "row"
   },
   selectedText: {
     color: color("grey", 0),
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
-    paddingBottom: size(1.5),
+    paddingBottom: size(1.5)
   },
   selectedIndicator: {
     borderBottomColor: color("grey", 0),
     borderBottomWidth: 2,
     marginLeft: size(1),
     marginRight: size(5),
-    marginBottom: size(2),
+    marginBottom: size(2)
   },
   unselectedText: {
     color: color("grey", 10),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
-    paddingBottom: size(1.5),
+    paddingBottom: size(1.5)
   },
   unselectedIndicator: {
     borderBottomColor: color("grey", 10),
     borderBottomWidth: 0,
     marginLeft: size(1),
     marginRight: size(5),
-    marginBottom: size(2),
-  },
+    marginBottom: size(2)
+  }
 });
 
 export const InputSelection: FunctionComponent<{
@@ -43,7 +43,7 @@ export const InputSelection: FunctionComponent<{
 }> = ({ selectionArray, currentSelection, onInputSelection }) => {
   return (
     <View style={styles.selectionContainer}>
-      {selectionArray.map((selectionType) => (
+      {selectionArray.map(selectionType => (
         <View
           key={selectionType.label}
           style={

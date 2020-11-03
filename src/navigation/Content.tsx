@@ -2,7 +2,7 @@ import React, { ReactElement, useRef, useEffect } from "react";
 import {
   createAppContainer,
   createSwitchNavigator,
-  NavigationContainerComponent,
+  NavigationContainerComponent
 } from "react-navigation";
 import CustomerQuotaStack from "./CustomerQuotaStack";
 import MerchantPayoutStack from "./MerchantPayoutStack";
@@ -16,7 +16,6 @@ import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation
 import { StackViewTransitionConfigs } from "react-navigation-stack";
 import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
-import { updateI18nLocale } from "../common/i18n/i18nSetup";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -26,11 +25,11 @@ const SwitchNavigator = createSwitchNavigator(
       {
         CampaignLocationsScreen,
         CustomerQuotaStack: {
-          screen: CustomerQuotaStack,
+          screen: CustomerQuotaStack
         },
         MerchantPayoutStack: {
-          screen: MerchantPayoutStack,
-        },
+          screen: MerchantPayoutStack
+        }
       },
       {
         drawerPosition: "right",
@@ -39,11 +38,11 @@ const SwitchNavigator = createSwitchNavigator(
         navigationOptions: {
           transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
           navigationOptions: {
-            gesturesEnabled: true,
-          },
-        },
+            gesturesEnabled: true
+          }
+        }
       }
-    ),
+    )
   },
   { initialRouteName: "DrawerNavigator" }
 );
@@ -56,11 +55,9 @@ export const Content = (): ReactElement => {
   const prefix = Linking.makeUrl("/");
 
   const checkUpdates = useCheckUpdates();
-
   useEffect(() => {
     if (appState === "active") {
       checkUpdates();
-      updateI18nLocale();
     }
   }, [appState, checkUpdates]);
 
@@ -71,7 +68,7 @@ export const Content = (): ReactElement => {
         style={{
           flex: 1,
           paddingTop:
-            Platform.OS === "android" && !__DEV__ ? StatusBar.currentHeight : 0, // padding is used to prevent content from going behind the status bar on Android production builds
+            Platform.OS === "android" && !__DEV__ ? StatusBar.currentHeight : 0 // padding is used to prevent content from going behind the status bar on Android production builds
         }}
       >
         <AppContainer ref={navigatorRef} uriPrefix={prefix} />

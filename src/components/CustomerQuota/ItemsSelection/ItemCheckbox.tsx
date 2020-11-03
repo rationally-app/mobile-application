@@ -22,7 +22,6 @@ export const ItemCheckbox: FunctionComponent<{
           descriptionAlert={cartItem.descriptionAlert}
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
-          accessibilityLabel="item-checkbox"
         />
       }
       isChecked={quantity > 0}

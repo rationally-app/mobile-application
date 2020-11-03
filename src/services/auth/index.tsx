@@ -78,7 +78,7 @@ export const liveRequestOTP = async (
       `${endpoint}/auth/register`,
       {
         method: "POST",
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       }
     );
     return response;
@@ -125,7 +125,7 @@ export const liveValidateOTP = async (
       `${endpoint}/auth/confirm`,
       {
         method: "POST",
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       }
     );
     return response;
@@ -155,7 +155,7 @@ export const mockValidateOTP = async (
 ): Promise<SessionCredentials> => {
   return {
     sessionToken: "some-valid-session-token",
-    ttl: new Date(2030, 0, 1),
+    ttl: new Date(2030, 0, 1)
   };
 };
 

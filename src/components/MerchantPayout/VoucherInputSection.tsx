@@ -11,32 +11,32 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
-    marginTop: size(3),
+    marginTop: size(3)
   },
   horizontalRule: {
     borderBottomColor: color("grey", 30),
     marginHorizontal: -size(3),
     borderBottomWidth: 1,
-    marginTop: size(5),
+    marginTop: size(5)
   },
   inputWrapper: {
     marginTop: size(4),
-    flex: 1,
+    flex: 1
   },
   voucherChipWrapper: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   seeAllButton: {
     marginTop: -size(2),
     marginRight: -size(2),
     padding: size(2),
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   seeAllText: {
-    fontFamily: "brand-italic",
-  },
+    fontFamily: "brand-italic"
+  }
 });
 
 interface VoucherInputSection {
@@ -54,7 +54,7 @@ export const VoucherInputSection: FunctionComponent<VoucherInputSection> = ({
   merchantCode,
   setMerchantCode,
   redeemVouchers,
-  openAllValidVouchersModal,
+  openAllValidVouchersModal
 }) => {
   const { i18nt } = useTranslate();
   return (

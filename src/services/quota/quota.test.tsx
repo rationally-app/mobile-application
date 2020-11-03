@@ -4,7 +4,7 @@ import {
   QuotaError,
   PostTransactionError,
   getPastTransactions,
-  PastTransactionError,
+  PastTransactionError
 } from "./index";
 import { Sentry } from "../../utils/errorTracking";
 import { defaultSelectedIdType } from "../../context/identification";
@@ -24,13 +24,13 @@ const transactions = [
   {
     category: "product-1",
     quantity: 1,
-    identifiers: [],
+    identifiers: []
   },
   {
     category: "product-2",
     quantity: 0,
-    identifiers: [],
-  },
+    identifiers: []
+  }
 ];
 
 const pastTransactions = [
@@ -43,9 +43,9 @@ const pastTransactions = [
         scanButtonType: "QR",
         validationRegex: "^[A-F0-9]{9}$",
         value: "123456789",
-        textInputType: "STRING",
-      },
-    ],
+        textInputType: "STRING"
+      }
+    ]
   },
   {
     category: "product-1",
@@ -56,9 +56,9 @@ const pastTransactions = [
         scanButtonType: "QR",
         validationRegex: "^[A-F0-9]{9}$",
         value: "123456789",
-        textInputType: "STRING",
-      },
-    ],
+        textInputType: "STRING"
+      }
+    ]
   },
   {
     category: "product-2",
@@ -69,30 +69,30 @@ const pastTransactions = [
         scanButtonType: "QR",
         validationRegex: "^[A-F0-9]{9}$",
         value: "123456789",
-        textInputType: "STRING",
-      },
-    ],
-  },
+        textInputType: "STRING"
+      }
+    ]
+  }
 ];
 
 const timestamp = new Date(2020, 3, 1);
 
 const mockGetQuotaResponseSingleId = {
-  remainingQuota: transactions.map((t) => ({
+  remainingQuota: transactions.map(t => ({
     ...t,
-    transactionTime: timestamp.getTime(),
-  })),
+    transactionTime: timestamp.getTime()
+  }))
 };
 
 const mockGetQuotaResultSingleId = {
-  remainingQuota: transactions.map((t) => ({
+  remainingQuota: transactions.map(t => ({
     ...t,
-    transactionTime: timestamp,
-  })),
+    transactionTime: timestamp
+  }))
 };
 
 const mockGetQuotaResponseMultipleId = {
-  remainingQuota: transactions,
+  remainingQuota: transactions
 };
 
 const postTransactionParams = {
@@ -100,39 +100,39 @@ const postTransactionParams = {
   identificationFlag,
   transactions: [{ category: "product-1", quantity: 1, identifiers: [] }],
   key,
-  endpoint,
+  endpoint
 };
 
 const mockPostTransactionResponse = {
   transactions: [
     {
       transaction: transactions,
-      timestamp: timestamp.getTime(),
-    },
-  ],
+      timestamp: timestamp.getTime()
+    }
+  ]
 };
 
 const mockPostTransactionResult = {
   transactions: [
     {
       transaction: transactions,
-      timestamp,
-    },
-  ],
+      timestamp
+    }
+  ]
 };
 
 const mockPastTransactionsResponse = {
-  pastTransactions: pastTransactions.map((t) => ({
+  pastTransactions: pastTransactions.map(t => ({
     ...t,
-    transactionTime: timestamp.getTime(),
-  })),
+    transactionTime: timestamp.getTime()
+  }))
 };
 
 const mockPastTransactionsResult = {
-  pastTransactions: pastTransactions.map((t) => ({
+  pastTransactions: pastTransactions.map(t => ({
     ...t,
-    transactionTime: timestamp,
-  })),
+    transactionTime: timestamp
+  }))
 };
 
 describe("quota", () => {
@@ -146,7 +146,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockGetQuotaResponseSingleId),
+        json: () => Promise.resolve(mockGetQuotaResponseSingleId)
       });
       const quota = await getQuota(
         ["S0000000J"],
@@ -161,7 +161,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockGetQuotaResponseMultipleId),
+        json: () => Promise.resolve(mockGetQuotaResponseMultipleId)
       });
       const quota = await getQuota(
         ["S0000000J", "S0000001I"],
@@ -176,7 +176,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "No ID was provided" }),
+        json: () => Promise.resolve({ message: "No ID was provided" })
       });
 
       await expect(
@@ -190,8 +190,8 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            remaining: mockGetQuotaResponseSingleId.remainingQuota,
-          }),
+            remaining: mockGetQuotaResponseSingleId.remainingQuota
+          })
       });
 
       await expect(
@@ -205,8 +205,8 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            remaining: mockGetQuotaResponseSingleId.remainingQuota,
-          }),
+            remaining: mockGetQuotaResponseSingleId.remainingQuota
+          })
       });
 
       await expect(
@@ -219,7 +219,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "Invalid customer ID" }),
+        json: () => Promise.resolve({ message: "Invalid customer ID" })
       });
 
       await expect(
@@ -242,7 +242,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockPostTransactionResponse),
+        json: () => Promise.resolve(mockPostTransactionResponse)
       });
       const result = await postTransaction(postTransactionParams);
       expect(result).toEqual(mockPostTransactionResult);
@@ -252,7 +252,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "No ID was provided" }),
+        json: () => Promise.resolve({ message: "No ID was provided" })
       });
 
       await expect(
@@ -266,8 +266,8 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            t: mockPostTransactionResult.transactions,
-          }),
+            t: mockPostTransactionResult.transactions
+          })
       });
 
       await expect(postTransaction(postTransactionParams)).rejects.toThrow(
@@ -281,8 +281,8 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            t: mockPostTransactionResult.transactions,
-          }),
+            t: mockPostTransactionResult.transactions
+          })
       });
 
       await expect(postTransaction(postTransactionParams)).rejects.toThrow(
@@ -295,7 +295,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "Invalid customer ID" }),
+        json: () => Promise.resolve({ message: "Invalid customer ID" })
       });
 
       await expect(
@@ -318,7 +318,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockReturnValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockPastTransactionsResponse),
+        json: () => Promise.resolve(mockPastTransactionsResponse)
       });
       const pastTransactionsResult = await getPastTransactions(
         ["S0000000J"],
@@ -333,7 +333,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockReturnValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "No ID was provided" }),
+        json: () => Promise.resolve({ message: "No ID was provided" })
       });
 
       await expect(
@@ -347,8 +347,8 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            transactions: mockPastTransactionsResponse.pastTransactions,
-          }),
+            transactions: mockPastTransactionsResponse.pastTransactions
+          })
       });
 
       await expect(

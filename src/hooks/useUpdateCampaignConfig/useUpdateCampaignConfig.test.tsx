@@ -22,8 +22,8 @@ describe("useUpdateCampaignConfig", () => {
     mockGetCampaignConfig.mockResolvedValue({
       features: {
         minAppBinaryVersion: "3.0.0",
-        minAppBuildVersion: 0,
-      },
+        minAppBuildVersion: 0
+      }
     });
     const { result } = renderHook(() =>
       useUpdateCampaignConfig(operatorToken, key, endpoint)
@@ -38,8 +38,8 @@ describe("useUpdateCampaignConfig", () => {
     expect(result.current.result).toStrictEqual({
       features: {
         minAppBinaryVersion: "3.0.0",
-        minAppBuildVersion: 0,
-      },
+        minAppBuildVersion: 0
+      }
     });
     expect(result.current.fetchingState).toBe("RETURNED_NEW_UPDATES");
   });
@@ -47,7 +47,7 @@ describe("useUpdateCampaignConfig", () => {
   it("should set fetchingState and not set result when there are no updates to the campaign config", async () => {
     expect.assertions(4);
     mockGetCampaignConfig.mockResolvedValue({
-      features: null,
+      features: null
     });
     const { result } = renderHook(() =>
       useUpdateCampaignConfig(operatorToken, key, endpoint)
@@ -88,8 +88,8 @@ describe("useUpdateCampaignConfig", () => {
     mockGetCampaignConfig.mockResolvedValue({
       features: {
         minAppBinaryVersion: "3.0.0",
-        minAppBuildVersion: 0,
-      },
+        minAppBuildVersion: 0
+      }
     });
     setCampaignConfigSpy.mockImplementation(() => {
       throw new Error("Error saving campaign config");
@@ -114,8 +114,8 @@ describe("useUpdateCampaignConfig", () => {
     mockGetCampaignConfig.mockResolvedValue({
       features: {
         minAppBinaryVersion: "3.0.0",
-        minAppBuildVersion: 0,
-      },
+        minAppBuildVersion: 0
+      }
     });
     setCampaignConfigSpy.mockImplementation(() => {
       throw new Error("Error saving campaign config");
@@ -138,8 +138,8 @@ describe("useUpdateCampaignConfig", () => {
     mockGetCampaignConfig.mockResolvedValue({
       features: {
         minAppBinaryVersion: "3.0.0",
-        minAppBuildVersion: 0,
-      },
+        minAppBuildVersion: 0
+      }
     });
     setCampaignConfigSpy.mockImplementation(() => {
       throw new Error("Error saving campaign config");
@@ -164,8 +164,8 @@ describe("useUpdateCampaignConfig", () => {
     mockGetCampaignConfig.mockResolvedValue({
       features: {
         minAppBinaryVersion: "3.0.0",
-        minAppBuildVersion: 0,
-      },
+        minAppBuildVersion: 0
+      }
     });
     setCampaignConfigSpy.mockReset();
     const { result } = renderHook(() =>

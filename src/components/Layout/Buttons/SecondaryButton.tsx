@@ -12,7 +12,6 @@ export interface SecondaryButton {
   icon?: ReactElement;
   disabled?: boolean;
   size?: "medium" | "small";
-  accessibilityLabel?: string;
 }
 
 export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
@@ -22,8 +21,7 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
   isLoading = false,
   icon,
   disabled,
-  size = "medium",
-  accessibilityLabel,
+  size = "medium"
 }) => (
   <BaseButton
     onPress={onPress}
@@ -32,7 +30,6 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
     fullWidth={fullWidth}
     disabled={disabled || isLoading}
     size={size}
-    accessibilityLabel={accessibilityLabel}
   >
     {isLoading ? (
       <ActivityIndicator size="small" color={color("grey", 40)} />
@@ -43,7 +40,7 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
           style={{
             color: disabled ? color("grey", 40) : color("blue", 50),
             fontFamily: "brand-bold",
-            textAlign: "center",
+            textAlign: "center"
           }}
         >
           {text}
