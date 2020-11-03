@@ -4,7 +4,7 @@ import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import {
   formatPhoneNumber,
-  stripPhoneNumberFormatting
+  stripPhoneNumberFormatting,
 } from "../../utils/phoneNumberFormatter";
 
 const styles = StyleSheet.create({
@@ -75,7 +75,7 @@ export const PhoneNumberInput: FunctionComponent<{
           style={styles.countryCode}
           keyboardType="phone-pad"
           value={countryCodeValue}
-          onChangeText={text => onChangeCountryCode(text)}
+          onChangeText={(text) => onChangeCountryCode(text)}
         />
         <AppText style={styles.hyphen}>-</AppText>
         <TextInput
@@ -85,7 +85,7 @@ export const PhoneNumberInput: FunctionComponent<{
             mobileNumberValue,
             countryCodeValue.substr(1)
           )}
-          onChangeText={text =>
+          onChangeText={(text) =>
             onChangeMobileNumber(stripPhoneNumberFormatting(text))
           }
           onSubmitEditing={onSubmit}
