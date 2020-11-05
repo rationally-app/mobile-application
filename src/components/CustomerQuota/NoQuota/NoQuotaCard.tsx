@@ -63,8 +63,8 @@ interface NoQuotaCard {
   cart: Cart;
   onCancel: () => void;
   onAppeal?: () => void;
-  quotaResponse: Quota | null;
-  allQuotaResponse: Quota | null;
+  quotaResponse?: Quota;
+  allQuotaResponse?: Quota;
 }
 
 /**
@@ -175,7 +175,7 @@ export const getLatestTransactionTime = (cart: Cart): Date | undefined =>
 
 export const checkHasAppealProduct = (
   allProducts: CampaignPolicy[] | null,
-  allQuotaResponse: Quota | null
+  allQuotaResponse: Quota | undefined
 ): boolean => {
   const appealProductsCategories = allProducts
     ?.filter((product) => product.categoryType === "APPEAL")
@@ -259,7 +259,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     !!allProducts[0].quantity.usage;
 
   const firstGlobalQuota = showGlobalQuota
-    ? quotaResponse!.globalQuota![0]
+    ? quotaResponse!.globalQuota[0]
     : undefined;
 
   return (
