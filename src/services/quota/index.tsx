@@ -4,9 +4,6 @@ import {
   Quota,
   PostTransactionResult,
   PastTransactionsResult,
-  DeleteTransactionResult,
-  TransactionIdentifier,
-  CommitTransactionResult,
   IdentificationFlag,
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
@@ -69,10 +66,12 @@ interface PostTransaction {
   endpoint: string;
 }
 
-interface CommitTransaction {
+interface PostTransactionUpdate {
+  ids: string[];
   key: string;
   endpoint: string;
-  transactionIdentifiers: TransactionIdentifier[];
+  transactions: { timestamp: number; transaction: Transaction[] }[];
+  reservationId: string;
 }
 
 export const mockGetQuota = async (
@@ -263,6 +262,7 @@ export const mockReserveTransaction = async ({
     }
     return {
       transactions: transactionArr,
+      reservationId: "abcdef",
     };
   }
   return {
@@ -272,6 +272,7 @@ export const mockReserveTransaction = async ({
         timestamp,
       },
     ],
+    reservationId: "abcdef",
   };
 };
 
@@ -313,33 +314,43 @@ export const liveReserveTransaction = async ({
 };
 
 export const mockCommitTransaction = async ({
-  transactionIdentifiers,
-}: CommitTransaction): Promise<CommitTransactionResult> => {
-  if (transactionIdentifiers.length === 0) {
-    throw new CommitTransactionError("No transactions to commit");
+  ids,
+  transactions,
+  reservationId,
+}: PostTransactionUpdate): Promise<PostTransactionResult> => {
+  if (ids.length === 0) {
+    throw new CommitTransactionError("No ids to commit");
   }
-  const timestamp = Date.now();
-  const transactions = transactionIdentifiers.map((identifier, i) => {
-    return {
-      identifier,
-      timestamp: new Date(timestamp + i),
-    };
-  });
 
-  return { transactions };
+  return {
+    transactions: transactions.map(({ transaction, timestamp }) => {
+      return {
+        transaction,
+        timestamp: new Date(timestamp),
+      };
+    }),
+  };
 };
 
 export const liveCommitTransaction = async ({
-  key,
+  ids,
   endpoint,
-  transactionIdentifiers,
-}: CommitTransaction): Promise<CommitTransactionResult> => {
-  if (transactionIdentifiers.length === 0) {
+  key,
+  transactions,
+  reservationId,
+}: PostTransactionUpdate): Promise<PostTransactionResult> => {
+  if (ids.length === 0) {
     throw new CommitTransactionError("No transactions to commit");
   }
   try {
+    console.log({
+      ids,
+      transactions,
+      reservationId,
+    });
+
     const response = await fetchWithValidator(
-      CommitTransactionResult,
+      PostTransactionResult,
       `${endpoint}/transactions/commit`,
       {
         method: "POST",
@@ -347,12 +358,15 @@ export const liveCommitTransaction = async ({
           Authorization: key,
         },
         body: JSON.stringify({
-          transactionIdentifiers,
+          ids,
+          transactions,
+          reservationId,
         }),
       }
     );
     return response;
   } catch (e) {
+    console.log(e);
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     } else if (e instanceof SessionError) {
@@ -363,24 +377,35 @@ export const liveCommitTransaction = async ({
 };
 
 export const mockCancelTransaction = async ({
-  transactionIdentifiers,
-}: CommitTransaction): Promise<void> => {
-  if (transactionIdentifiers.length === 0) {
-    throw new CommitTransactionError("No transactions to commit");
-  }
+  ids,
+  transactions,
+  reservationId,
+}: PostTransactionUpdate): Promise<PostTransactionResult> => {
+  console.log("hello");
+
+  const newTransactions = transactions.map(({ transaction, timestamp }) => {
+    return {
+      transaction,
+      timestamp: new Date(timestamp),
+    };
+  });
+
+  return { transactions: newTransactions, reservationId };
 };
 
 export const liveCancelTransaction = async ({
-  key,
+  ids,
   endpoint,
-  transactionIdentifiers,
-}: CommitTransaction): Promise<void> => {
-  if (transactionIdentifiers.length === 0) {
+  key,
+  transactions,
+  reservationId,
+}: PostTransactionUpdate): Promise<PostTransactionResult> => {
+  if (ids.length === 0) {
     throw new CommitTransactionError("No transactions to commit");
   }
   try {
-    await fetchWithValidator(
-      DeleteTransactionResult,
+    return await fetchWithValidator(
+      PostTransactionResult,
       `${endpoint}/transactions/cancel`,
       {
         method: "POST",
@@ -388,7 +413,9 @@ export const liveCancelTransaction = async ({
           Authorization: key,
         },
         body: JSON.stringify({
-          transactionIdentifiers,
+          ids,
+          transactions,
+          reservationId,
         }),
       }
     );

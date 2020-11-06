@@ -17,7 +17,6 @@ import {
   ItemQuota,
   IdentifierInput,
   CampaignPolicy,
-  TransactionIdentifier,
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
@@ -60,10 +59,10 @@ export type CartHook = {
     quantity: number,
     identifierInputs?: IdentifierInput[]
   ) => void;
-  reserveCart: (onComplete: () => void) => void;
+  reserveCart: () => void;
   commitCart: () => void;
   checkoutCart: () => void;
-  cancelCart: (onComplete: () => void) => void;
+  cancelCart: () => void;
   checkoutResult?: PostTransactionResult;
   error?: Error;
   clearError: () => void;
@@ -335,110 +334,46 @@ export const useCart = (
    * Sets checkoutResult to the response of the post transaction.
    */
 
-  const reserveCart: CartHook["reserveCart"] = useCallback(
-    (onComplete: () => void) => {
-      const reserve = async (): Promise<void> => {
-        setCartState("RESERVING");
-        const allIdentifierInputs: IdentifierInput[] = [];
-        const transactions = Object.values(cart)
-          .filter(({ quantity }) => quantity)
-          .map(({ category, quantity, identifierInputs }) => {
-            if (
-              identifierInputs.length > 0 &&
-              identifierInputs.some((identifierInput) => !identifierInput.value)
-            ) {
-            }
-            allIdentifierInputs.push(...identifierInputs);
-            return { category, quantity, identifierInputs };
-          });
-
-        if (transactions.length === 0) {
-          setCartState("DEFAULT");
-          setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
-          return;
-        }
-
-        try {
-          validateIdentifierInputs(allIdentifierInputs);
-        } catch (error) {
-          setCartState("DEFAULT");
-          setError(error);
-          return;
-        }
-
-        try {
-          const transactionResponse = await reserveTransaction({
-            ids,
-            identificationFlag: selectedIdType,
-            key: authKey,
-            transactions,
-            endpoint,
-          });
-          setCheckoutResult(transactionResponse);
-          setCartState("RESERVED");
-          onComplete();
-        } catch (e) {
-          setCartState("DEFAULT");
+  const reserveCart: CartHook["reserveCart"] = useCallback(async () => {
+    const reserve = async (): Promise<void> => {
+      setCartState("RESERVING");
+      const allIdentifierInputs: IdentifierInput[] = [];
+      const transactions = Object.values(cart)
+        .filter(({ quantity }) => quantity)
+        .map(({ category, quantity, identifierInputs }) => {
           if (
-            e.message ===
-            "Invalid Purchase Request: Duplicate identifier inputs"
+            identifierInputs.length > 0 &&
+            identifierInputs.some((identifierInput) => !identifierInput.value)
           ) {
-            setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
-          } else if (e instanceof SessionError) {
-            setError(e);
-          } else {
-            setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
           }
-        }
-      };
-
-      reserve();
-    },
-    [authKey, cart, endpoint, ids, selectedIdType]
-  );
-
-  const commitCart: CartHook["commitCart"] = useCallback(() => {
-    const commit = async (): Promise<void> => {
-      setCartState("COMMITTING");
-      // create array of transaction identifiers
-      const transactionIdentifiers: TransactionIdentifier[] = [];
-      const transactions = checkoutResult?.transactions;
-      if (transactions) {
-        ids.forEach((id: string, index: number) => {
-          const thisIdTransactions = transactions[index];
-          const baseTimestamp = thisIdTransactions.timestamp.valueOf();
-          thisIdTransactions.transaction.forEach((txn, idx) => {
-            transactionIdentifiers.push({
-              id,
-              transactionTime: baseTimestamp + idx,
-            });
-          });
+          allIdentifierInputs.push(...identifierInputs);
+          return { category, quantity, identifierInputs };
         });
+
+      if (transactions.length === 0) {
+        setCartState("DEFAULT");
+        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
+        return;
       }
-      //commit the transactions
+
       try {
-        const commitResponse = await commitTransaction({
+        validateIdentifierInputs(allIdentifierInputs);
+      } catch (error) {
+        setCartState("DEFAULT");
+        setError(error);
+        return;
+      }
+
+      try {
+        const transactionResponse = await reserveTransaction({
+          ids,
+          identificationFlag: selectedIdType,
           key: authKey,
+          transactions,
           endpoint,
-          transactionIdentifiers,
         });
-
-        if (checkoutResult) {
-          const newCheckoutResult: PostTransactionResult = {
-            ...checkoutResult,
-          };
-          let timestampPointer = 0;
-          checkoutResult.transactions.forEach((id_txn, idx) => {
-            newCheckoutResult.transactions[idx].timestamp =
-              commitResponse.transactions[timestampPointer].timestamp;
-            id_txn.transaction.forEach((txn) => {
-              timestampPointer++;
-            });
-          });
-          setCheckoutResult(newCheckoutResult);
-        }
-
-        setCartState("PURCHASED");
+        setCheckoutResult(transactionResponse);
+        setCartState("RESERVED");
       } catch (e) {
         setCartState("DEFAULT");
         if (
@@ -453,38 +388,78 @@ export const useCart = (
       }
     };
 
+    await reserve();
+  }, [authKey, cart, endpoint, ids, selectedIdType]);
+
+  const commitCart: CartHook["commitCart"] = useCallback(async () => {
+    const commit = async (): Promise<void> => {
+      setCartState("COMMITTING");
+      const { transactions, reservationId } = checkoutResult ?? {};
+
+      try {
+        if (transactions && reservationId) {
+          const transactionsFormatted = transactions.map(
+            ({ transaction, timestamp }) => {
+              return {
+                transaction,
+                timestamp: timestamp.valueOf(),
+              };
+            }
+          );
+          const commitResponse = await commitTransaction({
+            key: authKey,
+            endpoint,
+            ids,
+            transactions: transactionsFormatted,
+            reservationId,
+          });
+          setCheckoutResult(commitResponse);
+
+          setCartState("PURCHASED");
+        }
+      } catch (e) {
+        console.log(e);
+        setCartState("DEFAULT");
+        if (
+          e.message === "Invalid Purchase Request: Duplicate identifier inputs"
+        ) {
+          setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e instanceof SessionError) {
+          setError(e);
+        } else {
+          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+        }
+      }
+    };
+
     if (cartState == "RESERVED") {
-      commit();
+      await commit();
     } else {
       setError(new Error("Nothing to commit."));
     }
   }, [cartState, authKey, endpoint, checkoutResult, ids]);
 
-  const cancelCart: CartHook["cancelCart"] = useCallback(
-    (onComplete: () => void) => {
-      const cancel = async (): Promise<void> => {
-        setCartState("CANCELLING");
-        // create array of transaction identifiers
-        const transactionIdentifiers: TransactionIdentifier[] = [];
-        const transactions = checkoutResult?.transactions;
-        if (transactions) {
-          ids.forEach((id: string, index: number) => {
-            const thisIdTransactions = transactions[index];
-            const baseTimestamp = thisIdTransactions.timestamp.valueOf();
-            thisIdTransactions.transaction.forEach((txn, idx) => {
-              transactionIdentifiers.push({
-                id,
-                transactionTime: baseTimestamp + idx,
-              });
-            });
-          });
-        }
-
-        try {
+  const cancelCart: CartHook["cancelCart"] = useCallback(async () => {
+    const cancel = async (): Promise<void> => {
+      setCartState("CANCELLING");
+      // create array of transaction identifiers
+      const { transactions, reservationId } = checkoutResult ?? {};
+      try {
+        if (transactions && reservationId) {
+          const transactionsFormatted = transactions.map(
+            ({ transaction, timestamp }) => {
+              return {
+                transaction,
+                timestamp: timestamp.valueOf(),
+              };
+            }
+          );
           const cancelResponse = await cancelTransaction({
             key: authKey,
             endpoint,
-            transactionIdentifiers,
+            ids,
+            transactions: transactionsFormatted,
+            reservationId,
           });
           Sentry.addBreadcrumb({
             category: "useCart",
@@ -493,31 +468,29 @@ export const useCart = (
 
           setCheckoutResult(undefined);
           setCartState("DEFAULT");
-          onComplete();
-        } catch (e) {
-          setCartState("DEFAULT");
-          if (e instanceof SessionError) {
-            setError(e);
-          } else {
-            setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
-          }
         }
-      };
-
-      if (cartState == "RESERVED") {
-        cancel();
-      } else {
-        setError(new Error("Nothing to cancel."));
+      } catch (e) {
+        setCartState("DEFAULT");
+        if (e instanceof SessionError) {
+          setError(e);
+        } else {
+          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+        }
       }
-    },
-    [cartState, authKey, endpoint, checkoutResult, ids]
-  );
+    };
+
+    if (cartState == "RESERVED") {
+      await cancel();
+    } else {
+      setError(new Error("Nothing to cancel."));
+    }
+  }, [cartState, authKey, endpoint, checkoutResult, ids]);
 
   /**
    * Handles the checking out of the cart.
    * Sets checkoutResult to the response of the post transaction.
    */
-  const checkoutCart: CartHook["checkoutCart"] = useCallback(() => {
+  const checkoutCart: CartHook["checkoutCart"] = useCallback(async () => {
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
 
@@ -572,7 +545,7 @@ export const useCart = (
       }
     };
 
-    checkout();
+    await checkout();
   }, [authKey, cart, endpoint, ids, selectedIdType]);
 
   return {

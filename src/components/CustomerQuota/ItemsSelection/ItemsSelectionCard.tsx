@@ -8,7 +8,7 @@ import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
 import { Feather } from "@expo/vector-icons";
 import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
-import { PaymentConfirmationModal } from "../PaymentConfirmationModal";
+// import { PaymentConfirmationModal } from "../PaymentConfirmationModal";
 import { Item } from "./Item";
 import { ProductContext } from "../../../context/products";
 import {
@@ -19,6 +19,7 @@ import {
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
+import { PaymentConfirmationModal } from "../PaymentConfirmationModal";
 
 interface ItemsSelectionCard {
   ids: string[];
@@ -140,13 +141,11 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             onPress={
               !isChargeable
                 ? checkoutCart
-                : () => {
+                : async () => {
                     try {
-                      reserveCart(() => {
-                        setShowPaymentAlert(true);
-                      });
+                      await reserveCart();
+                      setShowPaymentAlert(true);
                     } catch (e) {
-                      setShowPaymentAlert(false);
                       showErrorAlert(e);
                     }
                   }
@@ -164,9 +163,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <PaymentConfirmationModal
         isVisible={showPaymentAlert}
         commitCart={commitCart}
-        cancelPayment={() => {
-          cancelCart(() => setShowPaymentAlert(false));
-        }}
+        cancelPayment={cancelCart}
       />
     </View>
   );
