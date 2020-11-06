@@ -146,6 +146,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                       await reserveCart();
                       setShowPaymentAlert(true);
                     } catch (e) {
+                      setShowPaymentAlert(false);
                       showErrorAlert(e);
                     }
                   }
