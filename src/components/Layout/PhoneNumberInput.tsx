@@ -2,6 +2,10 @@ import React, { FunctionComponent } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
+import {
+  formatPhoneNumber,
+  stripPhoneNumberFormatting,
+} from "../../utils/phoneNumberFormatter";
 
 const styles = StyleSheet.create({
   inputsWrapper: {
@@ -80,14 +84,19 @@ export const PhoneNumberInput: FunctionComponent<{
           style={styles.countryCode}
           keyboardType="phone-pad"
           value={countryCodeValue}
-          onChange={({ nativeEvent: { text } }) => onChangeCountryCode(text)}
+          onChangeText={(text) => onChangeCountryCode(text)}
         />
         <AppText style={styles.hyphen}>-</AppText>
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={mobileNumberValue}
-          onChange={({ nativeEvent: { text } }) => onChangeMobileNumber(text)}
+          value={formatPhoneNumber(
+            mobileNumberValue,
+            countryCodeValue.substr(1)
+          )}
+          onChangeText={(text) =>
+            onChangeMobileNumber(stripPhoneNumberFormatting(text))
+          }
           onSubmitEditing={onSubmit}
           accessibilityLabel={`${accessibilityLabel}-input`}
           testID={`${accessibilityLabel}-input`}
