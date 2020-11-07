@@ -2,68 +2,6 @@ import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
 import "../../common/i18n/i18nMock";
 import { i18ntWithValidator } from "../useTranslate/useTranslate";
-import { renderHook } from "@testing-library/react-hooks";
-import { useDailyStatistics } from "./useDailyStatistics";
-import React, { FunctionComponent } from "react";
-import { ProductContextProvider } from "../../context/products";
-import { defaultIdentifier } from "../../test/helpers/defaults";
-
-const key = "KEY";
-const endpoint = "https://myendpoint.com";
-const operatorToken = "operator-token";
-
-const wrapper: FunctionComponent = ({ children }) => (
-  <ProductContextProvider products={customProducts}>
-    {children}
-  </ProductContextProvider>
-);
-
-const customProducts: CampaignPolicy[] = [
-  {
-    category: "specs",
-    categoryType: "DEFAULT",
-    name: "Specs",
-    order: 1,
-    identifiers: [
-      {
-        ...defaultIdentifier,
-        label: "first",
-      },
-    ],
-    quantity: {
-      period: -1,
-      periodType: "ROLLING",
-      periodExpression: 365,
-      limit: 1,
-      default: 1,
-    },
-    type: "REDEEM",
-  },
-  {
-    category: "specs-lost",
-    categoryType: "APPEAL",
-    name: "Lost Specs",
-    order: 1,
-    alert: {
-      threshold: 2,
-      label: "*chargeable",
-    },
-    quantity: {
-      period: -1,
-      periodType: "ROLLING",
-      periodExpression: 365,
-      limit: 9999,
-      default: 1,
-    },
-    identifiers: [
-      {
-        ...defaultIdentifier,
-        label: "first",
-      },
-    ],
-    type: "REDEEM",
-  },
-];
 
 describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics[];
@@ -225,17 +163,12 @@ describe("countTotalTransactionsAndByCategory", () => {
 
   it("should return multiple summarised transactions categories with total count and count per category and the name to be displayed on the stats page, as well as ordered by ascending order number", async () => {
     expect.assertions(1);
-    const { result, waitForNextUpdate } = renderHook(
-      () => useDailyStatistics(key, endpoint, operatorToken, 12000000000),
-      { wrapper }
-    );
-    await waitForNextUpdate();
-    const { c13ntForUnit } = result.current;
+
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactions,
         campaignPolicy,
-        c13ntForUnit
+        jest.fn()
       )
     ).toStrictEqual({
       summarisedTotalCount: 4019,
@@ -243,14 +176,14 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 pack(s)",
+          quantityText: "999 qty",
           descriptionAlert: undefined,
           order: 2,
         },
         {
           category: "chocolate",
           name: "🍫 Chocolate",
-          quantityText: "$3,000",
+          quantityText: "3,000 qty",
           descriptionAlert: undefined,
           order: 3,
         },
@@ -268,18 +201,11 @@ describe("countTotalTransactionsAndByCategory", () => {
   it("should return single summarised transaction category", async () => {
     expect.assertions(1);
 
-    const { result, waitForNextUpdate } = renderHook(
-      () => useDailyStatistics(key, endpoint, operatorToken, 12000000000),
-      { wrapper }
-    );
-    await waitForNextUpdate();
-    const { c13ntForUnit } = result.current;
-
     expect(
       countTotalTransactionsAndByCategory(
         pastInstantNoodleTransactions,
         campaignPolicy,
-        c13ntForUnit
+        jest.fn()
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -287,7 +213,7 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 pack(s)",
+          quantityText: "999 qty",
           descriptionAlert: undefined,
           order: 2,
         },
@@ -298,18 +224,11 @@ describe("countTotalTransactionsAndByCategory", () => {
   it("should return category with category as name if transacted item is not in policies", async () => {
     expect.assertions(1);
 
-    const { result, waitForNextUpdate } = renderHook(
-      () => useDailyStatistics(key, endpoint, operatorToken, 12000000000),
-      { wrapper }
-    );
-    await waitForNextUpdate();
-    const { c13ntForUnit } = result.current;
-
     expect(
       countTotalTransactionsAndByCategory(
         invalidPastTransactions,
         campaignPolicy,
-        c13ntForUnit
+        jest.fn()
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -328,18 +247,11 @@ describe("countTotalTransactionsAndByCategory", () => {
   it("should have appeal alertDescription 'via appeal' if product is from an appeal flow", async () => {
     expect.assertions(1);
 
-    const { result, waitForNextUpdate } = renderHook(
-      () => useDailyStatistics(key, endpoint, operatorToken, 12000000000),
-      { wrapper }
-    );
-    await waitForNextUpdate();
-    const { c13ntForUnit } = result.current;
-
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactionsWithAppeal,
         campaignPolicy,
-        c13ntForUnit
+        jest.fn()
       )
     ).toStrictEqual({
       summarisedTotalCount: 200,
