@@ -17,6 +17,21 @@ export const fontSize = (level: FontSizeLevel): number => {
   }
 };
 
+/**
+ * Returns the line height given the level
+ *
+ * @param level
+ *    -4 (16), -3 (16), -2 (16), -1 (20), 0 (is it's a header then 20, else 24),
+ *    1 (24), 2 (28), 3 (32), 4 (40), 5 (56), 6 (64), 7 (72)
+ */
+export const lineHeight = (level: FontSizeLevel, isHeader: boolean): number => {
+  if (level < 0) {
+    return [20, 16, 16, 16][Math.abs(level) - 1];
+  } else {
+    return [isHeader ? 20 : 24, 24, 28, 32, 40, 56, 64, 72][level];
+  }
+};
+
 export type LetterSpacingLevel = 1 | 2;
 
 /**

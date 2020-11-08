@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { fontSize, size, color } from "../../common/styles";
+import { lineHeight } from "../../common/styles/typography";
 
 export const sharedStyles = StyleSheet.create({
   emoji: {
@@ -9,6 +10,7 @@ export const sharedStyles = StyleSheet.create({
     marginTop: size(1),
     fontFamily: "brand-bold",
     fontSize: fontSize(4),
+    lineHeight: lineHeight(4, true),
   },
   description: {
     marginTop: size(2),
