@@ -11,12 +11,12 @@ export type ToneLevel = 0 | 10 | 20 | 30 | 40 | 50 | 60 | 80 | 100;
 const palette: { [color in ColorName]: { [tone: string]: string } } = {
   grey: {
     "0": "#FFFFFF",
-    "10": "#F8FAFC",
-    "20": "#EEF1F7",
-    "30": "#CBD2D9",
-    "40": "#9AA5B1",
-    "80": "#3E4C59",
-    "100": "#000000",
+    "10": "#F5F7F9",
+    "20": "#ECEFF3",
+    "30": "#CDD1D6",
+    "40": "#ABB1B7",
+    "50": "#8C949B",
+    "60": "#686E74",
   },
   yellow: {
     "10": "#FFFBEA",
@@ -58,7 +58,7 @@ const palette: { [color in ColorName]: { [tone: string]: string } } = {
 
 export function color(
   colorName: "grey",
-  tone: 0 | 10 | 20 | 30 | 40 | 80 | 100
+  tone: 0 | 10 | 20 | 30 | 40 | 50 | 60
 ): string;
 export function color(
   colorName: "green" | "red" | "blue",
