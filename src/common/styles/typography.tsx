@@ -28,7 +28,6 @@ export const letterSpacing = (level: LetterSpacingLevel): number =>
   [0.5, 0.7][level - 1];
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-console.log(Dimensions.get("window"));
 
 // based on iphone 6s's scale
 const scale = SCREEN_WIDTH / 375;
