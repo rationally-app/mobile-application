@@ -164,7 +164,10 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
       <PaymentConfirmationModal
         isVisible={showPaymentAlert}
         commitCart={commitCart}
-        cancelPayment={cancelCart}
+        cancelPayment={async () => {
+          await cancelCart();
+          setShowPaymentAlert(false);
+        }}
       />
     </View>
   );
