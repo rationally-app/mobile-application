@@ -31,21 +31,33 @@ const styles = StyleSheet.create({
 interface InputWithLabel extends TextInputProps {
   label: string;
   editable?: boolean;
+  accessibilityLabel?: string;
 }
 
 export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
   label,
   editable = true,
+  accessibilityLabel = "input-with-label",
   ...props
 }) => (
   <View>
-    <AppText style={styles.label}>{label}</AppText>
+    <AppText
+      style={styles.label}
+      accessibilityLabel={`${accessibilityLabel}-label`}
+      testID={`${accessibilityLabel}-label`}
+      accessible={true}
+    >
+      {label}
+    </AppText>
     <TextInput
       style={[
         styles.input,
         ...(editable ? [styles.inputEditable] : [styles.inputNotEditable]),
       ]}
       editable={editable}
+      accessibilityLabel={`${accessibilityLabel}-input`}
+      testID={`${accessibilityLabel}-input`}
+      accessible={true}
       {...props}
     />
   </View>

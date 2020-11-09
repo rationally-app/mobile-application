@@ -50,6 +50,7 @@ export const ItemStepper: FunctionComponent<{
           description={description}
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
+          accessibilityLabel="item-stepper"
         />
       </View>
       <View>
@@ -63,6 +64,7 @@ export const ItemStepper: FunctionComponent<{
               ? productQuantity?.unit
               : undefined
           }
+          accessibilityLabel="item-stepper"
         />
         <AppText
           style={[sharedStyles.maxQuantityLabel, { textAlign: "center" }]}

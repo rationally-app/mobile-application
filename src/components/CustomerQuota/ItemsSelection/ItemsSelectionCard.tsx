@@ -153,6 +153,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             }
             isLoading={isLoading}
             fullWidth={true}
+            accessibilityLabel="items-selection-checkout-button"
           />
         </View>
       </View>

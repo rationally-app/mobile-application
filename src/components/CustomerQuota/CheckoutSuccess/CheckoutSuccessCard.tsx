@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
-  quotaResponse: Quota | null;
+  quotaResponse: Quota | undefined;
 }
 
 const UsageQuotaTitle: FunctionComponent<{
@@ -174,7 +174,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   const productType =
     (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
-  const { title, description, ctaButtonText } = getCheckoutMessages(
+  const { title, description } = getCheckoutMessages(
     translationProps.i18nt,
     productType
   );
@@ -192,7 +192,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     !!allProducts[0].quantity.usage;
 
   const firstGlobalQuota = showGlobalQuota
-    ? quotaResponse!.globalQuota![0]
+    ? quotaResponse!.globalQuota[0]
     : undefined;
 
   return (
@@ -206,7 +206,14 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               style={sharedStyles.icon}
             />
             <AppText style={sharedStyles.statusTitleWrapper}>
-              <AppText style={sharedStyles.statusTitle}>{title}</AppText>
+              <AppText
+                style={sharedStyles.statusTitle}
+                accessibilityLabel="checkout-success-title"
+                testID="checkout-success-title"
+                accessible={true}
+              >
+                {title}
+              </AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
                 <UsageQuotaTitle
                   quantity={firstGlobalQuota!.quantity}
@@ -253,7 +260,12 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text={ctaButtonText} onPress={onCancel} fullWidth={true} />
+        <DarkButton
+          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
+          onPress={onCancel}
+          fullWidth={true}
+          accessibilityLabel="checkout-success-next-identity-button"
+        />
       </View>
     </View>
   );

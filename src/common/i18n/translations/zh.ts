@@ -73,10 +73,9 @@ export const zh: Translations = {
   checkoutSuccessScreen: {
     redeemed: "已领取",
     redeemedItems: "已领取物品",
-    redeemedNextIdentity: "下一个证件",
+    nextIdentity: "下一个证件",
     purchased: "已购买",
     purchasedItems: "已购买物品",
-    purchasedNextIdentity: "下一个证件",
     previouslyRedeemedItems: "已领取物品",
     previouslyPurchasedItems: "已购买物品",
     redeemedAgo: "在 %{time} 已领取",
@@ -104,7 +103,7 @@ export const zh: Translations = {
   },
   notEligibleScreen: {
     notEligible: "不符合资格",
-    logAppeal: "请提出上诉。",
+    logAppeal: "不符合资格收集任何物品。请联系您的负责人，了解上诉准则。",
     cannot: "不能",
     purchase: "购买",
   },

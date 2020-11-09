@@ -63,7 +63,8 @@ interface NoQuotaCard {
   cart: Cart;
   onCancel: () => void;
   onAppeal?: () => void;
-  quotaResponse: Quota | null;
+  quotaResponse?: Quota;
+  allQuotaResponse?: Quota;
 }
 
 /**
@@ -172,6 +173,25 @@ export const getLatestTransactionTime = (cart: Cart): Date | undefined =>
     compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
   )[0]?.lastTransactionTime;
 
+export const checkHasAppealProduct = (
+  allProducts: CampaignPolicy[] | null,
+  allQuotaResponse: Quota | undefined
+): boolean => {
+  const appealProductsCategories = allProducts
+    ?.filter((product) => product.categoryType === "APPEAL")
+    .map((product) => product.category);
+
+  const hasAppealProduct =
+    (appealProductsCategories &&
+      allQuotaResponse?.remainingQuota.some(
+        (quota) =>
+          appealProductsCategories.includes(quota.category) &&
+          quota.quantity !== 0
+      )) ??
+    false;
+  return hasAppealProduct;
+};
+
 /**
  * Shows when the user cannot purchase anything
  *
@@ -182,6 +202,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   cart,
   onCancel,
   onAppeal,
+  allQuotaResponse,
   quotaResponse,
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
@@ -214,8 +235,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     ? differenceInSeconds(now, latestTransactionTime)
     : -1;
 
-  const hasAppealProduct =
-    allProducts?.some((policy) => policy.categoryType === "APPEAL") ?? false;
+  const hasAppealProduct = checkHasAppealProduct(allProducts, allQuotaResponse);
 
   const translationProps = useTranslate();
   const transactionsByCategoryMap = groupTransactionsByCategory(
@@ -239,7 +259,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     !!allProducts[0].quantity.usage;
 
   const firstGlobalQuota = showGlobalQuota
-    ? quotaResponse!.globalQuota![0]
+    ? quotaResponse!.globalQuota[0]
     : undefined;
 
   return (
@@ -252,7 +272,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               color={color("red", 60)}
               style={sharedStyles.icon}
             />
-            <AppText style={sharedStyles.statusTitleWrapper}>
+            <AppText
+              style={sharedStyles.statusTitleWrapper}
+              accessibilityLabel="no-quota-title"
+              testID="no-quota-title"
+              accessible={true}
+            >
               {secondsFromLatestTransaction > 0 ? (
                 secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (
                   <DistantTransactionTitle
@@ -330,12 +355,10 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={translationProps.i18nt(
-            "checkoutSuccessScreen",
-            "redeemedNextIdentity"
-          )}
+          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
+          accessibilityLabel="no-quota-next-identity-button"
         />
       </View>
       {onAppeal && hasAppealProduct ? (

@@ -1,27 +1,18 @@
-import { useState, useEffect, useCallback, useContext } from "react";
-import { Sentry } from "../../utils/errorTracking";
+import { useState, useCallback, useContext, useEffect } from "react";
 import {
-  getQuota,
   postTransaction,
   reserveTransaction,
   commitTransaction,
   cancelTransaction,
-  NotEligibleError,
 } from "../../services/quota";
-import { transform } from "lodash";
-import { ProductContextValue, ProductContext } from "../../context/products";
-import { usePrevious } from "../usePrevious";
-import {
-  PostTransactionResult,
-  Quota,
-  ItemQuota,
-  IdentifierInput,
-  CampaignPolicy,
-} from "../../types";
+import { PostTransactionResult, ItemQuota, IdentifierInput } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
 import { IdentificationContext } from "../../context/identification";
+import { ProductContext, ProductContextValue } from "../../context/products";
+import { usePrevious } from "../usePrevious";
+import { hasInvalidRemainingQuota } from "../useQuota/useQuota";
 
 export type CartItem = {
   category: string;
@@ -39,16 +30,13 @@ export type CartItem = {
 export type Cart = CartItem[];
 
 type CartState =
-  | "FETCHING_QUOTA"
-  | "NO_QUOTA"
   | "DEFAULT"
   | "RESERVING"
   | "RESERVED"
   | "COMMITTING"
   | "CANCELLING"
   | "CHECKING_OUT"
-  | "PURCHASED"
-  | "NOT_ELIGIBLE";
+  | "PURCHASED";
 
 export type CartHook = {
   cartState: CartState;
@@ -64,10 +52,8 @@ export type CartHook = {
   checkoutCart: () => void;
   cancelCart: () => void;
   checkoutResult?: PostTransactionResult;
-  error?: Error;
-  clearError: () => void;
-  allQuotaResponse: Quota | null;
-  quotaResponse: Quota | null;
+  cartError?: Error;
+  clearCartError: () => void;
 };
 
 const getItem = (
@@ -142,158 +128,58 @@ const mergeWithCart = (
     );
 };
 
-const filterQuotaWithAvailableProducts = (
-  quota: Quota,
-  products: CampaignPolicy[]
-): Quota => {
-  const filteredQuota: Quota = {
-    remainingQuota: [],
-  };
-  transform(
-    quota.remainingQuota,
-    (result: Quota, itemQuota) => {
-      if (products.some((policy) => policy.category === itemQuota.category))
-        result.remainingQuota.push(itemQuota);
-    },
-    filteredQuota
-  );
-
-  if (quota.globalQuota) {
-    filteredQuota.globalQuota = [];
-    transform(
-      quota.globalQuota!,
-      (result: Quota, itemQuota) => {
-        if (products.some((policy) => policy.category === itemQuota.category))
-          result.globalQuota!.push(itemQuota);
-      },
-      filteredQuota
-    );
-  }
-
-  if (quota.localQuota) {
-    filteredQuota.localQuota = [];
-    transform(
-      quota.localQuota!,
-      (result: Quota, itemQuota) => {
-        if (products.some((policy) => policy.category === itemQuota.category))
-          result.localQuota!.push(itemQuota);
-      },
-      filteredQuota
-    );
-  }
-
-  return filteredQuota;
-};
-
-const hasNoQuota = (quota: Quota): boolean =>
-  quota.remainingQuota.every((item) => item.quantity === 0);
-
-const hasInvalidQuota = (quota: Quota): boolean =>
-  // Note: Invalid quota refers to negative quota received
-  quota.remainingQuota.some((item) => item.quantity < 0);
-
 export const useCart = (
   ids: string[],
   authKey: string,
-  endpoint: string
+  endpoint: string,
+  cartQuota?: ItemQuota[]
 ): CartHook => {
-  const prevIds = usePrevious(ids);
-  const { products, getProduct } = useContext(ProductContext);
   const { selectedIdType } = useContext(IdentificationContext);
-  const prevProducts = usePrevious(products);
   const [cart, setCart] = useState<Cart>([]);
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
-  const [error, setError] = useState<Error>();
-  const [quotaResponse, setQuotaResponse] = useState<Quota | null>(null);
-  const [allQuotaResponse, setAllQuotaResponse] = useState<Quota | null>(null);
-  const clearError = useCallback((): void => setError(undefined), []);
+  const [cartError, setCartError] = useState<Error>();
+  const clearCartError = useCallback((): void => setCartError(undefined), []);
+  const { products, getProduct } = useContext(ProductContext);
+  const prevProducts = usePrevious(products);
+  const prevIds = usePrevious(ids);
+  const prevCartQuota = usePrevious(cartQuota);
 
   /**
-   * Fetch quota whenever IDs change.
+   * Update the cart when:
+   *  1. First quota is retrieved on initialisation (i.e. no previous cart quota)
+   *  2. When quota response changes
+   *  3. When quota is updated (i.e. products or ids change)
+   * Items 2 and 3 can occur at the same time.
    */
   useEffect(() => {
-    const fetchQuota = async (): Promise<void> => {
-      setCartState("FETCHING_QUOTA");
-      try {
-        const allQuotaResponse = await getQuota(
-          ids,
-          selectedIdType,
-          authKey,
-          endpoint
-        );
-        setAllQuotaResponse(allQuotaResponse);
-        const quotaResponse = filterQuotaWithAvailableProducts(
-          allQuotaResponse,
-          products
-        );
-        if (hasInvalidQuota(quotaResponse)) {
-          Sentry.captureException(
-            `Negative Quota Received: ${JSON.stringify(
-              quotaResponse.remainingQuota
-            )}`
-          );
-          setCartState("NO_QUOTA");
-        } else if (hasNoQuota(quotaResponse)) {
-          setCartState("NO_QUOTA");
-        } else {
-          setCartState("DEFAULT");
-        }
-        setQuotaResponse(quotaResponse);
-      } catch (e) {
-        if (e instanceof NotEligibleError) {
-          setCartState("NOT_ELIGIBLE");
-          return;
-        } else {
-          setError(e);
-        }
-        setCartState("DEFAULT");
+    if (
+      cartQuota &&
+      (!prevCartQuota || prevIds !== ids || prevProducts !== products)
+    ) {
+      if (!hasInvalidRemainingQuota(cartQuota)) {
+        /**
+         * Caveat: We must use a callback within this setState to avoid
+         * having `cart` as a dependency, preventing an infinite loop.
+         */
+        setCart((cart) => mergeWithCart(cart, cartQuota, getProduct));
+      } else {
+        setCartError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
       }
-    };
-
-    if (prevIds !== ids || prevProducts !== products) {
-      fetchQuota();
     }
-  }, [authKey, endpoint, ids, selectedIdType, prevIds, prevProducts, products]);
-
-  /**
-   * Merge quota response with current cart whenever quota response or products change.
-   */
-  useEffect(() => {
-    if (quotaResponse) {
-      // Note that we must use a callback within this setState to avoid
-      // having cart as a dependency which causes an infinite loop.
-      setCart((cart) =>
-        mergeWithCart(cart, quotaResponse.remainingQuota, getProduct)
-      );
-    }
-  }, [quotaResponse, products, getProduct]);
+  }, [
+    cartQuota,
+    getProduct,
+    prevCartQuota,
+    ids,
+    prevIds,
+    products,
+    prevProducts,
+  ]);
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
     setCart([]);
   }, []);
-
-  /**
-   * After checkout, update quota response
-   */
-  useEffect(() => {
-    if (cartState === "PURCHASED") {
-      const updateQuotaResponse = async (): Promise<void> => {
-        const allQuotaResponse = await getQuota(
-          ids,
-          selectedIdType,
-          authKey,
-          endpoint
-        );
-        const quotaResponse = filterQuotaWithAvailableProducts(
-          allQuotaResponse,
-          products
-        );
-        setQuotaResponse(quotaResponse);
-      };
-      updateQuotaResponse();
-    }
-  }, [ids, selectedIdType, authKey, endpoint, cartState, products]);
 
   /**
    * Update quantity of an item in the cart.
@@ -301,7 +187,7 @@ export const useCart = (
   const updateCart: CartHook["updateCart"] = useCallback(
     (category, quantity, identifierInputs) => {
       if (quantity < 0) {
-        setError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
+        setCartError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
         return;
       }
       const [item, itemIdx] = getItem(cart, category);
@@ -318,11 +204,11 @@ export const useCart = (
             ...cart.slice(itemIdx + 1),
           ]);
         } else {
-          setError(new Error(ERROR_MESSAGE.INSUFFICIENT_QUOTA));
+          setCartError(new Error(ERROR_MESSAGE.INSUFFICIENT_QUOTA));
           return;
         }
       } else {
-        setError(new Error(ERROR_MESSAGE.INVALID_CATEGORY));
+        setCartError(new Error(ERROR_MESSAGE.INVALID_CATEGORY));
         return;
       }
     },
@@ -352,7 +238,7 @@ export const useCart = (
 
       if (transactions.length === 0) {
         setCartState("DEFAULT");
-        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
+        setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         return;
       }
 
@@ -360,7 +246,7 @@ export const useCart = (
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
         setCartState("DEFAULT");
-        setError(error);
+        setCartError(error);
         return;
       }
 
@@ -379,11 +265,11 @@ export const useCart = (
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
-          setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+          setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
         } else if (e instanceof SessionError) {
-          setError(e);
+          setCartError(e);
         } else {
-          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+          setCartError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
       }
     };
@@ -422,11 +308,11 @@ export const useCart = (
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
-          setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+          setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
         } else if (e instanceof SessionError) {
-          setError(e);
+          setCartError(e);
         } else {
-          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+          setCartError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
       }
     };
@@ -434,7 +320,7 @@ export const useCart = (
     if (cartState == "RESERVED") {
       await commit();
     } else {
-      setError(new Error("Nothing to commit."));
+      setCartError(new Error("Nothing to commit."));
     }
   }, [cartState, authKey, endpoint, checkoutResult, ids]);
 
@@ -453,16 +339,12 @@ export const useCart = (
               };
             }
           );
-          const cancelResponse = await cancelTransaction({
+          await cancelTransaction({
             key: authKey,
             endpoint,
             ids,
             transactions: transactionsFormatted,
             reservationId,
-          });
-          Sentry.addBreadcrumb({
-            category: "useCart",
-            message: `deleted transactions: ${cancelResponse}`,
           });
 
           setCheckoutResult(undefined);
@@ -471,9 +353,9 @@ export const useCart = (
       } catch (e) {
         setCartState("DEFAULT");
         if (e instanceof SessionError) {
-          setError(e);
+          setCartError(e);
         } else {
-          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+          setCartError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
       }
     };
@@ -481,7 +363,7 @@ export const useCart = (
     if (cartState == "RESERVED") {
       await cancel();
     } else {
-      setError(new Error("Nothing to cancel."));
+      setCartError(new Error("Nothing to cancel."));
     }
   }, [cartState, authKey, endpoint, checkoutResult, ids]);
 
@@ -508,7 +390,7 @@ export const useCart = (
 
       if (transactions.length === 0) {
         setCartState("DEFAULT");
-        setError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
+        setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
         return;
       }
 
@@ -516,7 +398,7 @@ export const useCart = (
         validateIdentifierInputs(allIdentifierInputs);
       } catch (error) {
         setCartState("DEFAULT");
-        setError(error);
+        setCartError(error);
         return;
       }
 
@@ -535,11 +417,11 @@ export const useCart = (
         if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
-          setError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+          setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
         } else if (e instanceof SessionError) {
-          setError(e);
+          setCartError(e);
         } else {
-          setError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+          setCartError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
       }
     };
@@ -557,9 +439,7 @@ export const useCart = (
     checkoutCart,
     cancelCart,
     checkoutResult,
-    error,
-    clearError,
-    allQuotaResponse,
-    quotaResponse,
+    cartError,
+    clearCartError,
   };
 };

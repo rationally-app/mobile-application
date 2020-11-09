@@ -10,6 +10,7 @@ export interface DrawerButton {
   icon: string;
   label: string;
   onPress: () => void;
+  accessibilityLabel?: string;
 }
 
 interface DrawerContext {

@@ -81,8 +81,8 @@ export const mockGetQuota = async (
   _endpoint: string
 ): Promise<Quota> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
+  const transactionTime = new Date(2020, 3, 5);
   if (ids.length === 1) {
-    const transactionTime = new Date(2020, 3, 5);
     return {
       remainingQuota: [
         {
@@ -111,6 +111,60 @@ export const mockGetQuota = async (
           transactionTime,
         },
       ],
+      globalQuota: [
+        {
+          category: "toilet-paper",
+          quantity: 0,
+          transactionTime,
+        },
+        {
+          category: "instant-noodles",
+          quantity: 1,
+          transactionTime,
+        },
+        {
+          category: "chocolate",
+          quantity: 30,
+          transactionTime,
+        },
+        {
+          category: "vouchers",
+          quantity: 1,
+          transactionTime,
+        },
+        {
+          category: "voucher",
+          quantity: 1,
+          transactionTime,
+        },
+      ],
+      localQuota: [
+        {
+          category: "toilet-paper",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+        {
+          category: "instant-noodles",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+        {
+          category: "chocolate",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+        {
+          category: "vouchers",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+        {
+          category: "voucher",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+      ],
     };
   } else {
     return {
@@ -129,6 +183,38 @@ export const mockGetQuota = async (
         },
         { category: "vouchers", quantity: 1 },
         { category: "voucher", quantity: 1 },
+      ],
+      globalQuota: [
+        {
+          category: "toilet-paper",
+          quantity: 2,
+        },
+        {
+          category: "instant-noodles",
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          quantity: 60,
+        },
+        { category: "vouchers", quantity: 1 },
+        { category: "voucher", quantity: 1 },
+      ],
+      localQuota: [
+        {
+          category: "toilet-paper",
+          quantity: Number.MAX_SAFE_INTEGER,
+        },
+        {
+          category: "instant-noodles",
+          quantity: Number.MAX_SAFE_INTEGER,
+        },
+        {
+          category: "chocolate",
+          quantity: Number.MAX_SAFE_INTEGER,
+        },
+        { category: "vouchers", quantity: Number.MAX_SAFE_INTEGER },
+        { category: "voucher", quantity: Number.MAX_SAFE_INTEGER },
       ],
     };
   }
