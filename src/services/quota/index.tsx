@@ -262,7 +262,7 @@ export const mockReserveTransaction = async ({
     }
     return {
       transactions: transactionArr,
-      reservationId: "abcdef",
+      reservationId: "reservation-1",
     };
   }
   return {
@@ -326,7 +326,7 @@ export const mockCommitTransaction = async ({
     transactions: transactions.map(({ transaction, timestamp }) => {
       return {
         transaction,
-        timestamp: new Date(timestamp),
+        timestamp: new Date(timestamp + 1),
       };
     }),
   };
@@ -343,12 +343,6 @@ export const liveCommitTransaction = async ({
     throw new CommitTransactionError("No transactions to commit");
   }
   try {
-    console.log({
-      ids,
-      transactions,
-      reservationId,
-    });
-
     const response = await fetchWithValidator(
       PostTransactionResult,
       `${endpoint}/transactions/commit`,
@@ -366,7 +360,6 @@ export const liveCommitTransaction = async ({
     );
     return response;
   } catch (e) {
-    console.log(e);
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     } else if (e instanceof SessionError) {

@@ -2,11 +2,7 @@ import React, { FunctionComponent } from "react";
 import { renderHook } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
 import { wait } from "@testing-library/react-native";
-import {
-  Quota,
-  PostTransactionResult,
-  CommitTransactionResult,
-} from "../../types";
+import { Quota, PostTransactionResult } from "../../types";
 import {
   getQuota,
   postTransaction,
@@ -142,21 +138,35 @@ const mockPostTransactionResult: PostTransactionResult = {
   ],
 };
 
-const mockCommitTransactionResult: CommitTransactionResult = {
+const mockReserveTransactionResult: PostTransactionResult = {
   transactions: [
     {
-      identifier: {
-        id: "ID1",
-        transactionTime: transactionTime.valueOf(),
-      },
-      timestamp: new Date(transactionTime.valueOf() + 60000),
+      transaction: [
+        { category: "toilet-paper", identifierInputs: [], quantity: 1 },
+        {
+          category: "chocolate",
+          identifierInputs: [],
+          quantity: 5,
+        },
+      ],
+      timestamp: transactionTime,
     },
+  ],
+  reservationId: "reservation-1",
+};
+
+const mockCommitTransactionResult: PostTransactionResult = {
+  transactions: [
     {
-      identifier: {
-        id: "ID1",
-        transactionTime: transactionTime.valueOf() + 1,
-      },
-      timestamp: new Date(transactionTime.valueOf() + 60001),
+      transaction: [
+        { category: "toilet-paper", identifierInputs: [], quantity: 1 },
+        {
+          category: "chocolate",
+          identifierInputs: [],
+          quantity: 5,
+        },
+      ],
+      timestamp: new Date(transactionTime.valueOf() + 1),
     },
   ],
 };
@@ -572,10 +582,10 @@ describe("useCart", () => {
         result.current.updateCart("chocolate", 5);
       });
 
-      mockReserveTransaction.mockReturnValueOnce(mockPostTransactionResult);
+      mockReserveTransaction.mockReturnValueOnce(mockReserveTransactionResult);
 
       await wait(() => {
-        result.current.reserveCart(() => {});
+        result.current.reserveCart();
         expect(result.current.cartState).toBe("RESERVING");
       });
 
@@ -599,7 +609,7 @@ describe("useCart", () => {
         },
       ]);
       expect(result.current.checkoutResult).toStrictEqual(
-        mockPostTransactionResult
+        mockReserveTransactionResult
       );
     });
 
@@ -613,7 +623,7 @@ describe("useCart", () => {
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 0);
-        result.current.reserveCart(() => {});
+        result.current.reserveCart();
       });
 
       expect(result.current.error?.message).toBe(
@@ -656,7 +666,7 @@ describe("useCart", () => {
       await wait(() => {
         result.current.updateCart("toilet-paper", 2);
         result.current.updateCart("chocolate", 5);
-        result.current.reserveCart(() => {});
+        result.current.reserveCart();
       });
 
       expect(result.current.error?.message).toBe(
@@ -675,16 +685,16 @@ describe("useCart", () => {
         wrapper,
       });
 
-      mockReserveTransaction.mockReturnValueOnce(mockPostTransactionResult);
+      mockReserveTransaction.mockReturnValueOnce(mockReserveTransactionResult);
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 2);
         result.current.updateCart("chocolate", 5);
-        result.current.reserveCart(() => {});
+        result.current.reserveCart();
       });
 
       await wait(() => {
-        result.current.cancelCart(() => {});
+        result.current.cancelCart();
         expect(result.current.cartState).toBe("CANCELLING");
       });
 
@@ -724,7 +734,7 @@ describe("useCart", () => {
       });
 
       await wait(() => {
-        result.current.cancelCart(() => {});
+        result.current.cancelCart();
       });
 
       expect(result.current.cartState).toBe("DEFAULT");
@@ -760,12 +770,12 @@ describe("useCart", () => {
         wrapper,
       });
 
-      mockReserveTransaction.mockReturnValueOnce(mockPostTransactionResult);
+      mockReserveTransaction.mockReturnValueOnce(mockReserveTransactionResult);
 
       await wait(() => {
         result.current.updateCart("toilet-paper", 2);
         result.current.updateCart("chocolate", 5);
-        result.current.reserveCart(() => {});
+        result.current.reserveCart();
       });
 
       mockCommitTransaction.mockResolvedValueOnce(mockCommitTransactionResult);
@@ -805,7 +815,7 @@ describe("useCart", () => {
                 quantity: 5,
               },
             ],
-            timestamp: new Date(transactionTime.valueOf() + 60000),
+            timestamp: new Date(transactionTime.valueOf() + 1),
           },
         ],
       });
