@@ -5,7 +5,6 @@ import { getDailyStatistics } from "../../services/statistics";
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { sortTransactionsByOrder } from "../../components/CustomerQuota/utils";
 import { useTranslate } from "../useTranslate/useTranslate";
-import { CampaignPolicy } from "../../types";
 
 export type StatisticsHook = {
   totalCount: number | null;
@@ -19,9 +18,6 @@ export type StatisticsHook = {
   }[];
   error?: Error;
   loading: boolean;
-  c13ntForUnit: (
-    unit: CampaignPolicy["quantity"]["unit"]
-  ) => CampaignPolicy["quantity"]["unit"];
 };
 
 export const useDailyStatistics = (
