@@ -24,7 +24,12 @@ export const AppealButton: FunctionComponent<{
       testID="raise-appeal-button"
     >
       <View style={{ alignItems: "center" }}>
-        <AppText style={styles.appealButtonText}>
+        <AppText
+          style={styles.appealButtonText}
+          accessibilityLabel="raise-appeal"
+          testID="raise-appeal"
+          accessible={true}
+        >
           {i18nt("customerAppealScreen", "raiseAppeal")}
         </AppText>
       </View>

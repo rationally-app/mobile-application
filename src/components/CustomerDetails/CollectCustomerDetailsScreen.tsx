@@ -289,7 +289,14 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 size={size(2)}
                 color={color("blue", 50)}
               />
-              <AppText style={styles.statsText}>Go to statistics</AppText>
+              <AppText
+                style={styles.statsText}
+                accessibilityLabel="go-to-statistics"
+                testID="go-to-statistics"
+                accessible={true}
+              >
+                Go to statistics
+              </AppText>
             </TouchableOpacity>
           </Card>
           <FeatureToggler feature="HELP_MODAL">
