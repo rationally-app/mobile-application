@@ -11,7 +11,7 @@ import { TranslationHook, useTranslate } from "./useTranslate";
 import "../../common/i18n/i18nMock";
 
 const mockGetItem = jest.fn();
-jest.mock("react-native/Libraries/Storage/AsyncStorage", () => ({
+jest.mock("@react-native-async-storage/async-storage", () => ({
   getItem: mockGetItem,
 }));
 
