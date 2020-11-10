@@ -95,6 +95,5 @@ export const useDailyStatistics = (
     transactionHistory,
     error,
     loading,
-    c13ntForUnit,
   };
 };
