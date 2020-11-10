@@ -7,7 +7,7 @@ import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
 
 const mockGetItem = jest.fn();
 const mockSetItem = jest.fn();
-jest.mock("react-native/Libraries/Storage/AsyncStorage", () => ({
+jest.mock("@react-native-async-storage/async-storage", () => ({
   getItem: mockGetItem,
   setItem: mockSetItem,
 }));

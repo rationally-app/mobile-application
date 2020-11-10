@@ -5,7 +5,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { AsyncStorage } from "react-native";
+import  AsyncStorage  from "@react-native-async-storage/async-storage";
 import { LoadingView } from "../components/Loading";
 
 export enum AppMode {
