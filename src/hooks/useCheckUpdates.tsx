@@ -1,5 +1,5 @@
 import * as Updates from "expo-updates";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Sentry } from "../utils/errorTracking";
 import { differenceInMinutes } from "date-fns";
 import { useContext, useCallback } from "react";

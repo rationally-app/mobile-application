@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { AsyncStorage } from "react-native";
+import  AsyncStorage  from "@react-native-async-storage/async-storage";
 import { usePrevious } from "../hooks/usePrevious";
 import { AuthCredentials } from "../types";
 import { Sentry } from "../utils/errorTracking";
@@ -55,7 +55,10 @@ export const AuthStoreContextProvider: FunctionComponent<{
       const authCredentialsString = JSON.stringify(authCredentials);
       const prevAuthCredentialsString = JSON.stringify(prevAuthCredentials);
       if (authCredentialsString !== prevAuthCredentialsString) {
+        console.log(AUTH_CREDENTIALS_STORE_KEY);
+        console.log(authCredentialsString);
         AsyncStorage.setItem(AUTH_CREDENTIALS_STORE_KEY, authCredentialsString);
+        console.log("success");
       }
     }
   }, [hasLoadedFromStore, authCredentials, prevAuthCredentials]);
