@@ -83,8 +83,8 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
           <>
             <AppText
               style={styles.noTransactionText}
-              accessibilityLabel="no-items-scanned"
-              testID="no-items-scanned"
+              accessibilityLabel="transaction-history-no-items-scanned"
+              testID="transaction-history-no-items-scanned"
               accessible={true}
             >
               No items scanned

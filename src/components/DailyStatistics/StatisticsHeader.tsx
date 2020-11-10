@@ -68,8 +68,8 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
         />
         <AppText
           style={styles.backText}
-          accessibilityLabel="back"
-          testID="back"
+          accessibilityLabel="statistics-header-back-button"
+          testID="statistics-header-back-button"
           accessible={true}
         >
           Back
@@ -77,8 +77,8 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
       </TouchableOpacity>
       <AppText
         style={styles.header}
-        accessibilityLabel="statistics"
-        testID="statistics"
+        accessibilityLabel="statistics-header-title"
+        testID="statistics-header-title"
         accessible={true}
       >
         Statistics

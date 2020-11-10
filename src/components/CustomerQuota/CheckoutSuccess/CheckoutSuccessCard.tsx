@@ -55,8 +55,8 @@ const UsageQuotaTitle: FunctionComponent<{
     <>
       <AppText
         style={sharedStyles.statusTitle}
-        accessibilityLabel="redeemedLimitReached!"
-        testID="redeemedLimitReached!"
+        accessibilityLabel="checkout-redeemedLimitReached!"
+        testID="checkout-redeemedLimitReached!"
         accessible={true}
       >
         {"\n"}
