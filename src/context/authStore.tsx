@@ -55,10 +55,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
       const authCredentialsString = JSON.stringify(authCredentials);
       const prevAuthCredentialsString = JSON.stringify(prevAuthCredentials);
       if (authCredentialsString !== prevAuthCredentialsString) {
-        console.log(AUTH_CREDENTIALS_STORE_KEY);
-        console.log(authCredentialsString);
         AsyncStorage.setItem(AUTH_CREDENTIALS_STORE_KEY, authCredentialsString);
-        console.log("success");
       }
     }
   }, [hasLoadedFromStore, authCredentials, prevAuthCredentials]);
