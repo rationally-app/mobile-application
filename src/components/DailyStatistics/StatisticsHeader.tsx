@@ -65,10 +65,27 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
           name="chevron-left"
           size={size(4)}
           color={color("grey", 0)}
+          accessibilityLabel="chevron-left"
+          testID="chevron-left"
+          accessible={true}
         />
-        <AppText style={styles.backText}>Back</AppText>
+        <AppText
+          style={styles.backText}
+          accessibilityLabel="back"
+          testID="back"
+          accessible={true}
+        >
+          Back
+        </AppText>
       </TouchableOpacity>
-      <AppText style={styles.header}>Statistics</AppText>
+      <AppText
+        style={styles.header}
+        accessibilityLabel="statistics"
+        testID="statistics"
+        accessible={true}
+      >
+        Statistics
+      </AppText>
       <TouchableOpacity onPress={onPressOpenDrawer}>
         <MaterialCommunityIcons
           name="menu"

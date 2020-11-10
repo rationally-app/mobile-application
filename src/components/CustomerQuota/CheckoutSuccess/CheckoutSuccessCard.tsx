@@ -53,7 +53,12 @@ const UsageQuotaTitle: FunctionComponent<{
   const { i18nt } = useTranslate();
   return (
     <>
-      <AppText style={sharedStyles.statusTitle}>
+      <AppText
+        style={sharedStyles.statusTitle}
+        accessibilityLabel="redeemedLimitReached!"
+        testID="redeemedLimitReached!"
+        accessible={true}
+      >
         {"\n"}
         {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
           quantity: quantity,
