@@ -79,6 +79,9 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
               size={size(4)}
               color="white"
               style={styles.chevron}
+              accessibilityLabel="chevron-left"
+              testID="chevron-left"
+              accessible={true}
             />
           </View>
         </TouchableOpacity>

@@ -65,9 +65,6 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
           name="chevron-left"
           size={size(4)}
           color={color("grey", 0)}
-          accessibilityLabel="chevron-left"
-          testID="chevron-left"
-          accessible={true}
         />
         <AppText
           style={styles.backText}
