@@ -135,9 +135,6 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
                 name="thumbs-up"
                 color={color("blue-green", 40)}
                 style={sharedCardStyles.icon}
-                accessibilityLabel="thumbs-up"
-                testID="thumbs-up"
-                accessible={true}
               />
               <View style={sharedCardStyles.statusTitleWrapper}>
                 <AppText
