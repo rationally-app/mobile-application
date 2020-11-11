@@ -1,5 +1,11 @@
 import React, { FunctionComponent, useCallback, useContext } from "react";
-import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Linking,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
 import {
   DrawerContentComponentProps,
   DrawerActions,
@@ -13,7 +19,6 @@ import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { ScrollView } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
   container: {
@@ -127,27 +132,28 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
 
   return (
     <View style={{ flex: 1, marginBottom: size(2) }}>
-      <ScrollView>
-        <View
+      <View
+        style={{
+          marginTop: size(8),
+          marginRight: size(2),
+          alignItems: "flex-end",
+        }}
+      >
+        <TouchableOpacity
+          onPress={onPressCloseDrawer}
           style={{
-            marginTop: size(8),
-            marginRight: size(2),
-            alignItems: "flex-end",
+            padding: size(1),
           }}
         >
-          <TouchableOpacity
-            onPress={onPressCloseDrawer}
-            style={{
-              padding: size(1),
-            }}
-          >
-            <MaterialCommunityIcons
-              name="close"
-              size={size(3)}
-              color={color("blue", 50)}
-            />
-          </TouchableOpacity>
-        </View>
+          <MaterialCommunityIcons
+            name="close"
+            size={size(3)}
+            color={color("blue", 50)}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView>
         <View
           style={{
             marginTop: size(3),
@@ -165,7 +171,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
             accessibilityLabel="drawer-nav-logout-button"
           />
         </View>
-        <View style={{ marginTop: "auto", marginBottom: size(4) }}>
+        <View style={{ marginTop: size(10), marginBottom: size(4) }}>
           <BottomNavigationLink onPress={showHelpModal}>
             {i18nt("navigationDrawer", "helpSupport")}
           </BottomNavigationLink>
