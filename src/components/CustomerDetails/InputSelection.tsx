@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { size, fontSize, color } from "../../common/styles";
+import { lineHeight } from "../../common/styles/typography";
 import { IdentificationFlag } from "../../types";
 
 const styles = StyleSheet.create({
@@ -12,6 +13,7 @@ const styles = StyleSheet.create({
     color: color("grey", 0),
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
+    lineHeight: lineHeight(0, true),
     paddingBottom: size(1.5),
   },
   selectedIndicator: {
@@ -25,6 +27,7 @@ const styles = StyleSheet.create({
     color: color("grey", 10),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
+    lineHeight: lineHeight(0, true),
     paddingBottom: size(1.5),
   },
   unselectedIndicator: {

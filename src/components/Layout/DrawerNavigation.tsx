@@ -13,6 +13,7 @@ import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   container: {
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
   },
   bottomNavContainerText: {
     fontSize: fontSize(-1),
+    lineHeight: lineHeight(-1),
   },
 });
 

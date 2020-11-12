@@ -3,6 +3,7 @@ import { size, fontSize, color } from "../../common/styles";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Card } from "../Layout/Card";
+import { lineHeight } from "../../common/styles/typography";
 
 interface TransactionHistoryCardComponent {
   transactionHistory: {
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
   quantityText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
+    lineHeight: lineHeight(0, true),
     marginBottom: size(3),
   },
   transactionText: {
@@ -38,6 +40,7 @@ const styles = StyleSheet.create({
   noTransactionText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
+    lineHeight: lineHeight(0, true),
     marginBottom: size(3),
     flexDirection: "row",
     textAlign: "center",

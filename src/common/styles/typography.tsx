@@ -21,14 +21,14 @@ export const fontSize = (level: FontSizeLevel): number => {
  * Returns the line height given the level
  *
  * @param level
- *    -4 (16), -3 (16), -2 (16), -1 (20), 0 (is it's a header then 20, else 24),
+ *    -4 (16), -3 (16), -2 (16), -1 (20), 0 (is it's a body then 24, else 20),
  *    1 (24), 2 (28), 3 (32), 4 (40), 5 (56), 6 (64), 7 (72)
  */
-export const lineHeight = (level: FontSizeLevel, isHeader: boolean): number => {
+export const lineHeight = (level: FontSizeLevel, isBody?: boolean): number => {
   if (level < 0) {
     return [20, 16, 16, 16][Math.abs(level) - 1];
   } else {
-    return [isHeader ? 20 : 24, 24, 28, 32, 40, 56, 64, 72][level];
+    return [isBody ? 24 : 20, 24, 28, 32, 40, 56, 64, 72][level];
   }
 };
 
@@ -43,7 +43,6 @@ export const letterSpacing = (level: LetterSpacingLevel): number =>
   [0.5, 0.7][level - 1];
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-console.log(Dimensions.get("window"));
 
 // based on iphone 6s's scale
 const scale = SCREEN_WIDTH / 375;

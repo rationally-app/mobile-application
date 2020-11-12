@@ -5,6 +5,7 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { fontSize, color, size } from "../../common/styles";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   content: {
@@ -17,13 +18,16 @@ const styles = StyleSheet.create({
   campaignName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
+    lineHeight: lineHeight(1),
   },
   operatorId: {
     marginTop: size(1.5),
     fontSize: fontSize(-2),
+    lineHeight: lineHeight(-2),
   },
   expiry: {
     fontSize: fontSize(-2),
+    lineHeight: lineHeight(-2),
   },
 });
 

@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { withNavigation } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppText } from "../Layout/AppText";
+import { lineHeight } from "../../common/styles/typography";
 
 interface StatisticsHeader extends NavigationProps {
   mode?: AppMode;
@@ -32,12 +33,14 @@ const styles = StyleSheet.create({
     color: "white",
     alignSelf: "center",
     fontSize: fontSize(0),
+    lineHeight: lineHeight(0, false),
     marginRight: size(0.5),
     marginLeft: -size(1.5),
   },
   header: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
+    lineHeight: lineHeight(3),
     color: "white",
     flexDirection: "row",
     textAlign: "center",

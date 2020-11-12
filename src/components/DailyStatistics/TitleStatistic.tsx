@@ -4,6 +4,7 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AppText } from "../Layout/AppText";
 import { format, isSameDay } from "date-fns";
+import { lineHeight } from "../../common/styles/typography";
 
 interface TitleStatisticComponent {
   totalCount: number | null;
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     width: "100%",
     color: "white",
     fontSize: fontSize(7),
+    lineHeight: lineHeight(7),
   },
   dateText: {
     marginTop: size(1),

@@ -7,6 +7,7 @@ import { CartItem } from "../../../hooks/useCart/useCart";
 import { ProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../../common/styles/typography";
 
 const styles = StyleSheet.create({
   feedbackWrapper: {
@@ -23,6 +24,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     color: color("yellow", 50),
     fontSize: fontSize(-2),
+    lineHeight: lineHeight(-2),
     fontFamily: "brand-bold",
   },
 });

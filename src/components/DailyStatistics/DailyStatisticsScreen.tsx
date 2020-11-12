@@ -26,6 +26,7 @@ import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   content: {
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
   categoryName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
+    lineHeight: lineHeight(1),
     marginBottom: size(3),
   },
 });

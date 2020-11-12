@@ -6,6 +6,7 @@ import {
   formatPhoneNumber,
   stripPhoneNumberFormatting,
 } from "../../utils/phoneNumberFormatter";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   inputsWrapper: {
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
+    lineHeight: lineHeight(0, false),
     color: color("blue", 50),
     minWidth: size(7),
     fontFamily: "brand-regular",
@@ -35,6 +37,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
+    lineHeight: lineHeight(0, false),
     color: color("blue", 50),
     fontFamily: "brand-regular",
   },
@@ -42,6 +45,7 @@ const styles = StyleSheet.create({
     marginRight: size(1),
     marginLeft: size(1),
     fontSize: fontSize(3),
+    lineHeight: lineHeight(3),
   },
   numberWrapper: {
     marginBottom: size(2),

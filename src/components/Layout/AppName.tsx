@@ -3,6 +3,7 @@ import { color, fontSize } from "../../common/styles";
 import { AppText } from "./AppText";
 import { AppMode } from "../../context/config";
 import AppLogo from "../../../assets/Logo.svg";
+import { lineHeight } from "../../common/styles/typography";
 
 interface AppName {
   mode?: AppMode;
@@ -19,6 +20,7 @@ export const AppName: FunctionComponent<AppName> = (
           color: color("red", 50),
           fontFamily: "brand-bold",
           fontSize: fontSize(2),
+          lineHeight: lineHeight(2),
         }}
       >
         TESTING MODE

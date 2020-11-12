@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontFamily: "brand-bold",
     fontSize: normalize(fontSize(2)),
-    lineHeight: lineHeight(2, true),
+    lineHeight: lineHeight(2),
     color: color("blue", 50),
     textAlign: "center",
   },

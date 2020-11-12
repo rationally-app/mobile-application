@@ -11,6 +11,7 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   header: {
@@ -29,12 +30,13 @@ const styles = StyleSheet.create({
   idLabel: {
     color: color("grey", 0),
     fontSize: fontSize(-2),
+    lineHeight: lineHeight(-2),
     marginBottom: 2,
   },
   idText: {
     color: color("grey", 0),
     fontSize: fontSize(1),
-    lineHeight: 1.2 * fontSize(1),
+    lineHeight: lineHeight(1),
     fontFamily: "brand-bold",
   },
   childrenWrapper: {
