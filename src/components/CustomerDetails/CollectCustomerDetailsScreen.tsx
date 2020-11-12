@@ -278,7 +278,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 {tCampaignName}
               </AppText>
             )}
-            <AppText isBody={true}>
+            <AppText style={{ lineHeight: lineHeight(0, true) }}>
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             {getInputComponent()}

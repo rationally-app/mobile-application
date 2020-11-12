@@ -3,8 +3,7 @@ import { TextProps, Text } from "react-native";
 import { fontSize, color } from "../../common/styles";
 import { lineHeight } from "../../common/styles/typography";
 
-export const AppText: FunctionComponent<TextProps & { isBody?: boolean }> = ({
-  isBody = false,
+export const AppText: FunctionComponent<TextProps> = ({
   children,
   style,
   ...props
@@ -14,7 +13,7 @@ export const AppText: FunctionComponent<TextProps & { isBody?: boolean }> = ({
       {
         fontFamily: "brand-regular",
         fontSize: fontSize(0),
-        lineHeight: lineHeight(0, isBody),
+        lineHeight: lineHeight(0, false),
         color: color("blue", 50),
       },
       style,
