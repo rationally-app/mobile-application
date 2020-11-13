@@ -31,6 +31,7 @@ import {
   TranslationHook,
   useTranslate,
 } from "../../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../../common/styles/typography";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -227,7 +228,9 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               ) : undefined}
             </View>
             <View>
-              <AppText>{description}</AppText>
+              <AppText style={{ lineHeight: lineHeight(0, true) }}>
+                {description}
+              </AppText>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
                   <ActivityIndicator
