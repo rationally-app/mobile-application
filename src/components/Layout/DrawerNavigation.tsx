@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  Platform,
 } from "react-native";
 import {
   DrawerContentComponentProps,
@@ -171,7 +172,12 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
             accessibilityLabel="drawer-nav-logout-button"
           />
         </View>
-        <View style={{ marginTop: size(10), marginBottom: size(4) }}>
+        <View
+          style={{
+            marginTop: Platform.OS === "ios" ? 360 : 125,
+            marginBottom: size(4),
+          }}
+        >
           <BottomNavigationLink onPress={showHelpModal}>
             {i18nt("navigationDrawer", "helpSupport")}
           </BottomNavigationLink>
