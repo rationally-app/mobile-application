@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
-  quotaResponse: Quota | undefined;
+  quotaResponse: Quota | null;
 }
 
 const UsageQuotaTitle: FunctionComponent<{
@@ -53,12 +53,7 @@ const UsageQuotaTitle: FunctionComponent<{
   const { i18nt } = useTranslate();
   return (
     <>
-      <AppText
-        style={sharedStyles.statusTitle}
-        accessibilityLabel="checkout-redeemedLimitReached!"
-        testID="checkout-redeemedLimitReached!"
-        accessible={true}
-      >
+      <AppText style={sharedStyles.statusTitle}>
         {"\n"}
         {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
           quantity: quantity,
@@ -179,7 +174,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   const productType =
     (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
-  const { title, description } = getCheckoutMessages(
+  const { title, description, ctaButtonText } = getCheckoutMessages(
     translationProps.i18nt,
     productType
   );
@@ -197,7 +192,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     !!allProducts[0].quantity.usage;
 
   const firstGlobalQuota = showGlobalQuota
-    ? quotaResponse!.globalQuota[0]
+    ? quotaResponse!.globalQuota![0]
     : undefined;
 
   return (
@@ -211,14 +206,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               style={sharedStyles.icon}
             />
             <AppText style={sharedStyles.statusTitleWrapper}>
-              <AppText
-                style={sharedStyles.statusTitle}
-                accessibilityLabel="checkout-success-title"
-                testID="checkout-success-title"
-                accessible={true}
-              >
-                {title}
-              </AppText>
+              <AppText style={sharedStyles.statusTitle}>{title}</AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
                 <UsageQuotaTitle
                   quantity={firstGlobalQuota!.quantity}
@@ -265,12 +253,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton
-          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
-          onPress={onCancel}
-          fullWidth={true}
-          accessibilityLabel="checkout-success-next-identity-button"
-        />
+        <DarkButton text={ctaButtonText} onPress={onCancel} fullWidth={true} />
       </View>
     </View>
   );

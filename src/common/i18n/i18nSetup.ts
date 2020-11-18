@@ -17,8 +17,3 @@ i18n.missingTranslation = (scope: string) => {
   });
   return undefined;
 };
-
-export const updateI18nLocale = async (): Promise<void> => {
-  const { locale } = await Localization.getLocalizationAsync();
-  i18n.locale = locale;
-};

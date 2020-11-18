@@ -8,20 +8,14 @@ export interface TransparentButton {
   text: string;
   onPress?: () => void;
   icon?: ReactElement;
-  accessibilityLabel?: string;
 }
 
 export const TransparentButton: FunctionComponent<TransparentButton> = ({
   onPress,
   text,
   icon,
-  accessibilityLabel,
 }) => (
-  <BaseButton
-    onPress={onPress}
-    backgroundColor="transparent"
-    accessibilityLabel={accessibilityLabel}
-  >
+  <BaseButton onPress={onPress} backgroundColor="transparent">
     <View style={{ flexDirection: "row", alignItems: "center" }}>
       {icon && <View style={{ marginRight: size(1) }}>{icon}</View>}
       <AppText

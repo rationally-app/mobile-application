@@ -88,14 +88,12 @@ const clampAndRoundDown = (
 interface StepperButton {
   onPress: () => void;
   variant: "PLUS" | "MINUS";
-  accessibilityLabel: string;
   disabled?: boolean;
 }
 
 const StepperButton: FunctionComponent<StepperButton> = ({
   onPress,
   variant,
-  accessibilityLabel,
   disabled = false,
 }) => {
   const [isPressedIn, setIsPressedIn] = useState(false);
@@ -141,9 +139,6 @@ const StepperButton: FunctionComponent<StepperButton> = ({
       onLongPress={() => {
         setLongPressStartTime(Date.now());
       }}
-      accessibilityLabel={`${accessibilityLabel}-${
-        variant === "PLUS" ? "plus" : "minus"
-      }-button`}
     >
       <Feather
         name={variant === "PLUS" ? "plus" : "minus"}
@@ -166,7 +161,6 @@ export interface Stepper {
     type: "PREFIX" | "POSTFIX";
     label: string;
   };
-  accessibilityLabel?: string;
 }
 
 export const Stepper: FunctionComponent<Stepper> = ({
@@ -178,7 +172,6 @@ export const Stepper: FunctionComponent<Stepper> = ({
   },
   step = 1,
   unit,
-  accessibilityLabel = "stepper",
 }) => {
   const isMounted = useIsMounted();
   const [internalValue, setInternalValue] = useState<string>(`${value}`);
@@ -257,7 +250,6 @@ export const Stepper: FunctionComponent<Stepper> = ({
       <StepperButton
         variant="MINUS"
         onPress={decrement}
-        accessibilityLabel={accessibilityLabel}
         disabled={value === bounds.min}
       />
       <View style={styles.inputAndSuffixWrapper}>
@@ -272,9 +264,6 @@ export const Stepper: FunctionComponent<Stepper> = ({
           onBlur={onBlur}
           keyboardType="number-pad"
           maxLength={Math.ceil(Math.log10(bounds.max + 1))}
-          accessibilityLabel={`${accessibilityLabel}-value`}
-          testID={`${accessibilityLabel}-value`}
-          accessible={true}
         />
         {tUnit?.type === "POSTFIX" && (
           <AppText style={styles.suffix}>{tUnit?.label}</AppText>
@@ -283,7 +272,6 @@ export const Stepper: FunctionComponent<Stepper> = ({
       <StepperButton
         variant="PLUS"
         onPress={increment}
-        accessibilityLabel={accessibilityLabel}
         disabled={value === bounds.max}
       />
     </View>

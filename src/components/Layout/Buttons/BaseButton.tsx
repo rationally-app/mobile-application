@@ -9,7 +9,6 @@ export interface BaseButton {
   disabled?: boolean;
   fullWidth?: boolean;
   size?: "medium" | "small";
-  accessibilityLabel?: string;
 }
 
 export const BaseButton: FunctionComponent<BaseButton> = ({
@@ -20,15 +19,9 @@ export const BaseButton: FunctionComponent<BaseButton> = ({
   disabled = false,
   fullWidth = false,
   size = "medium",
-  accessibilityLabel = "base-button",
 }) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={disabled}
-      accessibilityLabel={accessibilityLabel}
-      testID={accessibilityLabel}
-    >
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
       <View
         style={{
           backgroundColor,

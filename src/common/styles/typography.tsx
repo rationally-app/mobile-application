@@ -1,5 +1,3 @@
-import { Dimensions, Platform, PixelRatio } from "react-native";
-
 export type FontSizeLevel = -4 | -3 | -2 | -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 /**
@@ -26,17 +24,3 @@ export type LetterSpacingLevel = 1 | 2;
  */
 export const letterSpacing = (level: LetterSpacingLevel): number =>
   [0.5, 0.7][level - 1];
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
-// based on iphone 6s's scale
-const scale = SCREEN_WIDTH / 375;
-
-export const normalize = (size: number): number => {
-  const newSize = size * scale;
-  if (Platform.OS === "ios") {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize));
-  } else {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
-  }
-};

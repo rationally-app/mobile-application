@@ -24,7 +24,6 @@ export const IdentifierPhoneNumberInput: FunctionComponent<{
         mobileNumberValue={phoneNumber}
         onChangeCountryCode={(text: string) => setCountryCodeValue(text)}
         onChangeMobileNumber={(text: string) => setPhoneNumber(text)}
-        accessibilityLabel="item-field-phone-number"
       />
     </View>
   );

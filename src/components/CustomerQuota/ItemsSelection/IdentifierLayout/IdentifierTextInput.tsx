@@ -25,7 +25,6 @@ export const IdentifierTextInput: FunctionComponent<{
       editable={editable}
       onChange={({ nativeEvent: { text } }) => onChange(text)}
       keyboardType={type === "NUMBER" ? "phone-pad" : "default"}
-      accessibilityLabel="item-field-text"
     />
   </View>
 );

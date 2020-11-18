@@ -95,7 +95,6 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
           onChangeCountryCode={onChangeCountryCode}
           onChangeMobileNumber={onChangeMobileNumber}
           onSubmit={onSubmitMobileNumber}
-          accessibilityLabel="login-phone-number"
         />
 
         <DarkButton
@@ -103,7 +102,6 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
           onPress={onSubmitMobileNumber}
           fullWidth={true}
           isLoading={isLoading}
-          accessibilityLabel="login-send-otp-button"
         />
       </View>
     </Card>

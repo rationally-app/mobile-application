@@ -124,7 +124,7 @@ describe("useVoucher", () => {
       expect(result.current.vouchers).toStrictEqual([
         { serial: "123456789", denomination: 2 },
       ]);
-      rerender();
+      rerender([key, endpoint]);
       expect(result.current.vouchers).toStrictEqual([
         { serial: "123456789", denomination: 2 },
       ]);
@@ -156,7 +156,7 @@ describe("useVoucher", () => {
       expect(result.current.vouchers).toStrictEqual([
         { serial: "123456789", denomination: 2 },
       ]);
-      rerender();
+      rerender([key, endpoint]);
       expect(result.current.vouchers).toStrictEqual([
         { serial: "123456789", denomination: 2 },
       ]);

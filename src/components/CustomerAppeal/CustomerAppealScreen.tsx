@@ -24,9 +24,9 @@ import {
 } from "./ReasonSelection/ReasonSelectionCard";
 import { pushRoute, navigateHome } from "../../common/navigation";
 import { AuthContext } from "../../context/auth";
+import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
-import { useQuota } from "../../hooks/useQuota/useQuota";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
@@ -78,7 +78,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const showHelpModal = useContext(HelpModalContext);
 
   const { sessionToken, endpoint } = useContext(AuthContext);
-  const { allQuotaResponse } = useQuota(ids, sessionToken, endpoint);
+  const { allQuotaResponse } = useCart(ids, sessionToken, endpoint);
 
   const { i18nt } = useTranslate();
 

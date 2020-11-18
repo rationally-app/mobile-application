@@ -84,9 +84,10 @@ export const en: Translations = {
   checkoutSuccessScreen: {
     redeemed: "Redeemed",
     redeemedItems: "Item(s) redeemed",
-    nextIdentity: "Next identity",
+    redeemedNextIdentity: "Next identity",
     purchased: "Purchased",
     purchasedItems: "The following have been purchased",
+    purchasedNextIdentity: "Next customer",
     previouslyRedeemedItems: "Item(s) redeemed previously",
     previouslyPurchasedItems: "Item(s) purchased previously",
     redeemedAgo: "Redeemed %{time} ago",

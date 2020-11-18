@@ -205,7 +205,6 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
                   color={color("grey", 0)}
                 />
               }
-              accessibilityLabel="id-scanner-back-button"
             />
           </View>
         </IdScannerCamera>
