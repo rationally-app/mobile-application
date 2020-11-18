@@ -18,9 +18,18 @@ export const AppealButton: FunctionComponent<{
 }> = ({ onAppeal }) => {
   const { i18nt } = useTranslate();
   return (
-    <TouchableOpacity onPress={onAppeal}>
+    <TouchableOpacity
+      onPress={onAppeal}
+      accessibilityLabel="raise-appeal-button"
+      testID="raise-appeal-button"
+    >
       <View style={{ alignItems: "center" }}>
-        <AppText style={styles.appealButtonText}>
+        <AppText
+          style={styles.appealButtonText}
+          accessibilityLabel="raise-appeal"
+          testID="raise-appeal"
+          accessible={true}
+        >
           {i18nt("customerAppealScreen", "raiseAppeal")}
         </AppText>
       </View>

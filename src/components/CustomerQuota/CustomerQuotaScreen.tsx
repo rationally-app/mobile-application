@@ -30,6 +30,7 @@ import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
 import { SessionError } from "../../services/helpers";
+import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
@@ -80,19 +81,29 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { showErrorAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
+  const [updateAfterPurchased, setUpdateAfterPurchased] = useState<boolean>(
+    false
+  );
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
+
+  const {
+    quotaResponse,
+    allQuotaResponse,
+    quotaState,
+    quotaError,
+    updateQuota,
+    clearQuotaError,
+  } = useQuota(ids, sessionToken, endpoint);
 
   const {
     cartState,
     cart,
     updateCart,
     checkoutCart,
-    error,
-    clearError,
-    allQuotaResponse,
-    quotaResponse,
-  } = useCart(ids, sessionToken, endpoint);
+    cartError,
+    clearCartError,
+  } = useCart(ids, sessionToken, endpoint, quotaResponse?.remainingQuota);
 
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -146,64 +157,103 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [setAuthCredentials, endpoint, operatorToken, sessionToken]);
 
   useEffect(() => {
-    if (!error) {
+    if (!cartError && !quotaError) {
       return;
     }
-    if (error instanceof SessionError) {
-      clearError();
-      expireSession();
-      showErrorAlert(error, () => {
-        navigation.navigate("CampaignLocationsScreen");
-      });
-      return;
-    }
-    if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
-      switch (error.message) {
-        case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
-          const missingIdentifierInputError = new Error(
-            campaignFeatures?.campaignName === "TT Tokens"
-              ? ERROR_MESSAGE.MISSING_POD_INPUT
-              : campaignFeatures?.campaignName.includes("Vouchers")
-              ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
-              : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
-          );
-          showErrorAlert(missingIdentifierInputError, () => clearError());
-          break;
-        case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
-          const invalidIdentifierInputError = new Error(
-            campaignFeatures?.campaignName === "TT Tokens"
-              ? ERROR_MESSAGE.INVALID_POD_INPUT
-              : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
-          );
-          showErrorAlert(invalidIdentifierInputError, () => clearError());
-          break;
-        case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
-          const duplicateIdentifierInputError = new Error(
-            campaignFeatures?.campaignName === "TT Tokens"
-              ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
-              : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
-          );
-          showErrorAlert(duplicateIdentifierInputError, () => clearError());
-          break;
-        default:
-          showErrorAlert(error, () => clearError());
+    /**
+     * We check for quota errors first because the cart relies on the quota.
+     */
+    if (quotaError) {
+      if (quotaError instanceof SessionError) {
+        clearQuotaError();
+        expireSession();
+        showErrorAlert(quotaError, () => {
+          navigation.navigate("CampaignLocationsScreen");
+        });
+        return;
       }
-    } else {
-      throw new Error(error.message);
+      showErrorAlert(quotaError, () => navigation.goBack());
+      return;
+    }
+
+    if (cartError) {
+      if (cartError instanceof SessionError) {
+        clearCartError();
+        expireSession();
+        showErrorAlert(cartError, () => {
+          navigation.navigate("CampaignLocationsScreen");
+        });
+        return;
+      }
+      if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
+        switch (cartError.message) {
+          case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
+            const missingIdentifierInputError = new Error(
+              campaignFeatures?.campaignName === "TT Tokens"
+                ? ERROR_MESSAGE.MISSING_POD_INPUT
+                : campaignFeatures?.campaignName.includes("Vouchers")
+                ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
+                : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
+            );
+            showErrorAlert(missingIdentifierInputError, () => clearCartError());
+            break;
+          case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
+            const invalidIdentifierInputError = new Error(
+              campaignFeatures?.campaignName === "TT Tokens"
+                ? ERROR_MESSAGE.INVALID_POD_INPUT
+                : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+            );
+            showErrorAlert(invalidIdentifierInputError, () => clearCartError());
+            break;
+          case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
+            const duplicateIdentifierInputError = new Error(
+              campaignFeatures?.campaignName === "TT Tokens"
+                ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
+                : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
+            );
+            showErrorAlert(duplicateIdentifierInputError, () =>
+              clearCartError()
+            );
+            break;
+          case ERROR_MESSAGE.INVALID_QUANTITY:
+          case ERROR_MESSAGE.MISSING_SELECTION:
+            showErrorAlert(cartError, () => clearCartError());
+            break;
+          default:
+            showErrorAlert(cartError, () => {
+              clearCartError();
+              navigation.goBack();
+            });
+        }
+      } else {
+        throw new Error(cartError.message);
+      }
     }
   }, [
     campaignFeatures?.campaignName,
     cartState,
-    clearError,
-    error,
+    clearCartError,
+    cartError,
     expireSession,
     navigation,
     showErrorAlert,
+    quotaError,
+    clearQuotaError,
   ]);
+
+  useEffect(() => {
+    /**
+     * Update quota after checkout
+     */
+    if (cartState === "PURCHASED" && !updateAfterPurchased) {
+      updateQuota();
+      setUpdateAfterPurchased(true);
+    }
+  }, [cartState, updateQuota, updateAfterPurchased]);
 
   const { i18nt } = useTranslate();
 
-  return cartState === "FETCHING_QUOTA" ? (
+  return quotaState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
       <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
       <Card>
@@ -234,7 +284,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             onCancel={onNextId}
             quotaResponse={quotaResponse}
           />
-        ) : cartState === "NO_QUOTA" ? (
+        ) : quotaState === "NO_QUOTA" ? (
           <NoQuotaCard
             ids={ids}
             cart={cart}
@@ -243,7 +293,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             quotaResponse={quotaResponse}
             allQuotaResponse={allQuotaResponse}
           />
-        ) : cartState === "NOT_ELIGIBLE" ? (
+        ) : quotaState === "NOT_ELIGIBLE" ? (
           <NotEligibleCard ids={ids} onCancel={onCancel} />
         ) : (
           <ItemsSelectionCard

@@ -80,10 +80,9 @@ export type Translations = {
   checkoutSuccessScreen: {
     redeemed: string;
     redeemedItems: string;
-    redeemedNextIdentity: string;
+    nextIdentity: string;
     purchased: string;
     purchasedItems: string;
-    purchasedNextIdentity: string;
     previouslyRedeemedItems: string;
     previouslyPurchasedItems: string;
     redeemedAgo: string;

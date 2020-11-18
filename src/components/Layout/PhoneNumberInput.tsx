@@ -2,6 +2,10 @@ import React, { FunctionComponent } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
+import {
+  formatPhoneNumber,
+  stripPhoneNumberFormatting,
+} from "../../utils/phoneNumberFormatter";
 
 const styles = StyleSheet.create({
   inputsWrapper: {
@@ -54,6 +58,7 @@ export const PhoneNumberInput: FunctionComponent<{
   onChangeCountryCode: (text: string) => void;
   onChangeMobileNumber: (text: string) => void;
   onSubmit?: () => void;
+  accessibilityLabel?: string;
 }> = ({
   countryCodeValue,
   label,
@@ -62,24 +67,40 @@ export const PhoneNumberInput: FunctionComponent<{
   onChangeMobileNumber,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit = () => {},
+  accessibilityLabel = "phone-number",
 }) => {
   return (
     <View style={styles.numberWrapper}>
-      <AppText style={styles.label}>{label}</AppText>
+      <AppText
+        style={styles.label}
+        accessibilityLabel={`${accessibilityLabel}-label`}
+        testID={`${accessibilityLabel}-label`}
+        accessible={true}
+      >
+        {label}
+      </AppText>
       <View style={styles.inputsWrapper}>
         <TextInput
           style={styles.countryCode}
           keyboardType="phone-pad"
           value={countryCodeValue}
-          onChange={({ nativeEvent: { text } }) => onChangeCountryCode(text)}
+          onChangeText={(text) => onChangeCountryCode(text)}
         />
         <AppText style={styles.hyphen}>-</AppText>
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={mobileNumberValue}
-          onChange={({ nativeEvent: { text } }) => onChangeMobileNumber(text)}
+          value={formatPhoneNumber(
+            mobileNumberValue,
+            countryCodeValue.substr(1)
+          )}
+          onChangeText={(text) =>
+            onChangeMobileNumber(stripPhoneNumberFormatting(text))
+          }
           onSubmitEditing={onSubmit}
+          accessibilityLabel={`${accessibilityLabel}-input`}
+          testID={`${accessibilityLabel}-input`}
+          accessible={true}
         />
       </View>
     </View>

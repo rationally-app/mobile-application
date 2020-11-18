@@ -44,10 +44,16 @@ export const ItemNoQuota: FunctionComponent<{
           description={description}
           unit={quantity?.unit}
           maxQuantity={maxQuantity}
+          accessibilityLabel="item-no-quota"
         />
       </View>
       <View style={styles.feedbackWrapper}>
-        <AppText style={styles.feedbackText}>
+        <AppText
+          style={styles.feedbackText}
+          accessibilityLabel="item-no-quota-badge"
+          testID="item-no-quota-badge"
+          accessible={true}
+        >
           {type === "REDEEM"
             ? i18nt("notEligibleScreen", "notEligible")
             : `${i18nt("notEligibleScreen", "cannot")}\n${i18nt(
