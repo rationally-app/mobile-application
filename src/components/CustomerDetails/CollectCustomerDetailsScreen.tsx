@@ -266,7 +266,14 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           )}
           <Card>
             {!!tCampaignName && (
-              <AppText style={styles.campaignName}>{tCampaignName}</AppText>
+              <AppText
+                style={styles.campaignName}
+                accessibilityLabel="identity-details-campaign-name"
+                testID="identity-details-campaign-name"
+                accessible={true}
+              >
+                {tCampaignName}
+              </AppText>
             )}
             <AppText>
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
@@ -282,8 +289,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 size={size(2)}
                 color={color("blue", 50)}
               />
-              <AppText style={styles.statsText}>
-                {i18nt("redemptionStats", "goToStatistics")}
+              <AppText
+                style={styles.statsText}
+                accessibilityLabel="go-to-statistics"
+                testID="go-to-statistics"
+                accessible={true}
+              >
+                Go to statistics
               </AppText>
             </TouchableOpacity>
           </Card>

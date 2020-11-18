@@ -6,7 +6,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { withNavigation } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppText } from "../Layout/AppText";
-import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 interface StatisticsHeader extends NavigationProps {
   mode?: AppMode;
@@ -57,7 +56,7 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
   const onPressBack = (): void => {
     navigation.navigate("CollectCustomerDetailsScreen");
   };
-  const { i18nt } = useTranslate();
+
   return (
     <View style={styles.appHeaderWrapper}>
       <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
@@ -67,12 +66,22 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
           size={size(4)}
           color={color("grey", 0)}
         />
-        <AppText style={styles.backText}>
-          {i18nt("redemptionStats", "back")}
+        <AppText
+          style={styles.backText}
+          accessibilityLabel="statistics-header-back-button"
+          testID="statistics-header-back-button"
+          accessible={true}
+        >
+          Back
         </AppText>
       </TouchableOpacity>
-      <AppText style={styles.header}>
-        {i18nt("redemptionStats", "statistics")}
+      <AppText
+        style={styles.header}
+        accessibilityLabel="statistics-header-title"
+        testID="statistics-header-title"
+        accessible={true}
+      >
+        Statistics
       </AppText>
       <TouchableOpacity onPress={onPressOpenDrawer}>
         <MaterialCommunityIcons
