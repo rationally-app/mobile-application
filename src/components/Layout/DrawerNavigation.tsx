@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
-  Platform,
+  Dimensions,
 } from "react-native";
 import {
   DrawerContentComponentProps,
@@ -20,6 +20,8 @@ import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+
+const { height: HEIGHT } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -154,30 +156,30 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </TouchableOpacity>
       </View>
 
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View
           style={{
             marginTop: size(3),
             borderTopColor: color("grey", 20),
             borderTopWidth: 1,
+            flex: 1,
+            justifyContent: "space-between",
+            minHeight: HEIGHT * 0.6,
           }}
         >
-          {drawerButtons.map((button) => (
-            <DrawerButtonComponent {...button} key={button.label} />
-          ))}
-          <DrawerButtonComponent
-            icon="logout"
-            label={i18nt("navigationDrawer", "logout")}
-            onPress={onPressLogout}
-            accessibilityLabel="drawer-nav-logout-button"
-          />
+          <View>
+            {drawerButtons.map((button) => (
+              <DrawerButtonComponent {...button} key={button.label} />
+            ))}
+            <DrawerButtonComponent
+              icon="logout"
+              label={i18nt("navigationDrawer", "logout")}
+              onPress={onPressLogout}
+              accessibilityLabel="drawer-nav-logout-button"
+            />
+          </View>
         </View>
-        <View
-          style={{
-            marginTop: Platform.OS === "ios" ? 360 : 125,
-            marginBottom: size(4),
-          }}
-        >
+        <View>
           <BottomNavigationLink onPress={showHelpModal}>
             {i18nt("navigationDrawer", "helpSupport")}
           </BottomNavigationLink>
