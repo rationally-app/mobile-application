@@ -3,6 +3,12 @@ import { CampaignPolicy, DailyStatistics } from "../../types";
 import "../../common/i18n/i18nMock";
 import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
+const mockFn = jest
+  .fn()
+  .mockImplementation((x: CampaignPolicy["quantity"]["unit"]) => {
+    return x;
+  });
+
 describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics[];
   let campaignPolicy: CampaignPolicy[] = [];
@@ -161,14 +167,14 @@ describe("countTotalTransactionsAndByCategory", () => {
     ];
   });
 
-  it("should return multiple summarised transactions categories with total count and count per category and the name to be displayed on the stats page, as well as ordered by ascending order number", async () => {
+  it("should return multiple summarised transactions categories with total count and count per category and the name to be displayed on the stats page, as well as ordered by ascending order number", () => {
     expect.assertions(1);
 
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactions,
         campaignPolicy,
-        jest.fn()
+        mockFn
       )
     ).toStrictEqual({
       summarisedTotalCount: 4019,
@@ -176,14 +182,14 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 qty",
+          quantityText: "999 pack(s)",
           descriptionAlert: undefined,
           order: 2,
         },
         {
           category: "chocolate",
           name: "🍫 Chocolate",
-          quantityText: "3,000 qty",
+          quantityText: "$3,000",
           descriptionAlert: undefined,
           order: 3,
         },
@@ -198,14 +204,14 @@ describe("countTotalTransactionsAndByCategory", () => {
     });
   });
 
-  it("should return single summarised transaction category", async () => {
+  it("should return single summarised transaction category", () => {
     expect.assertions(1);
 
     expect(
       countTotalTransactionsAndByCategory(
         pastInstantNoodleTransactions,
         campaignPolicy,
-        jest.fn()
+        mockFn
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -213,7 +219,7 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 qty",
+          quantityText: "999 pack(s)",
           descriptionAlert: undefined,
           order: 2,
         },
@@ -221,14 +227,13 @@ describe("countTotalTransactionsAndByCategory", () => {
     });
   });
 
-  it("should return category with category as name if transacted item is not in policies", async () => {
+  it("should return category with category as name if transacted item is not in policies", () => {
     expect.assertions(1);
-
     expect(
       countTotalTransactionsAndByCategory(
         invalidPastTransactions,
         campaignPolicy,
-        jest.fn()
+        mockFn
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -244,14 +249,14 @@ describe("countTotalTransactionsAndByCategory", () => {
     });
   });
 
-  it("should have appeal alertDescription 'via appeal' if product is from an appeal flow", async () => {
+  it("should have appeal alertDescription 'via appeal' if product is from an appeal flow", () => {
     expect.assertions(1);
 
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactionsWithAppeal,
         campaignPolicy,
-        jest.fn()
+        mockFn
       )
     ).toStrictEqual({
       summarisedTotalCount: 200,
