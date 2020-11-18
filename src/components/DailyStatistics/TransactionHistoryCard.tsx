@@ -84,8 +84,18 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
           ))
         ) : (
           <>
+
             <AppText style={styles.noTransactionText}>
               {i18nt("redemptionStats", "noItemsScanned")}
+
+            <AppText
+              style={styles.noTransactionText}
+              accessibilityLabel="transaction-history-no-items-scanned"
+              testID="transaction-history-no-items-scanned"
+              accessible={true}
+            >
+              No items scanned
+
             </AppText>
           </>
         )

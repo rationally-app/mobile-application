@@ -137,7 +137,12 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
                 style={sharedCardStyles.icon}
               />
               <View style={sharedCardStyles.statusTitleWrapper}>
-                <AppText style={sharedCardStyles.statusTitle}>
+                <AppText
+                  style={sharedCardStyles.statusTitle}
+                  accessibilityLabel="redeemed!"
+                  testID="redeemed"
+                  accessible={true}
+                >
                   {i18nt("checkoutSuccessScreen", "redeemed")}
                 </AppText>
               </View>

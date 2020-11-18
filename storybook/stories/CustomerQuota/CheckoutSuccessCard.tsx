@@ -43,6 +43,14 @@ const quotaResponse: Quota = {
     { category: "toilet-paper", quantity: 1 },
     { category: "chocolate", quantity: 7 },
   ],
+  globalQuota: [
+    { category: "toilet-paper", quantity: 1 },
+    { category: "chocolate", quantity: 7 },
+  ],
+  localQuota: [
+    { category: "toilet-paper", quantity: Number.MAX_SAFE_INTEGER },
+    { category: "chocolate", quantity: Number.MAX_SAFE_INTEGER },
+  ],
 };
 
 storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (

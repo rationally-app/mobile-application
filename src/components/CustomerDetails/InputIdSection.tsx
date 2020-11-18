@@ -86,11 +86,13 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
             autoCompleteType="off"
             autoCorrect={false}
             keyboardType={keyboardType}
+            accessibilityLabel="identity-details"
           />
         </View>
         <SecondaryButton
           text={i18nt("collectCustomerDetailsScreen", "check")}
           onPress={submitId}
+          accessibilityLabel="identity-details-check-button"
         />
       </View>
     </>

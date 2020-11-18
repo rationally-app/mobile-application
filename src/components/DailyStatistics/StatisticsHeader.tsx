@@ -67,12 +67,31 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
           size={size(4)}
           color={color("grey", 0)}
         />
+
         <AppText style={styles.backText}>
           {i18nt("redemptionStats", "back")}
         </AppText>
       </TouchableOpacity>
       <AppText style={styles.header}>
         {i18nt("redemptionStats", "statistics")}
+
+        <AppText
+          style={styles.backText}
+          accessibilityLabel="statistics-header-back-button"
+          testID="statistics-header-back-button"
+          accessible={true}
+        >
+          Back
+        </AppText>
+      </TouchableOpacity>
+      <AppText
+        style={styles.header}
+        accessibilityLabel="statistics-header-title"
+        testID="statistics-header-title"
+        accessible={true}
+      >
+        Statistics
+
       </AppText>
       <TouchableOpacity onPress={onPressOpenDrawer}>
         <MaterialCommunityIcons
