@@ -164,7 +164,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
             borderTopWidth: 1,
             flex: 1,
             justifyContent: "space-between",
-            minHeight: HEIGHT * 0.6,
+            minHeight: HEIGHT * 0.55,
           }}
         >
           <View>
