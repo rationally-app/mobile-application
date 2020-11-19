@@ -94,9 +94,16 @@ export const PhoneNumberInput: FunctionComponent<{
             mobileNumberValue,
             countryCodeValue.substr(1)
           )}
-          onChangeText={(text) =>
-            onChangeMobileNumber(stripPhoneNumberFormatting(text))
-          }
+          onChangeText={(text) => {
+            // Format newly entered phone number
+            const newFormattedPhoneNumber = formatPhoneNumber(
+              stripPhoneNumberFormatting(text),
+              countryCodeValue.substr(1)
+            );
+            onChangeMobileNumber(
+              stripPhoneNumberFormatting(newFormattedPhoneNumber)
+            );
+          }}
           onSubmitEditing={onSubmit}
           accessibilityLabel={`${accessibilityLabel}-input`}
           testID={`${accessibilityLabel}-input`}
