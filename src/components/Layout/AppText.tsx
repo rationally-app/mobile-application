@@ -14,7 +14,7 @@ export const AppText: FunctionComponent<TextProps> = ({
         fontFamily: "brand-regular",
         fontSize: fontSize(0),
         lineHeight: lineHeight(0, false),
-        color: color("blue", 50),
+        color: color("grey", 80),
       },
       style,
     ]}
