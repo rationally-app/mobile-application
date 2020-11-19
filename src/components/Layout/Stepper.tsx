@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: fontSize(1),
     lineHeight: lineHeight(1),
-    color: color("blue", 50),
+    color: color("grey", 80),
     borderBottomColor: color("grey", 30),
     borderBottomWidth: 1,
     textAlign: "center",

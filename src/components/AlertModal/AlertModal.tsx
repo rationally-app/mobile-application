@@ -49,20 +49,17 @@ const styles = StyleSheet.create({
   },
   modalButtonRow: {
     marginTop: size(5),
-    flexDirection: "row",
+    flexDirection: "column",
     alignSelf: "stretch",
-    flexWrap: "wrap",
     marginBottom: size(1),
-    marginLeft: size(1),
+    paddingHorizontal: size(1),
   },
   modalSecondaryButton: {
-    marginRight: size(1),
     flexGrow: 1,
-    marginBottom: size(1),
+    marginBottom: size(2),
   },
   modalPrimaryButton: {
     flexGrow: 1,
-    marginRight: size(1),
   },
 });
 

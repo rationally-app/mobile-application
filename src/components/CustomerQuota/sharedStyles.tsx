@@ -24,7 +24,7 @@ export const sharedStyles = StyleSheet.create({
     paddingBottom: size(2),
   },
   buttonRow: {
-    flexDirection: "row",
+    flexDirection: "column",
   },
   submitButton: { flex: 1 },
   icon: {

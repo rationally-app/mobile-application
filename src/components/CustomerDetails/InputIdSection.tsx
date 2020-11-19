@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
   },
   inputAndButtonWrapper: {
     marginTop: size(5),
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: "column",
+    alignItems: "stretch",
   },
   inputWrapper: {
     flex: 1,
-    marginRight: size(1),
+    marginBottom: size(2),
   },
 });
 
@@ -92,10 +92,12 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
             accessibilityLabel="identity-details"
           />
         </View>
+
         <SecondaryButton
           text={i18nt("collectCustomerDetailsScreen", "check")}
           onPress={submitId}
           accessibilityLabel="identity-details-check-button"
+          fullWidth={true}
         />
       </View>
     </>

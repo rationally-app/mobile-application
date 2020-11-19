@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     marginBottom: size(3),
   },
   statsButton: {
-    marginTop: size(4),
+    marginTop: size(2),
     flexDirection: "row",
     alignSelf: "center",
   },
@@ -248,7 +248,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   return (
     <>
-      <Credits style={{ bottom: size(3) }} />
       <KeyboardAvoidingScrollView>
         <TopBackground mode={config.appMode} />
         <View style={styles.content}>
@@ -282,29 +281,33 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             {getInputComponent()}
-            <TouchableOpacity
-              onPress={onPressStatistics}
-              style={styles.statsButton}
-            >
-              <MaterialCommunityIcons
-                style={styles.statsIcon}
-                name="poll"
-                size={size(2)}
-                color={color("blue", 50)}
-              />
-              <AppText
-                style={styles.statsText}
-                accessibilityLabel="go-to-statistics"
-                testID="go-to-statistics"
-                accessible={true}
-              >
-                Go to statistics
-              </AppText>
-            </TouchableOpacity>
           </Card>
+
+          <TouchableOpacity
+            onPress={onPressStatistics}
+            style={styles.statsButton}
+          >
+            <MaterialCommunityIcons
+              style={styles.statsIcon}
+              name="poll"
+              size={size(2)}
+              color={color("blue", 50)}
+            />
+            <AppText
+              style={styles.statsText}
+              accessibilityLabel="go-to-statistics"
+              testID="go-to-statistics"
+              accessible={true}
+            >
+              Go to statistics
+            </AppText>
+          </TouchableOpacity>
+
           <FeatureToggler feature="HELP_MODAL">
             <HelpButton onPress={showHelpModal} />
           </FeatureToggler>
+
+          <Credits style={{ bottom: size(3) }} />
         </View>
       </KeyboardAvoidingScrollView>
       {shouldShowCamera && (

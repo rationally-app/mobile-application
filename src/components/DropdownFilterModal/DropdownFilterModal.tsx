@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
     lineHeight: lineHeight(0, false),
-    color: color("blue", 50),
+    color: color("grey", 80),
     fontFamily: "brand-regular",
   },
   listItemView: {
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   listItemTag: {
     marginLeft: size(3),
     fontFamily: "brand-bold",
-    color: color("blue", 50),
+    color: color("grey", 80),
     fontSize: fontSize(1),
     lineHeight: lineHeight(1),
   },

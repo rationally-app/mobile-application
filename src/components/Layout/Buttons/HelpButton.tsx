@@ -26,6 +26,7 @@ export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
           fontFamily: "brand-italic",
           fontSize: fontSize(-1),
           lineHeight: lineHeight(-1),
+          padding: size(2),
           color: color("blue", 40),
         }}
       >

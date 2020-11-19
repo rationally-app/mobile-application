@@ -15,7 +15,7 @@ export const en: Translations = {
     sendOtp: "Send OTP",
   },
   loginOTPCard: {
-    sendingOtp: "We're sending you the one-time password...",
+    sendingOtp: "We're sending you the one-time password (OTP)...",
     otp: "OTP",
     resendIn: "Resend in %{ss}s",
     submit: "Submit",
