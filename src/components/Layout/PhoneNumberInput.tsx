@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
     lineHeight: lineHeight(0, false),
-    color: color("grey", 80),
+    color: color("blue", 50),
     minWidth: size(7),
     fontFamily: "brand-regular",
   },
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
     lineHeight: lineHeight(0, false),
-    color: color("grey", 80),
+    color: color("blue", 50),
     fontFamily: "brand-regular",
   },
   hyphen: {

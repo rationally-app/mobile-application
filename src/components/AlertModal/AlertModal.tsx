@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold",
     fontSize: normalize(fontSize(2)),
     lineHeight: lineHeight(2),
-    color: color("grey", 80),
+    color: color("blue", 50),
     textAlign: "center",
   },
   modalDescription: {

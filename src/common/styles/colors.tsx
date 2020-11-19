@@ -36,6 +36,7 @@ const palette: { [color in ColorName]: { [tone: string]: string } } = {
     "30": "#8398A4",
     "40": "#597585",
     "50": "#305367",
+    "60": "#264252",
   },
   "blue-green": {
     "40": "#0E8086",
