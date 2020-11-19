@@ -14,6 +14,7 @@ export const formatPhoneNumber = (
     .getNationalNumberOrDefault()
     .toString();
 
+  phoneNumber = stripPhoneNumberFormatting(phoneNumber);
   phoneNumber =
     phoneNumber.length > exampleNumber.length
       ? phoneNumber.substring(0, exampleNumber.length)

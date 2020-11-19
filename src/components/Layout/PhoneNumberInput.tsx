@@ -69,6 +69,7 @@ export const PhoneNumberInput: FunctionComponent<{
   onSubmit = () => {},
   accessibilityLabel = "phone-number",
 }) => {
+  const countryCode = countryCodeValue.substr(1);
   return (
     <View style={styles.numberWrapper}>
       <AppText
@@ -90,18 +91,10 @@ export const PhoneNumberInput: FunctionComponent<{
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={formatPhoneNumber(
-            mobileNumberValue,
-            countryCodeValue.substr(1)
-          )}
+          value={formatPhoneNumber(mobileNumberValue, countryCode)}
           onChangeText={(text) => {
-            // Format newly entered phone number
-            const newFormattedPhoneNumber = formatPhoneNumber(
-              stripPhoneNumberFormatting(text),
-              countryCodeValue.substr(1)
-            );
             onChangeMobileNumber(
-              stripPhoneNumberFormatting(newFormattedPhoneNumber)
+              stripPhoneNumberFormatting(formatPhoneNumber(text, countryCode))
             );
           }}
           onSubmitEditing={onSubmit}
