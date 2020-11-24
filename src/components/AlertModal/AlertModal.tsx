@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginBottom: size(1.5),
   },
   modalTitle: {
-    fontFamily: "brand-bold",
+    fontFamily: "brand-regular",
     fontSize: normalize(fontSize(2)),
     lineHeight: lineHeight(2),
     color: color("grey", 80),

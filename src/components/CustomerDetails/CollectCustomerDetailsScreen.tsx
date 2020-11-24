@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
     lineHeight: lineHeight(3),
-    marginBottom: size(3),
+    marginBottom: size(2),
     flexGrow: 1,
     flexShrink: 1,
   },
@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     marginTop: size(4),
     fontSize: fontSize(0),
     lineHeight: lineHeight(0, false),
+    color: color("blue", 50),
   },
   statsIcon: {
     marginTop: size(4),

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   inputEditable: {
     backgroundColor: color("grey", 0),
-    borderColor: color("blue", 50),
+    borderColor: color("grey", 40),
     color: color("grey", 80),
   },
   inputNotEditable: {

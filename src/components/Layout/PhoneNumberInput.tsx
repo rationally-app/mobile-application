@@ -16,13 +16,14 @@ const styles = StyleSheet.create({
   countryCode: {
     minHeight: size(6),
     paddingHorizontal: size(1),
+
     marginTop: size(1),
     backgroundColor: color("grey", 0),
     borderWidth: 1,
     borderRadius: borderRadius(2),
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0, false),
+    lineHeight: lineHeight(0, true),
     color: color("grey", 80),
     minWidth: size(7),
     fontFamily: "brand-regular",
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0, false),
+    lineHeight: lineHeight(0, true),
     color: color("grey", 80),
     fontFamily: "brand-regular",
   },
@@ -48,7 +49,8 @@ const styles = StyleSheet.create({
     lineHeight: lineHeight(3),
   },
   numberWrapper: {
-    marginBottom: size(2),
+    //marginBottom: size(2),
+    paddingBottom: 32,
   },
   label: {
     fontFamily: "brand-bold",

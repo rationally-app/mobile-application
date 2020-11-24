@@ -2,16 +2,15 @@ import { Translations } from "./type";
 
 export const en: Translations = {
   loginScanCard: {
-    loginWithQR:
-      "Please log in with your unique QR code provided by your supervisor",
-    scanToLogin: "Scan to login",
+    loginWithQR: "Login with your unique QR code provided by your in-charge.",
+    scanToLogin: "Scan to Login",
     needHelp: "Need help",
     askQuestion: "Ask a question",
   },
   loginMobileNumberCard: {
     enterMobileNumber:
-      "Please enter your mobile phone number to receive a one-time password.",
-    mobileNumber: "Mobile phone number",
+      "Enter your mobile number to receive a one-time password (OTP).",
+    mobileNumber: "Mobile number",
     sendOtp: "Send OTP",
   },
   loginOTPCard: {
