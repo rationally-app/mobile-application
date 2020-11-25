@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   descriptionAlert: {
     fontFamily: "brand-italic",
-    color: color("red", 50),
+    color: color("red", 60),
   },
 });
 
@@ -52,9 +52,7 @@ export const ItemContent: FunctionComponent<{
       >
         {c13nt(name)}
       </AppText>
-      {descriptionAlert && descriptionAlert.length > 0 && (
-        <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
-      )}
+
       {tDescription.length > 0 && (
         <AppText style={styles.description}>{tDescription}</AppText>
       )}
@@ -62,6 +60,9 @@ export const ItemContent: FunctionComponent<{
         <AppText style={sharedStyles.maxQuantityLabel}>
           <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
         </AppText>
+      )}
+      {descriptionAlert && descriptionAlert.length > 0 && (
+        <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
       )}
     </View>
   );
