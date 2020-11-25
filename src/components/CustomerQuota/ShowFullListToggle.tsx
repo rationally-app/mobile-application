@@ -1,13 +1,14 @@
 import React, { FunctionComponent } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
-import { size, color, fontSize } from "../../common/styles";
+import { size, color } from "../../common/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   toggleText: {
-    lineHeight: 1.5 * fontSize(0),
+    lineHeight: lineHeight(0),
     fontFamily: "brand-bold",
   },
   showFullListToggleBorder: {

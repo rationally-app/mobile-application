@@ -6,7 +6,7 @@ export const Card: FunctionComponent<ViewProps> = ({ children, style }) => (
   <View
     style={[
       {
-        paddingTop: size(3),
+        paddingTop: size(4),
         paddingBottom: size(4),
         paddingHorizontal: size(3),
         backgroundColor: color("grey", 0),

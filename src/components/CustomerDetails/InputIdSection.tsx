@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
   horizontalRule: {
     borderBottomColor: color("grey", 30),
-    marginHorizontal: size(1),
+    marginHorizontal: size(0.5),
     borderBottomWidth: 1,
   },
   orWrapper: {

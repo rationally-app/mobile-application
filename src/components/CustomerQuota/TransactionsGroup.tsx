@@ -18,9 +18,10 @@ export const styles = StyleSheet.create({
   itemHeader: {
     lineHeight: 1.5 * fontSize(0),
     fontFamily: "brand-bold",
+    fontSize: fontSize(1),
   },
   itemSubheader: {
-    fontSize: fontSize(-1),
+    fontSize: fontSize(0),
     lineHeight: lineHeight(-1),
     fontFamily: "brand-bold",
   },
@@ -32,16 +33,19 @@ export const styles = StyleSheet.create({
     borderLeftColor: color("grey", 30),
     marginLeft: size(1),
     marginRight: size(1),
+    marginTop: 10,
   },
   itemDetail: {
-    fontSize: fontSize(-1),
-    lineHeight: lineHeight(-1),
+    fontSize: fontSize(0),
+    lineHeight: lineHeight(0, true),
+    marginTop: 10,
   },
   appealLabel: {
-    fontSize: fontSize(-1),
+    fontSize: fontSize(0),
     lineHeight: lineHeight(-1),
     color: color("red", 60),
     fontFamily: "brand-italic",
+    marginTop: 10,
   },
 });
 

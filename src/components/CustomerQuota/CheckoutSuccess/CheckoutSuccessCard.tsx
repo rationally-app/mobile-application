@@ -228,7 +228,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               ) : undefined}
             </View>
             <View>
-              <AppText style={{ lineHeight: lineHeight(0, true) }}>
+              <AppText style={{ lineHeight: lineHeight(0, false) }}>
                 {description}
               </AppText>
               <View style={styles.checkoutItemsList}>
