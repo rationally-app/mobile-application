@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginBottom: size(1.5),
   },
   modalTitle: {
-    fontFamily: "brand-regular",
+    fontFamily: "brand-bold",
     fontSize: normalize(fontSize(2)),
     lineHeight: lineHeight(2),
     color: color("grey", 80),
@@ -56,10 +56,10 @@ const styles = StyleSheet.create({
   },
   modalSecondaryButton: {
     flexGrow: 1,
-    marginBottom: size(2),
   },
   modalPrimaryButton: {
     flexGrow: 1,
+    marginBottom: size(2),
   },
 });
 
@@ -104,6 +104,18 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
             <AppText style={styles.modalDescription}>{description}</AppText>
           ) : null}
           <View style={styles.modalButtonRow}>
+            <View style={styles.modalPrimaryButton}>
+              <PrimaryButton
+                text={buttonTexts.primaryActionText}
+                fullWidth={true}
+                onPress={() => {
+                  onExit?.();
+                  onOk();
+                }}
+                accessibilityLabel="alert-modal-primary-button"
+              />
+            </View>
+
             {buttonTexts.secondaryActionText && (
               <View style={styles.modalSecondaryButton}>
                 <SecondaryButton
@@ -117,17 +129,6 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
                 />
               </View>
             )}
-            <View style={styles.modalPrimaryButton}>
-              <PrimaryButton
-                text={buttonTexts.primaryActionText}
-                fullWidth={true}
-                onPress={() => {
-                  onExit?.();
-                  onOk();
-                }}
-                accessibilityLabel="alert-modal-primary-button"
-              />
-            </View>
           </View>
         </View>
       </View>
