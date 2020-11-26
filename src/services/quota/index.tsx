@@ -30,6 +30,27 @@ export class PostTransactionError extends Error {
   }
 }
 
+export class ReserveTransactionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ReserveTransactionError";
+  }
+}
+
+export class CommitTransactionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CommitTransactionError";
+  }
+}
+
+export class CancelTransactionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CancelTransactionError";
+  }
+}
+
 export class PastTransactionError extends Error {
   constructor(message: string) {
     super(message);
@@ -43,6 +64,14 @@ interface PostTransaction {
   transactions: Transaction[];
   key: string;
   endpoint: string;
+}
+
+interface PostTransactionUpdate {
+  ids: string[];
+  key: string;
+  endpoint: string;
+  transactions: { timestamp: number; transaction: Transaction[] }[];
+  reservationId: string;
 }
 
 export const mockGetQuota = async (
@@ -297,6 +326,188 @@ export const livePostTransaction = async ({
   }
 };
 
+export const mockReserveTransaction = async ({
+  ids,
+  transactions,
+}: PostTransaction): Promise<PostTransactionResult> => {
+  if (ids[0] === "S0000000J") throw new Error("Something broke");
+  const timestamp = new Date();
+  if (transactions[0].category === "voucher") {
+    const transactionArr = [];
+    for (let i = 0; i < transactions[0].quantity; i++) {
+      const transaction: Transaction[] = [
+        {
+          category: "voucher",
+          quantity: 1,
+        },
+      ];
+      transactionArr.push({
+        timestamp: timestamp,
+        transaction,
+      });
+    }
+    return {
+      transactions: transactionArr,
+      reservationId: "reservation-1",
+    };
+  }
+  return {
+    transactions: [
+      {
+        transaction: transactions,
+        timestamp,
+      },
+    ],
+    reservationId: "abcdef",
+  };
+};
+
+export const liveReserveTransaction = async ({
+  ids,
+  identificationFlag,
+  endpoint,
+  key,
+  transactions,
+}: PostTransaction): Promise<PostTransactionResult> => {
+  if (ids.length === 0) {
+    throw new ReserveTransactionError("No ID was provided");
+  }
+  try {
+    const response = await fetchWithValidator(
+      PostTransactionResult,
+      `${endpoint}/transactions/reserve`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: key,
+        },
+        body: JSON.stringify({
+          ids,
+          identificationFlag,
+          transaction: transactions,
+        }),
+      }
+    );
+    return response;
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
+    }
+    throw new ReserveTransactionError(e.message);
+  }
+};
+
+export const mockCommitTransaction = async ({
+  ids,
+  transactions,
+  reservationId,
+}: PostTransactionUpdate): Promise<PostTransactionResult> => {
+  if (ids.length === 0) {
+    throw new CommitTransactionError("No ids to commit");
+  }
+
+  return {
+    transactions: transactions.map(({ transaction, timestamp }) => {
+      return {
+        transaction,
+        timestamp: new Date(timestamp + 1),
+      };
+    }),
+  };
+};
+
+export const liveCommitTransaction = async ({
+  ids,
+  endpoint,
+  key,
+  transactions,
+  reservationId,
+}: PostTransactionUpdate): Promise<PostTransactionResult> => {
+  if (ids.length === 0) {
+    throw new CommitTransactionError("No transactions to commit");
+  }
+  try {
+    const response = await fetchWithValidator(
+      PostTransactionResult,
+      `${endpoint}/transactions/commit`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: key,
+        },
+        body: JSON.stringify({
+          ids,
+          transactions,
+          reservationId,
+        }),
+      }
+    );
+    return response;
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
+    }
+    throw new CommitTransactionError(e.message);
+  }
+};
+
+export const mockCancelTransaction = async ({
+  ids,
+  transactions,
+  reservationId,
+}: PostTransactionUpdate): Promise<PostTransactionResult> => {
+  console.log("hello");
+
+  const newTransactions = transactions.map(({ transaction, timestamp }) => {
+    return {
+      transaction,
+      timestamp: new Date(timestamp),
+    };
+  });
+
+  return { transactions: newTransactions, reservationId };
+};
+
+export const liveCancelTransaction = async ({
+  ids,
+  endpoint,
+  key,
+  transactions,
+  reservationId,
+}: PostTransactionUpdate): Promise<PostTransactionResult> => {
+  if (ids.length === 0) {
+    throw new CommitTransactionError("No transactions to commit");
+  }
+  try {
+    return await fetchWithValidator(
+      PostTransactionResult,
+      `${endpoint}/transactions/cancel`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: key,
+        },
+        body: JSON.stringify({
+          ids,
+          transactions,
+          reservationId,
+        }),
+      }
+    );
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
+    }
+    throw new CancelTransactionError(e.message);
+  }
+};
+
 export const mockPastTransactions = async (
   ids: string[],
   _identificationFlag: IdentificationFlag,
@@ -377,3 +588,12 @@ export const postTransaction = IS_MOCK
 export const getPastTransactions = IS_MOCK
   ? mockPastTransactions
   : livePastTransactions;
+export const reserveTransaction = IS_MOCK
+  ? mockReserveTransaction
+  : liveReserveTransaction;
+export const commitTransaction = IS_MOCK
+  ? mockCommitTransaction
+  : liveCommitTransaction;
+export const cancelTransaction = IS_MOCK
+  ? mockCancelTransaction
+  : liveCancelTransaction;

@@ -3,7 +3,11 @@ import { renderHook, act } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
 import { wait } from "@testing-library/react-native";
 import { Quota, PostTransactionResult, CampaignPolicy } from "../../types";
-import { postTransaction } from "../../services/quota";
+import {
+  postTransaction,
+  reserveTransaction,
+  commitTransaction,
+} from "../../services/quota";
 import {
   defaultProducts,
   defaultIdentifier,
@@ -13,6 +17,8 @@ import { ERROR_MESSAGE } from "../../context/alert";
 
 jest.mock("../../services/quota");
 const mockPostTransaction = postTransaction as jest.Mock;
+const mockReserveTransaction = reserveTransaction as jest.Mock;
+const mockCommitTransaction = commitTransaction as jest.Mock;
 
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
@@ -166,6 +172,39 @@ const mockPostTransactionResult: PostTransactionResult = {
         },
       ],
       timestamp: transactionTime,
+    },
+  ],
+};
+
+const mockReserveTransactionResult: PostTransactionResult = {
+  transactions: [
+    {
+      transaction: [
+        { category: "toilet-paper", identifierInputs: [], quantity: 1 },
+        {
+          category: "chocolate",
+          identifierInputs: [],
+          quantity: 5,
+        },
+      ],
+      timestamp: transactionTime,
+    },
+  ],
+  reservationId: "reservation-1",
+};
+
+const mockCommitTransactionResult: PostTransactionResult = {
+  transactions: [
+    {
+      transaction: [
+        { category: "toilet-paper", identifierInputs: [], quantity: 1 },
+        {
+          category: "chocolate",
+          identifierInputs: [],
+          quantity: 5,
+        },
+      ],
+      timestamp: new Date(transactionTime.valueOf() + 1),
     },
   ],
 };
@@ -475,6 +514,318 @@ describe("useCart", () => {
           quantity: 0,
         },
       ]);
+    });
+  });
+
+  describe("reserve cart", () => {
+    it("should set the correct checkoutResult when reserveCart is called", async () => {
+      expect.assertions(4);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 2);
+        result.current.updateCart("chocolate", 5);
+      });
+
+      mockReserveTransaction.mockReturnValueOnce(mockReserveTransactionResult);
+
+      await wait(() => {
+        result.current.reserveCart();
+        expect(result.current.cartState).toBe("RESERVING");
+      });
+
+      expect(result.current.cartState).toBe("RESERVED");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5,
+        },
+      ]);
+      expect(result.current.checkoutResult).toStrictEqual(
+        mockReserveTransactionResult
+      );
+    });
+
+    it("should set error when no item was selected", async () => {
+      expect.assertions(3);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 0);
+        result.current.reserveCart();
+      });
+
+      expect(result.current.cartError?.message).toBe(
+        "Select at least one item to checkout."
+      );
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 0,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0,
+        },
+      ]);
+    });
+
+    it("should throw duplicate identifier inputs error if there are duplicate identifier inputs", async () => {
+      expect.assertions(2);
+      const ids = ["ID1", "ID1"];
+
+      const { result } = renderHook(
+        () =>
+          useCart(ids, key, endpoint, mockQuotaResMultipleIds.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+      mockReserveTransaction.mockRejectedValueOnce(
+        new Error("Invalid Purchase Request: Duplicate identifier inputs")
+      );
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 2);
+        result.current.updateCart("chocolate", 5);
+        result.current.reserveCart();
+      });
+
+      expect(result.current.cartError?.message).toBe(
+        "Enter or scan a different code."
+      );
+      expect(result.current.cartState).toBe("DEFAULT");
+    });
+  });
+
+  describe("cancel cart", () => {
+    it("should set the correct checkoutCart result", async () => {
+      expect.assertions(4);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      mockReserveTransaction.mockReturnValueOnce(mockReserveTransactionResult);
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 2);
+        result.current.updateCart("chocolate", 5);
+        result.current.reserveCart();
+      });
+
+      await wait(() => {
+        result.current.cancelCart();
+        expect(result.current.cartState).toBe("CANCELLING");
+      });
+
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5,
+        },
+      ]);
+      expect(result.current.checkoutResult).toBeUndefined();
+    });
+
+    it("should throw an error if there is nothing reserved", async () => {
+      expect.assertions(4);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 2);
+        result.current.updateCart("chocolate", 5);
+      });
+
+      await wait(() => {
+        result.current.cancelCart();
+      });
+
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5,
+        },
+      ]);
+      expect(result.current.checkoutResult).toBeUndefined();
+      expect(result.current.cartError?.message).toStrictEqual(
+        "Nothing to cancel."
+      );
+    });
+  });
+
+  describe("commit cart", () => {
+    it("should set the correct checkoutCart result", async () => {
+      expect.assertions(4);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      mockReserveTransaction.mockReturnValueOnce(mockReserveTransactionResult);
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 2);
+        result.current.updateCart("chocolate", 5);
+        result.current.reserveCart();
+      });
+
+      mockCommitTransaction.mockResolvedValueOnce(mockCommitTransactionResult);
+
+      await wait(() => {
+        result.current.commitCart();
+        expect(result.current.cartState).toBe("COMMITTING");
+      });
+
+      expect(result.current.cartState).toBe("PURCHASED");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5,
+        },
+      ]);
+      expect(result.current.checkoutResult).toStrictEqual({
+        transactions: [
+          {
+            transaction: [
+              { category: "toilet-paper", identifierInputs: [], quantity: 1 },
+              {
+                category: "chocolate",
+                identifierInputs: [],
+                quantity: 5,
+              },
+            ],
+            timestamp: new Date(transactionTime.valueOf() + 1),
+          },
+        ],
+      });
+    });
+
+    it("should throw an error if there is nothing reserved", async () => {
+      expect.assertions(4);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 2);
+        result.current.updateCart("chocolate", 5);
+      });
+
+      await wait(() => {
+        result.current.commitCart();
+      });
+
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5,
+        },
+      ]);
+      expect(result.current.checkoutResult).toBeUndefined();
+      expect(result.current.cartError?.message).toStrictEqual(
+        "Nothing to commit."
+      );
     });
   });
 

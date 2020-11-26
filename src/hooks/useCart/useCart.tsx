@@ -1,5 +1,10 @@
 import { useState, useCallback, useContext, useEffect } from "react";
-import { postTransaction } from "../../services/quota";
+import {
+  postTransaction,
+  reserveTransaction,
+  commitTransaction,
+  cancelTransaction,
+} from "../../services/quota";
 import { PostTransactionResult, ItemQuota, IdentifierInput } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
@@ -24,7 +29,14 @@ export type CartItem = {
 
 export type Cart = CartItem[];
 
-type CartState = "DEFAULT" | "CHECKING_OUT" | "PURCHASED";
+type CartState =
+  | "DEFAULT"
+  | "RESERVING"
+  | "RESERVED"
+  | "COMMITTING"
+  | "CANCELLING"
+  | "CHECKING_OUT"
+  | "PURCHASED";
 
 export type CartHook = {
   cartState: CartState;
@@ -35,7 +47,10 @@ export type CartHook = {
     quantity: number,
     identifierInputs?: IdentifierInput[]
   ) => void;
+  reserveCart: () => void;
+  commitCart: () => void;
   checkoutCart: () => void;
+  cancelCart: () => void;
   checkoutResult?: PostTransactionResult;
   cartError?: Error;
   clearCartError: () => void;
@@ -201,10 +216,162 @@ export const useCart = (
   );
 
   /**
+   * Handles the reserving of the cart.
+   * Sets checkoutResult to the response of the post transaction.
+   */
+
+  const reserveCart: CartHook["reserveCart"] = useCallback(async () => {
+    const reserve = async (): Promise<void> => {
+      setCartState("RESERVING");
+      const allIdentifierInputs: IdentifierInput[] = [];
+      const transactions = Object.values(cart)
+        .filter(({ quantity }) => quantity)
+        .map(({ category, quantity, identifierInputs }) => {
+          if (
+            identifierInputs.length > 0 &&
+            identifierInputs.some((identifierInput) => !identifierInput.value)
+          ) {
+          }
+          allIdentifierInputs.push(...identifierInputs);
+          return { category, quantity, identifierInputs };
+        });
+
+      if (transactions.length === 0) {
+        setCartState("DEFAULT");
+        setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
+        return;
+      }
+
+      try {
+        validateIdentifierInputs(allIdentifierInputs);
+      } catch (error) {
+        setCartState("DEFAULT");
+        setCartError(error);
+        return;
+      }
+
+      try {
+        const transactionResponse = await reserveTransaction({
+          ids,
+          identificationFlag: selectedIdType,
+          key: authKey,
+          transactions,
+          endpoint,
+        });
+        setCheckoutResult(transactionResponse);
+        setCartState("RESERVED");
+      } catch (e) {
+        setCartState("DEFAULT");
+        if (
+          e.message === "Invalid Purchase Request: Duplicate identifier inputs"
+        ) {
+          setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e instanceof SessionError) {
+          setCartError(e);
+        } else {
+          setCartError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+        }
+      }
+    };
+
+    await reserve();
+  }, [authKey, cart, endpoint, ids, selectedIdType]);
+
+  const commitCart: CartHook["commitCart"] = useCallback(async () => {
+    const commit = async (): Promise<void> => {
+      setCartState("COMMITTING");
+      const { transactions, reservationId } = checkoutResult ?? {};
+
+      try {
+        if (transactions && reservationId) {
+          const transactionsFormatted = transactions.map(
+            ({ transaction, timestamp }) => {
+              return {
+                transaction,
+                timestamp: timestamp.valueOf(),
+              };
+            }
+          );
+          const commitResponse = await commitTransaction({
+            key: authKey,
+            endpoint,
+            ids,
+            transactions: transactionsFormatted,
+            reservationId,
+          });
+          setCheckoutResult(commitResponse);
+
+          setCartState("PURCHASED");
+        }
+      } catch (e) {
+        setCartState("DEFAULT");
+        if (
+          e.message === "Invalid Purchase Request: Duplicate identifier inputs"
+        ) {
+          setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e instanceof SessionError) {
+          setCartError(e);
+        } else {
+          setCartError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+        }
+      }
+    };
+
+    if (cartState == "RESERVED") {
+      await commit();
+    } else {
+      setCartError(new Error("Nothing to commit."));
+    }
+  }, [cartState, authKey, endpoint, checkoutResult, ids]);
+
+  const cancelCart: CartHook["cancelCart"] = useCallback(async () => {
+    const cancel = async (): Promise<void> => {
+      setCartState("CANCELLING");
+      // create array of transaction identifiers
+      const { transactions, reservationId } = checkoutResult ?? {};
+      try {
+        if (transactions && reservationId) {
+          const transactionsFormatted = transactions.map(
+            ({ transaction, timestamp }) => {
+              return {
+                transaction,
+                timestamp: timestamp.valueOf(),
+              };
+            }
+          );
+          await cancelTransaction({
+            key: authKey,
+            endpoint,
+            ids,
+            transactions: transactionsFormatted,
+            reservationId,
+          });
+
+          setCheckoutResult(undefined);
+          setCartState("DEFAULT");
+        }
+      } catch (e) {
+        setCartState("DEFAULT");
+        if (e instanceof SessionError) {
+          setCartError(e);
+        } else {
+          setCartError(new Error(ERROR_MESSAGE.SERVER_ERROR));
+        }
+      }
+    };
+
+    if (cartState == "RESERVED") {
+      await cancel();
+    } else {
+      setCartError(new Error("Nothing to cancel."));
+    }
+  }, [cartState, authKey, endpoint, checkoutResult, ids]);
+
+  /**
    * Handles the checking out of the cart.
    * Sets checkoutResult to the response of the post transaction.
    */
-  const checkoutCart: CartHook["checkoutCart"] = useCallback(() => {
+  const checkoutCart: CartHook["checkoutCart"] = useCallback(async () => {
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
 
@@ -254,7 +421,7 @@ export const useCart = (
       }
     };
 
-    checkout();
+    await checkout();
   }, [authKey, cart, endpoint, ids, selectedIdType]);
 
   return {
@@ -262,7 +429,10 @@ export const useCart = (
     cart,
     emptyCart,
     updateCart,
+    reserveCart,
+    commitCart,
     checkoutCart,
+    cancelCart,
     checkoutResult,
     cartError,
     clearCartError,

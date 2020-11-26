@@ -209,14 +209,17 @@ const Transaction = t.intersection([
   t.partial({ identifierInputs: t.array(IdentifierInput) }),
 ]);
 
-export const PostTransactionResult = t.type({
-  transactions: t.array(
-    t.type({
-      transaction: t.array(Transaction),
-      timestamp: DateFromNumber,
-    })
-  ),
-});
+export const PostTransactionResult = t.intersection([
+  t.type({
+    transactions: t.array(
+      t.type({
+        transaction: t.array(Transaction),
+        timestamp: DateFromNumber,
+      })
+    ),
+  }),
+  t.partial({ reservationId: t.string }),
+]);
 
 export type Transaction = t.TypeOf<typeof Transaction>;
 export type PostTransactionResult = t.TypeOf<typeof PostTransactionResult>;
@@ -233,7 +236,17 @@ export const PastTransactionsResult = t.type({
   pastTransactions: t.array(PastTransaction),
 });
 
+export const DeleteTransactionItem = t.type({
+  id: t.string,
+  quantity: t.number,
+  category: t.string,
+  transactionTime: DateFromNumber,
+});
+
+export const DeleteTransactionResult = t.array(DeleteTransactionItem);
+
 export type PastTransactionsResult = t.TypeOf<typeof PastTransactionsResult>;
+export type DeleteTransactionResult = t.TypeOf<typeof DeleteTransactionResult>;
 
 export type Voucher = {
   serial: string;

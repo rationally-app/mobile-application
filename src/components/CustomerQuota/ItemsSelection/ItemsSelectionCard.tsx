@@ -8,27 +8,31 @@ import { SecondaryButton } from "../../Layout/Buttons/SecondaryButton";
 import { Feather } from "@expo/vector-icons";
 import { Cart, CartHook } from "../../../hooks/useCart/useCart";
 import { AddUserModal } from "../AddUserModal";
+// import { PaymentConfirmationModal } from "../PaymentConfirmationModal";
 import { Item } from "./Item";
 import { ProductContext } from "../../../context/products";
 import {
   AlertModalContext,
-  CONFIRMATION_MESSAGE,
   ERROR_MESSAGE,
   WARNING_MESSAGE,
 } from "../../../context/alert";
 import { validateAndCleanId } from "../../../utils/validateIdentification";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
+import { PaymentConfirmationModal } from "../PaymentConfirmationModal";
 
 interface ItemsSelectionCard {
   ids: string[];
   addId: (id: string) => void;
   isLoading: boolean;
-  checkoutCart: () => void;
+  checkoutCart: CartHook["checkoutCart"];
+  reserveCart: CartHook["reserveCart"];
+  commitCart: CartHook["commitCart"];
   onCancel: () => void;
   onBack: () => void;
   cart: Cart;
   updateCart: CartHook["updateCart"];
+  cancelCart: CartHook["cancelCart"];
 }
 
 export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
@@ -36,6 +40,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   addId,
   isLoading,
   checkoutCart,
+  reserveCart,
+  commitCart,
+  cancelCart,
   onCancel,
   onBack,
   cart,
@@ -44,9 +51,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { features } = useContext(CampaignConfigContext);
   const { products } = useContext(ProductContext);
-  const { showWarnAlert, showConfirmationAlert, showErrorAlert } = useContext(
-    AlertModalContext
-  );
+  const { showWarnAlert, showErrorAlert } = useContext(AlertModalContext);
+  const [showPaymentAlert, setShowPaymentAlert] = useState<boolean>(false);
 
   const { i18nt } = useTranslate();
 
@@ -135,11 +141,14 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             onPress={
               !isChargeable
                 ? checkoutCart
-                : () => {
-                    showConfirmationAlert(
-                      CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
-                      checkoutCart
-                    );
+                : async () => {
+                    try {
+                      await reserveCart();
+                      setShowPaymentAlert(true);
+                    } catch (e) {
+                      setShowPaymentAlert(false);
+                      showErrorAlert(e);
+                    }
                   }
             }
             isLoading={isLoading}
@@ -152,6 +161,14 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         isVisible={isAddUserModalVisible}
         setIsVisible={setIsAddUserModalVisible}
         validateAndUpdateIds={onCheckAddedUsers}
+      />
+      <PaymentConfirmationModal
+        isVisible={showPaymentAlert}
+        commitCart={commitCart}
+        cancelPayment={async () => {
+          await cancelCart();
+          setShowPaymentAlert(false);
+        }}
       />
     </View>
   );
