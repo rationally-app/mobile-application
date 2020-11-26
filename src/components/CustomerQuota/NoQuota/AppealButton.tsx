@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
-import { size } from "../../../common/styles";
+import { color, size } from "../../../common/styles";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     fontFamily: "brand-bold",
     fontSize: size(2),
+    color: color("blue", 50),
   },
 });
 

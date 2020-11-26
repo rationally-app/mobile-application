@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
   },
   header: {
     fontFamily: "brand-bold",
-    fontSize: fontSize(3),
-    lineHeight: lineHeight(3),
+    fontSize: fontSize(2),
+    lineHeight: lineHeight(2),
     color: "white",
     flexDirection: "row",
     textAlign: "center",
