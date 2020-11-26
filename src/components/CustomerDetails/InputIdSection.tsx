@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     padding: size(1),
   },
   orText: {
-    fontSize: fontSize(-1),
-    lineHeight: lineHeight(-1),
+    fontSize: fontSize(-2),
+    lineHeight: lineHeight(-2),
     fontFamily: "brand-bold",
   },
   inputAndButtonWrapper: {
