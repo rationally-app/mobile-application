@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
     lineHeight: lineHeight(3),
   },
   numberWrapper: {
-    //marginBottom: size(2),
     paddingBottom: 32,
   },
   label: {
