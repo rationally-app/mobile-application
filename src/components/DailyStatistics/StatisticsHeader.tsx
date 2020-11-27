@@ -21,30 +21,21 @@ const styles = StyleSheet.create({
   },
   backButton: {
     flexDirection: "row",
-    alignSelf: "center",
-    marginLeft: -size(2),
-    marginRight: -size(0.5),
-  },
-  backIcon: {
-    alignSelf: "center",
-    marginRight: size(0.5),
   },
   backText: {
     color: "white",
     alignSelf: "center",
     fontSize: fontSize(0),
     lineHeight: lineHeight(0, false),
-    marginRight: size(0.5),
-    marginLeft: -size(1.5),
   },
   header: {
     fontFamily: "brand-bold",
     fontSize: fontSize(2),
     lineHeight: lineHeight(2),
     color: "white",
-    flexDirection: "row",
     textAlign: "center",
-    marginLeft: -size(1.5),
+    marginTop: 2,
+    marginRight: size(3),
   },
 });
 
@@ -64,9 +55,8 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
     <View style={styles.appHeaderWrapper}>
       <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
         <MaterialCommunityIcons
-          style={styles.backIcon}
           name="chevron-left"
-          size={size(4)}
+          size={size(3)}
           color={color("grey", 0)}
         />
         <AppText

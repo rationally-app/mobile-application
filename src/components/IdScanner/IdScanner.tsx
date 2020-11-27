@@ -25,11 +25,11 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   cameraWrapper: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: color("grey", 100),
+    backgroundColor: color("grey", 90),
   },
   backButtonWrapper: {
     position: "absolute",
-    marginTop: size(3),
+    marginTop: size(1), // TODO: test this on iOS
     zIndex: Number.MAX_SAFE_INTEGER,
   },
   scanner: {
