@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   backButtonWrapper: {
     position: "absolute",
-    marginTop: size(1), // TODO: test this on iOS
+    marginTop: size(1),
     zIndex: Number.MAX_SAFE_INTEGER,
   },
   scanner: {
