@@ -103,14 +103,16 @@ describe("CheckoutSuccessCard utility functions", () => {
         transactionTime: latestTransactionTime,
         transactions: [
           {
-            header: "TT token",
+            itemTitle: "TT token",
+            header: "4 Aug 2020, 4:39PM",
             details: "AAA987654321",
             quantity: "1 qty",
             isAppeal: false,
             order: 1,
           },
           {
-            header: "Meal credits",
+            header: "4 Aug 2020, 4:39PM",
+            itemTitle: "Meal credits",
             details: "",
             quantity: "$10",
             isAppeal: false,
@@ -123,7 +125,8 @@ describe("CheckoutSuccessCard utility functions", () => {
         transactionTime: new Date(latestTransactionTimeMs - 10000),
         transactions: [
           {
-            header: "CDC Vouchers",
+            header: "4 Aug 2020, 4:39PM",
+            itemTitle: "CDC Vouchers",
             details: "AAA987654322",
             quantity: "1 book",
             isAppeal: false,
@@ -136,7 +139,8 @@ describe("CheckoutSuccessCard utility functions", () => {
         transactionTime: new Date(latestTransactionTimeMs - 20000),
         transactions: [
           {
-            header: "Meal credits",
+            header: "4 Aug 2020, 4:38PM",
+            itemTitle: "Meal credits",
             details: "",
             quantity: "$5",
             isAppeal: false,
@@ -178,14 +182,16 @@ describe("CheckoutSuccessCard utility functions", () => {
           header: "4 Aug 2020, 4:39PM",
           transactions: [
             {
-              header: "Meal credits",
+              header: "4 Aug 2020, 4:39PM",
+              itemTitle: "Meal credits",
               details: "",
               quantity: "$10",
               isAppeal: false,
               order: 0,
             },
             {
-              header: "TT token",
+              header: "4 Aug 2020, 4:39PM",
+              itemTitle: "TT token",
               details: "AAA987654321",
               quantity: "1 qty",
               isAppeal: false,
@@ -198,7 +204,8 @@ describe("CheckoutSuccessCard utility functions", () => {
           header: "4 Aug 2020, 4:39PM",
           transactions: [
             {
-              header: "CDC Vouchers",
+              header: "4 Aug 2020, 4:39PM",
+              itemTitle: "CDC Vouchers",
               details: "AAA987654322",
               quantity: "1 book",
               isAppeal: false,
@@ -211,7 +218,8 @@ describe("CheckoutSuccessCard utility functions", () => {
           header: "4 Aug 2020, 4:38PM",
           transactions: [
             {
-              header: "Meal credits",
+              header: "4 Aug 2020, 4:38PM",
+              itemTitle: "Meal credits",
               details: "",
               quantity: "$5",
               isAppeal: false,
