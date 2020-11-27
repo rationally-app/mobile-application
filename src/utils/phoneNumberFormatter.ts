@@ -7,7 +7,11 @@ export const formatPhoneNumber = (
   countryCode = "65"
 ): string => {
   let region = util.getRegionCodeForCountryCode(Number.parseInt(countryCode));
-  region = region === "ZZ" ? "SG" : region;
+  // Defaults for when region is invalid
+  if (region === "ZZ") {
+    region = "SG";
+    countryCode = "65";
+  }
 
   const exampleNumber = util
     .getExampleNumber(region)
