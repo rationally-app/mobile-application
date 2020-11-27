@@ -25,6 +25,11 @@ export const styles = StyleSheet.create({
     lineHeight: lineHeight(-1),
     fontFamily: "brand-bold",
   },
+  transactionDateTime: {
+    fontSize: fontSize(1),
+    lineHeight: lineHeight(0, true),
+    fontFamily: "brand-bold",
+  },
   itemDetailWrapper: {
     flexDirection: "row",
   },
@@ -50,6 +55,7 @@ export const styles = StyleSheet.create({
 });
 
 export interface Transaction {
+  itemTitle: string;
   header: string;
   details: string;
   quantity: string;
@@ -64,6 +70,7 @@ export interface TransactionsGroup {
 }
 
 const Transaction: FunctionComponent<Transaction> = ({
+  itemTitle,
   header: transactionDate,
   details,
   quantity,
@@ -73,7 +80,10 @@ const Transaction: FunctionComponent<Transaction> = ({
   return (
     <>
       <View style={styles.itemRow}>
-        <AppText style={styles.itemSubheader}>{transactionDate}</AppText>
+        <AppText style={styles.transactionDateTime}>{transactionDate}</AppText>
+      </View>
+      <View style={styles.itemRow}>
+        <AppText style={styles.itemSubheader}>{itemTitle}</AppText>
         <AppText style={styles.itemSubheader}>{quantity}</AppText>
       </View>
       {!!details && (
@@ -102,13 +112,11 @@ export const TransactionsGroup: FunctionComponent<
   TransactionsGroup & {
     maxTransactionsToDisplay: number;
   }
-> = ({ header, transactions, maxTransactionsToDisplay }) => {
+> = ({ transactions, maxTransactionsToDisplay }) => {
+  console.log(transactions);
   const shouldShowGroup = transactions[0].order < maxTransactionsToDisplay;
   return shouldShowGroup ? (
     <View style={styles.wrapper}>
-      <View style={styles.itemRow}>
-        <AppText style={styles.itemHeader}>{header}</AppText>
-      </View>
       {transactions.map(
         (transaction, index) =>
           transaction.order < maxTransactionsToDisplay && (

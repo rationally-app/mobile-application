@@ -115,7 +115,8 @@ export const groupTransactionsByTime = (
       };
     }
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
-      header: (policy?.name && c13nt(policy?.name)) ?? item.category,
+      header: formatDateTime(item.transactionTime),
+      itemTitle: (policy?.name && c13nt(policy?.name)) ?? item.category,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
