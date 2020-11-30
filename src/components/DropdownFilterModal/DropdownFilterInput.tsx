@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     minHeight: size(6),
-    paddingHorizontal: size(1.5),
+    padding: size(1.5),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
     lineHeight: lineHeight(0, true),
