@@ -10,13 +10,13 @@ const styles = StyleSheet.create({
   },
   input: {
     minHeight: size(6),
-    paddingHorizontal: size(1),
+    padding: size(1.5),
     marginTop: size(1),
     borderWidth: 1,
     borderRadius: borderRadius(2),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0, false),
+    lineHeight: lineHeight(0, true),
   },
   inputEditable: {
     backgroundColor: color("grey", 0),
