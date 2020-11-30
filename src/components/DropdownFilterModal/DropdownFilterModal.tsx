@@ -60,15 +60,15 @@ const styles = StyleSheet.create({
   },
   searchTextInput: {
     minHeight: size(6),
-    paddingHorizontal: size(1),
+    paddingHorizontal: size(1.5),
     marginTop: size(1),
     backgroundColor: color("grey", 0),
     borderWidth: 1,
     borderRadius: borderRadius(2),
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0, false),
-    color: color("grey", 80),
+    lineHeight: lineHeight(0, true),
+    color: color("grey", 40),
     fontFamily: "brand-regular",
   },
   listItemView: {

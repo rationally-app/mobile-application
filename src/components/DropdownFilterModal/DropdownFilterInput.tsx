@@ -19,11 +19,11 @@ const styles = StyleSheet.create({
   },
   inputText: {
     minHeight: size(6),
-    paddingHorizontal: size(1),
+    paddingHorizontal: size(1.5),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0, false),
-    color: color("grey", 80),
+    lineHeight: lineHeight(0, true),
+    color: color("grey", 40),
   },
 });
 

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     color: color("grey", 0),
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0, true),
+    lineHeight: lineHeight(0, false),
     paddingBottom: size(1.5),
   },
   selectedIndicator: {
@@ -24,10 +24,10 @@ const styles = StyleSheet.create({
     marginBottom: size(2),
   },
   unselectedText: {
-    color: color("grey", 10),
+    color: color("grey", 0),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0, true),
+    lineHeight: lineHeight(0, false),
     paddingBottom: size(1.5),
   },
   unselectedIndicator: {
