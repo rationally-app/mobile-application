@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   searchTextInput: {
     minHeight: size(6),
-    paddingHorizontal: size(1.5),
+    padding: size(1.5),
     marginTop: size(1),
     backgroundColor: color("grey", 0),
     borderWidth: 1,
