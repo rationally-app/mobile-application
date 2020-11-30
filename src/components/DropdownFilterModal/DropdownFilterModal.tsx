@@ -45,8 +45,9 @@ const styles = StyleSheet.create({
   emoji: {
     fontSize: fontSize(3),
     lineHeight: lineHeight(3),
-    marginLeft: size(2),
-    marginRight: size(0.5),
+    marginHorizontal: 370,
+    paddingRight: 16,
+    marginRight: size(2),
     color: color("grey", 0),
   },
   crossText: {
@@ -158,7 +159,6 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
         <TopBackground mode={AppMode.production} style={styles.header} />
         <TouchableOpacity style={styles.closeTouchable} onPress={closeModal}>
           <AntDesign name="close" style={styles.emoji} />
-          <Text style={styles.crossText}>Close</Text>
         </TouchableOpacity>
       </View>
     );
