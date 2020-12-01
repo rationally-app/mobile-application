@@ -100,7 +100,6 @@ export const groupTransactionsByCategory = (
     }
     transactionsByCategoryMap[tName].transactions.push({
       header: formattedDate,
-      itemTitle: tName,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
