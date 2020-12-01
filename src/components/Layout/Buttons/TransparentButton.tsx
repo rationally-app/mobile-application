@@ -22,7 +22,13 @@ export const TransparentButton: FunctionComponent<TransparentButton> = ({
     backgroundColor="transparent"
     accessibilityLabel={accessibilityLabel}
   >
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <View
+      style={{
+        marginTop: size(3),
+        flexDirection: "row",
+        alignItems: "center",
+      }}
+    >
       {icon && <View style={{ marginRight: size(1) }}>{icon}</View>}
       <AppText
         style={{
