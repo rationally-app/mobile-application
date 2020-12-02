@@ -2,8 +2,7 @@ import React, { FunctionComponent, ReactElement } from "react";
 import { color, size } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
-import { ActivityIndicator, View } from "react-native";
-import { Platform } from "react-native";
+import { ActivityIndicator, View, Platform } from "react-native";
 
 export interface DarkButton {
   onPress?: () => void;
