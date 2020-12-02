@@ -212,11 +212,6 @@ export const useCart = (
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
-          if (
-            identifierInputs.length > 0 &&
-            identifierInputs.some((identifierInput) => !identifierInput.value)
-          ) {
-          }
           allIdentifierInputs.push(...identifierInputs);
           return { category, quantity, identifierInputs };
         });
