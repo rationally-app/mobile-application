@@ -222,7 +222,6 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           default:
             showErrorAlert(cartError, () => {
               clearCartError();
-              navigation.goBack();
             });
         }
       } else {
