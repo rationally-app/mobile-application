@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     lineHeight: lineHeight(2),
     color: "white",
     textAlign: "center",
-    marginTop: 2,
     marginRight: size(3),
   },
 });
