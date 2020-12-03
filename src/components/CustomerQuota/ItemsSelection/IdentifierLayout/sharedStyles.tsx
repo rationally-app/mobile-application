@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 import { size } from "../../../../common/styles";
-import { lineHeight } from "../../../../common/styles/typography";
 
 export const sharedStyles = StyleSheet.create({
   inputAndButtonWrapper: {
@@ -15,6 +14,5 @@ export const sharedStyles = StyleSheet.create({
   },
   buttonWrapper: {
     flexShrink: 1,
-    lineHeight: lineHeight(0),
   },
 });

@@ -3,7 +3,6 @@ import { color, size } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
 import { ActivityIndicator, View } from "react-native";
-import { Platform } from "react-native";
 
 export interface DarkButton {
   onPress?: () => void;
@@ -35,13 +34,7 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
     {isLoading ? (
       <ActivityIndicator size="small" color={color("grey", 0)} />
     ) : (
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          padding: Platform.OS === "ios" ? 1.5 : 3.5,
-        }}
-      >
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
         {icon && <View style={{ marginRight: size(1) }}>{icon}</View>}
         <AppText
           style={{
