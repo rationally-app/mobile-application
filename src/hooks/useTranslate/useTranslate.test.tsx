@@ -9,11 +9,9 @@ import {
 import { defaultFeatures, defaultProducts } from "../../test/helpers/defaults";
 import { TranslationHook, useTranslate } from "./useTranslate";
 import "../../common/i18n/i18nMock";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const mockGetItem = jest.fn();
-jest.mock("@react-native-async-storage/async-storage", () => ({
-  getItem: mockGetItem,
-}));
+const mockGetItem = AsyncStorage.getItem;
 
 describe("useTranslate", () => {
   let allCampaignConfigs: CampaignConfigsMap;

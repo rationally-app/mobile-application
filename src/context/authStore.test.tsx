@@ -4,13 +4,10 @@ import { render, waitFor, fireEvent } from "@testing-library/react-native";
 import { Text, Button } from "react-native";
 import { Sentry } from "../utils/errorTracking";
 import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const mockGetItem = jest.fn();
-const mockSetItem = jest.fn();
-jest.mock("@react-native-async-storage/async-storage", () => ({
-  getItem: mockGetItem,
-  setItem: mockSetItem,
-}));
+const mockGetItem = AsyncStorage.getItem;
+const mockSetItem = AsyncStorage.setItem;
 
 jest.mock("../utils/errorTracking");
 const mockCaptureException = jest.fn();
