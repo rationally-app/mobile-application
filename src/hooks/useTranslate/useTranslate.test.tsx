@@ -11,7 +11,7 @@ import { TranslationHook, useTranslate } from "./useTranslate";
 import "../../common/i18n/i18nMock";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const mockGetItem = AsyncStorage.getItem;
+const mockGetItem = AsyncStorage.getItem as jest.Mock;
 
 describe("useTranslate", () => {
   let allCampaignConfigs: CampaignConfigsMap;
