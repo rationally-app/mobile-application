@@ -6,8 +6,8 @@ import { Sentry } from "../utils/errorTracking";
 import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const mockGetItem = AsyncStorage.getItem;
-const mockSetItem = AsyncStorage.setItem;
+const mockGetItem = AsyncStorage.getItem as jest.Mock;
+const mockSetItem = AsyncStorage.setItem as jest.Mock;
 
 jest.mock("../utils/errorTracking");
 const mockCaptureException = jest.fn();
