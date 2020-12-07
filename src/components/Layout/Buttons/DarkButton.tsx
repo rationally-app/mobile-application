@@ -34,7 +34,12 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
     {isLoading ? (
       <ActivityIndicator size="small" color={color("grey", 0)} />
     ) : (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
         {icon && <View style={{ marginRight: size(1) }}>{icon}</View>}
         <AppText
           style={{

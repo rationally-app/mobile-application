@@ -36,10 +36,9 @@ export const sharedStyles = StyleSheet.create({
     fontSize: fontSize(6),
     lineHeight: lineHeight(6),
     marginBottom: size(2),
-    marginTop: size(2),
   },
   statusTitleWrapper: {
-    marginBottom: size(2),
+    marginBottom: size(3),
   },
   statusTitle: {
     fontSize: fontSize(3),

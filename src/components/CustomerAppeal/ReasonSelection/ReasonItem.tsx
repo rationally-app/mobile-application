@@ -9,6 +9,8 @@ const styles = StyleSheet.create({
     margin: 0,
     marginBottom: size(2),
     marginHorizontal: -size(3),
+    //Left: size(3),
+    //paddingRight: size(3),
     paddingVertical: size(2.5),
     backgroundColor: color("grey", 10),
   },
@@ -16,9 +18,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginHorizontal: size(3),
     marginBottom: 0,
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   reasonAlert: {
-    marginHorizontal: 100,
+    flexDirection: "row-reverse",
+    flexWrap: "wrap",
+    alignSelf: "flex-end",
+    marginRight: 24,
     fontFamily: "brand-italic",
     color: color("red", 60),
   },
@@ -32,16 +39,18 @@ export const ReasonItem: FunctionComponent<{
 }> = ({ description, descriptionAlert, isLast, onReasonSelection }) => {
   const { c13nt } = useTranslate();
   return (
-    <TouchableOpacity
-      style={[styles.reasonComponent, isLast ? { marginBottom: 0 } : {}]}
-      onPress={() => {
-        onReasonSelection(description);
-      }}
-    >
-      <View style={styles.reasonLayout}>
-        <AppText>{c13nt(description)}</AppText>
-        <AppText style={styles.reasonAlert}>{descriptionAlert ?? ""}</AppText>
-      </View>
-    </TouchableOpacity>
+    <View>
+      <TouchableOpacity
+        style={[styles.reasonComponent, isLast ? { marginBottom: 0 } : {}]}
+        onPress={() => {
+          onReasonSelection(description);
+        }}
+      >
+        <View style={styles.reasonLayout}>
+          <AppText>{c13nt(description)}</AppText>
+          <AppText style={styles.reasonAlert}>{descriptionAlert ?? ""}</AppText>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 };

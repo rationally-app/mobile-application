@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { TextInput, View, StyleSheet, TextInputProps } from "react-native";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
-import { lineHeight } from "../../common/styles/typography";
+
 import { AppText } from "./AppText";
 
 const styles = StyleSheet.create({
@@ -10,13 +10,13 @@ const styles = StyleSheet.create({
   },
   input: {
     minHeight: size(6),
-    padding: size(1.5),
     marginTop: size(1),
+    paddingLeft: size(1.5),
+    paddingRight: size(1.5),
     borderWidth: 1,
     borderRadius: borderRadius(2),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0, true),
   },
   inputEditable: {
     backgroundColor: color("grey", 0),
