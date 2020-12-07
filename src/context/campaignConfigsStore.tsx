@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import  AsyncStorage  from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CampaignConfig } from "../types";
 import { usePrevious } from "../hooks/usePrevious";
 import { CampaignConfigError } from "../services/campaignConfig";
