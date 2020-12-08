@@ -36,6 +36,7 @@ export const useDailyStatistics = (
   const [transactionHistory, setTransactionHistory] = useState<
     StatisticsHook["transactionHistory"]
   >([]);
+
   const { c13ntForUnit } = useTranslate();
   const { policies } = useContext(CampaignConfigContext);
 
