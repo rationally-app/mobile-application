@@ -1,7 +1,6 @@
 import { chain, sumBy } from "lodash";
-import { formatQuantityText } from "../../components/CustomerQuota/utils";
 import { DailyStatistics, CampaignPolicy } from "../../types";
-
+import { formatQuantityText } from "../../components/CustomerQuota/utils";
 import { Sentry } from "../../utils/errorTracking";
 import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
