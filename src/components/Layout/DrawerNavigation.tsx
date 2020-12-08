@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import {
   DrawerContentComponentProps,
@@ -20,8 +19,6 @@ import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-
-const { height: HEIGHT } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -156,15 +153,18 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "space-between",
+        }}
+      >
         <View
           style={{
             marginTop: size(3),
             borderTopColor: color("grey", 20),
             borderTopWidth: 1,
-            flex: 1,
-            justifyContent: "space-between",
-            minHeight: HEIGHT * 0.55,
+            marginBottom: size(4),
           }}
         >
           <View>
@@ -179,7 +179,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
             />
           </View>
         </View>
-        <View>
+        <View style={{ marginBottom: size(4) }}>
           <BottomNavigationLink onPress={showHelpModal}>
             {i18nt("navigationDrawer", "helpSupport")}
           </BottomNavigationLink>
