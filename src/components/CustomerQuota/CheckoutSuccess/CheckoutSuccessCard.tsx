@@ -204,8 +204,21 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   return (
     <View>
       <CustomerCard ids={ids}>
-        <View style={sharedStyles.successfulResultWrapper}>
-          <View style={sharedStyles.resultWrapper}>
+        <View
+          style={[
+            sharedStyles.successfulResultWrapper,
+            { paddingLeft: 0, paddingRight: 0 },
+          ]}
+        >
+          <View
+            style={[
+              sharedStyles.resultWrapper,
+              {
+                paddingLeft: size(5),
+                paddingRight: size(5),
+              },
+            ]}
+          >
             <FontAwesome
               name="thumbs-up"
               color={color("blue-green", 40)}
