@@ -9,7 +9,6 @@ import { useTranslate } from "../useTranslate/useTranslate";
 export type StatisticsHook = {
   totalCount: number | null;
   lastTransactionTime: Date | null;
-
   transactionHistory: {
     name: string;
     category: string;
