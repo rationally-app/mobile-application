@@ -81,6 +81,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Fetch Tags
+        run: git fetch --prune --unshallow --tags -f
       - uses: rlespinasse/github-slug-action@v2.x
       - name: Set tag variables
         id: setTags
