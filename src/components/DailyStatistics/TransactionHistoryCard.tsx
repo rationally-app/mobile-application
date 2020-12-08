@@ -14,6 +14,7 @@ interface TransactionHistoryCardComponent {
   }[];
   loading: boolean;
 }
+  
 const styles = StyleSheet.create({
   stats: {
     flexDirection: "column",
