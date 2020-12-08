@@ -7,7 +7,7 @@ export const zh: Translations = {
     back: " 返回",
     statistics: "查看统计",
     goToStatistics: "前往统计",
-    noItemsScanned: "没有扫描项目",
+    noItemsScanned: "没有分发记录",
     viaAppeal: "通过上诉",
   },
   loginScanCard: {
