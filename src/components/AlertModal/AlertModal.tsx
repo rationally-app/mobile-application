@@ -13,6 +13,7 @@ import {
   normalize,
 } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -38,7 +39,8 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontFamily: "brand-bold",
     fontSize: normalize(fontSize(2)),
-    color: color("blue", 50),
+    lineHeight: lineHeight(2),
+    color: color("grey", 80),
     textAlign: "center",
   },
   modalDescription: {
@@ -47,20 +49,17 @@ const styles = StyleSheet.create({
   },
   modalButtonRow: {
     marginTop: size(5),
-    flexDirection: "row",
+    flexDirection: "column",
     alignSelf: "stretch",
-    flexWrap: "wrap",
     marginBottom: size(1),
-    marginLeft: size(1),
+    paddingHorizontal: size(1),
   },
   modalSecondaryButton: {
-    marginRight: size(1),
     flexGrow: 1,
-    marginBottom: size(1),
+    marginBottom: size(2),
   },
   modalPrimaryButton: {
     flexGrow: 1,
-    marginRight: size(1),
   },
 });
 

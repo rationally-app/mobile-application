@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { TextProps, Text } from "react-native";
 import { fontSize, color } from "../../common/styles";
+import { lineHeight } from "../../common/styles/typography";
 
 export const AppText: FunctionComponent<TextProps> = ({
   children,
@@ -12,7 +13,8 @@ export const AppText: FunctionComponent<TextProps> = ({
       {
         fontFamily: "brand-regular",
         fontSize: fontSize(0),
-        color: color("blue", 50),
+        lineHeight: lineHeight(0, false),
+        color: color("grey", 80),
       },
       style,
     ]}

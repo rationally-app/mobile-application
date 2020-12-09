@@ -22,6 +22,7 @@ import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { AuthCredentials } from "../../types";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -31,13 +32,16 @@ const styles = StyleSheet.create({
   },
   buttonsWrapper: {
     marginTop: size(2),
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
   },
-  resendCountdownText: { marginRight: size(1), fontSize: fontSize(-2) },
+  resendCountdownText: {
+    marginRight: size(1),
+    fontSize: fontSize(0),
+    textAlign: "center",
+  },
   submitWrapper: {
     flex: 1,
-    marginLeft: size(1),
   },
 });
 
@@ -137,7 +141,10 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   return (
     <Card>
-      <AppText>{`${i18nt("loginOTPCard", "sendingOtp")}`}</AppText>
+      <AppText style={{ lineHeight: lineHeight(0, true) }}>{`${i18nt(
+        "loginOTPCard",
+        "sendingOtp"
+      )}`}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <InputWithLabel
           label={i18nt("loginOTPCard", "otp")}
@@ -147,32 +154,31 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           keyboardType="numeric"
           accessibilityLabel="login-otp"
         />
-        <View style={styles.buttonsWrapper}>
-          {resendDisabledTime > 0 ? (
-            <AppText style={styles.resendCountdownText}>
-              {i18nt("loginOTPCard", "resendIn", undefined, {
-                ss: resendDisabledTime / 1000,
-              })}
-            </AppText>
-          ) : (
-            <SecondaryButton
-              text={i18nt("loginOTPCard", "resend")}
-              onPress={resendOTP}
-              isLoading={isResending}
-              disabled={isLoading}
-            />
-          )}
-          <View style={styles.submitWrapper}>
-            <DarkButton
-              text={i18nt("loginOTPCard", "submit")}
-              fullWidth={true}
-              onPress={onSubmitOTP}
-              isLoading={isLoading}
-              disabled={isResending}
-              accessibilityLabel="login-submit-otp-button"
-            />
-          </View>
+        <View style={{ marginTop: size(4), marginBottom: size(2) }}>
+          <DarkButton
+            text={i18nt("loginOTPCard", "submit")}
+            fullWidth={true}
+            onPress={onSubmitOTP}
+            isLoading={isLoading}
+            disabled={isResending}
+            accessibilityLabel="login-submit-otp-button"
+          />
         </View>
+        {resendDisabledTime > 0 ? (
+          <AppText style={styles.resendCountdownText}>
+            {i18nt("loginOTPCard", "resendIn", undefined, {
+              ss: resendDisabledTime / 1000,
+            })}
+          </AppText>
+        ) : (
+          <SecondaryButton
+            text={i18nt("loginOTPCard", "resend")}
+            onPress={resendOTP}
+            isLoading={isResending}
+            disabled={isLoading}
+            fullWidth={true}
+          />
+        )}
       </View>
     </Card>
   );

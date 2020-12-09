@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactElement } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Card } from "../../Layout/Card";
 import { AppText } from "../../Layout/AppText";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
@@ -44,13 +44,13 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
   return (
     <Card style={styles.card}>
       <Text style={styles.emoji}>❌</Text>
-      <AppText style={sharedStyles.statusTitleWrapper}>
+      <View style={sharedStyles.statusTitleWrapper}>
         {typeof title === "string" ? (
           <AppText style={sharedStyles.statusTitle}>{title}</AppText>
         ) : (
           title
         )}
-      </AppText>
+      </View>
       <AppText style={styles.details}>{details}</AppText>
       <DarkButton
         fullWidth={true}
