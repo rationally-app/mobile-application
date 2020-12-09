@@ -43,7 +43,6 @@ export const countTotalTransactionsAndByCategory = (
               return key;
             })(),
           category: key,
-
           quantityText: formatQuantityText(
             totalQuantityInCategory,
             c13ntForUnit(findItemByCategory?.quantity.unit) || {
@@ -54,7 +53,6 @@ export const countTotalTransactionsAndByCategory = (
               )}`,
             }
           ),
-
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"
               ? i18ntWithValidator("redemptionStats", "viaAppeal")

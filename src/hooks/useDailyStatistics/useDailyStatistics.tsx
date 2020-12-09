@@ -39,8 +39,8 @@ export const useDailyStatistics = (
 
   const { c13ntForUnit } = useTranslate();
   const { policies } = useContext(CampaignConfigContext);
-
   const prevTimestamp = usePrevious(currentTimestamp);
+
   useEffect(() => {
     const fetchDailyStatistics = async (): Promise<void> => {
       try {
