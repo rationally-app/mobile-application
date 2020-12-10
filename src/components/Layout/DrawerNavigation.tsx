@@ -1,5 +1,11 @@
 import React, { FunctionComponent, useCallback, useContext } from "react";
-import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Linking,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
 import {
   DrawerContentComponentProps,
   DrawerActions,
@@ -146,50 +152,61 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
           />
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          marginTop: size(3),
-          borderTopColor: color("grey", 20),
-          borderTopWidth: 1,
+
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "space-between",
         }}
       >
-        {drawerButtons.map((button) => (
-          <DrawerButtonComponent {...button} key={button.label} />
-        ))}
-        <DrawerButtonComponent
-          icon="logout"
-          label={i18nt("navigationDrawer", "logout")}
-          onPress={onPressLogout}
-          accessibilityLabel="drawer-nav-logout-button"
-        />
-      </View>
-      <View style={{ marginTop: "auto", marginBottom: size(4) }}>
-        <BottomNavigationLink onPress={showHelpModal}>
-          {i18nt("navigationDrawer", "helpSupport")}
-        </BottomNavigationLink>
-        <BottomNavigationLink
-          onPress={() => {
-            Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
+        <View
+          style={{
+            marginTop: size(3),
+            borderTopColor: color("grey", 20),
+            borderTopWidth: 1,
+            marginBottom: size(4),
           }}
         >
-          {i18nt("navigationDrawer", "termsOfUse")}
-        </BottomNavigationLink>
-        <BottomNavigationLink
-          onPress={() => {
-            Linking.openURL("https://www.supplyally.gov.sg/privacy");
-          }}
-        >
-          {i18nt("navigationDrawer", "privacyStatement")}
-        </BottomNavigationLink>
-        <BottomNavigationLink
-          onPress={() => {
-            Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
-          }}
-        >
-          {i18nt("navigationDrawer", "reportVulnerability")}
-        </BottomNavigationLink>
-        <AppText style={styles.bottomVersionText}>{version}</AppText>
-      </View>
+          <View>
+            {drawerButtons.map((button) => (
+              <DrawerButtonComponent {...button} key={button.label} />
+            ))}
+            <DrawerButtonComponent
+              icon="logout"
+              label={i18nt("navigationDrawer", "logout")}
+              onPress={onPressLogout}
+              accessibilityLabel="drawer-nav-logout-button"
+            />
+          </View>
+        </View>
+        <View style={{ marginBottom: size(4) }}>
+          <BottomNavigationLink onPress={showHelpModal}>
+            {i18nt("navigationDrawer", "helpSupport")}
+          </BottomNavigationLink>
+          <BottomNavigationLink
+            onPress={() => {
+              Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
+            }}
+          >
+            {i18nt("navigationDrawer", "termsOfUse")}
+          </BottomNavigationLink>
+          <BottomNavigationLink
+            onPress={() => {
+              Linking.openURL("https://www.supplyally.gov.sg/privacy");
+            }}
+          >
+            {i18nt("navigationDrawer", "privacyStatement")}
+          </BottomNavigationLink>
+          <BottomNavigationLink
+            onPress={() => {
+              Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
+            }}
+          >
+            {i18nt("navigationDrawer", "reportVulnerability")}
+          </BottomNavigationLink>
+          <AppText style={styles.bottomVersionText}>{version}</AppText>
+        </View>
+      </ScrollView>
     </View>
   );
 };

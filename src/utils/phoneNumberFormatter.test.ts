@@ -34,9 +34,9 @@ describe("formatPhoneNumber", () => {
   it("should format other region numbers", () => {
     expect.assertions(2);
     // USA
-    expect(formatPhoneNumber("5555551234", "1")).toBe("(555) 555-1234");
+    expect(formatPhoneNumber("5555551234", "1")).toBe("555-555-1234");
     // Malaysia
-    expect(formatPhoneNumber("312341234", "60")).toBe("03-1234 1234");
+    expect(formatPhoneNumber("312341234", "60")).toBe("3-1234 1234");
   });
 });
 
@@ -50,7 +50,7 @@ describe("stripPhoneNumberFormatting", () => {
     expect(stripped).toBe(testPhoneNumber);
     // USA
     formatted = formatPhoneNumber("5555551234", "1");
-    expect(formatted).toBe("(555) 555-1234");
+    expect(formatted).toBe("555-555-1234");
     stripped = stripPhoneNumberFormatting(formatted);
     expect(stripped).toBe("5555551234");
   });
