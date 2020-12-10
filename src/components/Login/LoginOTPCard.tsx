@@ -22,6 +22,7 @@ import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { AuthCredentials } from "../../types";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -137,7 +138,10 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   return (
     <Card>
-      <AppText>{`${i18nt("loginOTPCard", "sendingOtp")}`}</AppText>
+      <AppText style={{ lineHeight: lineHeight(0, true) }}>{`${i18nt(
+        "loginOTPCard",
+        "sendingOtp"
+      )}`}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <InputWithLabel
           label={i18nt("loginOTPCard", "otp")}

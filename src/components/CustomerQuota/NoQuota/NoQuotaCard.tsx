@@ -272,7 +272,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               color={color("red", 60)}
               style={sharedStyles.icon}
             />
-            <AppText
+            <View
               style={sharedStyles.statusTitleWrapper}
               accessibilityLabel="no-quota-title"
               testID="no-quota-title"
@@ -302,7 +302,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                   quotaRefreshTime={firstGlobalQuota!.quotaRefreshTime}
                 />
               ) : undefined}
-            </AppText>
+            </View>
             {loading ? (
               <ActivityIndicator
                 style={{ alignSelf: "flex-start" }}

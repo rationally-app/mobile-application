@@ -3,6 +3,7 @@ import { size, fontSize, color } from "../../common/styles";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Card } from "../Layout/Card";
+import { lineHeight } from "../../common/styles/typography";
 
 interface TransactionHistoryCardComponent {
   transactionHistory: {
@@ -67,7 +68,12 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
               <View style={styles.transactionText}>
                 <AppText style={styles.categoryName}>{item.name}</AppText>
                 <View style={styles.transactionText}>
-                  <AppText style={styles.quantityText}>
+                  <AppText
+                    style={{
+                      ...styles.quantityText,
+                      lineHeight: lineHeight(0, false),
+                    }}
+                  >
                     {item.quantityText}
                   </AppText>
                 </View>

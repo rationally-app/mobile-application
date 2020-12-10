@@ -31,6 +31,7 @@ import {
   TranslationHook,
   useTranslate,
 } from "../../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../../common/styles/typography";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -210,7 +211,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               color={color("blue-green", 40)}
               style={sharedStyles.icon}
             />
-            <AppText style={sharedStyles.statusTitleWrapper}>
+            <View style={sharedStyles.statusTitleWrapper}>
               <AppText
                 style={sharedStyles.statusTitle}
                 accessibilityLabel="checkout-success-title"
@@ -225,9 +226,11 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                   quotaRefreshTime={firstGlobalQuota!.quotaRefreshTime}
                 />
               ) : undefined}
-            </AppText>
+            </View>
             <View>
-              <AppText>{description}</AppText>
+              <AppText style={{ lineHeight: lineHeight(0, true) }}>
+                {description}
+              </AppText>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
                   <ActivityIndicator
