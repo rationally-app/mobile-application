@@ -389,10 +389,10 @@ const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
   products = defaultProducts,
   children,
 }) => (
-    <ProductContextProvider products={products}>
-      {children}
-    </ProductContextProvider>
-  );
+  <ProductContextProvider products={products}>
+    {children}
+  </ProductContextProvider>
+);
 
 describe("useQuota", () => {
   beforeEach(() => {
