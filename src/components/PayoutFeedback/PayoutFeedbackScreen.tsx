@@ -17,6 +17,7 @@ import { Card } from "../Layout/Card";
 import { sharedStyles } from "../CustomerQuota/CheckoutSuccess/sharedStyles";
 import { sharedStyles as sharedCardStyles } from "../CustomerQuota/sharedStyles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   content: {
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
   cardHeaderSubText: {
     color: color("grey", 0),
     fontSize: fontSize(-2),
+    lineHeight: lineHeight(-2),
     marginBottom: 2,
   },
   cardHeaderText: {
