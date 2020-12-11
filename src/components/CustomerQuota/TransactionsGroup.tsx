@@ -16,11 +16,12 @@ export const styles = StyleSheet.create({
     alignItems: "baseline",
   },
   itemHeader: {
+    fontSize: fontSize(1),
     lineHeight: 1.5 * fontSize(0),
     fontFamily: "brand-bold",
   },
   itemSubheader: {
-    fontSize: fontSize(-1),
+    fontSize: fontSize(0),
     lineHeight: lineHeight(-1),
     fontFamily: "brand-bold",
   },
@@ -34,8 +35,8 @@ export const styles = StyleSheet.create({
     marginRight: size(1),
   },
   itemDetail: {
-    fontSize: fontSize(-1),
-    lineHeight: lineHeight(-1),
+    fontSize: fontSize(0),
+    lineHeight: lineHeight(0, true),
   },
   appealLabel: {
     fontSize: fontSize(-1),

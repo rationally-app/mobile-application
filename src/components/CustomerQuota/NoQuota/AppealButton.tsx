@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     fontFamily: "brand-bold",
     fontSize: size(2),
-    lineHeight: lineHeight(-2),
+    lineHeight: lineHeight(0),
   },
 });
 
