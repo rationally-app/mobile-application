@@ -4,7 +4,7 @@ export const zh: Translations = {
   redemptionStats: {
     youDistributed: "您已分发",
     lastDistributedAt: "最后在 %{lastTransactionTime} 分发",
-    back: " 返回",
+    back: "返回",
     statistics: "统计",
     goToStatistics: "查看统计",
     noItemsScanned: "没有分发记录",
