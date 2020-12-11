@@ -1,6 +1,7 @@
 import React, { useState, FunctionComponent } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
 import { size, borderRadius, color, fontSize } from "../../common/styles";
+import { lineHeight } from "../../common/styles/typography";
 import { AppText } from "../Layout/AppText";
 import { DropdownFilterModal, DropdownItem } from "./DropdownFilterModal";
 
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: size(1),
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
+    lineHeight: lineHeight(0),
     color: color("blue", 50),
   },
 });

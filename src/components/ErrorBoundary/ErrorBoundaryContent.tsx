@@ -6,6 +6,7 @@ import * as Updates from "expo-updates";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import AlertIcon from "../../../assets/icons/alert.svg";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -27,6 +28,7 @@ const styles = StyleSheet.create({
   heading: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
+    lineHeight: lineHeight(3),
     textAlign: "center",
   },
   body: {
@@ -37,6 +39,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: size(4),
     fontSize: fontSize(-3),
+    lineHeight: lineHeight(-3),
   },
   restartButton: {
     position: "absolute",

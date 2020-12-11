@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { color, size, fontSize } from "../../../common/styles";
+import { lineHeight } from "../../../common/styles/typography";
 
 export const styles = StyleSheet.create({
   wrapper: {
@@ -17,6 +18,7 @@ export const styles = StyleSheet.create({
   },
   itemSubheader: {
     fontSize: fontSize(-1),
+    lineHeight: lineHeight(-1),
     fontFamily: "brand-bold",
   },
   itemDetailWrapper: {
@@ -30,9 +32,11 @@ export const styles = StyleSheet.create({
   },
   itemDetail: {
     fontSize: fontSize(-1),
+    lineHeight: lineHeight(-1),
   },
   appealLabel: {
     fontSize: fontSize(-1),
+    lineHeight: lineHeight(-1),
     color: color("red", 60),
     fontFamily: "brand-italic",
   },
@@ -41,5 +45,6 @@ export const styles = StyleSheet.create({
     marginBottom: 0,
     fontFamily: "brand-bold",
     fontSize: size(2),
+    lineHeight: lineHeight(2),
   },
 });

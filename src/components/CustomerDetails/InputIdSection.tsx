@@ -7,6 +7,7 @@ import { AppText } from "../Layout/AppText";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { size, color, fontSize } from "../../common/styles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -26,7 +27,8 @@ const styles = StyleSheet.create({
     padding: size(1),
   },
   orText: {
-    fontSize: fontSize(-1),
+    fontSize: fontSize(-2),
+    lineHeight: lineHeight(-2),
     fontFamily: "brand-bold",
   },
   inputAndButtonWrapper: {

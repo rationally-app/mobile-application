@@ -6,6 +6,7 @@ import { size, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -25,7 +26,13 @@ export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   const { i18nt } = useTranslate();
   return (
     <Card>
-      <AppText>{i18nt("loginScanCard", "loginWithQR")}</AppText>
+      <AppText
+        style={{
+          lineHeight: lineHeight(0, true),
+        }}
+      >
+        {i18nt("loginScanCard", "loginWithQR")}
+      </AppText>
       <View style={styles.scanButtonWrapper}>
         <DarkButton
           text={i18nt("loginScanCard", "scanToLogin")}

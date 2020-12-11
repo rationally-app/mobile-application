@@ -6,6 +6,7 @@ import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color, fontSize } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
+import { lineHeight } from "../../../common/styles/typography";
 
 const styles = StyleSheet.create({
   card: {
@@ -17,6 +18,7 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: fontSize(3),
+    lineHeight: lineHeight(3),
     marginBottom: size(2),
   },
   details: {
