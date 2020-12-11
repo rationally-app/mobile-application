@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: fontSize(1),
     lineHeight: lineHeight(-1),
-    fontFamily: "brand-regular",
+    fontFamily: "brand-bold",
   },
   description: {
     fontSize: fontSize(0),
