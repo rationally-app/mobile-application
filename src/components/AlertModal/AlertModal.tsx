@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
   modalDescription: {
     marginTop: size(1),
     textAlign: "center",
+    lineHeight: lineHeight(0, true),
   },
   modalButtonRow: {
     marginTop: size(5),
