@@ -217,7 +217,15 @@ export const liveGetQuota = async (
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
-    if (e.message === "User is not eligible") {
+    // Currently the standalone mystique throws "User is not eligible" if not whitelisted,
+    // however, the new eligibility check on our backend throw "id is not eligible"
+    // This will be a current stop-gap measure to handle both types of eligibilty
+    // As we move forward, we will move towards using the new eligibilty check and
+    // phase out from the standalone mystique
+    if (
+      e.message === "User is not eligible" ||
+      e.message === "id is not eligible"
+    ) {
       throw new NotEligibleError(e.message);
     } else if (e instanceof SessionError) {
       throw e;

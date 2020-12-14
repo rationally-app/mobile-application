@@ -371,9 +371,16 @@ const mockQuotaResSingleIdNoQuotaWithAppealProducts: Quota = {
   ],
 };
 
-const mockIdNotEligible: any = (id: string) => {
+const mockUserNotEligible: any = (id: string) => {
   if (!eligibleIds.includes(id)) {
     const errorMessage = "User is not eligible";
+    throw new NotEligibleError(errorMessage);
+  }
+};
+
+const mockIdNotEligible: any = (id: string) => {
+  if (!eligibleIds.includes(id)) {
+    const errorMessage = "id is not eligible";
     throw new NotEligibleError(errorMessage);
   }
 };
@@ -510,7 +517,37 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse).toBeUndefined();
     });
 
-    it("should set quota state to NOT_ELIGIBLE when NotEligibleError is thrown, and does not update existing quota response", async () => {
+    it("should set quota state to NOT_ELIGIBLE when NotEligibleError is thrown and error message is 'User is not eligible', and does not update existing quota response", async () => {
+      expect.assertions(4);
+
+      let ids = ["ID1"];
+      mockGetQuota.mockResolvedValueOnce(mockQuotaResSingleId);
+      const { result, waitForNextUpdate, rerender } = renderHook(
+        () => useQuota(ids, key, endpoint),
+        {
+          wrapper,
+        }
+      );
+      await waitForNextUpdate();
+
+      expect(result.current.quotaState).toBe("DEFAULT");
+      expect(result.current.allQuotaResponse).toStrictEqual(
+        mockQuotaResSingleId
+      );
+
+      ids = ["ID_NOT_ELIGIBLE"];
+      mockGetQuota.mockImplementationOnce(() => {
+        mockUserNotEligible(ids[0]);
+      });
+      rerender();
+
+      expect(result.current.quotaState).toBe("NOT_ELIGIBLE");
+      expect(result.current.allQuotaResponse).toStrictEqual(
+        mockQuotaResSingleId
+      );
+    });
+
+    it("should set quota state to NOT_ELIGIBLE when NotEligibleError is thrown and error message is 'id is not eligible', and does not update existing quota response", async () => {
       expect.assertions(4);
 
       let ids = ["ID1"];
