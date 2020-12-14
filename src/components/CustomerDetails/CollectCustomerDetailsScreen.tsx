@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   statsText: {
     marginTop: size(4),
     fontSize: fontSize(0),
+    color: color("blue", 50),
   },
   statsIcon: {
     marginTop: size(4),
