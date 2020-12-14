@@ -12,7 +12,7 @@ export const Button: FunctionComponent<Button> = ({ onPress, text }) => (
   <BaseButton onPress={onPress}>
     <AppText
       style={{
-        color: color("blue", 50),
+        color: color("grey", 80),
         fontFamily: "brand-bold",
         fontSize: fontSize(-2),
       }}

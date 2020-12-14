@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
-    color: color("blue", 50),
+    color: color("grey", 80),
     minWidth: size(7),
     fontFamily: "brand-regular",
   },
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
-    color: color("blue", 50),
+    color: color("grey", 80),
     fontFamily: "brand-regular",
   },
   hyphen: {
