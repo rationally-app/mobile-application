@@ -3,12 +3,6 @@ import { CampaignPolicy, DailyStatistics } from "../../types";
 import "../../common/i18n/i18nMock";
 import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
-const mockFn = jest
-  .fn()
-  .mockImplementation((x: CampaignPolicy["quantity"]["unit"]) => {
-    return x;
-  });
-
 describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics[];
   let campaignPolicy: CampaignPolicy[] = [];
@@ -171,32 +165,37 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect.assertions(1);
 
     expect(
-      countTotalTransactionsAndByCategory(
-        pastTransactions,
-        campaignPolicy,
-        mockFn
-      )
+      countTotalTransactionsAndByCategory(pastTransactions, campaignPolicy)
     ).toStrictEqual({
       summarisedTotalCount: 4019,
       summarisedTransactionHistory: [
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 pack(s)",
+          quantity: 999,
+          unitType: {
+            label: " pack(s)",
+            type: "POSTFIX",
+          },
           descriptionAlert: undefined,
           order: 2,
         },
         {
           category: "chocolate",
           name: "🍫 Chocolate",
-          quantityText: "$3,000",
+          quantity: 3000,
+          unitType: {
+            label: "$",
+            type: "PREFIX",
+          },
           descriptionAlert: undefined,
           order: 3,
         },
         {
           category: "vouchers",
           name: "Funfair Vouchers",
-          quantityText: "20 qty",
+          quantity: 20,
+          unitType: undefined,
           descriptionAlert: undefined,
           order: 4,
         },
@@ -210,8 +209,7 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         pastInstantNoodleTransactions,
-        campaignPolicy,
-        mockFn
+        campaignPolicy
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -219,7 +217,11 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "instant-noodles",
           name: "🍜 Instant Noodles",
-          quantityText: "999 pack(s)",
+          quantity: 999,
+          unitType: {
+            label: " pack(s)",
+            type: "POSTFIX",
+          },
           descriptionAlert: undefined,
           order: 2,
         },
@@ -232,8 +234,7 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         invalidPastTransactions,
-        campaignPolicy,
-        mockFn
+        campaignPolicy
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -241,7 +242,8 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "funny-category",
           name: "funny-category",
-          quantityText: "999 qty",
+          quantity: 999,
+          unitType: undefined,
           descriptionAlert: undefined,
           order: -1,
         },
@@ -255,8 +257,7 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactionsWithAppeal,
-        campaignPolicy,
-        mockFn
+        campaignPolicy
       )
     ).toStrictEqual({
       summarisedTotalCount: 200,
@@ -264,7 +265,8 @@ describe("countTotalTransactionsAndByCategory", () => {
         {
           category: "appeal-product",
           name: "This Product is for Appeal",
-          quantityText: "200 qty",
+          quantity: 200,
+          unitType: undefined,
           descriptionAlert: i18ntWithValidator("redemptionStats", "viaAppeal"),
           order: 6,
         },

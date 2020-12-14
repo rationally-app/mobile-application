@@ -2,19 +2,14 @@ import { useState, useContext, useEffect } from "react";
 import { usePrevious } from "../usePrevious";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { getDailyStatistics } from "../../services/statistics";
-import { countTotalTransactionsAndByCategory } from "./utils";
+import { countTotalTransactionsAndByCategory, Transaction } from "./utils";
 import { sortTransactionsByOrder } from "../../components/CustomerQuota/utils";
 import { useTranslate } from "../useTranslate/useTranslate";
 
 export type StatisticsHook = {
   totalCount: number | null;
   lastTransactionTime: Date | null;
-  transactionHistory: {
-    name: string;
-    category: string;
-    quantityText: string;
-    descriptionAlert?: string;
-  }[];
+  transactionHistory: Transaction[];
   error?: Error;
   loading: boolean;
 };
@@ -56,8 +51,7 @@ export const useDailyStatistics = (
           summarisedTotalCount,
         } = countTotalTransactionsAndByCategory(
           response.pastTransactions,
-          policies,
-          c13ntForUnit
+          policies
         );
 
         setTransactionHistory(

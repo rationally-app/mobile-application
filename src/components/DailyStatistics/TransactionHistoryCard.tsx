@@ -3,15 +3,15 @@ import { size, fontSize, color } from "../../common/styles";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Card } from "../Layout/Card";
-import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import {
+  i18ntWithValidator,
+  useTranslate,
+} from "../../hooks/useTranslate/useTranslate";
+import { Transaction, UnitType } from "../../hooks/useDailyStatistics/utils";
+import { formatQuantityText } from "../CustomerQuota/utils";
 
 interface TransactionHistoryCardComponent {
-  transactionHistory: {
-    name: string;
-    category: string;
-    quantityText: string;
-    descriptionAlert?: string;
-  }[];
+  transactionHistory: Transaction[];
   loading: boolean;
 }
 
@@ -59,30 +59,39 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
   transactionHistory,
   loading,
 }) => {
-  const { c13nt } = useTranslate();
+  const { c13nt, c13ntForUnit } = useTranslate();
+  const formatText = (quantity: number, unitType: UnitType): string => {
+    return formatQuantityText(
+      quantity,
+      c13ntForUnit(unitType) || {
+        type: "POSTFIX",
+        label: ` ${i18ntWithValidator("checkoutSuccessScreen", "quantity")}`,
+      }
+    );
+  };
   return (
     <Card style={styles.stats}>
       {!loading ? (
         transactionHistory.length !== 0 ? (
-          transactionHistory.map((item) => (
-            <View key={item.category}>
-              <View style={styles.transactionText}>
-                <AppText style={styles.categoryName}>
-                  {c13nt(item.name)}
-                </AppText>
+          transactionHistory.map(
+            ({ category, name, quantity, unitType, descriptionAlert }) => (
+              <View key={category}>
                 <View style={styles.transactionText}>
-                  <AppText style={styles.quantityText}>
-                    {item.quantityText}
+                  <AppText style={styles.categoryName}>{c13nt(name)}</AppText>
+                  <View style={styles.transactionText}>
+                    <AppText style={styles.quantityText}>
+                      {formatText(quantity, unitType)}
+                    </AppText>
+                  </View>
+                </View>
+                <View style={styles.descriptionAlertText}>
+                  <AppText style={styles.reasonAlert}>
+                    {c13nt(descriptionAlert ?? "")}
                   </AppText>
                 </View>
               </View>
-              <View style={styles.descriptionAlertText}>
-                <AppText style={styles.reasonAlert}>
-                  {c13nt(item.descriptionAlert ?? "")}
-                </AppText>
-              </View>
-            </View>
-          ))
+            )
+          )
         ) : (
           <>
             <AppText

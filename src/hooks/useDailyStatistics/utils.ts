@@ -1,26 +1,32 @@
 import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
-import { formatQuantityText } from "../../components/CustomerQuota/utils";
 import { Sentry } from "../../utils/errorTracking";
 import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
+export type UnitType =
+  | {
+      type: "POSTFIX" | "PREFIX";
+      label: string;
+    }
+  | undefined;
+
+export type Transaction = {
+  name: string;
+  category: string;
+  quantity: number;
+  unitType: UnitType;
+  descriptionAlert?: string;
+  order: number;
+};
+
 type SummarisedTransactions = {
-  summarisedTransactionHistory: {
-    name: string;
-    category: string;
-    quantityText: string;
-    descriptionAlert?: string;
-    order: number;
-  }[];
+  summarisedTransactionHistory: Transaction[];
   summarisedTotalCount: number;
 };
 
 export const countTotalTransactionsAndByCategory = (
   transactions: DailyStatistics[],
-  policies: CampaignPolicy[] | null,
-  c13ntForUnit: (
-    unit: CampaignPolicy["quantity"]["unit"]
-  ) => CampaignPolicy["quantity"]["unit"]
+  policies: CampaignPolicy[] | null
 ): SummarisedTransactions => {
   return chain(transactions)
     .groupBy("category")
@@ -43,16 +49,8 @@ export const countTotalTransactionsAndByCategory = (
               return key;
             })(),
           category: key,
-          quantityText: formatQuantityText(
-            totalQuantityInCategory,
-            c13ntForUnit(findItemByCategory?.quantity.unit) || {
-              type: "POSTFIX",
-              label: ` ${i18ntWithValidator(
-                "checkoutSuccessScreen",
-                "quantity"
-              )}`,
-            }
-          ),
+          quantity: totalQuantityInCategory,
+          unitType: findItemByCategory?.quantity.unit,
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"
               ? i18ntWithValidator("redemptionStats", "viaAppeal")
