@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     borderColor: color("grey", 40),
     fontSize: fontSize(0),
-    color: color("blue", 50),
+    color: color("grey", 40),
     fontFamily: "brand-regular",
   },
   listItemView: {
