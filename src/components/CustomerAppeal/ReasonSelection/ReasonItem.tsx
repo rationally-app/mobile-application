@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   reasonAlert: {
     marginLeft: size(1.5),
     fontFamily: "brand-italic",
-    color: color("red", 50),
+    color: color("red", 60),
   },
 });
 
