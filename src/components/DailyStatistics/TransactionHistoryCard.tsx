@@ -86,7 +86,14 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
                 </View>
                 <View style={styles.descriptionAlertText}>
                   <AppText style={styles.reasonAlert}>
-                    {c13nt(descriptionAlert ?? "")}
+                    {c13nt(
+                      descriptionAlert
+                        ? i18ntWithValidator(
+                            "redemptionStats",
+                            descriptionAlert
+                          )
+                        : ""
+                    )}
                   </AppText>
                 </View>
               </View>

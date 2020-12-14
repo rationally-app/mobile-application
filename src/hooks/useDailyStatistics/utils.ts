@@ -1,7 +1,6 @@
 import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
 import { Sentry } from "../../utils/errorTracking";
-import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
 export type UnitType =
   | {
@@ -15,7 +14,7 @@ export type Transaction = {
   category: string;
   quantity: number;
   unitType: UnitType;
-  descriptionAlert?: string;
+  descriptionAlert?: "viaAppeal" | undefined;
   order: number;
 };
 
@@ -51,9 +50,10 @@ export const countTotalTransactionsAndByCategory = (
           category: key,
           quantity: totalQuantityInCategory,
           unitType: findItemByCategory?.quantity.unit,
+          // categoryType: findItemByCategory?.categoryType
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"
-              ? i18ntWithValidator("redemptionStats", "viaAppeal")
+              ? "viaAppeal"
               : undefined,
           order: findItemByCategory?.order ?? -1,
         });

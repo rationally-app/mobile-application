@@ -1,7 +1,6 @@
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
 import "../../common/i18n/i18nMock";
-import { i18ntWithValidator } from "../useTranslate/useTranslate";
 
 describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics[];
@@ -267,7 +266,7 @@ describe("countTotalTransactionsAndByCategory", () => {
           name: "This Product is for Appeal",
           quantity: 200,
           unitType: undefined,
-          descriptionAlert: i18ntWithValidator("redemptionStats", "viaAppeal"),
+          descriptionAlert: "viaAppeal",
           order: 6,
         },
       ],
