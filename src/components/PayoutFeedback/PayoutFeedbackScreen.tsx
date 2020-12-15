@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext, useMemo } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { NavigationProps, PostTransactionResult } from "../../types";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
@@ -80,11 +80,17 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
   const checkoutResult: PostTransactionResult = navigation.getParam(
     "checkoutResult"
   );
-  const voucherArr = checkoutResult.transactions.filter(
-    transaction =>
-      transaction.transaction.filter(obj => obj.category === "voucher").length >
-      0
+
+  const voucherArr = useMemo(
+    () =>
+      checkoutResult.transactions.filter(
+        transaction =>
+          transaction.transaction.filter(obj => obj.category === "voucher")
+            .length > 0
+      ),
+    [checkoutResult]
   );
+
   const itemQuantities = voucherArr.length;
   const merchantCode: string = navigation.getParam("merchantCode");
 

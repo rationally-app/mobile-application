@@ -3,7 +3,8 @@ import React, {
   useContext,
   useEffect,
   useLayoutEffect,
-  useCallback
+  useCallback,
+  useMemo
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
@@ -128,17 +129,20 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     navigateToCampaignLocation,
     navigation
   ]);
-  const authCredentialsWithCampaignName = Object.entries(authCredentials).map(
-    ([key, credentials]) => ({
-      ...credentials,
-      key,
-      name: allCampaignConfigs[key]?.features?.campaignName
-    })
+
+  const authCredentialsWithCampaignName = useMemo(
+    () =>
+      Object.entries(authCredentials).map(([key, credentials]) => ({
+        ...credentials,
+        key,
+        name: allCampaignConfigs[key]?.features?.campaignName
+      })),
+    [authCredentials, allCampaignConfigs]
   );
 
-  const sortedAuthCredentialsWithCampaignName = sortBy(
-    authCredentialsWithCampaignName,
-    "name"
+  const sortedAuthCredentialsWithCampaignName = useMemo(
+    () => sortBy(authCredentialsWithCampaignName, "name"),
+    [authCredentialsWithCampaignName]
   );
 
   return (
