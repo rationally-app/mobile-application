@@ -295,7 +295,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 testID="go-to-statistics"
                 accessible={true}
               >
-                Go to statistics
+                {i18nt("redemptionStats", "goToStatistics")}
               </AppText>
             </TouchableOpacity>
           </Card>
