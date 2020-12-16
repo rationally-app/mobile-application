@@ -12,11 +12,13 @@ export const defaultSelectedIdType: IdentificationFlag = {
 interface IdentificationContext {
   selectedIdType: IdentificationFlag;
   setSelectedIdType: (selectedIdType: IdentificationFlag) => void;
+  resetSelectedIdType: () => void;
 }
 
 export const IdentificationContext = createContext<IdentificationContext>({
   selectedIdType: defaultSelectedIdType,
   setSelectedIdType: (selectedIdType: IdentificationFlag) => undefined,
+  resetSelectedIdType: () => undefined,
 });
 
 export const IdentificationContextProvider: FunctionComponent = ({
@@ -26,9 +28,12 @@ export const IdentificationContextProvider: FunctionComponent = ({
     defaultSelectedIdType
   );
 
+  const resetSelectedIdType = (): void =>
+    setSelectedIdType(defaultSelectedIdType);
+
   return (
     <IdentificationContext.Provider
-      value={{ selectedIdType, setSelectedIdType }}
+      value={{ selectedIdType, setSelectedIdType, resetSelectedIdType }}
     >
       {children}
     </IdentificationContext.Provider>
