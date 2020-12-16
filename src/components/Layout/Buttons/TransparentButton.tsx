@@ -27,7 +27,7 @@ export const TransparentButton: FunctionComponent<TransparentButton> = ({
       <AppText
         style={{
           color: color("grey", 0),
-          fontFamily: "brand-regular",
+          fontFamily: "brand-bold",
           textAlign: "center",
         }}
       >
