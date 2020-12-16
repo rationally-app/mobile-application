@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
   campaignName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
-
     lineHeight: lineHeight(3),
     marginBottom: size(3),
     flexGrow: 1,
