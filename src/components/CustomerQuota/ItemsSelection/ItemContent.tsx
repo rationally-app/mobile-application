@@ -11,7 +11,7 @@ import { lineHeight } from "../../../common/styles/typography";
 const styles = StyleSheet.create({
   name: {
     fontSize: fontSize(0),
-    lineHeight: lineHeight(-1),
+    lineHeight: lineHeight(0),
     fontFamily: "brand-bold",
   },
   description: {
