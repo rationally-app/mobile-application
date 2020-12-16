@@ -48,7 +48,6 @@ export const styles = StyleSheet.create({
   wrapper: {
     marginTop: size(2),
     marginBottom: size(2),
-    lineHeight: lineHeight(0, true),
   },
 });
 
