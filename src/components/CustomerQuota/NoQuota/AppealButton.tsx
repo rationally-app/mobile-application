@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { size } from "../../../common/styles";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../../common/styles/typography";
+import { fontSize, lineHeight } from "../../../common/styles/typography";
 
 const styles = StyleSheet.create({
   appealButtonText: {
