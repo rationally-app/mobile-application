@@ -169,9 +169,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     // in the event the saved selection not found.. will always fall back to the first idType in array
     setSelectedIdType(
       selectionArray.some((selection) => {
-        return selection.label && selectedIdType.label
-          ? selection.label === selectedIdType.label
-          : false;
+        return (
+          selection.label &&
+          selectedIdType.label &&
+          selection.label === selectedIdType.label
+        );
       })
         ? selectedIdType
         : selectionArray[0]
