@@ -136,6 +136,7 @@ const IdentificationFlag = t.intersection([
       t.literal("NRIC"),
       t.literal("PASSPORT"),
       t.literal("REGEX"),
+      t.literal("UIN"),
     ]),
   }),
   t.partial({
