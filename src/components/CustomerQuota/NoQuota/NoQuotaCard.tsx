@@ -39,7 +39,6 @@ import {
   TranslationHook,
   useTranslate,
 } from "../../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../../common/styles/typography";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
