@@ -16,7 +16,6 @@ export const styles = StyleSheet.create({
     alignItems: "baseline",
   },
   itemHeader: {
-    fontSize: fontSize(1),
     lineHeight: 1.5 * fontSize(0),
     fontFamily: "brand-bold",
   },
