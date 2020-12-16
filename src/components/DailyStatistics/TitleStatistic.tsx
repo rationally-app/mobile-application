@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   dateText: {
     marginTop: size(1),
     fontSize: size(2),
-    lineHeight: lineHeight(7),
+    lineHeight: lineHeight(2),
     fontFamily: "brand-bold",
     textAlign: "center",
     color: "white",
