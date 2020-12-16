@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
   scanButtonWrapper: {
     marginTop: size(3),
   },
+  loginScanCard: {
+    lineHeight: lineHeight(0, true),
+  },
 });
 
 interface LoginScanCard {
@@ -26,11 +29,7 @@ export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   const { i18nt } = useTranslate();
   return (
     <Card>
-      <AppText
-        style={{
-          lineHeight: lineHeight(0, true),
-        }}
-      >
+      <AppText style={styles.loginScanCard}>
         {i18nt("loginScanCard", "loginWithQR")}
       </AppText>
       <View style={styles.scanButtonWrapper}>
