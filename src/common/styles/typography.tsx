@@ -22,6 +22,7 @@ export type LetterSpacingLevel = 1 | 2;
 /**Returns the line height given the level
 @param level
 -4 (16), -3 (16), -2 (16), -1 (20), 0 (is it's a body then 24, else 20),
+1 (24), 2 (28), 3 (32), 4 (40), 5 (56), 6 (64), 7 (72)
 */
 
 export const lineHeight = (level: FontSizeLevel, isBody?: boolean): number => {
