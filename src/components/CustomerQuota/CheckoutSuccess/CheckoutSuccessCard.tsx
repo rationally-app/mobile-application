@@ -39,6 +39,9 @@ const styles = StyleSheet.create({
   checkoutItemsList: {
     marginTop: size(2),
   },
+  description: {
+    lineHeight: lineHeight(0),
+  },
 });
 
 interface CheckoutSuccessCard {
@@ -228,9 +231,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               ) : undefined}
             </View>
             <View>
-              <AppText style={{ lineHeight: lineHeight(0) }}>
-                {description}
-              </AppText>
+              <AppText style={styles.description}>{description}</AppText>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
                   <ActivityIndicator

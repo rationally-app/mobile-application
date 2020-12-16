@@ -44,6 +44,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: size(1),
   },
+  otp: {
+    lineHeight: lineHeight(0, true),
+  },
 });
 
 interface LoginOTPCard {
@@ -142,7 +145,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   return (
     <Card>
-      <AppText style={{ lineHeight: lineHeight(0, true) }}>{`${i18nt(
+      <AppText style={styles.otp}>{`${i18nt(
         "loginOTPCard",
         "sendingOtp"
       )}`}</AppText>

@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
   inputAndButtonWrapper: {
     marginTop: size(3),
   },
+  enterMobileNo: {
+    lineHeight: lineHeight(0, true),
+  },
 });
 
 interface LoginMobileNumberCard {
@@ -87,7 +90,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   return (
     <Card>
-      <AppText style={{ lineHeight: lineHeight(0, true) }}>
+      <AppText style={styles.enterMobileNo}>
         {i18nt("loginMobileNumberCard", "enterMobileNumber")}
       </AppText>
       <View style={styles.inputAndButtonWrapper}>

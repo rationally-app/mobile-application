@@ -96,6 +96,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginRight: size(0.5),
   },
+  eligibility: {
+    lineHeight: lineHeight(0, true),
+  },
 });
 
 const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
@@ -278,7 +281,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 {tCampaignName}
               </AppText>
             )}
-            <AppText style={{ lineHeight: lineHeight(0, true) }}>
+            <AppText style={styles.eligibility}>
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             {getInputComponent()}

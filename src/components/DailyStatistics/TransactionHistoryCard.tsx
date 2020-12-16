@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   quantityText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0),
+    lineHeight: lineHeight(0, false),
     marginBottom: size(3),
   },
   transactionText: {
@@ -74,7 +74,6 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
                   <AppText
                     style={{
                       ...styles.quantityText,
-                      lineHeight: lineHeight(0, false),
                     }}
                   >
                     {item.quantityText}
