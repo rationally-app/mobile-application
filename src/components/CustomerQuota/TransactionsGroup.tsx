@@ -34,8 +34,8 @@ export const styles = StyleSheet.create({
     marginRight: size(1),
   },
   itemDetail: {
-    fontSize: fontSize(0),
-    lineHeight: lineHeight(0, true),
+    fontSize: fontSize(-1),
+    lineHeight: lineHeight(-1),
   },
   appealLabel: {
     fontSize: fontSize(-1),
