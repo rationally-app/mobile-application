@@ -44,13 +44,13 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
   return (
     <Card style={styles.card}>
       <Text style={styles.emoji}>❌</Text>
-      <View style={sharedStyles.statusTitleWrapper}>
+      <AppText style={sharedStyles.statusTitleWrapper}>
         {typeof title === "string" ? (
           <AppText style={sharedStyles.statusTitle}>{title}</AppText>
         ) : (
           title
         )}
-      </View>
+      </AppText>
       <AppText style={styles.details}>{details}</AppText>
       <DarkButton
         fullWidth={true}
