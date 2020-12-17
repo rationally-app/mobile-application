@@ -47,9 +47,9 @@ const styles = StyleSheet.create({
   },
   modalButtonRow: {
     marginTop: size(5),
-    flexDirection: "row",
+    flexDirection: "column",
     alignSelf: "stretch",
-    flexWrap: "wrap",
+
     marginBottom: size(1),
     marginLeft: size(1),
   },
