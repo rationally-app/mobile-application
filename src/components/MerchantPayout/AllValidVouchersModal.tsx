@@ -6,7 +6,6 @@ import { AppText } from "../Layout/AppText";
 import { ModalWithClose } from "../Layout/ModalWithClose";
 import { Voucher } from "../../types";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   card: {
@@ -35,7 +34,6 @@ const styles = StyleSheet.create({
   serialNumber: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
-    lineHeight: lineHeight(1),
   },
   removeText: {},
 });

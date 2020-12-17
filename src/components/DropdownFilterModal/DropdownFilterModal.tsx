@@ -14,7 +14,6 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { AppMode } from "../../context/config";
 import { AntDesign } from "@expo/vector-icons";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   modalView: {
@@ -44,14 +43,12 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: fontSize(3),
-    lineHeight: lineHeight(3),
     marginLeft: size(2),
     marginRight: size(0.5),
     color: color("grey", 0),
   },
   crossText: {
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0),
     marginRight: size(0.5),
     color: color("grey", 0),
   },
@@ -67,7 +64,6 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius(2),
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0),
     color: color("blue", 50),
     fontFamily: "brand-regular",
   },
@@ -83,7 +79,6 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold",
     color: color("blue", 50),
     fontSize: fontSize(1),
-    lineHeight: lineHeight(1),
   },
   listItemText: {
     marginLeft: size(3),

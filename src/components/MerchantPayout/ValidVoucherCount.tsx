@@ -4,13 +4,11 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   validText: {
     fontFamily: "brand-bold",
     fontSize: fontSize(-1),
-    lineHeight: lineHeight(-1),
   },
   validIcon: {
     marginRight: size(1),
@@ -23,7 +21,6 @@ const styles = StyleSheet.create({
     color: color("grey", 0),
     fontFamily: "brand-bold",
     fontSize: fontSize(2),
-    lineHeight: lineHeight(-2),
   },
   numVouchersWrapper: {
     flexDirection: "row",

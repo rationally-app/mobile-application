@@ -4,7 +4,6 @@ import { Feather } from "@expo/vector-icons";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { SecondaryButton } from "./Buttons/SecondaryButton";
 import { AppText } from "./AppText";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -24,11 +23,9 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "brand-bold",
     fontSize: fontSize(-1),
-    lineHeight: lineHeight(-1),
   },
   description: {
     fontSize: fontSize(-2),
-    lineHeight: lineHeight(-2),
   },
   buttonWrapper: {
     alignSelf: "center",

@@ -2,7 +2,6 @@ import { StyleSheet, View } from "react-native";
 import React, { FunctionComponent } from "react";
 import { size, fontSize } from "../../../common/styles";
 import { AppText } from "../../Layout/AppText";
-import { lineHeight } from "../../../common/styles/typography";
 
 const styles = StyleSheet.create({
   reasonSelectionComponent: {
@@ -12,7 +11,6 @@ const styles = StyleSheet.create({
   reasonSelectionDescription: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
-    lineHeight: lineHeight(1),
   },
 });
 

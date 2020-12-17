@@ -3,7 +3,6 @@ import { View, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { fontSize, size, color } from "../../common/styles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 export const styles = StyleSheet.create({
   wrapper: {
@@ -16,12 +15,10 @@ export const styles = StyleSheet.create({
     alignItems: "baseline",
   },
   itemHeader: {
-    lineHeight: 1.5 * fontSize(0),
     fontFamily: "brand-bold",
   },
   itemSubheader: {
     fontSize: fontSize(-1),
-    lineHeight: lineHeight(-1),
     fontFamily: "brand-bold",
   },
   itemDetailWrapper: {
@@ -35,11 +32,9 @@ export const styles = StyleSheet.create({
   },
   itemDetail: {
     fontSize: fontSize(-1),
-    lineHeight: lineHeight(-1),
   },
   appealLabel: {
     fontSize: fontSize(-1),
-    lineHeight: lineHeight(-1),
     color: color("red", 60),
     fontFamily: "brand-italic",
   },

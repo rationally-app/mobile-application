@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 import { size, color, fontSize } from "../../common/styles";
-import { lineHeight } from "../../common/styles/typography";
 
 export const sharedStyles = StyleSheet.create({
   resultWrapper: {
@@ -29,7 +28,6 @@ export const sharedStyles = StyleSheet.create({
   submitButton: { flex: 1 },
   icon: {
     fontSize: fontSize(6),
-    lineHeight: lineHeight(6),
     marginBottom: size(2),
     marginTop: size(2),
   },
@@ -38,7 +36,6 @@ export const sharedStyles = StyleSheet.create({
   },
   statusTitle: {
     fontSize: fontSize(3),
-    lineHeight: lineHeight(3),
     fontFamily: "brand-bold",
   },
 });

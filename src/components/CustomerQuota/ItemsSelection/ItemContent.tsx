@@ -6,17 +6,14 @@ import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { fontSize, color } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../../common/styles/typography";
 
 const styles = StyleSheet.create({
   name: {
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0),
     fontFamily: "brand-bold",
   },
   description: {
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0),
   },
   descriptionAlert: {
     fontFamily: "brand-italic",

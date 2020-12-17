@@ -20,7 +20,6 @@ import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppText } from "./AppText";
 import { useIsMounted } from "../../hooks/useIsMounted";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -52,7 +51,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
     fontWeight: "bold",
     fontSize: fontSize(1),
-    lineHeight: lineHeight(1),
     color: color("blue", 50),
     borderBottomColor: color("grey", 30),
     borderBottomWidth: 1,
@@ -70,7 +68,6 @@ const styles = StyleSheet.create({
     marginTop: -2,
     fontFamily: "brand-regular",
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0),
   },
 });
 

@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 import { size, fontSize, color } from "../../../common/styles";
-import { lineHeight } from "../../../common/styles/typography";
 
 export const sharedStyles = StyleSheet.create({
   wrapper: {
@@ -30,6 +29,5 @@ export const sharedStyles = StyleSheet.create({
     marginTop: 2,
     fontFamily: "brand-regular",
     fontSize: fontSize(-2),
-    lineHeight: lineHeight(-2),
   },
 });

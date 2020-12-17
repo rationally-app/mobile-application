@@ -22,7 +22,6 @@ import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { AuthCredentials } from "../../types";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const RESEND_OTP_TIME_LIMIT = 30 * 1000;
 
@@ -38,14 +37,10 @@ const styles = StyleSheet.create({
   resendCountdownText: {
     marginRight: size(1),
     fontSize: fontSize(-2),
-    lineHeight: lineHeight(-2),
   },
   submitWrapper: {
     flex: 1,
     marginLeft: size(1),
-  },
-  otp: {
-    lineHeight: lineHeight(0, true),
   },
 });
 
@@ -145,10 +140,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
 
   return (
     <Card>
-      <AppText style={styles.otp}>{`${i18nt(
-        "loginOTPCard",
-        "sendingOtp"
-      )}`}</AppText>
+      <AppText>{`${i18nt("loginOTPCard", "sendingOtp")}`}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <InputWithLabel
           label={i18nt("loginOTPCard", "otp")}

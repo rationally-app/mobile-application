@@ -27,7 +27,6 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { sortBy } from "lodash";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   content: {
@@ -51,7 +50,6 @@ const styles = StyleSheet.create({
   selectCampaignHeader: {
     fontFamily: "brand-bold",
     fontSize: fontSize(1),
-    lineHeight: lineHeight(1),
   },
   campaignLocationWrapper: {
     marginHorizontal: -size(3),

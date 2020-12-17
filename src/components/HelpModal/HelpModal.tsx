@@ -7,7 +7,6 @@ import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { SafeAreaView } from "react-navigation";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const BASE_URL = "https://supplyallyhelp.zendesk.com/hc/en-us";
 const FEEDBACK_URL = BASE_URL + "/requests/new";
@@ -32,7 +31,6 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontFamily: "brand-bold",
     fontSize: fontSize(2),
-    lineHeight: lineHeight(2),
     marginLeft: size(2),
   },
   navigationButtons: {

@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { size, fontSize } from "../../common/styles";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -25,13 +24,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: fontSize(-4),
-    lineHeight: lineHeight(-4),
     fontFamily: "brand-bold",
     color: "#CCCCCC",
   },
   subText: {
     fontSize: fontSize(-4),
-    lineHeight: lineHeight(-4),
     color: "#CCCCCC",
   },
 });

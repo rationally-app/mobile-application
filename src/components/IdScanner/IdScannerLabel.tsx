@@ -8,7 +8,6 @@ import {
   TranslationHook,
   useTranslate,
 } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   labelWrapper: {
@@ -19,7 +18,6 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold",
     color: color("grey", 0),
     fontSize: fontSize(1),
-    lineHeight: lineHeight(1),
   },
 });
 

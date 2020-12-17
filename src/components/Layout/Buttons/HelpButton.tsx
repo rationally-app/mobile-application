@@ -4,7 +4,6 @@ import { AppText } from "../AppText";
 import { size, fontSize, color } from "../../../common/styles";
 import { TouchableOpacity } from "react-native";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../../common/styles/typography";
 
 export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
   onPress,
@@ -25,7 +24,6 @@ export const HelpButton: FunctionComponent<{ onPress: () => void }> = ({
           textAlign: "center",
           fontFamily: "brand-italic",
           fontSize: fontSize(-1),
-          lineHeight: lineHeight(-1),
           color: color("blue", 40),
         }}
       >

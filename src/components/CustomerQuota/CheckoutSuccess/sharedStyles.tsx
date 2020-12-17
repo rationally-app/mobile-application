@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 import { fontSize, size, color } from "../../../common/styles";
-import { lineHeight } from "../../../common/styles/typography";
 
 export const sharedStyles = StyleSheet.create({
   itemRow: {
@@ -13,7 +12,6 @@ export const sharedStyles = StyleSheet.create({
   },
   quantityByIdText: {
     fontSize: fontSize(-1),
-    lineHeight: lineHeight(-1),
   },
   quantitiesWrapper: {
     flexDirection: "row",

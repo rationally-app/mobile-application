@@ -47,7 +47,6 @@ import {
 } from "../../context/identification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   content: {
@@ -67,7 +66,6 @@ const styles = StyleSheet.create({
   campaignName: {
     fontFamily: "brand-bold",
     fontSize: fontSize(3),
-    lineHeight: lineHeight(3),
     marginBottom: size(3),
     flexGrow: 1,
     flexShrink: 1,
@@ -89,15 +87,11 @@ const styles = StyleSheet.create({
   statsText: {
     marginTop: size(4),
     fontSize: fontSize(0),
-    lineHeight: lineHeight(0),
   },
   statsIcon: {
     marginTop: size(4),
     alignSelf: "center",
     marginRight: size(0.5),
-  },
-  eligibility: {
-    lineHeight: lineHeight(0, true),
   },
 });
 
@@ -281,7 +275,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 {tCampaignName}
               </AppText>
             )}
-            <AppText style={styles.eligibility}>
+            <AppText>
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             {getInputComponent()}
