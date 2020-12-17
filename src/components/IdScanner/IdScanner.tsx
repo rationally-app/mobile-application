@@ -181,7 +181,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
    * We only scan codes within the lightbox if the user is using Android.
    */
   return (
-    <View style={styles.cameraWrapper}>
+    <View testID="camera-wrapper" style={styles.cameraWrapper}>
       {hasCameraPermission && isScanningEnabled ? (
         <IdScannerCamera
           onBarCodeScanned={
@@ -194,7 +194,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
           barCodeTypes={barCodeTypes}
           interestArea={interestArea}
         >
-          <View style={styles.backButtonWrapper}>
+          <View testID="back-button" style={styles.backButtonWrapper}>
             <TransparentButton
               onPress={onCancel}
               text={tCancelButtonText}
