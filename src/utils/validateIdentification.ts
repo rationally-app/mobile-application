@@ -18,6 +18,7 @@ export const validateAndCleanId = (
       id = validateAndCleanPassport(inputId);
       break;
     case "REGEX":
+    case "UIN":
       if (!idRegex) {
         throw new CampaignConfigError(ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR);
       }
