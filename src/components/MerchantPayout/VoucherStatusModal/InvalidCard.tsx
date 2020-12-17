@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactElement } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { Card } from "../../Layout/Card";
 import { AppText } from "../../Layout/AppText";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
