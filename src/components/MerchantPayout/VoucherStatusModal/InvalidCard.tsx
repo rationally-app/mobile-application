@@ -52,7 +52,7 @@ export const InvalidCard: FunctionComponent<InvalidCard> = ({
         ) : (
           title
         )}
-      </View>
+      </AppText>
       <AppText style={styles.details}>{details}</AppText>
       <DarkButton
         fullWidth={true}
