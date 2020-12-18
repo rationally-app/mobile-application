@@ -53,14 +53,14 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
             color={color("red", 60)}
             style={sharedStyles.icon}
           />
-          <View
+          <AppText
             style={sharedStyles.statusTitleWrapper}
             accessibilityLabel="not-eligible-title"
             testID="not-eligible-title"
             accessible={true}
           >
             <NotEligibleTransactionTitle />
-          </View>
+          </AppText>
           <View>
             <NotEligibleTransactionDescription />
           </View>
