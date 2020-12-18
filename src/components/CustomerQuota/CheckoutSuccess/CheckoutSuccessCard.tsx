@@ -179,7 +179,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     : undefined;
 
   return (
-    <View>
+    <>
       <CustomerCard ids={ids}>
         <View style={sharedStyles.successfulResultWrapper}>
           <View style={sharedStyles.resultWrapper}>
@@ -197,7 +197,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                 />
               ) : undefined}
             </AppText>
-            <View>
+            <>
               <AppText>{description}</AppText>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
@@ -224,7 +224,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                   )
                 )}
               </View>
-            </View>
+            </>
           </View>
           {!loading &&
             transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
@@ -238,6 +238,6 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton text={ctaButtonText} onPress={onCancel} fullWidth={true} />
       </View>
-    </View>
+    </>
   );
 };

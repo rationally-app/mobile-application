@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { TextInput, View, StyleSheet, TextInputProps } from "react-native";
+import { TextInput, StyleSheet, TextInputProps } from "react-native";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { AppText } from "./AppText";
 
@@ -38,7 +38,7 @@ export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
   editable = true,
   ...props
 }) => (
-  <View>
+  <>
     <AppText style={styles.label}>{label}</AppText>
     <TextInput
       style={[
@@ -48,5 +48,5 @@ export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
       editable={editable}
       {...props}
     />
-  </View>
+  </>
 );

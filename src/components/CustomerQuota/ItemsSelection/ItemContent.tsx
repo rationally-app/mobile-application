@@ -1,5 +1,5 @@
-import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { FunctionComponent, memo } from "react";
+import { StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { CampaignPolicy } from "../../../types";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
@@ -26,8 +26,9 @@ export const ItemContent: FunctionComponent<{
   descriptionAlert?: string;
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
-}> = ({ name, description, descriptionAlert, unit, maxQuantity }) => (
-  <View>
+  // eslint-disable-next-line react/display-name
+}> = memo(({ name, description, descriptionAlert, unit, maxQuantity }) => (
+  <>
     <AppText style={styles.name}>{name}</AppText>
     {descriptionAlert && descriptionAlert.length > 0 && (
       <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
@@ -40,5 +41,5 @@ export const ItemContent: FunctionComponent<{
         <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
       </AppText>
     )}
-  </View>
-);
+  </>
+));

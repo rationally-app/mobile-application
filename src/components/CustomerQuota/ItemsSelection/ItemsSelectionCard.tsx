@@ -89,7 +89,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     cartItem => cartItem.descriptionAlert === "*chargeable"
   );
   return (
-    <View>
+    <>
       <CustomerCard
         ids={ids}
         onAddId={
@@ -172,6 +172,6 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         setIsVisible={setIsAddUserModalVisible}
         validateAndUpdateIds={onCheckAddedUsers}
       />
-    </View>
+    </>
   );
 };

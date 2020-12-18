@@ -30,7 +30,7 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
   onCancel
 }) => {
   return (
-    <View>
+    <>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
         <View
           style={[
@@ -46,14 +46,14 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
           <AppText style={sharedStyles.statusTitleWrapper}>
             <NotEligibleTransactionTitle />
           </AppText>
-          <View>
+          <>
             <NotEligibleTransactionDescription />
-          </View>
+          </>
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton text="Next identity" onPress={onCancel} fullWidth={true} />
       </View>
-    </View>
+    </>
   );
 };

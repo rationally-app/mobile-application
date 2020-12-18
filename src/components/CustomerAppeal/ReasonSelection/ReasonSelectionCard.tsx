@@ -43,7 +43,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
 }) => {
   const { showAlert } = useContext(AlertModalContext);
   return (
-    <View>
+    <>
       <CustomerCard ids={ids}>
         <Card>
           <View style={styles.titlePadding}>
@@ -80,6 +80,6 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
           fullWidth={true}
         />
       </View>
-    </View>
+    </>
   );
 };

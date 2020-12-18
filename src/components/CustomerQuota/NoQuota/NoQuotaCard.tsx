@@ -232,7 +232,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     : undefined;
 
   return (
-    <View>
+    <>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
         <View style={sharedStyles.failureResultWrapper}>
           <View style={sharedStyles.resultWrapper}>
@@ -275,7 +275,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               />
             ) : (
               transactionsByCategoryList.length > 0 && (
-                <View>
+                <>
                   <AppText style={styles.wrapper}>
                     Item(s) {policyType === "REDEEM" ? "redeemed" : "purchased"}{" "}
                     previously:
@@ -296,7 +296,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                       />
                     )
                   )}
-                </View>
+                </>
               )
             )}
           </View>
@@ -316,6 +316,6 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       {onAppeal && hasAppealProduct ? (
         <AppealButton onAppeal={onAppeal} />
       ) : undefined}
-    </View>
+    </>
   );
 };

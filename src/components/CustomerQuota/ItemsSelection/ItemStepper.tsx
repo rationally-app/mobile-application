@@ -52,7 +52,7 @@ export const ItemStepper: FunctionComponent<{
           maxQuantity={maxQuantity}
         />
       </View>
-      <View>
+      <>
         <Stepper
           value={stepperValue}
           setValue={setStepperValue}
@@ -72,7 +72,7 @@ export const ItemStepper: FunctionComponent<{
             maxQuantity={maxQuantity}
           />
         </AppText>
-      </View>
+      </>
     </View>
   );
 };

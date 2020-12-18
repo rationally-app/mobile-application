@@ -47,7 +47,7 @@ export const ValidVoucherCount: FunctionComponent<ValidVoucherCount> = ({
   denomination
 }) => {
   return (
-    <View>
+    <>
       <View style={styles.validTextWrapper}>
         <View style={styles.validIcon}>
           <Feather
@@ -65,6 +65,6 @@ export const ValidVoucherCount: FunctionComponent<ValidVoucherCount> = ({
           ${numVouchers * denomination}
         </AppText>
       </View>
-    </View>
+    </>
   );
 };

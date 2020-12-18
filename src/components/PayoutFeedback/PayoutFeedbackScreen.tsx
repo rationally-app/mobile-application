@@ -145,7 +145,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
               <AppText style={{ marginBottom: size(2) }}>
                 Item(s) redeemed:
               </AppText>
-              <View>
+              <>
                 <View style={sharedStyles.itemRow}>
                   <AppText style={sharedStyles.itemHeaderText}>
                     Voucher(s):
@@ -164,7 +164,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
                     </View>
                   </View>
                 </View>
-              </View>
+              </>
             </View>
           </View>
         </Card>
