@@ -210,7 +210,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               color={color("blue-green", 40)}
               style={sharedStyles.icon}
             />
-            <View style={sharedStyles.statusTitleWrapper}>
+            <AppText style={sharedStyles.statusTitleWrapper}>
               <AppText
                 style={sharedStyles.statusTitle}
                 accessibilityLabel="checkout-success-title"
