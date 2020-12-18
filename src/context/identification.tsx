@@ -1,4 +1,9 @@
-import React, { createContext, FunctionComponent, useState } from "react";
+import React, {
+  createContext,
+  FunctionComponent,
+  useCallback,
+  useState,
+} from "react";
 import { IdentificationFlag } from "../types";
 
 export const defaultSelectedIdType: IdentificationFlag = {
@@ -28,8 +33,9 @@ export const IdentificationContextProvider: FunctionComponent = ({
     defaultSelectedIdType
   );
 
-  const resetSelectedIdType = (): void =>
+  const resetSelectedIdType = useCallback(() => {
     setSelectedIdType(defaultSelectedIdType);
+  }, []);
 
   return (
     <IdentificationContext.Provider
