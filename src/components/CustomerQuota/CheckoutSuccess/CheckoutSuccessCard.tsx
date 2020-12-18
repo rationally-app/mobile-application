@@ -225,7 +225,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                   quotaRefreshTime={firstGlobalQuota!.quotaRefreshTime}
                 />
               ) : undefined}
-            </View>
+            </AppText>
             <View>
               <AppText>{description}</AppText>
               <View style={styles.checkoutItemsList}>
