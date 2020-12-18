@@ -31,16 +31,12 @@ import {
   TranslationHook,
   useTranslate,
 } from "../../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../../common/styles/typography";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
     marginTop: size(2),
-  },
-  description: {
-    lineHeight: lineHeight(0),
   },
 });
 
@@ -231,7 +227,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               ) : undefined}
             </View>
             <View>
-              <AppText style={styles.description}>{description}</AppText>
+              <AppText>{description}</AppText>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
                   <ActivityIndicator
