@@ -10,7 +10,7 @@ export const en: Translations = {
   loginMobileNumberCard: {
     enterMobileNumber:
       "Enter your mobile number to receive a one-time password (OTP).",
-    mobileNumber: "Mobile phone number",
+    mobileNumber: "Mobile number",
     sendOtp: "Send OTP",
   },
   loginOTPCard: {
