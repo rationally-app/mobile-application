@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   labelText: {
-    fontFamily: "brand-bold",
+    fontWeight: "bold",
     color: color("grey", 0),
     fontSize: fontSize(1),
   },
