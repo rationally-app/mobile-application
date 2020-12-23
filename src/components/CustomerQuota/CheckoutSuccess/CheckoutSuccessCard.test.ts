@@ -2,9 +2,13 @@ import { PastTransactionsResult, CampaignPolicy } from "../../../types";
 import {
   TransactionsByTimeMap,
   groupTransactionsByTime,
-  sortTransactions
+  sortTransactions,
 } from "./CheckoutSuccessCard";
-import { defaultIdentifier } from "../../../test/helpers/defaults";
+import {
+  defaultIdentifier,
+  defaultTranslationProps,
+} from "../../../test/helpers/defaults";
+import "../../../common/i18n/i18nMock";
 
 describe("CheckoutSuccessCard utility functions", () => {
   let sortedTransactions: PastTransactionsResult["pastTransactions"];
@@ -23,15 +27,15 @@ describe("CheckoutSuccessCard utility functions", () => {
           {
             ...defaultIdentifier,
             label: "Device code",
-            value: "AAA987654321"
-          }
+            value: "AAA987654321",
+          },
         ],
-        transactionTime: latestTransactionTime
+        transactionTime: latestTransactionTime,
       },
       {
         category: "meal-credits",
         quantity: 10,
-        transactionTime: latestTransactionTime
+        transactionTime: latestTransactionTime,
       },
       {
         category: "vouchers",
@@ -40,23 +44,27 @@ describe("CheckoutSuccessCard utility functions", () => {
           {
             ...defaultIdentifier,
             label: "Voucher code",
-            value: "AAA987654322"
-          }
+            value: "AAA987654322",
+          },
         ],
-        transactionTime: new Date(latestTransactionTimeMs - 10000)
+        transactionTime: new Date(latestTransactionTimeMs - 10000),
       },
       {
         category: "meal-credits",
         quantity: 5,
-        transactionTime: new Date(latestTransactionTimeMs - 20000)
-      }
+        transactionTime: new Date(latestTransactionTimeMs - 20000),
+      },
     ];
     allProducts = [
       {
         category: "meal-credits",
         name: "Meal credits",
         order: 0,
-        quantity: { period: 1, limit: 20, unit: { type: "PREFIX", label: "$" } }
+        quantity: {
+          period: 1,
+          limit: 20,
+          unit: { type: "PREFIX", label: "$" },
+        },
       },
       {
         category: "tt-token",
@@ -67,9 +75,9 @@ describe("CheckoutSuccessCard utility functions", () => {
           {
             label: "Device code",
             textInput: { disabled: true, visible: true, type: "STRING" },
-            scanButton: { disabled: false, visible: true, type: "QR" }
-          }
-        ]
+            scanButton: { disabled: false, visible: true, type: "QR" },
+          },
+        ],
       },
       {
         category: "vouchers",
@@ -78,16 +86,16 @@ describe("CheckoutSuccessCard utility functions", () => {
         quantity: {
           period: 1,
           limit: 1,
-          unit: { type: "POSTFIX", label: " book" }
+          unit: { type: "POSTFIX", label: " book" },
         },
         identifiers: [
           {
             label: "Voucher code",
             textInput: { disabled: false, visible: true, type: "STRING" },
-            scanButton: { disabled: false, visible: true, type: "BARCODE" }
-          }
-        ]
-      }
+            scanButton: { disabled: false, visible: true, type: "BARCODE" },
+          },
+        ],
+      },
     ];
 
     mockTransactionsByTimeMap = {
@@ -99,17 +107,17 @@ describe("CheckoutSuccessCard utility functions", () => {
             details: "AAA987654321",
             quantity: "1 qty",
             isAppeal: false,
-            order: 1
+            order: 1,
           },
           {
             header: "Meal credits",
             details: "",
             quantity: "$10",
             isAppeal: false,
-            order: 0
-          }
+            order: 0,
+          },
         ],
-        order: -1596530350
+        order: -1596530350,
       },
       "1596530340": {
         transactionTime: new Date(latestTransactionTimeMs - 10000),
@@ -119,10 +127,10 @@ describe("CheckoutSuccessCard utility functions", () => {
             details: "AAA987654322",
             quantity: "1 book",
             isAppeal: false,
-            order: 2
-          }
+            order: 2,
+          },
         ],
-        order: -1596530340
+        order: -1596530340,
       },
       "1596530330": {
         transactionTime: new Date(latestTransactionTimeMs - 20000),
@@ -132,11 +140,11 @@ describe("CheckoutSuccessCard utility functions", () => {
             details: "",
             quantity: "$5",
             isAppeal: false,
-            order: 0
-          }
+            order: 0,
+          },
         ],
-        order: -1596530330
-      }
+        order: -1596530330,
+      },
     };
   });
 
@@ -145,14 +153,20 @@ describe("CheckoutSuccessCard utility functions", () => {
       expect.assertions(1);
 
       expect(
-        groupTransactionsByTime(sortedTransactions, allProducts)
+        groupTransactionsByTime(
+          sortedTransactions,
+          allProducts,
+          defaultTranslationProps
+        )
       ).toStrictEqual(mockTransactionsByTimeMap);
     });
 
     it("should return empty object if sortedTransactions is null", () => {
       expect.assertions(1);
 
-      expect(groupTransactionsByTime(null, allProducts)).toStrictEqual({});
+      expect(
+        groupTransactionsByTime(null, allProducts, defaultTranslationProps)
+      ).toStrictEqual({});
     });
   });
 
@@ -168,17 +182,17 @@ describe("CheckoutSuccessCard utility functions", () => {
               details: "",
               quantity: "$10",
               isAppeal: false,
-              order: 0
+              order: 0,
             },
             {
               header: "TT token",
               details: "AAA987654321",
               quantity: "1 qty",
               isAppeal: false,
-              order: 1
-            }
+              order: 1,
+            },
           ],
-          order: -1596530350
+          order: -1596530350,
         },
         {
           header: "4 Aug 2020, 4:39PM",
@@ -188,10 +202,10 @@ describe("CheckoutSuccessCard utility functions", () => {
               details: "AAA987654322",
               quantity: "1 book",
               isAppeal: false,
-              order: 2
-            }
+              order: 2,
+            },
           ],
-          order: -1596530340
+          order: -1596530340,
         },
         {
           header: "4 Aug 2020, 4:38PM",
@@ -201,11 +215,11 @@ describe("CheckoutSuccessCard utility functions", () => {
               details: "",
               quantity: "$5",
               isAppeal: false,
-              order: 0
-            }
+              order: 0,
+            },
           ],
-          order: -1596530330
-        }
+          order: -1596530330,
+        },
       ]);
     });
   });

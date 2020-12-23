@@ -2,7 +2,7 @@ import React, {
   FunctionComponent,
   useContext,
   useState,
-  useEffect
+  useEffect,
 } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
@@ -19,40 +19,55 @@ import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTra
 import {
   formatQuantityText,
   BIG_NUMBER,
-  sortTransactionsByOrder
+  sortTransactionsByOrder,
 } from "../utils";
 import { TransactionsGroup, Transaction } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
 import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
-import { AlertModalContext, systemAlertProps } from "../../../context/alert";
+import { AlertModalContext } from "../../../context/alert";
+import {
+  TranslationHook,
+  useTranslate,
+} from "../../../hooks/useTranslate/useTranslate";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
-    marginTop: size(2)
-  }
+    marginTop: size(2),
+  },
 });
 
 interface CheckoutSuccessCard {
   ids: string[];
   onCancel: () => void;
-  quotaResponse: Quota | null;
+  quotaResponse: Quota | undefined;
 }
 
 const UsageQuotaTitle: FunctionComponent<{
   quantity: number;
   quotaRefreshTime: number;
-}> = ({ quantity, quotaRefreshTime }) => (
-  <>
-    <AppText style={sharedStyles.statusTitle}>
-      {"\n"}
-      {quantity} item(s) more till {formatDate(quotaRefreshTime)}.
-    </AppText>
-  </>
-);
+}> = ({ quantity, quotaRefreshTime }) => {
+  const { i18nt } = useTranslate();
+  return (
+    <>
+      <AppText
+        style={sharedStyles.statusTitle}
+        accessibilityLabel="checkout-redeemedLimitReached!"
+        testID="checkout-redeemedLimitReached!"
+        accessible={true}
+      >
+        {"\n"}
+        {`${i18nt("checkoutSuccessScreen", "redeemedLimitReached", undefined, {
+          quantity: quantity,
+          date: formatDate(quotaRefreshTime),
+        })}`}
+      </AppText>
+    </>
+  );
+};
 
 export interface TransactionsByTimeMap {
   [transactionTimeInSeconds: string]: {
@@ -71,8 +86,11 @@ export interface TransactionsByTimeMap {
  */
 export const groupTransactionsByTime = (
   sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
-  allProducts: CampaignPolicy[]
+  allProducts: CampaignPolicy[],
+  translationProps: TranslationHook
 ): TransactionsByTimeMap => {
+  const { c13nt, c13ntForUnit, i18nt } = translationProps;
+
   const transactionsByTimeMap: {
     [transactionTimeInSeconds: string]: {
       transactionTime: Date;
@@ -80,11 +98,10 @@ export const groupTransactionsByTime = (
       order: number;
     };
   } = {};
-  sortedTransactions?.forEach(item => {
+  sortedTransactions?.forEach((item) => {
     const policy = allProducts?.find(
-      policy => policy.category === item.category
+      (policy) => policy.category === item.category
     );
-    const categoryName = policy?.name ?? item.category;
     const transactionTimeInSeconds = String(
       Math.floor(item.transactionTime.getTime() / 1000)
     );
@@ -93,18 +110,23 @@ export const groupTransactionsByTime = (
       transactionsByTimeMap[transactionTimeInSeconds] = {
         transactionTime: item.transactionTime,
         transactions: [],
-        order: -transactionTimeInSeconds
+        order: -transactionTimeInSeconds,
       };
     }
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
-      header: categoryName,
+      header: (policy?.name && c13nt(policy?.name)) ?? item.category,
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
-        policy?.quantity.unit || { type: "POSTFIX", label: " qty" }
+        policy?.quantity.unit
+          ? c13ntForUnit(policy?.quantity.unit)
+          : {
+              type: "POSTFIX",
+              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`,
+            }
       ),
       isAppeal: policy?.categoryType === "APPEAL",
-      order: policy?.order ?? BIG_NUMBER
+      order: policy?.order ?? BIG_NUMBER,
     });
   });
   return transactionsByTimeMap;
@@ -118,14 +140,14 @@ export const sortTransactions = (
     .map(([, { transactionTime, transactions, order }]) => ({
       header: formatDateTime(transactionTime.getTime()),
       transactions: transactions.sort(sortTransactionsByOrder),
-      order
+      order,
     }));
 };
 
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   ids,
   onCancel,
-  quotaResponse
+  quotaResponse,
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
 
@@ -140,25 +162,25 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   // Assumes results are already sorted (valid assumption for results from /transactions/history)
   const sortedTransactions = pastTransactionsResult;
 
-  const { showAlert } = useContext(AlertModalContext);
+  const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
     if (error) {
-      showAlert({
-        ...systemAlertProps,
-        description: error.message || ""
-      });
+      showErrorAlert(error);
     }
-  }, [error, showAlert]);
+  }, [error, showErrorAlert]);
 
+  const translationProps = useTranslate();
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
-    allProducts || []
+    allProducts || [],
+    translationProps
   );
   const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
 
   const productType =
     (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
-  const { title, description, ctaButtonText } = getCheckoutMessages(
+  const { title, description } = getCheckoutMessages(
+    translationProps.i18nt,
     productType
   );
 
@@ -175,7 +197,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     !!allProducts[0].quantity.usage;
 
   const firstGlobalQuota = showGlobalQuota
-    ? quotaResponse!.globalQuota![0]
+    ? quotaResponse!.globalQuota[0]
     : undefined;
 
   return (
@@ -189,7 +211,14 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               style={sharedStyles.icon}
             />
             <AppText style={sharedStyles.statusTitleWrapper}>
-              <AppText style={sharedStyles.statusTitle}>{title}</AppText>
+              <AppText
+                style={sharedStyles.statusTitle}
+                accessibilityLabel="checkout-success-title"
+                testID="checkout-success-title"
+                accessible={true}
+              >
+                {title}
+              </AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
                 <UsageQuotaTitle
                   quantity={firstGlobalQuota!.quantity}
@@ -236,7 +265,12 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
-        <DarkButton text={ctaButtonText} onPress={onCancel} fullWidth={true} />
+        <DarkButton
+          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
+          onPress={onCancel}
+          fullWidth={true}
+          accessibilityLabel="checkout-success-next-identity-button"
+        />
       </View>
     </>
   );

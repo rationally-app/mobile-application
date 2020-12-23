@@ -7,7 +7,7 @@ export const replaceRouteFn = (
   // Any casting is required to not provide key
   const action: any = {
     routeName,
-    type: "Navigation/REPLACE"
+    type: "Navigation/REPLACE",
   };
   return navigation.dispatch(action);
 };
@@ -19,7 +19,7 @@ export const resetRouteFn = (
   // Any casting is required to not provide key
   const action: any = {
     routeName,
-    type: "Navigation/RESET"
+    type: "Navigation/RESET",
   };
   return navigation.dispatch(action);
 };

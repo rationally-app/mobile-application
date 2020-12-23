@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: Lint & Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -39,7 +39,7 @@ jobs:
   deploy_staging:
     name: Deploy to Staging
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - name: Fetch Tags

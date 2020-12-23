@@ -2,6 +2,7 @@ import { getCampaignConfig, CampaignConfigError } from "./campaignConfig";
 import { boolean } from "io-ts";
 import { Sentry } from "../../utils/errorTracking";
 import { SessionError } from "../helpers";
+import "../../common/i18n/i18nMock";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -20,8 +21,8 @@ const mockValidResponse = {
     id: {
       type: "STRING",
       scannerType: "CODE_39",
-      validation: "NRIC"
-    }
+      validation: "NRIC",
+    },
   },
   policies: [
     {
@@ -34,9 +35,9 @@ const mockValidResponse = {
         limit: 2,
         unit: {
           type: "POSTFIX",
-          label: " pack(s)"
-        }
-      }
+          label: " pack(s)",
+        },
+      },
     },
     {
       category: "chocolate",
@@ -49,11 +50,12 @@ const mockValidResponse = {
         step: 5,
         unit: {
           type: "PREFIX",
-          label: "$"
-        }
-      }
-    }
-  ]
+          label: "$",
+        },
+      },
+    },
+  ],
+  c13n: {},
 };
 
 const mockValidResponseNewFeature = {
@@ -67,8 +69,8 @@ const mockValidResponseNewFeature = {
     id: {
       type: "STRING",
       scannerType: "CODE_39",
-      validation: "NRIC"
-    }
+      validation: "NRIC",
+    },
   },
   policies: [
     {
@@ -81,9 +83,9 @@ const mockValidResponseNewFeature = {
         limit: 2,
         unit: {
           type: "POSTFIX",
-          label: " pack(s)"
-        }
-      }
+          label: " pack(s)",
+        },
+      },
     },
     {
       category: "chocolate",
@@ -96,31 +98,33 @@ const mockValidResponseNewFeature = {
         step: 5,
         unit: {
           type: "PREFIX",
-          label: "$"
-        }
-      }
-    }
-  ]
+          label: "$",
+        },
+      },
+    },
+  ],
+  c13n: {},
 };
 
 const mockValidResponseNoUpdates = {
   features: null,
-  policies: null
+  policies: null,
+  c13n: null,
 };
 
 const mockInvalidResponseIncorrectType = {
   features: {
-    minAppBuildVersion: "10"
-  }
+    minAppBuildVersion: "10",
+  },
 };
 
 const mockInvalidResponseNewConfig = {
   features: {
-    minAppBuildVersion: "10"
+    minAppBuildVersion: "10",
   },
   newConfig: {
-    newProperty: boolean
-  }
+    newProperty: boolean,
+  },
 };
 
 const key = "KEY";
@@ -139,12 +143,13 @@ describe("campaignConfig", () => {
         expect.assertions(1);
         mockFetch.mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve(response)
+          json: () => Promise.resolve(response),
         });
 
         const config = await getCampaignConfig(key, endpoint, {
           features: undefined,
-          policies: undefined
+          policies: undefined,
+          c13n: undefined,
         });
         expect(config).toStrictEqual(response);
       }
@@ -154,12 +159,13 @@ describe("campaignConfig", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockValidResponseNoUpdates)
+        json: () => Promise.resolve(mockValidResponseNoUpdates),
       });
 
       const config = await getCampaignConfig(key, endpoint, {
         features: "latest-hash",
-        policies: "latest-hash"
+        policies: "latest-hash",
+        c13n: "latest-hash",
       });
       expect(config).toStrictEqual(mockValidResponseNoUpdates);
     });
@@ -170,13 +176,14 @@ describe("campaignConfig", () => {
         expect.assertions(1);
         mockFetch.mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve(response)
+          json: () => Promise.resolve(response),
         });
 
         await expect(
           getCampaignConfig(key, endpoint, {
             features: undefined,
-            policies: undefined
+            policies: undefined,
+            c13n: undefined,
           })
         ).rejects.toThrow(CampaignConfigError);
       }
@@ -188,13 +195,14 @@ describe("campaignConfig", () => {
         expect.assertions(2);
         mockFetch.mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve(response)
+          json: () => Promise.resolve(response),
         });
 
         await expect(
           getCampaignConfig(key, endpoint, {
             features: undefined,
-            policies: undefined
+            policies: undefined,
+            c13n: undefined,
           })
         ).rejects.toThrow(CampaignConfigError);
         expect(mockCaptureException).toHaveBeenCalledTimes(1);
@@ -206,13 +214,14 @@ describe("campaignConfig", () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         json: () =>
-          Promise.resolve({ message: "Invalid authentication token provided" })
+          Promise.resolve({ message: "Invalid authentication token provided" }),
       });
 
       await expect(
         getCampaignConfig(key, endpoint, {
           features: undefined,
-          policies: undefined
+          policies: undefined,
+          c13n: undefined,
         })
       ).rejects.toThrow(SessionError);
     });
@@ -224,7 +233,8 @@ describe("campaignConfig", () => {
       await expect(
         getCampaignConfig(key, endpoint, {
           features: undefined,
-          policies: undefined
+          policies: undefined,
+          c13n: undefined,
         })
       ).rejects.toThrow("Network error");
     });

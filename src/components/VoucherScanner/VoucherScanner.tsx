@@ -3,13 +3,13 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  useRef
+  useRef,
 } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import * as Permissions from "expo-permissions";
 import { color, size } from "../../common/styles";
-import { Camera } from "../IdScanner/IdScanner";
+import { IdScannerCamera } from "../IdScanner/IdScanner";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { LoadingView } from "../Loading";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -19,6 +19,7 @@ import { Feather } from "@expo/vector-icons";
 import { ManualAddVoucherModal } from "./ManualAddVoucherModal";
 import { SafeAreaView } from "react-navigation";
 import { Voucher } from "../../types";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -27,34 +28,39 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: color("grey", 0)
+    backgroundColor: color("grey", 0),
   },
   content: {
-    flex: 1
+    flex: 1,
   },
   topSectionWrapper: {
     marginTop: size(1),
     marginBottom: size(3),
     marginHorizontal: size(2),
-    alignItems: "flex-start"
+    alignItems: "flex-start",
   },
   closeButton: {
     position: "absolute",
     right: -size(1),
     top: -size(1),
-    padding: size(1)
+    padding: size(1),
   },
   bottomSectionWrapper: {
     flexDirection: "row",
     marginVertical: size(3),
     marginHorizontal: size(2),
     maxWidth: 512,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   manualInputButtonWrapper: {
     marginRight: size(1),
-    flexGrow: 1
-  }
+    flexGrow: 1,
+  },
+  camera: {
+    flex: 1,
+    backgroundColor: color("grey", 0),
+    width: "100%",
+  },
 });
 
 interface VoucherScanner {
@@ -62,7 +68,7 @@ interface VoucherScanner {
   onCheckVoucher: (input: string) => void;
   onCancel: () => void;
   isScanningEnabled?: boolean;
-  barCodeTypes?: Camera["barCodeTypes"];
+  barCodeTypes?: IdScannerCamera["barCodeTypes"];
 }
 
 export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
@@ -70,7 +76,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   onCheckVoucher,
   onCancel,
   isScanningEnabled = true,
-  barCodeTypes
+  barCodeTypes,
 }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showManualInput, setShowManualInput] = useState(false);
@@ -90,7 +96,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   const openInputModal = useCallback(() => setShowManualInput(true), []);
 
   const currentBarcode = useRef<string>();
-  const onBarCodeScanned: BarCodeScannedCallback = event => {
+  const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (
       isScanningEnabled &&
       !showManualInput &&
@@ -102,6 +108,8 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
     }
   };
 
+  const { i18nt } = useTranslate();
+
   return (
     <View style={styles.wrapper}>
       <SafeAreaView style={styles.content}>
@@ -109,10 +117,10 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
           {vouchers.length === 0 ? (
             <AppText
               style={{
-                fontFamily: "brand-bold"
+                fontFamily: "brand-bold",
               }}
             >
-              Scan to check validity
+              {i18nt("idScanner", "scanToCheck")}
             </AppText>
           ) : (
             <ValidVoucherCount
@@ -126,9 +134,10 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
         </View>
 
         {hasCameraPermission ? (
-          <Camera
+          <IdScannerCamera
             onBarCodeScanned={onBarCodeScanned}
             barCodeTypes={barCodeTypes}
+            style={styles.camera}
           />
         ) : (
           <View style={{ flex: 1 }}>
@@ -138,12 +147,15 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
         <View style={styles.bottomSectionWrapper}>
           <View style={styles.manualInputButtonWrapper}>
             <SecondaryButton
-              text="Enter manually"
+              text={i18nt("idScanner", "enterManually")}
               onPress={openInputModal}
               fullWidth={true}
             />
           </View>
-          <DarkButton text="Complete" onPress={onCancel} />
+          <DarkButton
+            text={i18nt("checkoutSuccessScreen", "complete")}
+            onPress={onCancel}
+          />
         </View>
         <ManualAddVoucherModal
           isVisible={showManualInput}

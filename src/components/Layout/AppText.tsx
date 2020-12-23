@@ -10,9 +10,9 @@ export const AppText: FunctionComponent<TextProps> = memo(
         {
           fontFamily: "brand-regular",
           fontSize: fontSize(0),
-          color: color("blue", 50)
+          color: color("blue", 50),
         },
-        style
+        style,
       ]}
       {...props}
     >

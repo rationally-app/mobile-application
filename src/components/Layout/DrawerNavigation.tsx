@@ -1,8 +1,14 @@
 import React, { FunctionComponent, useCallback, useContext } from "react";
-import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Linking,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
 import {
   DrawerContentComponentProps,
-  DrawerActions
+  DrawerActions,
 } from "react-navigation-drawer";
 import { useLogout } from "../../hooks/useLogout";
 import { AppText } from "./AppText";
@@ -11,15 +17,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HelpModalContext } from "../../context/help";
 import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
-import {
-  AlertModalContext,
-  defaultConfirmationProps
-} from "../../context/alert";
+import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative"
+    position: "relative",
   },
   navLink: {
     flexDirection: "row",
@@ -27,26 +31,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: size(4),
     paddingVertical: size(2.5),
     borderBottomColor: color("grey", 20),
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   navLinkText: {
-    fontFamily: "brand-bold"
+    fontFamily: "brand-bold",
   },
   bottomNavContainerLink: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: size(4),
-    paddingVertical: size(1)
+    paddingVertical: size(1),
   },
   bottomVersionText: {
     paddingHorizontal: size(4),
     marginTop: size(3),
     paddingVertical: size(1),
-    fontSize: fontSize(-4)
+    fontSize: fontSize(-4),
   },
   bottomNavContainerText: {
-    fontSize: fontSize(-1)
-  }
+    fontSize: fontSize(-1),
+  },
 });
 
 interface BottomNavigationLink {
@@ -55,7 +59,7 @@ interface BottomNavigationLink {
 
 export const BottomNavigationLink: FunctionComponent<BottomNavigationLink> = ({
   children,
-  onPress
+  onPress,
 }) => {
   return (
     <View style={styles.bottomNavContainerLink}>
@@ -69,10 +73,15 @@ export const BottomNavigationLink: FunctionComponent<BottomNavigationLink> = ({
 export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
   icon,
   label,
-  onPress
+  onPress,
+  accessibilityLabel = "drawer-nav-button",
 }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      onPress={onPress}
+      accessibilityLabel={accessibilityLabel}
+      testID={accessibilityLabel}
+    >
       <View style={styles.navLink}>
         <MaterialCommunityIcons
           name={icon}
@@ -87,27 +96,20 @@ export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
 };
 
 export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponentProps> = ({
-  navigation
+  navigation,
 }) => {
   const { logout } = useLogout();
-  const { showAlert } = useContext(AlertModalContext);
+  const { showConfirmationAlert } = useContext(AlertModalContext);
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
   }, [logout, navigation.dispatch]);
 
+  const { i18nt } = useTranslate();
+
   const onPressLogout = (): void => {
-    showAlert({
-      ...defaultConfirmationProps,
-      title: "Confirm logout?",
-      buttonTexts: {
-        primaryActionText: "Logout",
-        secondaryActionText: "No"
-      },
-      visible: true,
-      onOk: handleLogout
-    });
+    showConfirmationAlert(CONFIRMATION_MESSAGE.CONFIRM_LOGOUT, handleLogout);
   };
 
   const onPressCloseDrawer = (): void => {
@@ -134,13 +136,13 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
         style={{
           marginTop: size(8),
           marginRight: size(2),
-          alignItems: "flex-end"
+          alignItems: "flex-end",
         }}
       >
         <TouchableOpacity
           onPress={onPressCloseDrawer}
           style={{
-            padding: size(1)
+            padding: size(1),
           }}
         >
           <MaterialCommunityIcons
@@ -150,49 +152,61 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
           />
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          marginTop: size(3),
-          borderTopColor: color("grey", 20),
-          borderTopWidth: 1
+
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "space-between",
         }}
       >
-        {drawerButtons.map(button => (
-          <DrawerButtonComponent {...button} key={button.label} />
-        ))}
-        <DrawerButtonComponent
-          icon="logout"
-          label="Logout"
-          onPress={onPressLogout}
-        />
-      </View>
-      <View style={{ marginTop: "auto", marginBottom: size(4) }}>
-        <BottomNavigationLink onPress={showHelpModal}>
-          Help & Support
-        </BottomNavigationLink>
-        <BottomNavigationLink
-          onPress={() => {
-            Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
+        <View
+          style={{
+            marginTop: size(3),
+            borderTopColor: color("grey", 20),
+            borderTopWidth: 1,
+            marginBottom: size(4),
           }}
         >
-          Terms of use
-        </BottomNavigationLink>
-        <BottomNavigationLink
-          onPress={() => {
-            Linking.openURL("https://www.supplyally.gov.sg/privacy");
-          }}
-        >
-          Privacy Statement
-        </BottomNavigationLink>
-        <BottomNavigationLink
-          onPress={() => {
-            Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
-          }}
-        >
-          Report vulnerability
-        </BottomNavigationLink>
-        <AppText style={styles.bottomVersionText}>{version}</AppText>
-      </View>
+          <View>
+            {drawerButtons.map((button) => (
+              <DrawerButtonComponent {...button} key={button.label} />
+            ))}
+            <DrawerButtonComponent
+              icon="logout"
+              label={i18nt("navigationDrawer", "logout")}
+              onPress={onPressLogout}
+              accessibilityLabel="drawer-nav-logout-button"
+            />
+          </View>
+        </View>
+        <View style={{ marginBottom: size(4) }}>
+          <BottomNavigationLink onPress={showHelpModal}>
+            {i18nt("navigationDrawer", "helpSupport")}
+          </BottomNavigationLink>
+          <BottomNavigationLink
+            onPress={() => {
+              Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
+            }}
+          >
+            {i18nt("navigationDrawer", "termsOfUse")}
+          </BottomNavigationLink>
+          <BottomNavigationLink
+            onPress={() => {
+              Linking.openURL("https://www.supplyally.gov.sg/privacy");
+            }}
+          >
+            {i18nt("navigationDrawer", "privacyStatement")}
+          </BottomNavigationLink>
+          <BottomNavigationLink
+            onPress={() => {
+              Linking.openURL("https://www.tech.gov.sg/report_vulnerability");
+            }}
+          >
+            {i18nt("navigationDrawer", "reportVulnerability")}
+          </BottomNavigationLink>
+          <AppText style={styles.bottomVersionText}>{version}</AppText>
+        </View>
+      </ScrollView>
     </View>
   );
 };

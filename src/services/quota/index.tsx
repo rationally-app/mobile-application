@@ -3,11 +3,11 @@ import {
   Transaction,
   Quota,
   PostTransactionResult,
-  PastTransactionsResult
+  PastTransactionsResult,
+  IdentificationFlag,
 } from "../../types";
 import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
-import { systemAlertProps, ERROR_MESSAGE } from "../../context/alert";
 
 export class NotEligibleError extends Error {
   constructor(message: string) {
@@ -21,11 +21,6 @@ export class QuotaError extends Error {
     super(message);
     this.name = "QuotaError";
   }
-  alertProps = {
-    ...systemAlertProps,
-    description: ERROR_MESSAGE.QUOTA_ERROR as string,
-    visible: true
-  };
 }
 
 export class PostTransactionError extends Error {
@@ -44,6 +39,7 @@ export class PastTransactionError extends Error {
 
 interface PostTransaction {
   ids: string[];
+  identificationFlag: IdentificationFlag;
   transactions: Transaction[];
   key: string;
   endpoint: string;
@@ -51,65 +47,153 @@ interface PostTransaction {
 
 export const mockGetQuota = async (
   ids: string[],
+  _identificationFlag: IdentificationFlag,
   _key: string,
   _endpoint: string
 ): Promise<Quota> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
+  const transactionTime = new Date(2020, 3, 5);
   if (ids.length === 1) {
-    const transactionTime = new Date(2020, 3, 5);
     return {
       remainingQuota: [
         {
           category: "toilet-paper",
           quantity: 0,
-          transactionTime
+          transactionTime,
         },
         {
           category: "instant-noodles",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "chocolate",
           quantity: 30,
-          transactionTime
+          transactionTime,
         },
         {
           category: "vouchers",
           quantity: 1,
-          transactionTime
+          transactionTime,
         },
         {
           category: "voucher",
           quantity: 1,
-          transactionTime
-        }
-      ]
+          transactionTime,
+        },
+      ],
+      globalQuota: [
+        {
+          category: "toilet-paper",
+          quantity: 0,
+          transactionTime,
+        },
+        {
+          category: "instant-noodles",
+          quantity: 1,
+          transactionTime,
+        },
+        {
+          category: "chocolate",
+          quantity: 30,
+          transactionTime,
+        },
+        {
+          category: "vouchers",
+          quantity: 1,
+          transactionTime,
+        },
+        {
+          category: "voucher",
+          quantity: 1,
+          transactionTime,
+        },
+      ],
+      localQuota: [
+        {
+          category: "toilet-paper",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+        {
+          category: "instant-noodles",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+        {
+          category: "chocolate",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+        {
+          category: "vouchers",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+        {
+          category: "voucher",
+          quantity: Number.MAX_SAFE_INTEGER,
+          transactionTime,
+        },
+      ],
     };
   } else {
     return {
       remainingQuota: [
         {
           category: "toilet-paper",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "instant-noodles",
-          quantity: 2
+          quantity: 2,
         },
         {
           category: "chocolate",
-          quantity: 60
+          quantity: 60,
         },
         { category: "vouchers", quantity: 1 },
-        { category: "voucher", quantity: 1 }
-      ]
+        { category: "voucher", quantity: 1 },
+      ],
+      globalQuota: [
+        {
+          category: "toilet-paper",
+          quantity: 2,
+        },
+        {
+          category: "instant-noodles",
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          quantity: 60,
+        },
+        { category: "vouchers", quantity: 1 },
+        { category: "voucher", quantity: 1 },
+      ],
+      localQuota: [
+        {
+          category: "toilet-paper",
+          quantity: Number.MAX_SAFE_INTEGER,
+        },
+        {
+          category: "instant-noodles",
+          quantity: Number.MAX_SAFE_INTEGER,
+        },
+        {
+          category: "chocolate",
+          quantity: Number.MAX_SAFE_INTEGER,
+        },
+        { category: "vouchers", quantity: Number.MAX_SAFE_INTEGER },
+        { category: "voucher", quantity: Number.MAX_SAFE_INTEGER },
+      ],
     };
   }
 };
 
 export const liveGetQuota = async (
   ids: string[],
+  identificationFlag: IdentificationFlag,
   key: string,
   endpoint: string
 ): Promise<Quota> => {
@@ -121,18 +205,27 @@ export const liveGetQuota = async (
     response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
       method: "POST",
       headers: {
-        Authorization: key
+        Authorization: key,
       },
       body: JSON.stringify({
-        ids
-      })
+        ids,
+        identificationFlag,
+      }),
     });
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
-    if (e.message === "User is not eligible") {
+    // Currently the standalone mystique throws "User is not eligible" if not whitelisted,
+    // however, the new eligibility check on our backend throw "id is not eligible"
+    // This will be a current stop-gap measure to handle both types of eligibilty
+    // As we move forward, we will move towards using the new eligibilty check and
+    // phase out from the standalone mystique
+    if (
+      e.message === "User is not eligible" ||
+      e.message === "id is not eligible"
+    ) {
       throw new NotEligibleError(e.message);
     } else if (e instanceof SessionError) {
       throw e;
@@ -143,7 +236,7 @@ export const liveGetQuota = async (
 
 export const mockPostTransaction = async ({
   ids,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids[0] === "S0000000J") throw new Error("Something broke");
   const timestamp = new Date();
@@ -153,33 +246,34 @@ export const mockPostTransaction = async ({
       const transaction: Transaction[] = [
         {
           category: "voucher",
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ];
       transactionArr.push({
         timestamp: timestamp,
-        transaction
+        transaction,
       });
     }
     return {
-      transactions: transactionArr
+      transactions: transactionArr,
     };
   }
   return {
     transactions: [
       {
         transaction: transactions,
-        timestamp
-      }
-    ]
+        timestamp,
+      },
+    ],
   };
 };
 
 export const livePostTransaction = async ({
   ids,
+  identificationFlag,
   endpoint,
   key,
-  transactions
+  transactions,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids.length === 0) {
     throw new PostTransactionError("No ID was provided");
@@ -191,12 +285,13 @@ export const livePostTransaction = async ({
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
           ids,
-          transaction: transactions
-        })
+          identificationFlag,
+          transaction: transactions,
+        }),
       }
     );
     return response;
@@ -212,6 +307,7 @@ export const livePostTransaction = async ({
 
 export const mockPastTransactions = async (
   ids: string[],
+  _identificationFlag: IdentificationFlag,
   _key: string,
   _endpoint: string
 ): Promise<PastTransactionsResult> => {
@@ -225,29 +321,30 @@ export const mockPastTransactions = async (
       {
         category: "toilet-paper",
         quantity: 1,
-        transactionTime
+        transactionTime,
       },
       {
         category: "instant-noodles",
         quantity: 1,
-        transactionTime
+        transactionTime,
       },
       {
         category: "chocolate",
         quantity: 30,
-        transactionTime
+        transactionTime,
       },
       {
         category: "vouchers",
         quantity: 5,
-        transactionTime
-      }
-    ]
+        transactionTime,
+      },
+    ],
   };
 };
 
 export const livePastTransactions = async (
   ids: string[],
+  identificationFlag: IdentificationFlag,
   key: string,
   endpoint: string
 ): Promise<PastTransactionsResult> => {
@@ -262,11 +359,12 @@ export const livePastTransactions = async (
       {
         method: "POST",
         headers: {
-          Authorization: key
+          Authorization: key,
         },
         body: JSON.stringify({
-          ids
-        })
+          ids,
+          identificationFlag,
+        }),
       }
     );
     return response;

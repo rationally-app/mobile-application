@@ -18,9 +18,9 @@ const products: CampaignPolicy[] = [
       default: 1,
       unit: {
         type: "POSTFIX",
-        label: " roll(s)"
-      }
-    }
+        label: " roll(s)",
+      },
+    },
   },
   {
     category: "chocolate",
@@ -32,24 +32,33 @@ const products: CampaignPolicy[] = [
       default: 0,
       unit: {
         type: "POSTFIX",
-        label: " bar(s)"
-      }
-    }
-  }
+        label: " bar(s)",
+      },
+    },
+  },
 ];
 
 const quotaResponse: Quota = {
   remainingQuota: [
     { category: "toilet-paper", quantity: 1 },
-    { category: "chocolate", quantity: 7 }
-  ]
+    { category: "chocolate", quantity: 7 },
+  ],
+  globalQuota: [
+    { category: "toilet-paper", quantity: 1 },
+    { category: "chocolate", quantity: 7 },
+  ],
+  localQuota: [
+    { category: "toilet-paper", quantity: Number.MAX_SAFE_INTEGER },
+    { category: "chocolate", quantity: Number.MAX_SAFE_INTEGER },
+  ],
 };
 
 storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
   <CampaignConfigContext.Provider
     value={{
       policies: products,
-      features: null
+      features: null,
+      c13n: {},
     }}
   >
     <View style={{ margin: size(3) }}>

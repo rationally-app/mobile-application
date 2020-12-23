@@ -1,23 +1,24 @@
 import React, { FunctionComponent, memo } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { CampaignPolicy } from "../../../types";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { fontSize, color } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   name: {
     fontSize: fontSize(1),
-    fontFamily: "brand-bold"
+    fontFamily: "brand-bold",
   },
   description: {
-    fontSize: fontSize(0)
+    fontSize: fontSize(0),
   },
   descriptionAlert: {
     fontFamily: "brand-italic",
-    color: color("red", 50)
-  }
+    color: color("red", 50),
+  },
 });
 
 export const ItemContent: FunctionComponent<{
@@ -26,20 +27,39 @@ export const ItemContent: FunctionComponent<{
   descriptionAlert?: string;
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
-  // eslint-disable-next-line react/display-name
-}> = memo(({ name, description, descriptionAlert, unit, maxQuantity }) => (
-  <>
-    <AppText style={styles.name}>{name}</AppText>
-    {descriptionAlert && descriptionAlert.length > 0 && (
-      <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
-    )}
-    {(description ?? "").length > 0 && (
-      <AppText style={styles.description}>{description}</AppText>
-    )}
-    {maxQuantity === 1 && (
-      <AppText style={sharedStyles.maxQuantityLabel}>
-        <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
+  accessibilityLabel?: string;
+}> = ({
+  name,
+  description,
+  descriptionAlert,
+  unit,
+  maxQuantity,
+  accessibilityLabel = "item-content",
+}) => {
+  const { c13nt } = useTranslate();
+  const tDescription = c13nt(description ?? "");
+
+  return (
+    <View>
+      <AppText
+        style={styles.name}
+        accessibilityLabel={`${accessibilityLabel}-name`}
+        testID={`${accessibilityLabel}-name`}
+        accessible={true}
+      >
+        {c13nt(name)}
       </AppText>
-    )}
-  </>
-));
+      {descriptionAlert && descriptionAlert.length > 0 && (
+        <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
+      )}
+      {tDescription.length > 0 && (
+        <AppText style={styles.description}>{tDescription}</AppText>
+      )}
+      {maxQuantity === 1 && (
+        <AppText style={sharedStyles.maxQuantityLabel}>
+          <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
+        </AppText>
+      )}
+    </View>
+  );
+};

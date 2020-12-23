@@ -16,7 +16,7 @@ export const IdentifierTextInput: FunctionComponent<{
   <View
     style={[
       sharedStyles.inputWrapper,
-      ...(addMarginRight ? [{ marginRight: size(1) }] : [])
+      ...(addMarginRight ? [{ marginRight: size(1) }] : []),
     ]}
   >
     <InputWithLabel
@@ -25,6 +25,7 @@ export const IdentifierTextInput: FunctionComponent<{
       editable={editable}
       onChange={({ nativeEvent: { text } }) => onChange(text)}
       keyboardType={type === "NUMBER" ? "phone-pad" : "default"}
+      accessibilityLabel="item-field-text"
     />
   </View>
 );

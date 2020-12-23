@@ -8,9 +8,9 @@ export const formatQuantityText = (
 ): string =>
   unit
     ? unit?.type === "PREFIX"
-      ? `${unit.label}${quantity}`
-      : `${quantity}${unit.label}`
-    : `${quantity}`;
+      ? `${unit.label}${quantity.toLocaleString()}`
+      : `${quantity.toLocaleString()}${unit.label}`
+    : `${quantity.toLocaleString()}`;
 
 export const sortTransactionsByOrder = (
   a: { order: number },

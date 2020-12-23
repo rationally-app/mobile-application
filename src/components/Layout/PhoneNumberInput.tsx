@@ -2,11 +2,15 @@ import React, { FunctionComponent } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
+import {
+  formatPhoneNumber,
+  stripPhoneNumberFormatting,
+} from "../../utils/phoneNumberFormatter";
 
 const styles = StyleSheet.create({
   inputsWrapper: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   countryCode: {
     minHeight: size(6),
@@ -19,7 +23,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize(0),
     color: color("blue", 50),
     minWidth: size(7),
-    fontFamily: "brand-regular"
+    fontFamily: "brand-regular",
   },
   numberInput: {
     flex: 1,
@@ -32,19 +36,19 @@ const styles = StyleSheet.create({
     borderColor: color("blue", 50),
     fontSize: fontSize(0),
     color: color("blue", 50),
-    fontFamily: "brand-regular"
+    fontFamily: "brand-regular",
   },
   hyphen: {
     marginRight: size(1),
     marginLeft: size(1),
-    fontSize: fontSize(3)
+    fontSize: fontSize(3),
   },
   numberWrapper: {
-    marginBottom: size(2)
+    marginBottom: size(2),
   },
   label: {
-    fontFamily: "brand-bold"
-  }
+    fontFamily: "brand-bold",
+  },
 });
 
 export const PhoneNumberInput: FunctionComponent<{
@@ -54,6 +58,7 @@ export const PhoneNumberInput: FunctionComponent<{
   onChangeCountryCode: (text: string) => void;
   onChangeMobileNumber: (text: string) => void;
   onSubmit?: () => void;
+  accessibilityLabel?: string;
 }> = ({
   countryCodeValue,
   label,
@@ -61,25 +66,41 @@ export const PhoneNumberInput: FunctionComponent<{
   onChangeCountryCode,
   onChangeMobileNumber,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onSubmit = () => {}
+  onSubmit = () => {},
+  accessibilityLabel = "phone-number",
 }) => {
+  const countryCode = countryCodeValue.substr(1);
   return (
     <View style={styles.numberWrapper}>
-      <AppText style={styles.label}>{label}</AppText>
+      <AppText
+        style={styles.label}
+        accessibilityLabel={`${accessibilityLabel}-label`}
+        testID={`${accessibilityLabel}-label`}
+        accessible={true}
+      >
+        {label}
+      </AppText>
       <View style={styles.inputsWrapper}>
         <TextInput
           style={styles.countryCode}
           keyboardType="phone-pad"
           value={countryCodeValue}
-          onChange={({ nativeEvent: { text } }) => onChangeCountryCode(text)}
+          onChangeText={(text) => onChangeCountryCode(text)}
         />
         <AppText style={styles.hyphen}>-</AppText>
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={mobileNumberValue}
-          onChange={({ nativeEvent: { text } }) => onChangeMobileNumber(text)}
+          value={formatPhoneNumber(mobileNumberValue, countryCode)}
+          onChangeText={(text) => {
+            onChangeMobileNumber(
+              stripPhoneNumberFormatting(formatPhoneNumber(text, countryCode))
+            );
+          }}
           onSubmitEditing={onSubmit}
+          accessibilityLabel={`${accessibilityLabel}-input`}
+          testID={`${accessibilityLabel}-input`}
+          accessible={true}
         />
       </View>
     </View>

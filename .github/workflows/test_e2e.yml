@@ -16,7 +16,7 @@ on:
 jobs:
   e2e_test:
     name: E2E PCloudy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -35,6 +35,7 @@ jobs:
       - name: Run E2E Tests
         run: ./e2e_run_all_tests_pCloudy.sh
       - name: Get Current Date
+        if: always()
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       - name: Upload Appium Logs
@@ -45,12 +46,14 @@ jobs:
           path: |
             ./result
       - name: xUnit Slack Reporter
+        if: always()
         uses: ivanklee86/xunit-slack-reporter@v1.0.1
         env:
           SLACK_CHANNEL: ${{ secrets.E2E_CHATBOT_CHANNELID }}
           SLACK_TOKEN: ${{ secrets.E2E_CHATBOT_TOKEN }}
           XUNIT_PATH: ./result/allresults.xml
       - name: Upload Report to Slack
+        if: always()
         run: >
           curl -F token=${{ secrets.E2E_CHATBOT_TOKEN }} -F channels=${{ secrets.E2E_CHATBOT_CHANNELID }} -F file=@./result/report.html -F
           initial_comment="Full report attached! Please download the artifact for more details: https://github.com/rationally-app/mobile-application/actions/runs/${{ github.run_id }}"

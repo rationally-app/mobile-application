@@ -3,7 +3,7 @@ import React, {
   FunctionComponent,
   useEffect,
   useContext,
-  useRef
+  useRef,
 } from "react";
 import {
   View,
@@ -11,13 +11,13 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Vibration,
-  BackHandler
+  BackHandler,
 } from "react-native";
 import { NavigationProps, AuthCredentials } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { size, borderRadius, color } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
-import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
+import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { Credits } from "../Credits";
 import { useConfigContext, AppMode } from "../../context/config";
 import { decodeQr } from "./utils";
@@ -39,9 +39,8 @@ import { DOMAIN_FORMAT } from "../../config";
 import { requestOTP, LoginError, AuthError } from "../../services/auth";
 import {
   AlertModalContext,
-  systemAlertProps,
+  CONFIRMATION_MESSAGE,
   ERROR_MESSAGE,
-  defaultConfirmationProps
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
@@ -57,19 +56,19 @@ const styles = StyleSheet.create({
     width: 512,
     maxWidth: "100%",
     height: "100%",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   headerText: {
     marginTop: size(3),
     marginBottom: size(4),
     textAlign: "center",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   scanButtonWrapper: {
-    marginTop: size(3)
+    marginTop: size(3),
   },
   bannerWrapper: {
-    marginBottom: size(1.5)
+    marginBottom: size(1.5),
   },
   closeButton: {
     alignItems: "center",
@@ -78,8 +77,8 @@ const styles = StyleSheet.create({
     padding: size(1),
     position: "absolute",
     top: size(3),
-    right: size(1)
-  }
+    right: size(1),
+  },
 });
 
 const CloseButton: FunctionComponent<{
@@ -93,7 +92,7 @@ const CloseButton: FunctionComponent<{
 );
 
 export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
-  navigation
+  navigation,
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({ category: "navigation", message: "LoginContainer" });
@@ -111,13 +110,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   >();
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const { showAlert } = useContext(AlertModalContext);
+  const { showConfirmationAlert, showErrorAlert } = useContext(
+    AlertModalContext
+  );
   const lastResendWarningMessageRef = useRef("");
 
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "loginStage",
-      message: loginStage
+      message: loginStage,
     });
   }, [loginStage]);
 
@@ -126,22 +127,15 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   };
 
   const getResendConfirmationIfNeeded = async (): Promise<boolean> => {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (!lastResendWarningMessageRef.current) {
         resolve(true);
       } else {
-        showAlert({
-          ...defaultConfirmationProps,
-          title: "Resend OTP?",
-          description: lastResendWarningMessageRef.current,
-          buttonTexts: {
-            primaryActionText: "Resend",
-            secondaryActionText: "No"
-          },
-          onOk: () => resolve(true),
-          onCancel: () => resolve(false),
-          visible: true
-        });
+        showConfirmationAlert(
+          CONFIRMATION_MESSAGE.RESEND_OTP,
+          () => resolve(true),
+          () => resolve(false)
+        );
       }
     });
   };
@@ -161,7 +155,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       return true;
     } catch (e) {
       if (e instanceof LoginError) {
-        showAlert({ ...e.alertProps, onOk: () => resetStage() });
+        showErrorAlert(e, () => resetStage(), { minutes: e.message });
       } else {
         setState(() => {
           throw e; // Let ErrorBoundary handle
@@ -190,22 +184,19 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
           Sentry.captureException(error);
-          showAlert({
-            ...systemAlertProps,
-            description: ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN
-          });
+          showErrorAlert(error);
           setLoginStage("SCAN");
         } else {
           setTempAuthCredentials({
             endpoint: queryEndpoint,
-            operatorToken: queryKey
+            operatorToken: queryKey,
           });
           setLoginStage("MOBILE_NUMBER");
         }
       }
     };
     skipScanningIfParamsInDeepLink();
-  }, [showAlert]);
+  }, [showErrorAlert]);
 
   const onToggleAppMode = (): void => {
     if (!ALLOW_MODE_CHANGE) return;
@@ -234,7 +225,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
     };
   }, [shouldShowCamera]);
 
-  const onBarCodeScanned: BarCodeScannedCallback = event => {
+  const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (!isLoading && event.data) {
       const qrCode = event.data;
       setShouldShowCamera(false);
@@ -246,7 +237,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN);
         setTempAuthCredentials({
           endpoint,
-          operatorToken: key
+          operatorToken: key,
         });
         setIsLoading(false);
         setLoginStage("MOBILE_NUMBER");
@@ -254,7 +245,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
         if (e instanceof AuthError) {
-          showAlert(e.alertProps);
+          showErrorAlert(e);
         } else {
           setState(() => {
             throw error; // Let ErrorBoundary handle
@@ -273,7 +264,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         scrollViewContentContainerStyle={{
           flexGrow: 1,
           alignItems: "center",
-          paddingBottom: size(8)
+          paddingBottom: size(8),
         }}
       >
         <TopBackground
@@ -342,9 +333,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       {shouldShowCamera && (
         <IdScanner
           onBarCodeScanned={onBarCodeScanned}
-          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           onCancel={() => setShouldShowCamera(false)}
-          cancelButtonText="Cancel"
         />
       )}
     </>

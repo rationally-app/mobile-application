@@ -4,9 +4,10 @@ import {
   QuotaError,
   PostTransactionError,
   getPastTransactions,
-  PastTransactionError
+  PastTransactionError,
 } from "./index";
 import { Sentry } from "../../utils/errorTracking";
+import { defaultSelectedIdType } from "../../context/identification";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -15,6 +16,7 @@ const mockCaptureException = jest.fn();
 const mockFetch = jest.fn();
 jest.spyOn(global, "fetch").mockImplementation(mockFetch);
 
+const identificationFlag = defaultSelectedIdType;
 const key = "KEY";
 const endpoint = "https://myendpoint.com";
 
@@ -22,13 +24,13 @@ const transactions = [
   {
     category: "product-1",
     quantity: 1,
-    identifiers: []
+    identifiers: [],
   },
   {
     category: "product-2",
     quantity: 0,
-    identifiers: []
-  }
+    identifiers: [],
+  },
 ];
 
 const pastTransactions = [
@@ -41,9 +43,9 @@ const pastTransactions = [
         scanButtonType: "QR",
         validationRegex: "^[A-F0-9]{9}$",
         value: "123456789",
-        textInputType: "STRING"
-      }
-    ]
+        textInputType: "STRING",
+      },
+    ],
   },
   {
     category: "product-1",
@@ -54,9 +56,9 @@ const pastTransactions = [
         scanButtonType: "QR",
         validationRegex: "^[A-F0-9]{9}$",
         value: "123456789",
-        textInputType: "STRING"
-      }
-    ]
+        textInputType: "STRING",
+      },
+    ],
   },
   {
     category: "product-2",
@@ -67,69 +69,93 @@ const pastTransactions = [
         scanButtonType: "QR",
         validationRegex: "^[A-F0-9]{9}$",
         value: "123456789",
-        textInputType: "STRING"
-      }
-    ]
-  }
+        textInputType: "STRING",
+      },
+    ],
+  },
 ];
 
 const timestamp = new Date(2020, 3, 1);
 
 const mockGetQuotaResponseSingleId = {
-  remainingQuota: transactions.map(t => ({
+  remainingQuota: transactions.map((t) => ({
     ...t,
-    transactionTime: timestamp.getTime()
-  }))
+    transactionTime: timestamp.getTime(),
+  })),
+  globalQuota: transactions.map((t) => ({
+    ...t,
+    transactionTime: timestamp.getTime(),
+  })),
+  localQuota: transactions.map((t) => ({
+    ...t,
+    quantity: Number.MAX_SAFE_INTEGER,
+    transactionTime: timestamp.getTime(),
+  })),
 };
 
 const mockGetQuotaResultSingleId = {
-  remainingQuota: transactions.map(t => ({
+  remainingQuota: transactions.map((t) => ({
     ...t,
-    transactionTime: timestamp
-  }))
+    transactionTime: timestamp,
+  })),
+  globalQuota: transactions.map((t) => ({
+    ...t,
+    transactionTime: timestamp,
+  })),
+  localQuota: transactions.map((t) => ({
+    ...t,
+    quantity: Number.MAX_SAFE_INTEGER,
+    transactionTime: timestamp,
+  })),
 };
 
 const mockGetQuotaResponseMultipleId = {
-  remainingQuota: transactions
+  remainingQuota: transactions,
+  globalQuota: transactions,
+  localQuota: transactions.map((t) => ({
+    ...t,
+    quantity: Number.MAX_SAFE_INTEGER,
+  })),
 };
 
 const postTransactionParams = {
   ids: ["S0000000J"],
+  identificationFlag,
   transactions: [{ category: "product-1", quantity: 1, identifiers: [] }],
   key,
-  endpoint
+  endpoint,
 };
 
 const mockPostTransactionResponse = {
   transactions: [
     {
       transaction: transactions,
-      timestamp: timestamp.getTime()
-    }
-  ]
+      timestamp: timestamp.getTime(),
+    },
+  ],
 };
 
 const mockPostTransactionResult = {
   transactions: [
     {
       transaction: transactions,
-      timestamp
-    }
-  ]
+      timestamp,
+    },
+  ],
 };
 
 const mockPastTransactionsResponse = {
-  pastTransactions: pastTransactions.map(t => ({
+  pastTransactions: pastTransactions.map((t) => ({
     ...t,
-    transactionTime: timestamp.getTime()
-  }))
+    transactionTime: timestamp.getTime(),
+  })),
 };
 
 const mockPastTransactionsResult = {
-  pastTransactions: pastTransactions.map(t => ({
+  pastTransactions: pastTransactions.map((t) => ({
     ...t,
-    transactionTime: timestamp
-  }))
+    transactionTime: timestamp,
+  })),
 };
 
 describe("quota", () => {
@@ -143,9 +169,14 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockGetQuotaResponseSingleId)
+        json: () => Promise.resolve(mockGetQuotaResponseSingleId),
       });
-      const quota = await getQuota(["S0000000J"], key, endpoint);
+      const quota = await getQuota(
+        ["S0000000J"],
+        identificationFlag,
+        key,
+        endpoint
+      );
       expect(quota).toEqual(mockGetQuotaResultSingleId);
     });
 
@@ -153,9 +184,14 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockGetQuotaResponseMultipleId)
+        json: () => Promise.resolve(mockGetQuotaResponseMultipleId),
       });
-      const quota = await getQuota(["S0000000J", "S0000001I"], key, endpoint);
+      const quota = await getQuota(
+        ["S0000000J", "S0000001I"],
+        identificationFlag,
+        key,
+        endpoint
+      );
       expect(quota).toEqual(mockGetQuotaResponseMultipleId);
     });
 
@@ -163,10 +199,12 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "No ID was provided" })
+        json: () => Promise.resolve({ message: "No ID was provided" }),
       });
 
-      await expect(getQuota([], key, endpoint)).rejects.toThrow(QuotaError);
+      await expect(
+        getQuota([], identificationFlag, key, endpoint)
+      ).rejects.toThrow(QuotaError);
     });
 
     it("should throw error if quota is malformed", async () => {
@@ -175,13 +213,13 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            remaining: mockGetQuotaResponseSingleId.remainingQuota
-          })
+            remaining: mockGetQuotaResponseSingleId.remainingQuota,
+          }),
       });
 
-      await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
-        QuotaError
-      );
+      await expect(
+        getQuota(["S0000000J"], identificationFlag, key, endpoint)
+      ).rejects.toThrow(QuotaError);
     });
 
     it("should capture exception through sentry if quota is malformed", async () => {
@@ -190,13 +228,13 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            remaining: mockGetQuotaResponseSingleId.remainingQuota
-          })
+            remaining: mockGetQuotaResponseSingleId.remainingQuota,
+          }),
       });
 
-      await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
-        QuotaError
-      );
+      await expect(
+        getQuota(["S0000000J"], identificationFlag, key, endpoint)
+      ).rejects.toThrow(QuotaError);
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
 
@@ -204,21 +242,21 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "Invalid customer ID" })
+        json: () => Promise.resolve({ message: "Invalid customer ID" }),
       });
 
-      await expect(getQuota(["invalid-id"], key, endpoint)).rejects.toThrow(
-        QuotaError
-      );
+      await expect(
+        getQuota(["invalid-id"], identificationFlag, key, endpoint)
+      ).rejects.toThrow(QuotaError);
     });
 
     it("should throw error if there were issues fetching", async () => {
       expect.assertions(1);
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      await expect(getQuota(["S0000000J"], key, endpoint)).rejects.toThrow(
-        "Network error"
-      );
+      await expect(
+        getQuota(["S0000000J"], identificationFlag, key, endpoint)
+      ).rejects.toThrow("Network error");
     });
   });
 
@@ -227,7 +265,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockPostTransactionResponse)
+        json: () => Promise.resolve(mockPostTransactionResponse),
       });
       const result = await postTransaction(postTransactionParams);
       expect(result).toEqual(mockPostTransactionResult);
@@ -237,7 +275,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "No ID was provided" })
+        json: () => Promise.resolve({ message: "No ID was provided" }),
       });
 
       await expect(
@@ -251,8 +289,8 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            t: mockPostTransactionResult.transactions
-          })
+            t: mockPostTransactionResult.transactions,
+          }),
       });
 
       await expect(postTransaction(postTransactionParams)).rejects.toThrow(
@@ -266,8 +304,8 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            t: mockPostTransactionResult.transactions
-          })
+            t: mockPostTransactionResult.transactions,
+          }),
       });
 
       await expect(postTransaction(postTransactionParams)).rejects.toThrow(
@@ -280,7 +318,7 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "Invalid customer ID" })
+        json: () => Promise.resolve({ message: "Invalid customer ID" }),
       });
 
       await expect(
@@ -303,10 +341,11 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockReturnValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockPastTransactionsResponse)
+        json: () => Promise.resolve(mockPastTransactionsResponse),
       });
       const pastTransactionsResult = await getPastTransactions(
         ["S0000000J"],
+        identificationFlag,
         key,
         endpoint
       );
@@ -317,12 +356,12 @@ describe("quota", () => {
       expect.assertions(1);
       mockFetch.mockReturnValueOnce({
         ok: false,
-        json: () => Promise.resolve({ message: "No ID was provided" })
+        json: () => Promise.resolve({ message: "No ID was provided" }),
       });
 
-      await expect(getPastTransactions([""], key, endpoint)).rejects.toThrow(
-        PastTransactionError
-      );
+      await expect(
+        getPastTransactions([""], identificationFlag, key, endpoint)
+      ).rejects.toThrow(PastTransactionError);
     });
 
     it("should throw error if past transactions are malformed", async () => {
@@ -331,12 +370,12 @@ describe("quota", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            transactions: mockPastTransactionsResponse.pastTransactions
-          })
+            transactions: mockPastTransactionsResponse.pastTransactions,
+          }),
       });
 
       await expect(
-        getPastTransactions(["S0000000J"], key, endpoint)
+        getPastTransactions(["S0000000J"], identificationFlag, key, endpoint)
       ).rejects.toThrow(PastTransactionError);
     });
   });
