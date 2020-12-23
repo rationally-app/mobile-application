@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     padding: size(1),
   },
   orText: {
-    fontSize: fontSize(-2),
+    fontSize: fontSize(-1),
     fontFamily: "brand-bold",
   },
   inputAndButtonWrapper: {
