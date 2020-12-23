@@ -21,8 +21,12 @@ export type LetterSpacingLevel = 1 | 2;
 
 /**Returns the line height given the level
 @param level
--4 (16), -3 (16), -2 (16), -1 (20), 0 (is it's a body then 24, else 20),
+-4 (16), -3 (16), -2 (16), -1 (20)
 1 (24), 2 (28), 3 (32), 4 (40), 5 (56), 6 (64), 7 (72)
+
+for level 0 text that are labels and CTAs (20)
+for level 0 text that are body (24)
+do refer to Figma to see the type of text it is
 */
 
 export const lineHeight = (level: FontSizeLevel, isBody?: boolean): number => {
