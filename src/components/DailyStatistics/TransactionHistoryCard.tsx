@@ -67,11 +67,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
               <View style={styles.transactionText}>
                 <AppText style={styles.categoryName}>{item.name}</AppText>
                 <View style={styles.transactionText}>
-                  <AppText
-                    style={{
-                      ...styles.quantityText,
-                    }}
-                  >
+                  <AppText style={styles.quantityText}>
                     {item.quantityText}
                   </AppText>
                 </View>
