@@ -60,5 +60,5 @@ export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
       accessible={true}
       {...props}
     />
-  </>
+  </View>
 );
