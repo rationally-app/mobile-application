@@ -34,10 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  resendCountdownText: {
-    marginRight: size(1),
-    fontSize: fontSize(-2),
-  },
+  resendCountdownText: { marginRight: size(1), fontSize: fontSize(-2) },
   submitWrapper: {
     flex: 1,
     marginLeft: size(1),

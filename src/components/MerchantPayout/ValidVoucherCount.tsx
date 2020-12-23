@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     color: color("grey", 0),
     fontFamily: "brand-bold",
     fontSize: fontSize(2),
+    lineHeight: fontSize(3),
   },
   numVouchersWrapper: {
     flexDirection: "row",
