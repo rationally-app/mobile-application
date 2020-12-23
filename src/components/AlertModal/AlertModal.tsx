@@ -13,7 +13,6 @@ import {
   normalize,
 } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -45,7 +44,6 @@ const styles = StyleSheet.create({
   modalDescription: {
     marginTop: size(1),
     textAlign: "center",
-    lineHeight: lineHeight(0, true),
   },
   modalButtonRow: {
     marginTop: size(5),
