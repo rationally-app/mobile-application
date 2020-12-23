@@ -36,6 +36,7 @@ export const sharedStyles = StyleSheet.create({
   },
   statusTitle: {
     fontSize: fontSize(3),
+    lineHeight: 1.3 * fontSize(3),
     fontFamily: "brand-bold",
   },
 });
