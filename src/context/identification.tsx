@@ -1,4 +1,9 @@
-import React, { createContext, FunctionComponent, useState } from "react";
+import React, {
+  createContext,
+  FunctionComponent,
+  useCallback,
+  useState,
+} from "react";
 import { IdentificationFlag } from "../types";
 
 export const defaultSelectedIdType: IdentificationFlag = {
@@ -12,11 +17,13 @@ export const defaultSelectedIdType: IdentificationFlag = {
 interface IdentificationContext {
   selectedIdType: IdentificationFlag;
   setSelectedIdType: (selectedIdType: IdentificationFlag) => void;
+  resetSelectedIdType: () => void;
 }
 
 export const IdentificationContext = createContext<IdentificationContext>({
   selectedIdType: defaultSelectedIdType,
   setSelectedIdType: (selectedIdType: IdentificationFlag) => undefined,
+  resetSelectedIdType: () => undefined,
 });
 
 export const IdentificationContextProvider: FunctionComponent = ({
@@ -26,9 +33,13 @@ export const IdentificationContextProvider: FunctionComponent = ({
     defaultSelectedIdType
   );
 
+  const resetSelectedIdType = useCallback(() => {
+    setSelectedIdType(defaultSelectedIdType);
+  }, []);
+
   return (
     <IdentificationContext.Provider
-      value={{ selectedIdType, setSelectedIdType }}
+      value={{ selectedIdType, setSelectedIdType, resetSelectedIdType }}
     >
       {children}
     </IdentificationContext.Provider>

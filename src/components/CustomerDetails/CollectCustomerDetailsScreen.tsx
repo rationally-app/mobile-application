@@ -168,9 +168,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   useEffect(() => {
     // in the event the saved selection not found.. will always fall back to the first idType in array
     setSelectedIdType(
-      selectionArray.some(
-        (selection) => selection.label === selectedIdType.label
-      )
+      selectionArray.some((selection) => {
+        return (
+          selection.label &&
+          selectedIdType.label &&
+          selection.label === selectedIdType.label
+        );
+      })
         ? selectedIdType
         : selectionArray[0]
     );
