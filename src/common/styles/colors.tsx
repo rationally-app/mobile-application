@@ -7,7 +7,7 @@ export type ColorName =
   | "green"
   | "red";
 export type ToneLevel = 0 | 10 | 20 | 30 | 40 | 50 | 60 | 80 | 100;
-export type ToneLevelv2 = 0 | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90;
+export type ToneLevelV2 = 0 | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90;
 
 const palette: { [color in ColorName]: { [tone: string]: string } } = {
   grey: {
@@ -58,8 +58,9 @@ const palette: { [color in ColorName]: { [tone: string]: string } } = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const palettev2: { [color in ColorName]: { [tone: string]: string } } = {
+const paletteV2: { [color in ColorName]: { [tone: string]: string } } = {
   grey: {
+    "0": "#FFFFFF",
     "10": "#F5F7F9",
     "20": "#ECEFF3",
     "30": "#CDD1D6",
@@ -129,23 +130,23 @@ export function color(colorName: ColorName, tone: ToneLevel): string {
   return palette[colorName][tone];
 }
 
-export function colorv2(
+export function colorV2(
   colorName: "grey",
   tone: 0 | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90
 ): string;
-export function colorv2(
+export function colorV2(
   colorName: "green" | "red" | "blue",
   tone: 10 | 20 | 30 | 40 | 50 | 60
 ): string;
-export function colorv2(colorName: "yellow", tone: 10 | 20 | 30 | 50): string;
-export function colorv2(colorName: "orange", tone: 30): string;
-export function colorv2(colorName: "blue-green", tone: 40): string;
+export function colorV2(colorName: "yellow", tone: 10 | 20 | 30 | 50): string;
+export function colorV2(colorName: "orange", tone: 30): string;
+export function colorV2(colorName: "blue-green", tone: 40): string;
 /**
  * Returns the color according to the given color name and tone.
  *
  * @param colorName grey, yellow, orange, blue, blue-green, green, red
  * @param tone based on the colorName
  */
-export function colorv2(colorName: ColorName, tone: ToneLevelv2): string {
-  return palette[colorName][tone];
+export function colorV2(colorName: ColorName, tone: ToneLevelV2): string {
+  return paletteV2[colorName][tone];
 }
