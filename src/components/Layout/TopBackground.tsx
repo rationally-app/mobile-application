@@ -30,7 +30,6 @@ export const TopBackground: FunctionComponent<TopBackground> = ({
         style,
       ]}
       colors={[primaryColor, secondaryColor]}
-      //colorsv2={["#303D67", secondaryColor]}
       start={[0.5, 0]}
       end={[-0.5, 1.8]}
     />
