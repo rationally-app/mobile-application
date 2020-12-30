@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { transform } from "lodash";
+import transform from "lodash/transform";
 import { StyleSheet, View } from "react-native";
 import { NavigationProps } from "../../types";
 import { size } from "../../common/styles";

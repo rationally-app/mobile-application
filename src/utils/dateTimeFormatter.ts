@@ -1,5 +1,6 @@
-import { format, formatDistance } from "date-fns";
-import { zhCN } from "date-fns/locale";
+import format from "date-fns/format";
+import formatDistance from "date-fns/formatDistance";
+import  zhCN from "date-fns/locale/zh-CN";
 import i18n from "i18n-js";
 
 export const formatDateTime = (date: number | Date): string =>
