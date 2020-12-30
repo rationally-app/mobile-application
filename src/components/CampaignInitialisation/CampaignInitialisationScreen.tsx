@@ -21,6 +21,7 @@ import * as config from "../../config";
 import { checkVersion } from "./utils";
 import { SessionError } from "../../services/helpers";
 import { AuthStoreContext } from "../../context/authStore";
+import { IdentificationContext } from "../../context/identification";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -54,6 +55,8 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
       message: "CampaignInitialisationScreen",
     });
   }, []);
+
+  const { resetSelectedIdType } = useContext(IdentificationContext);
 
   const authCredentials: AuthCredentials = navigation.getParam(
     "authCredentials"
@@ -124,6 +127,9 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   ]);
 
   const continueToNormalFlow = useCallback(() => {
+    // Reset IdentificationContext when adding or switching between campaigns
+    resetSelectedIdType();
+
     if (campaignConfig?.features?.flowType) {
       switch (campaignConfig?.features?.flowType) {
         case "DEFAULT":
@@ -145,6 +151,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
     authCredentials.operatorToken,
     campaignConfig?.features?.flowType,
     navigation,
+    resetSelectedIdType,
   ]);
 
   const [outdatedType, setOutdatedType] = useState<"BINARY" | "BUILD">();
