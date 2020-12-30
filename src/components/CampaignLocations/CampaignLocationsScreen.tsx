@@ -26,7 +26,7 @@ import { useDrawerContext } from "../../context/drawer";
 import { LoadingView } from "../Loading";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
-import { sortBy } from "lodash";
+import sortBy from "lodash/sortBy";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({

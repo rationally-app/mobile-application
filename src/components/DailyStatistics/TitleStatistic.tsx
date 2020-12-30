@@ -3,7 +3,8 @@ import { size, fontSize } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AppText } from "../Layout/AppText";
-import { format, isSameDay } from "date-fns";
+import format from "date-fns/format";
+import isSameDay from "date-fns/isSameDay";
 
 interface TitleStatisticComponent {
   totalCount: number | null;

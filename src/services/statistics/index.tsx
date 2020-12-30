@@ -2,7 +2,10 @@ import { IS_MOCK } from "../../config";
 import { DailyStatisticsResult } from "../../types";
 import { fetchWithValidator, ValidationError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
-import { subDays, addDays, getTime, isSameDay } from "date-fns";
+import subDays from "date-fns/subDays";
+import addDays from "date-fns/addDays";
+import getTime from "date-fns/getTime";
+import isSameDay from "date-fns/isSameDay";
 
 export class StatisticsError extends Error {
   constructor(message: string) {

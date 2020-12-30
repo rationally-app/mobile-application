@@ -5,7 +5,7 @@ import { formatQuantityText } from "../utils";
 import { View } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { ItemQuantities } from "../types";
-import { sum } from "lodash";
+import sum from "lodash/sum";
 import { sharedStyles } from "./sharedStyles";
 import { ProductContext } from "../../../context/products";
 
