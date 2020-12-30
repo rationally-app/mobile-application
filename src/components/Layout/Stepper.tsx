@@ -15,8 +15,7 @@ import {
   Vibration,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import clamp from "lodash/clamp";
-import debounce  from "lodash/debounce";
+import { clamp, debounce } from "lodash";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppText } from "./AppText";
 import { useIsMounted } from "../../hooks/useIsMounted";

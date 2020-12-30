@@ -6,9 +6,9 @@
     "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "scheme": "supplyally",
-    "icon": "./assets/icon.jpg",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splashscreen.jpg",
+      "image": "./assets/splashscreen.png",
       "resizeMode": "contain",
       "backgroundColor": "#F1FAFA"
     },
@@ -20,8 +20,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "sg.gov.tech.musket",
       "splash": {
-        "image": "./assets/splashscreen.jpg",
-        "tabletImage": "./assets/splashscreen-tablet.jpg",
+        "image": "./assets/splashscreen.png",
+        "tabletImage": "./assets/splashscreen-tablet.png",
         "backgroundColor": "#F1FAFA"
       },
       "infoPlist": {

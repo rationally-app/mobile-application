@@ -5,8 +5,7 @@ import {
 } from "../../utils/validateVoucherCode";
 import { getQuota } from "../../services/quota";
 import { Quota, Voucher } from "../../types";
-import differenceInSeconds from "date-fns/differenceInSeconds";
-import compareDesc from "date-fns/compareDesc";
+import { differenceInSeconds, compareDesc } from "date-fns";
 import { IdentificationContext } from "../../context/identification";
 
 export class ScannerError extends Error {

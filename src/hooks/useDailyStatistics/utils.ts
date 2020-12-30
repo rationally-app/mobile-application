@@ -1,5 +1,4 @@
-import chain from "lodash/chain";
-import sumBy from "lodash/sumBy";
+import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
 import { formatQuantityText } from "../../components/CustomerQuota/utils";
 import { Sentry } from "../../utils/errorTracking";

@@ -2,7 +2,7 @@ import { useState, useContext, useCallback, useEffect } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { getQuota, NotEligibleError } from "../../services/quota";
 import { ProductContext } from "../../context/products";
-import transform from "lodash/transform";
+import { transform } from "lodash";
 import { Quota, CampaignPolicy, ItemQuota } from "../../types";
 import { usePrevious } from "../usePrevious";
 import { IdentificationContext } from "../../context/identification";
