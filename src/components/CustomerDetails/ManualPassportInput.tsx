@@ -82,6 +82,7 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
             fullWidth={true}
             text={i18nt("collectCustomerDetailsScreen", "check")}
             onPress={submitId}
+            accessibilityLabel="identity-details-check-button-passport"
           />
         </View>
       </View>
