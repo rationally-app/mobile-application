@@ -283,26 +283,26 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             {getInputComponent()}
-            <TouchableOpacity
-              onPress={onPressStatistics}
-              style={styles.statsButton}
-            >
-              <MaterialCommunityIcons
-                style={styles.statsIcon}
-                name="poll"
-                size={size(2)}
-                color={color("blue", 50)}
-              />
-              <AppText
-                style={styles.statsText}
-                accessibilityLabel="go-to-statistics"
-                testID="go-to-statistics"
-                accessible={true}
-              >
-                Go to statistics
-              </AppText>
-            </TouchableOpacity>
           </Card>
+          <TouchableOpacity
+            onPress={onPressStatistics}
+            style={styles.statsButton}
+          >
+            <MaterialCommunityIcons
+              style={styles.statsIcon}
+              name="poll"
+              size={size(2)}
+              color={color("blue", 50)}
+            />
+            <AppText
+              style={styles.statsText}
+              accessibilityLabel="go-to-statistics"
+              testID="go-to-statistics"
+              accessible={true}
+            >
+              Go to statistics
+            </AppText>
+          </TouchableOpacity>
           <FeatureToggler feature="HELP_MODAL">
             <HelpButton onPress={showHelpModal} />
           </FeatureToggler>
