@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     marginBottom: size(3),
   },
   statsButton: {
-    marginTop: size(4),
+    marginTop: size(2),
     flexDirection: "row",
     alignSelf: "center",
   },
