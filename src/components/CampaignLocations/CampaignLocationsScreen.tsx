@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useCallback,
+  useMemo,
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
@@ -147,9 +148,9 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     }
   );
 
-  const sortedAuthCredentialsWithCampaignName = sortBy(
-    authCredentialsWithCampaignName,
-    "name"
+  const sortedAuthCredentialsWithCampaignName = useMemo(
+    () => sortBy(authCredentialsWithCampaignName, "name"),
+    [authCredentialsWithCampaignName]
   );
 
   return (
