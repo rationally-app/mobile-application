@@ -149,13 +149,13 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
 
   const renderHeader = (): JSX.Element => {
     return (
-      <View>
+      <>
         <TopBackground mode={AppMode.production} style={styles.header} />
         <TouchableOpacity style={styles.closeTouchable} onPress={closeModal}>
           <AntDesign name="close" style={styles.emoji} />
           <Text style={styles.crossText}>Close</Text>
         </TouchableOpacity>
-      </View>
+      </>
     );
   };
 

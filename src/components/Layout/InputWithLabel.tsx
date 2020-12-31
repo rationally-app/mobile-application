@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { TextInput, View, StyleSheet, TextInputProps } from "react-native";
+import { TextInput, StyleSheet, TextInputProps } from "react-native";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { AppText } from "./AppText";
 
@@ -40,7 +40,7 @@ export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
   accessibilityLabel = "input-with-label",
   ...props
 }) => (
-  <View>
+  <>
     <AppText
       style={styles.label}
       accessibilityLabel={`${accessibilityLabel}-label`}
@@ -60,5 +60,5 @@ export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
       accessible={true}
       {...props}
     />
-  </View>
+  </>
 );

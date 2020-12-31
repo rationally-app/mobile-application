@@ -51,7 +51,7 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
   };
 
   return (
-    <View>
+    <>
       <DropdownFilterModal
         isVisible={modalVisible}
         dropdownItems={dropdownItems}
@@ -76,6 +76,6 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
           {value}
         </TextInput>
       </View>
-    </View>
+    </>
   );
 };

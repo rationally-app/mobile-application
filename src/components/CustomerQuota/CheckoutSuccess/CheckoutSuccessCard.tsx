@@ -201,7 +201,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     : undefined;
 
   return (
-    <View>
+    <>
       <CustomerCard ids={ids}>
         <View style={sharedStyles.successfulResultWrapper}>
           <View style={sharedStyles.resultWrapper}>
@@ -226,7 +226,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                 />
               ) : undefined}
             </AppText>
-            <View>
+            <>
               <AppText>{description}</AppText>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
@@ -253,7 +253,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                   )
                 )}
               </View>
-            </View>
+            </>
           </View>
           {!loading &&
             transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
@@ -272,6 +272,6 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
           accessibilityLabel="checkout-success-next-identity-button"
         />
       </View>
-    </View>
+    </>
   );
 };

@@ -45,7 +45,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
   const { showWarnAlert } = useContext(AlertModalContext);
   const { i18nt } = useTranslate();
   return (
-    <View>
+    <>
       <CustomerCard ids={ids}>
         <Card>
           <View style={styles.titlePadding}>
@@ -73,6 +73,6 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
           fullWidth={true}
         />
       </View>
-    </View>
+    </>
   );
 };

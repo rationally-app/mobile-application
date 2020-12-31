@@ -40,7 +40,7 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
 }) => {
   const { i18nt } = useTranslate();
   return (
-    <View>
+    <>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
         <View
           style={[
@@ -61,9 +61,9 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
           >
             <NotEligibleTransactionTitle />
           </AppText>
-          <View>
+          <>
             <NotEligibleTransactionDescription />
-          </View>
+          </>
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
@@ -74,6 +74,6 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
           accessibilityLabel="not-eligible-next-identity-button"
         />
       </View>
-    </View>
+    </>
   );
 };

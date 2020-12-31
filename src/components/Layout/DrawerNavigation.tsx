@@ -167,7 +167,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
             marginBottom: size(4),
           }}
         >
-          <View>
+          <>
             {drawerButtons.map((button) => (
               <DrawerButtonComponent {...button} key={button.label} />
             ))}
@@ -177,7 +177,7 @@ export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponent
               onPress={onPressLogout}
               accessibilityLabel="drawer-nav-logout-button"
             />
-          </View>
+          </>
         </View>
         <View style={{ marginBottom: size(4) }}>
           <BottomNavigationLink onPress={showHelpModal}>

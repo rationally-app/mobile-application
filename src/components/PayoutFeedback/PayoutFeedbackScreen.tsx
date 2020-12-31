@@ -149,7 +149,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
               <AppText style={{ marginBottom: size(2) }}>
                 {i18nt("checkoutSuccessScreen", "redeemedItems")}
               </AppText>
-              <View>
+              <>
                 <View style={sharedStyles.itemRow}>
                   <AppText style={sharedStyles.itemHeaderText}>
                     {i18nt("merchantFlowScreen", "quotaCategoryVouchers")}:
@@ -168,7 +168,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
                     </View>
                   </View>
                 </View>
-              </View>
+              </>
             </View>
           </View>
         </Card>

@@ -73,7 +73,7 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>
-          <View>
+          <>
             <MaterialCommunityIcons
               name="chevron-left"
               size={size(4)}
@@ -83,13 +83,13 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
               testID="title-statistics-chevron-left"
               accessible={true}
             />
-          </View>
+          </>
         </TouchableOpacity>
         <AppText style={styles.dateText}>
           {format(new Date(currentTimestamp), "dd MMM yyyy")}
         </AppText>
         <TouchableOpacity onPress={onPressNextDay}>
-          <View>
+          <>
             <MaterialCommunityIcons
               name="chevron-right"
               size={size(4)}
@@ -98,7 +98,7 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
               }
               style={styles.chevron}
             />
-          </View>
+          </>
         </TouchableOpacity>
       </View>
     </View>

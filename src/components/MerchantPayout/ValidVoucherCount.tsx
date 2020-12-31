@@ -49,7 +49,7 @@ export const ValidVoucherCount: FunctionComponent<ValidVoucherCount> = ({
 }) => {
   const { i18nt } = useTranslate();
   return (
-    <View>
+    <>
       <View style={styles.validTextWrapper}>
         <View style={styles.validIcon}>
           <Feather
@@ -69,6 +69,6 @@ export const ValidVoucherCount: FunctionComponent<ValidVoucherCount> = ({
           ${numVouchers * denomination}
         </AppText>
       </View>
-    </View>
+    </>
   );
 };

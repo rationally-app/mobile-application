@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { CampaignPolicy } from "../../../types";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
@@ -40,7 +40,7 @@ export const ItemContent: FunctionComponent<{
   const tDescription = c13nt(description ?? "");
 
   return (
-    <View>
+    <>
       <AppText
         style={styles.name}
         accessibilityLabel={`${accessibilityLabel}-name`}
@@ -60,6 +60,6 @@ export const ItemContent: FunctionComponent<{
           <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
         </AppText>
       )}
-    </View>
+    </>
   );
 };

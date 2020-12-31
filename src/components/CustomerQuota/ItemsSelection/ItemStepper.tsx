@@ -53,7 +53,7 @@ export const ItemStepper: FunctionComponent<{
           accessibilityLabel="item-stepper"
         />
       </View>
-      <View>
+      <>
         <Stepper
           value={stepperValue}
           setValue={setStepperValue}
@@ -74,7 +74,7 @@ export const ItemStepper: FunctionComponent<{
             maxQuantity={maxQuantity}
           />
         </AppText>
-      </View>
+      </>
     </View>
   );
 };
