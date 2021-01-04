@@ -3,14 +3,13 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { size } from "../../../common/styles";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
-import { fontSize } from "../../../common/styles/typography";
 
 const styles = StyleSheet.create({
   appealButtonText: {
     marginTop: size(1),
     marginBottom: 0,
     fontFamily: "brand-bold",
-    fontSize: fontSize(2),
+    fontSize: size(2),
   },
 });
 
