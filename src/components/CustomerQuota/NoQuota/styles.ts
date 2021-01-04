@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
   },
   itemHeader: {
     fontFamily: "brand-bold",
+    lineHeight: 1.5 * fontSize(0),
   },
   itemSubheader: {
     fontSize: fontSize(-1),
