@@ -127,7 +127,7 @@ export const liveValidateOTP = async (
 ): Promise<SessionCredentials> => {
   const payload = { code, otp, phone: mobileNumber };
   Sentry.addBreadcrumb({
-    category: "otp validate",
+    category: "otpValidate",
     message: JSON.stringify(payload),
   });
   try {
