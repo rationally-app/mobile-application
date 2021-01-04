@@ -4,11 +4,9 @@ import { AppText } from "../Layout/AppText";
 import { size, color } from "../../common/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   toggleText: {
-    lineHeight: lineHeight(0),
     fontFamily: "brand-bold",
   },
   showFullListToggleBorder: {
