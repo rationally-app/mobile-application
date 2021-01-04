@@ -11,6 +11,7 @@ import {
   Keyboard,
   Vibration,
   BackHandler,
+  TouchableOpacity,
 } from "react-native";
 import { size, fontSize, borderRadius, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
@@ -45,7 +46,6 @@ import {
   IdentificationContext,
   defaultSelectedIdType,
 } from "../../context/identification";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
@@ -80,8 +80,10 @@ const styles = StyleSheet.create({
     marginBottom: size(3),
   },
   statsButton: {
-    marginTop: size(6),
-    marginBottom: size(9),
+    paddingHorizontal: size(4),
+    paddingVertical: size(3),
+    marginTop: size(3),
+    marginBottom: size(6),
     flexDirection: "row",
     alignSelf: "center",
   },
