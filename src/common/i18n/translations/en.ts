@@ -206,6 +206,11 @@ export const en: Translations = {
       body: "Get a new OTP and try again.",
       primaryActionText: "OK",
     },
+    emptyOTP: {
+      title: "Invalid input",
+      body: "Enter OTP again.",
+      primaryActionText: "OK",
+    },
     invalidInputOTPOneMoreInvalid: {
       title: "Invalid input",
       body:
