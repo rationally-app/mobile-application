@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     color: color("grey", 0),
     fontSize: fontSize(1),
     fontFamily: "brand-bold",
+    lineHeight: 1.2 * fontSize(1),
   },
   childrenWrapper: {
     overflow: "hidden",
