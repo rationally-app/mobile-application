@@ -9,7 +9,7 @@ import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   name: {
-    fontSize: fontSize(0),
+    fontSize: fontSize(1),
     fontFamily: "brand-bold",
   },
   description: {
