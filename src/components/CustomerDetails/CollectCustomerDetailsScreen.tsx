@@ -80,16 +80,15 @@ const styles = StyleSheet.create({
     marginBottom: size(3),
   },
   statsButton: {
-    marginTop: size(2),
+    marginTop: size(6),
+    marginBottom: size(9),
     flexDirection: "row",
     alignSelf: "center",
   },
   statsText: {
-    marginTop: size(4),
     fontSize: fontSize(0),
   },
   statsIcon: {
-    marginTop: size(4),
     alignSelf: "center",
     marginRight: size(0.5),
   },
