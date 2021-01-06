@@ -25,7 +25,7 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   background: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: color("grey", 100),
+    backgroundColor: color("grey", 90),
     opacity: 0.8,
   },
   scrollWrapper: {
