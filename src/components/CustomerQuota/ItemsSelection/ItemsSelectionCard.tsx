@@ -101,28 +101,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         </View>
       </CustomerCard>
       <View style={[sharedStyles.ctaButtonsWrapper, sharedStyles.buttonRow]}>
-        {!isLoading && (
-          <SecondaryButton
-            text={
-              isAppeal
-                ? i18nt("customerQuotaScreen", "quotaScanButtonBack")
-                : i18nt("customerQuotaScreen", "quotaAppealCancel")
-            }
-            onPress={
-              isAppeal
-                ? onBack
-                : () => {
-                    showWarnAlert(WARNING_MESSAGE.CANCEL_ENTRY, onCancel);
-                  }
-            }
-          />
-        )}
-        <View
-          style={[
-            sharedStyles.submitButton,
-            !isLoading && { marginLeft: size(2) },
-          ]}
-        >
+        <View style={[sharedStyles.submitButton, { marginBottom: size(2) }]}>
           <DarkButton
             text={i18nt("customerQuotaScreen", "quotaButtonCheckout")}
             icon={
@@ -147,6 +126,25 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
             accessibilityLabel="items-selection-checkout-button"
           />
         </View>
+      </View>
+      <View style={sharedStyles.submitButton}>
+        {!isLoading && (
+          <SecondaryButton
+            fullWidth={true}
+            text={
+              isAppeal
+                ? i18nt("customerQuotaScreen", "quotaScanButtonBack")
+                : i18nt("customerQuotaScreen", "quotaAppealCancel")
+            }
+            onPress={
+              isAppeal
+                ? onBack
+                : () => {
+                    showWarnAlert(WARNING_MESSAGE.CANCEL_ENTRY, onCancel);
+                  }
+            }
+          />
+        )}
       </View>
       <AddUserModal
         isVisible={isAddUserModalVisible}
