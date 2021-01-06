@@ -47,7 +47,6 @@ import {
   defaultSelectedIdType,
 } from "../../context/identification";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   content: {
@@ -78,9 +77,6 @@ const styles = StyleSheet.create({
     marginBottom: size(3),
     flexDirection: "row",
     alignSelf: "center",
-  },
-  details: {
-    lineHeight: lineHeight(0, true),
   },
   statsText: {
     fontSize: fontSize(0),
@@ -275,7 +271,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
                 {tCampaignName}
               </AppText>
             )}
-            <AppText style={styles.details}>
+            <AppText>
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             {getInputComponent()}
