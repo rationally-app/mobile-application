@@ -30,15 +30,19 @@ const styles = StyleSheet.create({
   inputAndButtonWrapper: {
     marginTop: size(3),
   },
+  submit: {
+    marginTop: size(4),
+    marginBottom: size(2),
+  },
   buttonsWrapper: {
     marginTop: size(2),
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
   },
-  resendCountdownText: { marginRight: size(1), fontSize: fontSize(-2) },
-  submitWrapper: {
-    flex: 1,
-    marginLeft: size(1),
+  resendCountdownText: {
+    marginRight: size(1),
+    fontSize: fontSize(0),
+    textAlign: "center",
   },
 });
 
@@ -152,32 +156,32 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
           keyboardType="numeric"
           accessibilityLabel="login-otp"
         />
-        <View style={styles.buttonsWrapper}>
-          {resendDisabledTime > 0 ? (
-            <AppText style={styles.resendCountdownText}>
-              {i18nt("loginOTPCard", "resendIn", undefined, {
-                ss: resendDisabledTime / 1000,
-              })}
-            </AppText>
-          ) : (
-            <SecondaryButton
-              text={i18nt("loginOTPCard", "resend")}
-              onPress={resendOTP}
-              isLoading={isResending}
-              disabled={isLoading}
-            />
-          )}
-          <View style={styles.submitWrapper}>
-            <DarkButton
-              text={i18nt("loginOTPCard", "submit")}
-              fullWidth={true}
-              onPress={onSubmitOTP}
-              isLoading={isLoading}
-              disabled={isResending}
-              accessibilityLabel="login-submit-otp-button"
-            />
-          </View>
+        <View style={styles.submit}>
+          <DarkButton
+            text={i18nt("loginOTPCard", "submit")}
+            fullWidth={true}
+            onPress={onSubmitOTP}
+            isLoading={isLoading}
+            disabled={isResending}
+            accessibilityLabel="login-submit-otp-button"
+          />
         </View>
+
+        {resendDisabledTime > 0 ? (
+          <AppText style={styles.resendCountdownText}>
+            {i18nt("loginOTPCard", "resendIn", undefined, {
+              ss: resendDisabledTime / 1000,
+            })}
+          </AppText>
+        ) : (
+          <SecondaryButton
+            text={i18nt("loginOTPCard", "resend")}
+            onPress={resendOTP}
+            isLoading={isResending}
+            disabled={isLoading}
+            fullWidth={true}
+          />
+        )}
       </View>
     </Card>
   );
