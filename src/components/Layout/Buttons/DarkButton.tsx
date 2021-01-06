@@ -3,6 +3,7 @@ import { color, size } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
 import { ActivityIndicator, View } from "react-native";
+import { lineHeight } from "../../../common/styles/typography";
 
 export interface DarkButton {
   onPress?: () => void;
@@ -41,6 +42,7 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
             color: color("grey", 0),
             fontFamily: "brand-bold",
             textAlign: "center",
+            lineHeight: lineHeight(0, false),
           }}
         >
           {text}

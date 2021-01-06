@@ -3,6 +3,7 @@ import { color, size as sizeScale } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
 import { ActivityIndicator, View } from "react-native";
+import { lineHeight } from "../../../common/styles/typography";
 
 export interface SecondaryButton {
   onPress?: () => void;
@@ -44,6 +45,7 @@ export const SecondaryButton: FunctionComponent<SecondaryButton> = ({
             color: disabled ? color("grey", 40) : color("blue", 50),
             fontFamily: "brand-bold",
             textAlign: "center",
+            lineHeight: lineHeight(0, false),
           }}
         >
           {text}
