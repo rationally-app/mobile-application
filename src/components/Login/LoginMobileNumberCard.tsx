@@ -20,14 +20,10 @@ import {
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   inputAndButtonWrapper: {
     marginTop: size(3),
-  },
-  enterMobileNo: {
-    lineHeight: lineHeight(0, true),
   },
 });
 
@@ -90,9 +86,7 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   return (
     <Card>
-      <AppText style={styles.enterMobileNo}>
-        {i18nt("loginMobileNumberCard", "enterMobileNumber")}
-      </AppText>
+      <AppText>{i18nt("loginMobileNumberCard", "enterMobileNumber")}</AppText>
       <View style={styles.inputAndButtonWrapper}>
         <PhoneNumberInput
           countryCodeValue={countryCode}
