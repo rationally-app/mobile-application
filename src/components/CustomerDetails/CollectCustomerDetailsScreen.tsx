@@ -11,8 +11,9 @@ import {
   Keyboard,
   Vibration,
   BackHandler,
+  TouchableOpacity,
 } from "react-native";
-import { size, fontSize, borderRadius, color } from "../../common/styles";
+import { size, fontSize, color } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -45,7 +46,6 @@ import {
   IdentificationContext,
   defaultSelectedIdType,
 } from "../../context/identification";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
@@ -70,26 +70,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
   },
-  manageButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: borderRadius(2),
-    padding: size(1),
-    marginRight: -size(1),
-    marginTop: -size(0.5),
-    marginBottom: size(3),
-  },
   statsButton: {
-    marginTop: size(4),
+    paddingHorizontal: size(4),
+    paddingVertical: size(3),
+    marginTop: size(3),
+    marginBottom: size(3),
     flexDirection: "row",
     alignSelf: "center",
   },
   statsText: {
-    marginTop: size(4),
     fontSize: fontSize(0),
   },
   statsIcon: {
-    marginTop: size(4),
     alignSelf: "center",
     marginRight: size(0.5),
   },
@@ -283,26 +275,26 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             {getInputComponent()}
-            <TouchableOpacity
-              onPress={onPressStatistics}
-              style={styles.statsButton}
-            >
-              <MaterialCommunityIcons
-                style={styles.statsIcon}
-                name="poll"
-                size={size(2)}
-                color={color("blue", 50)}
-              />
-              <AppText
-                style={styles.statsText}
-                accessibilityLabel="go-to-statistics"
-                testID="go-to-statistics"
-                accessible={true}
-              >
-                Go to statistics
-              </AppText>
-            </TouchableOpacity>
           </Card>
+          <TouchableOpacity
+            onPress={onPressStatistics}
+            style={styles.statsButton}
+          >
+            <MaterialCommunityIcons
+              style={styles.statsIcon}
+              name="poll"
+              size={size(2)}
+              color={color("blue", 50)}
+            />
+            <AppText
+              style={styles.statsText}
+              accessibilityLabel="go-to-statistics"
+              testID="go-to-statistics"
+              accessible={true}
+            >
+              Go to statistics
+            </AppText>
+          </TouchableOpacity>
           <FeatureToggler feature="HELP_MODAL">
             <HelpButton onPress={showHelpModal} />
           </FeatureToggler>
