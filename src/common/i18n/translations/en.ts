@@ -393,5 +393,10 @@ export const en: Translations = {
       primaryActionText: "Remove",
       secondaryActionText: "Cancel",
     },
+    wrongFormatEmailAddress: {
+      title: "Wrong format",
+      body: "Enter valid email address",
+      primaryActionText: "OK",
+    },
   },
 };

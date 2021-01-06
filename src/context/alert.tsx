@@ -54,6 +54,7 @@ export enum ERROR_MESSAGE {
   PAST_TRANSACTIONS_ERROR = "We are currently facing server issues. Try again later or contact your in-charge if the problem persists.",
   VALIDATE_INPUT_REGEX_ERROR = "Please check that the ID is in the correct format",
   INVALID_MERCHANT_CODE = "Invalid merchant code",
+  INVALID_EMAIL_ADDRESS = "Enter valid email address",
 }
 
 const errorNameToTranslationKeyMappings: Record<string, string> = {
@@ -115,6 +116,7 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR]: "systemErrorServerIssues",
   [ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR]: "checkIdFormat",
   [ERROR_MESSAGE.INVALID_MERCHANT_CODE]: "invalidMerchantCode",
+  [ERROR_MESSAGE.INVALID_EMAIL_ADDRESS]: "wrongFormatEmailAddress",
   [CONFIRMATION_MESSAGE.PAYMENT_COLLECTION]:
     CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
   [CONFIRMATION_MESSAGE.CONFIRM_LOGOUT]: CONFIRMATION_MESSAGE.CONFIRM_LOGOUT,

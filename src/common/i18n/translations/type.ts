@@ -428,5 +428,11 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    wrongFormatEmailAddress: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
   };
 };

@@ -384,5 +384,10 @@ export const zh: Translations = {
       primaryActionText: "清除",
       secondaryActionText: "取消",
     },
+    wrongFormatEmailAddress: {
+      title: "格式错误",
+      body: "请输入有效的邮件地址",
+      primaryActionText: "确定",
+    },
   },
 };
