@@ -90,6 +90,12 @@ export type Translations = {
     complete: string;
     quantity: string;
   };
+  checkoutUnsuccessfulScreen: {
+    unsuccessful: string;
+    unsuccessfulRedeemAttempt: string;
+    logAppeal: string;
+
+  },
   customerAppealScreen: {
     raiseAppeal: string;
     indicateReason: string;

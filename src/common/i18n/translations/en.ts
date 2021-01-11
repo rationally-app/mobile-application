@@ -93,6 +93,11 @@ export const en: Translations = {
     complete: "Complete",
     quantity: "qty",
   },
+  checkoutUnsuccessfulScreen: {
+    unsuccessful: "Unsuccessful",
+    unsuccessfulRedeemAttempt: "Item(s) redeemed previously",
+    logAppeal: "Returned item(s) differed from what was redeemed."
+  },
   customerAppealScreen: {
     raiseAppeal: "Raise an appeal",
     indicateReason: "Indicate reason for appeal",
