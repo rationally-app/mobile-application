@@ -24,7 +24,7 @@ export type CartItem = {
 
 export type Cart = CartItem[];
 
-type CartState = "DEFAULT" | "CHECKING_OUT" | "PURCHASED";
+type CartState = "DEFAULT" | "CHECKING_OUT" | "PURCHASED" | "UNSUCCESSFUL";
 
 export type CartHook = {
   cartState: CartState;
@@ -246,6 +246,8 @@ export const useCart = (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
           setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e.message === "Insufficient quota") {
+          setCartState("UNSUCCESSFUL");
         } else if (e instanceof SessionError) {
           setCartError(e);
         } else {

@@ -525,6 +525,28 @@ describe("useCart", () => {
       );
     });
 
+    it("should show unsuccessful cart state when insufficient quota error is received (return-pod)", async () => {
+      expect.assertions(2);
+      const ids = ["S0000001I"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      mockPostTransaction.mockRejectedValueOnce(
+        new Error("Insufficient quota")
+      );
+
+      await wait(() => {
+        result.current.checkoutCart();
+        expect(result.current.cartState).toBe("CHECKING_OUT");
+      });
+
+      expect(result.current.cartState).toBe("UNSUCCESSFUL");
+    });
+
     it("should set cartError when no item was selected", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
