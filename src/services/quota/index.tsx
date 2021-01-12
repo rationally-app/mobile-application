@@ -319,17 +319,6 @@ export const mockPastTransactions = async (
   return {
     pastTransactions: [
       {
-        category: "tt-token",
-        quantity: 1,
-        transactionTime,
-        identifierInputs: [
-          {
-            label: "Device code",
-            value: "AA:BB:CC:DD:EE:FF",
-          },
-        ],
-      },
-      {
         category: "toilet-paper",
         quantity: 1,
         transactionTime,

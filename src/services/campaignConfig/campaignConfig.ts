@@ -61,32 +61,6 @@ const mockGetCampaignConfig = async (
     },
     policies: [
       {
-        category: "tt-token",
-        name: "TT Token",
-        order: 1,
-        identifiers: [
-          {
-            label: "Device code",
-            validationRegex: "^[A-F0-9]{12}$",
-            textInput: { disabled: true, visible: true, type: "STRING" },
-            scanButton: { disabled: false, visible: true, type: "QR" },
-          },
-          {
-            label: "Contact number",
-            textInput: { disabled: false, visible: true, type: "PHONE_NUMBER" },
-            scanButton: { disabled: true, visible: false },
-          },
-        ],
-        quantity: {
-          period: -1,
-          periodType: "CRON",
-          periodExpression: "0 * * * *",
-          limit: 1,
-          default: 1,
-        },
-        type: "REDEEM",
-      },
-      {
         category: "toilet-paper",
         name: "🧻 Toilet Paper",
         description: "1 ply / 2 ply / 3 ply",
