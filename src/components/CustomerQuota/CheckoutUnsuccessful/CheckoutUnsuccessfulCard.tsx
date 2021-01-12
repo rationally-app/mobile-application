@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext, useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
@@ -10,6 +10,13 @@ import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { AuthContext } from "../../../context/auth";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { TransactionsGroup } from "../TransactionsGroup";
+import { AlertModalContext } from "../../../context/alert";
+import {
+  groupTransactionsByTime,
+  sortTransactions,
+} from "../CheckoutSuccess/CheckoutSuccessCard";
+import { CampaignConfigContext } from "../../../context/campaignConfig";
+import { BIG_NUMBER } from "../utils";
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -42,19 +49,37 @@ interface CheckoutUnsuccessfulCard {
 
 /**
  * Shows when the user is not able to return tt-token due to:
- * - Incorrect token id
- * - Have not redeemed the token
+ * - Redeemed token and returned token does not have the same id
+ * - Have not redeemed the token but attempted to return
  */
 export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCard> = ({
   ids,
   onCancel,
 }) => {
+  const { policies: allProducts } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
     sessionToken,
     endpoint
   );
+  // Assumes results are already sorted (valid assumption for results from /transactions/history)
+  const sortedTransactions = pastTransactionsResult;
+
+  const { showErrorAlert } = useContext(AlertModalContext);
+  useEffect(() => {
+    if (error) {
+      showErrorAlert(error);
+    }
+  }, [error, showErrorAlert]);
+
+  const translationProps = useTranslate();
+  const transactionsByTimeMap = groupTransactionsByTime(
+    sortedTransactions,
+    allProducts || [],
+    translationProps
+  );
+  const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
 
   const { i18nt } = useTranslate();
   return (
@@ -97,20 +122,15 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
                   color={color("grey", 40)}
                 />
               ) : (
-                <TransactionsGroup
-                  maxTransactionsToDisplay={10}
-                  header={"TT Token"}
-                  order={-1586016000}
-                  transactions={[
-                    {
-                      details: "AA:BB:CC:DD:EE:FF",
-                      header: "5 Apr 2020, 12:00AM",
-                      isAppeal: false,
-                      order: 1,
-                      quantity: "1 qty",
-                    },
-                  ]}
-                />
+                transactionsByTimeList.map(
+                  (transactionsByTime: TransactionsGroup, index: number) => (
+                    <TransactionsGroup
+                      key={index}
+                      maxTransactionsToDisplay={BIG_NUMBER}
+                      {...transactionsByTime}
+                    />
+                  )
+                )
               )}
             </View>
           </View>
