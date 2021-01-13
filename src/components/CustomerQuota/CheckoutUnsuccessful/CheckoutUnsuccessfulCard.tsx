@@ -24,24 +24,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const CheckoutUnsuccessfulCardTitle: FunctionComponent = () => {
-  const { i18nt } = useTranslate();
-  return (
-    <AppText style={sharedStyles.statusTitle}>
-      {i18nt("checkoutUnsuccessfulScreen", "unsuccessful")}
-    </AppText>
-  );
-};
-
-const CheckoutUnsuccessfulCardDescription: FunctionComponent = () => {
-  const { i18nt } = useTranslate();
-  return (
-    <AppText style={{ marginBottom: size(1) }}>
-      {`${i18nt("checkoutUnsuccessfulScreen", "logAppeal")}`}
-    </AppText>
-  );
-};
-
 interface CheckoutUnsuccessfulCard {
   ids: string[];
   onCancel: () => void;
@@ -96,16 +78,20 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
             color={color("red", 60)}
             style={sharedStyles.icon}
           />
-          <AppText
-            style={sharedStyles.statusTitleWrapper}
-            accessibilityLabel="checkout-unsuccessful-title"
-            testID="checkout-unsuccessful-title"
-            accessible={true}
-          >
-            <CheckoutUnsuccessfulCardTitle />
+          <AppText style={sharedStyles.statusTitleWrapper}>
+            <AppText
+              style={sharedStyles.statusTitle}
+              accessibilityLabel="checkout-unsuccessful-title"
+              testID="checkout-unsuccessful-title"
+              accessible={true}
+            >
+              {i18nt("checkoutUnsuccessfulScreen", "unsuccessful")}
+            </AppText>
           </AppText>
           <View>
-            <CheckoutUnsuccessfulCardDescription />
+            <AppText style={{ marginBottom: size(1) }}>
+              {i18nt("checkoutUnsuccessfulScreen", "logAppeal")}
+            </AppText>
           </View>
           <View>
             <AppText>
