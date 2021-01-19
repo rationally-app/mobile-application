@@ -9,6 +9,7 @@ describe("Email validation", () => {
     " test4@example.com     ",
     " test5@example.co.sg",
     "test-6@example.com",
+    "test+a1@example.com",
   ])("validate valid email-address", (emailAddress: string) => {
     expect(validateEmailAddress(emailAddress)).toBe(emailAddress);
   });
