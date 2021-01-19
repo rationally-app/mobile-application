@@ -92,6 +92,11 @@ export const zh: Translations = {
     complete: "确认交易",
     quantity: "个",
   },
+  checkoutUnsuccessfulScreen: {
+    unsuccessful: "不成功",
+    unsuccessfulRedeemAttempt: "已领取物品",
+    logAppeal: "退回的物品与已领取物品不符。",
+  },
   customerAppealScreen: {
     raiseAppeal: "提出上诉",
     indicateReason: "说明上诉理由",
