@@ -6,6 +6,7 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { DropdownFilterInput } from "../DropdownFilterModal/DropdownFilterInput";
 import { nationalityItems } from "../DropdownFilterModal/nationalityItems";
 import { DropdownItem } from "../DropdownFilterModal/DropdownFilterModal";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -34,6 +35,8 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
   setIdInput,
   submitId,
 }) => {
+  const { i18nt } = useTranslate();
+
   const [selectedCountry, setSelectedCountry] = useState<DropdownItem>();
   const [passportNum, setPassportNum] = useState<string>();
 
@@ -75,7 +78,12 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
       </View>
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
-          <DarkButton fullWidth={true} text="Submit" onPress={submitId} />
+          <DarkButton
+            fullWidth={true}
+            text={i18nt("collectCustomerDetailsScreen", "check")}
+            onPress={submitId}
+            accessibilityLabel="identity-details-check-button-passport"
+          />
         </View>
       </View>
     </View>

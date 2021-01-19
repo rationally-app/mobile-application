@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
   idText: {
     color: color("grey", 0),
     fontSize: fontSize(1),
-    lineHeight: 1.2 * fontSize(1),
     fontFamily: "brand-bold",
+    lineHeight: 1.2 * fontSize(1),
   },
   childrenWrapper: {
     overflow: "hidden",

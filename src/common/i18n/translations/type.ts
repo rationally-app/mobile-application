@@ -212,6 +212,12 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    emptyOTP: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
     invalidInputOTPOneMoreInvalid: {
       title: string;
       body?: string;

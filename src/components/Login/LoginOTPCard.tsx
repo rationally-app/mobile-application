@@ -16,6 +16,7 @@ import {
   LoginError,
   OTPWrongError,
   OTPExpiredError,
+  OTPEmptyError,
 } from "../../services/auth";
 import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContext } from "../../context/alert";
@@ -105,7 +106,11 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       onSuccess(credentials);
     } catch (e) {
       Sentry.captureException(e);
-      if (e instanceof OTPWrongError || e instanceof OTPExpiredError) {
+      if (
+        e instanceof OTPWrongError ||
+        e instanceof OTPExpiredError ||
+        e instanceof OTPEmptyError
+      ) {
         showErrorAlert(e);
       } else if (e instanceof LoginError) {
         showErrorAlert(e, () => resetStage());

@@ -66,6 +66,13 @@ export class OTPExpiredError extends LoginError {
   }
 }
 
+export class OTPEmptyError extends LoginError {
+  constructor(message: string) {
+    super(message);
+    this.name = "OTPEmptyError";
+  }
+}
+
 export const liveRequestOTP = async (
   mobileNumber: string,
   code: string,
@@ -119,6 +126,10 @@ export const liveValidateOTP = async (
   endpoint: string
 ): Promise<SessionCredentials> => {
   const payload = { code, otp, phone: mobileNumber };
+  Sentry.addBreadcrumb({
+    category: "otpValidate",
+    message: JSON.stringify(payload),
+  });
   try {
     const response = await fetchWithValidator(
       SessionCredentials,
@@ -141,6 +152,8 @@ export const liveValidateOTP = async (
       throw new OTPWrongError(e.message, true);
     } else if (e.message === "OTP expired") {
       throw new OTPExpiredError(e.message);
+    } else if (e.message === "OTP cannot be empty") {
+      throw new OTPEmptyError(e.message);
     } else {
       throw new LoginError(e.message);
     }

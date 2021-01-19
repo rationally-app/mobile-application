@@ -199,6 +199,11 @@ export const zh: Translations = {
       body: "获取新的一次性密码后再试一次。",
       primaryActionText: "确定",
     },
+    emptyOTP: {
+      title: "输入无效",
+      body: "请再次输入一次性密码。",
+      primaryActionText: "确定",
+    },
     invalidInputOTPOneMoreInvalid: {
       title: "输入无效",
       body:
