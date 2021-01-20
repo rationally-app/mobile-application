@@ -96,7 +96,7 @@ export const en: Translations = {
   checkoutUnsuccessfulScreen: {
     unsuccessful: "Unsuccessful",
     unsuccessfulRedeemAttempt: "Item(s) redeemed previously",
-    logAppeal: "Returned item(s) differed from what was redeemed."
+    logAppeal: "Returned item(s) differed from what was redeemed.",
   },
   customerAppealScreen: {
     raiseAppeal: "Raise an appeal",
