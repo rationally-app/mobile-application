@@ -32,7 +32,7 @@
     "io-ts": "^2.2.1",
     "io-ts-reporters": "^1.0.0",
     "io-ts-types": "^0.5.6",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "react": "16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-gesture-handler": "~1.8.0",
