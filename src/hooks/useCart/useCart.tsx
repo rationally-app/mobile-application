@@ -215,6 +215,7 @@ export const useCart = (
           allIdentifierInputs.push(...identifierInputs);
           return { category, quantity, identifierInputs };
         });
+      console.log(transactions);
 
       if (transactions.length === 0) {
         setCartState("DEFAULT");
