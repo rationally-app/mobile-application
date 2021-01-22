@@ -11,16 +11,19 @@ import { color, size } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
+import { Cart } from "../../../hooks/useCart/useCart";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { AuthContext } from "../../../context/auth";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
+import { Quota } from "../../../types";
 import { TransactionsGroup } from "../TransactionsGroup";
 import { AlertModalContext } from "../../../context/alert";
 import {
-  groupTransactionsByTime,
+  groupTransactionsByCategory,
   sortTransactions,
-} from "../CheckoutSuccess/CheckoutSuccessCard";
+  getLatestTransactionTime,
+} from "../NoQuota/NoQuotaCard";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { BIG_NUMBER } from "../utils";
 
@@ -34,7 +37,9 @@ const styles = StyleSheet.create({
 
 interface CheckoutUnsuccessfulCard {
   ids: string[];
+  cart: Cart;
   onCancel: () => void;
+  quotaResponse: Quota | undefined;
 }
 
 /**
@@ -44,7 +49,9 @@ interface CheckoutUnsuccessfulCard {
  */
 export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCard> = ({
   ids,
+  cart,
   onCancel,
+  quotaResponse,
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
@@ -64,76 +71,86 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
     }
   }, [error, showErrorAlert]);
 
+  const latestTransactionTime: Date | undefined =
+    (quotaResponse && getLatestTransactionTime(cart)) ?? undefined;
+
   const translationProps = useTranslate();
-  const transactionsByTimeMap = groupTransactionsByTime(
+  const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
+    latestTransactionTime,
     translationProps
   );
-  const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
 
+  const transactionsByCategoryList = sortTransactions(
+    transactionsByCategoryMap
+  );
   const { i18nt } = useTranslate();
   return (
     <View>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
-        <View
-          style={[
-            sharedStyles.resultWrapper,
-            sharedStyles.failureResultWrapper,
-          ]}
-        >
-          <FontAwesome
-            name="thumbs-down"
-            color={color("red", 60)}
-            style={sharedStyles.icon}
-          />
-          <AppText style={sharedStyles.statusTitleWrapper}>
-            <AppText
-              style={sharedStyles.statusTitle}
-              accessibilityLabel="checkout-unsuccessful-title"
-              testID="checkout-unsuccessful-title"
-              accessible={true}
-            >
-              {i18nt("checkoutUnsuccessfulScreen", "unsuccessful")}
-            </AppText>
-          </AppText>
-          <View>
-            <AppText style={{ marginBottom: size(1) }}>
-              {i18nt("checkoutUnsuccessfulScreen", "logAppeal")}
-            </AppText>
-          </View>
-          <View>
-            <AppText>
-              {`${i18nt(
-                "checkoutUnsuccessfulScreen",
-                "unsuccessfulRedeemAttempt"
-              )}:`}
-            </AppText>
-            <View style={styles.checkoutItemsList}>
-              {loading ? (
-                <ActivityIndicator
-                  style={{ alignSelf: "flex-start" }}
-                  size="large"
-                  color={color("grey", 40)}
-                />
-              ) : (
-                (isShowFullList
-                  ? transactionsByTimeList
-                  : transactionsByTimeList.slice(0, MAX_TRANSACTIONS_TO_DISPLAY)
-                ).map(
-                  (transactionsByTime: TransactionsGroup, index: number) => (
-                    <TransactionsGroup
-                      key={index}
-                      maxTransactionsToDisplay={BIG_NUMBER}
-                      {...transactionsByTime}
-                    />
-                  )
-                )
-              )}
+        <View style={sharedStyles.failureResultWrapper}>
+          <View style={sharedStyles.resultWrapper}>
+            <FontAwesome
+              name="thumbs-down"
+              color={color("red", 60)}
+              style={sharedStyles.icon}
+            />
+            <View style={sharedStyles.statusTitleWrapper}>
+              <AppText
+                style={sharedStyles.statusTitle}
+                accessibilityLabel="checkout-unsuccessful-title"
+                testID="checkout-unsuccessful-title"
+                accessible={true}
+              >
+                {i18nt("checkoutUnsuccessfulScreen", "unsuccessful")}
+              </AppText>
+            </View>
+            <View>
+              <AppText style={{ marginBottom: size(1) }}>
+                {i18nt("checkoutUnsuccessfulScreen", "logAppeal")}
+              </AppText>
+            </View>
+            <View>
+              <View style={styles.checkoutItemsList}>
+                {loading ? (
+                  <ActivityIndicator
+                    style={{ alignSelf: "flex-start" }}
+                    size="large"
+                    color={color("grey", 40)}
+                  />
+                ) : (
+                  <View>
+                    <AppText>
+                      {`${i18nt(
+                        "checkoutUnsuccessfulScreen",
+                        "unsuccessfulRedeemAttempt"
+                      )}:`}
+                    </AppText>
+                    {transactionsByCategoryList.map(
+                      (
+                        transactionsByCategory: TransactionsGroup,
+                        index: number
+                      ) => (
+                        <TransactionsGroup
+                          key={index}
+                          maxTransactionsToDisplay={
+                            isShowFullList
+                              ? BIG_NUMBER
+                              : MAX_TRANSACTIONS_TO_DISPLAY
+                          }
+                          {...transactionsByCategory}
+                        />
+                      )
+                    )}
+                  </View>
+                )}
+              </View>
             </View>
           </View>
           {!loading &&
-            transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+            sortedTransactions &&
+            sortedTransactions.length > MAX_TRANSACTIONS_TO_DISPLAY && (
               <ShowFullListToggle
                 toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
                 isShowFullList={isShowFullList}
