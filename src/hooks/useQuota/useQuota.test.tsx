@@ -335,26 +335,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [
-            {
-              label: "first",
-              value: "first identifier",
-              textInputType: "STRING",
-              scanButtonType: "BARCODE",
-            },
-            {
-              label: "last",
-              value: "last identifier",
-              textInputType: "STRING",
-              scanButtonType: "BARCODE",
-            },
-          ],
           transactionTime,
           quantity: 1,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
@@ -377,13 +362,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: 0,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 0,
         },
@@ -406,13 +389,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: -1,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
@@ -555,13 +536,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: 2,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
@@ -574,12 +553,10 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           quantity: 4,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           quantity: 30,
         },
       ]);
@@ -599,13 +576,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: 2,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
@@ -632,13 +607,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: 2,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
