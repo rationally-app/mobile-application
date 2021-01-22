@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useContext, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { AppText } from "../../Layout/AppText";
@@ -8,6 +13,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { AuthContext } from "../../../context/auth";
+import { ShowFullListToggle } from "../ShowFullListToggle";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { TransactionsGroup } from "../TransactionsGroup";
 import { AlertModalContext } from "../../../context/alert";
@@ -17,6 +23,8 @@ import {
 } from "../CheckoutSuccess/CheckoutSuccessCard";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { BIG_NUMBER } from "../utils";
+
+const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
 const styles = StyleSheet.create({
   checkoutItemsList: {
@@ -38,6 +46,7 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
   ids,
   onCancel,
 }) => {
+  const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { pastTransactionsResult, loading, error } = usePastTransaction(
@@ -108,7 +117,10 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
                   color={color("grey", 40)}
                 />
               ) : (
-                transactionsByTimeList.map(
+                (isShowFullList
+                  ? transactionsByTimeList
+                  : transactionsByTimeList.slice(0, MAX_TRANSACTIONS_TO_DISPLAY)
+                ).map(
                   (transactionsByTime: TransactionsGroup, index: number) => (
                     <TransactionsGroup
                       key={index}
@@ -120,6 +132,13 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
               )}
             </View>
           </View>
+          {!loading &&
+            transactionsByTimeList.length > MAX_TRANSACTIONS_TO_DISPLAY && (
+              <ShowFullListToggle
+                toggleIsShowFullList={() => setIsShowFullList(!isShowFullList)}
+                isShowFullList={isShowFullList}
+              />
+            )}
         </View>
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
