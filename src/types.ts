@@ -190,7 +190,6 @@ const ItemQuota = t.intersection([
   t.partial({
     quotaRefreshTime: t.number,
     transactionTime: DateFromNumber,
-    identifierInputs: t.array(IdentifierInput),
   }),
 ]);
 
