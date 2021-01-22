@@ -525,7 +525,7 @@ describe("useCart", () => {
       );
     });
 
-    it("should show unsuccessful cart state when insufficient quota error is received (return-pod)", async () => {
+    it("should show unsuccessful cart state when token mismatch error is received (return-pod)", async () => {
       expect.assertions(2);
       const ids = ["S0000001I"];
       const { result } = renderHook(
@@ -536,7 +536,7 @@ describe("useCart", () => {
       );
 
       mockPostTransaction.mockRejectedValueOnce(
-        new Error("Insufficient quota")
+        new Error("Token does not match the customer's last registered token")
       );
 
       await wait(() => {
