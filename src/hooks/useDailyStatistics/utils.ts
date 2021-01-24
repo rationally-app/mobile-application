@@ -2,12 +2,12 @@ import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
 import { Sentry } from "../../utils/errorTracking";
 
-export type UnitType =
-  | {
+export type UnitType = 
+    |{
       type: "POSTFIX" | "PREFIX";
       label: string;
     }
-  | undefined;
+    |{ type: "POSTFIX", label: " qty"};
 
 export type Transaction = {
   name: string;
@@ -49,8 +49,11 @@ export const countTotalTransactionsAndByCategory = (
             })(),
           category: key,
           quantity: totalQuantityInCategory,
-          unitType: findItemByCategory?.quantity.unit,
-          // categoryType: findItemByCategory?.categoryType
+          unitType: findItemByCategory?.quantity.unit || {
+            type: "POSTFIX",
+            label: " qty",
+          },
+          // categoryType: findItemByCategory?.categoryType,
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"
               ? "viaAppeal"

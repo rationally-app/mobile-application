@@ -81,7 +81,6 @@ export const useDailyStatistics = (
     sessionToken,
     currentTimestamp,
     prevTimestamp,
-    c13ntForUnit,
   ]);
 
   return {
