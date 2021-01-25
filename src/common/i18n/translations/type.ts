@@ -434,5 +434,10 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    invalidDeviceCode: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
   };
 };

@@ -398,5 +398,10 @@ export const en: Translations = {
       body: "Enter valid email address",
       primaryActionText: "OK",
     },
+    invalidDeviceCode: {
+      title: "Invalid Input",
+      body: "Scan item again or get a new item from your in-charge.",
+      primaryActionText: "Ok",
+    },
   },
 };

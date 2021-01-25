@@ -389,5 +389,10 @@ export const zh: Translations = {
       body: "请输入有效的邮件地址",
       primaryActionText: "确定",
     },
+    invalidDeviceCode: {
+      title: "输入无效",
+      body: "请再次扫描物品或向您的负责人索取新的物品。",
+      primaryActionText: "确定",
+    },
   },
 };
