@@ -31,6 +31,7 @@ export enum ERROR_MESSAGE {
   MISSING_VOUCHER_INPUT = "Enter a voucher code.",
   INVALID_POD_INPUT = "Scan a valid device code.",
   MISSING_POD_INPUT = "Scan a device code.",
+  INVALID_POD_IDENTIFIER = "Scan item again or get a new item from your in-charge.",
   INVALID_PHONE_NUMBER = "Enter a valid contact number.",
   INVALID_COUNTRY_CODE = "Enter a valid country code.",
   INVALID_PHONE_AND_COUNTRY_CODE = "Enter a valid country code and contact number.",
@@ -92,6 +93,7 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.MISSING_VOUCHER_INPUT]: "incompleteEntryVoucherCode",
   [ERROR_MESSAGE.INVALID_POD_INPUT]: "wrongFormatNotValidDeviceCode",
   [ERROR_MESSAGE.MISSING_POD_INPUT]: "incompleteEntryScanDeviceCode",
+  [ERROR_MESSAGE.INVALID_POD_IDENTIFIER]: "invalidDeviceCode",
   [ERROR_MESSAGE.INVALID_PHONE_NUMBER]: "wrongFormatContactNumber",
   [ERROR_MESSAGE.INVALID_COUNTRY_CODE]: "wrongFormatCountryCode",
   [ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE]:
