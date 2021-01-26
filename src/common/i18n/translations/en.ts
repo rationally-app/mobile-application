@@ -74,6 +74,8 @@ export const en: Translations = {
   checkoutSuccessScreen: {
     redeemed: "Redeemed",
     redeemedItems: "Item(s) redeemed",
+    returned: "Returned!",
+    returnedItems: "Item(s) returned",
     nextIdentity: "Next identity",
     purchased: "Purchased",
     purchasedItems: "The following have been purchased",

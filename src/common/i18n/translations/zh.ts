@@ -73,6 +73,8 @@ export const zh: Translations = {
   checkoutSuccessScreen: {
     redeemed: "已领取",
     redeemedItems: "已领取物品",
+    returned: "物品已退回!",
+    returnedItems: "已退回的物品:",
     nextIdentity: "下一个证件",
     purchased: "已购买",
     purchasedItems: "已购买物品",

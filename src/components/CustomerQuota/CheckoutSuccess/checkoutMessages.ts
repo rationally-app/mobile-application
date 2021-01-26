@@ -15,6 +15,11 @@ export const getCheckoutMessages = (
         title: `${i18nt("checkoutSuccessScreen", "redeemed")}!`,
         description: `${i18nt("checkoutSuccessScreen", "redeemedItems")}:`,
       };
+    case "RETURN":
+      return {
+        title: `${i18nt("checkoutSuccessScreen", "returned")}`,
+        description: `${i18nt("checkoutSuccessScreen", "returnedItems")}:`,
+      };
     case "PURCHASE":
     default:
       return {

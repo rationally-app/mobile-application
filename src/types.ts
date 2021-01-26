@@ -119,7 +119,11 @@ const CampaignPolicy = t.intersection([
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
-    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")]),
+    type: t.union([
+      t.literal("PURCHASE"),
+      t.literal("REDEEM"),
+      t.literal("RETURN"),
+    ]),
     alert: PolicyAlert,
   }),
 ]);
