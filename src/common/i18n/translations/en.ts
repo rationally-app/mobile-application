@@ -399,9 +399,9 @@ export const en: Translations = {
       primaryActionText: "OK",
     },
     invalidDeviceCode: {
-      title: "Invalid Input",
+      title: "Invalid input",
       body: "Scan item again or get a new item from your in-charge.",
-      primaryActionText: "Ok",
+      primaryActionText: "OK",
     },
   },
 };
