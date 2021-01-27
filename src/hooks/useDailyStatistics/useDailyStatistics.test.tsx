@@ -44,7 +44,6 @@ const customProducts: CampaignPolicy[] = [
       limit: 1,
       default: 1,
     },
-    type: "REDEEM",
   },
   {
     category: "specs-lost",
@@ -68,7 +67,6 @@ const customProducts: CampaignPolicy[] = [
         label: "first",
       },
     ],
-    type: "REDEEM",
   },
 ];
 

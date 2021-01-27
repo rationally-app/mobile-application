@@ -10,10 +10,8 @@ import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color } from "../../../common/styles";
-import { getCheckoutMessages } from "./checkoutMessages";
 import { FontAwesome } from "@expo/vector-icons";
 import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
-import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import {
@@ -151,7 +149,6 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
 
-  const { getProduct } = useContext(ProductContext);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { pastTransactionsResult, loading, error } = usePastTransaction(
@@ -170,19 +167,13 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   }, [error, showErrorAlert]);
 
   const translationProps = useTranslate();
+  const { c13nt, i18nt } = translationProps;
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
     allProducts || [],
     translationProps
   );
   const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
-
-  const productType =
-    (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
-  const { title, description } = getCheckoutMessages(
-    translationProps.i18nt,
-    productType
-  );
 
   const showGlobalQuota: boolean =
     !!quotaResponse?.globalQuota &&
@@ -217,7 +208,11 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                 testID="checkout-success-title"
                 accessible={true}
               >
-                {title}
+                {`${c13nt(
+                  "checkoutSuccessTitle",
+                  undefined,
+                  i18nt("checkoutSuccessScreen", "redeemed")
+                )}!`}
               </AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
                 <UsageQuotaTitle
@@ -227,7 +222,13 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               ) : undefined}
             </AppText>
             <View>
-              <AppText>{description}</AppText>
+              <AppText>
+                {`${c13nt(
+                  "checkoutSuccessDescription",
+                  undefined,
+                  i18nt("checkoutSuccessScreen", "redeemedItems")
+                )}:`}
+              </AppText>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
                   <ActivityIndicator
