@@ -126,7 +126,6 @@ export type Translations = {
       title: string;
       body?: string;
       primaryActionText: string;
-      secondaryActionText?: string;
     };
     cancelEntry: {
       title: string;
@@ -438,6 +437,9 @@ export type Translations = {
       title: string;
       body?: string;
       primaryActionText: string;
+    };
+    dynamicContentFallback: {
+      minutes: string;
     };
   };
 };

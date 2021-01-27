@@ -394,5 +394,8 @@ export const zh: Translations = {
       body: "请再次扫描物品或向您的负责人索取新的物品。",
       primaryActionText: "确定",
     },
+    dynamicContentFallback: {
+      minutes: "几",
+    },
   },
 };

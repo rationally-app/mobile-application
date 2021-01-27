@@ -403,5 +403,8 @@ export const en: Translations = {
       body: "Scan item again or get a new item from your in-charge.",
       primaryActionText: "OK",
     },
+    dynamicContentFallback: {
+      minutes: "a few",
+    },
   },
 };
