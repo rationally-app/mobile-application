@@ -12,6 +12,8 @@ on:
       - master
     types:
       - completed
+  # Allow manual runs
+  workflow_dispatch:
 
 jobs:
   e2e_test:
