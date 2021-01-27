@@ -65,7 +65,6 @@ const mockGetCampaignConfig = async (
         name: "🧻 Toilet Paper",
         description: "1 ply / 2 ply / 3 ply",
         order: 1,
-        type: "REDEEM",
         quantity: {
           period: 7,
           limit: 2,
@@ -80,7 +79,6 @@ const mockGetCampaignConfig = async (
         name: "🍜 Instant Noodles",
         description: "Indomee",
         order: 2,
-        type: "REDEEM",
         quantity: {
           period: 30,
           limit: 1,
@@ -95,7 +93,6 @@ const mockGetCampaignConfig = async (
         name: "🍫 Chocolate",
         description: "Dark / White / Assorted",
         order: 3,
-        type: "REDEEM",
         quantity: {
           period: 14,
           limit: 30,
@@ -110,7 +107,6 @@ const mockGetCampaignConfig = async (
         category: "vouchers",
         name: "Funfair Vouchers",
         order: 4,
-        type: "REDEEM",
         quantity: { period: 1, limit: 1, default: 1 },
         identifiers: [
           {
@@ -139,7 +135,6 @@ const mockGetCampaignConfig = async (
         category: "voucher",
         name: "🎟️ Golden Ticket",
         order: 5,
-        type: "REDEEM",
         quantity: { period: 1, limit: 1, default: 1 },
         identifiers: [
           {
