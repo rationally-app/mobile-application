@@ -7,6 +7,7 @@ interface CheckoutMessage {
 
 export const getCheckoutMessages = (
   i18nt: TranslationHook["i18nt"],
+  c13nt?: TranslationHook["c13nt"],
   productType?: string
 ): CheckoutMessage => {
   switch (productType) {
@@ -16,10 +17,15 @@ export const getCheckoutMessages = (
         description: `${i18nt("checkoutSuccessScreen", "redeemedItems")}:`,
       };
     case "RETURN":
-      return {
-        title: `${i18nt("checkoutSuccessScreen", "returned")}`,
-        description: `${i18nt("checkoutSuccessScreen", "returnedItems")}:`,
-      };
+      return c13nt
+        ? {
+            title: `${c13nt("checkoutTitle")}!`,
+            description: `${c13nt("checkoutItems")}:`,
+          }
+        : {
+            title: `${i18nt("checkoutSuccessScreen", "returned")}!`,
+            description: `${i18nt("checkoutSuccessScreen", "returnedItems")}:`,
+          };
     case "PURCHASE":
     default:
       return {

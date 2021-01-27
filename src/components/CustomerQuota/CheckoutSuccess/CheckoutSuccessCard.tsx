@@ -181,6 +181,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
   const { title, description } = getCheckoutMessages(
     translationProps.i18nt,
+    translationProps.c13nt,
     productType
   );
 
