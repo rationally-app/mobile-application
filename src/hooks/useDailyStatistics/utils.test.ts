@@ -57,7 +57,6 @@ describe("countTotalTransactionsAndByCategory", () => {
         name: "🧻 Toilet Paper",
         description: "1 ply / 2 ply / 3 ply",
         order: 1,
-        type: "REDEEM",
         quantity: {
           period: 7,
           limit: 2,
@@ -72,7 +71,6 @@ describe("countTotalTransactionsAndByCategory", () => {
         name: "🍜 Instant Noodles",
         description: "Indomee",
         order: 2,
-        type: "REDEEM",
         quantity: {
           period: 30,
           limit: 1,
@@ -87,7 +85,6 @@ describe("countTotalTransactionsAndByCategory", () => {
         name: "🍫 Chocolate",
         description: "Dark / White / Assorted",
         order: 3,
-        type: "REDEEM",
         quantity: {
           period: 14,
           limit: 30,
@@ -102,7 +99,6 @@ describe("countTotalTransactionsAndByCategory", () => {
         category: "vouchers",
         name: "Funfair Vouchers",
         order: 4,
-        type: "REDEEM",
         quantity: { period: 1, limit: 1, default: 1 },
         identifiers: [
           {
@@ -131,7 +127,6 @@ describe("countTotalTransactionsAndByCategory", () => {
         category: "voucher",
         name: "🎟️ Golden Ticket",
         order: 5,
-        type: "REDEEM",
         quantity: { period: 1, limit: 1, default: 1 },
         identifiers: [
           {
@@ -148,7 +143,6 @@ describe("countTotalTransactionsAndByCategory", () => {
         category: "appeal-product",
         name: "This Product is for Appeal",
         order: 6,
-        type: "REDEEM",
         categoryType: "APPEAL",
         quantity: { period: 1, limit: 1, default: 1 },
       },

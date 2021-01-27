@@ -246,6 +246,8 @@ export const useCart = (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
           setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
+        } else if (e.message === "Invalid Purchase Request: Item not found") {
+          setCartError(new Error(ERROR_MESSAGE.INVALID_POD_IDENTIFIER));
         } else if (
           e.message ===
           "Token does not match the customer's last registered token"

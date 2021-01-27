@@ -118,7 +118,6 @@ describe("NoQuotaCard utility functions", () => {
           limit: 1,
           period: 365,
         },
-        type: "REDEEM",
       },
       {
         category: "replacement-gift",
@@ -130,7 +129,6 @@ describe("NoQuotaCard utility functions", () => {
           limit: 1,
           period: 365,
         },
-        type: "REDEEM",
       },
     ];
 
@@ -191,7 +189,6 @@ describe("NoQuotaCard utility functions", () => {
             periodType: "CRON",
           },
         },
-        type: "REDEEM",
       },
     ];
 

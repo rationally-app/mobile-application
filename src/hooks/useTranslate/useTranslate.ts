@@ -6,7 +6,7 @@ import i18n from "i18n-js";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 
 export type TranslationHook = {
-  c13nt: (key: string, campaignKey?: string) => string;
+  c13nt: (key: string, campaignKey?: string, defaultString?: string) => string;
   c13ntForUnit: (
     unit: CampaignPolicy["quantity"]["unit"]
   ) => CampaignPolicy["quantity"]["unit"];
@@ -44,12 +44,16 @@ export const useTranslate = (): TranslationHook => {
   const { c13n } = useContext(CampaignConfigContext);
   const { allCampaignConfigs } = useContext(CampaignConfigsStoreContext);
 
-  const c13nt = (key: string, campaignKey?: string): string => {
+  const c13nt = (
+    key: string,
+    campaignKey?: string,
+    defaultString?: string
+  ): string => {
     let c13nStore = c13n;
     if (campaignKey) {
       c13nStore = allCampaignConfigs[campaignKey]?.c13n ?? null;
     }
-    return (c13nStore && key && c13nStore[key]) ?? key;
+    return (c13nStore && key && c13nStore[key]) ?? defaultString ?? key;
   };
 
   const c13ntForUnit = (

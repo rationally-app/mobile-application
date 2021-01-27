@@ -76,10 +76,7 @@ export const zh: Translations = {
     returned: "物品已退回",
     returnedItems: "已退回的物品",
     nextIdentity: "下一个证件",
-    purchased: "已购买",
-    purchasedItems: "已购买物品",
     previouslyRedeemedItems: "已领取物品",
-    previouslyPurchasedItems: "已购买物品",
     redeemedAgo: "在 %{time} 已领取",
     redeemedOn: "在 %{time} 已领取",
     previouslyRedeemed: "已领取过",
@@ -111,8 +108,6 @@ export const zh: Translations = {
   notEligibleScreen: {
     notEligible: "不符合资格",
     logAppeal: "不符合资格收集任何物品。请联系您的负责人，了解上诉准则。",
-    cannot: "不能",
-    purchase: "购买",
   },
   campaignInitialisationScreen: {
     appleStore: "谷歌应用商店",
@@ -395,6 +390,14 @@ export const zh: Translations = {
       title: "格式错误",
       body: "请输入有效的邮件地址",
       primaryActionText: "确定",
+    },
+    invalidDeviceCode: {
+      title: "输入无效",
+      body: "请再次扫描物品或向您的负责人索取新的物品。",
+      primaryActionText: "确定",
+    },
+    dynamicContentFallback: {
+      minutes: "几",
     },
   },
 };

@@ -32,9 +32,8 @@ export const ItemNoQuota: FunctionComponent<{
 }> = ({ cartItem }) => {
   const { category, maxQuantity } = cartItem;
   const { getProduct } = useContext(ProductContext);
-  const { name = category, description, quantity, type } =
-    getProduct(category) || {};
-  const { i18nt } = useTranslate();
+  const { name = category, description, quantity } = getProduct(category) || {};
+  const { i18nt, c13nt } = useTranslate();
 
   return (
     <View style={[sharedStyles.wrapper, sharedStyles.wrapperDefault]}>
@@ -54,12 +53,11 @@ export const ItemNoQuota: FunctionComponent<{
           testID="item-no-quota-badge"
           accessible={true}
         >
-          {type === "REDEEM"
-            ? i18nt("notEligibleScreen", "notEligible")
-            : `${i18nt("notEligibleScreen", "cannot")}\n${i18nt(
-                "notEligibleScreen",
-                "purchase"
-              )}`}
+          {c13nt(
+            "notEligibleTitle",
+            undefined,
+            i18nt("notEligibleScreen", "notEligible")
+          )}
         </AppText>
       </View>
     </View>

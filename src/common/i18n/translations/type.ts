@@ -74,10 +74,7 @@ export type Translations = {
     returned: string;
     returnedItems: string;
     nextIdentity: string;
-    purchased: string;
-    purchasedItems: string;
     previouslyRedeemedItems: string;
-    previouslyPurchasedItems: string;
     redeemedAgo: string;
     redeemedOn: string;
     previouslyRedeemed: string;
@@ -109,8 +106,6 @@ export type Translations = {
   notEligibleScreen: {
     notEligible: string;
     logAppeal: string;
-    cannot: string;
-    purchase: string;
   };
   campaignInitialisationScreen: {
     appleStore: string;
@@ -133,7 +128,6 @@ export type Translations = {
       title: string;
       body?: string;
       primaryActionText: string;
-      secondaryActionText?: string;
     };
     cancelEntry: {
       title: string;
@@ -440,6 +434,14 @@ export type Translations = {
       body?: string;
       primaryActionText: string;
       secondaryActionText?: string;
+    };
+    invalidDeviceCode: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    dynamicContentFallback: {
+      minutes: string;
     };
   };
 };
