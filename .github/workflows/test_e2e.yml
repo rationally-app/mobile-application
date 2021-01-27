@@ -12,6 +12,8 @@ on:
       - master
     types:
       - completed
+  # Allow manual runs
+  workflow_dispatch:
 
 jobs:
   e2e_test:
@@ -33,6 +35,10 @@ jobs:
       - name: Setup E2E Environment
         run: pip3 install -r requirements.txt
       - name: Run E2E Tests
+        env:
+          HATS_DEVICE_FARM_REMOTE_URL: ${{ secrets.HATS_DEVICE_FARM_REMOTE_URL }}
+          HATS_DEVICE_FARM_USERNAME: ${{ secrets.HATS_DEVICE_FARM_USERNAME }}
+          HATS_DEVICE_FARM_API_KEY: ${{ secrets.HATS_DEVICE_FARM_API_KEY }}
         run: ./e2e_run_all_tests_pCloudy.sh
       - name: Get Current Date
         if: always()

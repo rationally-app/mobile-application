@@ -32,7 +32,6 @@ import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisp
 import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
 import { AlertModalContext } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
-import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { formatDateTime } from "../../../utils/dateTimeFormatter";
 import {
@@ -207,10 +206,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
-  const { getProduct } = useContext(ProductContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
-
-  const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
   const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
@@ -238,6 +234,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const hasAppealProduct = checkHasAppealProduct(allProducts, allQuotaResponse);
 
   const translationProps = useTranslate();
+  const { i18nt, c13nt } = translationProps;
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
@@ -313,15 +310,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               transactionsByCategoryList.length > 0 && (
                 <View>
                   <AppText style={styles.wrapper}>
-                    {policyType === "REDEEM"
-                      ? `${translationProps.i18nt(
-                          "checkoutSuccessScreen",
-                          "previouslyRedeemedItems"
-                        )}:`
-                      : `${translationProps.i18nt(
-                          "checkoutSuccessScreen",
-                          "previouslyPurchasedItems"
-                        )}:`}
+                    {`${c13nt(
+                      "checkoutSuccessPreviousItems",
+                      undefined,
+                      i18nt("checkoutSuccessScreen", "previouslyRedeemedItems")
+                    )}:`}
                   </AppText>
                   {transactionsByCategoryList.map(
                     (
@@ -355,7 +348,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
+          text={i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
           accessibilityLabel="no-quota-next-identity-button"

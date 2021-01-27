@@ -75,10 +75,7 @@ export const en: Translations = {
     redeemed: "Redeemed",
     redeemedItems: "Item(s) redeemed",
     nextIdentity: "Next identity",
-    purchased: "Purchased",
-    purchasedItems: "The following have been purchased",
     previouslyRedeemedItems: "Item(s) redeemed previously",
-    previouslyPurchasedItems: "Item(s) purchased previously",
     redeemedAgo: "Redeemed %{time} ago",
     redeemedOn: "Redeemed on %{time}",
     previouslyRedeemed: "Previously redeemed",
@@ -106,8 +103,6 @@ export const en: Translations = {
     notEligible: "Not eligible",
     logAppeal:
       "Not eligible to collect any item. Contact your in-charge to find out about the appeal guidelines.",
-    cannot: "Cannot",
-    purchase: "purchase",
   },
   campaignInitialisationScreen: {
     appleStore: "App Store",
@@ -402,6 +397,9 @@ export const en: Translations = {
       title: "Invalid input",
       body: "Scan item again or get a new item from your in-charge.",
       primaryActionText: "OK",
+    },
+    dynamicContentFallback: {
+      minutes: "a few",
     },
   },
 };
