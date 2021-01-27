@@ -267,7 +267,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
+          text={i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
           accessibilityLabel="checkout-success-next-identity-button"
