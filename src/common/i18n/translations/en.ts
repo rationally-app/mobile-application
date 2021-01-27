@@ -74,7 +74,7 @@ export const en: Translations = {
   checkoutSuccessScreen: {
     redeemed: "Redeemed",
     redeemedItems: "Item(s) redeemed",
-    returned: "Returned!",
+    returned: "Returned",
     returnedItems: "Item(s) returned",
     nextIdentity: "Next identity",
     purchased: "Purchased",
@@ -112,7 +112,7 @@ export const en: Translations = {
   notEligibleScreen: {
     notEligible: "Not eligible",
     logAppeal:
-      "Not eligible to collect any item. Contact your in-charge to find out about the appeal guidelines.",
+      "Not eligible to collect any item. Contact your in-charge to find out about the appeal guidelines",
     cannot: "Cannot",
     purchase: "purchase",
   },
