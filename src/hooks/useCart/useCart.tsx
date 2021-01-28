@@ -61,56 +61,49 @@ const mergeWithCart = (
 
       return productOneOrder - productTwoOrder;
     })
-    .map(
-      ({
-        category,
-        quantity: remainingQuantity,
-        transactionTime,
-        identifierInputs,
-      }) => {
-        remainingQuantity = Math.max(remainingQuantity, 0);
-        const [existingItem] = getItem(cart, category);
+    .map(({ category, quantity: remainingQuantity, transactionTime }) => {
+      remainingQuantity = Math.max(remainingQuantity, 0);
+      const [existingItem] = getItem(cart, category);
 
-        const product = getProduct(category);
-        const defaultQuantity = product?.quantity.default || 0;
-        const defaultIdentifierInputs =
-          product?.identifiers?.map(
-            ({ label, textInput, scanButton, validationRegex }) => ({
-              label: label,
-              value: "",
-              ...(textInput.type ? { textInputType: textInput.type } : {}),
-              ...(scanButton.type ? { scanButtonType: scanButton.type } : {}),
-              ...(validationRegex ? { validationRegex } : {}),
-            })
-          ) || [];
+      const product = getProduct(category);
+      const defaultQuantity = product?.quantity.default || 0;
+      const identifierInputs =
+        product?.identifiers?.map(
+          ({ label, textInput, scanButton, validationRegex }) => ({
+            label: label,
+            value: "",
+            ...(textInput.type ? { textInputType: textInput.type } : {}),
+            ...(scanButton.type ? { scanButtonType: scanButton.type } : {}),
+            ...(validationRegex ? { validationRegex } : {}),
+          })
+        ) || [];
 
-        let descriptionAlert: string | undefined = undefined;
-        if (product && product.alert) {
-          const expandedQuota = product.quantity.limit - remainingQuantity;
-          descriptionAlert =
-            expandedQuota >= product.alert.threshold
-              ? product.alert.label
-              : undefined;
-        }
-
-        const checkoutLimit = product?.quantity.checkoutLimit;
-        const maxQuantity = checkoutLimit
-          ? Math.min(remainingQuantity, checkoutLimit)
-          : remainingQuantity;
-
-        return {
-          category,
-          quantity: Math.min(
-            maxQuantity,
-            existingItem?.quantity || defaultQuantity
-          ),
-          maxQuantity,
-          descriptionAlert,
-          lastTransactionTime: transactionTime,
-          identifierInputs: identifierInputs || defaultIdentifierInputs,
-        };
+      let descriptionAlert: string | undefined = undefined;
+      if (product && product.alert) {
+        const expandedQuota = product.quantity.limit - remainingQuantity;
+        descriptionAlert =
+          expandedQuota >= product.alert.threshold
+            ? product.alert.label
+            : undefined;
       }
-    );
+
+      const checkoutLimit = product?.quantity.checkoutLimit;
+      const maxQuantity = checkoutLimit
+        ? Math.min(remainingQuantity, checkoutLimit)
+        : remainingQuantity;
+
+      return {
+        category,
+        quantity: Math.min(
+          maxQuantity,
+          existingItem?.quantity || defaultQuantity
+        ),
+        maxQuantity,
+        descriptionAlert,
+        lastTransactionTime: transactionTime,
+        identifierInputs,
+      };
+    });
 };
 
 export const useCart = (
