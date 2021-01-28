@@ -23,13 +23,11 @@ const mockQuotaResSingleId: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 2,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -37,13 +35,11 @@ const mockQuotaResSingleId: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 2,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -51,13 +47,11 @@ const mockQuotaResSingleId: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
@@ -68,13 +62,11 @@ const mockQuotaResMultipleIds: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 4,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 30,
       transactionTime,
     },
@@ -82,13 +74,11 @@ const mockQuotaResMultipleIds: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 4,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 30,
       transactionTime,
     },
@@ -96,13 +86,11 @@ const mockQuotaResMultipleIds: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
@@ -113,13 +101,11 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: -1,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -127,13 +113,11 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: -1,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -141,13 +125,11 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
@@ -158,10 +140,12 @@ const mockPostTransactionResult: PostTransactionResult = {
   transactions: [
     {
       transaction: [
-        { category: "toilet-paper", identifierInputs: [], quantity: 1 },
+        {
+          category: "toilet-paper",
+          quantity: 1,
+        },
         {
           category: "chocolate",
-          identifierInputs: [],
           quantity: 5,
         },
       ],
@@ -174,26 +158,11 @@ const mockQuotaResSingleIdAlert: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [
-        {
-          label: "first",
-          value: "first identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-        {
-          label: "last",
-          value: "last identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-      ],
       quantity: 8,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -201,26 +170,11 @@ const mockQuotaResSingleIdAlert: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [
-        {
-          label: "first",
-          value: "first identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-        {
-          label: "last",
-          value: "last identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-      ],
       quantity: 8,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -228,31 +182,31 @@ const mockQuotaResSingleIdAlert: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [
-        {
-          label: "first",
-          value: "first identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-        {
-          label: "last",
-          value: "last identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-      ],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
   ],
 };
+
+const defaultProductsIdentifierInputsForCart = [
+  {
+    label: "first",
+    scanButtonType: "BARCODE",
+    textInputType: "STRING",
+    value: "",
+  },
+  {
+    label: "last",
+    scanButtonType: "BARCODE",
+    textInputType: "STRING",
+    value: "",
+  },
+];
 
 const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
   children,
@@ -282,7 +236,7 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           quantity: 1,
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
@@ -290,7 +244,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           quantity: 0,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
@@ -305,7 +259,7 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 4,
           quantity: 1,
@@ -313,7 +267,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 30,
           quantity: 0,
@@ -356,7 +310,7 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1,
@@ -364,7 +318,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 5,
@@ -391,7 +345,7 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1,
@@ -399,7 +353,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0,
@@ -425,7 +379,7 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1,
@@ -433,7 +387,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0,
@@ -461,7 +415,7 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1,
@@ -469,7 +423,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0,
@@ -490,8 +444,20 @@ describe("useCart", () => {
       );
 
       await wait(() => {
-        result.current.updateCart("toilet-paper", 2);
-        result.current.updateCart("chocolate", 5);
+        result.current.updateCart("toilet-paper", 2, [
+          {
+            label: "first",
+            value: "first",
+            textInputType: "STRING",
+          },
+        ]);
+        result.current.updateCart("chocolate", 5, [
+          {
+            label: "last",
+            value: "last",
+            textInputType: "STRING",
+          },
+        ]);
       });
 
       mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
@@ -506,7 +472,13 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: [
+            {
+              label: "first",
+              textInputType: "STRING",
+              value: "first",
+            },
+          ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 2,
@@ -514,7 +486,13 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: [
+            {
+              label: "last",
+              textInputType: "STRING",
+              value: "last",
+            },
+          ],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 5,
@@ -570,7 +548,7 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 0,
@@ -578,7 +556,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0,
@@ -641,7 +619,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0,
@@ -764,7 +742,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0,
@@ -1020,8 +998,20 @@ describe("useCart", () => {
       );
 
       await wait(() => {
-        result.current.updateCart("toilet-paper", 2);
-        result.current.updateCart("chocolate", 5);
+        result.current.updateCart("toilet-paper", 2, [
+          {
+            label: "first",
+            value: "first",
+            textInputType: "STRING",
+          },
+        ]);
+        result.current.updateCart("chocolate", 5, [
+          {
+            label: "last",
+            value: "last",
+            textInputType: "STRING",
+          },
+        ]);
       });
 
       mockPostTransaction.mockRejectedValueOnce(new Error());
@@ -1038,7 +1028,13 @@ describe("useCart", () => {
         {
           category: "toilet-paper",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: [
+            {
+              label: "first",
+              textInputType: "STRING",
+              value: "first",
+            },
+          ],
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 2,
@@ -1046,7 +1042,13 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: [
+            {
+              label: "last",
+              textInputType: "STRING",
+              value: "last",
+            },
+          ],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 5,
@@ -1115,13 +1117,13 @@ describe("useCart", () => {
           identifierInputs: [
             {
               label: "first",
-              value: "first identifier",
+              value: "",
               textInputType: "STRING",
               scanButtonType: "BARCODE",
             },
             {
               label: "last",
-              value: "last identifier",
+              value: "",
               textInputType: "STRING",
               scanButtonType: "BARCODE",
             },
@@ -1133,7 +1135,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0,
@@ -1181,13 +1183,13 @@ describe("useCart", () => {
           identifierInputs: [
             {
               label: "first",
-              value: "first identifier",
+              value: "",
               textInputType: "STRING",
               scanButtonType: "BARCODE",
             },
             {
               label: "last",
-              value: "last identifier",
+              value: "",
               textInputType: "STRING",
               scanButtonType: "BARCODE",
             },
@@ -1199,7 +1201,7 @@ describe("useCart", () => {
         {
           category: "chocolate",
           descriptionAlert: undefined,
-          identifierInputs: [],
+          identifierInputs: defaultProductsIdentifierInputsForCart,
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
           quantity: 0,
