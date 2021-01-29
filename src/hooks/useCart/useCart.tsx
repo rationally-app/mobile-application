@@ -241,6 +241,10 @@ export const useCart = (
           setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
         } else if (e.message === "Invalid Purchase Request: Item not found") {
           setCartError(new Error(ERROR_MESSAGE.INVALID_POD_IDENTIFIER));
+        } else if (
+          e.message === "Invalid Purchase Request: Item already used"
+        ) {
+          setCartError(new Error(ERROR_MESSAGE.ALREADY_USED_POD_IDENTIFIER));
         } else if (e instanceof SessionError) {
           setCartError(e);
         } else {
