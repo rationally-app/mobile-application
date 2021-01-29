@@ -59,8 +59,10 @@ export const ItemIdentifier: FunctionComponent<{
         {textInput.visible &&
           (textInput.type === "PHONE_NUMBER" ? (
             <IdentifierPhoneNumberInput
+              addMarginRight={scanButton.visible}
               label={c13nt(label)}
               onPhoneNumberChange={onManualInput}
+              value={inputValue}
             />
           ) : (
             <IdentifierTextInput
