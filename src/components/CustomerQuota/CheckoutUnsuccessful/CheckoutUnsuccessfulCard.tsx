@@ -75,6 +75,7 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
     (quotaResponse && getLatestTransactionTime(cart)) ?? undefined;
 
   const translationProps = useTranslate();
+  const { c13nt, i18nt } = translationProps;
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
@@ -85,7 +86,6 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
   const transactionsByCategoryList = sortTransactions(
     transactionsByCategoryMap
   );
-  const { i18nt } = useTranslate();
   return (
     <View>
       <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
@@ -103,12 +103,20 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
                 testID="checkout-unsuccessful-title"
                 accessible={true}
               >
-                {i18nt("checkoutUnsuccessfulScreen", "unsuccessful")}
+                {`${c13nt(
+                  "checkoutUnsuccessfulTitle",
+                  undefined,
+                  i18nt("checkoutUnsuccessfulScreen", "unsuccessful")
+                )}`}
               </AppText>
             </View>
             <View>
               <AppText style={{ marginBottom: size(1) }}>
-                {i18nt("checkoutUnsuccessfulScreen", "logAppeal")}
+                {`${c13nt(
+                  "checkoutUnsuccessfulDescription",
+                  undefined,
+                  i18nt("checkoutUnsuccessfulScreen", "logAppeal")
+                )}.`}
               </AppText>
             </View>
             <View>
