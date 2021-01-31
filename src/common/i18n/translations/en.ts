@@ -302,12 +302,12 @@ export const en: Translations = {
     },
     wrongFormatCode: {
       title: "Wrong format",
-      body: "Enter or scan valid code details.",
+      body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
     incompleteEntryCode: {
       title: "Incomplete entry",
-      body: "Enter or scan code details.",
+      body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
     wrongFormatNotValidDeviceCode: {
