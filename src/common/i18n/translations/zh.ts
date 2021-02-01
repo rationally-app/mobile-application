@@ -73,6 +73,8 @@ export const zh: Translations = {
   checkoutSuccessScreen: {
     redeemed: "已领取",
     redeemedItems: "已领取物品",
+    returned: "物品已退回",
+    returnedItems: "已退回的物品",
     nextIdentity: "下一个证件",
     previouslyRedeemedItems: "已领取物品",
     redeemedAgo: "在 %{time} 已领取",
@@ -88,6 +90,11 @@ export const zh: Translations = {
     valid: "有效",
     complete: "确认交易",
     quantity: "个",
+  },
+  checkoutUnsuccessfulScreen: {
+    unsuccessful: "不成功",
+    unsuccessfulRedeemAttempt: "已领取物品",
+    logAppeal: "退回的物品与已领取物品不符",
   },
   customerAppealScreen: {
     raiseAppeal: "提出上诉",
