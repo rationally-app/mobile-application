@@ -24,7 +24,7 @@ export type CartItem = {
 
 export type Cart = CartItem[];
 
-type CartState = "DEFAULT" | "CHECKING_OUT" | "PURCHASED";
+type CartState = "DEFAULT" | "CHECKING_OUT" | "PURCHASED" | "UNSUCCESSFUL";
 
 export type CartHook = {
   cartState: CartState;
@@ -241,6 +241,11 @@ export const useCart = (
           setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
         } else if (e.message === "Invalid Purchase Request: Item not found") {
           setCartError(new Error(ERROR_MESSAGE.INVALID_POD_IDENTIFIER));
+        } else if (
+          e.message ===
+          "Token does not match the customer's last registered token"
+        ) {
+          setCartState("UNSUCCESSFUL");
         } else if (
           e.message === "Invalid Purchase Request: Item already used"
         ) {
