@@ -18,10 +18,11 @@ const NotEligibleTransactionTitle: FunctionComponent = () => {
 };
 
 const NotEligibleTransactionDescription: FunctionComponent = () => {
-  const { i18nt } = useTranslate();
+  const { i18nt, c13nt } = useTranslate();
   return (
     <AppText style={{ marginBottom: size(1) }}>
-      {`${i18nt("notEligibleScreen", "logAppeal")}`}
+      {`${c13nt("notEligibleDescription")}` ??
+        `${i18nt("notEligibleScreen", "logAppeal")}`}
     </AppText>
   );
 };
