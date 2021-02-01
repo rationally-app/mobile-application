@@ -503,6 +503,35 @@ describe("useCart", () => {
       );
     });
 
+    it("should show unsuccessful cart state when token mismatch error is received (return-pod)", async () => {
+      expect.assertions(2);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      mockPostTransaction.mockRejectedValueOnce(
+        new Error("Token does not match the customer's last registered token")
+      );
+
+      await wait(() => {
+        result.current.updateCart("toilet-paper", 2, [
+          {
+            label: "first",
+            value: "first",
+            textInputType: "STRING",
+          },
+        ]);
+        result.current.checkoutCart();
+        expect(result.current.cartState).toBe("CHECKING_OUT");
+      });
+
+      expect(result.current.cartState).toBe("UNSUCCESSFUL");
+    });
+
     it("should set cartError when no item was selected", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
