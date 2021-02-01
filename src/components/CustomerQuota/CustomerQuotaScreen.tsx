@@ -17,6 +17,7 @@ import { Card } from "../Layout/Card";
 import { ItemsSelectionCard } from "./ItemsSelection/ItemsSelectionCard";
 import { NoQuotaCard } from "./NoQuota/NoQuotaCard";
 import { CheckoutSuccessCard } from "./CheckoutSuccess/CheckoutSuccessCard";
+import { CheckoutUnsuccessfulCard } from "./CheckoutUnsuccessful/CheckoutUnsuccessfulCard";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
 import { HelpModalContext } from "../../context/help";
@@ -281,6 +282,13 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           <CheckoutSuccessCard
             ids={ids}
             onCancel={onNextId}
+            quotaResponse={quotaResponse}
+          />
+        ) : cartState === "UNSUCCESSFUL" ? (
+          <CheckoutUnsuccessfulCard
+            ids={ids}
+            cart={cart}
+            onCancel={onCancel}
             quotaResponse={quotaResponse}
           />
         ) : quotaState === "NO_QUOTA" ? (
