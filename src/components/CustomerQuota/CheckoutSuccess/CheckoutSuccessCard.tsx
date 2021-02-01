@@ -89,13 +89,7 @@ export const groupTransactionsByTime = (
 ): TransactionsByTimeMap => {
   const { c13nt, c13ntForUnit, i18nt } = translationProps;
 
-  const transactionsByTimeMap: {
-    [transactionTimeInSeconds: string]: {
-      transactionTime: Date;
-      transactions: Transaction[];
-      order: number;
-    };
-  } = {};
+  const transactionsByTimeMap: TransactionsByTimeMap = {};
   sortedTransactions?.forEach((item) => {
     const policy = allProducts?.find(
       (policy) => policy.category === item.category
