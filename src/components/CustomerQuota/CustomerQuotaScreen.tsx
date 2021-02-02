@@ -285,12 +285,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             quotaResponse={quotaResponse}
           />
         ) : cartState === "UNSUCCESSFUL" ? (
-          <CheckoutUnsuccessfulCard
-            ids={ids}
-            cart={cart}
-            onCancel={onCancel}
-            quotaResponse={quotaResponse}
-          />
+          <CheckoutUnsuccessfulCard ids={ids} onCancel={onCancel} />
         ) : quotaState === "NO_QUOTA" ? (
           <NoQuotaCard
             ids={ids}

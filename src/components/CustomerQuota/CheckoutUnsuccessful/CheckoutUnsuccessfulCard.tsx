@@ -11,18 +11,15 @@ import { color, size } from "../../../common/styles";
 import { sharedStyles } from "../sharedStyles";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
-import { Cart } from "../../../hooks/useCart/useCart";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { AuthContext } from "../../../context/auth";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
-import { Quota } from "../../../types";
 import { TransactionsGroup } from "../TransactionsGroup";
 import { AlertModalContext } from "../../../context/alert";
 import {
   groupTransactionsByCategory,
   sortTransactions,
-  getLatestTransactionTime,
 } from "../NoQuota/NoQuotaCard";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { BIG_NUMBER } from "../utils";
@@ -37,9 +34,7 @@ const styles = StyleSheet.create({
 
 interface CheckoutUnsuccessfulCard {
   ids: string[];
-  cart: Cart;
   onCancel: () => void;
-  quotaResponse: Quota | undefined;
 }
 
 /**
@@ -49,9 +44,7 @@ interface CheckoutUnsuccessfulCard {
  */
 export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCard> = ({
   ids,
-  cart,
   onCancel,
-  quotaResponse,
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
@@ -72,7 +65,7 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
   }, [error, showErrorAlert]);
 
   const latestTransactionTime: Date | undefined =
-    (quotaResponse && getLatestTransactionTime(cart)) ?? undefined;
+    (sortedTransactions && sortedTransactions[0].transactionTime) ?? undefined;
 
   const translationProps = useTranslate();
   const { c13nt, i18nt } = translationProps;
@@ -121,10 +114,14 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
                 ) : (
                   <View>
                     <AppText>
-                      {`${i18nt(
-                        "checkoutUnsuccessfulScreen",
-                        "unsuccessfulRedeemAttempt"
-                      )}:`}
+                      {`${c13nt(
+                        "checkoutUnsuccessfulDescription",
+                        undefined,
+                        i18nt(
+                          "checkoutUnsuccessfulScreen",
+                          "unsuccessfulRedeemAttempt"
+                        )
+                      )}`}
                     </AppText>
                     {transactionsByCategoryList.map(
                       (
