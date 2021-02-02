@@ -11,24 +11,20 @@ import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color } from "../../../common/styles";
 import { FontAwesome } from "@expo/vector-icons";
-import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
+import { Quota } from "../../../types";
 import { AuthContext } from "../../../context/auth";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import {
-  formatQuantityText,
   BIG_NUMBER,
-  sortTransactionsByOrder,
+  groupTransactionsByTime,
+  sortTransactionsByTime,
 } from "../utils";
-import { TransactionsGroup, Transaction } from "../TransactionsGroup";
+import { TransactionsGroup } from "../TransactionsGroup";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { ShowFullListToggle } from "../ShowFullListToggle";
-import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import { formatDate, formatDateTime } from "../../../utils/dateTimeFormatter";
+import { formatDate } from "../../../utils/dateTimeFormatter";
 import { AlertModalContext } from "../../../context/alert";
-import {
-  TranslationHook,
-  useTranslate,
-} from "../../../hooks/useTranslate/useTranslate";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -67,81 +63,6 @@ const UsageQuotaTitle: FunctionComponent<{
   );
 };
 
-export interface TransactionsByTimeMap {
-  [transactionTimeInSeconds: string]: {
-    transactionTime: Date;
-    transactions: Transaction[];
-    order: number;
-  };
-}
-
-/**
- * Given past transactions, group them by timestamp
- * If less than 1 second apart, count as same group.
- *
- * @param sortedTransactions Past transaction results sorted by transaction time in desc order
- * @param allProducts Policies
- */
-export const groupTransactionsByTime = (
-  sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
-  allProducts: CampaignPolicy[],
-  translationProps: TranslationHook
-): TransactionsByTimeMap => {
-  const { c13nt, c13ntForUnit, i18nt } = translationProps;
-
-  const transactionsByTimeMap: {
-    [transactionTimeInSeconds: string]: {
-      transactionTime: Date;
-      transactions: Transaction[];
-      order: number;
-    };
-  } = {};
-  sortedTransactions?.forEach((item) => {
-    const policy = allProducts?.find(
-      (policy) => policy.category === item.category
-    );
-    const transactionTimeInSeconds = String(
-      Math.floor(item.transactionTime.getTime() / 1000)
-    );
-
-    if (!transactionsByTimeMap.hasOwnProperty(transactionTimeInSeconds)) {
-      transactionsByTimeMap[transactionTimeInSeconds] = {
-        transactionTime: item.transactionTime,
-        transactions: [],
-        order: -transactionTimeInSeconds,
-      };
-    }
-    transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
-      header: (policy?.name && c13nt(policy?.name)) ?? item.category,
-      details: getIdentifierInputDisplay(item.identifierInputs ?? []),
-      quantity: formatQuantityText(
-        item.quantity,
-        policy?.quantity.unit
-          ? c13ntForUnit(policy?.quantity.unit)
-          : {
-              type: "POSTFIX",
-              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`,
-            }
-      ),
-      isAppeal: policy?.categoryType === "APPEAL",
-      order: policy?.order ?? BIG_NUMBER,
-    });
-  });
-  return transactionsByTimeMap;
-};
-
-export const sortTransactions = (
-  transactionsByTimeMap: TransactionsByTimeMap
-): TransactionsGroup[] => {
-  return Object.entries(transactionsByTimeMap)
-    .sort(([, a], [, b]) => sortTransactionsByOrder(a, b))
-    .map(([, { transactionTime, transactions, order }]) => ({
-      header: formatDateTime(transactionTime.getTime()),
-      transactions: transactions.sort(sortTransactionsByOrder),
-      order,
-    }));
-};
-
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   ids,
   onCancel,
@@ -173,7 +94,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     allProducts || [],
     translationProps
   );
-  const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
+  const transactionsByTimeList = sortTransactionsByTime(transactionsByTimeMap);
 
   const showGlobalQuota: boolean =
     !!quotaResponse?.globalQuota &&
