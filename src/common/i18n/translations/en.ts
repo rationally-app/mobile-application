@@ -93,9 +93,9 @@ export const en: Translations = {
     quantity: "qty",
   },
   checkoutUnsuccessfulScreen: {
-    unsuccessful: "Unsuccessful",
-    unsuccessfulRedeemAttempt: "Item(s) redeemed previously",
-    logAppeal: "Returned item(s) differed from what was redeemed",
+    unsuccessful: "Unsuccessful return!",
+    unsuccessfulRedeemAttempt:
+      "Item(s) redeemed previously that is eligible for return:",
   },
   customerAppealScreen: {
     raiseAppeal: "Raise an appeal",

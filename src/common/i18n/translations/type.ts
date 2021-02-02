@@ -92,7 +92,6 @@ export type Translations = {
   checkoutUnsuccessfulScreen: {
     unsuccessful: string;
     unsuccessfulRedeemAttempt: string;
-    logAppeal: string;
   };
   customerAppealScreen: {
     raiseAppeal: string;

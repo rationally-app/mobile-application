@@ -111,15 +111,6 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
               </AppText>
             </View>
             <View>
-              <AppText style={{ marginBottom: size(1) }}>
-                {`${c13nt(
-                  "checkoutUnsuccessfulDescription",
-                  undefined,
-                  i18nt("checkoutUnsuccessfulScreen", "logAppeal")
-                )}.`}
-              </AppText>
-            </View>
-            <View>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
                   <ActivityIndicator
