@@ -87,7 +87,7 @@ export const groupTransactionsByCategory = (
     const policy = allProducts?.find(
       (policy) => policy.category === item.category
     );
-    const tName = (policy?.name && c13nt(policy?.name)) ?? item.category;
+    const tName = (policy?.name && c13nt(policy?.name)) ?? c13nt(item.category);
     const formattedDate = formatDateTime(item.transactionTime);
 
     if (!transactionsByCategoryMap.hasOwnProperty(tName)) {
