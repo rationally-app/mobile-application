@@ -181,7 +181,7 @@ export const groupTransactionsByTime = (
       };
     }
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
-      header: (policy?.name && c13nt(policy?.name)) ?? item.category,
+      header: (policy?.name && c13nt(policy?.name)) ?? c13nt(item.category),
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
@@ -220,7 +220,7 @@ export const groupTransactionsByCategory = (
     const policy = allProducts?.find(
       (policy) => policy.category === item.category
     );
-    const tName = (policy?.name && c13nt(policy?.name)) ?? item.category;
+    const tName = (policy?.name && c13nt(policy?.name)) ?? c13nt(item.category);
     const formattedDate = formatDateTime(item.transactionTime);
 
     if (!transactionsByCategoryMap.hasOwnProperty(tName)) {
