@@ -74,6 +74,8 @@ export const en: Translations = {
   checkoutSuccessScreen: {
     redeemed: "Redeemed",
     redeemedItems: "Item(s) redeemed",
+    returned: "Returned",
+    returnedItems: "Item(s) returned",
     nextIdentity: "Next identity",
     previouslyRedeemedItems: "Item(s) redeemed previously",
     redeemedAgo: "Redeemed %{time} ago",
@@ -89,6 +91,11 @@ export const en: Translations = {
     valid: "Valid",
     complete: "Complete",
     quantity: "qty",
+  },
+  checkoutUnsuccessfulScreen: {
+    unsuccessful: "Unsuccessful return!",
+    unsuccessfulRedeemAttempt:
+      "Item(s) redeemed previously that is eligible for return:",
   },
   customerAppealScreen: {
     raiseAppeal: "Raise an appeal",

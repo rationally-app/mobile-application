@@ -71,6 +71,8 @@ export type Translations = {
   checkoutSuccessScreen: {
     redeemed: string;
     redeemedItems: string;
+    returned: string;
+    returnedItems: string;
     nextIdentity: string;
     previouslyRedeemedItems: string;
     redeemedAgo: string;
@@ -86,6 +88,10 @@ export type Translations = {
     valid: string;
     complete: string;
     quantity: string;
+  };
+  checkoutUnsuccessfulScreen: {
+    unsuccessful: string;
+    unsuccessfulRedeemAttempt: string;
   };
   customerAppealScreen: {
     raiseAppeal: string;
