@@ -40,7 +40,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext } from "../../context/alert";
 import { InputSelection } from "./InputSelection";
-import { ManualPassportInput } from "./ManualPassportInput";
+import { PassportInputSection } from "./PassportInputSection";
 import { IdentificationFlag } from "../../types";
 import {
   IdentificationContext,
@@ -219,7 +219,17 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const getInputComponent = (): JSX.Element => {
     return selectedIdType.label === "Passport" &&
       selectedIdType.scannerType === "NONE" ? (
-      <ManualPassportInput
+      <PassportInputSection
+        hasScanner={false}
+        openCamera={() => null}
+        setIdInput={setIdInput}
+        submitId={() => onCheck(idInput)}
+      />
+    ) : selectedIdType.label === "Passport" &&
+      selectedIdType.scannerType === "QR" ? (
+      <PassportInputSection
+        hasScanner={true}
+        openCamera={() => setShouldShowCamera(true)}
         setIdInput={setIdInput}
         submitId={() => onCheck(idInput)}
       />
@@ -307,7 +317,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
           barCodeTypes={
-            features?.id.scannerType === "QR"
+            selectedIdType.label === "Passport"
+              ? features?.alternateIds &&
+                features?.alternateIds.length > 0 &&
+                features?.alternateIds[0].scannerType === "QR"
+                ? [BarCodeScanner.Constants.BarCodeType.qr]
+                : [BarCodeScanner.Constants.BarCodeType.code39]
+              : features?.id.scannerType === "QR"
               ? [BarCodeScanner.Constants.BarCodeType.qr]
               : [BarCodeScanner.Constants.BarCodeType.code39]
           }
