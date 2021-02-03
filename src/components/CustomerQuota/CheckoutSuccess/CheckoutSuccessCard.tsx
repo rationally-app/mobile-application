@@ -124,16 +124,29 @@ export const groupTransactionsByTime = (
   return transactionsByTimeMap;
 };
 
-export const sortTransactions = (
+/**
+ * Transforms map of transactions into an array
+ * Array is sorted by:
+ *  1. Timestamp
+ * Each group is sorted by the timestamp from latest to oldest
+ * The transactions are sorted by the order number
+ *
+ * @param transactionsByTimeMap Transactions by time
+ */
+export const sortTransactionsByTime = (
   transactionsByTimeMap: TransactionsByTimeMap
 ): TransactionsGroup[] => {
   return Object.entries(transactionsByTimeMap)
     .sort(([, a], [, b]) => sortTransactionsByOrder(a, b))
-    .map(([, { transactionTime, transactions, order }]) => ({
-      header: formatDateTime(transactionTime.getTime()),
-      transactions: transactions.sort(sortTransactionsByOrder),
-      order,
-    }));
+    .map(([, { transactionTime, transactions, order }]) => {
+      transactions.sort(sortTransactionsByOrder);
+
+      return {
+        header: formatDateTime(transactionTime.getTime()),
+        transactions,
+        order,
+      };
+    });
 };
 
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
@@ -167,7 +180,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
     allProducts || [],
     translationProps
   );
-  const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
+  const transactionsByTimeList = sortTransactionsByTime(transactionsByTimeMap);
 
   const showGlobalQuota: boolean =
     !!quotaResponse?.globalQuota &&
