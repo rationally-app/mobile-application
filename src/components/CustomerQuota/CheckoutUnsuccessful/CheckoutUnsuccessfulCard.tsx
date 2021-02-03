@@ -17,12 +17,12 @@ import { ShowFullListToggle } from "../ShowFullListToggle";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { TransactionsGroup } from "../TransactionsGroup";
 import { AlertModalContext } from "../../../context/alert";
+import { CampaignConfigContext } from "../../../context/campaignConfig";
 import {
   groupTransactionsByCategory,
-  sortTransactions,
-} from "../NoQuota/NoQuotaCard";
-import { CampaignConfigContext } from "../../../context/campaignConfig";
-import { BIG_NUMBER } from "../utils";
+  sortTransactionsByCategory,
+  BIG_NUMBER,
+} from "../utils";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -76,7 +76,7 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
     translationProps
   );
 
-  const transactionsByCategoryList = sortTransactions(
+  const transactionsByCategoryList = sortTransactionsByCategory(
     transactionsByCategoryMap
   );
   return (
