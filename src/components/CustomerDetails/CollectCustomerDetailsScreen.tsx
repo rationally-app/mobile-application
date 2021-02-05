@@ -325,16 +325,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
           barCodeTypes={getBarcodeType()}
-            selectedIdType.label === "Passport"
-              ? features?.alternateIds &&
-                features?.alternateIds.length > 0 &&
-                features?.alternateIds[0].scannerType === "QR"
-                ? [BarCodeScanner.Constants.BarCodeType.qr]
-                : [BarCodeScanner.Constants.BarCodeType.code39]
-              : features?.id.scannerType === "QR"
-              ? [BarCodeScanner.Constants.BarCodeType.qr]
-              : [BarCodeScanner.Constants.BarCodeType.code39]
-          }
         />
       )}
     </>
