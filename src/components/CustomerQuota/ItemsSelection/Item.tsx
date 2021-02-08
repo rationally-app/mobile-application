@@ -24,6 +24,9 @@ export const Item: FunctionComponent<{
   const { getProduct } = useContext(ProductContext);
   const identifiers = getProduct(cartItem.category)?.identifiers || [];
 
+  let newIdentifiers = identifiers;
+  const newCartItem = cartItem;
+
   if (
     identifiers.length > 0 &&
     cartItem.category.includes("lost") &&
@@ -32,6 +35,12 @@ export const Item: FunctionComponent<{
     console.log("test");
     console.log(cartItem.category);
     console.log(identifiers);
+    newIdentifiers = identifiers.filter(
+      (identifier) => identifier.label != "Payment receipt number"
+    );
+    newCartItem.identifierInputs = newCartItem.identifierInputs.filter(
+      (identifier) => identifier.label != "Payment receipt number"
+    );
   }
 
   return (
@@ -53,11 +62,11 @@ export const Item: FunctionComponent<{
           updateCart={updateCart}
         />
       )}
-      {cartItem.maxQuantity > 0 && identifiers.length > 0 && (
+      {newCartItem.maxQuantity > 0 && newIdentifiers.length > 0 && (
         <ItemIdentifiersCard
-          cartItem={cartItem}
+          cartItem={newCartItem}
           updateCart={updateCart}
-          identifiers={identifiers}
+          identifiers={newIdentifiers}
         />
       )}
     </View>
