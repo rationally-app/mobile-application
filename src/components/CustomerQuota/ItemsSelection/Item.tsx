@@ -24,6 +24,16 @@ export const Item: FunctionComponent<{
   const { getProduct } = useContext(ProductContext);
   const identifiers = getProduct(cartItem.category)?.identifiers || [];
 
+  if (
+    identifiers.length > 0 &&
+    cartItem.category.includes("lost") &&
+    cartItem.descriptionAlert !== "*chargeable"
+  ) {
+    console.log("test");
+    console.log(cartItem.category);
+    console.log(identifiers);
+  }
+
   return (
     <View style={styles.cartItemComponent}>
       {cartItem.maxQuantity === 0 ? (
