@@ -4,7 +4,7 @@ export const en: Translations = {
   loginScanCard: {
     loginWithQR: "Login with your unique QR code provided by your in-charge.",
     scanToLogin: "Scan to login",
-    needHelp: "Need help",
+    needHelp: "Need help?",
     askQuestion: "Ask a question",
   },
   loginMobileNumberCard: {
@@ -72,12 +72,10 @@ export const en: Translations = {
     remove: "Remove",
   },
   checkoutSuccessScreen: {
-    redeemed: "Redeemed",
-    redeemedItems: "Item(s) redeemed",
-    returned: "Returned",
-    returnedItems: "Item(s) returned",
+    redeemed: "Redeemed!",
+    redeemedItems: "Item(s) redeemed:",
     nextIdentity: "Next identity",
-    previouslyRedeemedItems: "Item(s) redeemed previously",
+    previouslyRedeemedItems: "Item(s) redeemed previously:",
     redeemedAgo: "Redeemed %{time} ago",
     redeemedOn: "Redeemed on %{time}",
     previouslyRedeemed: "Previously redeemed",

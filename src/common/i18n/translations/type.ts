@@ -71,8 +71,6 @@ export type Translations = {
   checkoutSuccessScreen: {
     redeemed: string;
     redeemedItems: string;
-    returned: string;
-    returnedItems: string;
     nextIdentity: string;
     previouslyRedeemedItems: string;
     redeemedAgo: string;

@@ -219,7 +219,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                   "checkoutSuccessTitle",
                   undefined,
                   i18nt("checkoutSuccessScreen", "redeemed")
-                )}!`}
+                )}`}
               </AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
                 <UsageQuotaTitle
@@ -234,7 +234,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                   "checkoutSuccessDescription",
                   undefined,
                   i18nt("checkoutSuccessScreen", "redeemedItems")
-                )}:`}
+                )}`}
               </AppText>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
