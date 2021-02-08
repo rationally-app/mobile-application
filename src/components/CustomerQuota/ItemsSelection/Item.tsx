@@ -24,23 +24,36 @@ export const Item: FunctionComponent<{
   const { getProduct } = useContext(ProductContext);
   const identifiers = getProduct(cartItem.category)?.identifiers || [];
 
-  let newIdentifiers = identifiers;
-  const newCartItem = cartItem;
+  const indexOfReceiptField = identifiers.findIndex((item) =>
+    item.label.includes("receipt number")
+  );
 
+  // let newIdentifiers = identifiers;
+  // const newCartItem = cartItem;
+
+  // these idenfitifiers should only be shown if this redemption is chargeable
+  // so we remove them if otherwise
   if (
     identifiers.length > 0 &&
     cartItem.category.includes("lost") &&
-    cartItem.descriptionAlert !== "*chargeable"
+    cartItem.descriptionAlert !== "*chargeable" &&
+    indexOfReceiptField != -1
   ) {
     console.log("test");
-    console.log(cartItem.category);
-    console.log(identifiers);
-    newIdentifiers = identifiers.filter(
-      (identifier) => identifier.label != "Payment receipt number"
+    // newCartItem.identifierInputs = newCartItem.identifierInputs.filter(
+    //   (identifier) => identifier.label != "Payment receipt number"
+    // );
+    // newIdentifiers = identifiers.filter(
+    //   (identifier) => identifier.label != "Payment receipt number"
+    // );
+
+    const removedFromCart = cartItem.identifierInputs.splice(
+      indexOfReceiptField,
+      1
     );
-    newCartItem.identifierInputs = newCartItem.identifierInputs.filter(
-      (identifier) => identifier.label != "Payment receipt number"
-    );
+    const removedFromIden = identifiers.splice(indexOfReceiptField, 1);
+    console.log(removedFromCart);
+    console.log(removedFromIden);
   }
 
   return (
@@ -62,11 +75,11 @@ export const Item: FunctionComponent<{
           updateCart={updateCart}
         />
       )}
-      {newCartItem.maxQuantity > 0 && newIdentifiers.length > 0 && (
+      {cartItem.maxQuantity > 0 && identifiers.length > 0 && (
         <ItemIdentifiersCard
-          cartItem={newCartItem}
+          cartItem={cartItem}
           updateCart={updateCart}
-          identifiers={newIdentifiers}
+          identifiers={identifiers}
         />
       )}
     </View>
