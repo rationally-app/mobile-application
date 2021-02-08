@@ -36,6 +36,7 @@ export enum ERROR_MESSAGE {
   INVALID_PHONE_NUMBER = "Enter a valid contact number.",
   INVALID_COUNTRY_CODE = "Enter a valid country code.",
   INVALID_PHONE_AND_COUNTRY_CODE = "Enter a valid country code and contact number.",
+  INVALID_PAYMENT_RECEIPT_NUMBER = "Enter a payment receipt number.",
   MISSING_SELECTION = "Select at least one item to checkout.",
   AUTH_FAILURE_INVALID_TOKEN = "Get a new QR code from your in-charge.",
   AUTH_FAILURE_INVALID_FORMAT = "Scan QR code again or get a new QR code from your in-charge.",
@@ -100,6 +101,7 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.INVALID_COUNTRY_CODE]: "wrongFormatCountryCode",
   [ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE]:
     "wrongFormatCountryCodePhoneNumber",
+  [ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER]: "wrongPaymentReceiptNumber",
   [ERROR_MESSAGE.MISSING_SELECTION]: "incompleteEntry",
   [ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN]: "expiredQR",
   [ERROR_MESSAGE.AUTH_FAILURE_INVALID_FORMAT]: "invalidInputQR",

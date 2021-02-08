@@ -277,6 +277,12 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    wrongPaymentReceiptNumber: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
     wrongFormatCountryCode: {
       title: string;
       body?: string;
