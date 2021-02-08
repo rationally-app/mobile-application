@@ -28,8 +28,8 @@ export const Item: FunctionComponent<{
     item.label.includes("receipt number")
   );
 
-  // let newIdentifiers = identifiers;
-  // const newCartItem = cartItem;
+  const newIdentifiers = identifiers;
+  const newCartItem = cartItem;
 
   // these idenfitifiers should only be shown if this redemption is chargeable
   // so we remove them if otherwise
@@ -47,13 +47,8 @@ export const Item: FunctionComponent<{
     //   (identifier) => identifier.label != "Payment receipt number"
     // );
 
-    const removedFromCart = cartItem.identifierInputs.splice(
-      indexOfReceiptField,
-      1
-    );
-    const removedFromIden = identifiers.splice(indexOfReceiptField, 1);
-    console.log(removedFromCart);
-    console.log(removedFromIden);
+    newCartItem.identifierInputs.splice(indexOfReceiptField, 1);
+    newIdentifiers.splice(indexOfReceiptField, 1);
   }
 
   return (
@@ -77,9 +72,9 @@ export const Item: FunctionComponent<{
       )}
       {cartItem.maxQuantity > 0 && identifiers.length > 0 && (
         <ItemIdentifiersCard
-          cartItem={cartItem}
+          cartItem={newCartItem}
           updateCart={updateCart}
-          identifiers={identifiers}
+          identifiers={newIdentifiers}
         />
       )}
     </View>
