@@ -189,4 +189,13 @@ describe("validateIdentifierInputs", () => {
       ])
     ).toThrow("Enter or scan a different code.");
   });
+
+  it("should throw the specific error if the identifierInput is payment receipt number", () => {
+    expect.assertions(1);
+    expect(() =>
+      validateIdentifierInputs([
+        { label: "Payment receipt number", value: "", textInputType: "STRING" },
+      ])
+    ).toThrow("Enter a payment receipt number.");
+  });
 });
