@@ -39,14 +39,6 @@ export const Item: FunctionComponent<{
     cartItem.descriptionAlert !== "*chargeable" &&
     indexOfReceiptField != -1
   ) {
-    console.log("test");
-    // newCartItem.identifierInputs = newCartItem.identifierInputs.filter(
-    //   (identifier) => identifier.label != "Payment receipt number"
-    // );
-    // newIdentifiers = identifiers.filter(
-    //   (identifier) => identifier.label != "Payment receipt number"
-    // );
-
     newCartItem.identifierInputs.splice(indexOfReceiptField, 1);
     newIdentifiers.splice(indexOfReceiptField, 1);
   }
