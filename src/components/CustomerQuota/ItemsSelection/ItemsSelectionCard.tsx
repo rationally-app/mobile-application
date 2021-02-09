@@ -78,7 +78,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     (product) => product.categoryType === "APPEAL"
   );
   const isChargeable = cart.some(
-    (cartItem) => cartItem.descriptionAlert === "*chargeable"
+    (cartItem) => cartItem.descriptionAlert === "Chargeable"
   );
   return (
     <View>
