@@ -11,27 +11,33 @@ import { Feather } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   wrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    minHeight: size(10),
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
     paddingHorizontal: size(2),
     paddingVertical: size(1.5),
   },
   wrapperUnchecked: {
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
     backgroundColor: color("grey", 10),
     borderColor: color("grey", 20),
   },
   wrapperChecked: {
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
     backgroundColor: color("green", 10),
     borderColor: color("green", 40),
+  },
+  categoryWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    minHeight: size(10),
   },
   labelWrapper: {
     marginRight: size(1),
     flex: 1,
   },
+  chargeableItemsWrapper: { marginRight: size(1), flex: 1 },
   toggle: {
     borderWidth: 1,
     width: size(5),
@@ -70,34 +76,36 @@ const Toggle: FunctionComponent<Toggle> = ({ isChecked }) => {
 
 interface Checkbox extends Toggle {
   label: ReactElement;
+  chargeableItems: ReactElement | null;
   onToggle: (isChecked: boolean) => void;
 }
 
 export const Checkbox: FunctionComponent<Checkbox> = ({
   label,
+  chargeableItems,
   isChecked,
   onToggle,
 }) => {
   return (
-    <TouchableHighlight
-      onPress={() => {
-        onToggle(!isChecked);
-        if (Platform.OS === "android") {
-          Vibration.vibrate(10);
-        }
-      }}
-      underlayColor="transparent"
-      activeOpacity={1}
-    >
-      <View
-        style={[
-          styles.wrapper,
-          isChecked ? styles.wrapperChecked : styles.wrapperUnchecked,
-        ]}
-      >
-        <View style={styles.labelWrapper}>{label}</View>
-        <Toggle isChecked={isChecked} />
+    <View style={isChecked ? styles.wrapperChecked : styles.wrapperUnchecked}>
+      <View style={styles.wrapper}>
+        <View style={styles.categoryWrapper}>
+          <View style={styles.labelWrapper}>{label}</View>
+          <TouchableHighlight
+            onPress={() => {
+              onToggle(!isChecked);
+              if (Platform.OS === "android") {
+                Vibration.vibrate(10);
+              }
+            }}
+            underlayColor="transparent"
+            activeOpacity={1}
+          >
+            <Toggle isChecked={isChecked} />
+          </TouchableHighlight>
+        </View>
+        <View style={styles.chargeableItemsWrapper}>{chargeableItems}</View>
       </View>
-    </TouchableHighlight>
+    </View>
   );
 };
