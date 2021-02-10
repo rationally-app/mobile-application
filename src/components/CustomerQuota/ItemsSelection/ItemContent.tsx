@@ -1,11 +1,12 @@
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, GestureResponderEvent } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { CampaignPolicy } from "../../../types";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { fontSize, color } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
+import { ShowAddonsToggle } from "./ShowAddonsToggle";
 
 const styles = StyleSheet.create({
   name: {
@@ -28,6 +29,8 @@ export const ItemContent: FunctionComponent<{
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
   accessibilityLabel?: string;
+  showAddonsToggle: (e: GestureResponderEvent) => void;
+  showAddons: boolean;
 }> = ({
   name,
   description,
@@ -35,6 +38,8 @@ export const ItemContent: FunctionComponent<{
   unit,
   maxQuantity,
   accessibilityLabel = "item-content",
+  showAddonsToggle,
+  showAddons,
 }) => {
   const { c13nt } = useTranslate();
   const tDescription = c13nt(description ?? "");
@@ -49,9 +54,6 @@ export const ItemContent: FunctionComponent<{
       >
         {c13nt(name)}
       </AppText>
-      {descriptionAlert && descriptionAlert.length > 0 && (
-        <AppText style={styles.descriptionAlert}>{descriptionAlert}</AppText>
-      )}
       {tDescription.length > 0 && (
         <AppText style={styles.description}>{tDescription}</AppText>
       )}
@@ -59,6 +61,13 @@ export const ItemContent: FunctionComponent<{
         <AppText style={sharedStyles.maxQuantityLabel}>
           <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
         </AppText>
+      )}
+      {descriptionAlert && descriptionAlert.length > 0 && (
+        <ShowAddonsToggle
+          descriptionAlert={descriptionAlert}
+          toggleIsShowAddons={showAddonsToggle}
+          isShowAddons={showAddons}
+        />
       )}
     </View>
   );

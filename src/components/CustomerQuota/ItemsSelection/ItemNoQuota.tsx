@@ -44,6 +44,9 @@ export const ItemNoQuota: FunctionComponent<{
           unit={quantity?.unit}
           maxQuantity={maxQuantity}
           accessibilityLabel="item-no-quota"
+          // TODO: update with showing AddonsItems
+          showAddonsToggle={() => null}
+          showAddons={false}
         />
       </View>
       <View style={styles.feedbackWrapper}>
