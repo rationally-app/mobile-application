@@ -37,6 +37,10 @@ const styles = StyleSheet.create({
     marginRight: size(1),
     flex: 1,
   },
+  toggleWrapper: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
   addonsWrapper: { marginRight: size(1), flex: 1 },
   toggle: {
     borderWidth: 1,
@@ -87,25 +91,30 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
   onToggle,
 }) => {
   return (
-    <View style={isChecked ? styles.wrapperChecked : styles.wrapperUnchecked}>
-      <View style={styles.wrapper}>
+    <View
+      style={[
+        styles.wrapper,
+        isChecked ? styles.wrapperChecked : styles.wrapperUnchecked,
+      ]}
+    >
+      <TouchableHighlight
+        onPress={() => {
+          onToggle(!isChecked);
+          if (Platform.OS === "android") {
+            Vibration.vibrate(10);
+          }
+        }}
+        underlayColor="transparent"
+        activeOpacity={1}
+      >
         <View style={styles.categoryWrapper}>
           <View style={styles.labelWrapper}>{label}</View>
-          <TouchableHighlight
-            onPress={() => {
-              onToggle(!isChecked);
-              if (Platform.OS === "android") {
-                Vibration.vibrate(10);
-              }
-            }}
-            underlayColor="transparent"
-            activeOpacity={1}
-          >
+          <View style={styles.toggleWrapper}>
             <Toggle isChecked={isChecked} />
-          </TouchableHighlight>
+          </View>
         </View>
-        <View style={styles.addonsWrapper}>{addons}</View>
-      </View>
+      </TouchableHighlight>
+      <View style={styles.addonsWrapper}>{addons}</View>
     </View>
   );
 };
