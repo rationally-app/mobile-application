@@ -10,6 +10,7 @@ function CheckboxItem(): ReactElement {
   return (
     <Checkbox
       label={<AppText>isChecked: {isChecked.toString()}</AppText>}
+      chargeableItems={null}
       isChecked={isChecked}
       onToggle={setIsChecked}
     />
