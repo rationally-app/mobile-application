@@ -203,7 +203,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                       "checkoutSuccessPreviousItems",
                       undefined,
                       i18nt("checkoutSuccessScreen", "previouslyRedeemedItems")
-                    )}:`}
+                    )}`}
                   </AppText>
                   {transactionsByCategoryList.map(
                     (

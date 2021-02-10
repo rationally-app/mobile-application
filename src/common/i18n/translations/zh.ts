@@ -4,7 +4,7 @@ export const zh: Translations = {
   loginScanCard: {
     loginWithQR: "请使用您专属的QR码登录",
     scanToLogin: "扫描QR码",
-    needHelp: "需要协助",
+    needHelp: "需要协助?",
     askQuestion: "问问题",
   },
   loginMobileNumberCard: {
@@ -71,12 +71,10 @@ export const zh: Translations = {
     remove: "清除",
   },
   checkoutSuccessScreen: {
-    redeemed: "已领取",
-    redeemedItems: "已领取物品",
-    returned: "物品已退回",
-    returnedItems: "已退回的物品",
+    redeemed: "已领取!",
+    redeemedItems: "已领取物品:",
     nextIdentity: "下一个证件",
-    previouslyRedeemedItems: "已领取物品",
+    previouslyRedeemedItems: "已领取物品:",
     redeemedAgo: "在 %{time} 已领取",
     redeemedOn: "在 %{time} 已领取",
     previouslyRedeemed: "已领取过",
