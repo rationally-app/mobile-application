@@ -346,7 +346,8 @@ export const livePastTransactions = async (
   ids: string[],
   identificationFlag: IdentificationFlag,
   key: string,
-  endpoint: string
+  endpoint: string,
+  categories?: string[]
 ): Promise<PastTransactionsResult> => {
   let response;
   if (ids.length === 0) {
@@ -364,6 +365,7 @@ export const livePastTransactions = async (
         body: JSON.stringify({
           ids,
           identificationFlag,
+          categories,
         }),
       }
     );
