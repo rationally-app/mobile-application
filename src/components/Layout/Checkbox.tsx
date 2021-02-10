@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginRight: size(1),
     flex: 1,
   },
-  chargeableItemsWrapper: { marginRight: size(1), flex: 1 },
+  addonsWrapper: { marginRight: size(1), flex: 1 },
   toggle: {
     borderWidth: 1,
     width: size(5),
@@ -76,13 +76,13 @@ const Toggle: FunctionComponent<Toggle> = ({ isChecked }) => {
 
 interface Checkbox extends Toggle {
   label: ReactElement;
-  chargeableItems: ReactElement | null;
+  addons: ReactElement | null;
   onToggle: (isChecked: boolean) => void;
 }
 
 export const Checkbox: FunctionComponent<Checkbox> = ({
   label,
-  chargeableItems,
+  addons,
   isChecked,
   onToggle,
 }) => {
@@ -104,7 +104,7 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
             <Toggle isChecked={isChecked} />
           </TouchableHighlight>
         </View>
-        <View style={styles.chargeableItemsWrapper}>{chargeableItems}</View>
+        <View style={styles.addonsWrapper}>{addons}</View>
       </View>
     </View>
   );

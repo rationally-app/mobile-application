@@ -34,7 +34,7 @@ export const ItemCheckbox: FunctionComponent<{
           isShowChargeable={isShowChargeableItems}
         />
       }
-      chargeableItems={
+      addons={
         <ChargeableItems ids={ids} isShowChargeable={isShowChargeableItems} />
       }
       isChecked={quantity > 0}
