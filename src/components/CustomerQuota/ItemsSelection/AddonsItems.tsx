@@ -14,10 +14,10 @@ import {
 
 const BIG_NUMBER = 99999;
 
-export const ChargeableItems: FunctionComponent<{
+export const AddonsItems: FunctionComponent<{
   ids: string[];
-  isShowChargeable: boolean;
-}> = ({ ids, isShowChargeable }) => {
+  isShowAddons: boolean;
+}> = ({ ids, isShowAddons }) => {
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { pastTransactionsResult, loading, error } = usePastTransaction(
@@ -50,7 +50,7 @@ export const ChargeableItems: FunctionComponent<{
   const transactionsByCategoryList = sortTransactionsByCategory(
     transactionsByCategoryMap
   );
-  return loading ? (
+  return loading && isShowAddons ? (
     <ActivityIndicator
       style={{ alignSelf: "flex-start" }}
       size="large"
@@ -62,7 +62,7 @@ export const ChargeableItems: FunctionComponent<{
         (transactionsByCategory: TransactionsGroup, index: number) => (
           <TransactionsGroup
             key={index}
-            maxTransactionsToDisplay={!isShowChargeable ? 0 : BIG_NUMBER}
+            maxTransactionsToDisplay={!isShowAddons ? 0 : BIG_NUMBER}
             {...transactionsByCategory}
           />
         )

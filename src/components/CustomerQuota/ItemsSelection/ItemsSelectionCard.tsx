@@ -94,6 +94,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           {cart.map((cartItem) => (
             <Item
               ids={ids}
+              isChargeable={isChargeable}
               key={cartItem.category}
               cartItem={cartItem}
               updateCart={updateCart}

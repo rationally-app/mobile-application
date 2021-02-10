@@ -1,12 +1,12 @@
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, GestureResponderEvent } from "react-native";
 import { AppText } from "../../Layout/AppText";
 import { CampaignPolicy } from "../../../types";
 import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { fontSize } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
-import { ShowChargeableItemsToggle } from "./ShowChargeableItemsToggle";
+import { ShowAddonsToggle } from "./ShowAddonsToggle";
 
 const styles = StyleSheet.create({
   name: {
@@ -25,8 +25,8 @@ export const ItemContent: FunctionComponent<{
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
   accessibilityLabel?: string;
-  showChargeableToggle: () => void;
-  isShowChargeable: boolean;
+  showAddonsToggle: (e: GestureResponderEvent) => void;
+  showAddons: boolean;
 }> = ({
   name,
   description,
@@ -34,8 +34,8 @@ export const ItemContent: FunctionComponent<{
   unit,
   maxQuantity,
   accessibilityLabel = "item-content",
-  showChargeableToggle,
-  isShowChargeable,
+  showAddonsToggle,
+  showAddons,
 }) => {
   const { c13nt } = useTranslate();
   const tDescription = c13nt(description ?? "");
@@ -59,10 +59,10 @@ export const ItemContent: FunctionComponent<{
         </AppText>
       )}
       {descriptionAlert && descriptionAlert.length > 0 && (
-        <ShowChargeableItemsToggle
+        <ShowAddonsToggle
           descriptionAlert={descriptionAlert}
-          toggleIsShowChargeableItems={showChargeableToggle}
-          isShowChargeableItems={isShowChargeable}
+          toggleIsShowAddons={showAddonsToggle}
+          isShowAddons={showAddons} // use flag from ItemsSelectionCard
         />
       )}
     </View>

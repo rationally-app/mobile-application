@@ -3,16 +3,15 @@ import { Checkbox } from "../../Layout/Checkbox";
 import { ItemContent } from "./ItemContent";
 import { CartItem, CartHook } from "../../../hooks/useCart/useCart";
 import { ProductContext } from "../../../context/products";
-import { ChargeableItems } from "./ChargeableItems";
+import { AddonsItems } from "./AddonsItems";
 
 export const ItemCheckbox: FunctionComponent<{
   ids: string[];
+  isChargeable: boolean;
   cartItem: CartItem;
   updateCart: CartHook["updateCart"];
-}> = ({ ids, cartItem, updateCart }) => {
-  const [isShowChargeableItems, setIsShowChargeableItems] = useState<boolean>(
-    false
-  );
+}> = ({ ids, isChargeable, cartItem, updateCart }) => {
+  const [isShowAddonsItems, setIsShowAddonsItems] = useState<boolean>(false);
   const { category, quantity, maxQuantity } = cartItem;
   const { getProduct } = useContext(ProductContext);
   const { name = category, description, quantity: productQuantity } =
@@ -28,14 +27,17 @@ export const ItemCheckbox: FunctionComponent<{
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
           accessibilityLabel="item-checkbox"
-          showChargeableToggle={() =>
-            setIsShowChargeableItems(!isShowChargeableItems)
-          }
-          isShowChargeable={isShowChargeableItems}
+          showAddonsToggle={(e) => {
+            e.stopPropagation();
+            setIsShowAddonsItems(!isShowAddonsItems);
+          }}
+          showAddons={isShowAddonsItems}
         />
       }
       addons={
-        <ChargeableItems ids={ids} isShowChargeable={isShowChargeableItems} />
+        isChargeable ? (
+          <AddonsItems ids={ids} isShowAddons={isShowAddonsItems} />
+        ) : null
       }
       isChecked={quantity > 0}
       onToggle={() => updateCart(category, quantity > 0 ? 0 : maxQuantity)}

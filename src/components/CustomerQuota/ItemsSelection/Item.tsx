@@ -17,9 +17,10 @@ const styles = StyleSheet.create({
 
 export const Item: FunctionComponent<{
   ids: string[];
+  isChargeable: boolean;
   cartItem: CartItem;
   updateCart: CartHook["updateCart"];
-}> = ({ ids, cartItem, updateCart }) => {
+}> = ({ ids, isChargeable, cartItem, updateCart }) => {
   const { getProduct } = useContext(ProductContext);
   const identifiers = getProduct(cartItem.category)?.identifiers || [];
 
@@ -28,9 +29,19 @@ export const Item: FunctionComponent<{
       {cartItem.maxQuantity === 0 ? (
         <ItemNoQuota cartItem={cartItem} />
       ) : cartItem.maxQuantity === 1 ? (
-        <ItemCheckbox ids={ids} cartItem={cartItem} updateCart={updateCart} />
+        <ItemCheckbox
+          ids={ids}
+          isChargeable={isChargeable}
+          cartItem={cartItem}
+          updateCart={updateCart}
+        />
       ) : (
-        <ItemStepper ids={ids} cartItem={cartItem} updateCart={updateCart} />
+        <ItemStepper
+          ids={ids}
+          isChargeable={isChargeable}
+          cartItem={cartItem}
+          updateCart={updateCart}
+        />
       )}
       {cartItem.maxQuantity > 0 && identifiers.length > 0 && (
         <ItemIdentifiersCard

@@ -15,9 +15,10 @@ import { sharedStyles } from "./sharedStyles";
 
 export const ItemStepper: FunctionComponent<{
   ids: string[];
+  isChargeable: boolean;
   cartItem: CartItem;
   updateCart: CartHook["updateCart"];
-}> = ({ ids, cartItem, updateCart }) => {
+}> = ({ ids, isChargeable, cartItem, updateCart }) => {
   const { category, quantity, maxQuantity } = cartItem;
   const { getProduct } = useContext(ProductContext);
   const { name = category, description, quantity: productQuantity } =
@@ -52,9 +53,9 @@ export const ItemStepper: FunctionComponent<{
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
           accessibilityLabel="item-stepper"
-          // TODO: update with showing ChargeableItems
-          showChargeableToggle={() => null}
-          isShowChargeable={false}
+          // TODO: update with showing AddonsItems
+          showAddonsToggle={() => null}
+          showAddons={false}
         />
       </View>
       <View>
