@@ -93,6 +93,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
         <View style={sharedStyles.resultWrapper}>
           {cart.map((cartItem) => (
             <Item
+              ids={ids}
+              isChargeable={isChargeable}
               key={cartItem.category}
               cartItem={cartItem}
               updateCart={updateCart}

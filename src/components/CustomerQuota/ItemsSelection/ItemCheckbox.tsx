@@ -6,9 +6,11 @@ import { ProductContext } from "../../../context/products";
 import { AddonsItems } from "./AddonsItems";
 
 export const ItemCheckbox: FunctionComponent<{
+  ids: string[];
+  isChargeable: boolean;
   cartItem: CartItem;
   updateCart: CartHook["updateCart"];
-}> = ({ cartItem, updateCart }) => {
+}> = ({ ids, isChargeable, cartItem, updateCart }) => {
   const [isShowAddonsItems, setIsShowAddonsItems] = useState<boolean>(false);
   const { category, quantity, maxQuantity } = cartItem;
   const { getProduct } = useContext(ProductContext);
@@ -32,7 +34,11 @@ export const ItemCheckbox: FunctionComponent<{
           showAddons={isShowAddonsItems}
         />
       }
-      addons={<AddonsItems />}
+      addons={
+        isChargeable ? (
+          <AddonsItems ids={ids} isShowAddons={isShowAddonsItems} />
+        ) : null
+      }
       isChecked={quantity > 0}
       onToggle={() => updateCart(category, quantity > 0 ? 0 : maxQuantity)}
     />
