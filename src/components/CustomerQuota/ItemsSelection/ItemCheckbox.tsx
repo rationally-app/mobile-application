@@ -9,7 +9,7 @@ export const ItemCheckbox: FunctionComponent<{
   cartItem: CartItem;
   updateCart: CartHook["updateCart"];
 }> = ({ cartItem, updateCart }) => {
-  const [isShowAddonsItems, setIsShowAddonsItems] = useState<boolean>(false);
+  const [isShowAddonsItems, setIsShowAddonsItems] = useState(false);
   const { category, quantity, maxQuantity, descriptionAlert } = cartItem;
   const { getProduct } = useContext(ProductContext);
   const { name = category, description, quantity: productQuantity } =
