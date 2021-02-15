@@ -24,23 +24,22 @@ export const Item: FunctionComponent<{
   const { getProduct } = useContext(ProductContext);
   const identifiers = getProduct(cartItem.category)?.identifiers || [];
 
-  const indexOfReceiptField = identifiers.findIndex((item) =>
-    item.label.includes("receipt number")
-  );
-
-  const newIdentifiers = identifiers;
+  let newIdentifiers = identifiers;
   const newCartItem = cartItem;
 
-  // these idenfitifiers should only be shown if this redemption is chargeable
-  // so we remove them if otherwise
+  // these identifiers should only be shown if this redemption is chargeable
+  // so we will filter them out if otherwise
   if (
     identifiers.length > 0 &&
     cartItem.category.includes("lost") &&
-    cartItem.descriptionAlert !== "*chargeable" &&
-    indexOfReceiptField != -1
+    cartItem.descriptionAlert !== "*chargeable"
   ) {
-    newCartItem.identifierInputs.splice(indexOfReceiptField, 1);
-    newIdentifiers.splice(indexOfReceiptField, 1);
+    newIdentifiers = identifiers.filter(
+      (identifier) => identifier.label != "Payment receipt number"
+    );
+    newCartItem.identifierInputs = newCartItem.identifierInputs.filter(
+      (identifier) => identifier.label != "Payment receipt number"
+    );
   }
 
   return (
