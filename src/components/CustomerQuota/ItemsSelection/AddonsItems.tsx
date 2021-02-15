@@ -17,13 +17,15 @@ const BIG_NUMBER = 99999;
 export const AddonsItems: FunctionComponent<{
   ids: string[];
   isShowAddons: boolean;
-}> = ({ ids, isShowAddons }) => {
+  categoryFilter?: string[];
+}> = ({ ids, isShowAddons, categoryFilter }) => {
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
     sessionToken,
-    endpoint
+    endpoint,
+    categoryFilter
   );
 
   const sortedTransactions = pastTransactionsResult;
