@@ -64,7 +64,7 @@ export const ItemContent: FunctionComponent<{
       )}
       {descriptionAlert && descriptionAlert.length > 0 && (
         <ShowAddonsToggle
-          descriptionAlert={c13nt(descriptionAlert)}
+          descriptionAlert={descriptionAlert}
           toggleIsShowAddons={showAddonsToggle}
           isShowAddons={showAddons}
         />
