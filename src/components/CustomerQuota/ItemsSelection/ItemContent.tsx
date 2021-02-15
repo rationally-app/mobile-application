@@ -29,8 +29,8 @@ export const ItemContent: FunctionComponent<{
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
   accessibilityLabel?: string;
-  showAddonsToggle: (e: GestureResponderEvent) => void;
-  showAddons: boolean;
+  showAddonsToggle?: (e: GestureResponderEvent) => void;
+  showAddons?: boolean;
 }> = ({
   name,
   description,

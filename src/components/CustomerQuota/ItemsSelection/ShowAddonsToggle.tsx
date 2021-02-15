@@ -22,11 +22,11 @@ export type DescriptionAlertTypes = keyof Translations["addonsToggleComponent"];
 
 export const ShowAddonsToggle: FunctionComponent<{
   descriptionAlert: DescriptionAlertTypes;
-  toggleIsShowAddons: (e: GestureResponderEvent) => void;
-  isShowAddons: boolean;
+  toggleIsShowAddons?: (e: GestureResponderEvent) => void;
+  isShowAddons?: boolean;
 }> = ({ descriptionAlert, toggleIsShowAddons, isShowAddons }) => {
   const { i18nt } = useTranslate();
-  return (
+  return toggleIsShowAddons && isShowAddons ? (
     <TouchableOpacity onPress={toggleIsShowAddons}>
       <AppText style={styles.descriptionAlert}>
         {`${i18nt(
@@ -39,5 +39,12 @@ export const ShowAddonsToggle: FunctionComponent<{
         />
       </AppText>
     </TouchableOpacity>
+  ) : (
+    <AppText style={styles.descriptionAlert}>
+      {`${i18nt(
+        "addonsToggleComponent",
+        descriptionAlert as DescriptionAlertTypes
+      )} `}
+    </AppText>
   );
 };
