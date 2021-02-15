@@ -5,10 +5,10 @@ import {
   GestureResponderEvent,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Translations } from "../../../common/i18n/translations/type";
 import { color, size } from "../../../common/styles";
 import { AppText } from "../../Layout/AppText";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
+import { Translations } from "../../../common/i18n/translations/type";
 
 const styles = StyleSheet.create({
   descriptionAlert: {
@@ -18,20 +18,20 @@ const styles = StyleSheet.create({
   },
 });
 
-type descriptionAlertTypes = keyof Translations["addonsToggleComponent"];
+export type DescriptionAlertTypes = keyof Translations["addonsToggleComponent"];
 
 export const ShowAddonsToggle: FunctionComponent<{
-  descriptionAlert: descriptionAlertTypes;
-  toggleIsShowAddons: (e: GestureResponderEvent) => void;
-  isShowAddons: boolean;
+  descriptionAlert: DescriptionAlertTypes;
+  toggleIsShowAddons?: (e: GestureResponderEvent) => void;
+  isShowAddons?: boolean;
 }> = ({ descriptionAlert, toggleIsShowAddons, isShowAddons }) => {
   const { i18nt } = useTranslate();
-  return (
+  return toggleIsShowAddons && isShowAddons ? (
     <TouchableOpacity onPress={toggleIsShowAddons}>
       <AppText style={styles.descriptionAlert}>
         {`${i18nt(
           "addonsToggleComponent",
-          descriptionAlert as descriptionAlertTypes
+          descriptionAlert as DescriptionAlertTypes
         )} `}
         <MaterialCommunityIcons
           name={isShowAddons ? "chevron-up" : "chevron-down"}
@@ -39,5 +39,12 @@ export const ShowAddonsToggle: FunctionComponent<{
         />
       </AppText>
     </TouchableOpacity>
+  ) : (
+    <AppText style={styles.descriptionAlert}>
+      {`${i18nt(
+        "addonsToggleComponent",
+        descriptionAlert as DescriptionAlertTypes
+      )} `}
+    </AppText>
   );
 };

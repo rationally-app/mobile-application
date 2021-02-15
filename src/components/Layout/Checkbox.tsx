@@ -80,7 +80,7 @@ const Toggle: FunctionComponent<Toggle> = ({ isChecked }) => {
 
 interface Checkbox extends Toggle {
   label: ReactElement;
-  addons: ReactElement | null;
+  addons?: ReactElement;
   onToggle: (isChecked: boolean) => void;
 }
 
@@ -91,21 +91,21 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
   onToggle,
 }) => {
   return (
-    <View
-      style={[
-        styles.wrapper,
-        isChecked ? styles.wrapperChecked : styles.wrapperUnchecked,
-      ]}
+    <TouchableHighlight
+      onPress={() => {
+        onToggle(!isChecked);
+        if (Platform.OS === "android") {
+          Vibration.vibrate(10);
+        }
+      }}
+      underlayColor="transparent"
+      activeOpacity={1}
     >
-      <TouchableHighlight
-        onPress={() => {
-          onToggle(!isChecked);
-          if (Platform.OS === "android") {
-            Vibration.vibrate(10);
-          }
-        }}
-        underlayColor="transparent"
-        activeOpacity={1}
+      <View
+        style={[
+          styles.wrapper,
+          isChecked ? styles.wrapperChecked : styles.wrapperUnchecked,
+        ]}
       >
         <View style={styles.categoryWrapper}>
           <View style={styles.labelWrapper}>{label}</View>
@@ -113,8 +113,8 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
             <Toggle isChecked={isChecked} />
           </View>
         </View>
-      </TouchableHighlight>
-      <View style={styles.addonsWrapper}>{addons}</View>
-    </View>
+        {addons && <View style={styles.addonsWrapper}>{addons}</View>}
+      </View>
+    </TouchableHighlight>
   );
 };
