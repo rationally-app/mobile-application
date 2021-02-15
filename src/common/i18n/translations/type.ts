@@ -108,6 +108,7 @@ export type Translations = {
     appleStore: string;
     androidStore: string;
   };
+  addonsToggleComponent: { "*chargeable": string };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: string;
