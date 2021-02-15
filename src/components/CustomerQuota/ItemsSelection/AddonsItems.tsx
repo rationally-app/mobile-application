@@ -66,6 +66,7 @@ export const AddonsItems: FunctionComponent<{
             key={index}
             maxTransactionsToDisplay={!isShowAddons ? 0 : BIG_NUMBER}
             {...transactionsByCategory}
+            header={undefined}
           />
         )
       )}
