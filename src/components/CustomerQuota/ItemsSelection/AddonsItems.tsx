@@ -16,19 +16,16 @@ const BIG_NUMBER = 99999;
 
 export const AddonsItems: FunctionComponent<{
   ids: string[];
-  isShowAddons: boolean;
+  isShowAddonItems: boolean;
   categoryFilter?: string[];
-}> = ({ ids, isShowAddons, categoryFilter }) => {
+}> = ({ ids, isShowAddonItems, categoryFilter }) => {
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { policies: allProducts } = useContext(CampaignConfigContext);
-  const { pastTransactionsResult, loading, error } = usePastTransaction(
-    ids,
-    sessionToken,
-    endpoint,
-    categoryFilter
-  );
-
-  const sortedTransactions = pastTransactionsResult;
+  const {
+    pastTransactionsResult: sortedTransactions,
+    loading,
+    error,
+  } = usePastTransaction(ids, sessionToken, endpoint, categoryFilter);
 
   const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
@@ -52,7 +49,7 @@ export const AddonsItems: FunctionComponent<{
   const transactionsByCategoryList = sortTransactionsByCategory(
     transactionsByCategoryMap
   );
-  return loading && isShowAddons ? (
+  return loading && isShowAddonItems ? (
     <ActivityIndicator
       style={{ alignSelf: "flex-start" }}
       size="large"
@@ -64,7 +61,7 @@ export const AddonsItems: FunctionComponent<{
         (transactionsByCategory: TransactionsGroup, index: number) => (
           <TransactionsGroup
             key={index}
-            maxTransactionsToDisplay={!isShowAddons ? 0 : BIG_NUMBER}
+            maxTransactionsToDisplay={!isShowAddonItems ? 0 : BIG_NUMBER}
             {...transactionsByCategory}
             header={undefined}
           />
