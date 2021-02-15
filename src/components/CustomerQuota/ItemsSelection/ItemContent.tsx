@@ -6,7 +6,7 @@ import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { fontSize, color } from "../../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
-import { ShowAddonsToggle } from "./ShowAddonsToggle";
+import { ShowAddonsToggle, DescriptionAlertTypes } from "./ShowAddonsToggle";
 
 const styles = StyleSheet.create({
   name: {
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 export const ItemContent: FunctionComponent<{
   name: CampaignPolicy["name"];
   description: CampaignPolicy["description"];
-  descriptionAlert?: string;
+  descriptionAlert?: DescriptionAlertTypes;
   unit: CampaignPolicy["quantity"]["unit"];
   maxQuantity: number;
   accessibilityLabel?: string;

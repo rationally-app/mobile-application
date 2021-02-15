@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { color, size } from "../../../common/styles";
 import { AppText } from "../../Layout/AppText";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
+import { Translations } from "../../../common/i18n/translations/type";
 
 const styles = StyleSheet.create({
   descriptionAlert: {
@@ -17,8 +18,10 @@ const styles = StyleSheet.create({
   },
 });
 
+export type DescriptionAlertTypes = keyof Translations["addonsToggleComponent"];
+
 export const ShowAddonsToggle: FunctionComponent<{
-  descriptionAlert: string;
+  descriptionAlert: DescriptionAlertTypes;
   toggleIsShowAddons: (e: GestureResponderEvent) => void;
   isShowAddons: boolean;
 }> = ({ descriptionAlert, toggleIsShowAddons, isShowAddons }) => {
@@ -26,7 +29,10 @@ export const ShowAddonsToggle: FunctionComponent<{
   return (
     <TouchableOpacity onPress={toggleIsShowAddons}>
       <AppText style={styles.descriptionAlert}>
-        {`${i18nt("addonsToggleComponent", descriptionAlert)} `}
+        {`${i18nt(
+          "addonsToggleComponent",
+          descriptionAlert as DescriptionAlertTypes
+        )} `}
         <MaterialCommunityIcons
           name={isShowAddons ? "chevron-up" : "chevron-down"}
           size={size(2)}
