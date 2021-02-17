@@ -53,9 +53,6 @@ export const ItemStepper: FunctionComponent<{
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
           accessibilityLabel="item-stepper"
-          // TODO: update with showing AddonsItems
-          showAddonsToggle={() => null}
-          showAddons={false}
         />
       </View>
       <View>

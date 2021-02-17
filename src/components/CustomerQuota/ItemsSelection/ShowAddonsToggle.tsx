@@ -26,7 +26,8 @@ export const ShowAddonsToggle: FunctionComponent<{
   isShowAddons?: boolean;
 }> = ({ descriptionAlert, toggleIsShowAddons, isShowAddons }) => {
   const { i18nt } = useTranslate();
-  return toggleIsShowAddons && isShowAddons ? (
+
+  return (
     <TouchableOpacity onPress={toggleIsShowAddons}>
       <AppText style={styles.descriptionAlert}>
         {`${i18nt(
@@ -39,12 +40,5 @@ export const ShowAddonsToggle: FunctionComponent<{
         />
       </AppText>
     </TouchableOpacity>
-  ) : (
-    <AppText style={styles.descriptionAlert}>
-      {`${i18nt(
-        "addonsToggleComponent",
-        descriptionAlert as DescriptionAlertTypes
-      )} `}
-    </AppText>
   );
 };
