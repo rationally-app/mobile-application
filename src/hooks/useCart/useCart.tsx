@@ -133,7 +133,9 @@ export const useCart = (
   useEffect(() => {
     if (
       cartQuota &&
-      (!prevCartQuota || prevIds !== ids || prevProducts !== products)
+      (prevCartQuota != cartQuota ||
+        prevIds !== ids ||
+        prevProducts !== products)
     ) {
       if (!hasInvalidRemainingQuota(cartQuota)) {
         /**
