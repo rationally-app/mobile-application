@@ -8,12 +8,13 @@ import { IdentificationContext } from "../../context/identification";
 import { ProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
 import { hasInvalidRemainingQuota } from "../useQuota/useQuota";
+import { DescriptionAlertTypes } from "../../components/CustomerQuota/ItemsSelection/ShowAddonsToggle";
 
 export type CartItem = {
   category: string;
   quantity: number;
   maxQuantity: number;
-  descriptionAlert?: string;
+  descriptionAlert?: DescriptionAlertTypes;
   /**
    * Indicates the previous time quota was used.
    * It will be undefined for batch quotas.
@@ -54,14 +55,15 @@ const mergeWithCart = (
   quota: ItemQuota[],
   getProduct: ProductContextValue["getProduct"]
 ): Cart => {
-  return quota
-    .sort((itemOne, itemTwo) => {
-      const productOneOrder = getProduct(itemOne.category)?.order || 0;
-      const productTwoOrder = getProduct(itemTwo.category)?.order || 0;
+  quota.sort((itemOne, itemTwo) => {
+    const productOneOrder = getProduct(itemOne.category)?.order || 0;
+    const productTwoOrder = getProduct(itemTwo.category)?.order || 0;
 
-      return productOneOrder - productTwoOrder;
-    })
-    .map(({ category, quantity: remainingQuantity, transactionTime }) => {
+    return productOneOrder - productTwoOrder;
+  });
+
+  return quota.map(
+    ({ category, quantity: remainingQuantity, transactionTime }) => {
       remainingQuantity = Math.max(remainingQuantity, 0);
       const [existingItem] = getItem(cart, category);
 
@@ -78,12 +80,12 @@ const mergeWithCart = (
           })
         ) || [];
 
-      let descriptionAlert: string | undefined = undefined;
+      let descriptionAlert: DescriptionAlertTypes | undefined = undefined;
       if (product && product.alert) {
         const expandedQuota = product.quantity.limit - remainingQuantity;
         descriptionAlert =
           expandedQuota >= product.alert.threshold
-            ? product.alert.label
+            ? (product.alert.label as DescriptionAlertTypes)
             : undefined;
       }
 
@@ -103,7 +105,8 @@ const mergeWithCart = (
         lastTransactionTime: transactionTime,
         identifierInputs,
       };
-    });
+    }
+  );
 };
 
 export const useCart = (

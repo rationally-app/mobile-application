@@ -113,6 +113,7 @@ export const en: Translations = {
     appleStore: "App Store",
     androidStore: "Play Store",
   },
+  addonsToggleComponent: { "*chargeable": "Chargeable" },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "Already used",
