@@ -32,7 +32,7 @@ export const ItemCheckbox: FunctionComponent<{
           showAddons={isShowAddonsItems}
         />
       }
-      addons={<AddonsItems />}
+      addons={<AddonsItems isShowAddons={isShowAddonsItems} />}
       isChecked={quantity > 0}
       onToggle={() => updateCart(category, quantity > 0 ? 0 : maxQuantity)}
     />
