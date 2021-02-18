@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import { createFullNumber } from "../../../../utils/validatePhoneNumbers";
+import { formatPhoneNumberE164 } from "../../../../utils/phoneNumbers";
 import { View } from "react-native";
 import { PhoneNumberInput } from "../../../Layout/PhoneNumberInput";
 import { sharedStyles } from "./sharedStyles";
@@ -12,7 +12,7 @@ export const IdentifierPhoneNumberInput: FunctionComponent<{
   const [phoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
-    onPhoneNumberChange(createFullNumber(countryCodeValue, phoneNumber));
+    onPhoneNumberChange(formatPhoneNumberE164(countryCodeValue, phoneNumber));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countryCodeValue, phoneNumber]);
 
