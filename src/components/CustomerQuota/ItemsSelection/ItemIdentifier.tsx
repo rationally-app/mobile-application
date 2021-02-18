@@ -33,7 +33,7 @@ export const ItemIdentifier: FunctionComponent<{
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { showErrorAlert } = useContext(AlertModalContext);
-  const { c13nt, i18nt } = useTranslate();
+  const { c13nt } = useTranslate();
 
   const { label, textInput, scanButton } = identifier;
 
@@ -77,10 +77,6 @@ export const ItemIdentifier: FunctionComponent<{
             disabled={scanButton.disabled}
             fullWidth={!textInput.visible}
             onPress={() => setShouldShowCamera(true)}
-            text={
-              (scanButton.text && c13nt(scanButton.text)) ??
-              i18nt("customerQuotaScreen", "quotaIdentifierButtonScan")
-            }
           />
         )}
       </View>
