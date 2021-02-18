@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useContext, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ActivityIndicator, View } from "react-native";
 import { color } from "../../../common/styles";
 import { AlertModalContext } from "../../../context/alert";
@@ -19,6 +24,9 @@ export const AddonsItems: FunctionComponent<{
   isShowAddonItems: boolean;
   categoryFilter?: string[];
 }> = ({ ids, isShowAddonItems, categoryFilter }) => {
+  const [transactionList, setTransactionList] = useState<TransactionsGroup[]>(
+    []
+  );
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const {
@@ -33,22 +41,27 @@ export const AddonsItems: FunctionComponent<{
       showErrorAlert(error);
     }
   }, [error, showErrorAlert]);
-  const latestTransactionTime: Date | undefined =
-    sortedTransactions && sortedTransactions.length > 0
-      ? sortedTransactions[0].transactionTime
-      : undefined;
-
   const translationProps = useTranslate();
-  const transactionsByCategoryMap = groupTransactionsByCategory(
-    sortedTransactions,
-    allProducts || [],
-    latestTransactionTime,
-    translationProps
-  );
 
-  const transactionsByCategoryList = sortTransactionsByCategory(
-    transactionsByCategoryMap
-  );
+  useEffect(() => {
+    const latestTransactionTime: Date | undefined =
+      sortedTransactions && sortedTransactions.length > 0
+        ? sortedTransactions[0].transactionTime
+        : undefined;
+
+    const transactionsByCategoryMap = groupTransactionsByCategory(
+      sortedTransactions,
+      allProducts || [],
+      latestTransactionTime,
+      translationProps
+    );
+
+    const transactionsByCategoryList = sortTransactionsByCategory(
+      transactionsByCategoryMap
+    );
+    setTransactionList(transactionsByCategoryList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortedTransactions]);
   return loading && isShowAddonItems ? (
     <ActivityIndicator
       style={{ alignSelf: "flex-start" }}
@@ -57,7 +70,7 @@ export const AddonsItems: FunctionComponent<{
     />
   ) : (
     <View>
-      {transactionsByCategoryList.map(
+      {transactionList.map(
         (transactionsByCategory: TransactionsGroup, index: number) => (
           <TransactionsGroup
             key={index}
