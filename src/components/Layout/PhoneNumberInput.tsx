@@ -1,11 +1,12 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import {
-  formatPhoneNumber,
-  stripPhoneNumberFormatting,
-} from "../../utils/phoneNumberFormatter";
+  parsePhoneNumber,
+  formatPhoneNumberInternational,
+  stripNonDigits,
+} from "../../utils/phoneNumbers";
 
 const styles = StyleSheet.create({
   inputsWrapper: {
@@ -69,7 +70,21 @@ export const PhoneNumberInput: FunctionComponent<{
   onSubmit = () => {},
   accessibilityLabel = "phone-number",
 }) => {
-  const countryCode = countryCodeValue.substr(1);
+  const [formattedNumber, setFormattedNumber] = useState(mobileNumberValue);
+
+  useEffect(() => {
+    try {
+      const parsedNumber = parsePhoneNumber(
+        mobileNumberValue,
+        countryCodeValue
+      );
+      setFormattedNumber(formatPhoneNumberInternational(parsedNumber, false));
+    } catch (e) {
+      // If there are errors parsing, don't format the number
+      setFormattedNumber(mobileNumberValue);
+    }
+  }, [countryCodeValue, mobileNumberValue]);
+
   return (
     <View style={styles.numberWrapper}>
       <AppText
@@ -85,17 +100,15 @@ export const PhoneNumberInput: FunctionComponent<{
           style={styles.countryCode}
           keyboardType="phone-pad"
           value={countryCodeValue}
-          onChangeText={(text) => onChangeCountryCode(text)}
+          onChangeText={onChangeCountryCode}
         />
         <AppText style={styles.hyphen}>-</AppText>
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={formatPhoneNumber(mobileNumberValue, countryCode)}
+          value={formattedNumber}
           onChangeText={(text) => {
-            onChangeMobileNumber(
-              stripPhoneNumberFormatting(formatPhoneNumber(text, countryCode))
-            );
+            onChangeMobileNumber(stripNonDigits(text));
           }}
           onSubmitEditing={onSubmit}
           accessibilityLabel={`${accessibilityLabel}-input`}
