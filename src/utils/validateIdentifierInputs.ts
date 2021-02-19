@@ -1,6 +1,10 @@
 import { IdentifierInput } from "../types";
-import { fullPhoneNumberValidator } from "./validatePhoneNumbers";
 import { ERROR_MESSAGE } from "../context/alert";
+import {
+  parsePhoneNumber,
+  validatePhoneNumberForCountry,
+} from "./phoneNumbers";
+import { PhoneNumber } from "google-libphonenumber";
 
 const defaultPhoneNumberValidationRegex = "^\\+[0-9]*$";
 
@@ -37,8 +41,14 @@ export const validateIdentifierInputs = (
     if (!isMatchRegex(value, validationRegex)) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
-    if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
-      throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
+    if (textInputType === "PHONE_NUMBER") {
+      let parsedNumber: PhoneNumber;
+      try {
+        parsedNumber = parsePhoneNumber(value);
+        validatePhoneNumberForCountry(parsedNumber);
+      } catch (e) {
+        throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
+      }
     }
   }
 

@@ -44,7 +44,7 @@ import {
 } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
-import { createFullNumber } from "../../utils/validatePhoneNumbers";
+import { formatPhoneNumberE164 } from "../../utils/phoneNumbers";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -315,7 +315,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
           {loginStage === "OTP" && (
             <LoginOTPCard
               resetStage={resetStage}
-              fullMobileNumber={createFullNumber(countryCode, mobileNumber)}
+              fullMobileNumber={formatPhoneNumberE164(
+                countryCode,
+                mobileNumber
+              )}
               operatorToken={tempAuthCredentials?.operatorToken ?? ""}
               endpoint={tempAuthCredentials?.endpoint ?? ""}
               handleRequestOTP={handleRequestOTP}

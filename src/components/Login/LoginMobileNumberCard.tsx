@@ -13,10 +13,11 @@ import { AppText } from "../Layout/AppText";
 import { LoginStage } from "./types";
 import { PhoneNumberInput } from "../Layout/PhoneNumberInput";
 import {
-  createFullNumber,
-  countryCodeValidator,
-  mobileNumberValidator,
-} from "../../utils/validatePhoneNumbers";
+  formatPhoneNumberE164,
+  parsePhoneNumber,
+  validatePhoneNumberForCountry,
+  Errors as PhoneNumberErrors,
+} from "../../utils/phoneNumbers";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { ConfigContext } from "../../context/config";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
@@ -62,7 +63,10 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
 
   const onRequestOTP = async (): Promise<void> => {
     setIsLoading(true);
-    const fullMobileNumber = createFullNumber(countryCode, mobileNumberValue);
+    const fullMobileNumber = formatPhoneNumberE164(
+      countryCode,
+      mobileNumberValue
+    );
     const isRequestSuccessful = await handleRequestOTP(fullMobileNumber);
     setIsLoading(false);
     if (isRequestSuccessful) {
@@ -73,12 +77,22 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
   };
 
   const onSubmitMobileNumber = (): void => {
-    if (!countryCodeValidator(countryCode)) {
-      showErrorAlert(new Error(ERROR_MESSAGE.INVALID_COUNTRY_CODE));
-    } else if (!mobileNumberValidator(countryCode, mobileNumberValue)) {
-      showErrorAlert(new Error(ERROR_MESSAGE.INVALID_PHONE_NUMBER));
-    } else {
+    try {
+      const parsedNumber = parsePhoneNumber(mobileNumberValue, countryCode);
+      validatePhoneNumberForCountry(parsedNumber);
       onRequestOTP();
+    } catch (e) {
+      switch (true) {
+        case e instanceof PhoneNumberErrors.CountryCodeInvalidError:
+          showErrorAlert(new Error(ERROR_MESSAGE.INVALID_COUNTRY_CODE));
+          break;
+        case e instanceof PhoneNumberErrors.PhoneNumberInvalidForRegionError:
+        case e instanceof PhoneNumberErrors.PhoneNumberTooLongError:
+        case e instanceof PhoneNumberErrors.PhoneNumberTooShortError:
+        case e instanceof PhoneNumberErrors.PhoneNumberUnrecognisedError:
+        default:
+          showErrorAlert(new Error(ERROR_MESSAGE.INVALID_PHONE_NUMBER));
+      }
     }
   };
 
