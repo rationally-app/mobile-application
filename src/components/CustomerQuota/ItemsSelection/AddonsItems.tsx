@@ -60,8 +60,7 @@ export const AddonsItems: FunctionComponent<{
       transactionsByCategoryMap
     );
     setTransactionList(transactionsByCategoryList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortedTransactions]);
+  }, [sortedTransactions, allProducts, translationProps]);
   return loading && isShowAddonItems ? (
     <ActivityIndicator
       style={{ alignSelf: "flex-start" }}
