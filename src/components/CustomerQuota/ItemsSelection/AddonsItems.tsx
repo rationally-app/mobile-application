@@ -69,16 +69,18 @@ export const AddonsItems: FunctionComponent<{
     />
   ) : (
     <View>
-      {transactionList.map(
-        (transactionsByCategory: TransactionsGroup, index: number) => (
-          <TransactionsGroup
-            key={index}
-            maxTransactionsToDisplay={!isShowAddonItems ? 0 : BIG_NUMBER}
-            {...transactionsByCategory}
-            header={undefined}
-          />
-        )
-      )}
+      {transactionList && transactionList.length > 0
+        ? transactionList.map(
+            (transactionsByCategory: TransactionsGroup, index: number) => (
+              <TransactionsGroup
+                key={index}
+                maxTransactionsToDisplay={!isShowAddonItems ? 0 : BIG_NUMBER}
+                {...transactionsByCategory}
+                header={undefined}
+              />
+            )
+          )
+        : undefined}
     </View>
   );
 };
