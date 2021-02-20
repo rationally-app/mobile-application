@@ -41,7 +41,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "flex-end",
   },
-  addonsWrapper: { marginRight: size(1), flex: 1 },
+  addonsWrapper: {
+    marginRight: size(1),
+    flex: 1,
+  },
   toggle: {
     borderWidth: 1,
     width: size(5),

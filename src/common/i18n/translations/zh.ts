@@ -110,7 +110,9 @@ export const zh: Translations = {
     appleStore: "谷歌应用商店",
     androidStore: "苹果应用商店",
   },
-  addonsToggleComponent: { "*chargeable": "Chargeable" },
+  addonsToggleComponent: {
+    "*chargeable": "应收费",
+  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "已使用",
