@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator } from "react-native";
 import { color } from "../../../common/styles";
 import { AlertModalContext } from "../../../context/alert";
 import { AuthContext } from "../../../context/auth";
@@ -47,7 +47,6 @@ export const AddonsItems: FunctionComponent<{
     }
   }, [error, showErrorAlert]);
   const translationProps = useTranslate();
-
   useEffect(() => {
     const latestTransactionTime: Date | undefined =
       sortedTransactions && sortedTransactions.length > 0
@@ -66,14 +65,14 @@ export const AddonsItems: FunctionComponent<{
     );
     setTransactionList(transactionsByCategoryList);
   }, [sortedTransactions, allProducts, translationProps]);
-  return loading && isShowAddonItems ? (
+  return loading ? (
     <ActivityIndicator
       style={{ alignSelf: "flex-start" }}
       size="large"
       color={color("grey", 40)}
     />
-  ) : (
-    <View>
+  ) : isShowAddonItems ? (
+    <>
       {transactionList && transactionList.length > 0
         ? transactionList.map(
             (transactionsByCategory: TransactionsGroup, index: number) => (
@@ -86,6 +85,8 @@ export const AddonsItems: FunctionComponent<{
             )
           )
         : undefined}
-    </View>
+    </>
+  ) : (
+    <></>
   );
 };
