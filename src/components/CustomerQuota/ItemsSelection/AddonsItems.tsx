@@ -78,15 +78,13 @@ export const AddonsItems: FunctionComponent<{
             (transactionsByCategory: TransactionsGroup, index: number) => (
               <TransactionsGroup
                 key={index}
-                maxTransactionsToDisplay={!isShowAddonItems ? 0 : BIG_NUMBER}
+                maxTransactionsToDisplay={BIG_NUMBER}
                 {...transactionsByCategory}
                 header={undefined}
               />
             )
           )
-        : undefined}
+        : null}
     </>
-  ) : (
-    <></>
-  );
+  ) : null;
 };
