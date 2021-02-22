@@ -31,6 +31,12 @@ export const usePastTransaction = (
 
   useEffect(() => {
     const fetchPastTransactions = async (): Promise<void> => {
+      Sentry.addBreadcrumb({
+        category: "fetchPastTransactions",
+        message: JSON.stringify({
+          ids: ids.map((id) => id.slice(-4).padStart(id.length, "*")),
+        }),
+      });
       try {
         const pastTransactionsResponse = await getPastTransactions(
           ids,
@@ -41,11 +47,7 @@ export const usePastTransaction = (
         );
         setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
       } catch (error) {
-        Sentry.captureException(
-          `Unable to fetch past transactions: ${ids.map((id) =>
-            id.slice(-4).padStart(id.length, "*")
-          )}`
-        );
+        Sentry.captureException("Unable to fetch past transactions");
         setError(
           new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
         );
