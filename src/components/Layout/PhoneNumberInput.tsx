@@ -1,4 +1,9 @@
-import React, { FunctionComponent } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { AppText } from "./AppText";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
@@ -42,9 +47,6 @@ const styles = StyleSheet.create({
     marginHorizontal: size(0.5),
     fontSize: fontSize(3),
   },
-  numberWrapper: {
-    marginBottom: size(2),
-  },
   label: {
     fontFamily: "brand-bold",
   },
@@ -68,9 +70,32 @@ export const PhoneNumberInput: FunctionComponent<{
   onSubmit = () => {},
   accessibilityLabel = "phone-number",
 }) => {
-  const countryCode = countryCodeValue.substr(1);
+  const [formattedNumber, setFormattedNumber] = useState(mobileNumberValue);
+
+  const onChangeNumberInput = useCallback(
+    (text: string): void => {
+      onChangeMobileNumber(stripPhoneNumberFormatting(text));
+    },
+    [onChangeMobileNumber]
+  );
+
+  useEffect(() => {
+    const formatted = formatPhoneNumber(mobileNumberValue, countryCodeValue);
+    setFormattedNumber(formatted);
+    /**
+     * Changes in country code may cause the format to be different and
+     * the parent needs to be informed of the state change.
+     * e.g. Initially country code is "+1", while number is "6588888888".
+     * The input will show "658-888-8888". On changing country code to "+65",
+     * the format updates to "8888 8888", but the parent's state is
+     * still "6588888888". This ensures that the parent's state becomes
+     * "88888888".
+     */
+    onChangeNumberInput(formatted);
+  }, [countryCodeValue, mobileNumberValue, onChangeNumberInput]);
+
   return (
-    <View style={styles.numberWrapper}>
+    <View>
       <AppText
         style={styles.label}
         accessibilityLabel={`${accessibilityLabel}-label`}
@@ -84,18 +109,14 @@ export const PhoneNumberInput: FunctionComponent<{
           style={styles.countryCode}
           keyboardType="phone-pad"
           value={countryCodeValue}
-          onChangeText={(text) => onChangeCountryCode(text)}
+          onChangeText={onChangeCountryCode}
         />
         <AppText style={styles.hyphen}>-</AppText>
         <TextInput
           style={styles.numberInput}
           keyboardType="phone-pad"
-          value={formatPhoneNumber(mobileNumberValue, countryCode)}
-          onChangeText={(text) => {
-            onChangeMobileNumber(
-              stripPhoneNumberFormatting(formatPhoneNumber(text, countryCode))
-            );
-          }}
+          value={formattedNumber}
+          onChangeText={onChangeNumberInput}
           onSubmitEditing={onSubmit}
           accessibilityLabel={`${accessibilityLabel}-input`}
           testID={`${accessibilityLabel}-input`}
