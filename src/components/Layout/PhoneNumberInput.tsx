@@ -39,8 +39,7 @@ const styles = StyleSheet.create({
     fontFamily: "brand-regular",
   },
   hyphen: {
-    marginRight: size(1),
-    marginLeft: size(1),
+    marginHorizontal: size(0.5),
     fontSize: fontSize(3),
   },
   numberWrapper: {
