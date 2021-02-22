@@ -14,6 +14,8 @@ import { ProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
 
 export const ItemStepper: FunctionComponent<{
+  ids: string[];
+  isChargeable: boolean;
   cartItem: CartItem;
   updateCart: CartHook["updateCart"];
 }> = ({ cartItem, updateCart }) => {

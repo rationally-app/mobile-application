@@ -50,7 +50,7 @@ export interface Transaction {
 }
 
 export interface TransactionsGroup {
-  header: string;
+  header: string | undefined;
   transactions: Transaction[];
   order: number;
 }
@@ -98,9 +98,11 @@ export const TransactionsGroup: FunctionComponent<
   const shouldShowGroup = transactions[0].order < maxTransactionsToDisplay;
   return shouldShowGroup ? (
     <View style={styles.wrapper}>
-      <View style={styles.itemRow}>
-        <AppText style={styles.itemHeader}>{header}</AppText>
-      </View>
+      {!!header && (
+        <View style={styles.itemRow}>
+          <AppText style={styles.itemHeader}>{header}</AppText>
+        </View>
+      )}
       {transactions.map(
         (transaction, index) =>
           transaction.order < maxTransactionsToDisplay && (
