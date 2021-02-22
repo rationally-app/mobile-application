@@ -39,7 +39,7 @@ export const ItemCheckbox: FunctionComponent<{
           <AddonsItems
             ids={ids}
             isShowAddonItems={isShowAddonsItems}
-            categoryFilter={[category]}
+            categoryFilter={category}
           />
         ) : undefined
       }

@@ -22,7 +22,7 @@ const BIG_NUMBER = 99999;
 export const AddonsItems: FunctionComponent<{
   ids: string[];
   isShowAddonItems: boolean;
-  categoryFilter?: string[];
+  categoryFilter?: string;
 }> = ({ ids, isShowAddonItems, categoryFilter }) => {
   const [transactionList, setTransactionList] = useState<TransactionsGroup[]>(
     []
@@ -33,7 +33,12 @@ export const AddonsItems: FunctionComponent<{
     pastTransactionsResult: sortedTransactions,
     loading,
     error,
-  } = usePastTransaction(ids, sessionToken, endpoint, categoryFilter);
+  } = usePastTransaction(
+    ids,
+    sessionToken,
+    endpoint,
+    categoryFilter ? [categoryFilter] : undefined
+  );
 
   const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
