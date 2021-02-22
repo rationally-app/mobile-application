@@ -65,26 +65,26 @@ export const AddonsItems: FunctionComponent<{
     );
     setTransactionList(transactionsByCategoryList);
   }, [sortedTransactions, allProducts, translationProps]);
-  return loading ? (
-    <ActivityIndicator
-      style={{ alignSelf: "flex-start" }}
-      size="large"
-      color={color("grey", 40)}
-    />
-  ) : isShowAddonItems ? (
-    <>
-      {transactionList && transactionList.length > 0
-        ? transactionList.map(
-            (transactionsByCategory: TransactionsGroup, index: number) => (
-              <TransactionsGroup
-                key={index}
-                maxTransactionsToDisplay={BIG_NUMBER}
-                {...transactionsByCategory}
-                header={undefined}
-              />
-            )
+  return isShowAddonItems ? (
+    loading ? (
+      <ActivityIndicator
+        style={{ alignSelf: "flex-start" }}
+        size="large"
+        color={color("grey", 40)}
+      />
+    ) : (
+      <>
+        {transactionList.map(
+          (transactionsByCategory: TransactionsGroup, index: number) => (
+            <TransactionsGroup
+              key={index}
+              maxTransactionsToDisplay={BIG_NUMBER}
+              {...transactionsByCategory}
+              header={undefined}
+            />
           )
-        : null}
-    </>
+        )}
+      </>
+    )
   ) : null;
 };
