@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useLayoutEffect,
+} from "react";
 import {
   createFullNumber,
   parsePhoneNumber,
@@ -21,16 +26,7 @@ export const IdentifierPhoneNumberInput: FunctionComponent<{
   const [fullNumber, setFullNumber] = useState("");
   const prevFullNumber = usePrevious(fullNumber);
 
-  useEffect(() => {
-    setFullNumber(createFullNumber(countryCodeValue, phoneNumber));
-  }, [countryCodeValue, phoneNumber]);
-
-  useEffect(() => {
-    onPhoneNumberChange(fullNumber);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fullNumber]);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     // value was updated from parent
     if (value.length > 0 && prevFullNumber && value !== prevFullNumber) {
       try {
@@ -42,6 +38,15 @@ export const IdentifierPhoneNumberInput: FunctionComponent<{
       }
     }
   }, [value, prevFullNumber, countryCodeValue]);
+
+  useEffect(() => {
+    setFullNumber(createFullNumber(countryCodeValue, phoneNumber));
+  }, [countryCodeValue, phoneNumber]);
+
+  useEffect(() => {
+    onPhoneNumberChange(fullNumber);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fullNumber]);
 
   return (
     <View
