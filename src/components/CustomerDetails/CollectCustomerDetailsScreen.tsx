@@ -189,6 +189,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           policy.categoryType === undefined || policy.categoryType === "DEFAULT"
       );
 
+      setShouldShowCamera(false);
       navigation.navigate("CustomerQuotaProxy", {
         id,
         products: defaultProducts,
