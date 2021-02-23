@@ -446,6 +446,7 @@ describe("quota", () => {
           body: JSON.stringify({
             ids: ["S0000000J"],
             identificationFlag,
+            getAllTransactions: false,
             categories,
           }),
           headers: { Authorization: key },
