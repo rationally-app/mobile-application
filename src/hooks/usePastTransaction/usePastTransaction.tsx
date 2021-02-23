@@ -19,7 +19,8 @@ export const usePastTransaction = (
   ids: string[],
   authKey: string,
   endpoint: string,
-  categories?: string[]
+  categories?: string[],
+  getAllTransactions = false
 ): PastTransactionHook => {
   const [pastTransactionsResult, setPastTransactionsResult] = useState<
     PastTransactionsResult["pastTransactions"] | null
@@ -37,7 +38,8 @@ export const usePastTransaction = (
           selectedIdType,
           authKey,
           endpoint,
-          categories
+          categories,
+          getAllTransactions
         );
         setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
       } catch (error) {
@@ -59,7 +61,15 @@ export const usePastTransaction = (
       setError(null);
       fetchPastTransactions();
     }
-  }, [authKey, endpoint, ids, categories, selectedIdType, prevIds]);
+  }, [
+    authKey,
+    endpoint,
+    ids,
+    categories,
+    getAllTransactions,
+    selectedIdType,
+    prevIds,
+  ]);
 
   return {
     pastTransactionsResult,
