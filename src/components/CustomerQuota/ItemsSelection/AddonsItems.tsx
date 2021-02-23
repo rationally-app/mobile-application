@@ -37,7 +37,8 @@ export const AddonsItems: FunctionComponent<{
     ids,
     sessionToken,
     endpoint,
-    categoryFilter ? [categoryFilter] : undefined
+    categoryFilter ? [categoryFilter] : undefined,
+    true
   );
 
   const { showErrorAlert } = useContext(AlertModalContext);
