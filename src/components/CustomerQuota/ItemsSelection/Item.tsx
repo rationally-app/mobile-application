@@ -31,7 +31,7 @@ export const Item: FunctionComponent<{
   // so we will filter them out if otherwise
   if (
     identifiers.length > 0 &&
-    cartItem.category.includes("lost") &&
+    cartItem.category.includes("tt-token-lost") &&
     cartItem.descriptionAlert !== "*chargeable"
   ) {
     newIdentifiers = identifiers.filter(

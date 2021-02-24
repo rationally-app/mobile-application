@@ -261,7 +261,7 @@ export const zh: Translations = {
     },
     wrongPaymentReceiptNumber: {
       title: "格式错误",
-      body: "请输入付款收据编号。",
+      body: "请输入有效的付款收据编号。",
       primaryActionText: "确定",
     },
     wrongFormatCountryCode: {
