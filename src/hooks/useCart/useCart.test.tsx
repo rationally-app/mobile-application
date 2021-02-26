@@ -58,6 +58,8 @@ const mockQuotaResSingleId: Quota = {
   ],
 };
 
+const mockQuotaResSingleIdSingleItem = [mockQuotaResSingleId.remainingQuota[0]];
+
 const mockQuotaResMultipleIds: Quota = {
   remainingQuota: [
     {
@@ -639,8 +641,7 @@ describe("useCart", () => {
 
       const ids = ["ID1"];
       const { result } = renderHook(
-        () =>
-          useCart(ids, key, endpoint, [mockQuotaResSingleId.remainingQuota[0]]),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleIdSingleItem),
         {
           wrapper,
           initialProps: {
@@ -880,8 +881,7 @@ describe("useCart", () => {
         </ProductContextProvider>
       );
       const { result } = renderHook(
-        () =>
-          useCart(ids, key, endpoint, [mockQuotaResSingleId.remainingQuota[0]]),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleIdSingleItem),
         {
           wrapper: MobileNumberIdentifierProductWrapper,
         }
@@ -952,8 +952,7 @@ describe("useCart", () => {
         </ProductContextProvider>
       );
       const { result } = renderHook(
-        () =>
-          useCart(ids, key, endpoint, [mockQuotaResSingleId.remainingQuota[0]]),
+        () => useCart(ids, key, endpoint, mockQuotaResSingleIdSingleItem),
         {
           wrapper: InvalidIdentifierProductWrapper,
         }
