@@ -125,10 +125,11 @@ export const useCart = (
 
   /**
    * Update the cart when:
-   *  1. First quota is retrieved on initialisation (i.e. no previous cart quota)
-   *  2. When quota response changes
-   *  3. When quota is updated (i.e. products or ids change)
-   * Items 2 and 3 can occur at the same time.
+   *  1. An incoming cart quota exists, AND
+   *  2. There is no existing cart quota, OR
+   *  3. The incoming cart quota is different from the existing cart quota, OR
+   *  4. The customer IDs have changed, OR
+   *  5. The products in the cart have changed
    */
   useEffect(() => {
     if (
