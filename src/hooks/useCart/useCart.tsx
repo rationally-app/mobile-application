@@ -133,7 +133,8 @@ export const useCart = (
   useEffect(() => {
     if (
       cartQuota &&
-      (prevCartQuota != cartQuota ||
+      (!prevCartQuota ||
+        prevCartQuota != cartQuota ||
         prevIds !== ids ||
         prevProducts !== products)
     ) {
