@@ -16,12 +16,24 @@ export class SessionError extends Error {
   }
 }
 
+export class NetworkError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "NetworkError";
+  }
+}
+
 export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
   init?: RequestInit
 ): Promise<T> {
-  const response = await fetch(requestInfo, init);
+  let response: Response;
+  try {
+    response = await fetch(requestInfo, init);
+  } catch (e) {
+    throw new NetworkError(e.message);
+  }
 
   const json = await response.json();
   if (!response.ok) {
