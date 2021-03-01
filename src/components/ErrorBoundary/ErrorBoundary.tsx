@@ -2,14 +2,15 @@ import React, { Component, ReactNode } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { ErrorBoundaryContent } from "./ErrorBoundaryContent";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
+import { camelCase } from "lodash";
 
-type State = { hasError: boolean; errorMessage?: string };
+type State = { hasError: boolean; errorName?: string };
 
 export class ErrorBoundary extends Component<unknown, State> {
   state: State = { hasError: false };
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, errorMessage: error.name };
+    return { hasError: true, errorName: error.name };
   }
 
   componentDidCatch(error: Error): void {
@@ -21,11 +22,12 @@ export class ErrorBoundary extends Component<unknown, State> {
   }
 
   render(): ReactNode {
-    const error = `(${this.state.errorMessage} ${formatDateTime(Date.now())})`;
+    const error = `(${this.state.errorName} ${formatDateTime(Date.now())})`;
 
     return this.state.hasError ? (
       <ErrorBoundaryContent
-        error={this.state.errorMessage ? error : undefined}
+        error={this.state.errorName ? error : undefined}
+        errorName={this.state.errorName}
       />
     ) : (
       this.props.children
