@@ -1,3 +1,4 @@
+import { PolicyIdentifier } from "../../../types";
 import { ItemNoQuota } from "./ItemNoQuota";
 import { ItemCheckbox } from "./ItemCheckbox";
 import { ItemStepper } from "./ItemStepper";
@@ -15,6 +16,56 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Check if the campaign contains tt-token
+ * to indicate pod camapaign
+ *
+ * @param cartItemCategory category of item
+ */
+const isPodCampaign = (cartItemCategory: string): boolean =>
+  cartItemCategory.includes("tt-token");
+
+/**
+ * Check if pod is chargeable
+ *
+ * @param identifiers policy identifiers
+ * @param cartItem policy cart item
+ */
+const isPodChargeable = (
+  identifiers: PolicyIdentifier[],
+  cartItem: CartItem
+): boolean =>
+  identifiers.length > 0 &&
+  cartItem.category.includes("tt-token-lost") &&
+  cartItem.descriptionAlert === "*chargeable";
+
+/**
+ * Filters out the payment receipt identifier if not required
+ * which happens when pod is not chargeable
+ * Shape of identifiers and cartItem.identifierInputs are slightly different and
+ * hence require to filter separately
+ *
+ * @param newIdentifiers identifiers that can be modified
+ * @param newCartItem cartItem containing identifiers that can be modified
+ */
+const removePaymentReceiptField = (
+  newIdentifiers: PolicyIdentifier[],
+  newCartItem: CartItem
+): {
+  newIdentifiers: PolicyIdentifier[];
+  newCartItem: CartItem;
+} => {
+  newIdentifiers = newIdentifiers.filter(
+    (identifier: { label: string }) =>
+      identifier.label != "Payment receipt number"
+  );
+  newCartItem.identifierInputs = newCartItem.identifierInputs.filter(
+    (identifier) => identifier.label != "Payment receipt number"
+  );
+
+  return { newIdentifiers, newCartItem };
+};
+
 export const Item: FunctionComponent<{
   ids: string[];
   isChargeable: boolean;
@@ -25,21 +76,17 @@ export const Item: FunctionComponent<{
   const identifiers = getProduct(cartItem.category)?.identifiers || [];
 
   let newIdentifiers = identifiers;
-  const newCartItem = cartItem;
+  let newCartItem = cartItem;
 
-  // these identifiers should only be shown if this redemption is chargeable
-  // so we will filter them out if otherwise
-  if (
-    identifiers.length > 0 &&
-    cartItem.category.includes("tt-token-lost") &&
-    cartItem.descriptionAlert !== "*chargeable"
-  ) {
-    newIdentifiers = identifiers.filter(
-      (identifier) => identifier.label != "Payment receipt number"
-    );
-    newCartItem.identifierInputs = newCartItem.identifierInputs.filter(
-      (identifier) => identifier.label != "Payment receipt number"
-    );
+  // Conditional check if receipt field should be removed,
+  // only applied for Pod distribution
+  if (isPodCampaign(cartItem.category)) {
+    if (!isPodChargeable(identifiers, cartItem)) {
+      ({ newIdentifiers, newCartItem } = removePaymentReceiptField(
+        identifiers,
+        cartItem
+      ));
+    }
   }
 
   return (
