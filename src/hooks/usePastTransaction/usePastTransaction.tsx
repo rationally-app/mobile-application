@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { PastTransactionsResult } from "../../types";
 import { usePrevious } from "../usePrevious";
+import { useIsMounted } from "../useIsMounted";
 import {
   getPastTransactions,
   PastTransactionError,
@@ -22,6 +23,7 @@ export const usePastTransaction = (
   categories?: string[],
   getAllTransactions = false
 ): PastTransactionHook => {
+  const isMounted = useIsMounted();
   const [pastTransactionsResult, setPastTransactionsResult] = useState<
     PastTransactionsResult["pastTransactions"] | null
   >(null);
@@ -47,14 +49,18 @@ export const usePastTransaction = (
           categories,
           getAllTransactions
         );
-        setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
+        if (isMounted()) {
+          setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
+        }
       } catch (error) {
         Sentry.captureException("Unable to fetch past transactions");
         setError(
           new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
         );
       } finally {
-        setLoading(false);
+        if (isMounted()) {
+          setLoading(false);
+        }
       }
     };
 
@@ -71,6 +77,7 @@ export const usePastTransaction = (
     getAllTransactions,
     selectedIdType,
     prevIds,
+    isMounted,
   ]);
 
   return {
