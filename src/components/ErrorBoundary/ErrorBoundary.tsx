@@ -1,7 +1,6 @@
 import React, { Component, ReactNode } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { ErrorBoundaryContent } from "./ErrorBoundaryContent";
-import { formatDateTime } from "../../utils/dateTimeFormatter";
 
 type State = { hasError: boolean; errorName?: string };
 
@@ -21,13 +20,8 @@ export class ErrorBoundary extends Component<unknown, State> {
   }
 
   render(): ReactNode {
-    const error = `(${this.state.errorName} ${formatDateTime(Date.now())})`;
-
     return this.state.hasError ? (
-      <ErrorBoundaryContent
-        error={this.state.errorName ? error : undefined}
-        errorName={this.state.errorName}
-      />
+      <ErrorBoundaryContent errorName={this.state.errorName} />
     ) : (
       this.props.children
     );

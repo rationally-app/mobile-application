@@ -6,6 +6,7 @@ import * as Updates from "expo-updates";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import AlertIcon from "../../../assets/icons/alert.svg";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { formatDateTime } from "../../utils/dateTimeFormatter";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -49,10 +50,13 @@ const styles = StyleSheet.create({
 });
 
 export const ErrorBoundaryContent: FunctionComponent<{
-  error?: string;
   errorName?: string;
-}> = ({ error, errorName }) => {
+}> = ({ errorName }) => {
   const { i18nt } = useTranslate();
+
+  const errorDescription = errorName
+    ? `(${errorName} ${formatDateTime(Date.now())})`
+    : undefined;
 
   let header, body, restartButtonText;
 
@@ -84,7 +88,9 @@ export const ErrorBoundaryContent: FunctionComponent<{
         <AlertIcon style={styles.icon} width={size(5)} height={size(5)} />
         <AppText style={styles.heading}>{header}</AppText>
         <AppText style={styles.body}>{body}</AppText>
-        {error && <AppText style={styles.errorDescription}>{error}</AppText>}
+        {errorDescription && (
+          <AppText style={styles.errorDescription}>{errorDescription}</AppText>
+        )}
       </View>
       <View style={styles.restartButton}>
         <DarkButton
