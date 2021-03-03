@@ -2,7 +2,6 @@ import React, { Component, ReactNode } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { ErrorBoundaryContent } from "./ErrorBoundaryContent";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
-import { camelCase } from "lodash";
 
 type State = { hasError: boolean; errorName?: string };
 
