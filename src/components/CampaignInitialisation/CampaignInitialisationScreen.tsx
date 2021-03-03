@@ -113,7 +113,6 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
           navigation.navigate("CampaignLocationsScreen")
         );
       } else if (updateCampaignConfigError instanceof NetworkError) {
-        showErrorAlert(updateCampaignConfigError);
         throw updateCampaignConfigError;
       } else {
         throw updateCampaignConfigError; // Let ErrorBoundary handle
