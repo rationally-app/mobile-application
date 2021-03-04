@@ -23,7 +23,7 @@ export const validateIdentifierInputs = (
     validationRegex,
     textInputType,
   } of identifierInputs) {
-    //TODO: switch between different errors based on campaign config
+    // TODO: switch between different errors based on campaign config
     // TODO: can set the validation regex here once it's confirmed
     if (label === "Payment receipt number" && !value) {
       throw new Error(ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER);

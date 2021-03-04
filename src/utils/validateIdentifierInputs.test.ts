@@ -196,6 +196,6 @@ describe("validateIdentifierInputs", () => {
       validateIdentifierInputs([
         { label: "Payment receipt number", value: "", textInputType: "STRING" },
       ])
-    ).toThrow("Enter a payment receipt number.");
+    ).toThrow("Enter a valid payment receipt number.");
   });
 });

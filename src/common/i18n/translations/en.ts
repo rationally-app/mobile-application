@@ -268,7 +268,7 @@ export const en: Translations = {
     },
     wrongPaymentReceiptNumber: {
       title: "Wrong format",
-      body: "Enter a payment receipt number.",
+      body: "Enter a valid payment receipt number.",
       primaryActionText: "OK",
     },
     wrongFormatCountryCode: {
