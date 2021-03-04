@@ -49,21 +49,21 @@ const isPodChargeable = (
  * @param newCartItem cartItem containing identifiers that can be modified
  */
 const removePaymentReceiptField = (
-  newIdentifiers: PolicyIdentifier[],
-  newCartItem: CartItem
+  identifiers: PolicyIdentifier[],
+  cartItem: CartItem
 ): {
   newIdentifiers: PolicyIdentifier[];
   newCartItem: CartItem;
 } => {
-  newIdentifiers = newIdentifiers.filter(
+  identifiers = identifiers.filter(
     (identifier: { label: string }) =>
       identifier.label != "Payment receipt number"
   );
-  newCartItem.identifierInputs = newCartItem.identifierInputs.filter(
+  cartItem.identifierInputs = cartItem.identifierInputs.filter(
     (identifier) => identifier.label != "Payment receipt number"
   );
 
-  return { newIdentifiers, newCartItem };
+  return { newIdentifiers: identifiers, newCartItem: cartItem };
 };
 
 export const Item: FunctionComponent<{
