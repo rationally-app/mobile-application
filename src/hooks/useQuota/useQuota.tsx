@@ -63,8 +63,21 @@ const filterQuotaWithAvailableProducts = (
   return filteredQuota;
 };
 
+/**
+ * Determines if there is no quota from a Quota object.
+ *
+ * There is no quota if:
+ *  - The remaining quota does not contain any items, or
+ *  - The remaining quota contains items, and all of their quantities are 0.
+ *
+ * @param quota a Quota object
+ * @returns true if there is no quota, otherwise false.
+ */
 const hasNoQuota = (quota: Quota): boolean => {
-  return quota.remainingQuota.every((item) => item.quantity === 0);
+  return (
+    quota.remainingQuota.length <= 0 ||
+    quota.remainingQuota.every((item) => item.quantity === 0)
+  );
 };
 
 const hasInvalidQuota = (quota: Quota): boolean => {
