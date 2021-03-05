@@ -74,10 +74,7 @@ const filterQuotaWithAvailableProducts = (
  * @returns true if there is no quota, otherwise false.
  */
 const hasNoQuota = (quota: Quota): boolean => {
-  return (
-    quota.remainingQuota.length <= 0 ||
-    quota.remainingQuota.every((item) => item.quantity === 0)
-  );
+  return quota.remainingQuota.every((item) => item.quantity === 0);
 };
 
 const hasInvalidQuota = (quota: Quota): boolean => {
