@@ -246,6 +246,12 @@ const mockQuotaResSingleIdWithAppealProducts: Quota = {
   ],
 };
 
+const mockQuotaResSingleIdEmptyQuota: Quota = {
+  remainingQuota: [],
+  globalQuota: [],
+  localQuota: [],
+};
+
 /**
  * This should be used alongside `defaultNonAppealProducts`,
  * which assumes that `toilet-paper` is a non-appeal product,
@@ -398,6 +404,22 @@ describe("useQuota", () => {
           quantity: 15,
         },
       ]);
+    });
+
+    it("should have quota state be NO_QUOTA when remainingQuota received contains an empty array", async () => {
+      expect.assertions(3);
+      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdEmptyQuota);
+
+      const ids = ["ID1"];
+      const { result, waitForNextUpdate } = renderHook(
+        () => useQuota(ids, key, endpoint),
+        { wrapper }
+      );
+      expect(result.current.quotaState).toBe("FETCHING_QUOTA");
+
+      await waitForNextUpdate();
+      expect(result.current.quotaState).toBe("NO_QUOTA");
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([]);
     });
 
     it("should set quota state to NOT_ELIGIBLE when NotEligibleError is thrown, and does not update quota response", async () => {
