@@ -8,17 +8,17 @@ const appTextElement = (): JSX.Element[] => {
   return [
     <>
       <AppText>
-        <Text> Default app text</Text>
+        <Text>Default app text</Text>
       </AppText>
     </>,
     <>
       <AppText style={{ color: color("red", 60) }}>
-        <Text> customize app text</Text>
+        <Text>customize app text in (color("red", 60))</Text>
       </AppText>
     </>,
     <>
       <AppText style={{ fontSize: size(3) }}>
-        <Text> customize app text</Text>
+        <Text>customize app text in fontSize: size(3)</Text>
       </AppText>
     </>,
   ];
