@@ -2,6 +2,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { useUpdateCampaignConfig } from "./useUpdateCampaignConfig";
 import { getCampaignConfig } from "../../services/campaignConfig";
 import { wait } from "@testing-library/react-native";
+import { NetworkError } from "../../services/helpers";
 
 jest.mock("../../services/campaignConfig");
 const mockGetCampaignConfig = getCampaignConfig as jest.Mock;
@@ -182,5 +183,25 @@ describe("useUpdateCampaignConfig", () => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
       expect(result.current.result).toBeUndefined();
     });
+  });
+
+  it("should set proper error message when NetworkError is thrown", async () => {
+    expect.assertions(5);
+    mockGetCampaignConfig.mockRejectedValue(
+      new NetworkError("Network request failed")
+    );
+    const { result } = renderHook(() =>
+      useUpdateCampaignConfig(operatorToken, key, endpoint)
+    );
+    expect(result.current.fetchingState).toBe("DEFAULT");
+
+    await wait(() => {
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
+    });
+
+    expect(setCampaignConfigSpy).toHaveBeenCalledTimes(0);
+    expect(result.current.fetchingState).toBe("FETCHING_CONFIG");
+    expect(result.current.error?.message).toBe("Network request failed");
+    expect(result.current.result).toBeUndefined();
   });
 });

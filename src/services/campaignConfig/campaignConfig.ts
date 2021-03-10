@@ -1,6 +1,11 @@
 import { IS_MOCK } from "../../config";
 import { CampaignConfig, ConfigHashes } from "../../types";
-import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
+import {
+  fetchWithValidator,
+  ValidationError,
+  SessionError,
+  NetworkError,
+} from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import i18n from "i18n-js";
 
@@ -35,6 +40,8 @@ const liveGetCampaignConfig = async (
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     } else if (e instanceof SessionError) {
+      throw e;
+    } else if (e instanceof NetworkError) {
       throw e;
     }
     throw new CampaignConfigError(e.message);
