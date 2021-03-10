@@ -13,7 +13,7 @@ const appTextElement = (): JSX.Element[] => {
     </>,
     <>
       <AppText style={{ color: color("red", 60) }}>
-        <Text>customize app text in (color("red", 60))</Text>
+        <Text>customize app text in (color(&quot;red&quot;, 60))</Text>
       </AppText>
     </>,
     <>

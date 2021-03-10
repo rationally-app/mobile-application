@@ -7,22 +7,21 @@ import { AppMode } from "../../../src/context/config";
 import { createAppContainer } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
 
-const reactNavigationDecorator = (story: any) => {
-  const Screen = () => story();
+const reactNavigationDecorator = (story: any): any => {
+  const Screen = (): any => story();
   const Navigator = createAppContainer(
     createDrawerNavigator(
       { Screen },
       {
         drawerPosition: "right",
         drawerType: "slide",
-        navigationOptions: { openDrawer: () => null },
       }
     )
   );
   return <Navigator />;
 };
 
-const appHeaderElements = () => {
+const appHeaderElements = (): any[] => {
   return [
     <>
       <Text>Production App Header</Text>
