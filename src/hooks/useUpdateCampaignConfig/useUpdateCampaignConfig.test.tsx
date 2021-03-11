@@ -195,7 +195,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
