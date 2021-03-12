@@ -197,7 +197,7 @@ describe("validateIdentifierInputs", () => {
   });
 
   it("should throw the specific error if the textInputType is payment receipt", () => {
-    expect.assertions(2);
+    expect.assertions(4);
 
     expect(() =>
       validateIdentifierInputs([
@@ -214,7 +214,29 @@ describe("validateIdentifierInputs", () => {
       validateIdentifierInputs([
         {
           label: "Payment receipt number",
-          value: "abcdqwer12345678qwer2", //21 characters
+          value: "abcdqwer12345678qwer2", // 21 characters
+          textInputType: "PAYMENT_RECEIPT",
+          validationRegex: "^[a-zA-Z0-9]{1,20}$",
+        },
+      ])
+    ).toThrow("Enter a valid payment receipt number.");
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment receipt number",
+          value: "     ",
+          textInputType: "PAYMENT_RECEIPT",
+          validationRegex: "^[a-zA-Z0-9]{1,20}$",
+        },
+      ])
+    ).toThrow("Enter a valid payment receipt number.");
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment receipt number",
+          value: "//asd.;'[",
           textInputType: "PAYMENT_RECEIPT",
           validationRegex: "^[a-zA-Z0-9]{1,20}$",
         },
