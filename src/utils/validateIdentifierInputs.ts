@@ -19,7 +19,6 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
-    // TODO: switch between different errors based on campaign config
     if (
       textInputType === "PAYMENT_RECEIPT" &&
       (!value ||
