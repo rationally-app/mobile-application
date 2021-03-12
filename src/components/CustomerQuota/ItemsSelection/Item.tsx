@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 
 /**
  * Check if the campaign contains tt-token
- * to indicate pod camapaign
+ * to indicate pod campaign
  *
  * @param cartItemCategory category of item
  */
@@ -101,13 +101,13 @@ export const Item: FunctionComponent<{
           updateCart={updateCart}
         />
       ) : (
-        <ItemStepper
-          ids={ids}
-          isChargeable={isChargeable}
-          cartItem={cartItem}
-          updateCart={updateCart}
-        />
-      )}
+            <ItemStepper
+              ids={ids}
+              isChargeable={isChargeable}
+              cartItem={cartItem}
+              updateCart={updateCart}
+            />
+          )}
       {cartItem.maxQuantity > 0 && identifiers.length > 0 && (
         <ItemIdentifiersCard
           cartItem={newCartItem}
