@@ -45,8 +45,8 @@ const isPodChargeable = (
  * Shape of identifiers and cartItem.identifierInputs are slightly different and
  * hence require to filter separately
  *
- * @param newIdentifiers identifiers that can be modified
- * @param newCartItem cartItem containing identifiers that can be modified
+ * @param identifiers identifiers that can be modified
+ * @param cartItem cartItem containing identifiers that can be modified
  */
 const removePaymentReceiptField = (
   identifiers: PolicyIdentifier[],
