@@ -22,38 +22,43 @@ const StepperItem: FunctionComponent<{
   );
 };
 
+const stepperElements: JSX.Element[] = [
+  <StepperItem key={0} />,
+  <StepperItem initialValue={990} step={10} key={1} />,
+  <StepperItem
+    initialValue={10}
+    step={10}
+    bounds={{ min: 10, max: 30 }}
+    key={2}
+  />,
+  <StepperItem
+    initialValue={10}
+    step={10}
+    bounds={{ min: 10, max: 30 }}
+    unit={{
+      type: "POSTFIX",
+      label: "kg",
+    }}
+    key={3}
+  />,
+  <StepperItem
+    initialValue={10}
+    step={5}
+    bounds={{ min: 10, max: 30 }}
+    unit={{
+      type: "PREFIX",
+      label: "$",
+    }}
+    key={4}
+  />,
+];
+
 storiesOf("Layout", module).add("Stepper", () => (
   <View style={{ flex: 1, alignItems: "center", marginTop: size(6) }}>
-    <View style={{ margin: size(1) }}>
-      <StepperItem />
-    </View>
-    <View style={{ margin: size(1) }}>
-      <StepperItem initialValue={990} step={10} />
-    </View>
-    <View style={{ margin: size(1) }}>
-      <StepperItem initialValue={10} step={10} bounds={{ min: 10, max: 30 }} />
-    </View>
-    <View style={{ margin: size(1) }}>
-      <StepperItem
-        initialValue={10}
-        step={10}
-        bounds={{ min: 10, max: 30 }}
-        unit={{
-          type: "POSTFIX",
-          label: "kg",
-        }}
-      />
-    </View>
-    <View style={{ margin: size(1) }}>
-      <StepperItem
-        initialValue={10}
-        step={5}
-        bounds={{ min: 10, max: 30 }}
-        unit={{
-          type: "PREFIX",
-          label: "$",
-        }}
-      />
-    </View>
+    {stepperElements.map((stepperElement, index) => (
+      <View key={index} style={{ margin: size(1) }}>
+        {stepperElement}
+      </View>
+    ))}
   </View>
 ));
