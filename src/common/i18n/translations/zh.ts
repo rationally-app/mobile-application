@@ -259,6 +259,11 @@ export const zh: Translations = {
       body: "您已断线。请尝试连接并重试。",
       primaryActionText: "重试",
     },
+    wrongPaymentReceiptNumber: {
+      title: "格式错误",
+      body: "请输入有效的付款收据编号。",
+      primaryActionText: "确定",
+    },
     wrongFormatCountryCode: {
       title: "格式错误",
       body: "请输入有效的国家代码。",

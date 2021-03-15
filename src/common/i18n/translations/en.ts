@@ -266,6 +266,11 @@ export const en: Translations = {
       body: "You are offline. Try to connect and try again.",
       primaryActionText: "Retry",
     },
+    wrongPaymentReceiptNumber: {
+      title: "Wrong format",
+      body: "Enter a valid payment receipt number.",
+      primaryActionText: "OK",
+    },
     wrongFormatCountryCode: {
       title: "Wrong format",
       body: "Enter a valid country code.",
