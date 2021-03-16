@@ -1,6 +1,6 @@
 import "./CustomerQuota/CheckoutSuccessCard";
+import "./CustomerAppeal";
+import "./CustomerDetails";
 import "./ErrorBoundary/ErrorBoundary";
 import "./Layout";
-import "./CustomerAppeal";
 import "./Modals";
-import "./CustomerDetails";
