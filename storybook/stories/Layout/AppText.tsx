@@ -10,7 +10,7 @@ const appTextElement: JSX.Element[] = [
     Customized text in red-60
   </AppText>,
   <AppText key="2" style={{ fontSize: size(3) }}>
-    customized text in fontSize: size(3)
+    customized text in fontSize-3
   </AppText>,
 ];
 
