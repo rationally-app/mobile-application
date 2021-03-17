@@ -254,6 +254,16 @@ export const zh: Translations = {
         "连接目前出现问题。请重启应用程序。如果问题持续出现，请联系政府科技局。",
       primaryActionText: "重启应用程序",
     },
+    networkError: {
+      title: "网络连接问题",
+      body: "您已断线。请尝试连接并重试。",
+      primaryActionText: "重试",
+    },
+    wrongPaymentReceiptNumber: {
+      title: "格式错误",
+      body: "请输入有效的付款收据编号。",
+      primaryActionText: "确定",
+    },
     wrongFormatCountryCode: {
       title: "格式错误",
       body: "请输入有效的国家代码。",

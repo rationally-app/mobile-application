@@ -19,7 +19,7 @@ import { AlertModalContext } from "../../context/alert";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import * as config from "../../config";
 import { checkVersion } from "./utils";
-import { SessionError } from "../../services/helpers";
+import { NetworkError, SessionError } from "../../services/helpers";
 import { AuthStoreContext } from "../../context/authStore";
 import { IdentificationContext } from "../../context/identification";
 
@@ -112,6 +112,8 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
         showErrorAlert(updateCampaignConfigError, () =>
           navigation.navigate("CampaignLocationsScreen")
         );
+      } else if (updateCampaignConfigError instanceof NetworkError) {
+        throw updateCampaignConfigError;
       } else {
         throw updateCampaignConfigError; // Let ErrorBoundary handle
       }

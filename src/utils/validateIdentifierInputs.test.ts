@@ -37,6 +37,12 @@ describe("validateIdentifierInputs", () => {
           value: "+13475679064",
           textInputType: "PHONE_NUMBER",
         },
+        {
+          label: "some payment receipt",
+          value: "1234acbd5678qwer1234",
+          validationRegex: "^[a-zA-Z0-9]{1,20}$",
+          textInputType: "PAYMENT_RECEIPT",
+        },
       ])
     ).toBe(true);
   });
@@ -188,5 +194,53 @@ describe("validateIdentifierInputs", () => {
         },
       ])
     ).toThrow("Enter or scan a different code.");
+  });
+
+  it("should throw the specific error if the textInputType is payment receipt", () => {
+    expect.assertions(4);
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment receipt number",
+          value: "",
+          textInputType: "PAYMENT_RECEIPT",
+          validationRegex: "^[a-zA-Z0-9]{1,20}$",
+        },
+      ])
+    ).toThrow("Enter a valid payment receipt number.");
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment receipt number",
+          value: "abcdqwer12345678qwer2", // 21 characters
+          textInputType: "PAYMENT_RECEIPT",
+          validationRegex: "^[a-zA-Z0-9]{1,20}$",
+        },
+      ])
+    ).toThrow("Enter a valid payment receipt number.");
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment receipt number",
+          value: "     ",
+          textInputType: "PAYMENT_RECEIPT",
+          validationRegex: "^[a-zA-Z0-9]{1,20}$",
+        },
+      ])
+    ).toThrow("Enter a valid payment receipt number.");
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment receipt number",
+          value: "//asd.;'[",
+          textInputType: "PAYMENT_RECEIPT",
+          validationRegex: "^[a-zA-Z0-9]{1,20}$",
+        },
+      ])
+    ).toThrow("Enter a valid payment receipt number.");
   });
 });

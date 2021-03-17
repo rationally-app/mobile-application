@@ -1,7 +1,8 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { useUpdateCampaignConfig } from "./useUpdateCampaignConfig";
 import { getCampaignConfig } from "../../services/campaignConfig";
-import { wait } from "@testing-library/react-native";
+import { waitFor } from "@testing-library/react-native";
+import { NetworkError } from "../../services/helpers";
 
 jest.mock("../../services/campaignConfig");
 const mockGetCampaignConfig = getCampaignConfig as jest.Mock;
@@ -30,7 +31,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
@@ -54,7 +55,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
@@ -73,7 +74,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
@@ -99,7 +100,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
@@ -124,12 +125,12 @@ describe("useUpdateCampaignConfig", () => {
       useUpdateCampaignConfig(operatorToken, key, endpoint)
     );
 
-    await wait(() =>
+    await waitFor(() =>
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.error?.message).toBe("Error saving campaign config");
 
-    await wait(() => result.current.clearError());
+    await waitFor(() => result.current.clearError());
     expect(result.current.error).toBeUndefined();
   });
 
@@ -148,12 +149,12 @@ describe("useUpdateCampaignConfig", () => {
       useUpdateCampaignConfig(operatorToken, key, endpoint)
     );
 
-    await wait(() =>
+    await waitFor(() =>
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.error?.message).toBe("Error saving campaign config");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
       expect(result.current.error).toBeUndefined();
     });
@@ -172,15 +173,35 @@ describe("useUpdateCampaignConfig", () => {
       useUpdateCampaignConfig(operatorToken, key, endpoint)
     );
 
-    await wait(() =>
+    await waitFor(() =>
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.fetchingState).toBe("RETURNED_NEW_UPDATES");
     expect(result.current.result).not.toBeUndefined();
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
       expect(result.current.result).toBeUndefined();
     });
+  });
+
+  it("should set proper error message when NetworkError is thrown", async () => {
+    expect.assertions(5);
+    mockGetCampaignConfig.mockRejectedValue(
+      new NetworkError("Network request failed")
+    );
+    const { result } = renderHook(() =>
+      useUpdateCampaignConfig(operatorToken, key, endpoint)
+    );
+    expect(result.current.fetchingState).toBe("DEFAULT");
+
+    await waitFor(() => {
+      result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
+    });
+
+    expect(setCampaignConfigSpy).toHaveBeenCalledTimes(0);
+    expect(result.current.fetchingState).toBe("FETCHING_CONFIG");
+    expect(result.current.error?.message).toBe("Network request failed");
+    expect(result.current.result).toBeUndefined();
   });
 });
