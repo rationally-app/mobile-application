@@ -43,8 +43,8 @@ describe("LoginMobileNumberCard", () => {
     expect(setLoginState).toHaveBeenCalledWith("OTP");
   });
 
-  describe("should show error modal when contact number", () => {
-    it("phone number input is empty", async () => {
+  describe("should show error modal", () => {
+    it("when contact number phone number input is empty", async () => {
       expect.assertions(6);
       const { getByTestId } = render(
         <CreateProvidersWrapper
@@ -68,13 +68,14 @@ describe("LoginMobileNumberCard", () => {
       await fireEvent.press(submitButton);
       expect(mockHandleRequestOTP).not.toHaveBeenCalled();
       expect(alertModal).toBeTruthy();
+      // TODO: compare the error message
 
       expect(setMobileNumber).not.toHaveBeenCalled();
       expect(setCountryCode).not.toHaveBeenCalled();
       expect(setLoginState).not.toHaveBeenCalled();
     });
 
-    it("phone number input is invalid", async () => {
+    it("when contact number phone number input is invalid", async () => {
       expect.assertions(6);
       const { getByTestId } = render(
         <CreateProvidersWrapper
@@ -98,6 +99,7 @@ describe("LoginMobileNumberCard", () => {
       await fireEvent.press(submitButton);
       expect(mockHandleRequestOTP).not.toHaveBeenCalled();
       expect(alertModal).toBeTruthy();
+      // TODO: compare the error message
 
       expect(setMobileNumber).not.toHaveBeenCalled();
       expect(setCountryCode).not.toHaveBeenCalled();
