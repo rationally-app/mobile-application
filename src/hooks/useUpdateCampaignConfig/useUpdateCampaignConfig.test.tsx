@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { useUpdateCampaignConfig } from "./useUpdateCampaignConfig";
 import { getCampaignConfig } from "../../services/campaignConfig";
-import { wait } from "@testing-library/react-native";
+import { waitFor } from "@testing-library/react-native";
 import { NetworkError } from "../../services/helpers";
 
 jest.mock("../../services/campaignConfig");
@@ -31,7 +31,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
@@ -55,7 +55,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
@@ -74,7 +74,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
@@ -100,7 +100,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 
@@ -125,12 +125,12 @@ describe("useUpdateCampaignConfig", () => {
       useUpdateCampaignConfig(operatorToken, key, endpoint)
     );
 
-    await wait(() =>
+    await waitFor(() =>
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.error?.message).toBe("Error saving campaign config");
 
-    await wait(() => result.current.clearError());
+    await waitFor(() => result.current.clearError());
     expect(result.current.error).toBeUndefined();
   });
 
@@ -149,12 +149,12 @@ describe("useUpdateCampaignConfig", () => {
       useUpdateCampaignConfig(operatorToken, key, endpoint)
     );
 
-    await wait(() =>
+    await waitFor(() =>
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.error?.message).toBe("Error saving campaign config");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
       expect(result.current.error).toBeUndefined();
     });
@@ -173,13 +173,13 @@ describe("useUpdateCampaignConfig", () => {
       useUpdateCampaignConfig(operatorToken, key, endpoint)
     );
 
-    await wait(() =>
+    await waitFor(() =>
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.fetchingState).toBe("RETURNED_NEW_UPDATES");
     expect(result.current.result).not.toBeUndefined();
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
       expect(result.current.result).toBeUndefined();
     });
@@ -195,7 +195,7 @@ describe("useUpdateCampaignConfig", () => {
     );
     expect(result.current.fetchingState).toBe("DEFAULT");
 
-    await wait(() => {
+    await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
     });
 

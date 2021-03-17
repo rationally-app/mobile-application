@@ -3,7 +3,7 @@ import {
   CampaignConfigsStoreContextProvider,
   CampaignConfigsStoreContext,
 } from "./campaignConfigsStore";
-import { render, wait, fireEvent } from "@testing-library/react-native";
+import { render, waitFor, fireEvent } from "@testing-library/react-native";
 import { Text, Button } from "react-native";
 import { Sentry } from "../utils/errorTracking";
 import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
@@ -67,7 +67,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
     expect(queryByTestId("loaded")).toBeNull();
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
       expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
@@ -101,7 +101,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("features")).toHaveTextContent("");
       expect(queryByTestId("policies")).toHaveTextContent("");
       expect(queryByTestId("c13n")).toHaveTextContent("");
@@ -129,7 +129,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
   });
@@ -173,7 +173,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
       expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
@@ -181,7 +181,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await wait(() => {
+    await waitFor(() => {
       expect(mockSetItem).toHaveBeenCalledTimes(1);
       expect(mockSetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE", "{}");
       expect(queryByTestId("features")).toHaveTextContent("");
@@ -235,7 +235,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
       expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
@@ -243,7 +243,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await wait(() => {
+    await waitFor(() => {
       expect(mockSetItem).toHaveBeenCalledTimes(1);
       expect(mockSetItem).toHaveBeenCalledWith(
         "CAMPAIGN_CONFIGS_STORE",
@@ -303,7 +303,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("configs")).toHaveTextContent(
         `{"test-campaign":{"features":{"asd":"asd"},"policies":[{"sdf":"sdf"}],"c13n":{"asdi":"asdi"}},"another-test-campaign":{"features":{"dfg":"dfg"},"policies":[{"sdf":"sdf"}],"c13n":{"asdi":"asdi"}}}`
       );
@@ -311,7 +311,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await wait(() => {
+    await waitFor(() => {
       expect(mockSetItem).toHaveBeenCalledTimes(1);
       expect(mockSetItem).toHaveBeenCalledWith(
         "CAMPAIGN_CONFIGS_STORE",
@@ -379,7 +379,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
       expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
@@ -387,7 +387,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await wait(() => {
+    await waitFor(() => {
       expect(mockSetItem).toHaveBeenCalledTimes(1);
       expect(mockSetItem).toHaveBeenCalledWith(
         "CAMPAIGN_CONFIGS_STORE",
@@ -445,7 +445,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
       expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
@@ -453,7 +453,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await wait(() => {
+    await waitFor(() => {
       expect(mockSetItem).toHaveBeenCalledTimes(1);
       expect(mockSetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE", "{}");
       expect(queryByTestId("features")).toHaveTextContent("");
