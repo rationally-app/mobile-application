@@ -1,4 +1,4 @@
-import { render, fireEvent } from "@testing-library/react-native";
+import { render, fireEvent, cleanup } from "@testing-library/react-native";
 import React from "react";
 import { AlertModalContextProvider } from "../../context/alert";
 import { CreateProvidersWrapper } from "../../test/helpers/providers";
@@ -15,6 +15,8 @@ describe("LoginMobileNumberCard", () => {
   });
 
   afterEach(() => {
+    cleanup();
+    jest.useRealTimers();
     jest.resetAllMocks();
   });
 
@@ -32,7 +34,7 @@ describe("LoginMobileNumberCard", () => {
     const phoneNumberInput = getByTestId("login-phone-number-input");
     const submitButton = getByTestId("login-send-otp-button");
 
-    await fireEvent.changeText(phoneNumberInput, "88888888");
+    await fireEvent(phoneNumberInput, "onChangeText", "88888888");
     expect(phoneNumberInput.props["value"]).toEqual("8888 8888");
 
     await fireEvent.press(submitButton);
@@ -62,7 +64,7 @@ describe("LoginMobileNumberCard", () => {
       const submitButton = getByTestId("login-send-otp-button");
       const alertModal = getByTestId("alert-modal-primary-button");
 
-      await fireEvent.changeText(phoneNumberInput, "");
+      await fireEvent(phoneNumberInput, "onChangeText", "");
       expect(phoneNumberInput.props["value"]).toEqual("");
 
       await fireEvent.press(submitButton);
@@ -93,7 +95,7 @@ describe("LoginMobileNumberCard", () => {
       const submitButton = getByTestId("login-send-otp-button");
       const alertModal = getByTestId("alert-modal-primary-button");
 
-      await fireEvent.changeText(phoneNumberInput, "888888888");
+      await fireEvent(phoneNumberInput, "onChangeText", "888888888");
       expect(phoneNumberInput.props["value"]).toEqual("888888888");
 
       await fireEvent.press(submitButton);

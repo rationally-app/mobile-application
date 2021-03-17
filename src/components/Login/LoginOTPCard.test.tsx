@@ -1,4 +1,4 @@
-import { render, fireEvent } from "@testing-library/react-native";
+import { render, fireEvent, cleanup } from "@testing-library/react-native";
 import React from "react";
 import { AlertModalContextProvider } from "../../context/alert";
 import { validateOTP } from "../../services/auth";
@@ -18,6 +18,8 @@ describe("LoginOTPCard", () => {
   });
 
   afterEach(() => {
+    cleanup();
+    jest.useRealTimers();
     jest.resetAllMocks();
   });
 
@@ -40,8 +42,9 @@ describe("LoginOTPCard", () => {
     );
     const OTPInput = getByTestId("login-otp-input");
     const submitButton = getByTestId("login-submit-otp-button");
-
-    await fireEvent.change(OTPInput, { nativeEvent: { text: "000000" } });
+    await fireEvent(OTPInput, "onChange", {
+      nativeEvent: { text: "000000" },
+    });
     expect(OTPInput.props["value"]).toEqual("000000");
 
     await fireEvent.press(submitButton);
@@ -73,7 +76,9 @@ describe("LoginOTPCard", () => {
       const submitButton = getByTestId("login-submit-otp-button");
       const alertModal = getByTestId("alert-modal-primary-button");
 
-      await fireEvent.change(OTPInput, { nativeEvent: { text: "000000" } });
+      await fireEvent(OTPInput, "onChange", {
+        nativeEvent: { text: "000000" },
+      });
       expect(OTPInput.props["value"]).toEqual("000000");
 
       await fireEvent.press(submitButton);
@@ -107,7 +112,7 @@ describe("LoginOTPCard", () => {
       const submitButton = getByTestId("login-submit-otp-button");
       const alertModal = getByTestId("alert-modal-primary-button");
 
-      await fireEvent.change(OTPInput, { nativeEvent: { text: "123" } });
+      await fireEvent(OTPInput, "onChange", { nativeEvent: { text: "123" } });
       expect(OTPInput.props["value"]).toEqual("123");
 
       await fireEvent.press(submitButton);
