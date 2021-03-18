@@ -1,71 +1,106 @@
-import { render, fireEvent, cleanup } from "@testing-library/react-native";
+import {
+  render,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from "@testing-library/react-native";
 import React from "react";
+import { Sentry } from "../../utils/errorTracking";
+import { AuthStoreContextProvider } from "../../context/authStore";
 import { AlertModalContextProvider } from "../../context/alert";
-import { validateOTP } from "../../services/auth";
+import * as auth from "../../services/auth";
 import { CreateProvidersWrapper } from "../../test/helpers/providers";
 import { LoginOTPCard } from "./LoginOTPCard";
+import "../../common/i18n/i18nMock";
 
-jest.mock("../../services/auth");
-const mockValidateOTP = validateOTP as jest.Mock;
+jest.mock("../../utils/errorTracking");
+const mockCaptureException = jest.fn();
+(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
+
+const mockValidateOTP = jest.spyOn(auth, "validateOTP");
 
 const resetStage = jest.fn();
 const mockHandleRequestOTP = jest.fn().mockReturnValue(true);
 const onSuccess = jest.fn();
 
+const fullPhoneNumber = "6588888888";
+const operatorToken = "my-operator-token";
+const endpoint = "https://my-endpoint.com";
+
 describe("LoginOTPCard", () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
+  beforeEach(() => {});
 
   afterEach(() => {
     cleanup();
-    jest.useRealTimers();
     jest.resetAllMocks();
   });
 
   it("should be able to fetch the endpoint without error", async () => {
-    expect.assertions(3);
-    mockValidateOTP.mockReturnValueOnce({
-      sessionToken: "a-session-token",
+    expect.assertions(4);
+    mockValidateOTP.mockResolvedValueOnce({
+      sessionToken: "my-session-token",
       ttl: new Date(2030, 0, 1),
     });
 
-    const { getByTestId } = render(
-      <LoginOTPCard
-        resetStage={resetStage}
-        fullMobileNumber={"6588888888"}
-        operatorToken={"an-operator-token"}
-        endpoint={"https://some-endpoint.com"}
-        handleRequestOTP={mockHandleRequestOTP}
-        onSuccess={onSuccess}
-      />
+    const { getByTestId, queryByText } = render(
+      <CreateProvidersWrapper
+        providers={[{ provider: AuthStoreContextProvider }]}
+      >
+        <LoginOTPCard
+          resetStage={resetStage}
+          fullMobileNumber={fullPhoneNumber}
+          operatorToken={operatorToken}
+          endpoint={endpoint}
+          handleRequestOTP={mockHandleRequestOTP}
+          onSuccess={onSuccess}
+        />
+      </CreateProvidersWrapper>
     );
     const OTPInput = getByTestId("login-otp-input");
     const submitButton = getByTestId("login-submit-otp-button");
-    await fireEvent(OTPInput, "onChange", {
+
+    fireEvent(OTPInput, "onChange", {
       nativeEvent: { text: "000000" },
     });
     expect(OTPInput.props["value"]).toEqual("000000");
 
-    await fireEvent.press(submitButton);
-    expect(mockValidateOTP).toHaveBeenCalledTimes(1);
-    expect(onSuccess).toHaveBeenCalledTimes(1);
+    fireEvent.press(submitButton);
+    expect(queryByText("Submit")).toBeNull();
+    expect(mockValidateOTP).toHaveBeenCalledWith(
+      "000000",
+      fullPhoneNumber,
+      operatorToken,
+      endpoint
+    );
+    await waitFor(() => {
+      expect(onSuccess).toHaveBeenCalledWith({
+        endpoint: "https://my-endpoint.com",
+        expiry: 1893427200000,
+        operatorToken: "my-operator-token",
+        sessionToken: "my-session-token",
+      });
+    });
   });
 
   describe("should show error modal", () => {
     it("when entered OTP is wrong", async () => {
-      expect.assertions(4);
-      mockValidateOTP.mockRejectedValueOnce(new Error("Wrong OTP entered"));
+      expect.assertions(5);
+      mockValidateOTP.mockRejectedValue(
+        new auth.OTPWrongError("Wrong OTP entered", false)
+      );
 
-      const { getByTestId } = render(
+      const { getByTestId, queryByText } = render(
         <CreateProvidersWrapper
-          providers={[{ provider: AlertModalContextProvider }]}
+          providers={[
+            { provider: AuthStoreContextProvider },
+            { provider: AlertModalContextProvider },
+          ]}
         >
           <LoginOTPCard
             resetStage={resetStage}
-            fullMobileNumber={"6588888888"}
-            operatorToken={"an-operator-token"}
-            endpoint={"https://some-endpoint.com"}
+            fullMobileNumber={fullPhoneNumber}
+            operatorToken={operatorToken}
+            endpoint={endpoint}
             handleRequestOTP={mockHandleRequestOTP}
             onSuccess={onSuccess}
           />
@@ -74,51 +109,19 @@ describe("LoginOTPCard", () => {
 
       const OTPInput = getByTestId("login-otp-input");
       const submitButton = getByTestId("login-submit-otp-button");
-      const alertModal = getByTestId("alert-modal-primary-button");
 
-      await fireEvent(OTPInput, "onChange", {
+      fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "000000" },
       });
       expect(OTPInput.props["value"]).toEqual("000000");
 
-      await fireEvent.press(submitButton);
+      fireEvent.press(submitButton);
+      expect(queryByText("Submit")).toBeNull();
       expect(mockValidateOTP).toHaveBeenCalledTimes(1);
-      expect(alertModal).toBeTruthy();
-      // TODO: compare the error message
 
-      expect(onSuccess).not.toHaveBeenCalled();
-    });
-
-    it("when entered OTP is of invalid length", async () => {
-      expect.hasAssertions();
-      mockValidateOTP.mockRejectedValueOnce(new Error("Wrong OTP entered"));
-
-      const { getByTestId } = render(
-        <CreateProvidersWrapper
-          providers={[{ provider: AlertModalContextProvider }]}
-        >
-          <LoginOTPCard
-            resetStage={resetStage}
-            fullMobileNumber={"6588888888"}
-            operatorToken={"an-operator-token"}
-            endpoint={"https://some-endpoint.com"}
-            handleRequestOTP={mockHandleRequestOTP}
-            onSuccess={onSuccess}
-          />
-        </CreateProvidersWrapper>
-      );
-
-      const OTPInput = getByTestId("login-otp-input");
-      const submitButton = getByTestId("login-submit-otp-button");
-      const alertModal = getByTestId("alert-modal-primary-button");
-
-      await fireEvent(OTPInput, "onChange", { nativeEvent: { text: "123" } });
-      expect(OTPInput.props["value"]).toEqual("123");
-
-      await fireEvent.press(submitButton);
-      expect(mockValidateOTP).toHaveBeenCalledTimes(1);
-      expect(alertModal).toBeTruthy();
-      // TODO: compare the error message
+      await waitFor(() => {
+        expect(queryByText("Enter OTP again.")).not.toBeNull();
+      });
 
       expect(onSuccess).not.toHaveBeenCalled();
     });

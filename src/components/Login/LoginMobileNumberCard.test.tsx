@@ -1,8 +1,14 @@
 import { render, fireEvent, cleanup } from "@testing-library/react-native";
 import React from "react";
+import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContextProvider } from "../../context/alert";
 import { CreateProvidersWrapper } from "../../test/helpers/providers";
 import { LoginMobileNumberCard } from "./LoginMobileNumberCard";
+import "../../common/i18n/i18nMock";
+
+jest.mock("../../utils/errorTracking");
+const mockCaptureException = jest.fn();
+(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const setLoginState = jest.fn();
 const setMobileNumber = jest.fn();
@@ -48,7 +54,7 @@ describe("LoginMobileNumberCard", () => {
   describe("should show error modal", () => {
     it("when contact number phone number input is empty", async () => {
       expect.assertions(6);
-      const { getByTestId } = render(
+      const { getByTestId, queryByText } = render(
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
@@ -62,15 +68,13 @@ describe("LoginMobileNumberCard", () => {
       );
       const phoneNumberInput = getByTestId("login-phone-number-input");
       const submitButton = getByTestId("login-send-otp-button");
-      const alertModal = getByTestId("alert-modal-primary-button");
 
       await fireEvent(phoneNumberInput, "onChangeText", "");
       expect(phoneNumberInput.props["value"]).toEqual("");
 
       await fireEvent.press(submitButton);
       expect(mockHandleRequestOTP).not.toHaveBeenCalled();
-      expect(alertModal).toBeTruthy();
-      // TODO: compare the error message
+      expect(queryByText("Enter a valid contact number.")).not.toBeNull();
 
       expect(setMobileNumber).not.toHaveBeenCalled();
       expect(setCountryCode).not.toHaveBeenCalled();
@@ -79,7 +83,7 @@ describe("LoginMobileNumberCard", () => {
 
     it("when contact number phone number input is invalid", async () => {
       expect.assertions(6);
-      const { getByTestId } = render(
+      const { getByTestId, queryByText } = render(
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
@@ -93,15 +97,13 @@ describe("LoginMobileNumberCard", () => {
       );
       const phoneNumberInput = getByTestId("login-phone-number-input");
       const submitButton = getByTestId("login-send-otp-button");
-      const alertModal = getByTestId("alert-modal-primary-button");
 
       await fireEvent(phoneNumberInput, "onChangeText", "888888888");
       expect(phoneNumberInput.props["value"]).toEqual("888888888");
 
       await fireEvent.press(submitButton);
       expect(mockHandleRequestOTP).not.toHaveBeenCalled();
-      expect(alertModal).toBeTruthy();
-      // TODO: compare the error message
+      expect(queryByText("Enter a valid contact number.")).not.toBeNull();
 
       expect(setMobileNumber).not.toHaveBeenCalled();
       expect(setCountryCode).not.toHaveBeenCalled();
