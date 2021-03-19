@@ -7,11 +7,9 @@ import { size } from "../../../src/common/styles";
 
 const cardElements: JSX.Element[] = [
   <Card key="0"></Card>,
-  <>
-    <Card key="1">
-      <AppText>Card with text child element</AppText>
-    </Card>
-  </>,
+  <Card key="1">
+    <AppText>Card with text child element</AppText>
+  </Card>,
 ];
 
 storiesOf("Layout", module).add("Card", () => (
