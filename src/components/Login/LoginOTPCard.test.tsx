@@ -82,7 +82,7 @@ describe("LoginOTPCard", () => {
 
   describe("should show error modal", () => {
     it("when entered OTP is wrong", async () => {
-      expect.assertions(5);
+      expect.assertions(6);
       mockValidateOTP.mockRejectedValue(
         new auth.OTPWrongError("Wrong OTP entered", false)
       );
@@ -118,10 +118,189 @@ describe("LoginOTPCard", () => {
       expect(mockValidateOTP).toHaveBeenCalledTimes(1);
 
       await waitFor(() => {
+        expect(queryByText("Invalid input")).not.toBeNull();
         expect(queryByText("Enter OTP again.")).not.toBeNull();
       });
 
       expect(onSuccess).not.toHaveBeenCalled();
+    });
+
+    it("when entered wrong OTP too many times", async () => {
+      expect.assertions(6);
+      mockValidateOTP.mockRejectedValue(
+        new auth.OTPWrongError("Wrong OTP entered, last try remaining", true)
+      );
+
+      const { getByTestId, queryByText } = render(
+        <CreateProvidersWrapper
+          providers={[
+            { provider: AuthStoreContextProvider },
+            { provider: AlertModalContextProvider },
+          ]}
+        >
+          <LoginOTPCard
+            resetStage={resetStage}
+            fullMobileNumber={fullPhoneNumber}
+            operatorToken={operatorToken}
+            endpoint={endpoint}
+            handleRequestOTP={mockHandleRequestOTP}
+            onSuccess={onSuccess}
+          />
+        </CreateProvidersWrapper>
+      );
+
+      const OTPInput = getByTestId("login-otp-input");
+      const submitButton = getByTestId("login-submit-otp-button");
+
+      fireEvent(OTPInput, "onChange", {
+        nativeEvent: { text: "000000" },
+      });
+      expect(OTPInput.props["value"]).toEqual("000000");
+
+      fireEvent.press(submitButton);
+      expect(queryByText("Submit")).toBeNull();
+      expect(mockValidateOTP).toHaveBeenCalledTimes(1);
+
+      await waitFor(() => {
+        expect(queryByText("Invalid input")).not.toBeNull();
+        expect(
+          queryByText(
+            "Enter OTP again. After 1 more invalid OTP entry, you will have to wait 3 minutes before trying again."
+          )
+        ).not.toBeNull();
+      });
+
+      expect(onSuccess).not.toHaveBeenCalled();
+    });
+
+    it("when OTP has expired", async () => {
+      expect.assertions(6);
+      mockValidateOTP.mockRejectedValue(
+        new auth.OTPExpiredError("OTP expired")
+      );
+
+      const { getByTestId, queryByText } = render(
+        <CreateProvidersWrapper
+          providers={[
+            { provider: AuthStoreContextProvider },
+            { provider: AlertModalContextProvider },
+          ]}
+        >
+          <LoginOTPCard
+            resetStage={resetStage}
+            fullMobileNumber={fullPhoneNumber}
+            operatorToken={operatorToken}
+            endpoint={endpoint}
+            handleRequestOTP={mockHandleRequestOTP}
+            onSuccess={onSuccess}
+          />
+        </CreateProvidersWrapper>
+      );
+
+      const OTPInput = getByTestId("login-otp-input");
+      const submitButton = getByTestId("login-submit-otp-button");
+
+      fireEvent(OTPInput, "onChange", {
+        nativeEvent: { text: "000000" },
+      });
+      expect(OTPInput.props["value"]).toEqual("000000");
+
+      fireEvent.press(submitButton);
+      expect(queryByText("Submit")).toBeNull();
+      expect(mockValidateOTP).toHaveBeenCalledTimes(1);
+
+      await waitFor(() => {
+        expect(queryByText("Expired")).not.toBeNull();
+        expect(queryByText("Get a new OTP and try again.")).not.toBeNull();
+      });
+
+      expect(onSuccess).not.toHaveBeenCalled();
+    });
+
+    it("when entered OTP is empty", async () => {
+      expect.assertions(5);
+      mockValidateOTP.mockRejectedValue(
+        new auth.OTPEmptyError("OTP cannot be empty")
+      );
+
+      const { getByTestId, queryByText } = render(
+        <CreateProvidersWrapper
+          providers={[
+            { provider: AuthStoreContextProvider },
+            { provider: AlertModalContextProvider },
+          ]}
+        >
+          <LoginOTPCard
+            resetStage={resetStage}
+            fullMobileNumber={fullPhoneNumber}
+            operatorToken={operatorToken}
+            endpoint={endpoint}
+            handleRequestOTP={mockHandleRequestOTP}
+            onSuccess={onSuccess}
+          />
+        </CreateProvidersWrapper>
+      );
+
+      const submitButton = getByTestId("login-submit-otp-button");
+
+      fireEvent.press(submitButton);
+      expect(queryByText("Submit")).toBeNull();
+      expect(mockValidateOTP).toHaveBeenCalledTimes(1);
+
+      await waitFor(() => {
+        expect(queryByText("Invalid input")).not.toBeNull();
+        expect(queryByText("Enter OTP again.")).not.toBeNull();
+      });
+
+      expect(onSuccess).not.toHaveBeenCalled();
+    });
+
+    it("when user is locked from entering OTP", async () => {
+      expect.assertions(7);
+      mockValidateOTP.mockRejectedValue(
+        new auth.LoginLockedError("Try again in 3 minutes.")
+      );
+
+      const { getByTestId, queryByText } = render(
+        <CreateProvidersWrapper
+          providers={[
+            { provider: AuthStoreContextProvider },
+            { provider: AlertModalContextProvider },
+          ]}
+        >
+          <LoginOTPCard
+            resetStage={resetStage}
+            fullMobileNumber={fullPhoneNumber}
+            operatorToken={operatorToken}
+            endpoint={endpoint}
+            handleRequestOTP={mockHandleRequestOTP}
+            onSuccess={onSuccess}
+          />
+        </CreateProvidersWrapper>
+      );
+
+      const OTPInput = getByTestId("login-otp-input");
+      const submitButton = getByTestId("login-submit-otp-button");
+
+      fireEvent(OTPInput, "onChange", {
+        nativeEvent: { text: "000000" },
+      });
+      expect(OTPInput.props["value"]).toEqual("000000");
+
+      fireEvent.press(submitButton);
+      expect(queryByText("Submit")).toBeNull();
+      expect(mockValidateOTP).toHaveBeenCalledTimes(1);
+
+      await waitFor(() => {
+        expect(queryByText("Disabled access")).not.toBeNull();
+        expect(queryByText("Try again in 3 minutes.")).not.toBeNull();
+      });
+
+      expect(onSuccess).not.toHaveBeenCalled();
+
+      const alertModalPrimaryButton = getByTestId("alert-modal-primary-button");
+      fireEvent.press(alertModalPrimaryButton);
+      expect(resetStage).toHaveBeenCalledTimes(1);
     });
   });
 });
