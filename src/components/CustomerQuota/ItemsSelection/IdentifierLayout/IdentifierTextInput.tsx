@@ -27,7 +27,7 @@ export const IdentifierTextInput: FunctionComponent<{
       keyboardType={type === "NUMBER" ? "phone-pad" : "default"}
       accessibilityLabel={
         label
-          ? label.trim().replace(" ", "-").toLowerCase().concat("-text")
+          ? label.trim().replace(/\s/g, "-").toLowerCase().concat("-text")
           : "item-field-text"
       }
     />
