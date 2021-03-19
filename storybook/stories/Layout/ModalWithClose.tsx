@@ -1,11 +1,11 @@
-import React, { useState, ReactElement } from "react";
+import React, { useState } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { ModalWithClose } from "../../../src/components/Layout/ModalWithClose";
 import { AppText } from "../../../src/components/Layout/AppText";
 
 import { View } from "react-native";
 
-function ModalItems(): ReactElement {
+const ModalItems = (): JSX.Element => {
   const [isVisible, setIsVisible] = useState(true);
   return (
     <View>
@@ -14,6 +14,6 @@ function ModalItems(): ReactElement {
       </ModalWithClose>
     </View>
   );
-}
+};
 
 storiesOf("Layout", module).add("Modal", () => <ModalItems />);

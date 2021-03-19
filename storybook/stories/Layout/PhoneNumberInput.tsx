@@ -1,10 +1,10 @@
-import React, { useState, ReactElement } from "react";
+import React, { useState } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { PhoneNumberInput } from "../../../src/components/Layout/PhoneNumberInput";
 import { View } from "react-native";
 import { size } from "../../../src/common/styles";
 
-function PhoneNumberInputItem(): ReactElement {
+const PhoneNumberInputItem = (): JSX.Element => {
   const [countryCodeValue, setCountryCodeValue] = useState("+65");
   const [mobileNumberValue, setMobileNumberValue] = useState("");
   return (
@@ -18,7 +18,7 @@ function PhoneNumberInputItem(): ReactElement {
       />
     </View>
   );
-}
+};
 storiesOf("Layout", module).add("PhoneNumberInput", () => (
   <PhoneNumberInputItem />
 ));

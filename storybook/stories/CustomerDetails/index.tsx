@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from "react";
+import React, { useState } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { InputSelection } from "../../../src/components/CustomerDetails/InputSelection";
 import { InputIdSection } from "../../../src/components/CustomerDetails/InputIdSection";
@@ -22,7 +22,7 @@ const selectionArray: IdentificationFlag[] = [
   },
 ];
 
-function InputSelectionItem(): ReactElement {
+const InputSelectionItem = (): JSX.Element => {
   const [currentSelection, setCurrentSelection] = useState<IdentificationFlag>(
     selectionArray[0]
   );
@@ -49,9 +49,9 @@ function InputSelectionItem(): ReactElement {
       />
     </View>
   );
-}
+};
 
-function InputIdSectionItem(): ReactElement {
+const InputIdSectionItem = (): JSX.Element => {
   const [inputValue, setInputValue] = useState("");
   return (
     <View style={{ margin: size(3) }}>
@@ -64,9 +64,9 @@ function InputIdSectionItem(): ReactElement {
       />
     </View>
   );
-}
+};
 
-function ManualPassportInputItem(): ReactElement {
+const ManualPassportInputItem = (): JSX.Element => {
   return (
     <View
       style={{
@@ -83,7 +83,7 @@ function ManualPassportInputItem(): ReactElement {
       />
     </View>
   );
-}
+};
 
 storiesOf("CustomerDetail", module)
   .add("InputSelection", () => <InputSelectionItem />)
