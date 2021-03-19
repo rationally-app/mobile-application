@@ -26,7 +26,9 @@ export const IdentifierTextInput: FunctionComponent<{
       onChange={({ nativeEvent: { text } }) => onChange(text)}
       keyboardType={type === "NUMBER" ? "phone-pad" : "default"}
       accessibilityLabel={
-        label.trim().replaceAll(" ", "-").toLowerCase() + "-text"
+        label
+          ? label.trim().replaceAll(" ", "-").toLowerCase().concat("-text")
+          : "item-field-text"
       }
     />
   </View>
