@@ -28,8 +28,6 @@ const operatorToken = "my-operator-token";
 const endpoint = "https://my-endpoint.com";
 
 describe("LoginOTPCard", () => {
-  beforeEach(() => {});
-
   afterEach(() => {
     cleanup();
     jest.resetAllMocks();
