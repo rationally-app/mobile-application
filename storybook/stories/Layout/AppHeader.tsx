@@ -1,7 +1,8 @@
 import React from "react";
 import { storiesOf } from "@storybook/react-native";
 import { AppHeader } from "../../../src/components/Layout/AppHeader";
-import { View, Text } from "react-native";
+import { AppText } from "../../../src/components/Layout/AppText";
+import { View } from "react-native";
 import { size, color } from "../../../src/common/styles";
 import { AppMode } from "../../../src/context/config";
 import { createAppContainer } from "react-navigation";
@@ -23,11 +24,11 @@ const reactNavigationDecorator = (story: any): JSX.Element => {
 
 const appHeaderElements: JSX.Element[] = [
   <>
-    <Text>Production App Header</Text>
+    <AppText>Production App Header</AppText>
     <AppHeader />
   </>,
   <>
-    <Text>Staging App Header</Text>
+    <AppText>Staging App Header</AppText>
     <AppHeader mode={AppMode.staging} />
   </>,
 ];
