@@ -16,15 +16,21 @@ export const IdentifierScanModal: FunctionComponent<{
     }
   };
 
-  let barcodeType = BarCodeScanner.Constants.BarCodeType.qr;
-  if (type === "CODE_128")
-    barcodeType = BarCodeScanner.Constants.BarCodeType.code128;
-  else if (type === "CODE_39")
-    barcodeType = BarCodeScanner.Constants.BarCodeType.code39;
-  // the idea is to drop the BARCODE type after we have updated this to prod
-  // without creating breaking changes, hence we currently support both types
-  else if (type === "BARCODE")
-    barcodeType = BarCodeScanner.Constants.BarCodeType.code39;
+  let barcodeType;
+  switch (type) {
+    case "CODE_128":
+      barcodeType = BarCodeScanner.Constants.BarCodeType.code128;
+      break;
+    // the idea is to drop the BARCODE type after we have updated this to prod
+    // without creating breaking changes, hence we currently support both types
+    case "CODE_39":
+    case "BARCODE":
+      barcodeType = BarCodeScanner.Constants.BarCodeType.code39;
+      break;
+    default:
+      barcodeType = BarCodeScanner.Constants.BarCodeType.qr;
+      break;
+  }
 
   return (
     <Modal
