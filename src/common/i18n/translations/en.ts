@@ -26,6 +26,9 @@ export const en: Translations = {
     or: "OR",
     enterIdNumber: "Enter ID Number",
     check: "Check",
+    goToStatistics: "Go to statistics",
+    nationalityInputLabel: "Nationality (non-Singaporean)",
+    passportInputLabel: "Passport number",
   },
   idScanner: {
     enterIdManually: "Enter ID manually",

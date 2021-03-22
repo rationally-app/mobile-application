@@ -293,7 +293,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               testID="go-to-statistics"
               accessible={true}
             >
-              Go to statistics
+              {i18nt("collectCustomerDetailsScreen", "goToStatistics")}
             </AppText>
           </TouchableOpacity>
           <FeatureToggler feature="HELP_MODAL">

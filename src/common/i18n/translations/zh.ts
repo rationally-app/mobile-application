@@ -25,6 +25,9 @@ export const zh: Translations = {
     or: "或",
     enterIdNumber: "输入证件号码",
     check: "查看",
+    goToStatistics: "前往统计",
+    nationalityInputLabel: "国籍 (非新加坡人)",
+    passportInputLabel: "护照号码",
   },
   idScanner: {
     enterIdManually: "输入证件号码",
