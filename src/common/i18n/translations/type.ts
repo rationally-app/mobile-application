@@ -23,6 +23,9 @@ export type Translations = {
     or: string;
     enterIdNumber: string;
     check: string;
+    goToStatistics: string;
+    nationalityInputLabel: string;
+    passportInputLabel: string;
   };
   idScanner: {
     enterIdManually: string;

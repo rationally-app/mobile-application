@@ -55,7 +55,10 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <DropdownFilterInput
-            label="Nationality (non-Singaporean)"
+            label={i18nt(
+              "collectCustomerDetailsScreen",
+              "nationalityInputLabel"
+            )}
             placeholder="Search country"
             value={selectedCountry?.name}
             dropdownItems={nationalityItems}
@@ -66,7 +69,7 @@ export const ManualPassportInput: FunctionComponent<ManualPassportInput> = ({
       <View style={styles.inputAndButtonWrapper}>
         <View style={styles.inputWrapper}>
           <InputWithLabel
-            label="Passport number"
+            label={i18nt("collectCustomerDetailsScreen", "passportInputLabel")}
             value={passportNum ? passportNum : undefined}
             onChange={({ nativeEvent: { text } }) => setPassportNum(text)}
             onSubmitEditing={submitId}
