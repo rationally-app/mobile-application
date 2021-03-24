@@ -61,7 +61,15 @@ export const IdentifierPhoneNumberInput: FunctionComponent<{
         mobileNumberValue={phoneNumber}
         onChangeCountryCode={setCountryCodeValue}
         onChangeMobileNumber={setPhoneNumber}
-        accessibilityLabel="item-field-phone-number"
+        accessibilityLabel={
+          label
+            ? label
+                .trim()
+                .replace(/\s/g, "-")
+                .toLowerCase()
+                .concat("-phone-number")
+            : "item-field-phone-number"
+        }
       />
     </View>
   );

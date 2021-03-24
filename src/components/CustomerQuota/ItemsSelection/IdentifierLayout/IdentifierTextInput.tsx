@@ -25,7 +25,11 @@ export const IdentifierTextInput: FunctionComponent<{
       editable={editable}
       onChange={({ nativeEvent: { text } }) => onChange(text)}
       keyboardType={type === "NUMBER" ? "phone-pad" : "default"}
-      accessibilityLabel="item-field-text"
+      accessibilityLabel={
+        label
+          ? label.trim().replace(/\s/g, "-").toLowerCase().concat("-text")
+          : "item-field-text"
+      }
     />
   </View>
 );
