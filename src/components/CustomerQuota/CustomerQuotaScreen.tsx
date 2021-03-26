@@ -204,6 +204,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
                 ? ERROR_MESSAGE.INVALID_POD_INPUT
                 : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
             );
+            Sentry.captureException(invalidIdentifierInputError);
             showErrorAlert(invalidIdentifierInputError, () => clearCartError());
             break;
           case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
@@ -212,6 +213,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
                 ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
                 : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
             );
+            Sentry.captureException(duplicateIdentifierInputError);
             showErrorAlert(duplicateIdentifierInputError, () =>
               clearCartError()
             );
