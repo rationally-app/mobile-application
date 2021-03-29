@@ -70,11 +70,8 @@ const ManualPassportInputItem = (): JSX.Element => {
   return (
     <View
       style={{
-        position: "relative",
         padding: size(2),
         height: "100%",
-        width: 512,
-        maxWidth: "100%",
       }}
     >
       <ManualPassportInput
