@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, ReactElement } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { Checkbox } from "../../../src/components/Layout/Checkbox";
 import { AppText } from "../../../src/components/Layout/AppText";
 import { View } from "react-native";
 import { color, size } from "../../../src/common/styles";
 
-const CheckboxItem = (): JSX.Element => {
+const CheckboxItem = (): ReactElement => {
   const [isChecked, setIsChecked] = useState(false);
   return (
     <Checkbox

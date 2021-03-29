@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, ReactElement } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { ModalWithClose } from "../../../src/components/Layout/ModalWithClose";
 import { AppText } from "../../../src/components/Layout/AppText";
 import { DarkButton } from "../../../src/components/Layout/Buttons/DarkButton";
 import { View } from "react-native";
 
-const ModalItems = (): JSX.Element => {
+const ModalItems = (): ReactElement => {
   const [isVisible, setIsVisible] = useState(false);
   return (
     <View style={{ flex: 1 }}>
