@@ -13,7 +13,7 @@ describe("LoginScanCard", () => {
   });
 
   it("should be able to render without error", async () => {
-    expect.hasAssertions();
+    expect.assertions(1);
 
     const { getByTestId } = render(
       <LoginScanCard onToggleScanner={onToggleScanner} isLoading={isLoading} />

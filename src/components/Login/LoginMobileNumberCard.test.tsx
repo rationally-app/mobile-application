@@ -20,13 +20,17 @@ const setMobileNumber = jest.fn();
 const setCountryCode = jest.fn();
 const mockHandleRequestOTP = jest.fn().mockResolvedValue(true);
 
+const OTPInputId = "login-phone-number-input";
+const submitButtonId = "login-send-otp-button";
+const invalidMessage = "Enter a valid contact number.";
+
 describe("LoginMobileNumberCard", () => {
   afterEach(() => {
     cleanup();
     jest.resetAllMocks();
   });
 
-  it("should be able to fetch the endpoint without error", async () => {
+  it("should request for OTP to the phone number successfully on pressing submit", async () => {
     expect.assertions(6);
     const { getByTestId, queryByText } = render(
       <LoginMobileNumberCard
@@ -37,8 +41,8 @@ describe("LoginMobileNumberCard", () => {
       />
     );
 
-    const phoneNumberInput = getByTestId("login-phone-number-input");
-    const submitButton = getByTestId("login-send-otp-button");
+    const phoneNumberInput = getByTestId(OTPInputId);
+    const submitButton = getByTestId(submitButtonId);
 
     fireEvent(phoneNumberInput, "onChangeText", "88888888");
     expect(phoneNumberInput.props["value"]).toEqual("8888 8888");
@@ -69,14 +73,14 @@ describe("LoginMobileNumberCard", () => {
           />
         </CreateProvidersWrapper>
       );
-      const phoneNumberInput = getByTestId("login-phone-number-input");
-      const submitButton = getByTestId("login-send-otp-button");
+      const phoneNumberInput = getByTestId(OTPInputId);
+      const submitButton = getByTestId(submitButtonId);
 
       fireEvent(phoneNumberInput, "onChangeText", "");
       expect(phoneNumberInput.props["value"]).toEqual("");
 
       fireEvent.press(submitButton);
-      expect(queryByText("Enter a valid contact number.")).not.toBeNull();
+      expect(queryByText(invalidMessage)).not.toBeNull();
 
       await waitFor(() => {
         expect(mockHandleRequestOTP).not.toHaveBeenCalled();
@@ -100,14 +104,14 @@ describe("LoginMobileNumberCard", () => {
           />
         </CreateProvidersWrapper>
       );
-      const phoneNumberInput = getByTestId("login-phone-number-input");
-      const submitButton = getByTestId("login-send-otp-button");
+      const phoneNumberInput = getByTestId(OTPInputId);
+      const submitButton = getByTestId(submitButtonId);
 
       fireEvent(phoneNumberInput, "onChangeText", "888888888");
       expect(phoneNumberInput.props["value"]).toEqual("888888888");
 
       fireEvent.press(submitButton);
-      expect(queryByText("Enter a valid contact number.")).not.toBeNull();
+      expect(queryByText(invalidMessage)).not.toBeNull();
 
       await waitFor(() => {
         expect(mockHandleRequestOTP).not.toHaveBeenCalled();

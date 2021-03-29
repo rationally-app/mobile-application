@@ -23,9 +23,12 @@ const resetStage = jest.fn();
 const mockHandleRequestOTP = jest.fn().mockReturnValue(true);
 const onSuccess = jest.fn();
 
-const fullPhoneNumber = "6588888888";
+const fullPhoneNumber = "+6588888888";
 const operatorToken = "my-operator-token";
 const endpoint = "https://my-endpoint.com";
+
+const OTPInputId = "login-otp-input";
+const submitButtonId = "login-submit-otp-button";
 
 describe("LoginOTPCard", () => {
   afterEach(() => {
@@ -33,7 +36,7 @@ describe("LoginOTPCard", () => {
     jest.resetAllMocks();
   });
 
-  it("should be able to fetch the endpoint without error", async () => {
+  it("should submit the OTP successfully on pressing submit", async () => {
     expect.assertions(4);
     mockValidateOTP.mockResolvedValueOnce({
       sessionToken: "my-session-token",
@@ -54,8 +57,8 @@ describe("LoginOTPCard", () => {
         />
       </CreateProvidersWrapper>
     );
-    const OTPInput = getByTestId("login-otp-input");
-    const submitButton = getByTestId("login-submit-otp-button");
+    const OTPInput = getByTestId(OTPInputId);
+    const submitButton = getByTestId(submitButtonId);
 
     fireEvent(OTPInput, "onChange", {
       nativeEvent: { text: "000000" },
@@ -105,8 +108,8 @@ describe("LoginOTPCard", () => {
         </CreateProvidersWrapper>
       );
 
-      const OTPInput = getByTestId("login-otp-input");
-      const submitButton = getByTestId("login-submit-otp-button");
+      const OTPInput = getByTestId(OTPInputId);
+      const submitButton = getByTestId(submitButtonId);
 
       fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "000000" },
@@ -149,8 +152,8 @@ describe("LoginOTPCard", () => {
         </CreateProvidersWrapper>
       );
 
-      const OTPInput = getByTestId("login-otp-input");
-      const submitButton = getByTestId("login-submit-otp-button");
+      const OTPInput = getByTestId(OTPInputId);
+      const submitButton = getByTestId(submitButtonId);
 
       fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "000000" },
@@ -197,8 +200,8 @@ describe("LoginOTPCard", () => {
         </CreateProvidersWrapper>
       );
 
-      const OTPInput = getByTestId("login-otp-input");
-      const submitButton = getByTestId("login-submit-otp-button");
+      const OTPInput = getByTestId(OTPInputId);
+      const submitButton = getByTestId(submitButtonId);
 
       fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "000000" },
@@ -241,7 +244,7 @@ describe("LoginOTPCard", () => {
         </CreateProvidersWrapper>
       );
 
-      const submitButton = getByTestId("login-submit-otp-button");
+      const submitButton = getByTestId(submitButtonId);
 
       fireEvent.press(submitButton);
       expect(queryByText("Submit")).toBeNull();
@@ -279,8 +282,8 @@ describe("LoginOTPCard", () => {
         </CreateProvidersWrapper>
       );
 
-      const OTPInput = getByTestId("login-otp-input");
-      const submitButton = getByTestId("login-submit-otp-button");
+      const OTPInput = getByTestId(OTPInputId);
+      const submitButton = getByTestId(submitButtonId);
 
       fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "000000" },
