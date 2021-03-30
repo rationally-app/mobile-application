@@ -23,6 +23,9 @@ export type Translations = {
     or: string;
     enterIdNumber: string;
     check: string;
+    goToStatistics: string;
+    nationalityInputLabel: string;
+    passportInputLabel: string;
   };
   idScanner: {
     enterIdManually: string;
@@ -270,6 +273,17 @@ export type Translations = {
       body?: string;
       primaryActionText: string;
       secondaryActionText?: string;
+    };
+    networkError: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
+    wrongPaymentReceiptNumber: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
     };
     wrongFormatCountryCode: {
       title: string;

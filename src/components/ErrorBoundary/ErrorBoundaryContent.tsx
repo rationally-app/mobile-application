@@ -6,6 +6,7 @@ import * as Updates from "expo-updates";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import AlertIcon from "../../../assets/icons/alert.svg";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { formatDateTime } from "../../utils/dateTimeFormatter";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -49,24 +50,51 @@ const styles = StyleSheet.create({
 });
 
 export const ErrorBoundaryContent: FunctionComponent<{
-  error?: string;
-}> = ({ error }) => {
+  errorName?: string;
+}> = ({ errorName }) => {
   const { i18nt } = useTranslate();
+
+  const errorDescription = errorName
+    ? `(${errorName} ${formatDateTime(Date.now())})`
+    : undefined;
+
+  let header, body, restartButtonText;
+
+  switch (errorName) {
+    case "NetworkError": {
+      header = i18nt("errorMessages", "networkError", "title");
+      body = i18nt("errorMessages", "networkError", "body");
+      restartButtonText = i18nt(
+        "errorMessages",
+        "networkError",
+        "primaryActionText"
+      );
+      break;
+    }
+    default: {
+      header = i18nt("errorMessages", "systemError", "title");
+      body = i18nt("errorMessages", "systemError", "body");
+      restartButtonText = i18nt(
+        "errorMessages",
+        "systemError",
+        "primaryActionText"
+      );
+    }
+  }
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.content}>
         <AlertIcon style={styles.icon} width={size(5)} height={size(5)} />
-        <AppText style={styles.heading}>
-          {i18nt("errorMessages", "systemError", "title")}
-        </AppText>
-        <AppText style={styles.body}>
-          {i18nt("errorMessages", "systemError", "body")}
-        </AppText>
-        {error && <AppText style={styles.errorDescription}>{error}</AppText>}
+        <AppText style={styles.heading}>{header}</AppText>
+        <AppText style={styles.body}>{body}</AppText>
+        {errorDescription && (
+          <AppText style={styles.errorDescription}>{errorDescription}</AppText>
+        )}
       </View>
       <View style={styles.restartButton}>
         <DarkButton
-          text={i18nt("errorMessages", "systemError", "primaryActionText")}
+          text={restartButtonText}
           onPress={() => Updates.reloadAsync()}
           fullWidth={true}
         />

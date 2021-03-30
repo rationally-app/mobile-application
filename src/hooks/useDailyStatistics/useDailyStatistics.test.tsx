@@ -6,7 +6,7 @@ import { ProductContextProvider } from "../../context/products";
 import { defaultIdentifier } from "../../test/helpers/defaults";
 import { CampaignPolicy } from "../../types";
 import { Sentry } from "../../utils/errorTracking";
-import { wait } from "@testing-library/react-native";
+import { waitFor } from "@testing-library/react-native";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -206,7 +206,7 @@ describe("useDailyStatistics", () => {
       { wrapper }
     );
 
-    await wait(() => {
+    await waitFor(() => {
       expect(result.current.lastTransactionTime).toStrictEqual(
         new Date(12000000000)
       );
@@ -234,7 +234,7 @@ describe("useDailyStatistics", () => {
     currentTimestamp = 19000000000;
 
     rerender();
-    await wait(() => {
+    await waitFor(() => {
       expect(mockGetDailyStatistics).toHaveBeenCalledTimes(2);
       expect(result.current.lastTransactionTime).toStrictEqual(
         new Date(19000000000)

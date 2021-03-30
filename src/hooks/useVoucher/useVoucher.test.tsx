@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { useVoucher } from "./useVoucher";
-import { wait } from "@testing-library/react-native";
+import { waitFor } from "@testing-library/react-native";
 import { postTransaction } from "../../services/quota";
 
 jest.mock("../../services/quota");
@@ -43,7 +43,7 @@ describe("useVoucher", () => {
       expect.assertions(2);
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
       });
 
@@ -51,7 +51,7 @@ describe("useVoucher", () => {
         { serial: "123456789", denomination: 2 },
       ]);
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.removeVoucher("123456789");
       });
 
@@ -62,7 +62,7 @@ describe("useVoucher", () => {
       expect.assertions(2);
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
         result.current.addVoucher({ serial: "123456788", denomination: 2 });
       });
@@ -72,7 +72,7 @@ describe("useVoucher", () => {
         { serial: "123456788", denomination: 2 },
       ]);
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.removeVoucher("123456788");
       });
       expect(result.current.vouchers).toStrictEqual([
@@ -84,7 +84,7 @@ describe("useVoucher", () => {
       expect.assertions(2);
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
         result.current.addVoucher({ serial: "123456788", denomination: 2 });
       });
@@ -94,7 +94,7 @@ describe("useVoucher", () => {
         { serial: "123456788", denomination: 2 },
       ]);
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.removeVoucher("invalid");
       });
       expect(result.current.vouchers).toStrictEqual([
@@ -107,7 +107,7 @@ describe("useVoucher", () => {
       expect.assertions(3);
       const { rerender, result } = renderHook(() => useVoucher(key, endpoint));
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
         result.current.addVoucher({ serial: "123456788", denomination: 2 });
       });
@@ -117,7 +117,7 @@ describe("useVoucher", () => {
         { serial: "123456788", denomination: 2 },
       ]);
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.removeVoucher("123456788");
       });
 
@@ -136,7 +136,7 @@ describe("useVoucher", () => {
       expect.assertions(1);
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
       });
 
@@ -149,7 +149,7 @@ describe("useVoucher", () => {
       expect.assertions(2);
       const { rerender, result } = renderHook(() => useVoucher(key, endpoint));
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
       });
 
@@ -169,7 +169,7 @@ describe("useVoucher", () => {
 
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
         result.current.addVoucher({ serial: "123456788", denomination: 2 });
       });
@@ -177,7 +177,7 @@ describe("useVoucher", () => {
       const mockMerchantCode = "12345678";
       mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.checkoutVouchers(mockMerchantCode);
         expect(result.current.checkoutVouchersState).toBe("CONSUMING_VOUCHER");
       });
@@ -204,7 +204,7 @@ describe("useVoucher", () => {
       const { result } = renderHook(() => useVoucher(key, endpoint));
       const mockMerchantCode = "<script>";
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
         result.current.checkoutVouchers(mockMerchantCode);
       });
@@ -223,7 +223,7 @@ describe("useVoucher", () => {
       expect.assertions(3);
       const { result } = renderHook(() => useVoucher(key, endpoint));
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.addVoucher({ serial: "123456789", denomination: 2 });
         result.current.addVoucher({ serial: "123456788", denomination: 2 });
       });
@@ -233,7 +233,7 @@ describe("useVoucher", () => {
         new Error("Couldn't checkout, please try again later")
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.checkoutVouchers(mockMerchantCode);
       });
 

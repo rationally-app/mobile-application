@@ -63,9 +63,15 @@ const TextInputType = t.union([
   t.literal("STRING"),
   t.literal("NUMBER"),
   t.literal("PHONE_NUMBER"),
+  t.literal("PAYMENT_RECEIPT"),
 ]);
 
-const ScanButtonType = t.union([t.literal("QR"), t.literal("BARCODE")]);
+const ScanButtonType = t.union([
+  t.literal("QR"),
+  t.literal("BARCODE"),
+  t.literal("CODE_128"),
+  t.literal("CODE_39"),
+]);
 
 const PolicyIdentifier = t.intersection([
   t.type({

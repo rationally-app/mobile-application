@@ -26,6 +26,9 @@ export const en: Translations = {
     or: "OR",
     enterIdNumber: "Enter ID Number",
     check: "Check",
+    goToStatistics: "Go to statistics",
+    nationalityInputLabel: "Nationality (non-Singaporean)",
+    passportInputLabel: "Passport number",
   },
   idScanner: {
     enterIdManually: "Enter ID manually",
@@ -153,12 +156,12 @@ export const en: Translations = {
     },
     incompleteEntryDeviceCode: {
       title: "Incomplete entry",
-      body: "Enter device code.",
+      body: "Enter a device code.",
       primaryActionText: "OK",
     },
     incompleteEntryContactNumber: {
       title: "Incomplete entry",
-      body: "Enter contact number",
+      body: "Enter a contact number.",
       primaryActionText: "OK",
     },
     incompleteEntrySelectCheckbox: {
@@ -261,6 +264,16 @@ export const en: Translations = {
         "We are currently facing connectivity issues. Try restarting the app or contact Govtech if the problem persists.",
       primaryActionText: "Restart app",
     },
+    networkError: {
+      title: "Network error",
+      body: "You are offline. Try to connect and try again.",
+      primaryActionText: "Retry",
+    },
+    wrongPaymentReceiptNumber: {
+      title: "Wrong format",
+      body: "Enter a valid payment receipt number.",
+      primaryActionText: "OK",
+    },
     wrongFormatCountryCode: {
       title: "Wrong format",
       body: "Enter a valid country code.",
@@ -298,37 +311,37 @@ export const en: Translations = {
     },
     alreadyUsedCode: {
       title: "Already Used",
-      body: "Enter unique code details",
+      body: "Enter or scan a unique code.",
       primaryActionText: "OK",
     },
     alreadyUsedItem: {
       title: "Already Used",
-      body: "Scan another item that is not tagged to any ID number",
+      body: "Scan another item that is not tagged to any ID number.",
       primaryActionText: "OK",
     },
     wrongFormatCode: {
       title: "Wrong format",
-      body: "Enter or scan valid code details",
+      body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
     incompleteEntryCode: {
       title: "Incomplete entry",
-      body: "Enter or scan code details",
+      body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
     wrongFormatNotValidDeviceCode: {
       title: "Wrong format",
-      body: "Scan valid device code",
+      body: "Scan a valid device code.",
       primaryActionText: "OK",
     },
     incompleteEntryScanDeviceCode: {
       title: "Incomplete entry",
-      body: "Scan device code",
+      body: "Scan a device code.",
       primaryActionText: "OK",
     },
     wrongFormatContactNumber: {
       title: "Wrong format",
-      body: "Enter valid contact number",
+      body: "Enter a valid contact number.",
       primaryActionText: "OK",
     },
     insufficientQuota: {
@@ -396,7 +409,7 @@ export const en: Translations = {
     },
     wrongFormatEmailAddress: {
       title: "Wrong format",
-      body: "Enter valid email address",
+      body: "Enter a valid email address.",
       primaryActionText: "OK",
     },
     invalidDeviceCode: {

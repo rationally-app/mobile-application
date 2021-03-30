@@ -25,6 +25,9 @@ export const zh: Translations = {
     or: "或",
     enterIdNumber: "输入证件号码",
     check: "查看",
+    goToStatistics: "前往统计",
+    nationalityInputLabel: "国籍 (非新加坡人)",
+    passportInputLabel: "护照号码",
   },
   idScanner: {
     enterIdManually: "输入证件号码",
@@ -253,6 +256,16 @@ export const zh: Translations = {
       body:
         "连接目前出现问题。请重启应用程序。如果问题持续出现，请联系政府科技局。",
       primaryActionText: "重启应用程序",
+    },
+    networkError: {
+      title: "网络连接问题",
+      body: "您已断线。请尝试连接并重试。",
+      primaryActionText: "重试",
+    },
+    wrongPaymentReceiptNumber: {
+      title: "格式错误",
+      body: "请输入有效的付款收据编号。",
+      primaryActionText: "确定",
     },
     wrongFormatCountryCode: {
       title: "格式错误",

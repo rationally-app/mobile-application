@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { renderHook, act } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
-import { wait } from "@testing-library/react-native";
+import { waitFor } from "@testing-library/react-native";
 import { Quota, PostTransactionResult, CampaignPolicy } from "../../types";
 import { postTransaction } from "../../services/quota";
 import {
@@ -445,7 +445,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 2, [
           {
             label: "first",
@@ -464,7 +464,7 @@ describe("useCart", () => {
 
       mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.checkoutCart();
         expect(result.current.cartState).toBe("CHECKING_OUT");
       });
@@ -519,7 +519,7 @@ describe("useCart", () => {
         new Error("Token does not match the customer's last registered token")
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 2, [
           {
             label: "first",
@@ -544,7 +544,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 0);
         result.current.checkoutCart();
       });
@@ -583,7 +583,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 1, [
           {
             value: "",
@@ -660,7 +660,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 1, [
           {
             value: "",
@@ -703,7 +703,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 1, [
           {
             value: "identical",
@@ -768,7 +768,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 1, [
           {
             value: "identical",
@@ -887,7 +887,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 1, [
           {
             value: "+659",
@@ -958,7 +958,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 1, [
           {
             value: "01234",
@@ -1003,7 +1003,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.updateCart("toilet-paper", 2, [
           {
             label: "first",
@@ -1022,7 +1022,7 @@ describe("useCart", () => {
 
       mockPostTransaction.mockRejectedValueOnce(new Error());
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.checkoutCart();
       });
 
@@ -1073,7 +1073,7 @@ describe("useCart", () => {
         }
       );
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.emptyCart();
       });
 
