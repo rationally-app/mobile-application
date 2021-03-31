@@ -18,9 +18,7 @@ const CheckboxItem = (): ReactElement => {
 
 storiesOf("Layout", module).add("Checkbox", () => (
   <View style={{ backgroundColor: color("grey", 10) }}>
-    <View style={{ marginBottom: size(3) }}>
-      <CheckboxItem />
-    </View>
+    <CheckboxItem />
     <CheckboxItem />
   </View>
 ));
