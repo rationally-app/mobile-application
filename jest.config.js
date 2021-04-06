@@ -4,7 +4,6 @@ const expoPreset = require("jest-expo/jest-preset");
 module.exports = {
   ...expoPreset,
   verbose: true,
-  preset: "react-native",
   moduleNameMapper: {
     "\\.svg": "<rootDir>/__mocks__/svg-mock.ts",
   },
