@@ -1,5 +1,8 @@
-// jest.config.js
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const expoPreset = require("jest-expo/jest-preset");
+
 module.exports = {
+  ...expoPreset,
   verbose: true,
   preset: "react-native",
   moduleNameMapper: {
