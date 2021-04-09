@@ -59,7 +59,6 @@
     "@types/google-libphonenumber": "^7.4.20",
     "@types/i18n-js": "^3.8.0",
     "@types/jest": "^26.0.22",
-    "@types/node": "^14.0.25",
     "@types/react": "~17.0.3",
     "@types/react-native": "~0.62.13",
     "@types/testing-library__react-hooks": "3.2.0",
