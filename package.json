@@ -15,7 +15,6 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.161",
     "date-fns": "^2.11.1",
     "expo": "^38.0.0",
     "expo-barcode-scanner": "~8.2.1",
@@ -32,7 +31,7 @@
     "io-ts": "^2.2.1",
     "io-ts-reporters": "^1.0.0",
     "io-ts-types": "^0.5.6",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "react": "16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-gesture-handler": "~1.8.0",
@@ -59,6 +58,7 @@
     "@types/google-libphonenumber": "^7.4.20",
     "@types/i18n-js": "^3.8.0",
     "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.168",
     "@types/react": "~17.0.4",
     "@types/react-native": "~0.62.13",
     "@types/testing-library__react-hooks": "3.2.0",
