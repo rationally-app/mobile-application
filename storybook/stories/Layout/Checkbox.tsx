@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react-native";
 import { Checkbox } from "../../../src/components/Layout/Checkbox";
 import { AppText } from "../../../src/components/Layout/AppText";
 import { View } from "react-native";
-import { color, size } from "../../../src/common/styles";
+import { color } from "../../../src/common/styles";
 
 const CheckboxItem = (): ReactElement => {
   const [isChecked, setIsChecked] = useState(false);

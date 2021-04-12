@@ -10,7 +10,7 @@ const inputWithLabelElements: JSX.Element[] = [
 ];
 
 storiesOf("Layout", module).add("InputWithLabel", () => (
-  <View style={{ margin: size(3) }}>
+  <View style={{ marginHorizontal: size(3), marginVertical: size(4) }}>
     {inputWithLabelElements.map((inputWithLabelElement, index) => (
       <View key={index} style={{ marginBottom: size(1) }}>
         {inputWithLabelElement}
