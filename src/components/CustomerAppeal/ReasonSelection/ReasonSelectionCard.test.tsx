@@ -1,12 +1,7 @@
 import { render, fireEvent, cleanup } from "@testing-library/react-native";
 import React from "react";
-import { Sentry } from "../../../utils/errorTracking";
 import { ReasonSelectionCard } from "./ReasonSelectionCard";
 import "../../../common/i18n/i18nMock";
-
-jest.mock("../../../utils/errorTracking");
-const mockCaptureException = jest.fn();
-(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const onCancel = jest.fn();
 const onReasonSelection = jest.fn();

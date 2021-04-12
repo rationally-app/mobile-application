@@ -1,12 +1,7 @@
 import { render, cleanup, fireEvent } from "@testing-library/react-native";
 import React from "react";
-import { Sentry } from "../../../utils/errorTracking";
 import { ReasonItem } from "./ReasonItem";
 import "../../../common/i18n/i18nMock";
-
-jest.mock("../../../utils/errorTracking");
-const mockCaptureException = jest.fn();
-(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const onReasonSelection = jest.fn();
 
