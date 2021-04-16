@@ -36,11 +36,6 @@ describe("CustomerAppealScreen", () => {
       campaignA: {
         features: {
           ...defaultFeatures,
-          id: {
-            type: "STRING",
-            scannerType: "QR",
-            validation: "NRIC",
-          },
           campaignName: "Some Campaign Name",
         },
         policies: [
