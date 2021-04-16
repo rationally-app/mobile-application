@@ -12,22 +12,24 @@ describe("ReasonItem", () => {
   });
 
   it("should render the item correctly", async () => {
-    expect.assertions(3);
+    expect.assertions(4);
 
-    const description = "reason-a";
     const { queryByText } = render(
       <ReasonItem
-        description={description}
+        description={"some-description"}
+        descriptionAlert={"*alert"}
         isLast={true}
         onReasonSelection={onReasonSelection}
       />
     );
 
-    const reasonA = queryByText("reason-a");
-    expect(reasonA).not.toBeNull();
+    const reasonDescription = queryByText("some-description");
+    const reasonDescriptionAlert = queryByText("*alert");
+    expect(reasonDescription).not.toBeNull();
+    expect(reasonDescriptionAlert).not.toBeNull();
 
-    fireEvent.press(reasonA!);
+    fireEvent.press(reasonDescription!);
     expect(onReasonSelection).toHaveBeenCalledTimes(1);
-    expect(onReasonSelection).toHaveBeenCalledWith(description);
+    expect(onReasonSelection).toHaveBeenCalledWith("some-description");
   });
 });

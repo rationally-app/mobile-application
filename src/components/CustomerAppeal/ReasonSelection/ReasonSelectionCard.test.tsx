@@ -8,7 +8,7 @@ const onReasonSelection = jest.fn();
 const getReasons = jest
   .fn()
   .mockReturnValue([
-    { description: "reason-a" },
+    { description: "reason-a", descriptionAlert: "*alert-a" },
     { description: "reason-b" },
     { description: "reason-c" },
   ]);
@@ -20,7 +20,7 @@ describe("ReasonSelectionCard", () => {
   });
 
   it("should render the reasons correctly", async () => {
-    expect.assertions(6);
+    expect.assertions(7);
     const { queryByText } = render(
       <ReasonSelectionCard
         ids={["S0000001I"]}
@@ -31,21 +31,23 @@ describe("ReasonSelectionCard", () => {
       />
     );
 
-    const reasonA = queryByText("reason-a");
-    const reasonB = queryByText("reason-b");
-    const reasonC = queryByText("reason-c");
+    const reasonDescriptionA = queryByText("reason-a");
+    const reasonDescriptionB = queryByText("reason-b");
+    const reasonDescriptionC = queryByText("reason-c");
+    const reasonDescriptionAlertA = queryByText("*alert-a");
 
-    expect(reasonA!).not.toBeNull();
-    expect(reasonB!).not.toBeNull();
-    expect(reasonC!).not.toBeNull();
+    expect(reasonDescriptionA!).not.toBeNull();
+    expect(reasonDescriptionB!).not.toBeNull();
+    expect(reasonDescriptionC!).not.toBeNull();
+    expect(reasonDescriptionAlertA).not.toBeNull();
 
-    fireEvent.press(reasonA!);
+    fireEvent.press(reasonDescriptionA!);
     expect(onReasonSelection).toHaveBeenCalledTimes(1);
 
-    fireEvent.press(reasonB!);
+    fireEvent.press(reasonDescriptionB!);
     expect(onReasonSelection).toHaveBeenCalledTimes(2);
 
-    fireEvent.press(reasonC!);
+    fireEvent.press(reasonDescriptionC!);
     expect(onReasonSelection).toHaveBeenCalledTimes(3);
   });
 });
