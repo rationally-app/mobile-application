@@ -17,4 +17,11 @@ describe("ReasonSelectionHeader", () => {
 
     expect(queryByText("Reason Header")).not.toBeNull();
   });
+
+  it("should render the null header", async () => {
+    expect.assertions(1);
+    const { queryByDisplayValue } = render(<ReasonSelectionHeader title="" />);
+
+    expect(queryByDisplayValue("")).toBeNull();
+  });
 });
