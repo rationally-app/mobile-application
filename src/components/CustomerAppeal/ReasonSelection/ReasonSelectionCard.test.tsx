@@ -1,17 +1,15 @@
 import { render, fireEvent, cleanup } from "@testing-library/react-native";
 import React from "react";
-import { ReasonSelectionCard } from "./ReasonSelectionCard";
+import { Reason, ReasonSelectionCard } from "./ReasonSelectionCard";
 import "../../../common/i18n/i18nMock";
 
 const onCancel = jest.fn();
 const onReasonSelection = jest.fn();
-const getReasons = jest
-  .fn()
-  .mockReturnValue([
-    { description: "reason-a", descriptionAlert: "*alert-a" },
-    { description: "reason-b" },
-    { description: "reason-c" },
-  ]);
+const mockReasons: Reason[] = [
+  { description: "reason-a", descriptionAlert: "*alert-a" },
+  { description: "reason-b", descriptionAlert: undefined },
+  { description: "reason-c", descriptionAlert: undefined },
+];
 
 describe("ReasonSelectionCard", () => {
   afterEach(() => {
@@ -25,7 +23,7 @@ describe("ReasonSelectionCard", () => {
       <ReasonSelectionCard
         ids={["S0000001I"]}
         reasonSelectionHeader={"Indicate reason for appeal"}
-        reasons={getReasons()}
+        reasons={mockReasons}
         onCancel={onCancel}
         onReasonSelection={onReasonSelection}
       />
