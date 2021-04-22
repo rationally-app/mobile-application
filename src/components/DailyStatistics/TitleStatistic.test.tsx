@@ -12,7 +12,7 @@ describe("TitleStatistic", () => {
     jest.resetAllMocks();
   });
 
-  it("should render the title correctly", async () => {
+  it("should render correctly", async () => {
     expect.assertions(3);
     const { queryByText } = render(
       <TitleStatistic
@@ -27,5 +27,22 @@ describe("TitleStatistic", () => {
     expect(queryByText("999")).not.toBeNull();
     expect(queryByText("01 Jan 1970")).not.toBeNull();
     expect(queryByText("Last distributed at 7:30AM")).not.toBeNull();
+  });
+
+  it("should render null count correctly", async () => {
+    expect.assertions(3);
+    const { queryByText, queryByDisplayValue } = render(
+      <TitleStatistic
+        totalCount={null}
+        currentTimestamp={0}
+        lastTransactionTime={null}
+        onPressPrevDay={onPressPrevDay}
+        onPressNextDay={onPressNextDay}
+      />
+    );
+
+    expect(queryByDisplayValue("")).toBeNull();
+    expect(queryByText("01 Jan 1970")).not.toBeNull();
+    expect(queryByText("Last distributed at -")).not.toBeNull();
   });
 });
