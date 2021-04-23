@@ -2,7 +2,7 @@ import React, { FunctionComponent, ComponentType, ReactElement } from "react";
 
 interface Providers {
   providers: {
-    provider: ComponentType | FunctionComponent;
+    provider: ComponentType<any> | FunctionComponent<any>;
     props?: Record<any, any>;
   }[];
 }
