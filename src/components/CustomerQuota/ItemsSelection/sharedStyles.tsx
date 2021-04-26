@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-import { size, fontSize, color } from "../../../common/styles";
-import { lineHeight } from "../../../common/styles/typography";
+import { size, fontSize, color, lineHeight } from "../../../common/styles";
 
 export const sharedStyles = StyleSheet.create({
   wrapper: {
