@@ -97,6 +97,9 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
                 isSameDay(currentTimestamp, Date.now()) ? "#597585" : "white"
               }
               style={styles.chevron}
+              accessibilityLabel="title-statistics-chevron-right"
+              testID="title-statistics-chevron-right"
+              accessible={true}
             />
           </View>
         </TouchableOpacity>
