@@ -1,13 +1,10 @@
 import React from "react";
 import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
-import { createAppContainer } from "react-navigation";
-import { createDrawerNavigator } from "react-navigation-drawer";
 import { CustomerAppealScreen } from "../../../src/components/CustomerAppeal/CustomerAppealScreen";
-import { CampaignConfigContext } from "../../../src/context/campaignConfig";
-import { ImportantMessageContentContext } from "../../../src/context/importantMessage";
 import { CampaignPolicy } from "../../../src/types";
-import { navigation } from "../mocks/navigation";
+import { navigation, mockReactNavigationDecorator } from "../mocks/navigation";
+import { provider as MockProvider } from "../mocks/provider";
 
 const products: CampaignPolicy[] = [
   {
@@ -45,37 +42,13 @@ const products: CampaignPolicy[] = [
     },
   },
 ];
-const reactNavigationDecorator = (story: any): JSX.Element => {
-  const Screen = (): any => story();
-  const Navigator = createAppContainer(
-    createDrawerNavigator(
-      { Screen },
-      {
-        drawerPosition: "right",
-        drawerType: "slide",
-      }
-    )
-  );
-  return <Navigator />;
-};
 
 storiesOf("CustomerAppeal", module)
   .addDecorator((Story: any) => (
-    <CampaignConfigContext.Provider
-      value={{
-        policies: products,
-        features: null,
-        c13n: {},
-      }}
-    >
-      <ImportantMessageContentContext.Provider
-        value={{
-          title: "MessageContent",
-        }}
-      >
-        {reactNavigationDecorator(Story)}
-      </ImportantMessageContentContext.Provider>
-    </CampaignConfigContext.Provider>
+    <MockProvider
+      policies={products}
+      story={mockReactNavigationDecorator(Story)}
+    />
   ))
   .add("Screen", () => {
     return (
