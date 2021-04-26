@@ -9,6 +9,7 @@ import {
 import { Sentry } from "../../utils/errorTracking";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { IdentificationContext } from "../../context/identification";
+import { CampaignConfigContext } from "../../context/campaignConfig";
 
 export type PastTransactionHook = {
   pastTransactionsResult: PastTransactionsResult["pastTransactions"] | null;
@@ -31,6 +32,7 @@ export const usePastTransaction = (
   const [error, setError] = useState<PastTransactionError | null>(null);
   const prevIds = usePrevious(ids);
   const { selectedIdType } = useContext(IdentificationContext);
+  const { features } = useContext(CampaignConfigContext);
 
   useEffect(() => {
     const fetchPastTransactions = async (): Promise<void> => {
@@ -47,7 +49,8 @@ export const usePastTransaction = (
           authKey,
           endpoint,
           categories,
-          getAllTransactions
+          getAllTransactions,
+          features?.apiVersion
         );
         if (isMounted()) {
           setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
@@ -78,6 +81,7 @@ export const usePastTransaction = (
     selectedIdType,
     prevIds,
     isMounted,
+    features?.apiVersion,
   ]);
 
   return {
