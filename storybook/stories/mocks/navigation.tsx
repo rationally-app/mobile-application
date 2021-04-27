@@ -25,7 +25,9 @@ export const setParam = (key: string, value: unknown): void => {
   params[key] = value;
 };
 
-export const mockReactNavigationDecorator = (story: any): JSX.Element => {
+export const mockReactNavigationDecorator = (
+  story: () => void
+): JSX.Element => {
   const Screen = (): any => story();
   const Navigator = createAppContainer(
     createDrawerNavigator(
