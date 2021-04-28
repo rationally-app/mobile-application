@@ -150,7 +150,7 @@ const mockGetQuotaResponseMultipleId = {
 const postTransactionParams = {
   ids: ["S0000000J"],
   identificationFlag,
-  transactions: [{ category: "product-1", quantity: 1, identifiers: [] }],
+  transactions: [{ category: "product-1", quantity: 2, identifiers: [] }],
   key,
   endpoint,
 };
@@ -219,6 +219,22 @@ describe("quota", () => {
         identificationFlag,
         key,
         endpoint
+      );
+      expect(quota).toEqual(mockGetQuotaResultSingleId);
+    });
+
+    it("should return the quota of an ID if version is passed in", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockGetQuotaResponseSingleId),
+      });
+      const quota = await getQuota(
+        ["S0000000J"],
+        identificationFlag,
+        key,
+        endpoint,
+        "v2" // version from features
       );
       expect(quota).toEqual(mockGetQuotaResultSingleId);
     });
@@ -314,6 +330,19 @@ describe("quota", () => {
       expect(result).toEqual(mockPostTransactionResult);
     });
 
+    it("should return the correct success result even with additional version param", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockPostTransactionResponse),
+      });
+      const result = await postTransaction({
+        ...postTransactionParams,
+        apiVersion: "v2",
+      });
+      expect(result).toEqual(mockPostTransactionResult);
+    });
+
     it("should throw error if no ID was provided", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
@@ -391,6 +420,24 @@ describe("quota", () => {
         identificationFlag,
         key,
         endpoint
+      );
+      expect(pastTransactionsResult).toEqual(mockPastTransactionsResult);
+    });
+
+    it("should return past transactions with additional version param", async () => {
+      expect.assertions(1);
+      mockFetch.mockReturnValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockPastTransactionsResponse),
+      });
+      const pastTransactionsResult = await getPastTransactions(
+        ["S0000000J"],
+        identificationFlag,
+        key,
+        endpoint,
+        [],
+        false,
+        "v2"
       );
       expect(pastTransactionsResult).toEqual(mockPastTransactionsResult);
     });
