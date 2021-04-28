@@ -9,9 +9,9 @@ import { AppText } from "../../../src/components/Layout/AppText";
 
 storiesOf("Login", module)
   .add("MobileNumberCard", () => (
-    <View style={{ margin: size(3) }} key="0">
+    <View style={{ margin: size(3) }} key="10">
       <LoginMobileNumberCard
-        key="1"
+        key="11"
         handleRequestOTP={() => Promise.resolve(true)}
         setMobileNumber={(num) => alert(num)}
         setLoginStage={() => null}
@@ -20,9 +20,9 @@ storiesOf("Login", module)
     </View>
   ))
   .add("OTPCard", () => (
-    <View style={{ margin: size(3) }} key="2">
+    <View style={{ margin: size(3) }} key="20">
       <LoginOTPCard
-        key="3"
+        key="21"
         resetStage={() => null}
         fullMobileNumber={"+65 8888 8888"}
         operatorToken={"operatorToken"}
@@ -33,19 +33,24 @@ storiesOf("Login", module)
     </View>
   ))
   .add("LoginScanCard", () => (
-    <View style={{ margin: size(3) }} key="5">
-      <LoginScanCard onToggleScanner={() => null} isLoading={false} />
-      <View style={{ marginVertical: size(3) }}>
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: size(1),
-          }}
-        >
-          <AppText> Loading state is true</AppText>
+    <View style={{ margin: size(3) }} key="30">
+      {[false, true].map((value, index) => (
+        <View style={{ marginVertical: size(3) }} key={index + 31}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: size(1),
+            }}
+          >
+            <AppText> Loading state is {value.toString()}</AppText>
+          </View>
+          <LoginScanCard
+            key={index * 2}
+            onToggleScanner={() => null}
+            isLoading={value}
+          />
         </View>
-        <LoginScanCard onToggleScanner={() => null} isLoading={true} />
-      </View>
+      ))}
     </View>
   ));
