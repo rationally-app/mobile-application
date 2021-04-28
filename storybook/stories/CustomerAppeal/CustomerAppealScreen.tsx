@@ -43,14 +43,14 @@ const products: CampaignPolicy[] = [
   },
 ];
 
-storiesOf("CustomerAppeal", module)
+storiesOf("Screen", module)
   .addDecorator((Story: any) => (
     <MockProvider
       policies={products}
       story={mockReactNavigationDecorator(Story)}
     />
   ))
-  .add("Screen", () => {
+  .add("CustomerAppeal", () => {
     return (
       <View>
         <CustomerAppealScreen

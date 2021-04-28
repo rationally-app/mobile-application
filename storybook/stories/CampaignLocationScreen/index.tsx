@@ -10,7 +10,7 @@ import {
   defaultProducts,
 } from "../../../src/test/helpers/defaults";
 
-storiesOf("CampaignLocation", module)
+storiesOf("Screen", module)
   .addDecorator((Story: any) => (
     <AuthStoreContext.Provider
       value={{
@@ -53,7 +53,7 @@ storiesOf("CampaignLocation", module)
       </CampaignConfigsStoreContext.Provider>
     </AuthStoreContext.Provider>
   ))
-  .add("Screen", () => (
+  .add("CampaignLocation", () => (
     <View>
       <CampaignLocationsScreen navigation={navigation} />
     </View>
