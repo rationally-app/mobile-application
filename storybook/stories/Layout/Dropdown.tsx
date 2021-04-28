@@ -1,9 +1,13 @@
-import React from "react";
+import React, { ReactElement, useState } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
 import { size } from "../../../src/common/styles";
-import { DropdownItem } from "../../../src/components/DropdownFilterModal/DropdownFilterModal";
+import {
+  DropdownItem,
+  DropdownFilterModal,
+} from "../../../src/components/DropdownFilterModal/DropdownFilterModal";
 import { DropdownFilterInput } from "../../../src/components/DropdownFilterModal/DropdownFilterInput";
+import { DarkButton } from "../../../src/components/Layout/Buttons/DarkButton";
 
 const items: DropdownItem[] = [
   //name key is must.It is to show the text in front
@@ -20,13 +24,43 @@ const items: DropdownItem[] = [
   { id: "I1", name: "instagram" },
 ];
 
-storiesOf("Layout", module).add("Dropdown", () => (
-  <View style={{ margin: size(3) }}>
-    <DropdownFilterInput
-      label="Dropdown label"
-      placeholder="placeholder"
-      dropdownItems={items}
-      onItemSelection={(item) => alert(JSON.stringify(item))}
-    />
-  </View>
-));
+const ModalItem = (): ReactElement => {
+  const [isVisible, setIsVisible] = useState(false);
+  return (
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <DarkButton
+          text="Show Dropdown Modal"
+          onPress={() => setIsVisible(true)}
+        />
+      </View>
+      <DropdownFilterModal
+        label="Dropdown label"
+        placeholder="placeholder"
+        isVisible={isVisible}
+        dropdownItems={items}
+        onItemSelection={(item) => alert(JSON.stringify(item))}
+        closeModal={() => setIsVisible(false)}
+      />
+    </View>
+  );
+};
+
+storiesOf("Layout/Dropdown", module)
+  .add("DropdownFilterInput", () => (
+    <View style={{ margin: size(3) }}>
+      <DropdownFilterInput
+        label="Dropdown label"
+        placeholder="placeholder"
+        dropdownItems={items}
+        onItemSelection={(item) => alert(JSON.stringify(item))}
+      />
+    </View>
+  ))
+  .add("DropdownFilterModal", () => <ModalItem />);

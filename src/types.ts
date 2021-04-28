@@ -162,6 +162,7 @@ const CampaignFeatures = t.intersection([
   }),
   t.partial({
     alternateIds: t.array(IdentificationFlag),
+    apiVersion: t.union([t.literal("v1"), t.literal("v2")]),
   }),
 ]);
 
