@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { render, cleanup, fireEvent } from "@testing-library/react-native";
 import React, { FunctionComponent } from "react";
 import { Sentry } from "../../utils/errorTracking";
