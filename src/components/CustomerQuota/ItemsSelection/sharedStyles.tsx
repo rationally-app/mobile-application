@@ -27,7 +27,7 @@ export const sharedStyles = StyleSheet.create({
   },
   maxQuantityLabel: {
     marginTop: 2,
-    fontFamily: "brand-italic",
+    fontFamily: "brand-regular",
     fontSize: fontSize(-1),
     fontWeight: "normal",
     lineHeight: lineHeight(-1),
