@@ -29,15 +29,15 @@ const styles = StyleSheet.create({
   },
 });
 
-interface PassportInputSection {
-  hasScanner: boolean;
+interface InputPassportSection {
+  scannerType: "CODE_39" | "QR" | "NONE";
   openCamera: () => void;
   setIdInput: (id: string) => void;
   submitId: () => void;
 }
 
-export const PassportInputSection: FunctionComponent<PassportInputSection> = ({
-  hasScanner,
+export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
+  scannerType,
   openCamera,
   setIdInput,
   submitId,
@@ -58,7 +58,7 @@ export const PassportInputSection: FunctionComponent<PassportInputSection> = ({
   }, [selectedCountry, passportNum, setIdInput]);
 
   const getScannerComponent = (): JSX.Element | null => {
-    return hasScanner ? (
+    return scannerType !== "NONE" ? (
       <>
         <View style={sharedStyles.scanButtonWrapper}>
           <DarkButton
