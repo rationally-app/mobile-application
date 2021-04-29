@@ -203,7 +203,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (isFocused && isScanningEnabled && event.data) {
-      if (event.type.includes("Code39")) {
+      if (event.type === BarCodeScanner.Constants.BarCodeType.code39) {
         onCheck(event.data);
       } else {
         const { passportId } = JSON.parse(event.data);
