@@ -5,30 +5,11 @@ import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { InputWithLabel } from "../Layout/InputWithLabel";
 import { AppText } from "../Layout/AppText";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
-import { size, color, fontSize } from "../../common/styles";
+import { size, color } from "../../common/styles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { sharedStyles } from "./sharedStyles";
 
 const styles = StyleSheet.create({
-  scanButtonWrapper: {
-    marginTop: size(3),
-    marginBottom: size(6),
-  },
-  horizontalRule: {
-    borderBottomColor: color("grey", 30),
-    marginHorizontal: -size(3),
-    borderBottomWidth: 1,
-  },
-  orWrapper: {
-    position: "absolute",
-    top: -fontSize(0),
-    alignSelf: "center",
-    backgroundColor: color("grey", 0),
-    padding: size(1),
-  },
-  orText: {
-    fontSize: fontSize(-1),
-    fontFamily: "brand-bold",
-  },
   inputAndButtonWrapper: {
     marginTop: size(5),
     flexDirection: "row",
@@ -58,7 +39,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
   const { i18nt } = useTranslate();
   return (
     <>
-      <View style={styles.scanButtonWrapper}>
+      <View style={sharedStyles.scanButtonWrapper}>
         <DarkButton
           fullWidth={true}
           text={i18nt("collectCustomerDetailsScreen", "scanIdentification")}
@@ -69,9 +50,9 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
         />
       </View>
       <View style={{ position: "relative" }}>
-        <View style={styles.horizontalRule} />
-        <View style={styles.orWrapper}>
-          <AppText style={styles.orText}>
+        <View style={sharedStyles.horizontalRule} />
+        <View style={sharedStyles.orWrapper}>
+          <AppText style={sharedStyles.orText}>
             {i18nt("collectCustomerDetailsScreen", "or")}
           </AppText>
         </View>
