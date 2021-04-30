@@ -57,7 +57,7 @@ export const ItemContent: FunctionComponent<{
       {tDescription.length > 0 && (
         <AppText style={styles.description}>{tDescription}</AppText>
       )}
-      {maxQuantity === 1 && (
+      {maxQuantity > 0 && (
         <AppText style={sharedStyles.maxQuantityLabel}>
           <ItemMaxUnitLabel unit={unit} maxQuantity={maxQuantity} />
         </AppText>

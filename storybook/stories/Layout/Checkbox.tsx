@@ -5,7 +5,7 @@ import { AppText } from "../../../src/components/Layout/AppText";
 import { View } from "react-native";
 import { color } from "../../../src/common/styles";
 
-function CheckboxItem(): ReactElement {
+const CheckboxItem = (): ReactElement => {
   const [isChecked, setIsChecked] = useState(false);
   return (
     <Checkbox
@@ -14,11 +14,10 @@ function CheckboxItem(): ReactElement {
       onToggle={setIsChecked}
     />
   );
-}
+};
 
 storiesOf("Layout", module).add("Checkbox", () => (
   <View style={{ backgroundColor: color("grey", 10) }}>
-    <CheckboxItem />
     <CheckboxItem />
     <CheckboxItem />
   </View>

@@ -8,7 +8,7 @@
  * ```
  */
 
-import React, { Component } from "react";
+import { Component } from "react";
 import { View, Text, Image, Animated } from "react-native";
 
 const NOOP = (): null => null;
@@ -112,5 +112,5 @@ export default {
   proc: (): any => NOOP,
 
   useCode: NOOP,
-  createAnimatedComponent: (component: React.Component): any => React.Component,
+  createAnimatedComponent: (component: Component): any => Component,
 };

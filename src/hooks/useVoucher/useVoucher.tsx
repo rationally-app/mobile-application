@@ -22,9 +22,10 @@ export type VoucherHook = {
 
 export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
-  const [checkoutVouchersState, setCheckoutVouchersState] = useState<
-    CheckoutVouchersState
-  >("DEFAULT");
+  const [
+    checkoutVouchersState,
+    setCheckoutVouchersState,
+  ] = useState<CheckoutVouchersState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [error, setError] = useState<Error>();
   const { selectedIdType } = useContext(IdentificationContext);

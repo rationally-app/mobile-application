@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
   },
   inputAndButtonWrapper: {
