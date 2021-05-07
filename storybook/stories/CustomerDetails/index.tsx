@@ -2,7 +2,7 @@ import React, { useState, ReactElement } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { InputSelection } from "../../../src/components/CustomerDetails/InputSelection";
 import { InputIdSection } from "../../../src/components/CustomerDetails/InputIdSection";
-import { InputPassportSection } from "../../../src/components/CustomerDetails/InputPassportSection";
+import { ManualPassportInput } from "../../../src/components/CustomerDetails/ManualPassportInput";
 import { size, color } from "../../../src/common/styles";
 import { View } from "react-native";
 import { IdentificationFlag } from "../../../src/types";
@@ -66,7 +66,7 @@ const InputIdSectionItem = (): ReactElement => {
   );
 };
 
-const InputPassportSectionItem = (): ReactElement => {
+const ManualPassportInputItem = (): ReactElement => {
   return (
     <View
       style={{
@@ -74,9 +74,7 @@ const InputPassportSectionItem = (): ReactElement => {
         height: "100%",
       }}
     >
-      <InputPassportSection
-        scannerType={"NONE"}
-        openCamera={() => null}
+      <ManualPassportInput
         setIdInput={() => null}
         submitId={() => alert("Submitted")}
       />
@@ -87,4 +85,4 @@ const InputPassportSectionItem = (): ReactElement => {
 storiesOf("CustomerDetail", module)
   .add("InputSelection", () => <InputSelectionItem />)
   .add("InputIdSection", () => <InputIdSectionItem />)
-  .add("InputPassportSection", () => <InputPassportSectionItem />);
+  .add("ManualPassportInput", () => <ManualPassportInputItem />);

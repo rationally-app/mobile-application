@@ -1,13 +1,12 @@
 import { render, cleanup, fireEvent } from "@testing-library/react-native";
 import React from "react";
-import { InputPassportSection } from "./InputPassportSection";
+import { ManualPassportInput } from "./ManualPassportInput";
 import "../../common/i18n/i18nMock";
 
-const openCamera = jest.fn();
 const setIdInput = jest.fn();
 const submitId = jest.fn();
 
-describe("InputPassportSection", () => {
+describe("ManualPassportInput", () => {
   afterEach(() => {
     cleanup();
     jest.resetAllMocks();
@@ -16,12 +15,7 @@ describe("InputPassportSection", () => {
   it("should be able to input data and submit", async () => {
     expect.assertions(7);
     const { queryByText, queryAllByPlaceholderText, queryByTestId } = render(
-      <InputPassportSection
-        scannerType={"NONE"}
-        openCamera={openCamera}
-        setIdInput={setIdInput}
-        submitId={submitId}
-      />
+      <ManualPassportInput setIdInput={setIdInput} submitId={submitId} />
     );
 
     const passportNumberInput = queryByTestId("input-with-label-input");
