@@ -203,11 +203,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (isFocused && isScanningEnabled && event.data) {
-      if (event.type === BarCodeScanner.Constants.BarCodeType.code39) {
-        onCheck(event.data);
-      } else {
+      if (selectedIdType.label === "Passport") {
         const { passportId } = JSON.parse(event.data);
         onCheck(passportId);
+      } else {
+        onCheck(event.data);
       }
     }
   };
