@@ -173,6 +173,25 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   }, [selectionArray, selectedIdType, setSelectedIdType]);
 
   const onCheck = async (input: string): Promise<void> => {
+    /**
+     * If "Passport" tab is chosen, we want to extract the passport
+     * number from a JSON object containing the `passportId`.
+     */
+    if (selectedIdType.label === "Passport") {
+      let passportId;
+      try {
+        ({ passportId } = JSON.parse(input));
+      } catch (e) {
+        /**
+         * We set this to empty so an appropriate error dialog will be
+         * shown, instead of an ErrorBoundary or empty dialog.
+         */
+        passportId = "";
+      } finally {
+        input = passportId;
+      }
+    }
+
     try {
       setIsScanningEnabled(false);
       if (!features) {
@@ -203,12 +222,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (isFocused && isScanningEnabled && event.data) {
-      if (selectedIdType.label === "Passport") {
-        const { passportId } = JSON.parse(event.data);
-        onCheck(passportId);
-      } else {
-        onCheck(event.data);
-      }
+      onCheck(event.data);
     }
   };
 
