@@ -47,7 +47,6 @@ import {
   defaultSelectedIdType,
 } from "../../context/identification";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { NetworkError } from "../../services/helpers";
 
 const styles = StyleSheet.create({
   content: {
