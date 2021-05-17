@@ -7,13 +7,13 @@ import React, {
 import { CartItem, CartHook } from "../../../hooks/useCart/useCart";
 import { View } from "react-native";
 import { Stepper } from "../../Layout/Stepper";
-import { AppText } from "../../Layout/AppText";
-import { ItemMaxUnitLabel } from "./ItemMaxUnitLabel";
 import { ItemContent } from "./ItemContent";
 import { ProductContext } from "../../../context/products";
 import { sharedStyles } from "./sharedStyles";
 
 export const ItemStepper: FunctionComponent<{
+  ids: string[];
+  isChargeable: boolean;
   cartItem: CartItem;
   updateCart: CartHook["updateCart"];
 }> = ({ cartItem, updateCart }) => {
@@ -66,14 +66,6 @@ export const ItemStepper: FunctionComponent<{
           }
           accessibilityLabel="item-stepper"
         />
-        <AppText
-          style={[sharedStyles.maxQuantityLabel, { textAlign: "center" }]}
-        >
-          <ItemMaxUnitLabel
-            unit={productQuantity?.unit}
-            maxQuantity={maxQuantity}
-          />
-        </AppText>
       </View>
     </View>
   );

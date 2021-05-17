@@ -10,10 +10,8 @@ import { AppText } from "../../Layout/AppText";
 import { sharedStyles } from "../sharedStyles";
 import { DarkButton } from "../../Layout/Buttons/DarkButton";
 import { size, color } from "../../../common/styles";
-import { getCheckoutMessages } from "./checkoutMessages";
 import { FontAwesome } from "@expo/vector-icons";
 import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
-import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import {
@@ -91,13 +89,7 @@ export const groupTransactionsByTime = (
 ): TransactionsByTimeMap => {
   const { c13nt, c13ntForUnit, i18nt } = translationProps;
 
-  const transactionsByTimeMap: {
-    [transactionTimeInSeconds: string]: {
-      transactionTime: Date;
-      transactions: Transaction[];
-      order: number;
-    };
-  } = {};
+  const transactionsByTimeMap: TransactionsByTimeMap = {};
   sortedTransactions?.forEach((item) => {
     const policy = allProducts?.find(
       (policy) => policy.category === item.category
@@ -114,7 +106,7 @@ export const groupTransactionsByTime = (
       };
     }
     transactionsByTimeMap[transactionTimeInSeconds].transactions.push({
-      header: (policy?.name && c13nt(policy?.name)) ?? item.category,
+      header: (policy?.name && c13nt(policy?.name)) ?? c13nt(item.category),
       details: getIdentifierInputDisplay(item.identifierInputs ?? []),
       quantity: formatQuantityText(
         item.quantity,
@@ -132,16 +124,29 @@ export const groupTransactionsByTime = (
   return transactionsByTimeMap;
 };
 
-export const sortTransactions = (
+/**
+ * Transforms map of transactions into an array
+ * Array is sorted by:
+ *  1. Timestamp
+ * Each group is sorted by the timestamp from latest to oldest
+ * The transactions are sorted by the order number
+ *
+ * @param transactionsByTimeMap Transactions by time
+ */
+export const sortTransactionsByTime = (
   transactionsByTimeMap: TransactionsByTimeMap
 ): TransactionsGroup[] => {
   return Object.entries(transactionsByTimeMap)
     .sort(([, a], [, b]) => sortTransactionsByOrder(a, b))
-    .map(([, { transactionTime, transactions, order }]) => ({
-      header: formatDateTime(transactionTime.getTime()),
-      transactions: transactions.sort(sortTransactionsByOrder),
-      order,
-    }));
+    .map(([, { transactionTime, transactions, order }]) => {
+      transactions.sort(sortTransactionsByOrder);
+
+      return {
+        header: formatDateTime(transactionTime.getTime()),
+        transactions,
+        order,
+      };
+    });
 };
 
 export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
@@ -151,7 +156,6 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
 
-  const { getProduct } = useContext(ProductContext);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
   const { pastTransactionsResult, loading, error } = usePastTransaction(
@@ -170,19 +174,13 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   }, [error, showErrorAlert]);
 
   const translationProps = useTranslate();
+  const { c13nt, i18nt } = translationProps;
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
     allProducts || [],
     translationProps
   );
-  const transactionsByTimeList = sortTransactions(transactionsByTimeMap);
-
-  const productType =
-    (allProducts && getProduct(allProducts[0].category)?.type) || "REDEEM";
-  const { title, description } = getCheckoutMessages(
-    translationProps.i18nt,
-    productType
-  );
+  const transactionsByTimeList = sortTransactionsByTime(transactionsByTimeMap);
 
   const showGlobalQuota: boolean =
     !!quotaResponse?.globalQuota &&
@@ -217,7 +215,11 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                 testID="checkout-success-title"
                 accessible={true}
               >
-                {title}
+                {`${c13nt(
+                  "checkoutSuccessTitle",
+                  undefined,
+                  i18nt("checkoutSuccessScreen", "redeemed")
+                )}`}
               </AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
                 <UsageQuotaTitle
@@ -227,7 +229,13 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
               ) : undefined}
             </AppText>
             <View>
-              <AppText>{description}</AppText>
+              <AppText>
+                {`${c13nt(
+                  "checkoutSuccessDescription",
+                  undefined,
+                  i18nt("checkoutSuccessScreen", "redeemedItems")
+                )}`}
+              </AppText>
               <View style={styles.checkoutItemsList}>
                 {loading ? (
                   <ActivityIndicator
@@ -266,7 +274,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
+          text={i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
           accessibilityLabel="checkout-success-next-identity-button"

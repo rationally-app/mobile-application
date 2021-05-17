@@ -75,6 +75,35 @@ const pastTransactions = [
   },
 ];
 
+const pastTransactionsWithSameCategory = [
+  {
+    category: "product-2",
+    quantity: 1,
+    identifierInputs: [
+      {
+        label: "first",
+        scanButtonType: "QR",
+        validationRegex: "^[A-F0-9]{9}$",
+        value: "123456789",
+        textInputType: "STRING",
+      },
+    ],
+  },
+  {
+    category: "product-2",
+    quantity: 1,
+    identifierInputs: [
+      {
+        label: "second",
+        scanButtonType: "QR",
+        validationRegex: "^[A-F0-9]{9}$",
+        value: "123456789",
+        textInputType: "STRING",
+      },
+    ],
+  },
+];
+
 const timestamp = new Date(2020, 3, 1);
 
 const mockGetQuotaResponseSingleId = {
@@ -121,7 +150,7 @@ const mockGetQuotaResponseMultipleId = {
 const postTransactionParams = {
   ids: ["S0000000J"],
   identificationFlag,
-  transactions: [{ category: "product-1", quantity: 1, identifiers: [] }],
+  transactions: [{ category: "product-1", quantity: 2, identifiers: [] }],
   key,
   endpoint,
 };
@@ -151,8 +180,22 @@ const mockPastTransactionsResponse = {
   })),
 };
 
+const mockPastTransactionsWithSameCategoryResponse = {
+  pastTransactions: pastTransactionsWithSameCategory.map((t) => ({
+    ...t,
+    transactionTime: timestamp.getTime(),
+  })),
+};
+
 const mockPastTransactionsResult = {
   pastTransactions: pastTransactions.map((t) => ({
+    ...t,
+    transactionTime: timestamp,
+  })),
+};
+
+const mockPastTransactionsWithSameCategoryResult = {
+  pastTransactions: pastTransactionsWithSameCategory.map((t) => ({
     ...t,
     transactionTime: timestamp,
   })),
@@ -176,6 +219,22 @@ describe("quota", () => {
         identificationFlag,
         key,
         endpoint
+      );
+      expect(quota).toEqual(mockGetQuotaResultSingleId);
+    });
+
+    it("should return the quota of an ID if version is passed in", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockGetQuotaResponseSingleId),
+      });
+      const quota = await getQuota(
+        ["S0000000J"],
+        identificationFlag,
+        key,
+        endpoint,
+        "v2" // version from features
       );
       expect(quota).toEqual(mockGetQuotaResultSingleId);
     });
@@ -271,6 +330,19 @@ describe("quota", () => {
       expect(result).toEqual(mockPostTransactionResult);
     });
 
+    it("should return the correct success result even with additional version param", async () => {
+      expect.assertions(1);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockPostTransactionResponse),
+      });
+      const result = await postTransaction({
+        ...postTransactionParams,
+        apiVersion: "v2",
+      });
+      expect(result).toEqual(mockPostTransactionResult);
+    });
+
     it("should throw error if no ID was provided", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
@@ -352,6 +424,24 @@ describe("quota", () => {
       expect(pastTransactionsResult).toEqual(mockPastTransactionsResult);
     });
 
+    it("should return past transactions with additional version param", async () => {
+      expect.assertions(1);
+      mockFetch.mockReturnValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockPastTransactionsResponse),
+      });
+      const pastTransactionsResult = await getPastTransactions(
+        ["S0000000J"],
+        identificationFlag,
+        key,
+        endpoint,
+        [],
+        false,
+        "v2"
+      );
+      expect(pastTransactionsResult).toEqual(mockPastTransactionsResult);
+    });
+
     it("should throw error if no ID was provided", async () => {
       expect.assertions(1);
       mockFetch.mockReturnValueOnce({
@@ -377,6 +467,42 @@ describe("quota", () => {
       await expect(
         getPastTransactions(["S0000000J"], identificationFlag, key, endpoint)
       ).rejects.toThrow(PastTransactionError);
+    });
+
+    it("should return past transactions based on ID, filtered by categories, if categories is specified", async () => {
+      expect.assertions(2);
+
+      mockFetch.mockReturnValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve(mockPastTransactionsWithSameCategoryResponse),
+      });
+
+      const categories = ["product-2"];
+      const pastTransactionsResult = await getPastTransactions(
+        ["S0000000J"],
+        identificationFlag,
+        key,
+        endpoint,
+        categories
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        `${endpoint}/transactions/history`,
+        {
+          body: JSON.stringify({
+            ids: ["S0000000J"],
+            identificationFlag,
+            getAllTransactions: false,
+            categories,
+          }),
+          headers: { Authorization: key },
+          method: "POST",
+        }
+      );
+      expect(pastTransactionsResult).toEqual(
+        mockPastTransactionsWithSameCategoryResult
+      );
     });
   });
 });

@@ -23,6 +23,9 @@ export type Translations = {
     or: string;
     enterIdNumber: string;
     check: string;
+    goToStatistics: string;
+    nationalityInputLabel: string;
+    passportInputLabel: string;
   };
   idScanner: {
     enterIdManually: string;
@@ -72,10 +75,7 @@ export type Translations = {
     redeemed: string;
     redeemedItems: string;
     nextIdentity: string;
-    purchased: string;
-    purchasedItems: string;
     previouslyRedeemedItems: string;
-    previouslyPurchasedItems: string;
     redeemedAgo: string;
     redeemedOn: string;
     previouslyRedeemed: string;
@@ -90,6 +90,10 @@ export type Translations = {
     complete: string;
     quantity: string;
   };
+  checkoutUnsuccessfulScreen: {
+    unsuccessful: string;
+    unsuccessfulRedeemAttempt: string;
+  };
   customerAppealScreen: {
     raiseAppeal: string;
     indicateReason: string;
@@ -102,13 +106,12 @@ export type Translations = {
   notEligibleScreen: {
     notEligible: string;
     logAppeal: string;
-    cannot: string;
-    purchase: string;
   };
   campaignInitialisationScreen: {
     appleStore: string;
     androidStore: string;
   };
+  addonsToggleComponent: { "*chargeable": string };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: string;
@@ -126,7 +129,6 @@ export type Translations = {
       title: string;
       body?: string;
       primaryActionText: string;
-      secondaryActionText?: string;
     };
     cancelEntry: {
       title: string;
@@ -271,6 +273,17 @@ export type Translations = {
       body?: string;
       primaryActionText: string;
       secondaryActionText?: string;
+    };
+    networkError: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
+    wrongPaymentReceiptNumber: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
     };
     wrongFormatCountryCode: {
       title: string;
@@ -433,6 +446,14 @@ export type Translations = {
       body?: string;
       primaryActionText: string;
       secondaryActionText?: string;
+    };
+    invalidDeviceCode: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    dynamicContentFallback: {
+      minutes: string;
     };
   };
 };

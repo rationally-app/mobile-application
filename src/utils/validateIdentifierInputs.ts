@@ -3,6 +3,7 @@ import { fullPhoneNumberValidator } from "./validatePhoneNumbers";
 import { ERROR_MESSAGE } from "../context/alert";
 
 const defaultPhoneNumberValidationRegex = "^\\+[0-9]*$";
+const defaultPaymentReceiptValidationRegex = "^[a-zA-Z0-9]{1,20}$";
 
 const isMatchRegex = (text: string, regex?: string): boolean => {
   if (!regex) {
@@ -18,10 +19,22 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
-    //TODO: switch between different errors based on campaign config
+    if (
+      textInputType === "PAYMENT_RECEIPT" &&
+      (!value ||
+        !isMatchRegex(
+          value,
+          validationRegex
+            ? validationRegex
+            : defaultPaymentReceiptValidationRegex
+        ))
+    ) {
+      throw new Error(ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER);
+    }
     if (!value) {
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
+
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }

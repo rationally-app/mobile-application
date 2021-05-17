@@ -1,5 +1,11 @@
 import React, { ReactElement, ReactNode } from "react";
-import { View, ViewStyle, SafeAreaView } from "react-native";
+import {
+  View,
+  ViewStyle,
+  SafeAreaView,
+  Platform,
+  StatusBar,
+} from "react-native";
 
 const styles = {
   flex: 1,
@@ -15,5 +21,12 @@ export const CenterVerticalDecorator = (
 ): ReactElement => <View style={styles}>{storyFn()}</View>;
 
 export const SafeAreaDecorator = (storyFn: () => ReactNode): ReactElement => (
-  <SafeAreaView style={{ flex: 1 }}>{storyFn()}</SafeAreaView>
+  <SafeAreaView
+    style={{
+      flex: 1,
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    }}
+  >
+    {storyFn()}
+  </SafeAreaView>
 );

@@ -22,13 +22,11 @@ const mockQuotaResSingleId: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 2,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -36,13 +34,11 @@ const mockQuotaResSingleId: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 2,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -50,13 +46,11 @@ const mockQuotaResSingleId: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
@@ -67,36 +61,30 @@ const mockQuotaResMultipleIds: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 4,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 30,
     },
   ],
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 4,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 30,
     },
   ],
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
     },
   ],
@@ -106,26 +94,11 @@ const mockQuotaResSingleIdWithIdentifiers: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [
-        {
-          label: "first",
-          value: "first identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-        {
-          label: "last",
-          value: "last identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-      ],
       quantity: 1,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -133,26 +106,11 @@ const mockQuotaResSingleIdWithIdentifiers: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [
-        {
-          label: "first",
-          value: "first identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-        {
-          label: "last",
-          value: "last identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-      ],
       quantity: 1,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -160,26 +118,11 @@ const mockQuotaResSingleIdWithIdentifiers: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [
-        {
-          label: "first",
-          value: "first identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-        {
-          label: "last",
-          value: "last identifier",
-          textInputType: "STRING",
-          scanButtonType: "BARCODE",
-        },
-      ],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
@@ -190,13 +133,11 @@ const mockQuotaResSingleIdNoQuota: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 0,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 0,
       transactionTime,
     },
@@ -204,13 +145,11 @@ const mockQuotaResSingleIdNoQuota: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 0,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 0,
       transactionTime,
     },
@@ -218,13 +157,11 @@ const mockQuotaResSingleIdNoQuota: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
@@ -235,13 +172,11 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: -1,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -249,13 +184,11 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: -1,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 15,
       transactionTime,
     },
@@ -263,13 +196,11 @@ const mockQuotaResSingleIdInvalidQuota: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
@@ -280,13 +211,11 @@ const mockQuotaResSingleIdWithAppealProducts: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 1,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 0,
       transactionTime,
     },
@@ -294,13 +223,11 @@ const mockQuotaResSingleIdWithAppealProducts: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 1,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 0,
       transactionTime,
     },
@@ -308,17 +235,21 @@ const mockQuotaResSingleIdWithAppealProducts: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
   ],
+};
+
+const mockQuotaResSingleIdEmptyQuota: Quota = {
+  remainingQuota: [],
+  globalQuota: [],
+  localQuota: [],
 };
 
 /**
@@ -330,13 +261,11 @@ const mockQuotaResSingleIdNoQuotaWithAppealProducts: Quota = {
   remainingQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 0,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 1,
       transactionTime,
     },
@@ -344,13 +273,11 @@ const mockQuotaResSingleIdNoQuotaWithAppealProducts: Quota = {
   globalQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: 0,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: 1,
       transactionTime,
     },
@@ -358,13 +285,11 @@ const mockQuotaResSingleIdNoQuotaWithAppealProducts: Quota = {
   localQuota: [
     {
       category: "toilet-paper",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
     {
       category: "chocolate",
-      identifierInputs: [],
       quantity: Number.MAX_SAFE_INTEGER,
       transactionTime,
     },
@@ -416,26 +341,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [
-            {
-              label: "first",
-              value: "first identifier",
-              textInputType: "STRING",
-              scanButtonType: "BARCODE",
-            },
-            {
-              label: "last",
-              value: "last identifier",
-              textInputType: "STRING",
-              scanButtonType: "BARCODE",
-            },
-          ],
           transactionTime,
           quantity: 1,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
@@ -458,13 +368,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: 0,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 0,
         },
@@ -487,17 +395,31 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: -1,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
       ]);
+    });
+
+    it("should have quota state be NO_QUOTA when remainingQuota received contains an empty array", async () => {
+      expect.assertions(3);
+      mockGetQuota.mockReturnValueOnce(mockQuotaResSingleIdEmptyQuota);
+
+      const ids = ["ID1"];
+      const { result, waitForNextUpdate } = renderHook(
+        () => useQuota(ids, key, endpoint),
+        { wrapper }
+      );
+      expect(result.current.quotaState).toBe("FETCHING_QUOTA");
+
+      await waitForNextUpdate();
+      expect(result.current.quotaState).toBe("NO_QUOTA");
+      expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([]);
     });
 
     it("should set quota state to NOT_ELIGIBLE when NotEligibleError is thrown, and does not update quota response", async () => {
@@ -636,13 +558,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: 2,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
@@ -655,12 +575,10 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           quantity: 4,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           quantity: 30,
         },
       ]);
@@ -680,13 +598,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: 2,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
@@ -713,13 +629,11 @@ describe("useQuota", () => {
       expect(result.current.quotaResponse?.remainingQuota).toStrictEqual([
         {
           category: "toilet-paper",
-          identifierInputs: [],
           transactionTime,
           quantity: 2,
         },
         {
           category: "chocolate",
-          identifierInputs: [],
           transactionTime,
           quantity: 15,
         },
