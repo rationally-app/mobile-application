@@ -47,6 +47,7 @@ import {
   defaultSelectedIdType,
 } from "../../context/identification";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { NetworkError } from "../../services/helpers";
 
 const styles = StyleSheet.create({
   content: {
@@ -172,6 +173,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     );
   }, [selectionArray, selectedIdType, setSelectedIdType]);
 
+  const setState = useState()[1];
   const onCheck = async (input: string): Promise<void> => {
     /**
      * If "Passport" tab is chosen, we want to extract the passport
@@ -183,10 +185,18 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         ({ passportId } = JSON.parse(input));
       } catch (e) {
         /**
-         * We set this to empty so an appropriate error dialog will be
-         * shown, instead of an ErrorBoundary or empty dialog.
+         * If we encounter any JSON errors, we set `passportId` to empty
+         * in order to allow logic below to handle it as an empty/invalid ID.
+         *
+         * However, any other errors will trigger the ErrorBoundary.
          */
-        passportId = "";
+        if (e instanceof SyntaxError) {
+          passportId = "";
+        } else {
+          setState(() => {
+            throw e;
+          });
+        }
       } finally {
         input = passportId;
       }
