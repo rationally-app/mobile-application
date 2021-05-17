@@ -2,32 +2,30 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   env: {
     browser: true,
-    es6: true
+    es6: true,
   },
   extends: [
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:jest/all",
     "plugin:prettier/recommended",
-    "prettier/@typescript-eslint",
-    "prettier/react"
   ],
   plugins: ["react", "@typescript-eslint", "react-hooks"],
   globals: {
     Atomics: "readonly",
-    SharedArrayBuffer: "readonly"
+    SharedArrayBuffer: "readonly",
   },
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: "module",
     ecmaFeatures: {
-      jsx: true
-    }
+      jsx: true,
+    },
   },
   rules: {
     "react/jsx-filename-extension": [
       1,
-      { extensions: [".js", ".jsx", ".ts", ".tsx"] }
+      { extensions: [".js", ".jsx", ".ts", ".tsx"] },
     ],
     "react/prop-types": 0,
     "react/jsx-boolean-value": [1, "always"],
@@ -39,27 +37,27 @@ module.exports = {
       "warn",
       {
         allowExpressions: true,
-        allowTypedFunctionExpressions: true
-      }
+        allowTypedFunctionExpressions: true,
+      },
     ],
     "jest/no-hooks": 0,
     "jest/lowercase-name": 0,
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "error",
-    "no-duplicate-imports": "error"
+    "no-duplicate-imports": "error",
   },
   overrides: [
     {
       files: ["**/*.test.tsx", "storybook/**/*.tsx"],
       rules: {
         "@typescript-eslint/no-empty-function": "off",
-        "jest/prefer-strict-equal": "off"
-      }
-    }
+        "jest/prefer-strict-equal": "off",
+      },
+    },
   ],
   settings: {
     react: {
-      version: "detect"
-    }
-  }
+      version: "detect",
+    },
+  },
 };

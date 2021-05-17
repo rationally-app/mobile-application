@@ -15,11 +15,11 @@ import { Cart } from "../../../hooks/useCart/useCart";
 import { usePastTransaction } from "../../../hooks/usePastTransaction/usePastTransaction";
 import { FontAwesome } from "@expo/vector-icons";
 import {
-  formatQuantityText,
   BIG_NUMBER,
-  sortTransactionsByOrder,
+  groupTransactionsByCategory,
+  sortTransactionsByCategory,
 } from "../utils";
-import { TransactionsGroup, Transaction } from "../TransactionsGroup";
+import { TransactionsGroup } from "../TransactionsGroup";
 import { ShowFullListToggle } from "../ShowFullListToggle";
 import {
   DistantTransactionTitle,
@@ -28,17 +28,11 @@ import {
   UsageQuotaTitle,
 } from "./TransactionTitle";
 import { AppealButton } from "./AppealButton";
-import { getIdentifierInputDisplay } from "../../../utils/getIdentifierInputDisplay";
-import { Quota, PastTransactionsResult, CampaignPolicy } from "../../../types";
+import { Quota, CampaignPolicy } from "../../../types";
 import { AlertModalContext } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
-import { ProductContext } from "../../../context/products";
 import { AuthContext } from "../../../context/auth";
-import { formatDateTime } from "../../../utils/dateTimeFormatter";
-import {
-  TranslationHook,
-  useTranslate,
-} from "../../../hooks/useTranslate/useTranslate";
+import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -50,14 +44,6 @@ export const styles = StyleSheet.create({
   },
 });
 
-export interface TransactionsByCategoryMap {
-  [category: string]: {
-    transactions: Transaction[];
-    order: number;
-    hasLatestTransaction: boolean;
-  };
-}
-
 interface NoQuotaCard {
   ids: string[];
   cart: Cart;
@@ -67,111 +53,13 @@ interface NoQuotaCard {
   allQuotaResponse?: Quota;
 }
 
-/**
- * Given past transactions, group them by categories.
- *
- * @param sortedTransactions Past transaction results sorted by transaction time in desc order
- * @param allProducts Policies
- * @param latestTransactionTime Transaction time of latest transaction
- */
-export const groupTransactionsByCategory = (
-  sortedTransactions: PastTransactionsResult["pastTransactions"] | null,
-  allProducts: CampaignPolicy[],
-  latestTransactionTime: Date | undefined,
-  translationProps: TranslationHook
-): TransactionsByCategoryMap => {
-  const { c13nt, c13ntForUnit, i18nt } = translationProps;
-
-  // Group transactions by category
-  const transactionsByCategoryMap: TransactionsByCategoryMap = {};
-  sortedTransactions?.forEach((item) => {
-    const policy = allProducts?.find(
-      (policy) => policy.category === item.category
-    );
-    const tName = (policy?.name && c13nt(policy?.name)) ?? item.category;
-    const formattedDate = formatDateTime(item.transactionTime);
-
-    if (!transactionsByCategoryMap.hasOwnProperty(tName)) {
-      transactionsByCategoryMap[tName] = {
-        transactions: [],
-        hasLatestTransaction: false,
-        order: policy?.order ?? BIG_NUMBER,
-      };
-    }
-    transactionsByCategoryMap[tName].transactions.push({
-      header: formattedDate,
-      details: getIdentifierInputDisplay(item.identifierInputs ?? []),
-      quantity: formatQuantityText(
-        item.quantity,
-        policy?.quantity.unit
-          ? c13ntForUnit(policy?.quantity.unit)
-          : {
-              type: "POSTFIX",
-              label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`,
-            }
-      ),
-      isAppeal: policy?.categoryType === "APPEAL",
-      order: -1,
-    });
-    transactionsByCategoryMap[tName].hasLatestTransaction =
-      transactionsByCategoryMap[tName].hasLatestTransaction ||
-      differenceInSeconds(latestTransactionTime || 0, item.transactionTime) ===
-        0;
-  });
-
-  return transactionsByCategoryMap;
-};
-
-/**
- * Transforms map of transactions into an array
- * Array is sorted by:
- *  1. Categories with latest transactions
- *  2. All other categories
- * Each group is sorted by category name in asc order
- * Also adds an order attribute to each transaction for the "Show more" feature
- *
- * @param transactionsByCategoryMap Transactions by category
- */
-export const sortTransactions = (
-  transactionsByCategoryMap: TransactionsByCategoryMap
-): TransactionsGroup[] => {
-  const latestTransactionsByCategory: TransactionsGroup[] = [];
-  const otherTransactionsByCategory: TransactionsGroup[] = [];
-  Object.entries(transactionsByCategoryMap).forEach(([key, value]) => {
-    const { transactions, hasLatestTransaction, order } = value;
-    if (hasLatestTransaction) {
-      latestTransactionsByCategory.push({
-        header: key,
-        transactions,
-        order,
-      });
-    } else {
-      otherTransactionsByCategory.push({ header: key, transactions, order });
-    }
-  });
-
-  latestTransactionsByCategory.sort(sortTransactionsByOrder);
-  otherTransactionsByCategory.sort(sortTransactionsByOrder);
-
-  let transactionCounter = 0;
-  return latestTransactionsByCategory
-    .concat(otherTransactionsByCategory)
-    .map((transactionsByCategory) => {
-      const orderedTransactions = transactionsByCategory.transactions.map(
-        (transaction) => {
-          const result = { ...transaction, order: transactionCounter };
-          transactionCounter += 1;
-          return result;
-        }
-      );
-      return { ...transactionsByCategory, transactions: orderedTransactions };
-    });
-};
-
-export const getLatestTransactionTime = (cart: Cart): Date | undefined =>
+export const getLatestTransactionTime = (cart: Cart): Date | undefined => {
   cart.sort((item1, item2) =>
     compareDesc(item1.lastTransactionTime ?? 0, item2.lastTransactionTime ?? 0)
-  )[0]?.lastTransactionTime;
+  );
+
+  return cart[0]?.lastTransactionTime;
+};
 
 export const checkHasAppealProduct = (
   allProducts: CampaignPolicy[] | null,
@@ -207,10 +95,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 }) => {
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
-  const { getProduct } = useContext(ProductContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
-
-  const policyType = cart.length > 0 && getProduct(cart[0].category)?.type;
 
   const { pastTransactionsResult, loading, error } = usePastTransaction(
     ids,
@@ -238,6 +123,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const hasAppealProduct = checkHasAppealProduct(allProducts, allQuotaResponse);
 
   const translationProps = useTranslate();
+  const { i18nt, c13nt } = translationProps;
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
@@ -245,7 +131,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     translationProps
   );
 
-  const transactionsByCategoryList = sortTransactions(
+  const transactionsByCategoryList = sortTransactionsByCategory(
     transactionsByCategoryMap
   );
 
@@ -313,15 +199,11 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
               transactionsByCategoryList.length > 0 && (
                 <View>
                   <AppText style={styles.wrapper}>
-                    {policyType === "REDEEM"
-                      ? `${translationProps.i18nt(
-                          "checkoutSuccessScreen",
-                          "previouslyRedeemedItems"
-                        )}:`
-                      : `${translationProps.i18nt(
-                          "checkoutSuccessScreen",
-                          "previouslyPurchasedItems"
-                        )}:`}
+                    {`${c13nt(
+                      "checkoutSuccessPreviousItems",
+                      undefined,
+                      i18nt("checkoutSuccessScreen", "previouslyRedeemedItems")
+                    )}`}
                   </AppText>
                   {transactionsByCategoryList.map(
                     (
@@ -355,7 +237,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
       </CustomerCard>
       <View style={sharedStyles.ctaButtonsWrapper}>
         <DarkButton
-          text={translationProps.i18nt("checkoutSuccessScreen", "nextIdentity")}
+          text={i18nt("checkoutSuccessScreen", "nextIdentity")}
           onPress={onCancel}
           fullWidth={true}
           accessibilityLabel="no-quota-next-identity-button"

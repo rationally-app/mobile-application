@@ -43,6 +43,7 @@ interface PostTransaction {
   transactions: Transaction[];
   key: string;
   endpoint: string;
+  apiVersion?: string;
 }
 
 export const mockGetQuota = async (
@@ -195,14 +196,18 @@ export const liveGetQuota = async (
   ids: string[],
   identificationFlag: IdentificationFlag,
   key: string,
-  endpoint: string
+  endpoint: string,
+  apiVersion?: string
 ): Promise<Quota> => {
   let response;
   if (ids.length === 0) {
     throw new QuotaError("No ID was provided");
   }
+  // format version with forward slash, to be added into endpoint, i.e. /v1, v2
+  const version = apiVersion ? `/${apiVersion}` : "";
+
   try {
-    response = await fetchWithValidator(Quota, `${endpoint}/quota`, {
+    response = await fetchWithValidator(Quota, `${endpoint}${version}/quota`, {
       method: "POST",
       headers: {
         Authorization: key,
@@ -274,14 +279,18 @@ export const livePostTransaction = async ({
   endpoint,
   key,
   transactions,
+  apiVersion,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids.length === 0) {
     throw new PostTransactionError("No ID was provided");
   }
+  // format version with forward slash, to be added into endpoint, i.e. /v1
+  const version = apiVersion ? `/${apiVersion}` : "";
+
   try {
     const response = await fetchWithValidator(
       PostTransactionResult,
-      `${endpoint}/transactions`,
+      `${endpoint}${version}/transactions`,
       {
         method: "POST",
         headers: {
@@ -346,16 +355,22 @@ export const livePastTransactions = async (
   ids: string[],
   identificationFlag: IdentificationFlag,
   key: string,
-  endpoint: string
+  endpoint: string,
+  categories?: string[],
+  getAllTransactions = false,
+  apiVersion?: string
 ): Promise<PastTransactionsResult> => {
   let response;
   if (ids.length === 0) {
     throw new PastTransactionError("No ID was provided");
   }
+  // format version with forward slash, to be added into endpoint, i.e. /v1
+  const version = apiVersion ? `/${apiVersion}` : "";
+
   try {
     response = await fetchWithValidator(
       PastTransactionsResult,
-      `${endpoint}/transactions/history`,
+      `${endpoint}${version}/transactions/history`,
       {
         method: "POST",
         headers: {
@@ -364,6 +379,8 @@ export const livePastTransactions = async (
         body: JSON.stringify({
           ids,
           identificationFlag,
+          getAllTransactions,
+          categories,
         }),
       }
     );

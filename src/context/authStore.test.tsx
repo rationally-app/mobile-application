@@ -1,6 +1,6 @@
 import React from "react";
 import { AuthStoreContextProvider, AuthStoreContext } from "./authStore";
-import { render, wait, fireEvent } from "@testing-library/react-native";
+import { render, waitFor, fireEvent } from "@testing-library/react-native";
 import { Text, Button } from "react-native";
 import { Sentry } from "../utils/errorTracking";
 import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
@@ -59,7 +59,7 @@ describe("AuthStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");
     expect(queryByTestId("loaded")).toBeNull();
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("credentials")).toHaveTextContent(
         `{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0}`
       );
@@ -85,7 +85,7 @@ describe("AuthStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("credentials")).toHaveTextContent("");
     });
   });
@@ -111,7 +111,7 @@ describe("AuthStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
   });
@@ -150,7 +150,7 @@ describe("AuthStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("credentials")).toHaveTextContent(
         `{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0}`
       );
@@ -158,7 +158,7 @@ describe("AuthStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await wait(() => {
+    await waitFor(() => {
       expect(mockSetItem).toHaveBeenCalledTimes(1);
       expect(mockSetItem).toHaveBeenCalledWith("AUTH_STORE", "{}");
       expect(queryByTestId("credentials")).toHaveTextContent("");
@@ -206,7 +206,7 @@ describe("AuthStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("credentials")).toHaveTextContent(
         `{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0}`
       );
@@ -214,7 +214,7 @@ describe("AuthStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await wait(() => {
+    await waitFor(() => {
       expect(mockSetItem).toHaveBeenCalledTimes(1);
       expect(mockSetItem).toHaveBeenCalledWith(
         "AUTH_STORE",
@@ -280,7 +280,7 @@ describe("AuthStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("credentials")).toHaveTextContent(
         `{"test-campaign":{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0},"another-test-campaign":{"operatorToken":"operatorTokenA","sessionToken":"sessionTokenA","endpoint":"endpointA","expiry":0}}`
       );
@@ -288,7 +288,7 @@ describe("AuthStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await wait(() => {
+    await waitFor(() => {
       expect(mockSetItem).toHaveBeenCalledTimes(1);
       expect(mockSetItem).toHaveBeenCalledWith(
         "AUTH_STORE",
@@ -347,7 +347,7 @@ describe("AuthStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByTestId("credentials")).toHaveTextContent(
         `{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0}`
       );
@@ -355,7 +355,7 @@ describe("AuthStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await wait(() => {
+    await waitFor(() => {
       expect(mockSetItem).toHaveBeenCalledTimes(1);
       expect(mockSetItem).toHaveBeenCalledWith("AUTH_STORE", "{}");
       expect(queryByTestId("credentials")).toHaveTextContent("");

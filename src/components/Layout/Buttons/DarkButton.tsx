@@ -6,7 +6,7 @@ import { ActivityIndicator, View } from "react-native";
 
 export interface DarkButton {
   onPress?: () => void;
-  text: string;
+  text?: string;
   fullWidth?: boolean;
   isLoading?: boolean;
   icon?: ReactElement;
@@ -35,16 +35,20 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
       <ActivityIndicator size="small" color={color("grey", 0)} />
     ) : (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        {icon && <View style={{ marginRight: size(1) }}>{icon}</View>}
-        <AppText
-          style={{
-            color: color("grey", 0),
-            fontFamily: "brand-bold",
-            textAlign: "center",
-          }}
-        >
-          {text}
-        </AppText>
+        {icon && (
+          <View style={text ? { marginRight: size(1) } : {}}>{icon}</View>
+        )}
+        {text ? (
+          <AppText
+            style={{
+              color: color("grey", 0),
+              fontFamily: "brand-bold",
+              textAlign: "center",
+            }}
+          >
+            {text}
+          </AppText>
+        ) : null}
       </View>
     )}
   </BaseButton>

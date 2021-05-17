@@ -3,6 +3,7 @@ import {
   mobileNumberValidator,
   countryCodeValidator,
   fullPhoneNumberValidator,
+  parsePhoneNumber,
 } from "./validatePhoneNumbers";
 
 describe("createFullNumber", () => {
@@ -11,6 +12,84 @@ describe("createFullNumber", () => {
     expect(createFullNumber("+65", "98765432")).toBe("+6598765432");
     expect(createFullNumber("+6 5", "98765432")).toBe("+6598765432");
     expect(createFullNumber("+65", "987654 32")).toBe("+6598765432");
+  });
+});
+
+describe("parsePhoneNumber", () => {
+  describe("when phoneNumber starts with `+`", () => {
+    describe("should not throw any error when phone number is valid", () => {
+      it.each([
+        "+65 8888 8888",
+        "+65 88888888",
+        "+6588888888",
+        "+65  88888 - - 888",
+        "+65  88888 - * 888",
+        "+65 9123 4567",
+        "+65 8038 4567",
+        "+65 999",
+        "+65 80", // Doesn't check if it's a legit number
+        "+60 300",
+        "+1 2024561414",
+      ])("%p", (phoneNumber) => {
+        expect.assertions(1);
+        expect(() => parsePhoneNumber(phoneNumber)).not.toThrow();
+      });
+    });
+  });
+
+  describe("when phoneNumber does not start with `+`", () => {
+    describe("when countryCode is specified", () => {
+      describe("should not throw any error when phone number is valid", () => {
+        it.each([
+          ["65", "8888 8888"],
+          ["65", "88888888"],
+          ["65", "  88888888"],
+          ["+65", "  88888 - - 888"],
+          ["65", "  88888 - * 888"],
+          ["65", "  88888 - /*() 888"],
+          ["+65", "9123 4567"],
+          ["65", "8038 4567"],
+          ["65", "999"],
+          ["65", "800"], // Doesn't check if it's a legit number
+          ["60", "300"],
+          ["1", "2024561414"],
+        ])("code: %p\t number: %p", (countryCode, phoneNumber) => {
+          expect.assertions(1);
+          expect(() =>
+            parsePhoneNumber(phoneNumber, countryCode)
+          ).not.toThrow();
+        });
+      });
+    });
+
+    describe("when countryCode is not specified", () => {
+      describe("should parse the number as a +65 number", () => {
+        it.each(["8888 8888", "1234", "999", "2024561414"])(
+          "%p",
+          (phoneNumber) => {
+            expect.assertions(2);
+            expect(() => parsePhoneNumber(phoneNumber)).not.toThrow();
+            expect(
+              parsePhoneNumber(phoneNumber).getCountryCode()
+            ).toStrictEqual(65);
+          }
+        );
+
+        it.each([undefined, ""])(
+          "should work for falsy countryCode value: %p",
+          (countryCode) => {
+            expect.assertions(2);
+            const phoneNumber = "8888 8888";
+            expect(() =>
+              parsePhoneNumber(phoneNumber, countryCode)
+            ).not.toThrow();
+            expect(
+              parsePhoneNumber(phoneNumber, countryCode).getCountryCode()
+            ).toStrictEqual(65);
+          }
+        );
+      });
+    });
   });
 });
 

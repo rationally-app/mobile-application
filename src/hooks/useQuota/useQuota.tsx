@@ -6,6 +6,7 @@ import { transform } from "lodash";
 import { Quota, CampaignPolicy, ItemQuota } from "../../types";
 import { usePrevious } from "../usePrevious";
 import { IdentificationContext } from "../../context/identification";
+import { CampaignConfigContext } from "../../context/campaignConfig";
 
 type QuotaState = "DEFAULT" | "FETCHING_QUOTA" | "NO_QUOTA" | "NOT_ELIGIBLE";
 
@@ -63,6 +64,16 @@ const filterQuotaWithAvailableProducts = (
   return filteredQuota;
 };
 
+/**
+ * Determines if there is no quota from a Quota object.
+ *
+ * There is no quota if:
+ *  - The remaining quota does not contain any items, or
+ *  - The remaining quota contains items, and all of their quantities are 0.
+ *
+ * @param quota a Quota object
+ * @returns true if there is no quota, otherwise false.
+ */
 const hasNoQuota = (quota: Quota): boolean => {
   return quota.remainingQuota.every((item) => item.quantity === 0);
 };
@@ -100,12 +111,19 @@ export const useQuota = (
   const { products } = useContext(ProductContext);
   const prevIds = usePrevious(ids);
   const prevProducts = usePrevious(products);
+  const { features } = useContext(CampaignConfigContext);
 
   const updateQuota: QuotaHook["updateQuota"] = useCallback(() => {
     const update = async (): Promise<void> => {
       try {
         setQuotaState("FETCHING_QUOTA");
-        const quota = await getQuota(ids, selectedIdType, authKey, endpoint);
+        const quota = await getQuota(
+          ids,
+          selectedIdType,
+          authKey,
+          endpoint,
+          features?.apiVersion
+        );
         const filteredQuotas = filterQuotaWithAvailableProducts(
           quota,
           products
@@ -135,7 +153,15 @@ export const useQuota = (
       }
     };
     update();
-  }, [ids, authKey, endpoint, products, quotaResponse, selectedIdType]);
+  }, [
+    ids,
+    authKey,
+    endpoint,
+    products,
+    quotaResponse,
+    selectedIdType,
+    features?.apiVersion,
+  ]);
 
   /**
    * Update the quota whenever the ids or products change
