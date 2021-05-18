@@ -3,6 +3,7 @@ import React from "react";
 import { InputPassportSection } from "./InputPassportSection";
 import "../../common/i18n/i18nMock";
 
+const openCamera = jest.fn();
 const setIdInput = jest.fn();
 const submitId = jest.fn();
 
@@ -15,7 +16,12 @@ describe("InputPassportSection", () => {
   it("should be able to input data and submit", async () => {
     expect.assertions(7);
     const { queryByText, queryAllByPlaceholderText, queryByTestId } = render(
-      <InputPassportSection setIdInput={setIdInput} submitId={submitId} />
+      <InputPassportSection
+        scannerType={"NONE"}
+        openCamera={openCamera}
+        setIdInput={setIdInput}
+        submitId={submitId}
+      />
     );
 
     const passportNumberInput = queryByTestId("input-with-label-input");
