@@ -245,8 +245,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const getInputComponent = (): JSX.Element => {
-    return selectedIdType.label === "Passport" &&
-      selectedIdType.scannerType === "NONE" ? (
+    return selectedIdType.label === "Passport" ? (
       <InputPassportSection
         scannerType={selectedIdType.scannerType}
         openCamera={() => setShouldShowCamera(true)}
