@@ -1,6 +1,11 @@
 import { IS_MOCK } from "../../config";
 import { CampaignConfig, ConfigHashes } from "../../types";
-import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
+import {
+  fetchWithValidator,
+  ValidationError,
+  SessionError,
+  NetworkError,
+} from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import i18n from "i18n-js";
 
@@ -36,6 +41,8 @@ const liveGetCampaignConfig = async (
       Sentry.captureException(e);
     } else if (e instanceof SessionError) {
       throw e;
+    } else if (e instanceof NetworkError) {
+      throw e;
     }
     throw new CampaignConfigError(e.message);
   }
@@ -65,7 +72,6 @@ const mockGetCampaignConfig = async (
         name: "🧻 Toilet Paper",
         description: "1 ply / 2 ply / 3 ply",
         order: 1,
-        type: "REDEEM",
         quantity: {
           period: 7,
           limit: 2,
@@ -80,7 +86,6 @@ const mockGetCampaignConfig = async (
         name: "🍜 Instant Noodles",
         description: "Indomee",
         order: 2,
-        type: "REDEEM",
         quantity: {
           period: 30,
           limit: 1,
@@ -95,7 +100,6 @@ const mockGetCampaignConfig = async (
         name: "🍫 Chocolate",
         description: "Dark / White / Assorted",
         order: 3,
-        type: "REDEEM",
         quantity: {
           period: 14,
           limit: 30,
@@ -110,7 +114,6 @@ const mockGetCampaignConfig = async (
         category: "vouchers",
         name: "Funfair Vouchers",
         order: 4,
-        type: "REDEEM",
         quantity: { period: 1, limit: 1, default: 1 },
         identifiers: [
           {
@@ -139,7 +142,6 @@ const mockGetCampaignConfig = async (
         category: "voucher",
         name: "🎟️ Golden Ticket",
         order: 5,
-        type: "REDEEM",
         quantity: { period: 1, limit: 1, default: 1 },
         identifiers: [
           {

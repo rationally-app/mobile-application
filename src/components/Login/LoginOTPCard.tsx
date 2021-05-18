@@ -17,6 +17,7 @@ import {
   OTPWrongError,
   OTPExpiredError,
   OTPEmptyError,
+  LoginLockedError,
 } from "../../services/auth";
 import { Sentry } from "../../utils/errorTracking";
 import { AlertModalContext } from "../../context/alert";
@@ -90,6 +91,8 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
     };
   }, [resendDisabledTime]);
 
+  const { i18nt } = useTranslate();
+
   const onValidateOTP = async (otp: string): Promise<void> => {
     setIsLoading(true);
     try {
@@ -116,6 +119,15 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
         e instanceof OTPEmptyError
       ) {
         showErrorAlert(e);
+      } else if (e instanceof LoginLockedError) {
+        const matches = e.message.match(/\d+/g);
+        showErrorAlert(e, () => resetStage(), {
+          // We assume backend error message has the number of minutes for user to wait before retrying
+          // Adding a fallback in case this assumption fails
+          minutes:
+            (matches && matches[0]) ??
+            i18nt("errorMessages", "dynamicContentFallback", "minutes"),
+        });
       } else if (e instanceof LoginError) {
         showErrorAlert(e, () => resetStage());
       } else {
@@ -141,8 +153,6 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
   const handleChange = (text: string): void => {
     /^\d*$/.test(text) && setOTPValue(text);
   };
-
-  const { i18nt } = useTranslate();
 
   return (
     <Card>

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { size, fontSize, color } from "../../../common/styles";
+import { size, fontSize, color, lineHeight } from "../../../common/styles";
 
 export const sharedStyles = StyleSheet.create({
   wrapper: {
@@ -27,7 +27,9 @@ export const sharedStyles = StyleSheet.create({
   },
   maxQuantityLabel: {
     marginTop: 2,
-    fontFamily: "brand-italic",
-    fontSize: fontSize(-2),
+    fontFamily: "brand-regular",
+    fontSize: fontSize(-1),
+    fontWeight: "normal",
+    lineHeight: lineHeight(-1),
   },
 });

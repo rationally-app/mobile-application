@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { PastTransactionsResult } from "../../types";
 import { usePrevious } from "../usePrevious";
+import { useIsMounted } from "../useIsMounted";
 import {
   getPastTransactions,
   PastTransactionError,
@@ -8,6 +9,7 @@ import {
 import { Sentry } from "../../utils/errorTracking";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { IdentificationContext } from "../../context/identification";
+import { CampaignConfigContext } from "../../context/campaignConfig";
 
 export type PastTransactionHook = {
   pastTransactionsResult: PastTransactionsResult["pastTransactions"] | null;
@@ -18,8 +20,11 @@ export type PastTransactionHook = {
 export const usePastTransaction = (
   ids: string[],
   authKey: string,
-  endpoint: string
+  endpoint: string,
+  categories?: string[],
+  getAllTransactions = false
 ): PastTransactionHook => {
+  const isMounted = useIsMounted();
   const [pastTransactionsResult, setPastTransactionsResult] = useState<
     PastTransactionsResult["pastTransactions"] | null
   >(null);
@@ -27,28 +32,38 @@ export const usePastTransaction = (
   const [error, setError] = useState<PastTransactionError | null>(null);
   const prevIds = usePrevious(ids);
   const { selectedIdType } = useContext(IdentificationContext);
+  const { features } = useContext(CampaignConfigContext);
 
   useEffect(() => {
     const fetchPastTransactions = async (): Promise<void> => {
+      Sentry.addBreadcrumb({
+        category: "fetchPastTransactions",
+        message: JSON.stringify({
+          ids: ids.map((id) => id.slice(-4).padStart(id.length, "*")),
+        }),
+      });
       try {
         const pastTransactionsResponse = await getPastTransactions(
           ids,
           selectedIdType,
           authKey,
-          endpoint
+          endpoint,
+          categories,
+          getAllTransactions,
+          features?.apiVersion
         );
-        setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
+        if (isMounted()) {
+          setPastTransactionsResult(pastTransactionsResponse?.pastTransactions);
+        }
       } catch (error) {
-        Sentry.captureException(
-          `Unable to fetch past transactions: ${ids.map((id) =>
-            id.slice(-4).padStart(id.length, "*")
-          )}`
-        );
+        Sentry.captureException("Unable to fetch past transactions");
         setError(
           new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
         );
       } finally {
-        setLoading(false);
+        if (isMounted()) {
+          setLoading(false);
+        }
       }
     };
 
@@ -57,7 +72,17 @@ export const usePastTransaction = (
       setError(null);
       fetchPastTransactions();
     }
-  }, [authKey, endpoint, ids, selectedIdType, prevIds]);
+  }, [
+    authKey,
+    endpoint,
+    ids,
+    categories,
+    getAllTransactions,
+    selectedIdType,
+    prevIds,
+    isMounted,
+    features?.apiVersion,
+  ]);
 
   return {
     pastTransactionsResult,

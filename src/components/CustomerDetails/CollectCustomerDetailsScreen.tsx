@@ -40,7 +40,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext } from "../../context/alert";
 import { InputSelection } from "./InputSelection";
-import { ManualPassportInput } from "./ManualPassportInput";
+import { InputPassportSection } from "./InputPassportSection";
 import { IdentificationFlag } from "../../types";
 import {
   IdentificationContext,
@@ -189,6 +189,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           policy.categoryType === undefined || policy.categoryType === "DEFAULT"
       );
 
+      setShouldShowCamera(false);
       navigation.navigate("CustomerQuotaProxy", {
         id,
         products: defaultProducts,
@@ -200,8 +201,35 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
+  const setState = useState()[1];
   const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (isFocused && isScanningEnabled && event.data) {
+      /**
+       * If "Passport" tab is chosen, we want to extract the passport
+       * number from a JSON object containing the `passportId`.
+       */
+      if (selectedIdType.label === "Passport") {
+        let passportId;
+        try {
+          ({ passportId } = JSON.parse(event.data));
+        } catch (e) {
+          /**
+           * If we encounter any JSON errors, we set `passportId` to empty
+           * in order to allow logic below to handle it as an empty/invalid ID.
+           *
+           * However, any other errors will trigger the ErrorBoundary.
+           */
+          if (e instanceof SyntaxError) {
+            passportId = "";
+          } else {
+            setState(() => {
+              throw e;
+            });
+          }
+        } finally {
+          event.data = passportId;
+        }
+      }
       onCheck(event.data);
     }
   };
@@ -216,9 +244,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const getInputComponent = (): JSX.Element => {
-    return selectedIdType.label === "Passport" &&
-      selectedIdType.scannerType === "NONE" ? (
-      <ManualPassportInput
+    return selectedIdType.label === "Passport" ? (
+      <InputPassportSection
+        scannerType={selectedIdType.scannerType}
+        openCamera={() => setShouldShowCamera(true)}
         setIdInput={setIdInput}
         submitId={() => onCheck(idInput)}
       />
@@ -235,6 +264,18 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onPressStatistics = (): void => {
     navigation.navigate("DailyStatisticsScreen");
+  };
+
+  const getBarcodeType = (): any[] => {
+    if (selectedIdType.scannerType === "QR") {
+      return [BarCodeScanner.Constants.BarCodeType.qr];
+    } else if (selectedIdType.scannerType === "CODE_39") {
+      return [BarCodeScanner.Constants.BarCodeType.code39];
+    } else {
+      return features?.id.scannerType === "QR"
+        ? [BarCodeScanner.Constants.BarCodeType.qr]
+        : [BarCodeScanner.Constants.BarCodeType.code39];
+    }
   };
 
   const tCampaignName = c13nt(features?.campaignName ?? "");
@@ -292,7 +333,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               testID="go-to-statistics"
               accessible={true}
             >
-              Go to statistics
+              {i18nt("collectCustomerDetailsScreen", "goToStatistics")}
             </AppText>
           </TouchableOpacity>
           <FeatureToggler feature="HELP_MODAL">
@@ -305,11 +346,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
-          barCodeTypes={
-            features?.id.scannerType === "QR"
-              ? [BarCodeScanner.Constants.BarCodeType.qr]
-              : [BarCodeScanner.Constants.BarCodeType.code39]
-          }
+          barCodeTypes={getBarcodeType()}
         />
       )}
     </>

@@ -17,6 +17,7 @@ import { Card } from "../Layout/Card";
 import { ItemsSelectionCard } from "./ItemsSelection/ItemsSelectionCard";
 import { NoQuotaCard } from "./NoQuota/NoQuotaCard";
 import { CheckoutSuccessCard } from "./CheckoutSuccess/CheckoutSuccessCard";
+import { CheckoutUnsuccessfulCard } from "./CheckoutUnsuccessful/CheckoutUnsuccessfulCard";
 import { useCart } from "../../hooks/useCart/useCart";
 import { Sentry } from "../../utils/errorTracking";
 import { HelpModalContext } from "../../context/help";
@@ -203,6 +204,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
                 ? ERROR_MESSAGE.INVALID_POD_INPUT
                 : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
             );
+            Sentry.captureException(invalidIdentifierInputError);
             showErrorAlert(invalidIdentifierInputError, () => clearCartError());
             break;
           case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
@@ -211,6 +213,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
                 ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
                 : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
             );
+            Sentry.captureException(duplicateIdentifierInputError);
             showErrorAlert(duplicateIdentifierInputError, () =>
               clearCartError()
             );
@@ -283,6 +286,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             onCancel={onNextId}
             quotaResponse={quotaResponse}
           />
+        ) : cartState === "UNSUCCESSFUL" ? (
+          <CheckoutUnsuccessfulCard ids={ids} onCancel={onCancel} />
         ) : quotaState === "NO_QUOTA" ? (
           <NoQuotaCard
             ids={ids}
