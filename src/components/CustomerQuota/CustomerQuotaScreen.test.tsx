@@ -509,7 +509,7 @@ describe("CustomerQuotaScreen", () => {
     });
 
     it("when quotaState is FETCHING_QUOTA", async () => {
-      expect.assertions(3);
+      expect.assertions(1);
 
       mockUseCart.mockReturnValue({
         cartState: "DEFAULT",
@@ -523,7 +523,7 @@ describe("CustomerQuotaScreen", () => {
       mockUseQuota.mockReturnValue({
         quotaResponse: mockQuotaResponse,
         allQuotaResponse: mockQuotaResponse,
-        quotaState: "NOT_ELIGIBLE",
+        quotaState: "FETCHING_QUOTA",
         quotaError: undefined,
         updateQuota: () => null,
         clearQuotaError: () => null,
@@ -534,7 +534,7 @@ describe("CustomerQuotaScreen", () => {
         error: null,
       });
 
-      const { queryByText, queryByTestId } = render(
+      const { queryByText } = render(
         <CreateProvidersWrapper
           providers={[
             {
@@ -554,13 +554,7 @@ describe("CustomerQuotaScreen", () => {
         </CreateProvidersWrapper>
       );
 
-      expect(queryByText("valid-id")).not.toBeNull();
-      expect(queryByTestId("not-eligible-title")).not.toBeNull();
-      expect(
-        queryByText(
-          "Not eligible to collect any item. Contact your in-charge to find out about the appeal guidelines."
-        )
-      ).not.toBeNull();
+      expect(queryByText("Checking...")).not.toBeNull();
     });
   });
 });
