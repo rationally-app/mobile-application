@@ -254,7 +254,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
          * When using the manual input, `idInput` is a string, unlike the JSON format
          * done when scanning the QR.
          *
-         * Thus, we need to reformat the `idInput` before passing to `onCheck`
+         * Thus, we need to reformat the manual `idInput`
+         * before passing to `onCheck`
          */
         submitId={() => onCheck(`{"passportId": "${idInput}"}`)}
       />
