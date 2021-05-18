@@ -172,35 +172,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     );
   }, [selectionArray, selectedIdType, setSelectedIdType]);
 
-  const setState = useState()[1];
   const onCheck = async (input: string): Promise<void> => {
-    /**
-     * If "Passport" tab is chosen, we want to extract the passport
-     * number from a JSON object containing the `passportId`.
-     */
-    if (selectedIdType.label === "Passport") {
-      let passportId;
-      try {
-        ({ passportId } = JSON.parse(input));
-      } catch (e) {
-        /**
-         * If we encounter any JSON errors, we set `passportId` to empty
-         * in order to allow logic below to handle it as an empty/invalid ID.
-         *
-         * However, any other errors will trigger the ErrorBoundary.
-         */
-        if (e instanceof SyntaxError) {
-          passportId = "";
-        } else {
-          setState(() => {
-            throw e;
-          });
-        }
-      } finally {
-        input = passportId;
-      }
-    }
-
     try {
       setIsScanningEnabled(false);
       if (!features) {
@@ -229,8 +201,35 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
+  const setState = useState()[1];
   const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (isFocused && isScanningEnabled && event.data) {
+      /**
+       * If "Passport" tab is chosen, we want to extract the passport
+       * number from a JSON object containing the `passportId`.
+       */
+      if (selectedIdType.label === "Passport") {
+        let passportId;
+        try {
+          ({ passportId } = JSON.parse(event.data));
+        } catch (e) {
+          /**
+           * If we encounter any JSON errors, we set `passportId` to empty
+           * in order to allow logic below to handle it as an empty/invalid ID.
+           *
+           * However, any other errors will trigger the ErrorBoundary.
+           */
+          if (e instanceof SyntaxError) {
+            passportId = "";
+          } else {
+            setState(() => {
+              throw e;
+            });
+          }
+        } finally {
+          event.data = passportId;
+        }
+      }
       onCheck(event.data);
     }
   };
