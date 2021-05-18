@@ -40,7 +40,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext } from "../../context/alert";
 import { InputSelection } from "./InputSelection";
-import { ManualPassportInput } from "./ManualPassportInput";
+import { InputPassportSection } from "./InputPassportSection";
 import { IdentificationFlag } from "../../types";
 import {
   IdentificationContext,
@@ -247,7 +247,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   const getInputComponent = (): JSX.Element => {
     return selectedIdType.label === "Passport" &&
       selectedIdType.scannerType === "NONE" ? (
-      <ManualPassportInput
+      <InputPassportSection
+        scannerType={selectedIdType.scannerType}
+        openCamera={() => setShouldShowCamera(true)}
         setIdInput={setIdInput}
         submitId={() => onCheck(idInput)}
       />
@@ -264,6 +266,18 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onPressStatistics = (): void => {
     navigation.navigate("DailyStatisticsScreen");
+  };
+
+  const getBarcodeType = (): any[] => {
+    if (selectedIdType.scannerType === "QR") {
+      return [BarCodeScanner.Constants.BarCodeType.qr];
+    } else if (selectedIdType.scannerType === "CODE_39") {
+      return [BarCodeScanner.Constants.BarCodeType.code39];
+    } else {
+      return features?.id.scannerType === "QR"
+        ? [BarCodeScanner.Constants.BarCodeType.qr]
+        : [BarCodeScanner.Constants.BarCodeType.code39];
+    }
   };
 
   const tCampaignName = c13nt(features?.campaignName ?? "");
@@ -334,11 +348,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
-          barCodeTypes={
-            features?.id.scannerType === "QR"
-              ? [BarCodeScanner.Constants.BarCodeType.qr]
-              : [BarCodeScanner.Constants.BarCodeType.code39]
-          }
+          barCodeTypes={getBarcodeType()}
         />
       )}
     </>
