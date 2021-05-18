@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { useCheckVoucherValidity } from "./useCheckVoucherValidity";
-import { wait } from "@testing-library/react-native";
+import { waitFor } from "@testing-library/react-native";
 import { getQuota } from "../../services/quota";
 import { Voucher } from "../../types";
 
@@ -54,7 +54,7 @@ describe("useCheckVoucherValidity", () => {
       const mockVouchersArr: Voucher[] = [];
       mockGetQuota.mockReturnValueOnce(mockValidQuotaRes);
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.checkValidity("123456789", mockVouchersArr);
         expect(result.current.checkValidityState).toBe("CHECKING_VALIDITY");
       });
@@ -71,7 +71,7 @@ describe("useCheckVoucherValidity", () => {
       );
       const mockVouchersArr: Voucher[] = [];
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.checkValidity("", mockVouchersArr);
         expect(result.current.checkValidityState).toBe("CHECKING_VALIDITY");
       });
@@ -87,7 +87,7 @@ describe("useCheckVoucherValidity", () => {
       );
       const mockVouchersArr: Voucher[] = [];
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.checkValidity("007", mockVouchersArr);
         expect(result.current.checkValidityState).toBe("CHECKING_VALIDITY");
       });
@@ -107,7 +107,7 @@ describe("useCheckVoucherValidity", () => {
         { serial: "123456789", denomination: 2 },
       ];
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.checkValidity("123456789", mockVouchersArr);
         expect(result.current.checkValidityState).toBe("CHECKING_VALIDITY");
       });
@@ -126,7 +126,7 @@ describe("useCheckVoucherValidity", () => {
       const mockVouchersArr: Voucher[] = [];
       mockGetQuota.mockResolvedValue(mockInvalidQuotaRes);
 
-      await wait(() => {
+      await waitFor(() => {
         result.current.checkValidity("000000000", mockVouchersArr);
         expect(result.current.checkValidityState).toBe("CHECKING_VALIDITY");
       });

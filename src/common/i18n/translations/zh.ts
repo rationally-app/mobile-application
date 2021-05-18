@@ -4,7 +4,7 @@ export const zh: Translations = {
   loginScanCard: {
     loginWithQR: "请使用您专属的QR码登录",
     scanToLogin: "扫描QR码",
-    needHelp: "需要协助",
+    needHelp: "需要协助?",
     askQuestion: "问问题",
   },
   loginMobileNumberCard: {
@@ -25,6 +25,9 @@ export const zh: Translations = {
     or: "或",
     enterIdNumber: "输入证件号码",
     check: "查看",
+    goToStatistics: "前往统计",
+    nationalityInputLabel: "国籍 (非新加坡人)",
+    passportInputLabel: "护照号码",
   },
   idScanner: {
     enterIdManually: "输入证件号码",
@@ -71,13 +74,10 @@ export const zh: Translations = {
     remove: "清除",
   },
   checkoutSuccessScreen: {
-    redeemed: "已领取",
-    redeemedItems: "已领取物品",
+    redeemed: "已领取!",
+    redeemedItems: "已领取物品:",
     nextIdentity: "下一个证件",
-    purchased: "已购买",
-    purchasedItems: "已购买物品",
-    previouslyRedeemedItems: "已领取物品",
-    previouslyPurchasedItems: "已购买物品",
+    previouslyRedeemedItems: "已领取物品:",
     redeemedAgo: "在 %{time} 已领取",
     redeemedOn: "在 %{time} 已领取",
     previouslyRedeemed: "已领取过",
@@ -92,6 +92,10 @@ export const zh: Translations = {
     complete: "确认交易",
     quantity: "个",
   },
+  checkoutUnsuccessfulScreen: {
+    unsuccessful: "不成功退回!",
+    unsuccessfulRedeemAttempt: "以前已领取以及符合退货条件的物品:",
+  },
   customerAppealScreen: {
     raiseAppeal: "提出上诉",
     indicateReason: "说明上诉理由",
@@ -104,12 +108,13 @@ export const zh: Translations = {
   notEligibleScreen: {
     notEligible: "不符合资格",
     logAppeal: "不符合资格收集任何物品。请联系您的负责人，了解上诉准则。",
-    cannot: "不能",
-    purchase: "购买",
   },
   campaignInitialisationScreen: {
     appleStore: "谷歌应用商店",
     androidStore: "苹果应用商店",
+  },
+  addonsToggleComponent: {
+    "*chargeable": "应收费",
   },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
@@ -252,6 +257,16 @@ export const zh: Translations = {
         "连接目前出现问题。请重启应用程序。如果问题持续出现，请联系政府科技局。",
       primaryActionText: "重启应用程序",
     },
+    networkError: {
+      title: "网络连接问题",
+      body: "您已断线。请尝试连接并重试。",
+      primaryActionText: "重试",
+    },
+    wrongPaymentReceiptNumber: {
+      title: "格式错误",
+      body: "请输入有效的付款收据编号。",
+      primaryActionText: "确定",
+    },
     wrongFormatCountryCode: {
       title: "格式错误",
       body: "请输入有效的国家代码。",
@@ -383,6 +398,19 @@ export const zh: Translations = {
       body: "您要清除%{voucherSerial}吗?",
       primaryActionText: "清除",
       secondaryActionText: "取消",
+    },
+    wrongFormatEmailAddress: {
+      title: "格式错误",
+      body: "请输入有效的邮件地址",
+      primaryActionText: "确定",
+    },
+    invalidDeviceCode: {
+      title: "输入无效",
+      body: "请再次扫描物品或向您的负责人索取新的物品。",
+      primaryActionText: "确定",
+    },
+    dynamicContentFallback: {
+      minutes: "几",
     },
   },
 };

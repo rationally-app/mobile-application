@@ -3,6 +3,7 @@ import { validateAndCleanRegexInput } from "./validateInputWithRegex";
 import { CampaignConfigError } from "../services/campaignConfig";
 import { ERROR_MESSAGE } from "../context/alert";
 import { validateAndCleanPassport } from "./validatePassport";
+import { validateEmailAddress } from "./validateEmailAddress";
 
 export const validateAndCleanId = (
   inputId: string,
@@ -23,6 +24,9 @@ export const validateAndCleanId = (
         throw new CampaignConfigError(ERROR_MESSAGE.CAMPAIGN_CONFIG_ERROR);
       }
       id = validateAndCleanRegexInput(inputId, idRegex);
+      break;
+    case "EMAIL":
+      id = validateEmailAddress(inputId);
       break;
     default:
       // Remove validation

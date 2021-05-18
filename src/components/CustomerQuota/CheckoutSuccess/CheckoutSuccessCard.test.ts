@@ -2,7 +2,7 @@ import { PastTransactionsResult, CampaignPolicy } from "../../../types";
 import {
   TransactionsByTimeMap,
   groupTransactionsByTime,
-  sortTransactions,
+  sortTransactionsByTime,
 } from "./CheckoutSuccessCard";
 import {
   defaultIdentifier,
@@ -170,10 +170,10 @@ describe("CheckoutSuccessCard utility functions", () => {
     });
   });
 
-  describe("sortTransactions", () => {
+  describe("sortTransactionsByTime", () => {
     it("should return array of transactions by time, ordered by timestamp", () => {
       expect.assertions(1);
-      expect(sortTransactions(mockTransactionsByTimeMap)).toStrictEqual([
+      expect(sortTransactionsByTime(mockTransactionsByTimeMap)).toStrictEqual([
         {
           header: "4 Aug 2020, 4:39PM",
           transactions: [

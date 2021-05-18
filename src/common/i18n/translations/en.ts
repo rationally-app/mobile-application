@@ -4,7 +4,7 @@ export const en: Translations = {
   loginScanCard: {
     loginWithQR: "Login with your unique QR code provided by your in-charge.",
     scanToLogin: "Scan to login",
-    needHelp: "Need help",
+    needHelp: "Need help?",
     askQuestion: "Ask a question",
   },
   loginMobileNumberCard: {
@@ -26,6 +26,9 @@ export const en: Translations = {
     or: "OR",
     enterIdNumber: "Enter ID Number",
     check: "Check",
+    goToStatistics: "Go to statistics",
+    nationalityInputLabel: "Nationality (non-Singaporean)",
+    passportInputLabel: "Passport number",
   },
   idScanner: {
     enterIdManually: "Enter ID manually",
@@ -72,13 +75,10 @@ export const en: Translations = {
     remove: "Remove",
   },
   checkoutSuccessScreen: {
-    redeemed: "Redeemed",
-    redeemedItems: "Item(s) redeemed",
+    redeemed: "Redeemed!",
+    redeemedItems: "Item(s) redeemed:",
     nextIdentity: "Next identity",
-    purchased: "Purchased",
-    purchasedItems: "The following have been purchased",
-    previouslyRedeemedItems: "Item(s) redeemed previously",
-    previouslyPurchasedItems: "Item(s) purchased previously",
+    previouslyRedeemedItems: "Item(s) redeemed previously:",
     redeemedAgo: "Redeemed %{time} ago",
     redeemedOn: "Redeemed on %{time}",
     previouslyRedeemed: "Previously redeemed",
@@ -93,6 +93,11 @@ export const en: Translations = {
     complete: "Complete",
     quantity: "qty",
   },
+  checkoutUnsuccessfulScreen: {
+    unsuccessful: "Unsuccessful return!",
+    unsuccessfulRedeemAttempt:
+      "Item(s) redeemed previously that is eligible for return:",
+  },
   customerAppealScreen: {
     raiseAppeal: "Raise an appeal",
     indicateReason: "Indicate reason for appeal",
@@ -106,13 +111,12 @@ export const en: Translations = {
     notEligible: "Not eligible",
     logAppeal:
       "Not eligible to collect any item. Contact your in-charge to find out about the appeal guidelines.",
-    cannot: "Cannot",
-    purchase: "purchase",
   },
   campaignInitialisationScreen: {
     appleStore: "App Store",
     androidStore: "Play Store",
   },
+  addonsToggleComponent: { "*chargeable": "Chargeable" },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "Already used",
@@ -152,12 +156,12 @@ export const en: Translations = {
     },
     incompleteEntryDeviceCode: {
       title: "Incomplete entry",
-      body: "Enter device code.",
+      body: "Enter a device code.",
       primaryActionText: "OK",
     },
     incompleteEntryContactNumber: {
       title: "Incomplete entry",
-      body: "Enter contact number",
+      body: "Enter a contact number.",
       primaryActionText: "OK",
     },
     incompleteEntrySelectCheckbox: {
@@ -260,6 +264,16 @@ export const en: Translations = {
         "We are currently facing connectivity issues. Try restarting the app or contact Govtech if the problem persists.",
       primaryActionText: "Restart app",
     },
+    networkError: {
+      title: "Network error",
+      body: "You are offline. Try to connect and try again.",
+      primaryActionText: "Retry",
+    },
+    wrongPaymentReceiptNumber: {
+      title: "Wrong format",
+      body: "Enter a valid payment receipt number.",
+      primaryActionText: "OK",
+    },
     wrongFormatCountryCode: {
       title: "Wrong format",
       body: "Enter a valid country code.",
@@ -297,37 +311,37 @@ export const en: Translations = {
     },
     alreadyUsedCode: {
       title: "Already Used",
-      body: "Enter unique code details",
+      body: "Enter or scan a unique code.",
       primaryActionText: "OK",
     },
     alreadyUsedItem: {
       title: "Already Used",
-      body: "Scan another item that is not tagged to any ID number",
+      body: "Scan another item that is not tagged to any ID number.",
       primaryActionText: "OK",
     },
     wrongFormatCode: {
       title: "Wrong format",
-      body: "Enter or scan valid code details",
+      body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
     incompleteEntryCode: {
       title: "Incomplete entry",
-      body: "Enter or scan code details",
+      body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
     wrongFormatNotValidDeviceCode: {
       title: "Wrong format",
-      body: "Scan valid device code",
+      body: "Scan a valid device code.",
       primaryActionText: "OK",
     },
     incompleteEntryScanDeviceCode: {
       title: "Incomplete entry",
-      body: "Scan device code",
+      body: "Scan a device code.",
       primaryActionText: "OK",
     },
     wrongFormatContactNumber: {
       title: "Wrong format",
-      body: "Enter valid contact number",
+      body: "Enter a valid contact number.",
       primaryActionText: "OK",
     },
     insufficientQuota: {
@@ -392,6 +406,19 @@ export const en: Translations = {
       body: "Do you want to remove this item: %{voucherSerial}?",
       primaryActionText: "Remove",
       secondaryActionText: "Cancel",
+    },
+    wrongFormatEmailAddress: {
+      title: "Wrong format",
+      body: "Enter a valid email address.",
+      primaryActionText: "OK",
+    },
+    invalidDeviceCode: {
+      title: "Invalid input",
+      body: "Scan item again or get a new item from your in-charge.",
+      primaryActionText: "OK",
+    },
+    dynamicContentFallback: {
+      minutes: "a few",
     },
   },
 };

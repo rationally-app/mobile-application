@@ -29,6 +29,7 @@ const getBarCodeTypeLabel = (
     case BarCodeScanner.Constants.BarCodeType.qr:
       return i18nt("idScanner", "scanQRCode");
     case BarCodeScanner.Constants.BarCodeType.code39:
+    case BarCodeScanner.Constants.BarCodeType.code128:
     default:
       return i18nt("idScanner", "scanBarcode");
   }
@@ -46,6 +47,7 @@ const getBarCodeTypeIcon = (barCodeType: string): ReactElement => {
         />
       );
     case BarCodeScanner.Constants.BarCodeType.code39:
+    case BarCodeScanner.Constants.BarCodeType.code128:
     default:
       return (
         <Ionicons

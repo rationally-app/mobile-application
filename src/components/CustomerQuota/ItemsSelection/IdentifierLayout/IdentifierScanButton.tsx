@@ -9,12 +9,12 @@ export const IdentifierScanButton: FunctionComponent<{
   disabled: boolean;
   fullWidth: boolean;
   onPress: () => void;
-  text: string;
-}> = ({ disabled, fullWidth, onPress, text }) => (
+}> = ({ disabled, fullWidth, onPress }) => (
   <View style={sharedStyles.buttonWrapper}>
     <DarkButton
-      text={text}
-      icon={<Feather name="maximize" size={size(2)} color={color("grey", 0)} />}
+      icon={
+        <Feather name="maximize" size={size(2.5)} color={color("grey", 0)} />
+      }
       disabled={disabled}
       fullWidth={fullWidth}
       onPress={onPress}

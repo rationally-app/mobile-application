@@ -63,9 +63,15 @@ const TextInputType = t.union([
   t.literal("STRING"),
   t.literal("NUMBER"),
   t.literal("PHONE_NUMBER"),
+  t.literal("PAYMENT_RECEIPT"),
 ]);
 
-const ScanButtonType = t.union([t.literal("QR"), t.literal("BARCODE")]);
+const ScanButtonType = t.union([
+  t.literal("QR"),
+  t.literal("BARCODE"),
+  t.literal("CODE_128"),
+  t.literal("CODE_39"),
+]);
 
 const PolicyIdentifier = t.intersection([
   t.type({
@@ -119,7 +125,6 @@ const CampaignPolicy = t.intersection([
     description: t.string,
     image: t.string,
     identifiers: t.array(PolicyIdentifier),
-    type: t.union([t.literal("PURCHASE"), t.literal("REDEEM")]),
     alert: PolicyAlert,
   }),
 ]);
@@ -137,6 +142,7 @@ const IdentificationFlag = t.intersection([
       t.literal("PASSPORT"),
       t.literal("REGEX"),
       t.literal("UIN"),
+      t.literal("EMAIL"),
     ]),
   }),
   t.partial({
@@ -156,6 +162,7 @@ const CampaignFeatures = t.intersection([
   }),
   t.partial({
     alternateIds: t.array(IdentificationFlag),
+    apiVersion: t.union([t.literal("v1"), t.literal("v2")]),
   }),
 ]);
 
@@ -189,7 +196,6 @@ const ItemQuota = t.intersection([
   t.partial({
     quotaRefreshTime: t.number,
     transactionTime: DateFromNumber,
-    identifierInputs: t.array(IdentifierInput),
   }),
 ]);
 

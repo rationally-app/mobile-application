@@ -27,15 +27,15 @@ export interface CampaignConfigsStoreContext {
   clearCampaignConfigs: () => void;
 }
 
-export const CampaignConfigsStoreContext = createContext<
-  CampaignConfigsStoreContext
->({
-  hasLoadedFromStore: false,
-  allCampaignConfigs: {},
-  setCampaignConfig: () => undefined,
-  removeCampaignConfig: () => undefined,
-  clearCampaignConfigs: () => undefined,
-});
+export const CampaignConfigsStoreContext = createContext<CampaignConfigsStoreContext>(
+  {
+    hasLoadedFromStore: false,
+    allCampaignConfigs: {},
+    setCampaignConfig: () => undefined,
+    removeCampaignConfig: () => undefined,
+    clearCampaignConfigs: () => undefined,
+  }
+);
 
 export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
   children,

@@ -1,10 +1,13 @@
 import React from "react";
 import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
-import { size } from "../../../src/common/styles";
+import { size, color } from "../../../src/common/styles";
 import { CheckoutSuccessCard } from "../../../src/components/CustomerQuota/CheckoutSuccess/CheckoutSuccessCard";
+import { RedeemedItem } from "../../../src/components/CustomerQuota/CheckoutSuccess/RedeemedItem";
+import { PurchasedItem } from "../../../src/components/CustomerQuota/CheckoutSuccess/PurchasedItem";
 import { Quota, CampaignPolicy } from "../../../src/types";
 import { CampaignConfigContext } from "../../../src/context/campaignConfig";
+import { ItemQuantities } from "../../../src/components/CustomerQuota/types";
 
 const products: CampaignPolicy[] = [
   {
@@ -53,20 +56,47 @@ const quotaResponse: Quota = {
   ],
 };
 
-storiesOf("CustomerQuota", module).add("PurchaseSuccessCard", () => (
-  <CampaignConfigContext.Provider
-    value={{
-      policies: products,
-      features: null,
-      c13n: {},
-    }}
-  >
-    <View style={{ margin: size(3) }}>
+const itemQuantities: ItemQuantities = {
+  category: "toilet-paper",
+  quantities: {
+    "roll(s)": 2,
+  },
+};
+
+storiesOf("CustomerQuota", module)
+  .addDecorator((Story: any) => (
+    <CampaignConfigContext.Provider
+      value={{
+        policies: products,
+        features: null,
+        c13n: {},
+      }}
+    >
+      <Story />
+    </CampaignConfigContext.Provider>
+  ))
+  .add("PurchaseSuccessCard", () => (
+    <View key="0" style={{ margin: size(3) }}>
       <CheckoutSuccessCard
         ids={["S0000001I", "S0000002G"]}
         onCancel={() => null}
         quotaResponse={quotaResponse}
       />
     </View>
-  </CampaignConfigContext.Provider>
-));
+  ))
+  .add("RedeemedItem", () => (
+    <View
+      key="1"
+      style={{ margin: size(3), backgroundColor: color("orange", 30) }}
+    >
+      <RedeemedItem itemQuantities={itemQuantities} />
+    </View>
+  ))
+  .add("PurchasedItem", () => (
+    <View
+      key="2"
+      style={{ margin: size(3), backgroundColor: color("orange", 30) }}
+    >
+      <PurchasedItem itemQuantities={itemQuantities} />
+    </View>
+  ));

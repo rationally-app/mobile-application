@@ -43,7 +43,6 @@ const customProducts: CampaignPolicy[] = [
       limit: 1,
       default: 1,
     },
-    type: "REDEEM",
   },
   {
     category: "specs-lost",
@@ -67,7 +66,6 @@ const customProducts: CampaignPolicy[] = [
         label: "first",
       },
     ],
-    type: "REDEEM",
   },
 ];
 
@@ -100,6 +98,88 @@ const mockPastTransactions: PastTransactionsResult = {
     {
       category: "specs-lost",
       quantity: 1,
+      identifierInputs: [
+        {
+          ...defaultIdentifier,
+          label: "first",
+          value: "AAA987654323",
+        },
+      ],
+      transactionTime: new Date(1596530356432),
+    },
+  ],
+};
+
+const mockPastTransactionsWithSameCategory: PastTransactionsResult = {
+  pastTransactions: [
+    {
+      category: "specs",
+      quantity: 1,
+      identifierInputs: [
+        {
+          ...defaultIdentifier,
+          label: "first",
+          value: "AAA987654321",
+        },
+      ],
+      transactionTime: new Date(1596530356430),
+    },
+    {
+      category: "specs",
+      quantity: 1,
+      identifierInputs: [
+        {
+          ...defaultIdentifier,
+          label: "first",
+          value: "AAA123456789",
+        },
+      ],
+      transactionTime: new Date(1596530356220),
+    },
+  ],
+};
+
+const mockPastTransactionsWithGetAllTransactions: PastTransactionsResult = {
+  pastTransactions: [
+    {
+      category: "specs",
+      quantity: 1,
+      identifierInputs: [
+        {
+          ...defaultIdentifier,
+          label: "first",
+          value: "AAA987654321",
+        },
+      ],
+      transactionTime: new Date(1596530356430),
+    },
+    {
+      category: "specs-lost",
+      quantity: 1,
+      identifierInputs: [
+        {
+          ...defaultIdentifier,
+          label: "first",
+          value: "AAA987654322",
+        },
+      ],
+      transactionTime: new Date(1596530356431),
+    },
+    {
+      category: "specs-lost",
+      quantity: 1,
+      identifierInputs: [
+        {
+          ...defaultIdentifier,
+          label: "first",
+          value: "AAA987654323",
+        },
+      ],
+      transactionTime: new Date(1596530356432),
+    },
+    {
+      category: "specs-lost",
+      quantity: -1,
       identifierInputs: [
         {
           ...defaultIdentifier,
@@ -218,6 +298,127 @@ describe("usePastTransaction", () => {
         ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
       );
       expect(result.current.loading).toStrictEqual(false);
+    });
+  });
+
+  describe("fetch past transactions filtered by categories", () => {
+    it("should populate past transactions with transactions of the same categories", async () => {
+      expect.assertions(4);
+
+      mockGetPastTransactions.mockReturnValueOnce(
+        mockPastTransactionsWithSameCategory
+      );
+
+      const categories = ["specs"];
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => usePastTransaction(ids, key, endpoint, categories),
+        { wrapper }
+      );
+
+      expect(result.current.loading).toStrictEqual(true);
+
+      await waitForNextUpdate();
+
+      expect(result.current.pastTransactionsResult).toStrictEqual([
+        {
+          category: "specs",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654321",
+            },
+          ],
+          transactionTime: new Date(1596530356430),
+        },
+        {
+          category: "specs",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA123456789",
+            },
+          ],
+          transactionTime: new Date(1596530356220),
+        },
+      ]);
+      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.error).toBeNull();
+    });
+  });
+
+  describe("fetch all past transactions", () => {
+    it("should populate past transactions with all transactions", async () => {
+      expect.assertions(4);
+      mockGetPastTransactions.mockReturnValue(
+        mockPastTransactionsWithGetAllTransactions
+      );
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => usePastTransaction(ids, key, endpoint, undefined, true),
+        { wrapper }
+      );
+
+      expect(result.current.loading).toStrictEqual(true);
+
+      await waitForNextUpdate();
+
+      expect(result.current.pastTransactionsResult).toStrictEqual([
+        {
+          category: "specs",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654321",
+            },
+          ],
+          transactionTime: new Date(1596530356430),
+        },
+        {
+          category: "specs-lost",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654322",
+            },
+          ],
+          transactionTime: new Date(1596530356431),
+        },
+        {
+          category: "specs-lost",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654323",
+            },
+          ],
+          transactionTime: new Date(1596530356432),
+        },
+        {
+          category: "specs-lost",
+          quantity: -1,
+          identifierInputs: [
+            {
+              ...defaultIdentifier,
+              label: "first",
+              value: "AAA987654323",
+            },
+          ],
+          transactionTime: new Date(1596530356432),
+        },
+      ]);
+      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.error).toBeNull();
     });
   });
 });

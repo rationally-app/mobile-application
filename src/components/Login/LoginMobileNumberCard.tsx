@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
   inputAndButtonWrapper: {
     marginTop: size(3),
   },
+  buttonWrapper: {
+    marginTop: size(2),
+  },
 });
 
 interface LoginMobileNumberCard {
@@ -97,14 +100,15 @@ export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = (
           onSubmit={onSubmitMobileNumber}
           accessibilityLabel="login-phone-number"
         />
-
-        <DarkButton
-          text={i18nt("loginMobileNumberCard", "sendOtp")}
-          onPress={onSubmitMobileNumber}
-          fullWidth={true}
-          isLoading={isLoading}
-          accessibilityLabel="login-send-otp-button"
-        />
+        <View style={styles.buttonWrapper}>
+          <DarkButton
+            text={i18nt("loginMobileNumberCard", "sendOtp")}
+            onPress={onSubmitMobileNumber}
+            fullWidth={true}
+            isLoading={isLoading}
+            accessibilityLabel="login-send-otp-button"
+          />
+        </View>
       </View>
     </Card>
   );

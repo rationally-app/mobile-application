@@ -186,7 +186,7 @@ export const Stepper: FunctionComponent<Stepper> = ({
   const delayedClampAndRoundDown = useRef(
     debounce<typeof clampAndRoundDown>((...props) => {
       const num = clampAndRoundDown(...props);
-      if (isMounted.current) {
+      if (isMounted()) {
         setInternalValue(`${num}`);
       }
       return num;

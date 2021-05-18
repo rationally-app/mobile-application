@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
 const interestAreaRatios: Record<string, Record<string, number>> = {
   [BarCodeScanner.Constants.BarCodeType.qr]: { width: 0.7, height: 0.35 },
   [BarCodeScanner.Constants.BarCodeType.code39]: { width: 0.9, height: 0.25 },
+  [BarCodeScanner.Constants.BarCodeType.code128]: { width: 0.9, height: 0.25 },
 };
 
 const getInterestAreaDimensions = (

@@ -26,17 +26,20 @@ describe("formatPhoneNumber", () => {
     expect(formatPhoneNumber(testShortPhoneNumber)).toBe(testShortPhoneNumber);
   });
 
-  it("should truncate and format numbers if they are too long", () => {
+  it("should not truncate and format numbers if they are too long", () => {
     expect.assertions(1);
-    expect(formatPhoneNumber(testLongPhoneNumber)).toBe(formattedPhoneNumber);
+    expect(formatPhoneNumber(testLongPhoneNumber)).toBe(testLongPhoneNumber);
   });
 
   it("should format other region numbers", () => {
-    expect.assertions(2);
+    expect.assertions(4);
     // USA
     expect(formatPhoneNumber("5555551234", "1")).toBe("555-555-1234");
     // Malaysia
     expect(formatPhoneNumber("312341234", "60")).toBe("3-1234 1234");
+    // China
+    expect(formatPhoneNumber("1065529988", "86")).toBe("10 6552 9988");
+    expect(formatPhoneNumber("16755585558", "86")).toBe("167 5558 5558");
   });
 });
 
