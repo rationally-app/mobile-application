@@ -227,7 +227,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
             });
           }
         } finally {
-          event.data = passportId;
+          event.data = passportId ?? "";
         }
       }
       onCheck(event.data);
