@@ -1,6 +1,6 @@
 import { BarCodeEvent } from "expo-barcode-scanner";
 
-export const extractPassportIdFromEvent = (event: BarCodeEvent) => {
+export const extractPassportIdFromEvent = (event: BarCodeEvent): string => {
   let passportId;
   try {
     ({ passportId } = JSON.parse(event.data));
@@ -16,8 +16,7 @@ export const extractPassportIdFromEvent = (event: BarCodeEvent) => {
     } else {
       throw e;
     }
-  } finally {
-    // TODO: Replace this with `io-ts`
-    return typeof passportId !== "string" ? "" : passportId;
   }
+  // TODO: Enforce passportId type with io-ts
+  return typeof passportId !== "string" ? "" : passportId;
 };
