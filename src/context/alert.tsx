@@ -58,6 +58,7 @@ export enum ERROR_MESSAGE {
   VALIDATE_INPUT_REGEX_ERROR = "Please check that the ID is in the correct format",
   INVALID_MERCHANT_CODE = "Invalid merchant code",
   INVALID_EMAIL_ADDRESS = "Enter valid email address",
+  MISSING_DISBURSEMENTS = "Eligible identity does not have quota. Contact your in-charge to resolve this issue.",
 }
 
 const errorNameToTranslationKeyMappings: Record<string, string> = {
@@ -123,6 +124,7 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.VALIDATE_INPUT_REGEX_ERROR]: "checkIdFormat",
   [ERROR_MESSAGE.INVALID_MERCHANT_CODE]: "invalidMerchantCode",
   [ERROR_MESSAGE.INVALID_EMAIL_ADDRESS]: "wrongFormatEmailAddress",
+  [ERROR_MESSAGE.MISSING_DISBURSEMENTS]: "missingDisbursements",
   [CONFIRMATION_MESSAGE.PAYMENT_COLLECTION]:
     CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
   [CONFIRMATION_MESSAGE.CONFIRM_LOGOUT]: CONFIRMATION_MESSAGE.CONFIRM_LOGOUT,

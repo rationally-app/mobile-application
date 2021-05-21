@@ -220,6 +220,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             break;
           case ERROR_MESSAGE.INVALID_QUANTITY:
           case ERROR_MESSAGE.MISSING_SELECTION:
+          case ERROR_MESSAGE.MISSING_DISBURSEMENTS:
             showErrorAlert(cartError, () => clearCartError());
             break;
           default:
