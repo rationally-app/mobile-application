@@ -36,7 +36,7 @@ interface NotEligibleCard {
 }
 
 /**
- * Shows when the user cannot is not eligible for redemption/purchase
+ * This card is shown when the user is not eligible for redemption/purchase
  */
 export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
   ids,
