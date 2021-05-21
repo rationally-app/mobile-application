@@ -123,15 +123,6 @@ describe("passportScanning", () => {
           expect(extractPassportIdFromEvent(event)).toStrictEqual("");
         });
 
-        it("should return empty string if data is object", () => {
-          expect.assertions(1);
-          event = {
-            data: JSON.stringify({}),
-          };
-
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
-        });
-
         it("should return empty string if data is undefined", () => {
           expect.assertions(1);
           event = {
