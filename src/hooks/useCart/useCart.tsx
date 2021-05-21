@@ -250,6 +250,8 @@ export const useCart = (
           setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
         } else if (e.message === "Invalid Purchase Request: Item not found") {
           setCartError(new Error(ERROR_MESSAGE.INVALID_POD_IDENTIFIER));
+        } else if (e.message === "No registered token found for customer") {
+          setCartState("UNSUCCESSFUL");
         } else if (
           e.message ===
           "Token does not match the customer's last registered token"
