@@ -47,6 +47,7 @@ import {
   defaultSelectedIdType,
 } from "../../context/identification";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { extractPassportIdFromEvent } from "../../utils/passportScanning";
 
 const styles = StyleSheet.create({
   content: {
@@ -209,25 +210,12 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
        * number from a JSON object containing the `passportId`.
        */
       if (selectedIdType.label === "Passport") {
-        let passportId;
         try {
-          ({ passportId } = JSON.parse(event.data));
+          event.data = extractPassportIdFromEvent(event);
         } catch (e) {
-          /**
-           * If we encounter any JSON errors, we set `passportId` to empty
-           * in order to allow logic below to handle it as an empty/invalid ID.
-           *
-           * However, any other errors will trigger the ErrorBoundary.
-           */
-          if (e instanceof SyntaxError) {
-            passportId = "";
-          } else {
-            setState(() => {
-              throw e;
-            });
-          }
-        } finally {
-          event.data = passportId ?? "";
+          setState(() => {
+            throw e;
+          });
         }
       }
       onCheck(event.data);
