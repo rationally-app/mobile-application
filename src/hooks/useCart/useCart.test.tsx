@@ -210,6 +210,12 @@ const defaultProductsIdentifierInputsForCart = [
   },
 ];
 
+const mockQuotaResEmptyQuota: Quota = {
+  remainingQuota: [],
+  globalQuota: [],
+  localQuota: [],
+};
+
 const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
   children,
   products = defaultProducts,
@@ -288,6 +294,21 @@ describe("useCart", () => {
             endpoint,
             mockQuotaResSingleIdInvalidQuota.remainingQuota
           ),
+        {
+          wrapper,
+        }
+      );
+      expect(result.current.cartError?.message).toBe(
+        ERROR_MESSAGE.INVALID_QUANTITY
+      );
+    });
+
+    it("should throw cartError (invalidQuantity) when quota response has empty quantities", () => {
+      expect.assertions(1);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () =>
+          useCart(ids, key, endpoint, mockQuotaResEmptyQuota.remainingQuota),
         {
           wrapper,
         }

@@ -170,7 +170,7 @@ export const useCart = (
     prevIds,
     products,
     prevProducts,
-    features?.apiVersion,
+    features,
   ]);
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
