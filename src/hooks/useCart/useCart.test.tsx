@@ -5,10 +5,13 @@ import { waitFor } from "@testing-library/react-native";
 import { Quota, PostTransactionResult, CampaignPolicy } from "../../types";
 import { postTransaction } from "../../services/quota";
 import {
+  defaultFeatures,
   defaultProducts,
   defaultIdentifier,
 } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
+import { CampaignConfigContextProvider } from "../../context/campaignConfig";
+import { CampaignConfigsStoreContextProvider } from "../../context/campaignConfigsStore";
 import { ERROR_MESSAGE } from "../../context/alert";
 
 jest.mock("../../services/quota");
@@ -315,6 +318,43 @@ describe("useCart", () => {
       );
       expect(result.current.cartError?.message).toBe(
         ERROR_MESSAGE.INVALID_QUANTITY
+      );
+    });
+
+    it("should throw cartError (missingDisbursements) when quota response has empty quantities", () => {
+      expect.assertions(1);
+      const MissingDisbursementsWrapper: FunctionComponent = ({ children }) => (
+        <CampaignConfigsStoreContextProvider>
+          <CampaignConfigContextProvider
+            campaignConfig={{
+              features: {
+                ...defaultFeatures,
+                apiVersion: "v2",
+                campaignName: "Some Campaign Name",
+              },
+              policies: [defaultProducts[0]],
+              c13n: {},
+            }}
+          >
+            <ProductContextProvider products={defaultProducts}>
+              {children}
+            </ProductContextProvider>
+          </CampaignConfigContextProvider>
+        </CampaignConfigsStoreContextProvider>
+      );
+
+      const ids = ["ID1"];
+
+      const { result } = renderHook(
+        () =>
+          useCart(ids, key, endpoint, mockQuotaResEmptyQuota.remainingQuota),
+        {
+          wrapper: MissingDisbursementsWrapper,
+        }
+      );
+
+      expect(result.current.cartError?.message).toBe(
+        ERROR_MESSAGE.MISSING_DISBURSEMENTS
       );
     });
 
