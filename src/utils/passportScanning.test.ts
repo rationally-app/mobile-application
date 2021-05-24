@@ -88,7 +88,16 @@ describe("passportScanning", () => {
       });
 
       describe("cases without passportId", () => {
-        it("should return empty string if it does not contain passportId", () => {
+        it("should return empty string if data is null", () => {
+          expect.assertions(1);
+          event = {
+            data: JSON.stringify(null),
+          };
+
+          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+        });
+
+        it("should return empty string if data does not contain passportId", () => {
           expect.assertions(1);
           event = {
             data: JSON.stringify({}),
@@ -96,6 +105,7 @@ describe("passportScanning", () => {
 
           expect(extractPassportIdFromEvent(event)).toStrictEqual("");
         });
+
         it("should return empty string if data is boolean", () => {
           expect.assertions(1);
           event = {

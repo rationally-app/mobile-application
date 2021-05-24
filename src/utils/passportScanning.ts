@@ -11,7 +11,7 @@ export const extractPassportIdFromEvent = (event: BarCodeEvent): string => {
      *
      * However, any other errors will trigger the ErrorBoundary.
      */
-    if (e instanceof SyntaxError) {
+    if (e instanceof SyntaxError || e instanceof TypeError) {
       return "";
     } else {
       throw e;
