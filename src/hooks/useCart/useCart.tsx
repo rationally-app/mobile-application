@@ -9,6 +9,7 @@ import { ProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
 import { hasInvalidRemainingQuota } from "../useQuota/useQuota";
 import { DescriptionAlertTypes } from "../../components/CustomerQuota/ItemsSelection/ShowAddonsToggle";
+import { CampaignConfigContext } from "../../context/campaignConfig";
 
 export type CartItem = {
   category: string;
@@ -125,7 +126,7 @@ export const useCart = (
   const prevProducts = usePrevious(products);
   const prevIds = usePrevious(ids);
   const prevCartQuota = usePrevious(cartQuota);
-
+  const { features } = useContext(CampaignConfigContext);
   /**
    * Update the cart when:
    *  1. An incoming cart quota exists, AND
@@ -237,6 +238,7 @@ export const useCart = (
           key: authKey,
           transactions,
           endpoint,
+          apiVersion: features?.apiVersion,
         });
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
@@ -248,6 +250,8 @@ export const useCart = (
           setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
         } else if (e.message === "Invalid Purchase Request: Item not found") {
           setCartError(new Error(ERROR_MESSAGE.INVALID_POD_IDENTIFIER));
+        } else if (e.message === "No registered token found for customer") {
+          setCartState("UNSUCCESSFUL");
         } else if (
           e.message ===
           "Token does not match the customer's last registered token"
@@ -266,7 +270,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [authKey, cart, endpoint, ids, selectedIdType]);
+  }, [authKey, cart, endpoint, ids, selectedIdType, features?.apiVersion]);
 
   return {
     cartState,

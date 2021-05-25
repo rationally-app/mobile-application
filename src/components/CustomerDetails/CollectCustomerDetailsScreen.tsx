@@ -40,13 +40,14 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext } from "../../context/alert";
 import { InputSelection } from "./InputSelection";
-import { ManualPassportInput } from "./ManualPassportInput";
+import { InputPassportSection } from "./InputPassportSection";
 import { IdentificationFlag } from "../../types";
 import {
   IdentificationContext,
   defaultSelectedIdType,
 } from "../../context/identification";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { extractPassportIdFromEvent } from "../../utils/passportScanning";
 
 const styles = StyleSheet.create({
   content: {
@@ -201,8 +202,22 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     }
   };
 
+  const setState = useState()[1];
   const onBarCodeScanned: BarCodeScannedCallback = (event) => {
     if (isFocused && isScanningEnabled && event.data) {
+      /**
+       * If "Passport" tab is chosen, we want to extract the passport
+       * number from a JSON object containing the `passportId`.
+       */
+      if (selectedIdType.label === "Passport") {
+        try {
+          event.data = extractPassportIdFromEvent(event);
+        } catch (e) {
+          setState(() => {
+            throw e;
+          });
+        }
+      }
       onCheck(event.data);
     }
   };
@@ -217,9 +232,10 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const getInputComponent = (): JSX.Element => {
-    return selectedIdType.label === "Passport" &&
-      selectedIdType.scannerType === "NONE" ? (
-      <ManualPassportInput
+    return selectedIdType.label === "Passport" ? (
+      <InputPassportSection
+        scannerType={selectedIdType.scannerType}
+        openCamera={() => setShouldShowCamera(true)}
         setIdInput={setIdInput}
         submitId={() => onCheck(idInput)}
       />
@@ -236,6 +252,18 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
 
   const onPressStatistics = (): void => {
     navigation.navigate("DailyStatisticsScreen");
+  };
+
+  const getBarcodeType = (): any[] => {
+    if (selectedIdType.scannerType === "QR") {
+      return [BarCodeScanner.Constants.BarCodeType.qr];
+    } else if (selectedIdType.scannerType === "CODE_39") {
+      return [BarCodeScanner.Constants.BarCodeType.code39];
+    } else {
+      return features?.id.scannerType === "QR"
+        ? [BarCodeScanner.Constants.BarCodeType.qr]
+        : [BarCodeScanner.Constants.BarCodeType.code39];
+    }
   };
 
   const tCampaignName = c13nt(features?.campaignName ?? "");
@@ -306,11 +334,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
           isScanningEnabled={isScanningEnabled}
           onBarCodeScanned={onBarCodeScanned}
           onCancel={() => setShouldShowCamera(false)}
-          barCodeTypes={
-            features?.id.scannerType === "QR"
-              ? [BarCodeScanner.Constants.BarCodeType.qr]
-              : [BarCodeScanner.Constants.BarCodeType.code39]
-          }
+          barCodeTypes={getBarcodeType()}
         />
       )}
     </>

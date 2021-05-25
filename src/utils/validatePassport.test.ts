@@ -11,6 +11,7 @@ describe("parse passport", () => {
   ])(
     "should pass passport validation with input [%s] and output [%s]",
     (input: string, output: string) => {
+      expect.assertions(1);
       expect(validateAndCleanPassport(input)).toBe(output);
     }
   );
