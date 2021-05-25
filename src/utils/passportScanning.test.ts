@@ -31,7 +31,7 @@ describe("passportScanning", () => {
           expect(extractPassportIdFromEvent(event)).toStrictEqual("");
         });
 
-        it("should return empty string if passportId is boolean", () => {
+        it("should return empty string if passportId is a boolean", () => {
           expect.assertions(1);
           event = {
             data: JSON.stringify({
@@ -42,7 +42,7 @@ describe("passportScanning", () => {
           expect(extractPassportIdFromEvent(event)).toStrictEqual("");
         });
 
-        it("should return empty string if passportId is number", () => {
+        it("should return empty string if passportId is a number", () => {
           expect.assertions(1);
           event = {
             data: JSON.stringify({
@@ -53,7 +53,7 @@ describe("passportScanning", () => {
           expect(extractPassportIdFromEvent(event)).toStrictEqual("");
         });
 
-        it("should return empty string if passportId is array", () => {
+        it("should return empty string if passportId is an array", () => {
           expect.assertions(1);
           event = {
             data: JSON.stringify({
@@ -64,11 +64,24 @@ describe("passportScanning", () => {
           expect(extractPassportIdFromEvent(event)).toStrictEqual("");
         });
 
-        it("should return empty string if passportId is object", () => {
+        it("should return empty string if passportId is an empty object", () => {
           expect.assertions(1);
           event = {
             data: JSON.stringify({
               passportId: {},
+            }),
+          };
+
+          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+        });
+
+        it("should return empty string if passportId is a non-empty object", () => {
+          expect.assertions(1);
+          event = {
+            data: JSON.stringify({
+              passportId: {
+                value: "ABC-12345",
+              },
             }),
           };
 
@@ -97,7 +110,7 @@ describe("passportScanning", () => {
           expect(extractPassportIdFromEvent(event)).toStrictEqual("");
         });
 
-        it("should return empty string if data does not contain passportId", () => {
+        it("should return empty string if data is an empty object", () => {
           expect.assertions(1);
           event = {
             data: JSON.stringify({}),
@@ -106,7 +119,27 @@ describe("passportScanning", () => {
           expect(extractPassportIdFromEvent(event)).toStrictEqual("");
         });
 
-        it("should return empty string if data is boolean", () => {
+        it("should return empty string if data is an object without 'passportId' property", () => {
+          expect.assertions(1);
+          event = {
+            data: JSON.stringify({
+              property: "value",
+            }),
+          };
+
+          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+        });
+
+        it("should return empty string if data is a string", () => {
+          expect.assertions(1);
+          event = {
+            data: JSON.stringify("123"),
+          };
+
+          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+        });
+
+        it("should return empty string if data is a boolean", () => {
           expect.assertions(1);
           event = {
             data: JSON.stringify(true),
