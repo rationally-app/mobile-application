@@ -41,6 +41,16 @@ const products: CampaignPolicy[] = [
       limit: 2,
     },
   },
+  {
+    category: "Defective token",
+    categoryType: "APPEAL",
+    name: "Defective token",
+    order: 4,
+    quantity: {
+      period: 7,
+      limit: 2,
+    },
+  },
 ];
 
 storiesOf("Screen", module)

@@ -5,10 +5,6 @@ import { CampaignLocationsScreen } from "../../../src/components/CampaignLocatio
 import { navigation, mockReactNavigationDecorator } from "../mocks/navigation";
 import { CampaignConfigsStoreContext } from "../../../src/context/campaignConfigsStore";
 import { AuthStoreContext } from "../../../src/context/authStore";
-import {
-  defaultFeatures,
-  defaultProducts,
-} from "../../../src/test/helpers/defaults";
 
 storiesOf("Screen", module)
   .addDecorator((Story: any) => (
@@ -19,7 +15,7 @@ storiesOf("Screen", module)
           "Campaign 1": {
             operatorToken: "operatorToken",
             sessionToken: "sessionToken",
-            expiry: new Date().setDate(new Date().getDate() + 1),
+            expiry: Date.now() + 86400000, // 1 day in millisecond
             endpoint: "Endpoint",
           },
           "Campaign 2": {
@@ -37,13 +33,7 @@ storiesOf("Screen", module)
       <CampaignConfigsStoreContext.Provider
         value={{
           hasLoadedFromStore: true,
-          allCampaignConfigs: {
-            "Campaign 1": {
-              policies: defaultProducts,
-              features: defaultFeatures,
-              c13n: {},
-            },
-          },
+          allCampaignConfigs: {},
           setCampaignConfig: () => undefined,
           removeCampaignConfig: () => undefined,
           clearCampaignConfigs: () => undefined,
