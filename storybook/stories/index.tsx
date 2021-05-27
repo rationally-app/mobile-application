@@ -5,7 +5,6 @@ import "./CustomerAppeal";
 import "./CustomerDetails";
 import "./DailyStatistics";
 import "./ErrorBoundary/ErrorBoundary";
-import "./Login";
 import "./Layout";
 import "./Login";
 import "./Modals";
