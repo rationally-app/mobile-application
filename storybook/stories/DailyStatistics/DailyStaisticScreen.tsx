@@ -40,9 +40,9 @@ const reactNavigationDecorator = (story: any): JSX.Element => {
   return <Navigator />;
 };
 
-storiesOf("Screen", module)
+storiesOf("Statistics", module)
   .addDecorator((Story: any) => reactNavigationDecorator(Story))
-  .add("DailyStatistics", () => (
+  .add("Screen", () => (
     <View style={{ height: "100%" }}>
       <DailyStatisticsScreenContainer
         navigation={{
