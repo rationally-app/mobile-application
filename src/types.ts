@@ -96,7 +96,10 @@ const PolicyIdentifier = t.intersection([
       }),
     ]),
   }),
-  t.partial({ validationRegex: t.string }),
+  t.partial({
+    validationRegex: t.string,
+    isOptional: t.boolean,
+  }),
 ]);
 
 const IdentifierInput = t.intersection([
