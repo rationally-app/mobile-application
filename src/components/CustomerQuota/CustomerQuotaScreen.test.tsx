@@ -225,337 +225,343 @@ describe("CustomerQuotaScreen", () => {
   });
 
   describe("should render the screen correctly", () => {
-    it("when cartState is DEFAULT", async () => {
-      expect.assertions(7);
+    describe("when cartState is", () => {
+      it("DEFAULT", async () => {
+        expect.assertions(7);
 
-      const mockCheckoutCart = jest.fn();
-      mockUseCart.mockReturnValue({
-        cartState: "DEFAULT",
-        cart: mockCart,
-        emptyCart: () => null,
-        updateCart: () => null,
-        checkoutCart: mockCheckoutCart,
-        cartError: undefined,
-        clearCartError: () => null,
+        const mockCheckoutCart = jest.fn();
+        mockUseCart.mockReturnValue({
+          cartState: "DEFAULT",
+          cart: mockCart,
+          emptyCart: () => null,
+          updateCart: () => null,
+          checkoutCart: mockCheckoutCart,
+          cartError: undefined,
+          clearCartError: () => null,
+        });
+        mockUseQuota.mockReturnValue({
+          quotaResponse: mockQuotaResponse,
+          allQuotaResponse: mockQuotaResponse,
+          quotaState: "DEFAULT",
+          quotaError: undefined,
+          updateQuota: () => null,
+          clearQuotaError: () => null,
+        });
+
+        const { queryByText, queryByTestId } = render(
+          <CreateProvidersWrapper
+            providers={[
+              {
+                provider: CampaignConfigContextProvider,
+                props: { campaignConfig: allCampaignConfigs.campaignA },
+              },
+              {
+                provider: ProductContextProvider,
+                props: { products: mockProduct },
+              },
+            ]}
+          >
+            <CustomerQuotaScreen
+              navigation={mockNavigate}
+              navIds={["valid-id"]}
+            />
+          </CreateProvidersWrapper>
+        );
+
+        const checkoutButton = queryByTestId("items-selection-checkout-button");
+        expect(checkoutButton).not.toBeNull();
+
+        expect(queryByText("valid-id")).not.toBeNull();
+        expect(queryByText("🧻 Toilet Paper")).not.toBeNull();
+        expect(queryByText("🍜 Instant Noodles")).not.toBeNull();
+        expect(queryByText("🍫 Chocolate")).not.toBeNull();
+        expect(queryByText("Funfair Vouchers")).not.toBeNull();
+
+        fireEvent.press(checkoutButton!);
+        await waitFor(() => {
+          expect(mockCheckoutCart).toHaveBeenCalledTimes(1);
+        });
       });
-      mockUseQuota.mockReturnValue({
-        quotaResponse: mockQuotaResponse,
-        allQuotaResponse: mockQuotaResponse,
-        quotaState: "DEFAULT",
-        quotaError: undefined,
-        updateQuota: () => null,
-        clearQuotaError: () => null,
+
+      it("PURCHASED", async () => {
+        expect.assertions(6);
+
+        mockUseCart.mockReturnValue({
+          cartState: "PURCHASED",
+          cart: mockCart,
+          emptyCart: () => null,
+          updateCart: () => null,
+          checkoutCart: () => null,
+          cartError: undefined,
+          clearCartError: () => null,
+        });
+        mockUseQuota.mockReturnValue({
+          quotaResponse: mockQuotaResponse,
+          allQuotaResponse: mockQuotaResponse,
+          quotaState: "DEFAULT",
+          quotaError: undefined,
+          updateQuota: () => null,
+          clearQuotaError: () => null,
+        });
+        mockUsePastTransaction.mockReturnValue({
+          pastTransactionsResult: [
+            {
+              category: "toilet-paper",
+              quantity: 1,
+              transactionTime: new Date(0),
+            },
+          ],
+          loading: false,
+          error: null,
+        });
+
+        const { queryByText, queryByTestId } = render(
+          <CreateProvidersWrapper
+            providers={[
+              {
+                provider: CampaignConfigContextProvider,
+                props: { campaignConfig: allCampaignConfigs.campaignA },
+              },
+              {
+                provider: ProductContextProvider,
+                props: { products: mockProduct },
+              },
+            ]}
+          >
+            <CustomerQuotaScreen
+              navigation={mockNavigate}
+              navIds={["valid-id"]}
+            />
+          </CreateProvidersWrapper>
+        );
+
+        expect(queryByText("valid-id")).not.toBeNull();
+        expect(queryByTestId("checkout-success-title")).not.toBeNull();
+        expect(queryByText("Item(s) redeemed:")).not.toBeNull();
+        expect(queryByText("1 Jan 1970, 7:30AM")).not.toBeNull();
+        expect(queryByText("🧻 Toilet Paper")).not.toBeNull();
+        expect(queryByText("1 pack(s)")).not.toBeNull();
       });
 
-      const { queryByText, queryByTestId } = render(
-        <CreateProvidersWrapper
-          providers={[
+      it("UNSUCCESSFUL", async () => {
+        expect.assertions(6);
+
+        mockUseCart.mockReturnValue({
+          cartState: "UNSUCCESSFUL",
+          cart: mockCart,
+          emptyCart: () => null,
+          updateCart: () => null,
+          checkoutCart: () => null,
+          cartError: undefined,
+          clearCartError: () => null,
+        });
+        mockUseQuota.mockReturnValue({
+          quotaResponse: mockQuotaResponse,
+          allQuotaResponse: mockQuotaResponse,
+          quotaState: "DEFAULT",
+          quotaError: undefined,
+          updateQuota: () => null,
+          clearQuotaError: () => null,
+        });
+        mockUsePastTransaction.mockReturnValue({
+          pastTransactionsResult: [
             {
-              provider: CampaignConfigContextProvider,
-              props: { campaignConfig: allCampaignConfigs.campaignA },
+              category: "toilet-paper",
+              quantity: 1,
+              transactionTime: new Date(0),
             },
-            {
-              provider: ProductContextProvider,
-              props: { products: mockProduct },
-            },
-          ]}
-        >
-          <CustomerQuotaScreen
-            navigation={mockNavigate}
-            navIds={["valid-id"]}
-          />
-        </CreateProvidersWrapper>
-      );
+          ],
+          loading: false,
+          error: null,
+        });
 
-      const checkoutButton = queryByTestId("items-selection-checkout-button");
-      expect(checkoutButton).not.toBeNull();
+        const { queryByText, queryByTestId } = render(
+          <CreateProvidersWrapper
+            providers={[
+              {
+                provider: CampaignConfigContextProvider,
+                props: { campaignConfig: allCampaignConfigs.campaignA },
+              },
+              {
+                provider: ProductContextProvider,
+                props: { products: mockProduct },
+              },
+            ]}
+          >
+            <CustomerQuotaScreen
+              navigation={mockNavigate}
+              navIds={["valid-id"]}
+            />
+          </CreateProvidersWrapper>
+        );
 
-      expect(queryByText("valid-id")).not.toBeNull();
-      expect(queryByText("🧻 Toilet Paper")).not.toBeNull();
-      expect(queryByText("🍜 Instant Noodles")).not.toBeNull();
-      expect(queryByText("🍫 Chocolate")).not.toBeNull();
-      expect(queryByText("Funfair Vouchers")).not.toBeNull();
-
-      fireEvent.press(checkoutButton!);
-      await waitFor(() => {
-        expect(mockCheckoutCart).toHaveBeenCalledTimes(1);
+        expect(queryByText("valid-id")).not.toBeNull();
+        expect(queryByTestId("checkout-unsuccessful-title")).not.toBeNull();
+        expect(
+          queryByText(
+            "Item(s) redeemed previously that is eligible for return:"
+          )
+        ).not.toBeNull();
+        expect(queryByText("1 Jan 1970, 7:30AM")).not.toBeNull();
+        expect(queryByText("🧻 Toilet Paper")).not.toBeNull();
+        expect(queryByText("1 pack(s)")).not.toBeNull();
       });
     });
 
-    it("when cartState is PURCHASED", async () => {
-      expect.assertions(6);
+    describe("when quotaState is", () => {
+      it("NO_QUOTA", async () => {
+        expect.assertions(2);
 
-      mockUseCart.mockReturnValue({
-        cartState: "PURCHASED",
-        cart: mockCart,
-        emptyCart: () => null,
-        updateCart: () => null,
-        checkoutCart: () => null,
-        cartError: undefined,
-        clearCartError: () => null,
-      });
-      mockUseQuota.mockReturnValue({
-        quotaResponse: mockQuotaResponse,
-        allQuotaResponse: mockQuotaResponse,
-        quotaState: "DEFAULT",
-        quotaError: undefined,
-        updateQuota: () => null,
-        clearQuotaError: () => null,
-      });
-      mockUsePastTransaction.mockReturnValue({
-        pastTransactionsResult: [
-          {
-            category: "toilet-paper",
-            quantity: 1,
-            transactionTime: new Date(0),
-          },
-        ],
-        loading: false,
-        error: null,
-      });
+        mockUseCart.mockReturnValue({
+          cartState: "DEFAULT",
+          cart: mockCart,
+          emptyCart: () => null,
+          updateCart: () => null,
+          checkoutCart: () => null,
+          cartError: undefined,
+          clearCartError: () => null,
+        });
+        mockUseQuota.mockReturnValue({
+          quotaResponse: mockQuotaResponse,
+          allQuotaResponse: mockQuotaResponse,
+          quotaState: "NO_QUOTA",
+          quotaError: undefined,
+          updateQuota: () => null,
+          clearQuotaError: () => null,
+        });
+        mockUsePastTransaction.mockReturnValue({
+          pastTransactionsResult: [],
+          loading: true,
+          error: null,
+        });
 
-      const { queryByText, queryByTestId } = render(
-        <CreateProvidersWrapper
-          providers={[
-            {
-              provider: CampaignConfigContextProvider,
-              props: { campaignConfig: allCampaignConfigs.campaignA },
-            },
-            {
-              provider: ProductContextProvider,
-              props: { products: mockProduct },
-            },
-          ]}
-        >
-          <CustomerQuotaScreen
-            navigation={mockNavigate}
-            navIds={["valid-id"]}
-          />
-        </CreateProvidersWrapper>
-      );
+        const { queryByText, queryByTestId } = render(
+          <CreateProvidersWrapper
+            providers={[
+              {
+                provider: CampaignConfigContextProvider,
+                props: { campaignConfig: allCampaignConfigs.campaignA },
+              },
+              {
+                provider: ProductContextProvider,
+                props: { products: mockProduct },
+              },
+            ]}
+          >
+            <CustomerQuotaScreen
+              navigation={mockNavigate}
+              navIds={["valid-id"]}
+            />
+          </CreateProvidersWrapper>
+        );
 
-      expect(queryByText("valid-id")).not.toBeNull();
-      expect(queryByTestId("checkout-success-title")).not.toBeNull();
-      expect(queryByText("Item(s) redeemed:")).not.toBeNull();
-      expect(queryByText("1 Jan 1970, 7:30AM")).not.toBeNull();
-      expect(queryByText("🧻 Toilet Paper")).not.toBeNull();
-      expect(queryByText("1 pack(s)")).not.toBeNull();
-    });
-
-    it("when cartState is UNSUCCESSFUL", async () => {
-      expect.assertions(6);
-
-      mockUseCart.mockReturnValue({
-        cartState: "UNSUCCESSFUL",
-        cart: mockCart,
-        emptyCart: () => null,
-        updateCart: () => null,
-        checkoutCart: () => null,
-        cartError: undefined,
-        clearCartError: () => null,
-      });
-      mockUseQuota.mockReturnValue({
-        quotaResponse: mockQuotaResponse,
-        allQuotaResponse: mockQuotaResponse,
-        quotaState: "DEFAULT",
-        quotaError: undefined,
-        updateQuota: () => null,
-        clearQuotaError: () => null,
-      });
-      mockUsePastTransaction.mockReturnValue({
-        pastTransactionsResult: [
-          {
-            category: "toilet-paper",
-            quantity: 1,
-            transactionTime: new Date(0),
-          },
-        ],
-        loading: false,
-        error: null,
+        expect(queryByText("valid-id")).not.toBeNull();
+        expect(queryByTestId("no-quota-title")).not.toBeNull();
       });
 
-      const { queryByText, queryByTestId } = render(
-        <CreateProvidersWrapper
-          providers={[
-            {
-              provider: CampaignConfigContextProvider,
-              props: { campaignConfig: allCampaignConfigs.campaignA },
-            },
-            {
-              provider: ProductContextProvider,
-              props: { products: mockProduct },
-            },
-          ]}
-        >
-          <CustomerQuotaScreen
-            navigation={mockNavigate}
-            navIds={["valid-id"]}
-          />
-        </CreateProvidersWrapper>
-      );
+      it("NOT_ELIGIBLE", async () => {
+        expect.assertions(3);
 
-      expect(queryByText("valid-id")).not.toBeNull();
-      expect(queryByTestId("checkout-unsuccessful-title")).not.toBeNull();
-      expect(
-        queryByText("Item(s) redeemed previously that is eligible for return:")
-      ).not.toBeNull();
-      expect(queryByText("1 Jan 1970, 7:30AM")).not.toBeNull();
-      expect(queryByText("🧻 Toilet Paper")).not.toBeNull();
-      expect(queryByText("1 pack(s)")).not.toBeNull();
-    });
+        mockUseCart.mockReturnValue({
+          cartState: "DEFAULT",
+          cart: mockCart,
+          emptyCart: () => null,
+          updateCart: () => null,
+          checkoutCart: () => null,
+          cartError: undefined,
+          clearCartError: () => null,
+        });
+        mockUseQuota.mockReturnValue({
+          quotaResponse: mockQuotaResponse,
+          allQuotaResponse: mockQuotaResponse,
+          quotaState: "NOT_ELIGIBLE",
+          quotaError: undefined,
+          updateQuota: () => null,
+          clearQuotaError: () => null,
+        });
+        mockUsePastTransaction.mockReturnValue({
+          pastTransactionsResult: [],
+          loading: true,
+          error: null,
+        });
 
-    it("when quotaState is NO_QUOTA", async () => {
-      expect.assertions(2);
+        const { queryByText, queryByTestId } = render(
+          <CreateProvidersWrapper
+            providers={[
+              {
+                provider: CampaignConfigContextProvider,
+                props: { campaignConfig: allCampaignConfigs.campaignA },
+              },
+              {
+                provider: ProductContextProvider,
+                props: { products: mockProduct },
+              },
+            ]}
+          >
+            <CustomerQuotaScreen
+              navigation={mockNavigate}
+              navIds={["valid-id"]}
+            />
+          </CreateProvidersWrapper>
+        );
 
-      mockUseCart.mockReturnValue({
-        cartState: "DEFAULT",
-        cart: mockCart,
-        emptyCart: () => null,
-        updateCart: () => null,
-        checkoutCart: () => null,
-        cartError: undefined,
-        clearCartError: () => null,
-      });
-      mockUseQuota.mockReturnValue({
-        quotaResponse: mockQuotaResponse,
-        allQuotaResponse: mockQuotaResponse,
-        quotaState: "NO_QUOTA",
-        quotaError: undefined,
-        updateQuota: () => null,
-        clearQuotaError: () => null,
-      });
-      mockUsePastTransaction.mockReturnValue({
-        pastTransactionsResult: [],
-        loading: true,
-        error: null,
-      });
-
-      const { queryByText, queryByTestId } = render(
-        <CreateProvidersWrapper
-          providers={[
-            {
-              provider: CampaignConfigContextProvider,
-              props: { campaignConfig: allCampaignConfigs.campaignA },
-            },
-            {
-              provider: ProductContextProvider,
-              props: { products: mockProduct },
-            },
-          ]}
-        >
-          <CustomerQuotaScreen
-            navigation={mockNavigate}
-            navIds={["valid-id"]}
-          />
-        </CreateProvidersWrapper>
-      );
-
-      expect(queryByText("valid-id")).not.toBeNull();
-      expect(queryByTestId("no-quota-title")).not.toBeNull();
-    });
-
-    it("when quotaState is NOT_ELIGIBLE", async () => {
-      expect.assertions(3);
-
-      mockUseCart.mockReturnValue({
-        cartState: "DEFAULT",
-        cart: mockCart,
-        emptyCart: () => null,
-        updateCart: () => null,
-        checkoutCart: () => null,
-        cartError: undefined,
-        clearCartError: () => null,
-      });
-      mockUseQuota.mockReturnValue({
-        quotaResponse: mockQuotaResponse,
-        allQuotaResponse: mockQuotaResponse,
-        quotaState: "NOT_ELIGIBLE",
-        quotaError: undefined,
-        updateQuota: () => null,
-        clearQuotaError: () => null,
-      });
-      mockUsePastTransaction.mockReturnValue({
-        pastTransactionsResult: [],
-        loading: true,
-        error: null,
+        expect(queryByText("valid-id")).not.toBeNull();
+        expect(queryByTestId("not-eligible-title")).not.toBeNull();
+        expect(
+          queryByText(
+            "Not eligible to collect any item. Contact your in-charge to find out about the appeal guidelines."
+          )
+        ).not.toBeNull();
       });
 
-      const { queryByText, queryByTestId } = render(
-        <CreateProvidersWrapper
-          providers={[
-            {
-              provider: CampaignConfigContextProvider,
-              props: { campaignConfig: allCampaignConfigs.campaignA },
-            },
-            {
-              provider: ProductContextProvider,
-              props: { products: mockProduct },
-            },
-          ]}
-        >
-          <CustomerQuotaScreen
-            navigation={mockNavigate}
-            navIds={["valid-id"]}
-          />
-        </CreateProvidersWrapper>
-      );
+      it("FETCHING_QUOTA", async () => {
+        expect.assertions(1);
 
-      expect(queryByText("valid-id")).not.toBeNull();
-      expect(queryByTestId("not-eligible-title")).not.toBeNull();
-      expect(
-        queryByText(
-          "Not eligible to collect any item. Contact your in-charge to find out about the appeal guidelines."
-        )
-      ).not.toBeNull();
-    });
+        mockUseCart.mockReturnValue({
+          cartState: "DEFAULT",
+          cart: mockCart,
+          emptyCart: () => null,
+          updateCart: () => null,
+          checkoutCart: () => null,
+          cartError: undefined,
+          clearCartError: () => null,
+        });
+        mockUseQuota.mockReturnValue({
+          quotaResponse: mockQuotaResponse,
+          allQuotaResponse: mockQuotaResponse,
+          quotaState: "FETCHING_QUOTA",
+          quotaError: undefined,
+          updateQuota: () => null,
+          clearQuotaError: () => null,
+        });
+        mockUsePastTransaction.mockReturnValue({
+          pastTransactionsResult: [],
+          loading: true,
+          error: null,
+        });
 
-    it("when quotaState is FETCHING_QUOTA", async () => {
-      expect.assertions(1);
+        const { queryByText } = render(
+          <CreateProvidersWrapper
+            providers={[
+              {
+                provider: CampaignConfigContextProvider,
+                props: { campaignConfig: allCampaignConfigs.campaignA },
+              },
+              {
+                provider: ProductContextProvider,
+                props: { products: mockProduct },
+              },
+            ]}
+          >
+            <CustomerQuotaScreen
+              navigation={mockNavigate}
+              navIds={["valid-id"]}
+            />
+          </CreateProvidersWrapper>
+        );
 
-      mockUseCart.mockReturnValue({
-        cartState: "DEFAULT",
-        cart: mockCart,
-        emptyCart: () => null,
-        updateCart: () => null,
-        checkoutCart: () => null,
-        cartError: undefined,
-        clearCartError: () => null,
+        expect(queryByText("Checking...")).not.toBeNull();
       });
-      mockUseQuota.mockReturnValue({
-        quotaResponse: mockQuotaResponse,
-        allQuotaResponse: mockQuotaResponse,
-        quotaState: "FETCHING_QUOTA",
-        quotaError: undefined,
-        updateQuota: () => null,
-        clearQuotaError: () => null,
-      });
-      mockUsePastTransaction.mockReturnValue({
-        pastTransactionsResult: [],
-        loading: true,
-        error: null,
-      });
-
-      const { queryByText } = render(
-        <CreateProvidersWrapper
-          providers={[
-            {
-              provider: CampaignConfigContextProvider,
-              props: { campaignConfig: allCampaignConfigs.campaignA },
-            },
-            {
-              provider: ProductContextProvider,
-              props: { products: mockProduct },
-            },
-          ]}
-        >
-          <CustomerQuotaScreen
-            navigation={mockNavigate}
-            navIds={["valid-id"]}
-          />
-        </CreateProvidersWrapper>
-      );
-
-      expect(queryByText("Checking...")).not.toBeNull();
     });
   });
 });
