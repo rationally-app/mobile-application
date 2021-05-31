@@ -1,1 +1,2 @@
+import "./DailyStaisticScreen";
 import "./StatisticsHeader";

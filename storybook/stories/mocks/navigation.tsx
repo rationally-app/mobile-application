@@ -1,3 +1,6 @@
+import React from "react";
+import { createAppContainer } from "react-navigation";
+import { createDrawerNavigator } from "react-navigation-drawer";
 let params: any = {};
 
 export const navigation: any = {
@@ -20,4 +23,20 @@ export const resetNavigation = (): void => {
 
 export const setParam = (key: string, value: unknown): void => {
   params[key] = value;
+};
+
+export const mockReactNavigationDecorator = (
+  story: () => void
+): JSX.Element => {
+  const Screen = (): any => story();
+  const Navigator = createAppContainer(
+    createDrawerNavigator(
+      { Screen },
+      {
+        drawerPosition: "right",
+        drawerType: "slide",
+      }
+    )
+  );
+  return <Navigator />;
 };
