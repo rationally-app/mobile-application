@@ -19,24 +19,20 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
-    if (
-      textInputType === "PAYMENT_RECEIPT" &&
-      (!value ||
-        !isMatchRegex(
-          value,
-          validationRegex
-            ? validationRegex
-            : defaultPaymentReceiptValidationRegex
-        ))
-    ) {
-      throw new Error(ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER);
-    }
-    if (!value) {
+    if (textInputType !== "PAYMENT_RECEIPT" && !value) {
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
-
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    }
+    if (
+      textInputType === "PAYMENT_RECEIPT" &&
+      !isMatchRegex(
+        value,
+        validationRegex ? validationRegex : defaultPaymentReceiptValidationRegex
+      )
+    ) {
+      throw new Error(ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER);
     }
     if (
       textInputType === "PHONE_NUMBER" &&
@@ -62,6 +58,5 @@ export const validateIdentifierInputs = (
   ) {
     throw new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT);
   }
-
   return true;
 };

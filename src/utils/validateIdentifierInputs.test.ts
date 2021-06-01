@@ -38,9 +38,20 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER",
         },
         {
-          label: "some payment receipt",
+          label: "payment receipt with regex",
           value: "1234acbd5678qwer1234",
-          validationRegex: "^[a-zA-Z0-9]{1,20}$",
+          validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
+          textInputType: "PAYMENT_RECEIPT",
+        },
+        {
+          label: "payment receipt with regex and empty value",
+          value: "",
+          validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
+          textInputType: "PAYMENT_RECEIPT",
+        },
+        {
+          label: "payment receipt without regex",
+          value: "within20characters",
           textInputType: "PAYMENT_RECEIPT",
         },
       ])
