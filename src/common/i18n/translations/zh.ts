@@ -347,6 +347,11 @@ export const zh: Translations = {
       body: "数量无效",
       primaryActionText: "确定",
     },
+    missingDisbursements: {
+      title: "系统错误",
+      body: "符合资格的身份没有配额。请与您的负责人联系以解决此问题。",
+      primaryActionText: "确定",
+    },
     categoryDoesNotExist: {
       title: "错误",
       body: "找不到物品类别",

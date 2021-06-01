@@ -381,6 +381,12 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    missingDisbursements: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
     categoryDoesNotExist: {
       title: string;
       body?: string;

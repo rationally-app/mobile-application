@@ -149,6 +149,15 @@ export const useCart = (
          * having `cart` as a dependency, preventing an infinite loop.
          */
         setCart((cart) => mergeWithCart(cart, cartQuota, getProduct));
+      } else if (features?.apiVersion === "v2") {
+        /**
+         * This is a special case for disbursements, where a beneficiary might be
+         * whitelisted, but not disbursed with any items, resulting in an empty quota.
+         * In this case, we will proceed to the NoQuotaCard, and an error dialog
+         * will be shown subsequently. For non-v2 distributions, an empty quota
+         * will still throw the invalid quantity error, seen below.
+         */
+        setCartError(new Error(ERROR_MESSAGE.MISSING_DISBURSEMENTS));
       } else {
         setCartError(new Error(ERROR_MESSAGE.INVALID_QUANTITY));
       }
@@ -161,6 +170,7 @@ export const useCart = (
     prevIds,
     products,
     prevProducts,
+    features,
   ]);
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {

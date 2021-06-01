@@ -354,6 +354,12 @@ export const en: Translations = {
       body: "Invalid quantity",
       primaryActionText: "OK",
     },
+    missingDisbursements: {
+      title: "System error",
+      body:
+        "Eligible identity does not have quota. Contact your in-charge to resolve this issue.",
+      primaryActionText: "OK",
+    },
     categoryDoesNotExist: {
       title: "Error",
       body: "Category does not exist",
