@@ -11,8 +11,7 @@ export const ItemMaxUnitLabel: FunctionComponent<{
   const tUnit = c13ntForUnit(unit);
   return (
     <>
-      {i18nt("customerQuotaScreen", "quotaLimitMax")}
-      {". "}
+      {i18nt("customerQuotaScreen", "quotaLimitMax")}{" "}
       {formatQuantityText(maxQuantity, tUnit)}
     </>
   );
