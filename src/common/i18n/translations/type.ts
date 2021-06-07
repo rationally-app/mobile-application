@@ -102,6 +102,9 @@ export type Translations = {
     distributedAmount: string;
     lastDistributedTiming: string;
     viaAppeal: string;
+    itemsScanned: string;
+    title: string;
+    back: string;
   };
   notEligibleScreen: {
     notEligible: string;

@@ -101,9 +101,12 @@ export const zh: Translations = {
     indicateReason: "说明上诉理由",
   },
   statisticsScreen: {
-    distributedAmount: "您已分发%{quantity}",
+    distributedAmount: "您已分发",
     lastDistributedTiming: "最后在 %{dateTime} 分发",
     viaAppeal: "通过上诉",
+    itemsScanned: "没有分发记录",
+    title: "统计",
+    back: "返回",
   },
   notEligibleScreen: {
     notEligible: "不符合资格",

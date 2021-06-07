@@ -103,9 +103,12 @@ export const en: Translations = {
     indicateReason: "Indicate reason for appeal",
   },
   statisticsScreen: {
-    distributedAmount: "You have distributed %{quantity}",
+    distributedAmount: "You have distributed",
     lastDistributedTiming: "Last distributed at %{dateTime}",
     viaAppeal: "via appeal",
+    itemsScanned: "No items scanned",
+    title: "Statistics",
+    back: "Back",
   },
   notEligibleScreen: {
     notEligible: "Not eligible",

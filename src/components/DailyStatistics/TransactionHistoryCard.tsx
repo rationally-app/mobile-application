@@ -3,6 +3,7 @@ import { size, fontSize, color } from "../../common/styles";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { Card } from "../Layout/Card";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 interface TransactionHistoryCardComponent {
   transactionHistory: {
@@ -58,6 +59,8 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
   transactionHistory,
   loading,
 }) => {
+  const { i18nt } = useTranslate();
+
   return (
     <Card style={styles.stats}>
       {!loading ? (
@@ -87,7 +90,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
               testID="transaction-history-no-items-scanned"
               accessible={true}
             >
-              No items scanned
+              {i18nt("statisticsScreen", "itemsScanned")}
             </AppText>
           </>
         )
