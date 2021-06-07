@@ -3,6 +3,7 @@ import { color } from "../../../common/styles";
 import { BaseButton } from "./BaseButton";
 import { AppText } from "../AppText";
 import { ActivityIndicator } from "react-native";
+import { lineHeight } from "../../../common/styles/typography";
 
 export interface DangerButton {
   onPress?: () => void;
@@ -35,6 +36,7 @@ export const DangerButton: FunctionComponent<DangerButton> = ({
           color: color("grey", 0),
           fontFamily: "brand-bold",
           textAlign: "center",
+          lineHeight: lineHeight(0, false),
         }}
       >
         {text}

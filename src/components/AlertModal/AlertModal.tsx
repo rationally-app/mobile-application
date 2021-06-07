@@ -13,6 +13,7 @@ import {
   normalize,
 } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
+import { lineHeight } from "../../common/styles/typography";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
     marginRight: size(1),
     flexGrow: 1,
     marginBottom: size(1),
+    lineHeight: lineHeight(0, false),
   },
   modalPrimaryButton: {
     flexGrow: 1,
