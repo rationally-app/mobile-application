@@ -20,7 +20,7 @@ export interface ShadowProps {
  */
 export const shadow = (
   elevationLevel: ElevationLevel,
-  shadowColor = color("grey", 100)
+  shadowColor = color("grey", 90)
 ): ShadowProps => {
   switch (elevationLevel) {
     case 1:

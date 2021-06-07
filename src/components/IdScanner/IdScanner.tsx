@@ -25,7 +25,7 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 const styles = StyleSheet.create({
   cameraWrapper: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: color("grey", 100),
+    backgroundColor: color("grey", 90),
   },
   backButtonWrapper: {
     position: "absolute",
