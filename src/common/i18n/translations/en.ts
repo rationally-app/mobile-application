@@ -56,7 +56,7 @@ export const en: Translations = {
     campaignValidTo: "Valid till %{dateTime}",
     idNumber: "Identification number",
     idNumbers: "Identification numbers",
-    quotaLimitMax: "Max",
+    quotaLimitMax: "Max.",
     quotaAppealCancel: "Cancel",
     quotaButtonCheckout: "Checkout",
     quotaButtonAdd: "Add",
