@@ -104,7 +104,7 @@ export const zh: Translations = {
     distributedAmount: "您已分发",
     lastDistributedTiming: "最后在 %{dateTime} 分发",
     viaAppeal: "通过上诉",
-    itemsScanned: "没有分发记录",
+    noItemsScanned: "没有分发记录",
     title: "统计",
     back: "返回",
   },

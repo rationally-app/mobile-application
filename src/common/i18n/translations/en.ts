@@ -106,7 +106,7 @@ export const en: Translations = {
     distributedAmount: "You have distributed",
     lastDistributedTiming: "Last distributed at %{dateTime}",
     viaAppeal: "via appeal",
-    itemsScanned: "No items scanned",
+    noItemsScanned: "No items scanned",
     title: "Statistics",
     back: "Back",
   },

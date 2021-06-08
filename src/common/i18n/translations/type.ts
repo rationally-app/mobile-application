@@ -102,7 +102,7 @@ export type Translations = {
     distributedAmount: string;
     lastDistributedTiming: string;
     viaAppeal: string;
-    itemsScanned: string;
+    noItemsScanned: string;
     title: string;
     back: string;
   };

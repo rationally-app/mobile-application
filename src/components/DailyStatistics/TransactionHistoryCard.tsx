@@ -90,7 +90,7 @@ export const TransactionHistoryCardComponent: FunctionComponent<TransactionHisto
               testID="transaction-history-no-items-scanned"
               accessible={true}
             >
-              {i18nt("statisticsScreen", "itemsScanned")}
+              {i18nt("statisticsScreen", "noItemsScanned")}
             </AppText>
           </>
         )
