@@ -1,7 +1,7 @@
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
 import { defaultTranslationProps } from "../../test/helpers/defaults";
-import "../../../common/i18n/i18nMock";
+import "../../common/i18n/i18nMock";
 
 describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics[];
