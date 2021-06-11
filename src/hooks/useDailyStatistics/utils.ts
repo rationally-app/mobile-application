@@ -2,6 +2,7 @@ import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
 import { formatQuantityText } from "../../components/CustomerQuota/utils";
 import { Sentry } from "../../utils/errorTracking";
+import { useTranslate } from "../useTranslate/useTranslate";
 
 type SummarisedTransactions = {
   summarisedTransactionHistory: {
@@ -22,6 +23,7 @@ export const countTotalTransactionsAndByCategory = (
     .groupBy("category")
     .reduce<SummarisedTransactions>(
       (prev, transactionsByCategory, key) => {
+        const { i18nt, c13ntForUnit } = useTranslate();
         const findItemByCategory = policies?.find(
           (item) => item.category === key
         );
@@ -41,10 +43,12 @@ export const countTotalTransactionsAndByCategory = (
           category: key,
           quantityText: formatQuantityText(
             totalQuantityInCategory,
-            findItemByCategory?.quantity.unit || {
-              type: "POSTFIX",
-              label: " qty",
-            }
+            findItemByCategory?.quantity.unit
+              ? c13ntForUnit(findItemByCategory?.quantity.unit)
+              : {
+                  type: "POSTFIX",
+                  label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`,
+                }
           ),
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"
