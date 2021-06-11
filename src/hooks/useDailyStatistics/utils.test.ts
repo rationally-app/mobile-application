@@ -1,5 +1,6 @@
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
+import { TranslationHook } from "../useTranslate/useTranslate";
 
 describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics[];
@@ -7,6 +8,7 @@ describe("countTotalTransactionsAndByCategory", () => {
   let pastInstantNoodleTransactions: DailyStatistics[];
   let invalidPastTransactions: DailyStatistics[];
   let pastTransactionsWithAppeal: DailyStatistics[];
+  let translationProps: TranslationHook;
 
   beforeAll(() => {
     pastTransactions = [
@@ -152,7 +154,11 @@ describe("countTotalTransactionsAndByCategory", () => {
   it("should return multiple summarised transactions categories with total count and count per category and the name to be displayed on the stats page, as well as ordered by ascending order number", () => {
     expect.assertions(1);
     expect(
-      countTotalTransactionsAndByCategory(pastTransactions, campaignPolicy)
+      countTotalTransactionsAndByCategory(
+        pastTransactions,
+        campaignPolicy,
+        translationProps
+      )
     ).toStrictEqual({
       summarisedTotalCount: 4019,
       summarisedTransactionHistory: [
@@ -186,7 +192,8 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         pastInstantNoodleTransactions,
-        campaignPolicy
+        campaignPolicy,
+        translationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -207,7 +214,8 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         invalidPastTransactions,
-        campaignPolicy
+        campaignPolicy,
+        translationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -228,7 +236,8 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactionsWithAppeal,
-        campaignPolicy
+        campaignPolicy,
+        translationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 200,
