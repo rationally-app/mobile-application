@@ -1,6 +1,6 @@
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
-import { TranslationHook } from "../useTranslate/useTranslate";
+import { defaultTranslationProps } from "../../test/helpers/defaults";
 
 describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics[];
@@ -8,7 +8,6 @@ describe("countTotalTransactionsAndByCategory", () => {
   let pastInstantNoodleTransactions: DailyStatistics[];
   let invalidPastTransactions: DailyStatistics[];
   let pastTransactionsWithAppeal: DailyStatistics[];
-  let translationProps: TranslationHook;
 
   beforeAll(() => {
     pastTransactions = [
@@ -157,7 +156,7 @@ describe("countTotalTransactionsAndByCategory", () => {
       countTotalTransactionsAndByCategory(
         pastTransactions,
         campaignPolicy,
-        translationProps
+        defaultTranslationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 4019,
@@ -193,7 +192,7 @@ describe("countTotalTransactionsAndByCategory", () => {
       countTotalTransactionsAndByCategory(
         pastInstantNoodleTransactions,
         campaignPolicy,
-        translationProps
+        defaultTranslationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -215,7 +214,7 @@ describe("countTotalTransactionsAndByCategory", () => {
       countTotalTransactionsAndByCategory(
         invalidPastTransactions,
         campaignPolicy,
-        translationProps
+        defaultTranslationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -237,7 +236,7 @@ describe("countTotalTransactionsAndByCategory", () => {
       countTotalTransactionsAndByCategory(
         pastTransactionsWithAppeal,
         campaignPolicy,
-        translationProps
+        defaultTranslationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 200,
