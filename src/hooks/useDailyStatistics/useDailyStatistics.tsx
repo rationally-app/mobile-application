@@ -4,6 +4,7 @@ import { CampaignConfigContext } from "../../context/campaignConfig";
 import { getDailyStatistics } from "../../services/statistics";
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { sortTransactionsByOrder } from "../../components/CustomerQuota/utils";
+import { useTranslate } from "../useTranslate/useTranslate";
 
 export type StatisticsHook = {
   totalCount: number | null;
@@ -38,6 +39,7 @@ export const useDailyStatistics = (
 
   const { policies } = useContext(CampaignConfigContext);
   const prevTimestamp = usePrevious(currentTimestamp);
+  const translationProps = useTranslate();
 
   useEffect(() => {
     const fetchDailyStatistics = async (): Promise<void> => {
@@ -54,7 +56,8 @@ export const useDailyStatistics = (
           summarisedTotalCount,
         } = countTotalTransactionsAndByCategory(
           response.pastTransactions,
-          policies
+          policies,
+          translationProps
         );
         setTransactionHistory(
           summarisedTransactionHistory.sort(sortTransactionsByOrder)
@@ -83,6 +86,7 @@ export const useDailyStatistics = (
     sessionToken,
     currentTimestamp,
     prevTimestamp,
+    translationProps,
   ]);
 
   return {

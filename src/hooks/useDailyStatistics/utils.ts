@@ -2,7 +2,7 @@ import { chain, sumBy } from "lodash";
 import { DailyStatistics, CampaignPolicy } from "../../types";
 import { formatQuantityText } from "../../components/CustomerQuota/utils";
 import { Sentry } from "../../utils/errorTracking";
-import { useTranslate } from "../useTranslate/useTranslate";
+import { TranslationHook } from "../useTranslate/useTranslate";
 
 type SummarisedTransactions = {
   summarisedTransactionHistory: {
@@ -17,13 +17,14 @@ type SummarisedTransactions = {
 
 export const countTotalTransactionsAndByCategory = (
   transactions: DailyStatistics[],
-  policies: CampaignPolicy[] | null
+  policies: CampaignPolicy[] | null,
+  translationProps: TranslationHook
 ): SummarisedTransactions => {
   return chain(transactions)
     .groupBy("category")
     .reduce<SummarisedTransactions>(
       (prev, transactionsByCategory, key) => {
-        const { i18nt, c13ntForUnit } = useTranslate();
+        const { i18nt, c13ntForUnit } = translationProps;
         const findItemByCategory = policies?.find(
           (item) => item.category === key
         );
