@@ -7,7 +7,7 @@ export const validateAndCleanRegexInput = (
   idRegex: string
 ): string => {
   // set ID to all uppercase to remove case sensitivity and removes trailing and leading white spaces
-  const id = inputId.trim().slice(0).toUpperCase();
+  const id = inputId.trim().toUpperCase();
 
   const isValid = validate(id, idRegex);
   if (!isValid)
