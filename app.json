@@ -41,7 +41,8 @@
     },
     "android": {
       "package": "sg.gov.tech.musket",
-      "permissions": ["CAMERA", "VIBRATE"]
+      "permissions": ["CAMERA", "VIBRATE"],
+      "allowBackup": false
     },
     "packagerOpts": {
       "config": "metro.config.js",
