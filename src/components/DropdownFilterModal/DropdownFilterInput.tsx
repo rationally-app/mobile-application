@@ -1,8 +1,9 @@
 import React, { useState, FunctionComponent } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
 import { size, borderRadius, color, fontSize } from "../../common/styles";
+import { PolicyChoices } from "../../types";
 import { AppText } from "../Layout/AppText";
-import { DropdownFilterModal, DropdownItem } from "./DropdownFilterModal";
+import { DropdownFilterModal } from "./DropdownFilterModal";
 
 const styles = StyleSheet.create({
   label: {
@@ -29,8 +30,8 @@ export interface DropdownFilterInput {
   label: string;
   placeholder: string;
   value?: string;
-  dropdownItems: DropdownItem[];
-  onItemSelection: (item: DropdownItem) => void;
+  dropdownItems: PolicyChoices[];
+  onItemSelection: (item: PolicyChoices) => void;
 }
 
 export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({

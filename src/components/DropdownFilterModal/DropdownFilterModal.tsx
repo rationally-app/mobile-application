@@ -14,6 +14,7 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { AppMode } from "../../context/config";
 import { AntDesign } from "@expo/vector-icons";
+import { PolicyChoices } from "../../types";
 
 const styles = StyleSheet.create({
   modalView: {
@@ -86,30 +87,24 @@ const styles = StyleSheet.create({
   },
 });
 
-export interface DropdownItem {
-  id: string | number;
-  name: string;
-  tag?: boolean;
-}
-
 export interface DropdownFilterModal {
   isVisible: boolean;
-  dropdownItems: DropdownItem[];
+  dropdownItems: PolicyChoices[];
   label: string;
   placeholder: string;
-  onItemSelection: (item: DropdownItem) => void;
+  onItemSelection: (item: PolicyChoices) => void;
   closeModal: () => void;
 }
 
 export const ListItem: FunctionComponent<{
-  item: DropdownItem;
+  item: PolicyChoices;
   closeModal: () => void;
-  onItemSelection: (item: DropdownItem) => void;
+  onItemSelection: (item: PolicyChoices) => void;
 }> = ({ item, closeModal, onItemSelection }) => {
   return (
     <View style={styles.listItemView}>
       {item.tag ? (
-        <Text style={styles.listItemTag}>{item.name}</Text>
+        <Text style={styles.listItemTag}>{item.label}</Text>
       ) : (
         <TouchableOpacity
           onPress={() => {
@@ -118,7 +113,7 @@ export const ListItem: FunctionComponent<{
           }}
         >
           <View style={styles.listItemContent}>
-            <AppText style={styles.listItemText}>{item.name}</AppText>
+            <AppText style={styles.listItemText}>{item.label}</AppText>
           </View>
         </TouchableOpacity>
       )}
@@ -134,7 +129,9 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   onItemSelection,
   closeModal,
 }) => {
-  const [filterState, setFilterState] = useState<DropdownItem[]>(dropdownItems);
+  const [filterState, setFilterState] = useState<PolicyChoices[]>(
+    dropdownItems
+  );
 
   useEffect(() => {
     setFilterState(dropdownItems);
@@ -142,7 +139,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
 
   const searchFilterFunction = (text: string): void => {
     const newData = dropdownItems.filter((item) => {
-      return item.name.toUpperCase().includes(text.toUpperCase());
+      return item.label.toUpperCase().includes(text.toUpperCase());
     });
     setFilterState(newData);
   };
@@ -199,7 +196,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
                 onItemSelection={onItemSelection}
               />
             )}
-            keyExtractor={(item) => item.name}
+            keyExtractor={(item) => item.label}
           />
         </View>
       </View>

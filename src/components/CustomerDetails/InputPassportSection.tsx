@@ -1,14 +1,15 @@
 import React, { useState, FunctionComponent, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { InputWithLabel } from "../Layout/InputWithLabel";
+
 import { size, color } from "../../common/styles";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { PolicyChoices } from "../../types";
+import { InputWithLabel } from "../Layout/InputWithLabel";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { AppText } from "../Layout/AppText";
 import { DropdownFilterInput } from "../DropdownFilterModal/DropdownFilterInput";
 import { nationalityItems } from "../DropdownFilterModal/nationalityItems";
-import { DropdownItem } from "../DropdownFilterModal/DropdownFilterModal";
-import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { sharedStyles } from "./sharedStyles";
 
 const styles = StyleSheet.create({
@@ -43,16 +44,16 @@ export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
 }) => {
   const { i18nt } = useTranslate();
 
-  const [selectedCountry, setSelectedCountry] = useState<DropdownItem>();
+  const [selectedCountry, setSelectedCountry] = useState<PolicyChoices>();
   const [passportNum, setPassportNum] = useState<string>();
 
-  const onItemSelection = (item: DropdownItem): void => {
+  const onItemSelection = (item: PolicyChoices): void => {
     setSelectedCountry(item);
   };
 
   useEffect(() => {
     selectedCountry && passportNum
-      ? setIdInput(`${selectedCountry?.id}-${passportNum}`)
+      ? setIdInput(`${selectedCountry?.value}-${passportNum}`)
       : setIdInput("");
   }, [selectedCountry, passportNum, setIdInput]);
 
@@ -94,7 +95,7 @@ export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
             <DropdownFilterInput
               label="Nationality (non-Singaporean)"
               placeholder="Search country"
-              value={selectedCountry?.name}
+              value={selectedCountry?.label}
               dropdownItems={nationalityItems}
               onItemSelection={onItemSelection}
             />

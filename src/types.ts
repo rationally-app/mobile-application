@@ -59,11 +59,22 @@ const PolicyQuantity = t.intersection([
   }),
 ]);
 
+const PolicyChoices = t.intersection([
+  t.type({
+    label: t.string,
+    value: t.union([t.string, t.number]),
+  }),
+  t.partial({
+    tag: t.boolean,
+  }),
+]);
+
 const TextInputType = t.union([
   t.literal("STRING"),
   t.literal("NUMBER"),
   t.literal("PHONE_NUMBER"),
   t.literal("PAYMENT_RECEIPT"),
+  t.literal("SINGLE_CHOICE"),
 ]);
 
 const ScanButtonType = t.union([
@@ -83,6 +94,7 @@ const PolicyIdentifier = t.intersection([
       }),
       t.partial({
         type: TextInputType,
+        choices: t.array(PolicyChoices),
       }),
     ]),
     scanButton: t.intersection([
@@ -183,6 +195,7 @@ export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type IdentificationFlag = t.TypeOf<typeof IdentificationFlag>;
 export type PolicyIdentifier = t.TypeOf<typeof PolicyIdentifier>;
+export type PolicyChoices = t.TypeOf<typeof PolicyChoices>;
 export type CampaignPolicy = t.TypeOf<typeof CampaignPolicy>;
 export type CampaignFeatures = t.TypeOf<typeof CampaignFeatures>;
 export type CampaignC13N = t.TypeOf<typeof CampaignC13N>;

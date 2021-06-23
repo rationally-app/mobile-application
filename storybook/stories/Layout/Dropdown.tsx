@@ -2,26 +2,24 @@ import React, { ReactElement, useState } from "react";
 import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
 import { size } from "../../../src/common/styles";
-import {
-  DropdownItem,
-  DropdownFilterModal,
-} from "../../../src/components/DropdownFilterModal/DropdownFilterModal";
+import { DropdownFilterModal } from "../../../src/components/DropdownFilterModal/DropdownFilterModal";
 import { DropdownFilterInput } from "../../../src/components/DropdownFilterModal/DropdownFilterInput";
 import { DarkButton } from "../../../src/components/Layout/Buttons/DarkButton";
+import { PolicyChoices } from "../../../src/types";
 
-const items: DropdownItem[] = [
-  //name key is must.It is to show the text in front
-  { id: "A", name: "A", tag: true },
-  { id: "A1", name: "angellist" },
-  { id: "F", name: "F", tag: true },
-  { id: "F1", name: "facebook" },
-  { id: "F2", name: "foursquare" },
-  { id: "G", name: "G", tag: true },
-  { id: "G1", name: "github-alt" },
-  { id: "G2", name: "github" },
-  { id: "G3", name: "gitlab" },
-  { id: "I", name: "I", tag: true },
-  { id: "I1", name: "instagram" },
+const items: PolicyChoices[] = [
+  // label key is must. It is to show the text in front
+  { value: "A", label: "A", tag: true },
+  { value: "A1", label: "angellist" },
+  { value: "F", label: "F", tag: true },
+  { value: "F1", label: "facebook" },
+  { value: "F2", label: "foursquare" },
+  { value: "G", label: "G", tag: true },
+  { value: "G1", label: "github-alt" },
+  { value: "G2", label: "github" },
+  { value: "G3", label: "gitlab" },
+  { value: "I", label: "I", tag: true },
+  { value: "I1", label: "instagram" },
 ];
 
 const ModalItem = (): ReactElement => {
