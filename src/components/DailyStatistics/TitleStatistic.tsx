@@ -70,12 +70,12 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
       </AppText>
       <AppText style={styles.statText}>{totalCount?.toLocaleString()}</AppText>
       <AppText style={styles.smallText}>
-        {`${i18nt("statisticsScreen", "lastDistributedTiming", undefined, {
+        {i18nt("statisticsScreen", "lastDistributedTiming", undefined, {
           dateTime:
             lastTransactionTime !== null
               ? format(lastTransactionTime, "h:mma")
               : "-",
-        })}`}
+        })}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>

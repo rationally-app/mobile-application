@@ -107,6 +107,7 @@ export const zh: Translations = {
     noItemsScanned: "没有分发记录",
     title: "统计",
     back: "返回",
+    quantity: "个",
   },
   notEligibleScreen: {
     notEligible: "不符合资格",

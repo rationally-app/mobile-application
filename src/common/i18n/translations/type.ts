@@ -105,6 +105,7 @@ export type Translations = {
     noItemsScanned: string;
     title: string;
     back: string;
+    quantity: string;
   };
   notEligibleScreen: {
     notEligible: string;

@@ -48,7 +48,7 @@ export const countTotalTransactionsAndByCategory = (
               ? c13ntForUnit(findItemByCategory?.quantity.unit)
               : {
                   type: "POSTFIX",
-                  label: ` ${i18nt("checkoutSuccessScreen", "quantity")}`,
+                  label: ` ${i18nt("statisticsScreen", "quantity")}`,
                 }
           ),
           descriptionAlert:

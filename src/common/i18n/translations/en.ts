@@ -109,6 +109,7 @@ export const en: Translations = {
     noItemsScanned: "No items scanned",
     title: "Statistics",
     back: "Back",
+    quantity: "qty",
   },
   notEligibleScreen: {
     notEligible: "Not eligible",
