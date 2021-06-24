@@ -7,6 +7,7 @@ import { defaultIdentifier } from "../../test/helpers/defaults";
 import { CampaignPolicy } from "../../types";
 import { Sentry } from "../../utils/errorTracking";
 import { waitFor } from "@testing-library/react-native";
+import "../../common/i18n/i18nMock";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
