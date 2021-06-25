@@ -53,9 +53,9 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
             <ReasonSelectionHeader title={reasonSelectionHeader} />
           </View>
           <View style={styles.reasonPadding}>
-            {reasons.map((reason) => (
+            {reasons.map((reason, index) => (
               <ReasonItem
-                key={reason.description}
+                key={index}
                 category={reason.category}
                 description={reason.description}
                 descriptionAlert={reason.descriptionAlert}
