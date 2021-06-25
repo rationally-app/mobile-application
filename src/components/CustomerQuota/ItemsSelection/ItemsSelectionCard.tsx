@@ -76,7 +76,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     }
   };
 
-  const onCheckout = (alert: string) => {
+  const onCheckout = (alert: string): (() => void) => {
     if (!(alert === "*chargeable")) {
       return checkoutCart;
     } else {
