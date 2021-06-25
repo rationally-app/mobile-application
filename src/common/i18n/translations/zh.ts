@@ -115,6 +115,7 @@ export const zh: Translations = {
   },
   addonsToggleComponent: {
     "*chargeable": "应收费",
+    "*waive charges": "免收费",
   },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {

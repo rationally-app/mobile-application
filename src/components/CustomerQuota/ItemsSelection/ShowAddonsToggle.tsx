@@ -30,10 +30,7 @@ export const ShowAddonsToggle: FunctionComponent<{
   return (
     <TouchableOpacity onPress={toggleIsShowAddons}>
       <AppText style={styles.descriptionAlert}>
-        {`${i18nt(
-          "addonsToggleComponent",
-          descriptionAlert as DescriptionAlertTypes
-        )} `}
+        {`${i18nt("addonsToggleComponent", descriptionAlert)} `}
         <MaterialCommunityIcons
           name={isShowAddons ? "chevron-up" : "chevron-down"}
           size={size(2)}

@@ -111,7 +111,7 @@ export type Translations = {
     appleStore: string;
     androidStore: string;
   };
-  addonsToggleComponent: { "*chargeable": string };
+  addonsToggleComponent: { "*chargeable": string; "*waive charges": string };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: string;
