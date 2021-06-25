@@ -16,6 +16,7 @@ describe("ReasonItem", () => {
 
     const { queryByText } = render(
       <ReasonItem
+        category={"category-a"}
         description={"some-description"}
         descriptionAlert={"*alert"}
         isLast={true}

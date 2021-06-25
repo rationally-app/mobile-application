@@ -6,9 +6,21 @@ import "../../../common/i18n/i18nMock";
 const onCancel = jest.fn();
 const onReasonSelection = jest.fn();
 const mockReasons: Reason[] = [
-  { description: "reason-a", descriptionAlert: "*alert-a" },
-  { description: "reason-b", descriptionAlert: undefined },
-  { description: "reason-c", descriptionAlert: undefined },
+  {
+    category: "category-a",
+    description: "reason-a",
+    descriptionAlert: "*alert-a",
+  },
+  {
+    category: "category-b",
+    description: "reason-b",
+    descriptionAlert: undefined,
+  },
+  {
+    category: "category-c",
+    description: "reason-c",
+    descriptionAlert: undefined,
+  },
 ];
 
 describe("ReasonSelectionCard", () => {
