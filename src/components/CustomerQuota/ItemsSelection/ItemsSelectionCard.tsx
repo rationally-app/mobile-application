@@ -31,6 +31,11 @@ interface ItemsSelectionCard {
   updateCart: CartHook["updateCart"];
 }
 
+interface AddonToggleItem {
+  hasAddonToggle: boolean;
+  descriptionAlert: string;
+}
+
 export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   ids,
   addId,
@@ -77,11 +82,22 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const isAppeal = products.some(
     (product) => product.categoryType === "APPEAL"
   );
-  const hasAddonToggle = cart.some(
-    (cartItem) =>
+
+  const addonToggleItem: AddonToggleItem = {
+    hasAddonToggle: false,
+    descriptionAlert: "",
+  };
+  cart.some((cartItem) => {
+    if (
       cartItem.descriptionAlert === "*chargeable" ||
       cartItem.descriptionAlert === "*waive charges"
-  );
+    ) {
+      addonToggleItem.hasAddonToggle = true;
+      addonToggleItem.descriptionAlert = cartItem.descriptionAlert;
+      return true;
+    }
+    return false;
+  });
   return (
     <View>
       <CustomerCard
@@ -96,7 +112,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           {cart.map((cartItem) => (
             <Item
               ids={ids}
-              hasAddonToggle={hasAddonToggle}
+              addonToggleItem={addonToggleItem.hasAddonToggle}
               key={cartItem.category}
               cartItem={cartItem}
               updateCart={updateCart}
@@ -137,7 +153,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               />
             }
             onPress={
-              !hasAddonToggle
+              !(addonToggleItem.descriptionAlert === "*chargeable")
                 ? checkoutCart
                 : () => {
                     showConfirmationAlert(
