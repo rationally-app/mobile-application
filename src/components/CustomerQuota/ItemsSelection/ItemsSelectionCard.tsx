@@ -77,7 +77,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const isAppeal = products.some(
     (product) => product.categoryType === "APPEAL"
   );
-  const isChargeable = cart.some(
+  const hasAddonToggle = cart.some(
     (cartItem) => cartItem.descriptionAlert === "*chargeable"
   );
   return (
@@ -94,7 +94,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           {cart.map((cartItem) => (
             <Item
               ids={ids}
-              isChargeable={isChargeable}
+              hasAddonToggle={hasAddonToggle}
               key={cartItem.category}
               cartItem={cartItem}
               updateCart={updateCart}
@@ -135,7 +135,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
               />
             }
             onPress={
-              !isChargeable
+              !hasAddonToggle
                 ? checkoutCart
                 : () => {
                     showConfirmationAlert(

@@ -7,10 +7,10 @@ import { AddonsItems } from "./AddonsItems";
 
 export const ItemCheckbox: FunctionComponent<{
   ids: string[];
-  isChargeable: boolean;
+  hasAddonToggle: boolean;
   cartItem: CartItem;
   updateCart: CartHook["updateCart"];
-}> = ({ ids, isChargeable, cartItem, updateCart }) => {
+}> = ({ ids, hasAddonToggle, cartItem, updateCart }) => {
   const [isShowAddonsItems, setIsShowAddonsItems] = useState(false);
   const { category, quantity, maxQuantity, descriptionAlert } = cartItem;
   const { getProduct } = useContext(ProductContext);
@@ -35,7 +35,7 @@ export const ItemCheckbox: FunctionComponent<{
         />
       }
       addons={
-        isChargeable ? (
+        hasAddonToggle ? (
           <AddonsItems
             ids={ids}
             isShowAddonItems={isShowAddonsItems}
