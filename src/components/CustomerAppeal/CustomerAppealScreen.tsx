@@ -107,6 +107,8 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
               description: policy.name,
               descriptionAlert,
             });
+            // policy threshold is string when its visibility is conditional to other policy that is
+            // written on the threshold
           } else if (typeof policyThreshold === "string") {
             const dependentReason = result.find(
               (reason) =>
