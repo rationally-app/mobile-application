@@ -31,11 +31,13 @@ export const OTPResponse = t.intersection([
 export type SessionCredentials = t.TypeOf<typeof SessionCredentials>;
 export type OTPResponse = t.TypeOf<typeof OTPResponse>;
 
-const PolicyAlert = t.type({
-  threshold: t.number,
-  label: t.string,
-});
-
+const PolicyAlert = t.intersection([
+  t.type({
+    threshold: t.number,
+    label: t.string,
+  }),
+  t.partial({ refCategory: t.string }),
+]);
 const PolicyQuantity = t.intersection([
   t.type({
     period: t.number,

@@ -81,7 +81,6 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const { allQuotaResponse } = useQuota(ids, sessionToken, endpoint);
 
   const { i18nt } = useTranslate();
-
   const getReasons = (): Reason[] => {
     return transform(
       allProducts ?? [],
@@ -89,7 +88,9 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         if (policy.categoryType === "APPEAL") {
           const policyLimit = policy.quantity.limit;
           const quotaResponse = allQuotaResponse?.remainingQuota.find(
-            (quota) => quota.category === policy.category
+            (quota) =>
+              quota.category === policy.alert?.refCategory ||
+              quota.category === policy.category
           );
           let descriptionAlert: string | undefined = undefined;
           if (
@@ -100,6 +101,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
             descriptionAlert = policy.alert.label;
           }
           result.push({
+            category: policy.category,
             description: policy.name,
             descriptionAlert: descriptionAlert,
           });
@@ -109,13 +111,15 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     );
   };
 
-  const onReasonSelection = (productName: string): void => {
+  const onReasonSelection = (productCategory: string): void => {
     const appealProduct = allProducts?.find(
       (policy) =>
-        policy.categoryType === "APPEAL" && policy.name === productName
+        policy.categoryType === "APPEAL" && policy.category === productCategory
     );
     if (appealProduct === undefined) {
-      Sentry.captureException(`Unable to find appeal product: ${productName}}`);
+      Sentry.captureException(
+        `Unable to find appeal product: ${productCategory}}`
+      );
       return;
     }
     pushRoute(navigation, "CustomerQuotaProxy", {

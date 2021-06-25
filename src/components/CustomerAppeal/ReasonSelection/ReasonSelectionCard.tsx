@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
 });
 
 export type Reason = {
+  category: string;
   description: string;
   descriptionAlert: string | undefined;
 };
@@ -55,6 +56,7 @@ export const ReasonSelectionCard: FunctionComponent<ReasonSelectionCard> = ({
             {reasons.map((reason) => (
               <ReasonItem
                 key={reason.description}
+                category={reason.category}
                 description={reason.description}
                 descriptionAlert={reason.descriptionAlert}
                 isLast={reasons[reasons.length - 1] === reason}
