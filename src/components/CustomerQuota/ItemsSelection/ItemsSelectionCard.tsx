@@ -76,6 +76,19 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     }
   };
 
+  const onCheckout = (alert: string) => {
+    if (!(alert === "*chargeable")) {
+      return checkoutCart;
+    } else {
+      return () => {
+        showConfirmationAlert(
+          CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
+          checkoutCart
+        );
+      };
+    }
+  };
+
   // TODO:
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
@@ -152,16 +165,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 color={color("grey", 0)}
               />
             }
-            onPress={
-              !(addonToggleItem.descriptionAlert === "*chargeable")
-                ? checkoutCart
-                : () => {
-                    showConfirmationAlert(
-                      CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
-                      checkoutCart
-                    );
-                  }
-            }
+            onPress={onCheckout(addonToggleItem.descriptionAlert)}
             isLoading={isLoading}
             fullWidth={true}
             accessibilityLabel="items-selection-checkout-button"
