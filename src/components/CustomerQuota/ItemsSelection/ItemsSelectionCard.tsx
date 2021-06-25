@@ -78,7 +78,9 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     (product) => product.categoryType === "APPEAL"
   );
   const hasAddonToggle = cart.some(
-    (cartItem) => cartItem.descriptionAlert === "*chargeable"
+    (cartItem) =>
+      cartItem.descriptionAlert === "*chargeable" ||
+      cartItem.descriptionAlert === "*waive charges"
   );
   return (
     <View>
