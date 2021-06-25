@@ -31,6 +31,6 @@ describe("ReasonItem", () => {
 
     fireEvent.press(reasonDescription!);
     expect(onReasonSelection).toHaveBeenCalledTimes(1);
-    expect(onReasonSelection).toHaveBeenCalledWith("some-description");
+    expect(onReasonSelection).toHaveBeenCalledWith("category-a");
   });
 });
