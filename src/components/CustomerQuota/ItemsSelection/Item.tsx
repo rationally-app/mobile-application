@@ -101,12 +101,7 @@ export const Item: FunctionComponent<{
           updateCart={updateCart}
         />
       ) : (
-        <ItemStepper
-          ids={ids}
-          isChargeable={isChargeable}
-          cartItem={cartItem}
-          updateCart={updateCart}
-        />
+        <ItemStepper ids={ids} cartItem={cartItem} updateCart={updateCart} />
       )}
       {cartItem.maxQuantity > 0 && identifiers.length > 0 && (
         <ItemIdentifiersCard
