@@ -1,5 +1,7 @@
 import { countTotalTransactionsAndByCategory } from "./utils";
 import { CampaignPolicy, DailyStatistics } from "../../types";
+import { defaultTranslationProps } from "../../test/helpers/defaults";
+import "../../common/i18n/i18nMock";
 
 describe("countTotalTransactionsAndByCategory", () => {
   let pastTransactions: DailyStatistics[];
@@ -152,7 +154,11 @@ describe("countTotalTransactionsAndByCategory", () => {
   it("should return multiple summarised transactions categories with total count and count per category and the name to be displayed on the stats page, as well as ordered by ascending order number", () => {
     expect.assertions(1);
     expect(
-      countTotalTransactionsAndByCategory(pastTransactions, campaignPolicy)
+      countTotalTransactionsAndByCategory(
+        pastTransactions,
+        campaignPolicy,
+        defaultTranslationProps
+      )
     ).toStrictEqual({
       summarisedTotalCount: 4019,
       summarisedTransactionHistory: [
@@ -186,7 +192,8 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         pastInstantNoodleTransactions,
-        campaignPolicy
+        campaignPolicy,
+        defaultTranslationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -207,7 +214,8 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         invalidPastTransactions,
-        campaignPolicy
+        campaignPolicy,
+        defaultTranslationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 999,
@@ -228,7 +236,8 @@ describe("countTotalTransactionsAndByCategory", () => {
     expect(
       countTotalTransactionsAndByCategory(
         pastTransactionsWithAppeal,
-        campaignPolicy
+        campaignPolicy,
+        defaultTranslationProps
       )
     ).toStrictEqual({
       summarisedTotalCount: 200,
