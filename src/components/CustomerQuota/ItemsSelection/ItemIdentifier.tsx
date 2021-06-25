@@ -69,7 +69,7 @@ export const ItemIdentifier: FunctionComponent<{
             <IdentifierSelectionInput
               addMarginRight={scanButton.visible}
               label={c13nt(label)}
-              setInputValue={setInputValue}
+              onSelectDropdown={onManualInput}
               dropdownItems={textInput.choices}
             />
           ) : (

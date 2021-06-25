@@ -9,9 +9,9 @@ import { sharedStyles } from "./sharedStyles";
 export const IdentifierSelectionInput: FunctionComponent<{
   addMarginRight: boolean;
   label: string;
-  setInputValue: (id: string) => void;
+  onSelectDropdown: (choice: string) => void;
   dropdownItems?: PolicyChoices[];
-}> = ({ addMarginRight, label, setInputValue, dropdownItems = [] }) => {
+}> = ({ addMarginRight, label, onSelectDropdown, dropdownItems = [] }) => {
   const [selectedChoice, setSelectedChoice] = useState<PolicyChoices>();
 
   const onItemSelection = (item: PolicyChoices): void => {
@@ -19,8 +19,11 @@ export const IdentifierSelectionInput: FunctionComponent<{
   };
 
   useEffect(() => {
-    selectedChoice ? setInputValue(selectedChoice.label) : setInputValue("");
-  }, [selectedChoice, setInputValue]);
+    selectedChoice
+      ? onSelectDropdown(selectedChoice.value)
+      : onSelectDropdown("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedChoice]);
 
   return (
     <View
