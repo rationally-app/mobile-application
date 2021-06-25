@@ -83,11 +83,15 @@ const mergeWithCart = (
 
       let descriptionAlert: DescriptionAlertTypes | undefined = undefined;
       if (product && product.alert) {
-        const expandedQuota = product.quantity.limit - remainingQuantity;
-        descriptionAlert =
-          expandedQuota >= product.alert.threshold
-            ? (product.alert.label as DescriptionAlertTypes)
-            : undefined;
+        if (typeof product.alert.threshold === "number") {
+          const expandedQuota = product.quantity.limit - remainingQuantity;
+          descriptionAlert =
+            expandedQuota >= product.alert.threshold
+              ? (product.alert.label as DescriptionAlertTypes)
+              : undefined;
+        } else {
+          descriptionAlert = product.alert.label as DescriptionAlertTypes;
+        }
       }
 
       const checkoutLimit = product?.quantity.checkoutLimit;

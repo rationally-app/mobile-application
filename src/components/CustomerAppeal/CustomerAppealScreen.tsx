@@ -87,24 +87,45 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
       (result: Reason[], policy) => {
         if (policy.categoryType === "APPEAL") {
           const policyLimit = policy.quantity.limit;
+          const policyThreshold = policy.alert?.threshold;
           const quotaResponse = allQuotaResponse?.remainingQuota.find(
             (quota) =>
-              quota.category === policy.alert?.refCategory ||
+              quota.category === policyThreshold ||
               quota.category === policy.category
           );
           let descriptionAlert: string | undefined = undefined;
-          if (
-            quotaResponse &&
-            policy.alert &&
-            policyLimit - quotaResponse.quantity >= policy.alert.threshold
-          ) {
-            descriptionAlert = policy.alert.label;
+          if (typeof policyThreshold === "number") {
+            if (
+              quotaResponse &&
+              policy.alert &&
+              policyLimit - quotaResponse.quantity >= policyThreshold
+            ) {
+              descriptionAlert = policy.alert.label;
+            }
+            result.push({
+              category: policy.category,
+              description: policy.name,
+              descriptionAlert,
+            });
+          } else if (typeof policyThreshold === "string") {
+            const dependentReason = result.find(
+              (reason) =>
+                reason.descriptionAlert && reason.category === policyThreshold
+            );
+            if (dependentReason && policy.alert) {
+              result.push({
+                category: policy.category,
+                description: policy.name,
+                descriptionAlert: policy.alert.label,
+              });
+            }
+          } else {
+            result.push({
+              category: policy.category,
+              description: policy.name,
+              descriptionAlert,
+            });
           }
-          result.push({
-            category: policy.category,
-            description: policy.name,
-            descriptionAlert: descriptionAlert,
-          });
         }
       },
       []

@@ -18,8 +18,8 @@ export const ItemCheckbox: FunctionComponent<{
     getProduct(category) || {};
 
   const categoryFilter = [category];
-  if (alert?.refCategory) {
-    categoryFilter.push(alert.refCategory);
+  if (typeof alert?.threshold === "string") {
+    categoryFilter.push(alert.threshold);
   }
   return (
     <Checkbox

@@ -77,15 +77,15 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   };
 
   const onCheckout = (alert: string): (() => void) => {
-    if (!(alert === "*chargeable")) {
-      return checkoutCart;
-    } else {
+    if (alert === "*chargeable") {
       return () => {
         showConfirmationAlert(
           CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
           checkoutCart
         );
       };
+    } else {
+      return checkoutCart;
     }
   };
 
