@@ -327,6 +327,11 @@ export const en: Translations = {
       body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
+    incompleteWaiveReason: {
+      title: "Incomplete entry",
+      body: "Enter a valid waive reason.",
+      primaryActionText: "OK",
+    },
     incompleteEntryCode: {
       title: "Incomplete entry",
       body: "Enter or scan a valid code.",

@@ -318,6 +318,11 @@ export const zh: Translations = {
       body: "请输入或扫描有效的编号。",
       primaryActionText: "确定",
     },
+    incompleteWaiveReason: {
+      title: "资料输入不完整",
+      body: "请输入有效的豁免原因。",
+      primaryActionText: "确定",
+    },
     incompleteEntryCode: {
       title: "资料输入不完整",
       body: "请输入或扫描编号。",

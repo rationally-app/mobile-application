@@ -345,6 +345,12 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    incompleteWaiveReason: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
     incompleteEntryCode: {
       title: string;
       body?: string;
