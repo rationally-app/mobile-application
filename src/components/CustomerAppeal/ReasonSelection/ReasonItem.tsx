@@ -47,11 +47,9 @@ export const ReasonItem: FunctionComponent<{
     >
       <View style={styles.reasonLayout}>
         <AppText>{c13nt(description)}</AppText>
-        <AppText style={styles.reasonAlert}>
-          {descriptionAlert
-            ? c13nt(descriptionAlert, undefined, descriptionAlert)
-            : ""}
-        </AppText>
+        <AppText style={styles.reasonAlert}>{`${c13nt(
+          descriptionAlert
+        )}`}</AppText>
       </View>
     </TouchableOpacity>
   );
