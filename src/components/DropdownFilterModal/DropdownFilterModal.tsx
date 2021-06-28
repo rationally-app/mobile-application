@@ -15,6 +15,7 @@ import { TopBackground } from "../Layout/TopBackground";
 import { AppMode } from "../../context/config";
 import { AntDesign } from "@expo/vector-icons";
 import { PolicyChoices } from "../../types";
+import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
   modalView: {
@@ -101,10 +102,14 @@ export const ListItem: FunctionComponent<{
   closeModal: () => void;
   onItemSelection: (item: PolicyChoices) => void;
 }> = ({ item, closeModal, onItemSelection }) => {
+  const { c13nt } = useTranslate();
+
   return (
     <View style={styles.listItemView}>
       {item.tag ? (
-        <Text style={styles.listItemTag}>{item.label}</Text>
+        <Text style={styles.listItemTag}>
+          {c13nt(item.value, undefined, item.label)}
+        </Text>
       ) : (
         <TouchableOpacity
           onPress={() => {
@@ -113,7 +118,9 @@ export const ListItem: FunctionComponent<{
           }}
         >
           <View style={styles.listItemContent}>
-            <AppText style={styles.listItemText}>{item.label}</AppText>
+            <AppText style={styles.listItemText}>
+              {c13nt(item.value, undefined, item.label)}
+            </AppText>
           </View>
         </TouchableOpacity>
       )}
