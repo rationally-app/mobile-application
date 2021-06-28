@@ -61,10 +61,10 @@ const PolicyQuantity = t.intersection([
 
 const PolicyChoices = t.intersection([
   t.type({
-    label: t.string,
     value: t.string,
   }),
   t.partial({
+    label: t.string,
     tag: t.boolean,
   }),
 ]);
