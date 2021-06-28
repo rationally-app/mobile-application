@@ -136,6 +136,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   onItemSelection,
   closeModal,
 }) => {
+  const { c13nt } = useTranslate();
   const [filterState, setFilterState] = useState<PolicyChoices[]>(
     dropdownItems
   );
@@ -146,7 +147,9 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
 
   const searchFilterFunction = (text: string): void => {
     const newData = dropdownItems.filter((item) => {
-      return item.label.toUpperCase().includes(text.toUpperCase());
+      return c13nt(item.value, undefined, item.label)
+        .toUpperCase()
+        .includes(text.toUpperCase());
     });
     setFilterState(newData);
   };
@@ -203,7 +206,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
                 onItemSelection={onItemSelection}
               />
             )}
-            keyExtractor={(item) => item.label}
+            keyExtractor={(item) => item.value}
           />
         </View>
       </View>
