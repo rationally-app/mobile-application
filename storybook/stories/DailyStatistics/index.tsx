@@ -1,2 +1,2 @@
-import "./DailyStaisticScreen";
+import "./DailyStatisticsScreen";
 import "./StatisticsHeader";
