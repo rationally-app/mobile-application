@@ -90,8 +90,10 @@ const mergeWithCart = (
               ? (product.alert.label as DescriptionAlertTypes)
               : undefined;
         } else {
-          // this section is only accessible when the iterated policy becomes accessible
-          // because its dependent policy has reached the threshold
+          /**
+           * this section is only accessible when the iterated policy becomes accessible
+           * because its dependent policy has reached the threshold
+           */
           descriptionAlert = product.alert.label as DescriptionAlertTypes;
         }
       }
