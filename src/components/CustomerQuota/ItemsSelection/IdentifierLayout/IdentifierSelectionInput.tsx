@@ -14,18 +14,12 @@ export const IdentifierSelectionInput: FunctionComponent<{
   dropdownItems?: PolicyChoices[];
 }> = ({ addMarginRight, label, onSelectDropdown, dropdownItems = [] }) => {
   const { c13nt } = useTranslate();
-  const [selectedChoice, setSelectedChoice] = useState<PolicyChoices>();
+  const [selectedChoice, setSelectedChoice] = useState<string>("");
 
   const onItemSelection = (item: PolicyChoices): void => {
-    setSelectedChoice(item);
+    setSelectedChoice(item?.value);
+    onSelectDropdown(item?.value);
   };
-
-  useEffect(() => {
-    selectedChoice
-      ? onSelectDropdown(selectedChoice.value)
-      : onSelectDropdown("");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedChoice]);
 
   return (
     <View
@@ -37,7 +31,7 @@ export const IdentifierSelectionInput: FunctionComponent<{
       <DropdownFilterInput
         label={label}
         placeholder="Select reason"
-        value={`${c13nt(selectedChoice?.value)}`}
+        value={`${c13nt(selectedChoice)}`}
         dropdownItems={dropdownItems}
         onItemSelection={onItemSelection}
       />
