@@ -91,8 +91,10 @@ const mergeWithCart = (
               : undefined;
         } else {
           /**
-           * this section is only accessible when the iterated policy becomes accessible
-           * because its dependent policy has reached the threshold
+           * Since the reason item of policies with dependencies only shows up when
+           * its dependent policy has reached its threshold, this section is only
+           * called when the reason item becomes visible,
+           * i.e., the dependent policy has reached its threshold.
            */
           descriptionAlert = product.alert.label as DescriptionAlertTypes;
         }
