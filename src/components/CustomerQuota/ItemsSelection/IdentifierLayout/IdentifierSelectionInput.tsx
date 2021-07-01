@@ -30,12 +30,8 @@ export const IdentifierSelectionInput: FunctionComponent<{
     >
       <DropdownFilterInput
         label={label}
-        placeholder={`${c13nt(
-          "selectionPlaceholder",
-          undefined,
-          i18nt("identifierSelectionInput", "placeholder")
-        )}`}
-        value={`${c13nt(selectedChoice)}`}
+        placeholder={i18nt("identifierSelectionInput", "placeholder")}
+        value={c13nt(selectedChoice)}
         dropdownItems={dropdownItems}
         onItemSelection={onItemSelection}
       />
