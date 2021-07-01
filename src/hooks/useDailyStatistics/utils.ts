@@ -53,7 +53,7 @@ export const countTotalTransactionsAndByCategory = (
           ),
           descriptionAlert:
             findItemByCategory?.categoryType === "APPEAL"
-              ? "via appeal"
+              ? i18nt("statisticsScreen", "viaAppeal")
               : undefined,
           order: findItemByCategory?.order ?? -1,
         });
