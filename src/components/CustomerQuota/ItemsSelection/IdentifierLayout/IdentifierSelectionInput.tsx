@@ -1,3 +1,4 @@
+import { placeholder } from "i18n-js";
 import React, { FunctionComponent, useState } from "react";
 import { View } from "react-native";
 
@@ -13,7 +14,7 @@ export const IdentifierSelectionInput: FunctionComponent<{
   onSelectDropdown: (choice: string) => void;
   dropdownItems?: PolicyChoices[];
 }> = ({ addMarginRight, label, onSelectDropdown, dropdownItems = [] }) => {
-  const { c13nt } = useTranslate();
+  const { c13nt, i18nt } = useTranslate();
   const [selectedChoice, setSelectedChoice] = useState<string>("");
 
   const onItemSelection = (item: PolicyChoices): void => {
@@ -30,7 +31,11 @@ export const IdentifierSelectionInput: FunctionComponent<{
     >
       <DropdownFilterInput
         label={label}
-        placeholder="Select reason"
+        placeholder={`${c13nt(
+          "selectionPlaceholder",
+          undefined,
+          i18nt("identifierSelectionInput", "placeholder")
+        )}`}
         value={`${c13nt(selectedChoice)}`}
         dropdownItems={dropdownItems}
         onItemSelection={onItemSelection}

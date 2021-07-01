@@ -124,6 +124,9 @@ export const en: Translations = {
     "*chargeable": "Chargeable",
     "*waive charges": "waive charges",
   },
+  identifierSelectionInput: {
+    placeholder: "Select reason",
+  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "Already used",

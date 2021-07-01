@@ -115,6 +115,9 @@ export type Translations = {
     appleStore: string;
     androidStore: string;
   };
+  identifierSelectionInput: {
+    placeholder: string;
+  };
   addonsToggleComponent: { "*chargeable": string; "*waive charges": string };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
