@@ -121,6 +121,9 @@ export const zh: Translations = {
     "*chargeable": "应收费",
     "*waive charges": "免收费",
   },
+  identifierSelectionInput: {
+    placeholder: "请选择原因",
+  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "已使用",
