@@ -16,6 +16,7 @@ describe("ReasonItem", () => {
 
     const { queryByText } = render(
       <ReasonItem
+        category={"category-a"}
         description={"some-description"}
         descriptionAlert={"*alert"}
         isLast={true}
@@ -30,6 +31,6 @@ describe("ReasonItem", () => {
 
     fireEvent.press(reasonDescription!);
     expect(onReasonSelection).toHaveBeenCalledTimes(1);
-    expect(onReasonSelection).toHaveBeenCalledWith("some-description");
+    expect(onReasonSelection).toHaveBeenCalledWith("category-a");
   });
 });

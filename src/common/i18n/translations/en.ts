@@ -120,7 +120,10 @@ export const en: Translations = {
     appleStore: "App Store",
     androidStore: "Play Store",
   },
-  addonsToggleComponent: { "*chargeable": "Chargeable" },
+  addonsToggleComponent: {
+    "*chargeable": "Chargeable",
+    "*waive charges": "waive charges",
+  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "Already used",
@@ -326,6 +329,11 @@ export const en: Translations = {
     wrongFormatCode: {
       title: "Wrong format",
       body: "Enter or scan a valid code.",
+      primaryActionText: "OK",
+    },
+    incompleteWaiveReason: {
+      title: "Incomplete entry",
+      body: "Enter a valid waive reason.",
       primaryActionText: "OK",
     },
     incompleteEntryCode: {

@@ -119,6 +119,7 @@ export const zh: Translations = {
   },
   addonsToggleComponent: {
     "*chargeable": "应收费",
+    "*waive charges": "免收费",
   },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
@@ -319,6 +320,11 @@ export const zh: Translations = {
     wrongFormatCode: {
       title: "格式错误",
       body: "请输入或扫描有效的编号。",
+      primaryActionText: "确定",
+    },
+    incompleteWaiveReason: {
+      title: "资料输入不完整",
+      body: "请输入有效的豁免原因。",
       primaryActionText: "确定",
     },
     incompleteEntryCode: {

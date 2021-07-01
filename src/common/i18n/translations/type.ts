@@ -115,7 +115,7 @@ export type Translations = {
     appleStore: string;
     androidStore: string;
   };
-  addonsToggleComponent: { "*chargeable": string };
+  addonsToggleComponent: { "*chargeable": string; "*waive charges": string };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: string;
@@ -344,6 +344,12 @@ export type Translations = {
       secondaryActionText?: string;
     };
     wrongFormatCode: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
+    incompleteWaiveReason: {
       title: string;
       body?: string;
       primaryActionText: string;

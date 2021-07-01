@@ -68,10 +68,10 @@ const removePaymentReceiptField = (
 
 export const Item: FunctionComponent<{
   ids: string[];
-  isChargeable: boolean;
+  addonToggleItem: boolean;
   cartItem: CartItem;
   updateCart: CartHook["updateCart"];
-}> = ({ ids, isChargeable, cartItem, updateCart }) => {
+}> = ({ ids, addonToggleItem, cartItem, updateCart }) => {
   const { getProduct } = useContext(ProductContext);
   const identifiers = getProduct(cartItem.category)?.identifiers || [];
 
@@ -96,17 +96,12 @@ export const Item: FunctionComponent<{
       ) : cartItem.maxQuantity === 1 ? (
         <ItemCheckbox
           ids={ids}
-          isChargeable={isChargeable}
+          addonToggleItem={addonToggleItem}
           cartItem={cartItem}
           updateCart={updateCart}
         />
       ) : (
-        <ItemStepper
-          ids={ids}
-          isChargeable={isChargeable}
-          cartItem={cartItem}
-          updateCart={updateCart}
-        />
+        <ItemStepper ids={ids} cartItem={cartItem} updateCart={updateCart} />
       )}
       {cartItem.maxQuantity > 0 && identifiers.length > 0 && (
         <ItemIdentifiersCard

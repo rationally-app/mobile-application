@@ -83,11 +83,21 @@ const mergeWithCart = (
 
       let descriptionAlert: DescriptionAlertTypes | undefined = undefined;
       if (product && product.alert) {
-        const expandedQuota = product.quantity.limit - remainingQuantity;
-        descriptionAlert =
-          expandedQuota >= product.alert.threshold
-            ? (product.alert.label as DescriptionAlertTypes)
-            : undefined;
+        if (typeof product.alert.threshold === "number") {
+          const expandedQuota = product.quantity.limit - remainingQuantity;
+          descriptionAlert =
+            expandedQuota >= product.alert.threshold
+              ? (product.alert.label as DescriptionAlertTypes)
+              : undefined;
+        } else {
+          /**
+           * Since the reason item of policies with dependencies only shows up when
+           * its dependent policy has reached its threshold, this section is only
+           * called when the reason item becomes visible,
+           * i.e., the dependent policy has reached its threshold.
+           */
+          descriptionAlert = product.alert.label as DescriptionAlertTypes;
+        }
       }
 
       const checkoutLimit = product?.quantity.checkoutLimit;

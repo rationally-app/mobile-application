@@ -25,6 +25,7 @@ export enum CONFIRMATION_MESSAGE {
 export enum ERROR_MESSAGE {
   DUPLICATE_IDENTIFIER_INPUT = "Enter or scan a different code.",
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
+  MISSING_WAIVER_INPUT = "Enter a valid waiver reason",
   INVALID_IDENTIFIER_INPUT = "Enter or scan a valid code.",
   MISSING_IDENTIFIER_INPUT = "Enter or scan a code.",
   INVALID_VOUCHER_INPUT = "Enter a valid voucher code.",
@@ -92,6 +93,7 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT]: "alreadyUsedCode",
   [ERROR_MESSAGE.DUPLICATE_POD_INPUT]: "alreadyUsedItem",
   [ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT]: "wrongFormatCode",
+  [ERROR_MESSAGE.MISSING_WAIVER_INPUT]: "incompleteWaiveReason",
   [ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT]: "incompleteEntryCode",
   [ERROR_MESSAGE.MISSING_VOUCHER_INPUT]: "incompleteEntryVoucherCode",
   [ERROR_MESSAGE.INVALID_POD_INPUT]: "wrongFormatNotValidDeviceCode",

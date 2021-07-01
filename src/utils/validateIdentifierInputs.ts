@@ -19,6 +19,9 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
+    if (textInputType === "SINGLE_CHOICE" && !value) {
+      throw new Error(ERROR_MESSAGE.MISSING_WAIVER_INPUT);
+    }
     if (textInputType !== "PAYMENT_RECEIPT" && !value) {
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }

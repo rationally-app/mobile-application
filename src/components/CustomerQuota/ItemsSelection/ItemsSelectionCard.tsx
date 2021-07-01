@@ -31,6 +31,11 @@ interface ItemsSelectionCard {
   updateCart: CartHook["updateCart"];
 }
 
+interface AddonToggleItem {
+  hasAddonToggle: boolean;
+  descriptionAlert: string;
+}
+
 export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   ids,
   addId,
@@ -71,15 +76,41 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     }
   };
 
+  const onCheckout = (alert: string): (() => void) => {
+    if (alert === "*chargeable") {
+      return () => {
+        showConfirmationAlert(
+          CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
+          checkoutCart
+        );
+      };
+    } else {
+      return checkoutCart;
+    }
+  };
+
   // TODO:
   // We may need to refactor this card once the difference in behaviour between main products and appeal products is vastly different.
   // To be further discuss
   const isAppeal = products.some(
     (product) => product.categoryType === "APPEAL"
   );
-  const isChargeable = cart.some(
-    (cartItem) => cartItem.descriptionAlert === "*chargeable"
-  );
+
+  const addonToggleItem: AddonToggleItem = {
+    hasAddonToggle: false,
+    descriptionAlert: "",
+  };
+  cart.some((cartItem) => {
+    if (
+      cartItem.descriptionAlert === "*chargeable" ||
+      cartItem.descriptionAlert === "*waive charges"
+    ) {
+      addonToggleItem.hasAddonToggle = true;
+      addonToggleItem.descriptionAlert = cartItem.descriptionAlert;
+      return true;
+    }
+    return false;
+  });
   return (
     <View>
       <CustomerCard
@@ -94,7 +125,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
           {cart.map((cartItem) => (
             <Item
               ids={ids}
-              isChargeable={isChargeable}
+              addonToggleItem={addonToggleItem.hasAddonToggle}
               key={cartItem.category}
               cartItem={cartItem}
               updateCart={updateCart}
@@ -134,16 +165,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 color={color("grey", 0)}
               />
             }
-            onPress={
-              !isChargeable
-                ? checkoutCart
-                : () => {
-                    showConfirmationAlert(
-                      CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
-                      checkoutCart
-                    );
-                  }
-            }
+            onPress={onCheckout(addonToggleItem.descriptionAlert)}
             isLoading={isLoading}
             fullWidth={true}
             accessibilityLabel="items-selection-checkout-button"

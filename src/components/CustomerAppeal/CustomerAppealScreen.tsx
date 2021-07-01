@@ -81,41 +81,75 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   const { allQuotaResponse } = useQuota(ids, sessionToken, endpoint);
 
   const { i18nt } = useTranslate();
-
   const getReasons = (): Reason[] => {
     return transform(
       allProducts ?? [],
       (result: Reason[], policy) => {
         if (policy.categoryType === "APPEAL") {
           const policyLimit = policy.quantity.limit;
+          const policyThreshold = policy.alert?.threshold;
           const quotaResponse = allQuotaResponse?.remainingQuota.find(
-            (quota) => quota.category === policy.category
+            (quota) =>
+              quota.category === policyThreshold ||
+              quota.category === policy.category
           );
           let descriptionAlert: string | undefined = undefined;
-          if (
-            quotaResponse &&
-            policy.alert &&
-            policyLimit - quotaResponse.quantity >= policy.alert.threshold
-          ) {
-            descriptionAlert = policy.alert.label;
+          if (typeof policyThreshold === "number") {
+            if (
+              quotaResponse &&
+              policy.alert &&
+              policyLimit - quotaResponse.quantity >= policyThreshold
+            ) {
+              descriptionAlert = policy.alert.label;
+            }
+            result.push({
+              category: policy.category,
+              description: policy.name,
+              descriptionAlert,
+            });
+          } else if (typeof policyThreshold === "string") {
+            /**
+             * Policy threshold is string when its visibility is conditional to other policy that is
+             * written on the threshold.
+             *
+             * Some assumptions that are made:
+             * - Policies with dependencies on other policies should be defined after their dependents
+             * - Policies with dependencies show up depending on whether its dependent policy's
+             *   descriptionAlert is shown
+             */
+            const dependentReason = result.find(
+              (reason) =>
+                reason.descriptionAlert && reason.category === policyThreshold
+            );
+            if (dependentReason && policy.alert) {
+              result.push({
+                category: policy.category,
+                description: policy.name,
+                descriptionAlert: policy.alert.label,
+              });
+            }
+          } else {
+            result.push({
+              category: policy.category,
+              description: policy.name,
+              descriptionAlert,
+            });
           }
-          result.push({
-            description: policy.name,
-            descriptionAlert: descriptionAlert,
-          });
         }
       },
       []
     );
   };
 
-  const onReasonSelection = (productName: string): void => {
+  const onReasonSelection = (productCategory: string): void => {
     const appealProduct = allProducts?.find(
       (policy) =>
-        policy.categoryType === "APPEAL" && policy.name === productName
+        policy.categoryType === "APPEAL" && policy.category === productCategory
     );
     if (appealProduct === undefined) {
-      Sentry.captureException(`Unable to find appeal product: ${productName}}`);
+      Sentry.captureException(
+        `Unable to find appeal product: ${productCategory}}`
+      );
       return;
     }
     pushRoute(navigation, "CustomerQuotaProxy", {

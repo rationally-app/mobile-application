@@ -25,25 +25,30 @@ const styles = StyleSheet.create({
 });
 
 export const ReasonItem: FunctionComponent<{
+  category: string;
   description: string;
   descriptionAlert?: string;
   isLast: boolean;
-  onReasonSelection: (productName: string) => void;
-}> = ({ description, descriptionAlert, isLast, onReasonSelection }) => {
+  onReasonSelection: (productCategory: string) => void;
+}> = ({
+  category,
+  description,
+  descriptionAlert,
+  isLast,
+  onReasonSelection,
+}) => {
   const { c13nt } = useTranslate();
   return (
     <TouchableOpacity
       style={[styles.reasonComponent, isLast ? { marginBottom: 0 } : {}]}
       onPress={() => {
-        onReasonSelection(description);
+        onReasonSelection(category);
       }}
     >
       <View style={styles.reasonLayout}>
         <AppText>{c13nt(description)}</AppText>
         <AppText style={styles.reasonAlert}>
-          {descriptionAlert
-            ? c13nt(descriptionAlert, undefined, descriptionAlert)
-            : ""}
+          {descriptionAlert ? c13nt(descriptionAlert) : ""}
         </AppText>
       </View>
     </TouchableOpacity>
