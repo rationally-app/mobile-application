@@ -1,4 +1,3 @@
-import { placeholder } from "i18n-js";
 import React, { FunctionComponent, useState } from "react";
 import { View } from "react-native";
 
