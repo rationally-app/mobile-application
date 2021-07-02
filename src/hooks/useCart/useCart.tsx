@@ -26,7 +26,12 @@ export type CartItem = {
 
 export type Cart = CartItem[];
 
-type CartState = "DEFAULT" | "CHECKING_OUT" | "PURCHASED" | "UNSUCCESSFUL";
+type CartState =
+  | "DEFAULT"
+  | "CHECKING_OUT"
+  | "PURCHASED"
+  | "PENDING_CONFIRMATION"
+  | "UNSUCCESSFUL";
 
 export type CartHook = {
   cartState: CartState;
@@ -38,9 +43,11 @@ export type CartHook = {
     identifierInputs?: IdentifierInput[]
   ) => void;
   checkoutCart: () => void;
+  completeCheckout: () => void;
   checkoutResult?: PostTransactionResult;
   cartError?: Error;
   clearCartError: () => void;
+  resetCartState: () => void;
 };
 
 const getItem = (
@@ -132,6 +139,7 @@ export const useCart = (
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [cartError, setCartError] = useState<Error>();
   const clearCartError = useCallback((): void => setCartError(undefined), []);
+  const resetCartState = useCallback((): void => setCartState("DEFAULT"), []);
   const { products, getProduct } = useContext(ProductContext);
   const prevProducts = usePrevious(products);
   const prevIds = usePrevious(ids);
@@ -222,35 +230,15 @@ export const useCart = (
   );
 
   /**
-   * Handles the checking out of the cart.
    * Sets checkoutResult to the response of the post transaction.
    */
-  const checkoutCart: CartHook["checkoutCart"] = useCallback(() => {
-    const checkout = async (): Promise<void> => {
-      setCartState("CHECKING_OUT");
-
-      const allIdentifierInputs: IdentifierInput[] = [];
+  const completeCheckout: CartHook["completeCheckout"] = useCallback(() => {
+    const complete = async (): Promise<void> => {
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
-          allIdentifierInputs.push(...identifierInputs);
           return { category, quantity, identifierInputs };
         });
-
-      if (transactions.length === 0) {
-        setCartState("DEFAULT");
-        setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
-        return;
-      }
-
-      try {
-        validateIdentifierInputs(allIdentifierInputs);
-      } catch (error) {
-        setCartState("DEFAULT");
-        setCartError(error);
-        return;
-      }
-
       try {
         const transactionResponse = await postTransaction({
           ids,
@@ -288,9 +276,50 @@ export const useCart = (
         }
       }
     };
+    complete();
+  }, [cart, ids, selectedIdType, authKey, endpoint, features?.apiVersion]);
+
+  /**
+   * Handles the checking out of the cart.
+   */
+  const checkoutCart: CartHook["checkoutCart"] = useCallback(() => {
+    const checkout = async (): Promise<void> => {
+      setCartState("CHECKING_OUT");
+
+      const allIdentifierInputs: IdentifierInput[] = [];
+      const transactions = Object.values(cart)
+        .filter(({ quantity }) => quantity)
+        .map(({ category, quantity, identifierInputs }) => {
+          allIdentifierInputs.push(...identifierInputs);
+          return { category, quantity, identifierInputs };
+        });
+
+      if (transactions.length === 0) {
+        setCartState("DEFAULT");
+        setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
+        return;
+      }
+
+      try {
+        validateIdentifierInputs(allIdentifierInputs);
+      } catch (error) {
+        setCartState("DEFAULT");
+        setCartError(error);
+        return;
+      }
+      const hasPaymentReceipt = allIdentifierInputs.find(
+        (identifierInput) => identifierInput.textInputType === "PAYMENT_RECEIPT"
+      );
+      if (hasPaymentReceipt) {
+        setCartState("PENDING_CONFIRMATION");
+        return;
+      }
+
+      completeCheckout();
+    };
 
     checkout();
-  }, [authKey, cart, endpoint, ids, selectedIdType, features?.apiVersion]);
+  }, [cart, completeCheckout]);
 
   return {
     cartState,
@@ -298,8 +327,10 @@ export const useCart = (
     emptyCart,
     updateCart,
     checkoutCart,
+    completeCheckout,
     checkoutResult,
     cartError,
     clearCartError,
+    resetCartState,
   };
 };
