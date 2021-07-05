@@ -138,14 +138,14 @@ export const AuthStoreContextProvider: FunctionComponent<{
         } else {
           const migrated = await migrateOldAuthFromStore();
           if (migrated) {
-            Sentry.addBreadcrumb({
+            Sentry.Browser.addBreadcrumb({
               category: "migration",
               message: "success",
             });
             setHasLoadedFromStore(true);
             return;
           } else {
-            Sentry.addBreadcrumb({
+            Sentry.Browser.addBreadcrumb({
               category: "migration",
               message: "failure",
             });

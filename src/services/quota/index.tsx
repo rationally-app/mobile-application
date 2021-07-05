@@ -220,7 +220,7 @@ export const liveGetQuota = async (
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
-      Sentry.captureException(e);
+      Sentry.Browser.captureException(e);
     }
     // Currently the standalone mystique throws "User is not eligible" if not whitelisted,
     // however, the new eligibility check on our backend throw "id is not eligible"
@@ -306,7 +306,7 @@ export const livePostTransaction = async ({
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
-      Sentry.captureException(e);
+      Sentry.Browser.captureException(e);
     } else if (e instanceof SessionError) {
       throw e;
     }
@@ -387,7 +387,7 @@ export const livePastTransactions = async (
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
-      Sentry.captureException(e);
+      Sentry.Browser.captureException(e);
     } else if (e instanceof SessionError) {
       throw e;
     }

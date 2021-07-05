@@ -60,7 +60,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
   navigation,
 }) => {
   useEffect(() => {
-    Sentry.addBreadcrumb({
+    Sentry.Browser.addBreadcrumb({
       category: "navigation",
       message: "CustomerAppealScreen",
     });
@@ -147,7 +147,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
         policy.categoryType === "APPEAL" && policy.category === productCategory
     );
     if (appealProduct === undefined) {
-      Sentry.captureException(
+      Sentry.Browser.captureException(
         `Unable to find appeal product: ${productCategory}}`
       );
       return;

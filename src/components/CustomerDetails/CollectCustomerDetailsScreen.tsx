@@ -93,7 +93,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   isFocused,
 }) => {
   useEffect(() => {
-    Sentry.addBreadcrumb({
+    Sentry.Browser.addBreadcrumb({
       category: "navigation",
       message: "CollectCustomerDetailsScreen",
     });

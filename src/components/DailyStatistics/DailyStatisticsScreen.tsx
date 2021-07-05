@@ -52,7 +52,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   navigation,
 }) => {
   useEffect(() => {
-    Sentry.addBreadcrumb({
+    Sentry.Browser.addBreadcrumb({
       category: "navigation",
       message: "DailyStatisticsScreen",
     });

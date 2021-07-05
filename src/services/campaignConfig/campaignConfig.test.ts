@@ -6,7 +6,9 @@ import "../../common/i18n/i18nMock";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
-(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
+(Sentry.Browser.captureException as jest.Mock).mockImplementation(
+  mockCaptureException
+);
 
 const mockFetch = jest.fn();
 jest.spyOn(global, "fetch").mockImplementation(mockFetch);

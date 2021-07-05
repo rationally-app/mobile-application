@@ -69,7 +69,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   navIds,
 }) => {
   useEffect(() => {
-    Sentry.addBreadcrumb({
+    Sentry.Browser.addBreadcrumb({
       category: "navigation",
       message: "CustomerQuotaScreen",
     });
@@ -107,7 +107,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   } = useCart(ids, sessionToken, endpoint, quotaResponse?.remainingQuota);
 
   useEffect(() => {
-    Sentry.addBreadcrumb({
+    Sentry.Browser.addBreadcrumb({
       category: "cartState",
       message: cartState,
     });
@@ -204,7 +204,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
                 ? ERROR_MESSAGE.INVALID_POD_INPUT
                 : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
             );
-            Sentry.captureException(invalidIdentifierInputError);
+            Sentry.Browser.captureException(invalidIdentifierInputError);
             showErrorAlert(invalidIdentifierInputError, () => clearCartError());
             break;
           case ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT:
@@ -213,7 +213,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
                 ? ERROR_MESSAGE.DUPLICATE_POD_INPUT
                 : ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
             );
-            Sentry.captureException(duplicateIdentifierInputError);
+            Sentry.Browser.captureException(duplicateIdentifierInputError);
             showErrorAlert(duplicateIdentifierInputError, () =>
               clearCartError()
             );

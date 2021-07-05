@@ -11,7 +11,7 @@ i18n.translations = {
   en,
 };
 i18n.missingTranslation = (scope: string) => {
-  Sentry.addBreadcrumb({
+  Sentry.Browser.addBreadcrumb({
     category: "translation",
     message: `A missing translation of scope ${scope} was found.`,
   });

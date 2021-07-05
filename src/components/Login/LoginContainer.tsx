@@ -95,7 +95,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation,
 }) => {
   useEffect(() => {
-    Sentry.addBreadcrumb({ category: "navigation", message: "LoginContainer" });
+    Sentry.Browser.addBreadcrumb({
+      category: "navigation",
+      message: "LoginContainer",
+    });
   }, []);
 
   const { hasLoadedFromStore, authCredentials } = useContext(AuthStoreContext);
@@ -116,7 +119,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const lastResendWarningMessageRef = useRef("");
 
   useEffect(() => {
-    Sentry.addBreadcrumb({
+    Sentry.Browser.addBreadcrumb({
       category: "loginStage",
       message: loginStage,
     });
@@ -183,7 +186,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       if (queryEndpoint && queryKey) {
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
-          Sentry.captureException(error);
+          Sentry.Browser.captureException(error);
           showErrorAlert(error);
           setLoginStage("SCAN");
         } else {
@@ -243,7 +246,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         setLoginStage("MOBILE_NUMBER");
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
-        Sentry.captureException(error);
+        Sentry.Browser.captureException(error);
         if (e instanceof AuthError) {
           showErrorAlert(e);
         } else {

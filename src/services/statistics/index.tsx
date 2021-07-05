@@ -130,7 +130,7 @@ export const liveGetStatistics = async (
     );
   } catch (e) {
     if (e instanceof ValidationError) {
-      Sentry.captureException(e);
+      Sentry.Browser.captureException(e);
     }
 
     throw new StatisticsError(e.message);

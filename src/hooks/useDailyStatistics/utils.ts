@@ -36,7 +36,7 @@ export const countTotalTransactionsAndByCategory = (
           name:
             findItemByCategory?.name ??
             (() => {
-              Sentry.captureException(
+              Sentry.Browser.captureException(
                 `Unable to find item category in policies: ${key}}`
               );
               return key;

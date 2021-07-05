@@ -50,7 +50,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   navigation,
 }) => {
   useEffect(() => {
-    Sentry.addBreadcrumb({
+    Sentry.Browser.addBreadcrumb({
       category: "navigation",
       message: "CampaignInitialisationScreen",
     });
@@ -102,7 +102,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   useEffect(() => {
     if (updateCampaignConfigError) {
       if (updateCampaignConfigError instanceof CampaignConfigError) {
-        Sentry.captureException(updateCampaignConfigError);
+        Sentry.Browser.captureException(updateCampaignConfigError);
         showErrorAlert(updateCampaignConfigError);
       } else if (updateCampaignConfigError instanceof SessionError) {
         setAuthCredentials(key, {
@@ -167,7 +167,7 @@ export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = 
   const getNewBuildIfAny = useCallback(async (): Promise<void> => {
     let lastUpdateResult;
     for (let i = 0; i < RETRY_UPDATE_TIMES; i++) {
-      Sentry.addBreadcrumb({
+      Sentry.Browser.addBreadcrumb({
         category: "checkUpdates",
         message: `attempt ${i + 1}`,
       });
