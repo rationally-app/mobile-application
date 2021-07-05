@@ -161,15 +161,18 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
 
   const checkIfInInterestArea: BarCodeScannedCallback = (event) => {
     const bounds = event.bounds?.origin;
+    const width = event.bounds?.size.width;
+    const height = event.bounds?.size.height;
     if (
       bounds &&
       interestArea &&
+      width &&
+      height &&
+      onBarCodeScanned &&
       bounds.x >= interestArea.x &&
       bounds.y >= interestArea.y &&
-      bounds.x + event.bounds.size.width <=
-        interestArea.x + interestArea.width &&
-      bounds.y + event.bounds.size.height <=
-        interestArea.y + interestArea.height
+      bounds.x + width <= interestArea.x + interestArea.width &&
+      bounds.y + height <= interestArea.y + interestArea.height
     ) {
       onBarCodeScanned(event);
     }
