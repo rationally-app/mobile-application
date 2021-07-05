@@ -8,7 +8,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import * as Permissions from "expo-permissions";
+import { Camera } from "expo-camera";
 import { color, size } from "../../common/styles";
 import {
   BarCodeScannedCallback,
@@ -148,7 +148,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
 
   useEffect(() => {
     const askForCameraPermission = async (): Promise<void> => {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      const { status } = await Camera.requestPermissionsAsync();
       if (status === "granted") {
         setHasCameraPermission(true);
       } else {
