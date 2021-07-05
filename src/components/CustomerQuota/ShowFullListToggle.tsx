@@ -44,9 +44,7 @@ export const ShowFullListToggle: FunctionComponent<{
           <View style={styles.showFullListToggleBorder} />
           <Ionicons
             name={
-              isShowFullList
-                ? "ios-arrow-dropup-circle"
-                : "ios-arrow-dropdown-circle"
+              isShowFullList ? "ios-arrow-up-circle" : "ios-arrow-down-circle"
             }
             size={size(4)}
             color={color("blue", 50)}
