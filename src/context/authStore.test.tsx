@@ -46,7 +46,7 @@ describe("AuthStoreContextProvider", () => {
           {({ hasLoadedFromStore, authCredentials }) => (
             <>
               {hasLoadedFromStore && (
-                <Text testID="loaded">{hasLoadedFromStore}</Text>
+                <Text testID="loaded">{`${hasLoadedFromStore}`}</Text>
               )}
               <Text testID="credentials">
                 {JSON.stringify(authCredentials[testCampaignKey])}
