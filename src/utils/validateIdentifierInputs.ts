@@ -19,19 +19,20 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
-    if (textInputType === "SINGLE_CHOICE" && !value) {
+    const trimmedValue = value.trim();
+    if (textInputType === "SINGLE_CHOICE" && !trimmedValue) {
       throw new Error(ERROR_MESSAGE.MISSING_WAIVER_INPUT);
     }
-    if (textInputType !== "PAYMENT_RECEIPT" && !value) {
+    if (textInputType !== "PAYMENT_RECEIPT" && !trimmedValue) {
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
-    if (textInputType === "NUMBER" && isNaN(Number(value))) {
+    if (textInputType === "NUMBER" && isNaN(Number(trimmedValue))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
     if (
       textInputType === "PAYMENT_RECEIPT" &&
       !isMatchRegex(
-        value.trim(),
+        trimmedValue,
         validationRegex ? validationRegex : defaultPaymentReceiptValidationRegex
       )
     ) {
@@ -40,16 +41,19 @@ export const validateIdentifierInputs = (
     if (
       textInputType === "PHONE_NUMBER" &&
       !isMatchRegex(
-        value,
+        trimmedValue,
         validationRegex ? validationRegex : defaultPhoneNumberValidationRegex
       )
     ) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
-    if (!isMatchRegex(value.trim(), validationRegex)) {
+    if (!isMatchRegex(trimmedValue, validationRegex)) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
-    if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
+    if (
+      textInputType === "PHONE_NUMBER" &&
+      !fullPhoneNumberValidator(trimmedValue)
+    ) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
   }
