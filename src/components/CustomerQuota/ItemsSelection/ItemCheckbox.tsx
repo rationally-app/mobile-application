@@ -14,13 +14,9 @@ export const ItemCheckbox: FunctionComponent<{
   const [isShowAddonsItems, setIsShowAddonsItems] = useState(false);
   const { category, quantity, maxQuantity, descriptionAlert } = cartItem;
   const { getProduct } = useContext(ProductContext);
-  const { name = category, description, quantity: productQuantity, alert } =
+  const { name = category, description, quantity: productQuantity } =
     getProduct(category) || {};
 
-  const categoryFilter = [category];
-  if (typeof alert?.threshold === "string") {
-    categoryFilter.push(alert.threshold);
-  }
   return (
     <Checkbox
       label={
@@ -43,7 +39,7 @@ export const ItemCheckbox: FunctionComponent<{
           <AddonsItems
             ids={ids}
             isShowAddonItems={isShowAddonsItems}
-            categoryFilter={categoryFilter}
+            categoryFilter={category}
           />
         ) : undefined
       }
