@@ -118,8 +118,8 @@ export const zh: Translations = {
     androidStore: "苹果应用商店",
   },
   addonsToggleComponent: {
-    "*chargeable": "应收费",
-    "*waive charges": "免收费",
+    "*chargeable": "免收费记录",
+    "*waive charges": "收费记录",
   },
   identifierSelectionInput: {
     placeholder: "请选择原因",
