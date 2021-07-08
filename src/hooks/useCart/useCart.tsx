@@ -230,7 +230,8 @@ export const useCart = (
   );
 
   /**
-   * Sets checkoutResult to the response of the post transaction.
+   * POST the transaction and set the cartState according to completion
+   * or error caught.
    */
   const completeCheckout: CartHook["completeCheckout"] = useCallback(() => {
     const complete = async (): Promise<void> => {
@@ -280,7 +281,10 @@ export const useCart = (
   }, [cart, ids, selectedIdType, authKey, endpoint, features?.apiVersion]);
 
   /**
-   * Handles the checking out of the cart.
+   * Handles the checking out of the cart. This function will validate the transactions
+   * and the identifier inputs. It will follow up to post the transactions unless
+   * the identifier inputs contain a payment receipt field, where `completeCheckout`
+   * must be manually called.
    */
   const checkoutCart: CartHook["checkoutCart"] = useCallback(() => {
     const checkout = async (): Promise<void> => {
