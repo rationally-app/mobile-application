@@ -38,6 +38,11 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER",
         },
         {
+          label: "phone number with whitespace",
+          value: "  +6591234567  ",
+          textInputType: "PHONE_NUMBER",
+        },
+        {
           label: "payment receipt with regex",
           value: "1234acbd5678qwer1234",
           validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
