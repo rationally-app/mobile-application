@@ -121,8 +121,8 @@ export const en: Translations = {
     androidStore: "Play Store",
   },
   addonsToggleComponent: {
-    "*chargeable": "Previously charged",
-    "*waive charges": "Previously waived",
+    "*chargeable": "Related history",
+    "*waive charges": "Related history",
   },
   identifierSelectionInput: {
     placeholder: "Select reason",
