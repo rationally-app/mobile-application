@@ -20,13 +20,13 @@ export const validateIdentifierInputs = (
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
     const trimmedValue = value.trim();
-    if (textInputType === "SINGLE_CHOICE" && !trimmedValue) {
+    if (textInputType === "SINGLE_CHOICE" && !value) {
       throw new Error(ERROR_MESSAGE.MISSING_WAIVER_INPUT);
     }
-    if (textInputType !== "PAYMENT_RECEIPT" && !trimmedValue) {
+    if (textInputType !== "PAYMENT_RECEIPT" && !value) {
       throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
-    if (textInputType === "NUMBER" && isNaN(Number(trimmedValue))) {
+    if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
     if (
