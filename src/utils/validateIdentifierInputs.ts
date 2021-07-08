@@ -19,7 +19,6 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
-    const trimmedValue = value.trim();
     if (textInputType === "SINGLE_CHOICE" && !value) {
       throw new Error(ERROR_MESSAGE.MISSING_WAIVER_INPUT);
     }
@@ -29,6 +28,9 @@ export const validateIdentifierInputs = (
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
+
+    const trimmedValue = value.trim();
+
     if (
       textInputType === "PAYMENT_RECEIPT" &&
       !isMatchRegex(
