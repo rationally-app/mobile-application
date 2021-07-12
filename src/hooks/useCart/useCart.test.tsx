@@ -1274,7 +1274,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should be able to complete a transaction without going through checkoutCart", async () => {
+    it("should not be able to complete a transaction without going through checkoutCart", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -1307,7 +1307,7 @@ describe("useCart", () => {
         result.current.completeCheckout();
       });
 
-      expect(result.current.cartState).toBe("PURCHASED");
+      expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
           category: "toilet-paper",
@@ -1338,9 +1338,7 @@ describe("useCart", () => {
           quantity: 5,
         },
       ]);
-      expect(result.current.checkoutResult).toStrictEqual(
-        mockPostTransactionResult
-      );
+      expect(result.current.checkoutResult).toBeUndefined();
     });
   });
 
