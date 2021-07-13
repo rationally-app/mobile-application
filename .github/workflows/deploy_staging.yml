@@ -5,6 +5,12 @@ on:
     branches:
       - master
 
+# Ensure only a single job or workflow using the same concurrency group will run at a time
+# When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress,
+# the queued job or workflow will be pending.
+concurrency:
+  group: ${{ github.ref }} # The branch or tag ref that triggered the workflow run.
+
 jobs:
   test:
     name: Lint & Test
