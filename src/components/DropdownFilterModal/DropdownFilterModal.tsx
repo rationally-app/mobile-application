@@ -107,7 +107,9 @@ export const ListItem: FunctionComponent<{
   return (
     <View style={styles.listItemView}>
       {item.tag ? (
-        <Text style={styles.listItemTag}>{item.label}</Text>
+        <Text style={styles.listItemTag}>
+          {c13nt(item.value, undefined, item.label)}
+        </Text>
       ) : (
         <TouchableOpacity
           onPress={() => {
