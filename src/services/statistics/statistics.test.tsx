@@ -4,9 +4,7 @@ import { DailyStatisticsResult } from "../../types";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
-(Sentry.captureException as jest.Mock).mockImplementation(
-  mockCaptureException
-);
+(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const mockFetch = jest.fn();
 jest.spyOn(global, "fetch").mockImplementation(mockFetch);

@@ -7,9 +7,7 @@ import "../../common/i18n/i18nMock";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
-(Sentry.captureException as jest.Mock).mockImplementation(
-  mockCaptureException
-);
+(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const mockDate = jest.spyOn(global.Date, "now");
 const mockNavigate: any = { navigate: jest.fn() };

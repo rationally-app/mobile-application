@@ -11,9 +11,7 @@ import "../../common/i18n/i18nMock";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
-(Sentry.captureException as jest.Mock).mockImplementation(
-  mockCaptureException
-);
+(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 jest.mock("../../services/statistics");
 const mockGetDailyStatistics = getDailyStatistics as jest.Mock;

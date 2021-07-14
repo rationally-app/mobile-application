@@ -19,9 +19,7 @@ import { IdentificationContextProvider } from "../../context/identification";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
-(Sentry.captureException as jest.Mock).mockImplementation(
-  mockCaptureException
-);
+(Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const mockNavigate = { navigate: jest.fn() };
 const mockValidateAndCleanId = jest.spyOn(
