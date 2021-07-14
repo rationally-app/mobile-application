@@ -15,7 +15,7 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.13.2",
+    "@react-native-async-storage/async-storage": "^1.15.5",
     "date-fns": "^2.21.1",
     "expo": "^38.0.0",
     "expo-barcode-scanner": "~8.2.1",
