@@ -28,10 +28,13 @@ export const validateIdentifierInputs = (
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
+
+    const trimmedValue = value.trim();
+
     if (
       textInputType === "PAYMENT_RECEIPT" &&
       !isMatchRegex(
-        value,
+        trimmedValue,
         validationRegex ? validationRegex : defaultPaymentReceiptValidationRegex
       )
     ) {
@@ -40,16 +43,19 @@ export const validateIdentifierInputs = (
     if (
       textInputType === "PHONE_NUMBER" &&
       !isMatchRegex(
-        value,
+        trimmedValue,
         validationRegex ? validationRegex : defaultPhoneNumberValidationRegex
       )
     ) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
-    if (!isMatchRegex(value, validationRegex)) {
+    if (!isMatchRegex(trimmedValue, validationRegex)) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
-    if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
+    if (
+      textInputType === "PHONE_NUMBER" &&
+      !fullPhoneNumberValidator(trimmedValue)
+    ) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
   }
