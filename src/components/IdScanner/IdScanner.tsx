@@ -15,6 +15,7 @@ import {
   BarCodeScanner,
   BarCodeScannerProps,
 } from "expo-barcode-scanner";
+import Constants from "expo-constants";
 import { LoadingView } from "../Loading";
 import { LightBox } from "../Layout/LightBox";
 import { Ionicons } from "@expo/vector-icons";
@@ -160,6 +161,9 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   }, [onCancel]);
 
   const checkIfInInterestArea: BarCodeScannedCallback = (event) => {
+    // Will not check bounds if running on emulator since bounds become undefined.
+    if (!Constants.isDevice) onBarCodeScanned(event);
+
     const bounds = event.bounds?.origin;
     if (
       bounds &&
