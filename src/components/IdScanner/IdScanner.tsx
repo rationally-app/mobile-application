@@ -161,9 +161,6 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   }, [onCancel]);
 
   const checkIfInInterestArea: BarCodeScannedCallback = (event) => {
-    // Will not check bounds if running on emulator since bounds become undefined.
-    if (!Constants.isDevice) onBarCodeScanned(event);
-
     const bounds = event.bounds?.origin;
     if (
       bounds &&
@@ -190,7 +187,9 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
       {hasCameraPermission && isScanningEnabled ? (
         <IdScannerCamera
           onBarCodeScanned={
-            hasLimitedInterestArea && platform === "android"
+            hasLimitedInterestArea &&
+            platform === "android" &&
+            Constants.isDevice
               ? checkIfInInterestArea
               : onBarCodeScanned
           }
