@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
-import * as Permissions from "expo-permissions";
+import { Camera } from "expo-camera";
 import { color, size } from "../../common/styles";
 import { IdScannerCamera } from "../IdScanner/IdScanner";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
@@ -82,7 +82,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   const [showManualInput, setShowManualInput] = useState(false);
   useEffect(() => {
     const askForCameraPermission = async (): Promise<void> => {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      const { status } = await Camera.requestPermissionsAsync();
       if (status === "granted") {
         setHasCameraPermission(true);
       } else {

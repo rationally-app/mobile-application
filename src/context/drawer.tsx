@@ -5,9 +5,10 @@ import React, {
   useState,
   useCallback,
 } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export interface DrawerButton {
-  icon: string;
+  icon: keyof typeof MaterialCommunityIcons.glyphMap;
   label: string;
   onPress: () => void;
   accessibilityLabel?: string;

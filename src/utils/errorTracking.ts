@@ -3,11 +3,11 @@ import * as SentryExpo from "sentry-expo";
 const SENTRY_LOG_PREFIX = "[dev-sentry]";
 
 // This dev mock only implements the 4 currently used Sentry functions
-let Sentry: Pick<
-  typeof SentryExpo,
-  "init" | "setRelease" | "addBreadcrumb" | "captureException"
->;
-
+let Sentry: Pick<typeof SentryExpo, "init"> &
+  Pick<
+    typeof SentryExpo.Native,
+    "setRelease" | "addBreadcrumb" | "captureException"
+  >;
 if (__DEV__) {
   Sentry = {
     init: (): void => console.log(`${SENTRY_LOG_PREFIX} initialised`),
@@ -23,7 +23,10 @@ if (__DEV__) {
     },
   };
 } else {
-  Sentry = SentryExpo;
+  Sentry = {
+    ...SentryExpo.Native,
+    init: SentryExpo.init,
+  };
 }
 
 export { Sentry };

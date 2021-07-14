@@ -5,11 +5,12 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
+import { Feather } from "@expo/vector-icons";
 
 type MessageContent = {
   title: string;
   description?: string;
-  featherIconName?: string;
+  featherIconName?: keyof typeof Feather.glyphMap;
   action?: {
     callback: () => void;
     label: string;

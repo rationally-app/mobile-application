@@ -95,7 +95,10 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   navigation,
 }) => {
   useEffect(() => {
-    Sentry.addBreadcrumb({ category: "navigation", message: "LoginContainer" });
+    Sentry.addBreadcrumb({
+      category: "navigation",
+      message: "LoginContainer",
+    });
   }, []);
 
   const { hasLoadedFromStore, authCredentials } = useContext(AuthStoreContext);

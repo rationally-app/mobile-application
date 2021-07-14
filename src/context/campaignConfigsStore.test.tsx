@@ -46,7 +46,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
           {({ hasLoadedFromStore, allCampaignConfigs }) => (
             <>
               {hasLoadedFromStore && (
-                <Text testID="loaded">{hasLoadedFromStore}</Text>
+                <Text testID="loaded">{`${hasLoadedFromStore}`}</Text>
               )}
               <Text testID="features">
                 {JSON.stringify(allCampaignConfigs[testCampaignKey]?.features)}
@@ -66,7 +66,6 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockGetItem).toHaveBeenCalledTimes(1);
     expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
     expect(queryByTestId("loaded")).toBeNull();
-
     await waitFor(() => {
       expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
       expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);

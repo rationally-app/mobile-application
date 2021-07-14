@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 interface Banner {
   title: string;
   description?: string;
-  featherIconName?: string;
+  featherIconName?: keyof typeof Feather.glyphMap;
   action?: {
     callback: () => void;
     label: string;
