@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, useContext } from "react";
+import React, {
+  FunctionComponent,
+  useEffect,
+  useState,
+  useContext,
+} from "react";
 import { View, Vibration } from "react-native";
 import { CustomerCard } from "../CustomerCard";
 import { size, color } from "../../../common/styles";
@@ -24,7 +29,10 @@ interface ItemsSelectionCard {
   ids: string[];
   addId: (id: string) => void;
   isLoading: boolean;
+  hasPendingConfirmation: boolean;
   checkoutCart: () => void;
+  completeCheckout: () => void;
+  resetCartState: () => void;
   onCancel: () => void;
   onBack: () => void;
   cart: Cart;
@@ -40,7 +48,10 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   ids,
   addId,
   isLoading,
+  hasPendingConfirmation,
   checkoutCart,
+  completeCheckout,
+  resetCartState,
   onCancel,
   onBack,
   cart,
@@ -52,6 +63,22 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const { showWarnAlert, showConfirmationAlert, showErrorAlert } = useContext(
     AlertModalContext
   );
+
+  useEffect(() => {
+    if (!hasPendingConfirmation) {
+      return;
+    }
+    showConfirmationAlert(
+      CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
+      completeCheckout,
+      resetCartState
+    );
+  }, [
+    hasPendingConfirmation,
+    completeCheckout,
+    resetCartState,
+    showConfirmationAlert,
+  ]);
 
   const { i18nt } = useTranslate();
 
@@ -73,19 +100,6 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
     } catch (e) {
       setIsAddUserModalVisible(false);
       showErrorAlert(e, () => setIsAddUserModalVisible(true));
-    }
-  };
-
-  const onCheckout = (alert: string): (() => void) => {
-    if (alert === "*chargeable") {
-      return () => {
-        showConfirmationAlert(
-          CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
-          checkoutCart
-        );
-      };
-    } else {
-      return checkoutCart;
     }
   };
 
@@ -165,7 +179,7 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
                 color={color("grey", 0)}
               />
             }
-            onPress={onCheckout(addonToggleItem.descriptionAlert)}
+            onPress={checkoutCart}
             isLoading={isLoading}
             fullWidth={true}
             accessibilityLabel="items-selection-checkout-button"

@@ -595,6 +595,67 @@ describe("useCart", () => {
       expect(result.current.cartState).toBe("UNSUCCESSFUL");
     });
 
+    it("should show PENDING_CONFIRMATION cart state when a PAYMENT_RECEIPT identifier input exists", async () => {
+      expect.assertions(2);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await waitFor(() => {
+        result.current.updateCart("toilet-paper", 1, [
+          {
+            label: "second",
+            value: "second",
+            textInputType: "PAYMENT_RECEIPT",
+          },
+        ]);
+        result.current.checkoutCart();
+      });
+
+      expect(result.current.cartState).toBe("PENDING_CONFIRMATION");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "second",
+              textInputType: "PAYMENT_RECEIPT",
+              value: "second",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 1,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "first",
+              scanButtonType: "BARCODE",
+              textInputType: "STRING",
+              value: "",
+            },
+            {
+              label: "last",
+              scanButtonType: "BARCODE",
+              textInputType: "STRING",
+              value: "",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0,
+        },
+      ]);
+    });
+
     it("should set cartError when no item was selected", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
@@ -1139,6 +1200,145 @@ describe("useCart", () => {
       });
 
       expect(result.current.cart).toStrictEqual([]);
+    });
+  });
+
+  describe("complete checkout", () => {
+    it("should set the correct checkoutResult when completeCheckout is called", async () => {
+      expect.assertions(2);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await waitFor(() => {
+        result.current.updateCart("toilet-paper", 1, [
+          {
+            label: "second",
+            value: "second",
+            textInputType: "PAYMENT_RECEIPT",
+          },
+        ]);
+      });
+
+      mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
+
+      await waitFor(() => {
+        result.current.checkoutCart();
+        expect(result.current.cartState).toBe("PENDING_CONFIRMATION");
+      });
+
+      await waitFor(() => {
+        result.current.completeCheckout();
+      });
+
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "second",
+              textInputType: "PAYMENT_RECEIPT",
+              value: "second",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 1,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "first",
+              scanButtonType: "BARCODE",
+              textInputType: "STRING",
+              value: "",
+            },
+            {
+              label: "last",
+              scanButtonType: "BARCODE",
+              textInputType: "STRING",
+              value: "",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0,
+        },
+      ]);
+    });
+
+    it("should not be able to complete a transaction without going through checkoutCart", async () => {
+      expect.assertions(3);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await waitFor(() => {
+        result.current.updateCart("toilet-paper", 2, [
+          {
+            label: "first",
+            value: "first",
+            textInputType: "STRING",
+          },
+        ]);
+        result.current.updateCart("chocolate", 5, [
+          {
+            label: "last",
+            value: "last",
+            textInputType: "STRING",
+          },
+        ]);
+      });
+
+      mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
+
+      await waitFor(() => {
+        result.current.completeCheckout();
+      });
+
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "first",
+              textInputType: "STRING",
+              value: "first",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "last",
+              textInputType: "STRING",
+              value: "last",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5,
+        },
+      ]);
+      expect(result.current.checkoutResult).toBeUndefined();
     });
   });
 

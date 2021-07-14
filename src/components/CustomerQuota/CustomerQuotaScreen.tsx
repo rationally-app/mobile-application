@@ -102,8 +102,10 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     cart,
     updateCart,
     checkoutCart,
+    completeCheckout,
     cartError,
     clearCartError,
+    resetCartState,
   } = useCart(ids, sessionToken, endpoint, quotaResponse?.remainingQuota);
 
   useEffect(() => {
@@ -305,7 +307,10 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             ids={ids}
             addId={addId}
             isLoading={cartState === "CHECKING_OUT"}
+            hasPendingConfirmation={cartState === "PENDING_CONFIRMATION"}
             checkoutCart={checkoutCart}
+            completeCheckout={completeCheckout}
+            resetCartState={resetCartState}
             onCancel={onCancel}
             onBack={onBack}
             cart={cart}
