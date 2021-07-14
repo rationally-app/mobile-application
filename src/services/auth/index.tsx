@@ -126,7 +126,7 @@ export const liveValidateOTP = async (
   endpoint: string
 ): Promise<SessionCredentials> => {
   const payload = { code, otp, phone: mobileNumber };
-  Sentry.Browser.addBreadcrumb({
+  Sentry.addBreadcrumb({
     category: "otpValidate",
     message: JSON.stringify(payload),
   });
@@ -142,7 +142,7 @@ export const liveValidateOTP = async (
     return response;
   } catch (e) {
     if (e instanceof ValidationError) {
-      Sentry.Browser.captureException(e);
+      Sentry.captureException(e);
     }
     if (e.message.match(/Try again in [1-9] minutes?\./)) {
       throw new LoginLockedError(e.message);

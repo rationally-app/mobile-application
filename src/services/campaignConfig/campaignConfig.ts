@@ -38,7 +38,7 @@ const liveGetCampaignConfig = async (
     );
   } catch (e) {
     if (e instanceof ValidationError) {
-      Sentry.Browser.captureException(e);
+      Sentry.captureException(e);
     } else if (e instanceof SessionError) {
       throw e;
     } else if (e instanceof NetworkError) {

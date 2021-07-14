@@ -64,11 +64,11 @@ export const useCheckUpdates = (): ((
           return "TOO_RECENT_CHECK";
         }
       } catch (e) {
-        Sentry.Browser.addBreadcrumb({
+        Sentry.addBreadcrumb({
           category: "action",
           message: "Check for updates",
         });
-        Sentry.Browser.captureException(e);
+        Sentry.captureException(e);
         return "UPDATE_ERROR";
       }
     },

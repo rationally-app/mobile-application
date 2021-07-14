@@ -9,6 +9,6 @@ Sentry.init({
   // enableInExpoDevelopment: true,
   debug: __DEV__,
 });
-Sentry.Native.setRelease(Constants.manifest!.revisionId!);
+Sentry.setRelease(Constants.manifest!.revisionId!);
 
 export default IS_STORYBOOK_VIEW ? Storybook : AppNavigation;

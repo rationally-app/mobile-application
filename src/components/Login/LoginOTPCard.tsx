@@ -108,7 +108,7 @@ export const LoginOTPCard: FunctionComponent<LoginOTPCard> = ({
       setAuthCredentials(`${operatorToken}${endpoint}`, credentials);
       onSuccess(credentials);
     } catch (e) {
-      Sentry.Browser.captureException(e);
+      Sentry.captureException(e);
       if (
         e instanceof OTPWrongError ||
         e instanceof OTPExpiredError ||

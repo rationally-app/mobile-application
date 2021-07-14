@@ -129,7 +129,7 @@ export const useQuota = (
           products
         );
         if (hasInvalidQuota(filteredQuotas)) {
-          Sentry.Browser.captureException(
+          Sentry.captureException(
             `Negative Quota Received: ${JSON.stringify(
               quotaResponse?.remainingQuota
             )}`

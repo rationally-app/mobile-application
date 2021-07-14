@@ -61,7 +61,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
   navigation,
 }) => {
   useEffect(() => {
-    Sentry.Browser.addBreadcrumb({
+    Sentry.addBreadcrumb({
       category: "navigation",
       message: "CampaignLocationsScreen",
     });

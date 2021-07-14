@@ -11,7 +11,7 @@ import "../../common/i18n/i18nMock";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
-(Sentry.Browser.captureException as jest.Mock).mockImplementation(
+(Sentry.captureException as jest.Mock).mockImplementation(
   mockCaptureException
 );
 

@@ -12,11 +12,11 @@ export class ErrorBoundary extends Component<unknown, State> {
   }
 
   componentDidCatch(error: Error): void {
-    Sentry.Browser.addBreadcrumb({
+    Sentry.addBreadcrumb({
       category: "navigation",
       message: "ErrorBoundary",
     });
-    Sentry.Browser.captureException(error);
+    Sentry.captureException(error);
   }
 
   render(): ReactNode {
