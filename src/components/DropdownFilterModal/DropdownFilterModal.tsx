@@ -206,7 +206,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
                 onItemSelection={onItemSelection}
               />
             )}
-            keyExtractor={(item) => item.value}
+            keyExtractor={(item) => item.label ?? item.value}
           />
         </View>
       </View>
