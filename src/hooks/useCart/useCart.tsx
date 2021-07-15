@@ -233,8 +233,8 @@ export const useCart = (
    * POST the transaction and set the cartState according to completion
    * or error caught.
    */
-  const closeCheckoutCart = useCallback(() => {
-    const close = async (): Promise<void> => {
+  const _completeCheckout = useCallback(() => {
+    const complete = async (): Promise<void> => {
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
@@ -277,14 +277,14 @@ export const useCart = (
         }
       }
     };
-    close();
+    complete();
   }, [cart, ids, selectedIdType, authKey, endpoint, features?.apiVersion]);
 
   const completeCheckout: CartHook["completeCheckout"] = useCallback(() => {
     if (cartState === "PENDING_CONFIRMATION") {
-      closeCheckoutCart();
+      _completeCheckout();
     }
-  }, [cartState, closeCheckoutCart]);
+  }, [cartState, _completeCheckout]);
 
   /**
    * Handles the checking out of the cart. This function will validate the transactions
@@ -325,11 +325,11 @@ export const useCart = (
         return;
       }
 
-      closeCheckoutCart();
+      _completeCheckout();
     };
 
     checkout();
-  }, [cart, closeCheckoutCart]);
+  }, [cart, _completeCheckout]);
 
   return {
     cartState,
