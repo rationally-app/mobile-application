@@ -566,6 +566,76 @@ describe("useCart", () => {
       );
     });
 
+    it("should set the correct checkoutResult when checkoutCart is called with whitespaced values", async () => {
+      expect.assertions(4);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await waitFor(() => {
+        result.current.updateCart("toilet-paper", 2, [
+          {
+            label: "first",
+            value: "      first          ",
+            textInputType: "STRING",
+          },
+        ]);
+        result.current.updateCart("chocolate", 5, [
+          {
+            label: "last",
+            value: "        last      ",
+            textInputType: "STRING",
+          },
+        ]);
+      });
+
+      mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
+
+      await waitFor(() => {
+        result.current.checkoutCart();
+        expect(result.current.cartState).toBe("CHECKING_OUT");
+      });
+
+      expect(result.current.cartState).toBe("PURCHASED");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "first",
+              textInputType: "STRING",
+              value: "first",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "last",
+              textInputType: "STRING",
+              value: "last",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5,
+        },
+      ]);
+      expect(result.current.checkoutResult).toStrictEqual(
+        mockPostTransactionResult
+      );
+    });
+
     it("should show unsuccessful cart state when token mismatch error is received (return-pod)", async () => {
       expect.assertions(2);
       const ids = ["ID1"];
