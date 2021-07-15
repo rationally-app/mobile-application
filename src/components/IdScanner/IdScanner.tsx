@@ -15,6 +15,7 @@ import {
   BarCodeScanner,
   BarCodeScannerProps,
 } from "expo-barcode-scanner";
+import Constants from "expo-constants";
 import { LoadingView } from "../Loading";
 import { LightBox } from "../Layout/LightBox";
 import { Ionicons } from "@expo/vector-icons";
@@ -186,7 +187,9 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
       {hasCameraPermission && isScanningEnabled ? (
         <IdScannerCamera
           onBarCodeScanned={
-            hasLimitedInterestArea && platform === "android"
+            hasLimitedInterestArea &&
+            platform === "android" &&
+            Constants.isDevice
               ? checkIfInInterestArea
               : onBarCodeScanned
           }
