@@ -52,7 +52,7 @@ jobs:
           expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
           expo-cache: true
-      - uses: rlespinasse/github-slug-action@v2.x
+      - uses: rlespinasse/github-slug-action@v3.x
       - name: Generate Release Channel # Release Channels are named prod-<Major Release>, i.e. prod-1, prod-3
         id: releaseChannel
         run: |
@@ -89,7 +89,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Fetch Tags
         run: git fetch --prune --unshallow --tags -f
-      - uses: rlespinasse/github-slug-action@v2.x
+      - uses: rlespinasse/github-slug-action@v3.x
       - name: Set tag variables
         id: setTags
         run: |
@@ -117,7 +117,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - uses: rlespinasse/github-slug-action@v2.x
+      - uses: rlespinasse/github-slug-action@v3.x
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: npm
@@ -158,7 +158,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - uses: rlespinasse/github-slug-action@v2.x
+      - uses: rlespinasse/github-slug-action@v3.x
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: npm
