@@ -9,8 +9,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePrevious } from "../hooks/usePrevious";
 import { AuthCredentials } from "../types";
 import { Sentry } from "../utils/errorTracking";
+import * as SecureStore from 'expo-secure-store';
 
 export const AUTH_CREDENTIALS_STORE_KEY = "AUTH_STORE";
+
+/** Number of credentials per bucket. Calculated with 2048/286. 286 is the length of a stringified AuthCredentials object. */
+export const BUCKET_SIZE = 7;
 
 /** @deprecated */
 export const SESSION_TOKEN_KEY = "SESSION_TOKEN";
@@ -41,6 +45,25 @@ export const AuthStoreContext = createContext<AuthStoreContext>({
   clearAuthCredentials: () => undefined,
 });
 
+/**
+ * Uses three versions of auth credential storage. Will automatically migrate to v3 and clear the values in v1 and v2 storage
+ * 
+ * Versions:
+ * 
+ * 1. (deprecated)
+ *    - Stores the corresponding values in AsyncStorage under the following keys: {@link SESSION_TOKEN_KEY}, {@link EXPIRY_KEY} and {@link ENDPOINT_KEY}
+ *    - Can only store one set of credentials
+ * 2. (deprecated)
+ *    - Stores a stringified {@link AuthCredentialsMap} in AsyncStorage under the key {@link AUTH_CREDENTIALS_STORE_KEY}
+ *    - Map from {{@link AuthCredentials.operatorToken}}{{@link AuthCredentials.endpoint}} to corresponding credentials
+ * 3. (current)
+ *    - Stores a stringified {@link AuthCredentialsMap} in SecureStorage under the key {@link AUTH_CREDENTIALS_STORE_KEY}
+ *    - Map from a hash of {{@link AuthCredentials.operatorToken}}{{@link AuthCredentials.endpoint}} to corresponding credentials
+ *    - Due to the limit of 2048 bytes per key, we adopt the following storage method:
+ *      - The map is split into buckets, each containing 7 {@link authCredentials} objects
+ *      - {@link AUTH_CREDENTIALS_STORE_KEY} stores the number of buckets
+ *      - {@link AUTH_CREDENTIALS_STORE_KEY}_n stores the nth bucket
+ */
 export const AuthStoreContextProvider: FunctionComponent<{
   shouldMigrate?: boolean; // Temporary toggle to disable migration when testing
 }> = ({ shouldMigrate = true, children }) => {
@@ -54,8 +77,35 @@ export const AuthStoreContextProvider: FunctionComponent<{
     if (hasLoadedFromStore) {
       const authCredentialsString = JSON.stringify(authCredentials);
       const prevAuthCredentialsString = JSON.stringify(prevAuthCredentials);
+      // do a top level check to see if there are any changes
       if (authCredentialsString !== prevAuthCredentialsString) {
-        AsyncStorage.setItem(AUTH_CREDENTIALS_STORE_KEY, authCredentialsString);
+
+        // if there are changes, do a check for each bucket
+        const authKeys = Object.keys(authCredentials); // list of new keys
+        const prevAuthKeys = Object.keys(prevAuthCredentials?? {}); // list of prev keys
+        let authCredentialsBucket:AuthCredentialsMap = {}, prevAuthCredentialsBucket:AuthCredentialsMap = {}; // temporary variables to hold the buckets being checked
+        const credentialsCount = Math.max(authKeys.length, prevAuthKeys.length);
+        for (let i = 0 ;i < credentialsCount; i++) {
+          if (i<authKeys.length) {
+            authCredentialsBucket[authKeys[i]] = authCredentials[authKeys[i]];
+          }
+          if (i<prevAuthKeys.length) { // if this condition is fulfilled we know prevAuthCredentials != undefined
+            prevAuthCredentialsBucket[prevAuthKeys[i]] = prevAuthCredentials![prevAuthKeys[i]];
+          }
+          if (i % BUCKET_SIZE === BUCKET_SIZE-1 || i === credentialsCount - 1) { // check when the bucket is full or when we reached the end
+            const authCredentialsBucketString = JSON.stringify(authCredentialsBucket);
+            const prevAuthCredentialsBucketString = JSON.stringify(prevAuthCredentialsBucket);
+            if (authCredentialsBucketString !== prevAuthCredentialsBucketString) {
+              if (authCredentialsBucketString === "{}") { // if the new bucket is empty, delete the key
+                SecureStore.deleteItemAsync(AUTH_CREDENTIALS_STORE_KEY+"_"+Math.floor(i/BUCKET_SIZE));
+              } else {
+                SecureStore.setItemAsync(AUTH_CREDENTIALS_STORE_KEY+"_"+Math.floor(i/BUCKET_SIZE),authCredentialsBucketString);
+              }
+            }
+            authCredentialsBucket = {};
+            prevAuthCredentialsBucket = {};
+          }
+        }
       }
     }
   }, [hasLoadedFromStore, authCredentials, prevAuthCredentials]);
@@ -90,6 +140,10 @@ export const AuthStoreContextProvider: FunctionComponent<{
 
   const [, setState] = useState();
   useEffect(() => {
+    /**
+     * Migrates credentials from old auth store to new auth store
+     * @returns true if credentials were migrated from oldAuth, false if nothing found there
+     */
     const migrateOldAuthFromStore = async (): Promise<boolean> => {
       const values = await AsyncStorage.multiGet([
         SESSION_TOKEN_KEY,
