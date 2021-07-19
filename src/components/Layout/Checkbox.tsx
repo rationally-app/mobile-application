@@ -84,12 +84,14 @@ const Toggle: FunctionComponent<Toggle> = ({ isChecked }) => {
 interface Checkbox extends Toggle {
   label: ReactElement;
   addons?: ReactElement;
+  addonsLabel?: ReactElement;
   onToggle: (isChecked: boolean) => void;
 }
 
 export const Checkbox: FunctionComponent<Checkbox> = ({
   label,
   addons,
+  addonsLabel,
   isChecked,
   onToggle,
 }) => {
@@ -111,7 +113,10 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
         ]}
       >
         <View style={styles.categoryWrapper}>
-          <View style={styles.labelWrapper}>{label}</View>
+          <View>
+            <View style={styles.labelWrapper}>{label}</View>
+            <View style={styles.labelWrapper}>{addonsLabel}</View>
+          </View>
           <View style={styles.toggleWrapper}>
             <Toggle isChecked={isChecked} />
           </View>
