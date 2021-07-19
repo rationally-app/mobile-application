@@ -236,8 +236,10 @@ describe("CustomerQuotaScreen", () => {
           emptyCart: () => null,
           updateCart: () => null,
           checkoutCart: mockCheckoutCart,
+          completeCheckout: () => null,
           cartError: undefined,
           clearCartError: () => null,
+          resetCartState: () => null,
         });
         mockUseQuota.mockReturnValue({
           quotaResponse: mockQuotaResponse,
@@ -292,8 +294,10 @@ describe("CustomerQuotaScreen", () => {
           emptyCart: () => null,
           updateCart: () => null,
           checkoutCart: () => null,
+          completeCheckout: () => null,
           cartError: undefined,
           clearCartError: () => null,
+          resetCartState: () => null,
         });
         mockUseQuota.mockReturnValue({
           quotaResponse: mockQuotaResponse,
@@ -352,8 +356,10 @@ describe("CustomerQuotaScreen", () => {
           emptyCart: () => null,
           updateCart: () => null,
           checkoutCart: () => null,
+          completeCheckout: () => null,
           cartError: undefined,
           clearCartError: () => null,
+          resetCartState: () => null,
         });
         mockUseQuota.mockReturnValue({
           quotaResponse: mockQuotaResponse,
@@ -418,8 +424,10 @@ describe("CustomerQuotaScreen", () => {
           emptyCart: () => null,
           updateCart: () => null,
           checkoutCart: () => null,
+          completeCheckout: () => null,
           cartError: undefined,
           clearCartError: () => null,
+          resetCartState: () => null,
         });
         mockUseQuota.mockReturnValue({
           quotaResponse: mockQuotaResponse,
@@ -468,8 +476,10 @@ describe("CustomerQuotaScreen", () => {
           emptyCart: () => null,
           updateCart: () => null,
           checkoutCart: () => null,
+          completeCheckout: () => null,
           cartError: undefined,
           clearCartError: () => null,
+          resetCartState: () => null,
         });
         mockUseQuota.mockReturnValue({
           quotaResponse: mockQuotaResponse,
@@ -523,8 +533,10 @@ describe("CustomerQuotaScreen", () => {
           emptyCart: () => null,
           updateCart: () => null,
           checkoutCart: () => null,
+          completeCheckout: () => null,
           cartError: undefined,
           clearCartError: () => null,
+          resetCartState: () => null,
         });
         mockUseQuota.mockReturnValue({
           quotaResponse: mockQuotaResponse,
