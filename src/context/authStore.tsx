@@ -61,8 +61,8 @@ export const AuthStoreContext = createContext<AuthStoreContext>({
  *    - Map from a hash of {{@link AuthCredentials.operatorToken}}{{@link AuthCredentials.endpoint}} to corresponding credentials
  *    - Due to the limit of 2048 bytes per key, we adopt the following storage method:
  *      - The map is split into buckets, each containing 7 {@link authCredentials} objects
- *      - {@link AUTH_CREDENTIALS_STORE_KEY} stores the number of buckets
- *      - {@link AUTH_CREDENTIALS_STORE_KEY}_n stores the nth bucket
+ *      - @todo {@link AUTH_CREDENTIALS_STORE_KEY} stores the number of buckets
+ *      - {@link AUTH_CREDENTIALS_STORE_KEY}_n stores the nth bucket (zero indexed)
  */
 export const AuthStoreContextProvider: FunctionComponent<{
   shouldMigrate?: boolean; // Temporary toggle to disable migration when testing
@@ -73,48 +73,43 @@ export const AuthStoreContextProvider: FunctionComponent<{
   );
   const prevAuthCredentials = usePrevious(authCredentials);
 
+  /**
+   * Compares old and new credential maps and saves changes to the store. Only
+   * updates buckets that have changes.
+   */
   const saveToStore: (
     authCredentials: AuthCredentialsMap,
     prevAuthCredentials: AuthCredentialsMap
   ) => void = useCallback((authCredentials, prevAuthCredentials) => {
-    const authKeys = Object.keys(authCredentials); // list of new keys
-    const prevAuthKeys = Object.keys(prevAuthCredentials); // list of prev keys
-    let authCredentialsBucket: AuthCredentialsMap = {},
-      prevAuthCredentialsBucket: AuthCredentialsMap = {}; // temporary variables to hold the buckets being checked
-    const credentialsCount = Math.max(authKeys.length, prevAuthKeys.length);
-    for (let i = 0; i < credentialsCount; i++) {
-      if (i < authKeys.length) {
-        authCredentialsBucket[authKeys[i]] = authCredentials[authKeys[i]];
-      }
-      if (i < prevAuthKeys.length) {
-        // if this condition is fulfilled we know prevAuthCredentials != undefined
-        prevAuthCredentialsBucket[prevAuthKeys[i]] = prevAuthCredentials![
-          prevAuthKeys[i]
-        ];
-      }
-      if (i % BUCKET_SIZE === BUCKET_SIZE - 1 || i === credentialsCount - 1) {
-        // check when the bucket is full or when we reached the end
-        const authCredentialsBucketString = JSON.stringify(
-          authCredentialsBucket
-        );
-        const prevAuthCredentialsBucketString = JSON.stringify(
-          prevAuthCredentialsBucket
-        );
-        if (authCredentialsBucketString !== prevAuthCredentialsBucketString) {
-          if (authCredentialsBucketString === "{}") {
-            // if the new bucket is empty, delete the key
-            SecureStore.deleteItemAsync(
-              AUTH_CREDENTIALS_STORE_KEY + "_" + Math.floor(i / BUCKET_SIZE)
-            );
-          } else {
-            SecureStore.setItemAsync(
-              AUTH_CREDENTIALS_STORE_KEY + "_" + Math.floor(i / BUCKET_SIZE),
-              authCredentialsBucketString
-            );
-          }
+    const authEntries = Object.entries(authCredentials); // list of new credentials
+    const prevAuthEntries = Object.entries(prevAuthCredentials); // list of prev credentials
+    // iterate the longer length in case we have to clear buckets
+    const credentialsCount = Math.max(
+      authEntries.length,
+      prevAuthEntries.length
+    );
+
+    for (let i = 0; i < credentialsCount; i += BUCKET_SIZE) {
+      const authCredentialsBucketString = JSON.stringify(
+        Object.fromEntries(authEntries.splice(i, i + BUCKET_SIZE))
+      );
+      const prevAuthCredentialsBucketString = JSON.stringify(
+        Object.fromEntries(prevAuthEntries.splice(i, i + BUCKET_SIZE))
+      );
+
+      if (authCredentialsBucketString !== prevAuthCredentialsBucketString) {
+        const bucketNo = Math.floor(i / BUCKET_SIZE);
+        if (authCredentialsBucketString === "{}") {
+          // if the new bucket is empty, delete the key
+          SecureStore.deleteItemAsync(
+            AUTH_CREDENTIALS_STORE_KEY + "_" + bucketNo
+          );
+        } else {
+          SecureStore.setItemAsync(
+            AUTH_CREDENTIALS_STORE_KEY + "_" + bucketNo,
+            authCredentialsBucketString
+          );
         }
-        authCredentialsBucket = {};
-        prevAuthCredentialsBucket = {};
       }
     }
   }, []);
