@@ -157,63 +157,110 @@ export const AuthStoreContextProvider: FunctionComponent<{
   const [, setState] = useState();
   useEffect(() => {
     /**
-     * Migrates credentials from old auth store to new auth store
-     * @returns true if credentials were migrated from oldAuth, false if nothing found there
+     * Migrates credentials from old auth store to new auth store. Checks stores in order of
+     * increasing age (e.g. checks v2 then v1). Takes the value in the highest version. Clears all
+     * old storage locations.
+     * @param newStorageHasData whether most recent data has been found. If this is true, does not
+     * attempt any migration and just clears old storage locations
+     * @returns the updated value of {@link hasUpdatedData}, i.e. true if any updated data was found
+     * in the older storage (if {@link newStorageHasData} was passed in as true, it will always return true)
      */
-    const migrateOldAuthFromStore = async (): Promise<boolean> => {
-      const values = await AsyncStorage.multiGet([
-        SESSION_TOKEN_KEY,
-        EXPIRY_KEY,
-        ENDPOINT_KEY,
-      ]);
-      const [sessionToken, expiry, endpoint] = values.map((value) => value[1]);
-      if (sessionToken && endpoint && expiry) {
+    const migrateOldAuthFromStore = async (
+      newStorageHasData: boolean
+    ): Promise<boolean> => {
+      let hasUpdatedData = newStorageHasData;
+      // check v2 storage
+      if (!hasUpdatedData) {
+        const authCredentialsString = await AsyncStorage.getItem(
+          AUTH_CREDENTIALS_STORE_KEY
+        );
+        if (authCredentialsString) {
+          try {
+            const authCredentialsFromStore: AuthCredentialsMap = JSON.parse(
+              authCredentialsString
+            );
+            setAuthCredentialsMap(authCredentialsFromStore);
+            hasUpdatedData = true; // should this be set b4 parsing? error recovery policy
+          } catch (e) {
+            setState(() => {
+              throw new Error(e);
+            });
+          }
+        }
+      }
+      if (hasUpdatedData) {
+        await AsyncStorage.removeItem(AUTH_CREDENTIALS_STORE_KEY);
+      }
+
+      // check v1 storage
+      if (!hasUpdatedData) {
+        const values = await AsyncStorage.multiGet([
+          SESSION_TOKEN_KEY,
+          EXPIRY_KEY,
+          ENDPOINT_KEY,
+        ]);
+        const [sessionToken, expiry, endpoint] = values.map(
+          (value) => value[1]
+        );
+        if (sessionToken && endpoint && expiry) {
+          const newAuthCredentials = {
+            [endpoint]: {
+              endpoint,
+              sessionToken,
+              expiry: Number(expiry),
+              operatorToken: "",
+            },
+          };
+          setAuthCredentialsMap(newAuthCredentials);
+          hasUpdatedData = true;
+        }
+      }
+      if (hasUpdatedData) {
         await AsyncStorage.multiRemove([
           SESSION_TOKEN_KEY,
           EXPIRY_KEY,
           ENDPOINT_KEY,
         ]);
-        const newAuthCredentials = {
-          [endpoint]: {
-            endpoint,
-            sessionToken,
-            expiry: Number(expiry),
-            operatorToken: "",
-          },
-        };
-        setAuthCredentialsMap(newAuthCredentials);
-        AsyncStorage.setItem(
-          AUTH_CREDENTIALS_STORE_KEY,
-          JSON.stringify(newAuthCredentials)
-        );
-        return true;
-      } else {
-        return false;
       }
+      return hasUpdatedData;
     };
 
     const loadAuthCredentialsFromStore = async (): Promise<void> => {
-      const authCredentialsString = await AsyncStorage.getItem(
-        AUTH_CREDENTIALS_STORE_KEY
-      );
+      let bucketNo = 0;
+      let newStorageHasData = false;
+      let authCredentialsBucketString;
+      try {
+        do {
+          authCredentialsBucketString = await SecureStore.getItemAsync(
+            AUTH_CREDENTIALS_STORE_KEY + "_" + bucketNo
+          );
+          if (authCredentialsBucketString) {
+            const authCredentialsFromStore: AuthCredentialsMap = JSON.parse(
+              authCredentialsBucketString
+            );
+            setAuthCredentialsMap((prev) => ({
+              ...prev,
+              ...authCredentialsFromStore,
+            }));
+            bucketNo++;
+            newStorageHasData = true;
+          }
+        } while (authCredentialsBucketString !== null);
+      } catch (e) {
+        setState(() => {
+          throw new Error(e);
+        });
+      }
 
       if (shouldMigrate) {
-        if (authCredentialsString) {
-          // if there's already the new store, delete old keys
-          AsyncStorage.multiRemove([
-            SESSION_TOKEN_KEY,
-            EXPIRY_KEY,
-            ENDPOINT_KEY,
-          ]);
-        } else {
-          const migrated = await migrateOldAuthFromStore();
+        const migrated = await migrateOldAuthFromStore(newStorageHasData);
+        if (!newStorageHasData) {
+          // migration was attempted
           if (migrated) {
             Sentry.addBreadcrumb({
               category: "migration",
               message: "success",
             });
-            setHasLoadedFromStore(true);
-            return;
           } else {
             Sentry.addBreadcrumb({
               category: "migration",
@@ -222,25 +269,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
           }
         }
       }
-
-      if (!authCredentialsString) {
-        setHasLoadedFromStore(true);
-        return;
-      }
-      try {
-        const authCredentialsFromStore: AuthCredentialsMap = JSON.parse(
-          authCredentialsString
-        );
-        setAuthCredentialsMap((prev) => ({
-          ...prev,
-          ...authCredentialsFromStore,
-        }));
-        setHasLoadedFromStore(true);
-      } catch (e) {
-        setState(() => {
-          throw new Error(e);
-        });
-      }
+      setHasLoadedFromStore(true);
     };
 
     loadAuthCredentialsFromStore();
