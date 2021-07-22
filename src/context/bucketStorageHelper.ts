@@ -24,10 +24,10 @@ export const saveToStoreInBuckets: <T>(
 
   for (let i = 0; i < credentialsCount; i += bucketSize) {
     const newValueBucketString = JSON.stringify(
-      Object.fromEntries(newValueEntries.splice(i, i + bucketSize))
+      Object.fromEntries(newValueEntries.slice(i, i + bucketSize))
     );
     const oldValueBucketString = JSON.stringify(
-      Object.fromEntries(oldValueEntries.splice(i, i + bucketSize))
+      Object.fromEntries(oldValueEntries.slice(i, i + bucketSize))
     );
 
     if (newValueBucketString !== oldValueBucketString) {
