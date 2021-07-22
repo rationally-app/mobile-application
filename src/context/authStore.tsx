@@ -54,10 +54,7 @@ export const AuthStoreContext = createContext<AuthStoreContext>({
  * 3. (current)
  *    - Stores a stringified {@link AuthCredentialsMap} in SecureStorage under the key {@link AUTH_CREDENTIALS_STORE_KEY}
  *    - Map from a hash of {{@link AuthCredentials.operatorToken}}{{@link AuthCredentials.endpoint}} to corresponding credentials
- *    - Due to the limit of 2048 bytes per key, we adopt the following storage method:
- *      - The map is split into buckets, each containing 7 {@link authCredentials} objects
- *      - @todo {@link AUTH_CREDENTIALS_STORE_KEY} stores the number of buckets
- *      - {@link AUTH_CREDENTIALS_STORE_KEY}_n stores the nth bucket (zero indexed)
+ *    - Due to size limit of SecureStore, uses a bucketing method explained in {@link saveToStoreInBuckets}
  */
 export const AuthStoreContextProvider: FunctionComponent<{
   shouldMigrate?: boolean; // Temporary toggle to disable migration when testing
@@ -77,9 +74,8 @@ export const AuthStoreContextProvider: FunctionComponent<{
         // if there are changes, do a check for each bucket
         saveToStoreInBuckets(
           AUTH_CREDENTIALS_STORE_KEY,
-          authCredentials,
-          prevAuthCredentials ?? {},
-          BUCKET_SIZE
+          authCredentialsString,
+          prevAuthCredentialsString ?? ""
         );
       }
     }
@@ -157,14 +153,14 @@ export const AuthStoreContextProvider: FunctionComponent<{
     const loadAuthCredentialsFromStore = async (): Promise<void> => {
       let newStorageHasData = false;
       try {
-        const dataFromStore = await readFromStoreInBuckets<AuthCredentials>(
+        const dataFromStore = await readFromStoreInBuckets(
           AUTH_CREDENTIALS_STORE_KEY
         );
 
         if (dataFromStore !== null) {
           setAuthCredentialsMap((prev) => ({
             ...prev,
-            ...dataFromStore,
+            ...JSON.parse(dataFromStore),
           }));
           newStorageHasData = true;
         }

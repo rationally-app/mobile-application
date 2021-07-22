@@ -44,14 +44,16 @@ describe("AuthStoreContextProvider", () => {
 
   it("should load the auth credentials from the store if it exists", async () => {
     expect.assertions(5);
-    mockReadBucket.mockResolvedValueOnce({
-      [testCampaignKey]: {
-        operatorToken: "operatorToken",
-        sessionToken: "sessionToken",
-        endpoint: "endpoint",
-        expiry: 0,
-      },
-    });
+    mockReadBucket.mockResolvedValueOnce(
+      JSON.stringify({
+        [testCampaignKey]: {
+          operatorToken: "operatorToken",
+          sessionToken: "sessionToken",
+          endpoint: "endpoint",
+          expiry: 0,
+        },
+      })
+    );
 
     const { queryByTestId } = render(
       <AuthStoreContextProvider shouldMigrate={false}>
@@ -85,6 +87,8 @@ describe("AuthStoreContextProvider", () => {
   it("should not set auth credentials if it doesn't exist in the store", async () => {
     expect.assertions(3);
 
+    mockReadBucket.mockResolvedValueOnce(null);
+
     const { queryByTestId } = render(
       <AuthStoreContextProvider shouldMigrate={false}>
         <AuthStoreContext.Consumer>
@@ -107,7 +111,7 @@ describe("AuthStoreContextProvider", () => {
 
   it("should call Sentry when the campaign config from the store is malformed", async () => {
     expect.assertions(3);
-    mockReadBucket.mockRejectedValueOnce(new Error("malformed object"));
+    mockReadBucket.mockResolvedValueOnce("malformed object");
 
     render(
       <ErrorBoundary>
@@ -133,14 +137,16 @@ describe("AuthStoreContextProvider", () => {
 
   it("should clear the auth credentials and from asyncstorage when clear function is called", async () => {
     expect.assertions(6);
-    mockReadBucket.mockResolvedValueOnce({
-      [testCampaignKey]: {
-        operatorToken: "operatorToken",
-        sessionToken: "sessionToken",
-        endpoint: "endpoint",
-        expiry: 0,
-      },
-    });
+    mockReadBucket.mockResolvedValueOnce(
+      JSON.stringify({
+        [testCampaignKey]: {
+          operatorToken: "operatorToken",
+          sessionToken: "sessionToken",
+          endpoint: "endpoint",
+          expiry: 0,
+        },
+      })
+    );
 
     const { queryByTestId, getByText } = render(
       <AuthStoreContextProvider shouldMigrate={false}>
@@ -175,16 +181,15 @@ describe("AuthStoreContextProvider", () => {
       expect(mockWriteBucket).toHaveBeenCalledTimes(1);
       expect(mockWriteBucket).toHaveBeenCalledWith(
         "AUTH_STORE",
-        {},
-        {
+        JSON.stringify({}),
+        JSON.stringify({
           [testCampaignKey]: {
             operatorToken: "operatorToken",
             sessionToken: "sessionToken",
             endpoint: "endpoint",
             expiry: 0,
           },
-        },
-        7
+        })
       );
       expect(queryByTestId("credentials")).toHaveTextContent("");
     });
@@ -192,14 +197,16 @@ describe("AuthStoreContextProvider", () => {
 
   it("should add a set of auth credentials properly", async () => {
     expect.assertions(6);
-    mockReadBucket.mockResolvedValueOnce({
-      [testCampaignKey]: {
-        operatorToken: "operatorToken",
-        sessionToken: "sessionToken",
-        endpoint: "endpoint",
-        expiry: 0,
-      },
-    });
+    mockReadBucket.mockResolvedValueOnce(
+      JSON.stringify({
+        [testCampaignKey]: {
+          operatorToken: "operatorToken",
+          sessionToken: "sessionToken",
+          endpoint: "endpoint",
+          expiry: 0,
+        },
+      })
+    );
 
     const { queryByTestId, getByText } = render(
       <AuthStoreContextProvider shouldMigrate={false}>
@@ -241,23 +248,22 @@ describe("AuthStoreContextProvider", () => {
       expect(mockWriteBucket).toHaveBeenCalledTimes(1);
       expect(mockWriteBucket).toHaveBeenCalledWith(
         "AUTH_STORE",
-        {
+        JSON.stringify({
           [testCampaignKey]: {
             operatorToken: "newOperatorToken",
             sessionToken: "newSessionToken",
             endpoint: "newEndpoint",
             expiry: 0,
           },
-        },
-        {
+        }),
+        JSON.stringify({
           [testCampaignKey]: {
             operatorToken: "operatorToken",
             sessionToken: "sessionToken",
             endpoint: "endpoint",
             expiry: 0,
           },
-        },
-        7
+        })
       );
       expect(queryByTestId("credentials")).toHaveTextContent(
         `{"operatorToken":"newOperatorToken","sessionToken":"newSessionToken","endpoint":"newEndpoint","expiry":0}`
@@ -267,20 +273,22 @@ describe("AuthStoreContextProvider", () => {
 
   it("should add a set of auth credentials properly when there are existing credentials for other campaigns", async () => {
     expect.assertions(6);
-    mockReadBucket.mockResolvedValueOnce({
-      [testCampaignKey]: {
-        operatorToken: "operatorToken",
-        sessionToken: "sessionToken",
-        endpoint: "endpoint",
-        expiry: 0,
-      },
-      "another-test-campaign": {
-        operatorToken: "operatorTokenA",
-        sessionToken: "sessionTokenA",
-        endpoint: "endpointA",
-        expiry: 0,
-      },
-    });
+    mockReadBucket.mockResolvedValueOnce(
+      JSON.stringify({
+        [testCampaignKey]: {
+          operatorToken: "operatorToken",
+          sessionToken: "sessionToken",
+          endpoint: "endpoint",
+          expiry: 0,
+        },
+        "another-test-campaign": {
+          operatorToken: "operatorTokenA",
+          sessionToken: "sessionTokenA",
+          endpoint: "endpointA",
+          expiry: 0,
+        },
+      })
+    );
 
     const { queryByTestId, getByText } = render(
       <AuthStoreContextProvider shouldMigrate={false}>
@@ -322,7 +330,7 @@ describe("AuthStoreContextProvider", () => {
       expect(mockWriteBucket).toHaveBeenCalledTimes(1);
       expect(mockWriteBucket).toHaveBeenCalledWith(
         "AUTH_STORE",
-        {
+        JSON.stringify({
           [testCampaignKey]: {
             operatorToken: "newOperatorToken",
             sessionToken: "newSessionToken",
@@ -335,8 +343,8 @@ describe("AuthStoreContextProvider", () => {
             endpoint: "endpointA",
             expiry: 0,
           },
-        },
-        {
+        }),
+        JSON.stringify({
           [testCampaignKey]: {
             operatorToken: "operatorToken",
             sessionToken: "sessionToken",
@@ -349,8 +357,7 @@ describe("AuthStoreContextProvider", () => {
             endpoint: "endpointA",
             expiry: 0,
           },
-        },
-        7
+        })
       );
       expect(queryByTestId("credentials")).toHaveTextContent(
         `{"test-campaign":{"operatorToken":"newOperatorToken","sessionToken":"newSessionToken","endpoint":"newEndpoint","expiry":0},"another-test-campaign":{"operatorToken":"operatorTokenA","sessionToken":"sessionTokenA","endpoint":"endpointA","expiry":0}}`
@@ -360,14 +367,16 @@ describe("AuthStoreContextProvider", () => {
 
   it("should remove a set of auth credentials properly", async () => {
     expect.assertions(6);
-    mockReadBucket.mockResolvedValueOnce({
-      [testCampaignKey]: {
-        operatorToken: "operatorToken",
-        sessionToken: "sessionToken",
-        endpoint: "endpoint",
-        expiry: 0,
-      },
-    });
+    mockReadBucket.mockResolvedValueOnce(
+      JSON.stringify({
+        [testCampaignKey]: {
+          operatorToken: "operatorToken",
+          sessionToken: "sessionToken",
+          endpoint: "endpoint",
+          expiry: 0,
+        },
+      })
+    );
 
     const { queryByTestId, getByText } = render(
       <AuthStoreContextProvider shouldMigrate={false}>
@@ -402,16 +411,15 @@ describe("AuthStoreContextProvider", () => {
       expect(mockWriteBucket).toHaveBeenCalledTimes(1);
       expect(mockWriteBucket).toHaveBeenCalledWith(
         "AUTH_STORE",
-        {},
-        {
+        "{}",
+        JSON.stringify({
           [testCampaignKey]: {
             operatorToken: "operatorToken",
             sessionToken: "sessionToken",
             endpoint: "endpoint",
             expiry: 0,
           },
-        },
-        7
+        })
       );
       expect(queryByTestId("credentials")).toHaveTextContent("");
     });
@@ -420,14 +428,16 @@ describe("AuthStoreContextProvider", () => {
   describe("migration from v2 to v3 storage", () => {
     it("should clear v2 storage if there are credentials in later storage without querying for data", async () => {
       expect.assertions(8);
-      mockReadBucket.mockResolvedValueOnce({
-        [testCampaignKey]: {
-          operatorToken: "operatorToken",
-          sessionToken: "sessionToken",
-          endpoint: "endpoint",
-          expiry: 0,
-        },
-      });
+      mockReadBucket.mockResolvedValueOnce(
+        JSON.stringify({
+          [testCampaignKey]: {
+            operatorToken: "operatorToken",
+            sessionToken: "sessionToken",
+            endpoint: "endpoint",
+            expiry: 0,
+          },
+        })
+      );
 
       const { queryByTestId, getByTestId } = render(
         <AuthStoreContextProvider shouldMigrate={true}>
@@ -507,20 +517,9 @@ describe("AuthStoreContextProvider", () => {
       expect(mockRemoveItem).toHaveBeenCalledTimes(1);
       expect(mockRemoveItem).toHaveBeenCalledWith("AUTH_STORE");
 
-      // expect(mockWriteBucket).toHaveBeenCalledTimes(1);
-      // expect(mockWriteBucket).toHaveBeenCalledWith({
-      //   [testCampaignKey]: {
-      //     operatorToken: "operatorToken",
-      //     sessionToken: "sessionToken",
-      //     endpoint: "endpoint",
-      //     expiry: 0,
-      //   },
-      // });
-
       expect(queryByTestId("credentials")).toHaveTextContent(
         `{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0}`
       );
     });
   });
-
 });
