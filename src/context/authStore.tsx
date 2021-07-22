@@ -9,7 +9,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePrevious } from "../hooks/usePrevious";
 import { AuthCredentials } from "../types";
 import { Sentry } from "../utils/errorTracking";
-import * as SecureStore from "expo-secure-store";
+import {
+  readFromStoreInBuckets,
+  saveToStoreInBuckets,
+} from "./bucketStorageHelper";
 
 export const AUTH_CREDENTIALS_STORE_KEY = "AUTH_STORE";
 
@@ -73,47 +76,6 @@ export const AuthStoreContextProvider: FunctionComponent<{
   );
   const prevAuthCredentials = usePrevious(authCredentials);
 
-  /**
-   * Compares old and new credential maps and saves changes to the store. Only
-   * updates buckets that have changes.
-   */
-  const saveToStore: (
-    authCredentials: AuthCredentialsMap,
-    prevAuthCredentials: AuthCredentialsMap
-  ) => void = useCallback((authCredentials, prevAuthCredentials) => {
-    const authEntries = Object.entries(authCredentials); // list of new credentials
-    const prevAuthEntries = Object.entries(prevAuthCredentials); // list of prev credentials
-    // iterate the longer length in case we have to clear buckets
-    const credentialsCount = Math.max(
-      authEntries.length,
-      prevAuthEntries.length
-    );
-
-    for (let i = 0; i < credentialsCount; i += BUCKET_SIZE) {
-      const authCredentialsBucketString = JSON.stringify(
-        Object.fromEntries(authEntries.splice(i, i + BUCKET_SIZE))
-      );
-      const prevAuthCredentialsBucketString = JSON.stringify(
-        Object.fromEntries(prevAuthEntries.splice(i, i + BUCKET_SIZE))
-      );
-
-      if (authCredentialsBucketString !== prevAuthCredentialsBucketString) {
-        const bucketNo = Math.floor(i / BUCKET_SIZE);
-        if (authCredentialsBucketString === "{}") {
-          // if the new bucket is empty, delete the key
-          SecureStore.deleteItemAsync(
-            AUTH_CREDENTIALS_STORE_KEY + "_" + bucketNo
-          );
-        } else {
-          SecureStore.setItemAsync(
-            AUTH_CREDENTIALS_STORE_KEY + "_" + bucketNo,
-            authCredentialsBucketString
-          );
-        }
-      }
-    }
-  }, []);
-
   useEffect(() => {
     if (hasLoadedFromStore) {
       const authCredentialsString = JSON.stringify(authCredentials);
@@ -121,10 +83,15 @@ export const AuthStoreContextProvider: FunctionComponent<{
       // do a top level check to see if there are any changes
       if (authCredentialsString !== prevAuthCredentialsString) {
         // if there are changes, do a check for each bucket
-        saveToStore(authCredentials, prevAuthCredentials ?? {});
+        saveToStoreInBuckets(
+          AUTH_CREDENTIALS_STORE_KEY,
+          authCredentials,
+          prevAuthCredentials ?? {},
+          BUCKET_SIZE
+        );
       }
     }
-  }, [hasLoadedFromStore, authCredentials, prevAuthCredentials, saveToStore]);
+  }, [hasLoadedFromStore, authCredentials, prevAuthCredentials]);
 
   const setAuthCredentials: AuthStoreContext["setAuthCredentials"] = useCallback(
     (key, newAuthCredentials) => {
@@ -202,13 +169,13 @@ export const AuthStoreContextProvider: FunctionComponent<{
         const [sessionToken, expiry, endpoint] = values.map(
           (value) => value[1]
         );
-        if (sessionToken && endpoint && expiry) {
+        if (sessionToken && endpoint && expiry!==undefined) {
           const newAuthCredentials = {
             [endpoint]: {
-              endpoint,
-              sessionToken,
-              expiry: Number(expiry),
               operatorToken: "",
+              sessionToken,
+              endpoint,
+              expiry: Number(expiry),
             },
           };
           setAuthCredentialsMap(newAuthCredentials);
@@ -226,32 +193,24 @@ export const AuthStoreContextProvider: FunctionComponent<{
     };
 
     const loadAuthCredentialsFromStore = async (): Promise<void> => {
-      let bucketNo = 0;
       let newStorageHasData = false;
-      let authCredentialsBucketString;
       try {
-        do {
-          authCredentialsBucketString = await SecureStore.getItemAsync(
-            AUTH_CREDENTIALS_STORE_KEY + "_" + bucketNo
-          );
-          if (authCredentialsBucketString) {
-            const authCredentialsFromStore: AuthCredentialsMap = JSON.parse(
-              authCredentialsBucketString
-            );
-            setAuthCredentialsMap((prev) => ({
-              ...prev,
-              ...authCredentialsFromStore,
-            }));
-            bucketNo++;
-            newStorageHasData = true;
-          }
-        } while (authCredentialsBucketString !== null);
+        const dataFromStore = await readFromStoreInBuckets<AuthCredentials>(
+          AUTH_CREDENTIALS_STORE_KEY
+        );
+
+        if (dataFromStore !== null) {
+          setAuthCredentialsMap((prev) => ({
+            ...prev,
+            ...dataFromStore,
+          }));
+          newStorageHasData = true;
+        }
       } catch (e) {
         setState(() => {
           throw new Error(e);
         });
       }
-
       if (shouldMigrate) {
         const migrated = await migrateOldAuthFromStore(newStorageHasData);
         if (!newStorageHasData) {
