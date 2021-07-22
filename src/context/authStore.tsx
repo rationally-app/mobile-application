@@ -16,9 +16,6 @@ import {
 
 export const AUTH_CREDENTIALS_STORE_KEY = "AUTH_STORE";
 
-/** Number of credentials per bucket. Calculated with 2048/286. 286 is the length of a stringified AuthCredentials object. */
-export const BUCKET_SIZE = 7;
-
 type AuthCredentialsMap = {
   [key: string]: AuthCredentials;
 };
