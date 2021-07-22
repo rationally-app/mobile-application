@@ -82,6 +82,11 @@ export const readFromStoreInBuckets: (
     const newValueBucketString = await SecureStore.getItemAsync(
       storageKey + "_" + bucketNo
     );
+    if (newValueBucketString === undefined) {
+      // this shouldn't happen unless SecureStore is mocked with no implementation
+      throw new Error("unexpected undefined here, you probably should mock SecureStore");
+    }
+
     if (newValueBucketString === null) {
       return storageData;
     } else if (storageData === null) {

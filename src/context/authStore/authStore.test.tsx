@@ -2,8 +2,8 @@ import React from "react";
 import { AuthStoreContextProvider, AuthStoreContext } from "./authStore";
 import { render, waitFor, fireEvent } from "@testing-library/react-native";
 import { Text, Button } from "react-native";
-import { Sentry } from "../utils/errorTracking";
-import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
+import { Sentry } from "../../utils/errorTracking";
+import { ErrorBoundary } from "../../components/ErrorBoundary/ErrorBoundary";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   saveToStoreInBuckets,
