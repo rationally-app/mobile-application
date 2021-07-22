@@ -169,7 +169,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
         const [sessionToken, expiry, endpoint] = values.map(
           (value) => value[1]
         );
-        if (sessionToken && endpoint && expiry!==undefined) {
+        if (sessionToken && endpoint && expiry !== undefined) {
           const newAuthCredentials = {
             [endpoint]: {
               operatorToken: "",

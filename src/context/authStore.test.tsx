@@ -32,7 +32,6 @@ const testCampaignKey = "test-campaign";
 
 describe("AuthStoreContextProvider", () => {
   beforeEach(() => {
-    (AsyncStorage.getItem as jest.MockedFunction<typeof AsyncStorage.getItem>).mockReset();
     mockGetItem.mockReset().mockName("asyncGetItem");
     mockSetItem.mockReset().mockName("asyncSetItem");
     mockRemoveItem.mockReset().mockName("asyncRemoveItem");
@@ -42,7 +41,6 @@ describe("AuthStoreContextProvider", () => {
     mockWriteBucket.mockReset().mockName("bucketWriteItem");
     mockCaptureException.mockReset();
   });
-
 
   it("should load the auth credentials from the store if it exists", async () => {
     expect.assertions(5);
@@ -567,7 +565,7 @@ describe("AuthStoreContextProvider", () => {
       expect(mockMultiRemove).toHaveBeenCalledWith([
         "SESSION_TOKEN",
         "EXPIRY_KEY",
-        "ENDPOINT_KEY"
+        "ENDPOINT_KEY",
       ]);
 
       expect(queryByTestId("credentials")).toHaveTextContent(
