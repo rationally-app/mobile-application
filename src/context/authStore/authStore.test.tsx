@@ -24,7 +24,7 @@ const mockWriteBucket = saveToStoreInBuckets as jest.MockedFunction<
   typeof saveToStoreInBuckets
 >;
 
-jest.mock("../utils/errorTracking");
+jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
