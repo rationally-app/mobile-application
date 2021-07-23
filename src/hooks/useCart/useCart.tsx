@@ -235,11 +235,22 @@ export const useCart = (
    */
   const _completeCheckout = useCallback(() => {
     const complete = async (): Promise<void> => {
-      const transactions = Object.values(cart)
-        .filter(({ quantity }) => quantity)
-        .map(({ category, quantity, identifierInputs }) => {
-          return { category, quantity, identifierInputs };
-        });
+      const allIdentifierInputs: IdentifierInput[] = [];
+      let transactions: any = [];
+      try {
+        transactions = Object.values(cart)
+          .filter(({ quantity }) => quantity)
+          .map(({ category, quantity, identifierInputs }) => {
+            allIdentifierInputs.push(...identifierInputs);
+            validateIdentifierInputs(allIdentifierInputs);
+            return { category, quantity, identifierInputs };
+          });
+      } catch (error) {
+        setCartState("DEFAULT");
+        setCartError(error);
+        return;
+      }
+
       try {
         const transactionResponse = await postTransaction({
           ids,
@@ -297,12 +308,20 @@ export const useCart = (
       setCartState("CHECKING_OUT");
 
       const allIdentifierInputs: IdentifierInput[] = [];
-      const transactions = Object.values(cart)
-        .filter(({ quantity }) => quantity)
-        .map(({ category, quantity, identifierInputs }) => {
-          allIdentifierInputs.push(...identifierInputs);
-          return { category, quantity, identifierInputs };
-        });
+      let transactions: any = [];
+      try {
+        transactions = Object.values(cart)
+          .filter(({ quantity }) => quantity)
+          .map(({ category, quantity, identifierInputs }) => {
+            allIdentifierInputs.push(...identifierInputs);
+            validateIdentifierInputs(allIdentifierInputs);
+            return { category, quantity, identifierInputs };
+          });
+      } catch (error) {
+        setCartState("DEFAULT");
+        setCartError(error);
+        return;
+      }
 
       if (transactions.length === 0) {
         setCartState("DEFAULT");
@@ -310,13 +329,6 @@ export const useCart = (
         return;
       }
 
-      try {
-        validateIdentifierInputs(allIdentifierInputs);
-      } catch (error) {
-        setCartState("DEFAULT");
-        setCartError(error);
-        return;
-      }
       const hasPaymentReceipt = allIdentifierInputs.find(
         (identifierInput) => identifierInput.textInputType === "PAYMENT_RECEIPT"
       );
