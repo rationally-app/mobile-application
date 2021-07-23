@@ -68,6 +68,8 @@ export const AuthStoreContextProvider: FunctionComponent<{
    *
    * This flag should be set to true before any migration happens so that migrations will
    * update the primary store.
+   *
+   * Documented in [#398](https://github.com/rationally-app/mobile-application/pull/398)
    */
   const [hasLoadedFromPrimaryStore, setHasLoadedFromPrimaryStore] = useState(
     false
