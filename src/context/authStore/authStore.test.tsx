@@ -473,8 +473,8 @@ describe("AuthStoreContextProvider", () => {
       );
     });
 
-    it("should use v2 storage credentials if all later versions are empty", async () => {
-      expect.assertions(9);
+    it("should use v2 storage credentials and migrate to latest store if all later versions are empty", async () => {
+      expect.assertions(11);
       mockReadBucket.mockResolvedValueOnce(null);
       mockGetItem.mockResolvedValueOnce(
         JSON.stringify({
@@ -516,6 +516,19 @@ describe("AuthStoreContextProvider", () => {
       expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");
       expect(mockRemoveItem).toHaveBeenCalledTimes(1);
       expect(mockRemoveItem).toHaveBeenCalledWith("AUTH_STORE");
+      expect(mockWriteBucket).toHaveBeenCalledTimes(1);
+      expect(mockWriteBucket).toHaveBeenCalledWith(
+        "AUTH_STORE",
+        JSON.stringify({
+          [testCampaignKey]: {
+            operatorToken: "operatorToken",
+            sessionToken: "sessionToken",
+            endpoint: "endpoint",
+            expiry: 0,
+          },
+        }),
+        "{}"
+      );
 
       expect(queryByTestId("credentials")).toHaveTextContent(
         `{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0}`

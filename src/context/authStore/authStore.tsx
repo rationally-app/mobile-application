@@ -56,14 +56,30 @@ export const AuthStoreContext = createContext<AuthStoreContext>({
 export const AuthStoreContextProvider: FunctionComponent<{
   shouldMigrate?: boolean; // Temporary toggle to disable migration when testing
 }> = ({ shouldMigrate = true, children }) => {
+  /**
+   * Flag to mark when all loading has been done and consumers can read from the data.
+   * This includes any migration actions needed.
+   */
   const [hasLoadedFromStore, setHasLoadedFromStore] = useState(false);
+  /**
+   * This flag marks when {@link authCredentials} is matching with the current state of
+   * the primary store. Any changes after this flag is true should trigger updates to the
+   * primary store.
+   *
+   * This flag should be set to true before any migration happens so that migrations will
+   * update the primary store.
+   */
+  const [hasLoadedFromPrimaryStore, setHasLoadedFromPrimaryStore] = useState(
+    false
+  );
   const [authCredentials, setAuthCredentialsMap] = useState<AuthCredentialsMap>(
     {}
   );
   const prevAuthCredentials = usePrevious(authCredentials);
 
+  /** Effect to update the store when there are changes to authCredentials */
   useEffect(() => {
-    if (hasLoadedFromStore) {
+    if (hasLoadedFromPrimaryStore) {
       const authCredentialsString = JSON.stringify(authCredentials);
       const prevAuthCredentialsString = JSON.stringify(prevAuthCredentials);
       // do a top level check to see if there are any changes
@@ -76,7 +92,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
         );
       }
     }
-  }, [hasLoadedFromStore, authCredentials, prevAuthCredentials]);
+  }, [hasLoadedFromPrimaryStore, authCredentials, prevAuthCredentials]);
 
   const setAuthCredentials: AuthStoreContext["setAuthCredentials"] = useCallback(
     (key, newAuthCredentials) => {
@@ -166,6 +182,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
           throw new Error(e);
         });
       }
+      setHasLoadedFromPrimaryStore(true);
       if (shouldMigrate) {
         const migrated = await migrateOldAuthFromStore(newStorageHasData);
         if (!newStorageHasData) {
