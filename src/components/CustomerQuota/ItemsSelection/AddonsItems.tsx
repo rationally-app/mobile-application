@@ -10,15 +10,11 @@ export const AddonsItems: FunctionComponent<{
   return isShowAddonItems && transactionList && transactionList.length > 0 ? (
     <>
       {transactionList.map(
-        (
-          { transactions, order }: Omit<TransactionsGroup, "header">,
-          index: number
-        ) => (
+        ({ header, ...rest }: TransactionsGroup, index: number) => (
           <TransactionsGroup
             key={index}
             maxTransactionsToDisplay={BIG_NUMBER}
-            transactions={transactions}
-            order={order}
+            {...rest}
           />
         )
       )}
