@@ -1,7 +1,7 @@
 import { useState, useCallback, useContext, useEffect } from "react";
 import { postTransaction } from "../../services/quota";
 import { PostTransactionResult, ItemQuota, IdentifierInput } from "../../types";
-import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
+import { validateIdentifierInputs } from "../../utils/validateAndCleanIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
 import { IdentificationContext } from "../../context/identification";
@@ -242,8 +242,10 @@ export const useCart = (
           .filter(({ quantity }) => quantity)
           .map(({ category, quantity, identifierInputs }) => {
             allIdentifierInputs.push(...identifierInputs);
-            validateIdentifierInputs(allIdentifierInputs);
-            return { category, quantity, identifierInputs };
+            const cleanedIdentifierInputs = validateIdentifierInputs(
+              allIdentifierInputs
+            );
+            return { category, quantity, cleanedIdentifierInputs };
           });
       } catch (error) {
         setCartState("DEFAULT");
@@ -314,8 +316,10 @@ export const useCart = (
           .filter(({ quantity }) => quantity)
           .map(({ category, quantity, identifierInputs }) => {
             allIdentifierInputs.push(...identifierInputs);
-            validateIdentifierInputs(allIdentifierInputs);
-            return { category, quantity, identifierInputs };
+            const cleanedIdentifierInputs = validateIdentifierInputs(
+              allIdentifierInputs
+            );
+            return { category, quantity, cleanedIdentifierInputs };
           });
       } catch (error) {
         setCartState("DEFAULT");
