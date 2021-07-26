@@ -119,6 +119,7 @@ export const liveGetStatistics = async (
       {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: key,
         },
         body: JSON.stringify({
