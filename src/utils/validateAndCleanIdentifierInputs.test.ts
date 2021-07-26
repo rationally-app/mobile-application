@@ -1,7 +1,53 @@
-import { validateIdentifierInputs } from "./validateIdentifierInputs";
+import {
+  validateIdentifierInputs,
+  cleanIdentifierInputs,
+} from "./validateAndCleanIdentifierInputs";
+
+describe("cleanIdentifierInputs", () => {
+  it("should return cleaned input for identifiers with whitespaces", () => {
+    expect.assertions(1);
+    expect(
+      cleanIdentifierInputs([
+        {
+          label: "phone number with whitespace",
+          value: "  +6591234567  ",
+          textInputType: "PHONE_NUMBER",
+        },
+        {
+          label: "payment receipt with regex and whitespace",
+          value: "1234acbd5678qwer1234",
+          validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
+          textInputType: "PAYMENT_RECEIPT",
+        },
+        {
+          label: "payment receipt without regex and with whitespace",
+          value: " aaaaa  ",
+          textInputType: "PAYMENT_RECEIPT",
+        },
+      ])
+    ).toStrictEqual([
+      {
+        label: "phone number with whitespace",
+        value: "+6591234567",
+        textInputType: "PHONE_NUMBER",
+      },
+      {
+        label: "payment receipt with regex and whitespace",
+        value: "1234acbd5678qwer1234",
+        validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
+        textInputType: "PAYMENT_RECEIPT",
+      },
+      {
+        label: "payment receipt without regex and with whitespace",
+        value: "aaaaa",
+        textInputType: "PAYMENT_RECEIPT",
+      },
+    ]);
+  });
+});
 
 describe("validateIdentifierInputs", () => {
-  it("should return true if all identifiers are valid", () => {
+  it("should return cleaned and validated input if all identifiers are valid", () => {
     expect.assertions(1);
     expect(
       validateIdentifierInputs([
@@ -71,7 +117,73 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PAYMENT_RECEIPT",
         },
       ])
-    ).toBe(true);
+    ).toStrictEqual([
+      {
+        label: "number with regex",
+        value: "1234567",
+        validationRegex: "^[0-9]{7}$",
+        textInputType: "NUMBER",
+      },
+      {
+        label: "number without regex",
+        value: "12345678",
+        textInputType: "NUMBER",
+      },
+      {
+        label: "string with regex",
+        value: "AA:BB:CC",
+        validationRegex: "^[a-zA-Z:]+$",
+        textInputType: "STRING",
+      },
+      {
+        label: "string without regex",
+        value: "AA:BB",
+        textInputType: "STRING",
+      },
+      {
+        label: "valid phone number",
+        value: "+6591234567",
+        textInputType: "PHONE_NUMBER",
+      },
+      {
+        label: "another valid phone number",
+        value: "+13475679064",
+        textInputType: "PHONE_NUMBER",
+      },
+      {
+        label: "phone number with whitespace",
+        value: "+6591234567",
+        textInputType: "PHONE_NUMBER",
+      },
+      {
+        label: "payment receipt with regex",
+        value: "1234acbd5678qwer1234",
+        validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
+        textInputType: "PAYMENT_RECEIPT",
+      },
+      {
+        label: "payment receipt with regex and whitespace",
+        value: "1234acbd5678qwer1234",
+        validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
+        textInputType: "PAYMENT_RECEIPT",
+      },
+      {
+        label: "payment receipt with regex and empty value",
+        value: "",
+        validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
+        textInputType: "PAYMENT_RECEIPT",
+      },
+      {
+        label: "payment receipt without regex",
+        value: "within20characters",
+        textInputType: "PAYMENT_RECEIPT",
+      },
+      {
+        label: "payment receipt without regex and with whitespace",
+        value: "aaaaa",
+        textInputType: "PAYMENT_RECEIPT",
+      },
+    ]);
   });
 
   it("should throw error if input is phone number and fails default regex", () => {
