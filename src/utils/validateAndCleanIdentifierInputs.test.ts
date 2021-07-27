@@ -15,7 +15,7 @@ describe("cleanIdentifierInputs", () => {
         },
         {
           label: "payment receipt with regex and whitespace",
-          value: "1234acbd5678qwer1234",
+          value: "         1234acbd5678qwer1234          ",
           validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
           textInputType: "PAYMENT_RECEIPT",
         },
