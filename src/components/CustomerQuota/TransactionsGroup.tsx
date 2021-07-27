@@ -50,7 +50,7 @@ export interface Transaction {
 }
 
 export interface TransactionsGroup {
-  header: string | undefined;
+  header?: string;
   transactions: Transaction[];
   order: number;
 }
