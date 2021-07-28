@@ -4,6 +4,16 @@ import * as SecureStore from "expo-secure-store";
 const SIZE_LIMIT = 2048;
 
 /**
+ * Generates the keys for the bucket values
+ * @param key the main key to use
+ * @param bucketNo the current bucket number
+ * @returns the bucket-specific key
+ */
+function getBucketKey(key: string, bucketNo: number): string {
+  return `${key}_${bucketNo}`;
+}
+
+/**
  * Saves a string to SecureStore, respecting the
  * [2048 size limit](https://docs.expo.io/versions/v42.0.0/sdk/securestore/)
  * by splitting the serialised string up and saving it under multiple keys.
@@ -55,10 +65,10 @@ export const saveToStoreInBuckets: (
       if (newValueBucketString === "" && bucketNo !== 0) {
         // if the new bucket is empty, delete the key
         // however, if this is the first bucket, user is saving an empty string, so do not delete
-        SecureStore.deleteItemAsync(storageKey + "_" + bucketNo);
+        SecureStore.deleteItemAsync(getBucketKey(storageKey, bucketNo));
       } else {
         SecureStore.setItemAsync(
-          storageKey + "_" + bucketNo,
+          getBucketKey(storageKey, bucketNo),
           newValueBucketString
         );
       }
@@ -77,10 +87,10 @@ export const readFromStoreInBuckets: (
   storageKey: string
 ) => Promise<string | null> = async (storageKey) => {
   let bucketNo = 0;
-  let storageData: string | null = null;
+  let storageData = "";
   while (true) {
     const newValueBucketString = await SecureStore.getItemAsync(
-      storageKey + "_" + bucketNo
+      getBucketKey(storageKey, bucketNo)
     );
     if (newValueBucketString === undefined) {
       // this shouldn't happen unless SecureStore is mocked with no implementation
@@ -90,13 +100,12 @@ export const readFromStoreInBuckets: (
     }
 
     if (newValueBucketString === null) {
-      return storageData;
-    } else if (storageData === null) {
-      storageData = "";
+      break;
     }
     storageData += newValueBucketString;
     bucketNo++;
   }
+  return bucketNo === 0 ? null : storageData;
 };
 
 /**
@@ -115,6 +124,6 @@ export const deleteInStoreInBuckets: (
   }
   const bucketCount = Math.max(1, Math.ceil(oldValue.length / SIZE_LIMIT));
   for (let bucketNo = 0; bucketNo < bucketCount; bucketNo++) {
-    SecureStore.deleteItemAsync(storageKey + "_" + bucketNo);
+    await SecureStore.deleteItemAsync(getBucketKey(storageKey, bucketNo));
   }
 };
