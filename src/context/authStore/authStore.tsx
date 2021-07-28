@@ -13,6 +13,7 @@ import {
   readFromStoreInBuckets,
   saveToStoreInBuckets,
 } from "./bucketStorageHelper";
+import { AuthInvalidError } from "../../services/auth";
 
 export const AUTH_CREDENTIALS_STORE_KEY = "AUTH_STORE";
 
@@ -153,7 +154,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
             hasUpdatedData = true; // should this be set b4 parsing? error recovery policy
           } catch (e) {
             setState(() => {
-              throw new Error(e);
+              throw new AuthInvalidError(e);
             });
           }
         }
@@ -168,20 +169,21 @@ export const AuthStoreContextProvider: FunctionComponent<{
     const loadAuthCredentialsFromStore = async (): Promise<void> => {
       let newStorageHasData = false;
       try {
-        const dataFromStore = await readFromStoreInBuckets(
+        const authCredentialsString = await readFromStoreInBuckets(
           AUTH_CREDENTIALS_STORE_KEY
         );
 
-        if (dataFromStore !== null) {
+        if (authCredentialsString !== null) {
+          const authCredentialsFromStore = JSON.parse(authCredentialsString);
           setAuthCredentialsMap((prev) => ({
             ...prev,
-            ...JSON.parse(dataFromStore),
+            ...authCredentialsFromStore,
           }));
           newStorageHasData = true;
         }
       } catch (e) {
         setState(() => {
-          throw new Error(e);
+          throw new AuthInvalidError(e);
         });
       }
       setHasLoadedFromPrimaryStore(true);
@@ -191,12 +193,12 @@ export const AuthStoreContextProvider: FunctionComponent<{
           // migration was attempted
           if (migrated) {
             Sentry.addBreadcrumb({
-              category: "migration",
+              category: "authMigration",
               message: "success",
             });
           } else {
             Sentry.addBreadcrumb({
-              category: "migration",
+              category: "authMigration",
               message: "failure",
             });
           }
