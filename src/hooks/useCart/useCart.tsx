@@ -1,7 +1,8 @@
 import { useState, useCallback, useContext, useEffect } from "react";
 import { postTransaction } from "../../services/quota";
 import { PostTransactionResult, ItemQuota, IdentifierInput } from "../../types";
-import { validateIdentifierInputs } from "../../utils/validateAndCleanIdentifierInputs";
+import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
+import { cleanIdentifierInputs } from "../../utils/cleanIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
 import { IdentificationContext } from "../../context/identification";
@@ -235,18 +236,23 @@ export const useCart = (
    */
   const _completeCheckout = useCallback(() => {
     const complete = async (): Promise<void> => {
-      const allIdentifierInputs: IdentifierInput[] = [];
+      const allCleanedIdentifierInputs: IdentifierInput[] = [];
       let transactions: any = [];
       try {
         transactions = Object.values(cart)
           .filter(({ quantity }) => quantity)
           .map(({ category, quantity, identifierInputs }) => {
-            allIdentifierInputs.push(...identifierInputs);
-            const cleanedIdentifierInputs = validateIdentifierInputs(
-              allIdentifierInputs
+            const cleanedIdentifierInputs = cleanIdentifierInputs(
+              identifierInputs
             );
-            return { category, quantity, cleanedIdentifierInputs };
+            allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
+            return {
+              category,
+              quantity,
+              identifierInputs: cleanedIdentifierInputs,
+            };
           });
+        validateIdentifierInputs(allCleanedIdentifierInputs);
       } catch (error) {
         setCartState("DEFAULT");
         setCartError(error);
@@ -309,18 +315,23 @@ export const useCart = (
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
 
-      const allIdentifierInputs: IdentifierInput[] = [];
+      const allCleanedIdentifierInputs: IdentifierInput[] = [];
       let transactions: any = [];
       try {
         transactions = Object.values(cart)
           .filter(({ quantity }) => quantity)
           .map(({ category, quantity, identifierInputs }) => {
-            allIdentifierInputs.push(...identifierInputs);
-            const cleanedIdentifierInputs = validateIdentifierInputs(
-              allIdentifierInputs
+            const cleanedIdentifierInputs = cleanIdentifierInputs(
+              identifierInputs
             );
-            return { category, quantity, cleanedIdentifierInputs };
+            allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
+            return {
+              category,
+              quantity,
+              identifierInputs: cleanedIdentifierInputs,
+            };
           });
+        validateIdentifierInputs(allCleanedIdentifierInputs);
       } catch (error) {
         setCartState("DEFAULT");
         setCartError(error);
@@ -333,7 +344,7 @@ export const useCart = (
         return;
       }
 
-      const hasPaymentReceipt = allIdentifierInputs.find(
+      const hasPaymentReceipt = allCleanedIdentifierInputs.find(
         (identifierInput) => identifierInput.textInputType === "PAYMENT_RECEIPT"
       );
       if (hasPaymentReceipt) {
