@@ -48,7 +48,7 @@
     "unimodules-permissions-interface": "^6.1.0"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0",
+    "@babel/core": "^7.14.8",
     "@storybook/addon-actions": "^5.3.21",
     "@storybook/addon-links": "^5.3.21",
     "@storybook/addons": "^5.3.21",
