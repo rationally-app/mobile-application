@@ -10,11 +10,21 @@ import {
   readFromStoreInBuckets,
 } from "./bucketStorageHelper";
 
-const mockGetItem = AsyncStorage.getItem as jest.Mock;
-const mockSetItem = AsyncStorage.setItem as jest.Mock;
-const mockRemoveItem = AsyncStorage.removeItem as jest.Mock;
-const mockMultiGet = AsyncStorage.multiGet as jest.Mock;
-const mockMultiRemove = AsyncStorage.multiRemove as jest.Mock;
+const mockGetItem = AsyncStorage.getItem as jest.MockedFunction<
+  typeof AsyncStorage.getItem
+>;
+const mockSetItem = AsyncStorage.setItem as jest.MockedFunction<
+  typeof AsyncStorage.setItem
+>;
+const mockRemoveItem = AsyncStorage.removeItem as jest.MockedFunction<
+  typeof AsyncStorage.removeItem
+>;
+const mockMultiGet = AsyncStorage.multiGet as jest.MockedFunction<
+  typeof AsyncStorage.multiGet
+>;
+const mockMultiRemove = AsyncStorage.multiRemove as jest.MockedFunction<
+  typeof AsyncStorage.multiRemove
+>;
 jest.mock("./bucketStorageHelper");
 
 const mockReadBucket = readFromStoreInBuckets as jest.MockedFunction<
