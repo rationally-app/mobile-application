@@ -93,7 +93,10 @@ export const readFromStoreInBuckets: (
       getBucketKey(storageKey, bucketNo)
     );
     if (newValueBucketString === undefined) {
-      // this shouldn't happen unless SecureStore is mocked with no implementation
+      // This shouldn't happen unless SecureStore is mocked with no implementation
+      // This likely happened in a test. Either mock SecureStore or mock bucketStorageHelper
+      // to resolve the issue. Ensure that mockResolvedValue(null) or some other
+      // non-undefined value is implemented on the mocked function.
       throw new Error(
         "unexpected undefined here, you probably should mock SecureStore"
       );

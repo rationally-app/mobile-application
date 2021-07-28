@@ -2,13 +2,13 @@ import React from "react";
 import { AuthStoreContextProvider, AuthStoreContext } from "./authStore";
 import { render, waitFor, fireEvent } from "@testing-library/react-native";
 import { Text, Button } from "react-native";
-import { Sentry } from "../../utils/errorTracking";
-import { ErrorBoundary } from "../../components/ErrorBoundary/ErrorBoundary";
+import { Sentry } from "../utils/errorTracking";
+import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   saveToStoreInBuckets,
   readFromStoreInBuckets,
-} from "./bucketStorageHelper";
+} from "../utils/bucketStorageHelper";
 
 const mockGetItem = AsyncStorage.getItem as jest.MockedFunction<
   typeof AsyncStorage.getItem
@@ -25,7 +25,7 @@ const mockMultiGet = AsyncStorage.multiGet as jest.MockedFunction<
 const mockMultiRemove = AsyncStorage.multiRemove as jest.MockedFunction<
   typeof AsyncStorage.multiRemove
 >;
-jest.mock("./bucketStorageHelper");
+jest.mock("../utils/bucketStorageHelper");
 
 const mockReadBucket = readFromStoreInBuckets as jest.MockedFunction<
   typeof readFromStoreInBuckets

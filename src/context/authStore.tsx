@@ -6,14 +6,14 @@ import React, {
   useCallback,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { usePrevious } from "../../hooks/usePrevious";
-import { AuthCredentials } from "../../types";
-import { Sentry } from "../../utils/errorTracking";
+import { usePrevious } from "../hooks/usePrevious";
+import { AuthCredentials } from "../types";
+import { Sentry } from "../utils/errorTracking";
 import {
   readFromStoreInBuckets,
   saveToStoreInBuckets,
-} from "./bucketStorageHelper";
-import { AuthInvalidError } from "../../services/auth";
+} from "../utils/bucketStorageHelper";
+import { AuthInvalidError } from "../services/auth";
 
 export const AUTH_CREDENTIALS_STORE_KEY = "AUTH_STORE";
 
