@@ -15,18 +15,9 @@ const isMatchRegex = (text: string, regex?: string): boolean => {
 const isUniqueList = (list: string[]): boolean =>
   new Set(list).size === list.length;
 
-export const cleanIdentifierInputs = (
-  input: IdentifierInput[]
-): IdentifierInput[] => {
-  for (const identifierInput of input) {
-    identifierInput.value = identifierInput.value.trim();
-  }
-  return input;
-};
-
 export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
-): IdentifierInput[] => {
+): boolean => {
   for (const { value, validationRegex, textInputType } of identifierInputs) {
     if (textInputType === "SINGLE_CHOICE" && !value) {
       throw new Error(ERROR_MESSAGE.MISSING_WAIVER_INPUT);
@@ -39,6 +30,7 @@ export const validateIdentifierInputs = (
     }
 
     const trimmedValue = value.trim();
+
     if (
       textInputType === "PAYMENT_RECEIPT" &&
       !isMatchRegex(
@@ -76,7 +68,5 @@ export const validateIdentifierInputs = (
     throw new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT);
   }
 
-  const cleanedIdentifierInputs = cleanIdentifierInputs(identifierInputs);
-
-  return cleanedIdentifierInputs;
+  return true;
 };
