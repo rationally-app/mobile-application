@@ -203,8 +203,8 @@ export const zh: Translations = {
       primaryActionText: "确定",
     },
     expiredQR: {
-      title: "过期",
-      body: "请向您的负责人索取新QR码。",
+      title: "不能使用",
+      body: "仅限于在有效期内使用您的QR码。",
       primaryActionText: "确定",
     },
     expiredOTP: {
