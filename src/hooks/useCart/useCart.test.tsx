@@ -586,9 +586,9 @@ describe("useCart", () => {
         ]);
         result.current.updateCart("chocolate", 5, [
           {
-            label: "last",
-            value: "        last      ",
-            textInputType: "STRING",
+            label: "code",
+            value: "        +6581898380      ",
+            textInputType: "PHONE_NUMBER",
           },
         ]);
       });
@@ -621,9 +621,9 @@ describe("useCart", () => {
           descriptionAlert: undefined,
           identifierInputs: [
             {
-              label: "last",
-              textInputType: "STRING",
-              value: "last",
+              label: "code",
+              textInputType: "PHONE_NUMBER",
+              value: "+6581898380",
             },
           ],
           lastTransactionTime: transactionTime,
@@ -680,6 +680,67 @@ describe("useCart", () => {
           {
             label: "second",
             value: "second",
+            textInputType: "PAYMENT_RECEIPT",
+          },
+        ]);
+        result.current.checkoutCart();
+      });
+
+      expect(result.current.cartState).toBe("PENDING_CONFIRMATION");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "second",
+              textInputType: "PAYMENT_RECEIPT",
+              value: "second",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 1,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "first",
+              scanButtonType: "BARCODE",
+              textInputType: "STRING",
+              value: "",
+            },
+            {
+              label: "last",
+              scanButtonType: "BARCODE",
+              textInputType: "STRING",
+              value: "",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 0,
+        },
+      ]);
+    });
+
+    it("should show PENDING_CONFIRMATION cart state when a PAYMENT_RECEIPT identifier input exists with whitespaced values", async () => {
+      expect.assertions(2);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await waitFor(() => {
+        result.current.updateCart("toilet-paper", 1, [
+          {
+            label: "second",
+            value: "         second           ",
             textInputType: "PAYMENT_RECEIPT",
           },
         ]);

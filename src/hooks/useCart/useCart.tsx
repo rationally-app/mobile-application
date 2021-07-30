@@ -253,6 +253,7 @@ export const useCart = (
             };
           });
         validateIdentifierInputs(allCleanedIdentifierInputs);
+
         if (transactions.length === 0) {
           setCartState("DEFAULT");
           setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
@@ -337,6 +338,7 @@ export const useCart = (
             };
           });
         validateIdentifierInputs(allCleanedIdentifierInputs);
+
         if (transactions.length === 0) {
           setCartState("DEFAULT");
           setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
@@ -344,7 +346,6 @@ export const useCart = (
         }
       } catch (error) {
         setCartState("DEFAULT");
-
         setCartError(error);
         return;
       }
