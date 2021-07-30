@@ -211,8 +211,8 @@ export const en: Translations = {
       primaryActionText: "OK",
     },
     expiredQR: {
-      title: "Expired",
-      body: "Get a new QR code from your in-charge.",
+      title: "Cannot use",
+      body: "Only use your QR code during the validity period.",
       primaryActionText: "OK",
     },
     expiredOTP: {
