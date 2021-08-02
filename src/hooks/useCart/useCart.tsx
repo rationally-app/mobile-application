@@ -238,32 +238,19 @@ export const useCart = (
     const complete = async (): Promise<void> => {
       const allCleanedIdentifierInputs: IdentifierInput[] = [];
       let transactions: any = [];
-      try {
-        transactions = Object.values(cart)
-          .filter(({ quantity }) => quantity)
-          .map(({ category, quantity, identifierInputs }) => {
-            const cleanedIdentifierInputs = cleanIdentifierInputs(
-              identifierInputs
-            );
-            allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
-            return {
-              category,
-              quantity,
-              identifierInputs: cleanedIdentifierInputs,
-            };
-          });
-        validateIdentifierInputs(allCleanedIdentifierInputs);
-
-        if (transactions.length === 0) {
-          setCartState("DEFAULT");
-          setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
-          return;
-        }
-      } catch (error) {
-        setCartState("DEFAULT");
-        setCartError(error);
-        return;
-      }
+      transactions = Object.values(cart)
+        .filter(({ quantity }) => quantity)
+        .map(({ category, quantity, identifierInputs }) => {
+          const cleanedIdentifierInputs = cleanIdentifierInputs(
+            identifierInputs
+          );
+          allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
+          return {
+            category,
+            quantity,
+            identifierInputs: cleanedIdentifierInputs,
+          };
+        });
 
       try {
         const transactionResponse = await postTransaction({
@@ -320,30 +307,29 @@ export const useCart = (
   const checkoutCart: CartHook["checkoutCart"] = useCallback(() => {
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
-
       const allCleanedIdentifierInputs: IdentifierInput[] = [];
-      let transactions: any = [];
-      try {
-        transactions = Object.values(cart)
-          .filter(({ quantity }) => quantity)
-          .map(({ category, quantity, identifierInputs }) => {
-            const cleanedIdentifierInputs = cleanIdentifierInputs(
-              identifierInputs
-            );
-            allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
-            return {
-              category,
-              quantity,
-              identifierInputs: cleanedIdentifierInputs,
-            };
-          });
-        validateIdentifierInputs(allCleanedIdentifierInputs);
+      const transactions: any = Object.values(cart)
+        .filter(({ quantity }) => quantity)
+        .map(({ category, quantity, identifierInputs }) => {
+          const cleanedIdentifierInputs = cleanIdentifierInputs(
+            identifierInputs
+          );
+          allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
+          return {
+            category,
+            quantity,
+            identifierInputs: cleanedIdentifierInputs,
+          };
+        });
 
-        if (transactions.length === 0) {
-          setCartState("DEFAULT");
-          setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
-          return;
-        }
+      if (transactions.length === 0) {
+        setCartState("DEFAULT");
+        setCartError(new Error(ERROR_MESSAGE.MISSING_SELECTION));
+        return;
+      }
+
+      try {
+        validateIdentifierInputs(allCleanedIdentifierInputs);
       } catch (error) {
         setCartState("DEFAULT");
         setCartError(error);
