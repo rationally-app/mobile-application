@@ -587,7 +587,7 @@ describe("useCart", () => {
         result.current.updateCart("chocolate", 5, [
           {
             label: "code",
-            value: "        +6581898380      ",
+            value: "        +6588888888      ",
             textInputType: "PHONE_NUMBER",
           },
         ]);
@@ -623,7 +623,7 @@ describe("useCart", () => {
             {
               label: "code",
               textInputType: "PHONE_NUMBER",
-              value: "+6581898380",
+              value: "+6588888888",
             },
           ],
           lastTransactionTime: transactionTime,
@@ -744,6 +744,20 @@ describe("useCart", () => {
             textInputType: "PAYMENT_RECEIPT",
           },
         ]);
+        result.current.updateCart("chocolate", 4, [
+          {
+            value: "        first             ",
+            label: "first",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE",
+          },
+          {
+            value: "       last       ",
+            label: "last",
+            textInputType: "STRING",
+            scanButtonType: "BARCODE",
+          },
+        ]);
         result.current.checkoutCart();
       });
 
@@ -771,18 +785,18 @@ describe("useCart", () => {
               label: "first",
               scanButtonType: "BARCODE",
               textInputType: "STRING",
-              value: "",
+              value: "first",
             },
             {
               label: "last",
               scanButtonType: "BARCODE",
               textInputType: "STRING",
-              value: "",
+              value: "last",
             },
           ],
           lastTransactionTime: transactionTime,
           maxQuantity: 15,
-          quantity: 0,
+          quantity: 4,
         },
       ]);
     });

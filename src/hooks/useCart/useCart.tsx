@@ -237,8 +237,7 @@ export const useCart = (
   const _completeCheckout = useCallback(() => {
     const complete = async (): Promise<void> => {
       const allCleanedIdentifierInputs: IdentifierInput[] = [];
-      let transactions: any = [];
-      transactions = Object.values(cart)
+      const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
           const cleanedIdentifierInputs = cleanIdentifierInputs(
@@ -251,7 +250,6 @@ export const useCart = (
             identifierInputs: cleanedIdentifierInputs,
           };
         });
-
       try {
         const transactionResponse = await postTransaction({
           ids,
