@@ -67,6 +67,5 @@ export const validateIdentifierInputs = (
   ) {
     throw new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT);
   }
-
   return true;
 };
