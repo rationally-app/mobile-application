@@ -29,12 +29,10 @@ export const validateIdentifierInputs = (
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
 
-    const trimmedValue = value.trim();
-
     if (
       textInputType === "PAYMENT_RECEIPT" &&
       !isMatchRegex(
-        trimmedValue,
+        value,
         validationRegex ? validationRegex : defaultPaymentReceiptValidationRegex
       )
     ) {
@@ -43,19 +41,16 @@ export const validateIdentifierInputs = (
     if (
       textInputType === "PHONE_NUMBER" &&
       !isMatchRegex(
-        trimmedValue,
+        value,
         validationRegex ? validationRegex : defaultPhoneNumberValidationRegex
       )
     ) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
-    if (!isMatchRegex(trimmedValue, validationRegex)) {
+    if (!isMatchRegex(value, validationRegex)) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
-    if (
-      textInputType === "PHONE_NUMBER" &&
-      !fullPhoneNumberValidator(trimmedValue)
-    ) {
+    if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
   }

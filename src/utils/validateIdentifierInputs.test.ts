@@ -1,7 +1,7 @@
 import { validateIdentifierInputs } from "./validateIdentifierInputs";
 
 describe("validateIdentifierInputs", () => {
-  it("should return cleaned and validated input if all identifiers are valid", () => {
+  it("should return validated input if all identifiers are valid", () => {
     expect.assertions(1);
     expect(
       validateIdentifierInputs([
@@ -38,19 +38,8 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PHONE_NUMBER",
         },
         {
-          label: "phone number with whitespace",
-          value: "  +6591234567  ",
-          textInputType: "PHONE_NUMBER",
-        },
-        {
           label: "payment receipt with regex",
           value: "1234acbd5678qwer1234",
-          validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
-          textInputType: "PAYMENT_RECEIPT",
-        },
-        {
-          label: "payment receipt with regex and whitespace",
-          value: "   1234acbd5678qwer1234                ",
           validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
           textInputType: "PAYMENT_RECEIPT",
         },
@@ -63,11 +52,6 @@ describe("validateIdentifierInputs", () => {
         {
           label: "payment receipt without regex",
           value: "within20characters",
-          textInputType: "PAYMENT_RECEIPT",
-        },
-        {
-          label: "payment receipt without regex and with whitespace",
-          value: " aaaaa  ",
           textInputType: "PAYMENT_RECEIPT",
         },
       ])

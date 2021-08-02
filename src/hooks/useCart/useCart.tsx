@@ -236,14 +236,12 @@ export const useCart = (
    */
   const _completeCheckout = useCallback(() => {
     const complete = async (): Promise<void> => {
-      const allCleanedIdentifierInputs: IdentifierInput[] = [];
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
           const cleanedIdentifierInputs = cleanIdentifierInputs(
             identifierInputs
           );
-          allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
           return {
             category,
             quantity,
@@ -306,7 +304,7 @@ export const useCart = (
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
       const allCleanedIdentifierInputs: IdentifierInput[] = [];
-      const transactions: any = Object.values(cart)
+      const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
           const cleanedIdentifierInputs = cleanIdentifierInputs(
