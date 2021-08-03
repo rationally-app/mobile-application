@@ -1,7 +1,7 @@
 import { validateIdentifierInputs } from "./validateIdentifierInputs";
 
 describe("validateIdentifierInputs", () => {
-  it("should return validated input if all identifiers are valid", () => {
+  it("should return true if all identifiers are valid", () => {
     expect.assertions(1);
     expect(
       validateIdentifierInputs([
