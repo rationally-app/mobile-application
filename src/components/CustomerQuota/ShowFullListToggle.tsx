@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "../Layout/AppText";
 import { size, color, fontSize } from "../../common/styles";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
 const styles = StyleSheet.create({
@@ -42,12 +42,8 @@ export const ShowFullListToggle: FunctionComponent<{
       >
         <View style={styles.showFullListToggleWrapper}>
           <View style={styles.showFullListToggleBorder} />
-          <Ionicons
-            name={
-              isShowFullList
-                ? "ios-arrow-dropup-circle"
-                : "ios-arrow-dropdown-circle"
-            }
+          <AntDesign
+            name={isShowFullList ? "upcircle" : "downcircle"}
             size={size(4)}
             color={color("blue", 50)}
           />

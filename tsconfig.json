@@ -12,5 +12,6 @@
     "types": ["node", "jest"],
     "target": "esnext"
   },
-  "includes": ["src"]
+  "includes": ["src"],
+  "extends": "expo/tsconfig.base"
 }

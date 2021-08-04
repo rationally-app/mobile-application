@@ -496,7 +496,10 @@ describe("quota", () => {
             getAllTransactions: false,
             categories,
           }),
-          headers: { Authorization: key },
+          headers: {
+            Authorization: key,
+            "Content-Type": "application/json",
+          },
           method: "POST",
         }
       );

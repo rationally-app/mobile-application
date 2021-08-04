@@ -210,6 +210,7 @@ export const liveGetQuota = async (
     response = await fetchWithValidator(Quota, `${endpoint}${version}/quota`, {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Authorization: key,
       },
       body: JSON.stringify({
@@ -294,6 +295,7 @@ export const livePostTransaction = async ({
       {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: key,
         },
         body: JSON.stringify({
@@ -374,6 +376,7 @@ export const livePastTransactions = async (
       {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: key,
         },
         body: JSON.stringify({

@@ -47,7 +47,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const NavigationIcon: FunctionComponent<{ name: string }> = ({ name }) => (
+const NavigationIcon: FunctionComponent<{
+  name: keyof typeof Feather.glyphMap;
+}> = ({ name }) => (
   <Feather name={name} size={size(3)} color={color("blue", 50)} />
 );
 
