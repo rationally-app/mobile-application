@@ -106,10 +106,11 @@ describe("mobileNumberValidator", () => {
   });
 
   it("should return true for valid numbers", () => {
-    expect.assertions(3);
+    expect.assertions(4);
     expect(mobileNumberValidator("+65", "96247612")).toBe(true);
     expect(mobileNumberValidator("+65", "98261749")).toBe(true);
     expect(mobileNumberValidator("+65", "98219374")).toBe(true);
+    expect(mobileNumberValidator("+65", "80230000")).toBe(true);
   });
 });
 
@@ -137,9 +138,10 @@ describe("fullPhoneNumberValidator", () => {
   });
 
   it("should return true for valid phone numbers", () => {
-    expect.assertions(3);
+    expect.assertions(4);
     expect(fullPhoneNumberValidator("+6596247612")).toBe(true);
     expect(fullPhoneNumberValidator("+6598261749")).toBe(true);
     expect(fullPhoneNumberValidator("+6598219374")).toBe(true);
+    expect(fullPhoneNumberValidator("+6580230000")).toBe(true);
   });
 });

@@ -4,6 +4,8 @@ import { ItemContent } from "./ItemContent";
 import { CartItem, CartHook } from "../../../hooks/useCart/useCart";
 import { ProductContext } from "../../../context/products";
 import { AddonsItems } from "./AddonsItems";
+import { TransactionsGroup } from "../TransactionsGroup";
+import { ShowAddonsToggle } from "./ShowAddonsToggle";
 
 export const ItemCheckbox: FunctionComponent<{
   ids: string[];
@@ -12,6 +14,9 @@ export const ItemCheckbox: FunctionComponent<{
   updateCart: CartHook["updateCart"];
 }> = ({ ids, addonToggleItem, cartItem, updateCart }) => {
   const [isShowAddonsItems, setIsShowAddonsItems] = useState(false);
+  const [addonsTransactionList, setAddonsTransactionList] = useState<
+    TransactionsGroup[]
+  >([]);
   const { category, quantity, maxQuantity, descriptionAlert } = cartItem;
   const { getProduct } = useContext(ProductContext);
   const { name = category, description, quantity: productQuantity } =
@@ -23,23 +28,32 @@ export const ItemCheckbox: FunctionComponent<{
         <ItemContent
           name={name}
           description={description}
-          descriptionAlert={descriptionAlert}
           unit={productQuantity?.unit}
           maxQuantity={maxQuantity}
           accessibilityLabel="item-checkbox"
-          showAddonsToggle={(e) => {
-            e.stopPropagation();
-            setIsShowAddonsItems(!isShowAddonsItems);
-          }}
-          showAddons={isShowAddonsItems}
         />
+      }
+      addonsLabel={
+        descriptionAlert && descriptionAlert.length > 0 ? (
+          <ShowAddonsToggle
+            descriptionAlert={descriptionAlert}
+            toggleIsShowAddons={(e) => {
+              e.stopPropagation();
+              setIsShowAddonsItems(!isShowAddonsItems);
+            }}
+            isShowAddons={isShowAddonsItems}
+            addonsTransactionList={addonsTransactionList}
+            setAddonsTransactionList={setAddonsTransactionList}
+            ids={ids}
+            categoryFilter={category}
+          />
+        ) : undefined
       }
       addons={
         addonToggleItem ? (
           <AddonsItems
-            ids={ids}
+            transactionList={addonsTransactionList}
             isShowAddonItems={isShowAddonsItems}
-            categoryFilter={category}
           />
         ) : undefined
       }

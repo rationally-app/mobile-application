@@ -28,7 +28,7 @@
     "expo-localization": "~10.2.0",
     "expo-updates": "~0.8.0",
     "fp-ts": "^2.9.5",
-    "google-libphonenumber": "^3.2.19",
+    "google-libphonenumber": "^3.2.22",
     "io-ts": "^2.2.16",
     "io-ts-reporters": "^1.2.2",
     "io-ts-types": "^0.5.16",
