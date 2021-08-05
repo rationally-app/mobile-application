@@ -124,6 +124,9 @@ export const zh: Translations = {
   identifierSelectionInput: {
     placeholder: "请选择原因",
   },
+  logoutScreen: {
+    loggingOut: "正在登出中",
+  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "已使用",
@@ -425,6 +428,12 @@ export const zh: Translations = {
     invalidDeviceCode: {
       title: "输入无效",
       body: "请再次扫描物品或向您的负责人索取新的物品。",
+      primaryActionText: "确定",
+    },
+    systemErrorLogoutIssue: {
+      title: "系统错误",
+      body:
+        "无法登出所有活动。请稍后再试着登出。如果问题持续出现，请联系您的负责人。",
       primaryActionText: "确定",
     },
     dynamicContentFallback: {

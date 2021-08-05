@@ -119,6 +119,9 @@ export type Translations = {
     placeholder: string;
   };
   addonsToggleComponent: { "*chargeable": string; "*waive charges": string };
+  logoutScreen: {
+    loggingOut: string;
+  };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: string;
@@ -467,6 +470,11 @@ export type Translations = {
       secondaryActionText?: string;
     };
     invalidDeviceCode: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    systemErrorLogoutIssue: {
       title: string;
       body?: string;
       primaryActionText: string;
