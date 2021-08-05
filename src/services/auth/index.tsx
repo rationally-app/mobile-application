@@ -1,6 +1,11 @@
 import { IS_MOCK } from "../../config";
-import { SessionCredentials, OTPResponse } from "../../types";
-import { fetchWithValidator, ValidationError } from "../helpers";
+import { SessionCredentials, OTPResponse, LogoutResponse } from "../../types";
+import {
+  fetchWithValidator,
+  NetworkError,
+  SessionError,
+  ValidationError,
+} from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 
 export class LoginError extends Error {
@@ -70,6 +75,20 @@ export class OTPEmptyError extends LoginError {
   constructor(message: string) {
     super(message);
     this.name = "OTPEmptyError";
+  }
+}
+
+export class LogoutError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "LogoutError";
+  }
+}
+
+export class OperatorTokenError extends LogoutError {
+  constructor(message: string) {
+    super(message);
+    this.name = "OperatorTokenError";
   }
 }
 
@@ -172,5 +191,90 @@ export const mockValidateOTP = async (
   };
 };
 
+export const liveCallLogout = async (
+  sessionToken: string,
+  operatorToken: string,
+  endpoint: string
+): Promise<void> => {
+  const payload = { sessionToken, operatorToken };
+
+  try {
+    await fetchWithValidator(LogoutResponse, `${endpoint}/auth/logout`, {
+      method: "POST",
+      headers: {
+        Authorization: sessionToken,
+      },
+      body: JSON.stringify({
+        operatorToken,
+      }),
+    });
+    Sentry.addBreadcrumb({
+      category: "logout",
+      message: JSON.stringify({
+        status: "success",
+        ...payload,
+        endpoint,
+      }),
+    });
+    return;
+  } catch (e) {
+    if (e instanceof NetworkError) {
+      throw e;
+    } else if (
+      e instanceof SessionError ||
+      e.message === "Auth token is not currently valid"
+    ) {
+      // for this case the session token is already invalidated or past the valid date
+      // logoutTodo: is it safe to keep session token there if already past validity date
+
+      Sentry.addBreadcrumb({
+        category: "logout",
+        message: JSON.stringify({
+          status: "success despite error",
+          message: e.message,
+          ...payload,
+          endpoint,
+        }),
+      });
+      return;
+    } else if (
+      e.message === "Unauthorized auth token" ||
+      e.message === "Auth token is of invalid format"
+    ) {
+      // these shouldn't happen because the operator token should be correct
+      Sentry.addBreadcrumb({
+        category: "logout",
+        message: JSON.stringify({
+          status: "failed",
+          message: e.message,
+          ...payload,
+          endpoint,
+        }),
+      });
+      throw new OperatorTokenError(e.message);
+    } else {
+      Sentry.addBreadcrumb({
+        category: "logout",
+        message: JSON.stringify({
+          status: "failed",
+          message: e.message,
+          ...payload,
+          endpoint,
+        }),
+      });
+      throw new LogoutError(e.message);
+    }
+  }
+};
+
+export const mockCallLogout = async (
+  _sessionToken: string,
+  _operatorToken: string,
+  _endpoint: string
+): Promise<void> => {
+  // throw new LogoutError("error logging out");
+};
+
 export const requestOTP = IS_MOCK ? mockRequestOTP : liveRequestOTP;
 export const validateOTP = IS_MOCK ? mockValidateOTP : liveValidateOTP;
+export const callLogout = IS_MOCK ? mockCallLogout : liveCallLogout;
