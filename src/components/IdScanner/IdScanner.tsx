@@ -167,12 +167,16 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
       const { x: interestAreaX, y: interestAreaY } = interestArea;
       if (origin && boundsSize && interestAreaX && interestAreaY) {
         const { x: boundsX, y: boundsY } = origin;
-        const { width, height } = boundsSize;
+        const { width: boundsWidth, height: boundsHeight } = boundsSize;
+        const {
+          width: interestAreaWidth,
+          height: interestAreaHeight,
+        } = interestArea;
         if (
           boundsX >= interestAreaX &&
           boundsY >= interestAreaY &&
-          boundsX + width <= interestAreaX + width &&
-          boundsY + height <= interestAreaY + height
+          boundsX + boundsWidth <= interestAreaX + interestAreaWidth &&
+          boundsY + boundsHeight <= interestAreaY + interestAreaHeight
         ) {
           if (onBarCodeScanned) {
             onBarCodeScanned(event);
