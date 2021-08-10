@@ -34,7 +34,7 @@ const mockWriteBucket = saveToStoreInBuckets as jest.MockedFunction<
   typeof saveToStoreInBuckets
 >;
 
-jest.mock("../../utils/errorTracking");
+jest.mock("../utils/errorTracking");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
@@ -48,7 +48,7 @@ describe("AuthStoreContextProvider", () => {
     mockMultiGet.mockReset().mockName("asyncMultiGet");
     mockMultiRemove.mockReset().mockName("asyncMultiRemove");
     mockReadBucket.mockReset().mockName("bucketReadItem");
-    mockWriteBucket.mockReset().mockName("bucketWriteItem");
+    mockWriteBucket.mockReset().mockName("bucketWriteItem").mockResolvedValue(undefined);
     mockCaptureException.mockReset();
   });
 
@@ -435,6 +435,64 @@ describe("AuthStoreContextProvider", () => {
     });
   });
 
+  it("should capture exception if there is an error saving to buckets", async () => {
+    expect.assertions(3);
+
+    const oldData = JSON.stringify({
+      [testCampaignKey]: {
+        operatorToken: "operatorToken",
+        sessionToken: "sessionToken",
+        endpoint: "endpoint",
+        expiry: 0,
+      },
+    });
+    const newAuthCredential = {
+      operatorToken: "operatorTokenA",
+      sessionToken: "sessionTokenA",
+      endpoint: "endpointA",
+      expiry: 0,
+    };
+
+    mockReadBucket.mockResolvedValueOnce(
+      oldData
+    );
+
+    mockWriteBucket.mockRejectedValueOnce("could not save");
+
+    const { queryByTestId, getByText } = render(
+      <ErrorBoundary>
+        <AuthStoreContextProvider shouldMigrate={false}>
+          <AuthStoreContext.Consumer>
+            {({ authCredentials, setAuthCredentials }) => (
+              <>
+                <Text testID="credentials">
+                  {JSON.stringify(authCredentials[testCampaignKey])}
+                </Text>
+                <Button
+                  onPress={() => setAuthCredentials(testCampaignKey, newAuthCredential)}
+                  title="test button"
+                />
+              </>
+            )}
+          </AuthStoreContext.Consumer>
+        </AuthStoreContextProvider>
+      </ErrorBoundary>
+    );
+
+    await waitFor(() => {
+      expect(queryByTestId("credentials")).toHaveTextContent(
+        `{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0}`
+      );
+    });
+    
+    fireEvent.press(getByText("test button"));
+
+    await waitFor(() => {
+      expect(mockCaptureException).toHaveBeenCalledTimes(1);
+    });
+    expect(mockCaptureException).toHaveBeenCalledWith("could not save");
+  });
+
   describe("migration from v2 to v3 storage", () => {
     it("should clear v2 storage if there are credentials in later storage without querying for data", async () => {
       expect.assertions(8);
@@ -458,7 +516,7 @@ describe("AuthStoreContextProvider", () => {
                   {JSON.stringify(authCredentials[testCampaignKey])}
                 </Text>
                 {hasLoadedFromStore && (
-                  <Text testID="loaded">{hasLoadedFromStore}</Text>
+                  <Text testID="loaded">{`${hasLoadedFromStore}`}</Text>
                 )}
               </>
             )}
@@ -506,7 +564,7 @@ describe("AuthStoreContextProvider", () => {
                   {JSON.stringify(authCredentials[testCampaignKey])}
                 </Text>
                 {hasLoadedFromStore && (
-                  <Text testID="loaded">{hasLoadedFromStore}</Text>
+                  <Text testID="loaded">{`${hasLoadedFromStore}`}</Text>
                 )}
               </>
             )}
