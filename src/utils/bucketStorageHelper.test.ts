@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import {
-  deleteInStoreInBuckets,
+  deleteStoreInBuckets,
   readFromStoreInBuckets,
   saveToStoreInBuckets,
 } from "./bucketStorageHelper";
@@ -28,124 +28,87 @@ describe("bucket storage helpers", () => {
     it("should split up data into buckets according to the specified size", async () => {
       expect.assertions(4);
 
-      await saveToStoreInBuckets(
-        testKey,
-        JSON.stringify({
-          key1: veryLongStringA,
-          key2: veryLongStringB,
-          key3: veryLongStringC,
-          key4: veryLongStringA,
-          key5: veryLongStringB,
-        }),
-        null
-      );
+      const newData = JSON.stringify({
+        key1: veryLongStringA,
+        key2: veryLongStringB,
+        key3: veryLongStringC,
+        key4: veryLongStringA,
+        key5: veryLongStringB,
+      });
+
+      await saveToStoreInBuckets(testKey, newData, null);
       expect(mockSecureSetItem).toHaveBeenCalledTimes(3);
       expect(mockSecureSetItem).toHaveBeenNthCalledWith(
         1,
         testKey + "_0",
-        JSON.stringify({
-          key1: veryLongStringA,
-          key2: veryLongStringB,
-          key3: veryLongStringC,
-          key4: veryLongStringA,
-          key5: veryLongStringB,
-        }).slice(0, 2048)
+        newData.slice(0, 2048)
       );
       expect(mockSecureSetItem).toHaveBeenNthCalledWith(
         2,
         testKey + "_1",
-        JSON.stringify({
-          key1: veryLongStringA,
-          key2: veryLongStringB,
-          key3: veryLongStringC,
-          key4: veryLongStringA,
-          key5: veryLongStringB,
-        }).slice(2048, 4096)
+        newData.slice(2048, 4096)
       );
       expect(mockSecureSetItem).toHaveBeenNthCalledWith(
         3,
         testKey + "_2",
-        JSON.stringify({
-          key1: veryLongStringA,
-          key2: veryLongStringB,
-          key3: veryLongStringC,
-          key4: veryLongStringA,
-          key5: veryLongStringB,
-        }).slice(4096, 6144)
+        newData.slice(4096, 6144)
       );
     });
 
-    it("should only overwrite buckets that have changes", async () => {
+    it("should only overwrite bucket 0 and 1 that has changes and not touch bucket 2", async () => {
       expect.assertions(3);
 
-      await saveToStoreInBuckets(
-        testKey,
-        JSON.stringify({
-          key1: veryLongStringA,
-          key2: veryLongStringB,
-          key3: veryLongStringA,
-          key4: veryLongStringB,
-          key5: veryLongStringA,
-        }),
-        JSON.stringify({
-          key1: veryLongStringA,
-          key2: veryLongStringB,
-          key3: veryLongStringC,
-          key4: veryLongStringB,
-          key5: veryLongStringA,
-        })
-      );
+      const newData = JSON.stringify({
+        key1: veryLongStringA,
+        key2: veryLongStringB,
+        key3: veryLongStringA,
+        key4: veryLongStringB,
+        key5: veryLongStringA,
+      });
+      const oldData = JSON.stringify({
+        key1: veryLongStringA,
+        key2: veryLongStringB,
+        key3: veryLongStringC,
+        key4: veryLongStringB,
+        key5: veryLongStringA,
+      });
+
+      await saveToStoreInBuckets(testKey, newData, oldData);
 
       expect(mockSecureSetItem).toHaveBeenCalledTimes(2);
       expect(mockSecureSetItem).toHaveBeenNthCalledWith(
         1,
         testKey + "_0",
-        JSON.stringify({
-          key1: veryLongStringA,
-          key2: veryLongStringB,
-          key3: veryLongStringA,
-          key4: veryLongStringB,
-          key5: veryLongStringA,
-        }).slice(0, 2048)
+        newData.slice(0, 2048)
       );
       expect(mockSecureSetItem).toHaveBeenNthCalledWith(
         2,
         testKey + "_1",
-        JSON.stringify({
-          key1: veryLongStringA,
-          key2: veryLongStringB,
-          key3: veryLongStringA,
-          key4: veryLongStringB,
-          key5: veryLongStringA,
-        }).slice(2048, 4096)
+        newData.slice(2048, 4096)
       );
     });
 
-    it("should delete extra buckets", async () => {
+    it("should delete extra bucket 1 and 2", async () => {
       expect.assertions(5);
 
-      await saveToStoreInBuckets(
-        testKey,
-        JSON.stringify({
-          key1: veryLongStringA,
-          key5: veryLongStringA,
-        }),
-        JSON.stringify({
-          key1: veryLongStringA,
-          key2: veryLongStringB,
-          key3: veryLongStringC,
-          key4: veryLongStringB,
-          key5: veryLongStringA,
-        })
-      );
+      const newData = JSON.stringify({
+        key1: veryLongStringA,
+        key5: veryLongStringA,
+      });
+      const oldData = JSON.stringify({
+        key1: veryLongStringA,
+        key2: veryLongStringB,
+        key3: veryLongStringC,
+        key4: veryLongStringB,
+        key5: veryLongStringA,
+      });
+
+      await saveToStoreInBuckets(testKey, newData, oldData);
       expect(mockSecureSetItem).toHaveBeenCalledTimes(1);
       expect(mockSecureSetItem).toHaveBeenNthCalledWith(
         1,
         testKey + "_0",
-        JSON.stringify({
-          key1: veryLongStringA,
-          key5: veryLongStringA,
-        })
+        newData
       );
       expect(mockSecureDeleteItem).toHaveBeenCalledTimes(2);
       expect(mockSecureDeleteItem).toHaveBeenNthCalledWith(1, testKey + "_1");
@@ -249,7 +212,7 @@ describe("bucket storage helpers", () => {
     it("should delete all keys", async () => {
       expect.assertions(3);
 
-      await deleteInStoreInBuckets(
+      await deleteStoreInBuckets(
         testKey,
         veryLongStringA + veryLongStringB + veryLongStringC
       );
@@ -262,7 +225,7 @@ describe("bucket storage helpers", () => {
     it("should not do anything if old value is null", async () => {
       expect.assertions(1);
 
-      await deleteInStoreInBuckets(testKey, null);
+      await deleteStoreInBuckets(testKey, null);
 
       expect(mockSecureDeleteItem).not.toHaveBeenCalled();
     });
@@ -270,7 +233,7 @@ describe("bucket storage helpers", () => {
     it("should delete key if value is empty string", async () => {
       expect.assertions(2);
 
-      await deleteInStoreInBuckets(testKey, "");
+      await deleteStoreInBuckets(testKey, "");
 
       expect(mockSecureDeleteItem).toHaveBeenCalledTimes(1);
       expect(mockSecureDeleteItem).toHaveBeenNthCalledWith(1, testKey + "_0");
