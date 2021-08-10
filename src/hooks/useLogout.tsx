@@ -1,10 +1,6 @@
-import { useContext, useState, useCallback } from "react";
-import { ImportantMessageSetterContext } from "../context/importantMessage";
+import { useCallback } from "react";
 import { Alert } from "react-native";
 import { NavigationDispatch, NavigationActions } from "react-navigation";
-import { AuthStoreContext } from "../context/authStore";
-import { CampaignConfigsStoreContext } from "../context/campaignConfigsStore";
-import { ConfigContext } from "../context/config";
 
 type AlertProps = {
   title: string;
@@ -12,7 +8,6 @@ type AlertProps = {
 };
 
 interface LogoutHook {
-  isLoggingOut: boolean;
   logout: (
     navigationDispatch: NavigationDispatch | undefined,
     alert?: AlertProps
@@ -20,26 +15,14 @@ interface LogoutHook {
 }
 
 export const useLogout = (): LogoutHook => {
-  const setMessageContent = useContext(ImportantMessageSetterContext);
-  const { setConfigValue } = useContext(ConfigContext);
-  const { clearAuthCredentials } = useContext(AuthStoreContext);
-  const { clearCampaignConfigs } = useContext(CampaignConfigsStoreContext);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
   const logout: LogoutHook["logout"] = useCallback(
     async (navigationDispatch, alert) => {
       if (!navigationDispatch) {
         return;
       }
-      setIsLoggingOut(true);
-      clearAuthCredentials();
-      clearCampaignConfigs();
-      setConfigValue("fullMobileNumber", undefined);
-      setMessageContent(null);
-      setIsLoggingOut(false);
       navigationDispatch?.(
         NavigationActions.navigate({
-          routeName: "LoginScreen",
+          routeName: "LogoutScreen",
         })
       );
       if (alert) {
@@ -49,16 +32,10 @@ export const useLogout = (): LogoutHook => {
         Alert.alert(title, description);
       }
     },
-    [
-      setConfigValue,
-      clearAuthCredentials,
-      clearCampaignConfigs,
-      setMessageContent,
-    ]
+    []
   );
 
   return {
-    isLoggingOut,
     logout,
   };
 };

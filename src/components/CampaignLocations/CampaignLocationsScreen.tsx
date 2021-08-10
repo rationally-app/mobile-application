@@ -67,6 +67,12 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
+  /**
+   * Determines whether the app should automatically load a campaign if there
+   * is only one existing campaign
+   */
+  const autoLoad: boolean = navigation.getParam("autoLoad") ?? true;
+
   const messageContent = useContext(ImportantMessageContentContext);
   const showHelpModal = useContext(HelpModalContext);
 
@@ -122,7 +128,8 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
       const numCampaignLocations = Object.keys(authCredentials).length;
       if (
         numCampaignLocations === 1 &&
-        Date.now() < Object.values(authCredentials)[0].expiry
+        Date.now() < Object.values(authCredentials)[0].expiry &&
+        autoLoad
       ) {
         // Automatically go to the only valid campaign location
         navigateToCampaignLocation(Object.values(authCredentials)[0]);
@@ -136,6 +143,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     hasLoadedAuthFromStore,
     navigateToCampaignLocation,
     navigation,
+    autoLoad,
   ]);
   const authCredentialsWithCampaignName = Object.entries(authCredentials).map(
     ([key, credentials]) => {

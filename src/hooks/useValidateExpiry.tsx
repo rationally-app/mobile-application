@@ -14,7 +14,7 @@ export const useValidateExpiry = (
 ): (() => void) => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
   const { expiry } = useContext(AuthContext);
-  const { isLoggingOut, logout } = useLogout();
+  const { logout: logout } = useLogout();
 
   const onExpired = useCallback(() => {
     logout(navigationDispatch, {
@@ -46,7 +46,7 @@ export const useValidateExpiry = (
   const validate = useCallback(async (): Promise<void> => {
     clearTimeout(timeout);
 
-    if (!expiry || isLoggingOut) {
+    if (!expiry) {
       return;
     }
 
@@ -71,7 +71,7 @@ export const useValidateExpiry = (
         validate();
       }, durationInSeconds * 1000);
     }
-  }, [expiry, isLoggingOut, onAboutToExpire, onExpired]);
+  }, [expiry, onAboutToExpire, onExpired]);
 
   return validate;
 };
