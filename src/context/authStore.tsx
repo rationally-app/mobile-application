@@ -100,7 +100,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
           });
           setState(() => {
             throw reason;
-          })
+          });
         });
       }
     }
