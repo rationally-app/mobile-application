@@ -8,3 +8,4 @@ import "./ErrorBoundary/ErrorBoundary";
 import "./Layout";
 import "./Login";
 import "./Modals";
+import "./Logout";
