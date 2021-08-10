@@ -46,11 +46,12 @@ export const saveToStoreInBuckets: (
   storageKey: string,
   newValue: string,
   oldValue: string | null
-) => void = (storageKey, newValue, oldValue) => {
+) => Promise<void> = async (storageKey, newValue, oldValue) => {
   oldValue = oldValue ?? "";
 
   // iterate the longer length in case we have to clear buckets
   const compareLength = Math.max(newValue.length, oldValue.length);
+  const promiseArray: Promise<void>[] = [];
   for (let bucketNo = 0; bucketNo * SIZE_LIMIT < compareLength; bucketNo++) {
     const newValueBucketString = newValue.slice(
       bucketNo * SIZE_LIMIT,
@@ -65,14 +66,19 @@ export const saveToStoreInBuckets: (
       if (newValueBucketString === "" && bucketNo !== 0) {
         // if the new bucket is empty, delete the key
         // however, if this is the first bucket, user is saving an empty string, so do not delete
-        SecureStore.deleteItemAsync(getBucketKey(storageKey, bucketNo));
+        promiseArray.push(
+          SecureStore.deleteItemAsync(getBucketKey(storageKey, bucketNo))
+        );
       } else {
-        SecureStore.setItemAsync(
-          getBucketKey(storageKey, bucketNo),
-          newValueBucketString
+        promiseArray.push(
+          SecureStore.setItemAsync(
+            getBucketKey(storageKey, bucketNo),
+            newValueBucketString
+          )
         );
       }
     }
+    await Promise.all(promiseArray);
   }
 };
 
@@ -118,7 +124,7 @@ export const readFromStoreInBuckets: (
  * @param storageKey key used in storage
  * @param oldValue existing value in storage
  */
-export const deleteInStoreInBuckets: (
+export const deleteStoreInBuckets: (
   storageKey: string,
   oldValue: string | null
 ) => Promise<void> = async (storageKey, oldValue) => {

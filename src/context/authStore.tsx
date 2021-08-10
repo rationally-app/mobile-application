@@ -92,7 +92,13 @@ export const AuthStoreContextProvider: FunctionComponent<{
           AUTH_CREDENTIALS_STORE_KEY,
           authCredentialsString,
           prevAuthCredentialsString ?? ""
-        );
+        ).catch((reason) => {
+          Sentry.addBreadcrumb({
+            category: "authStore",
+            message: "save failed",
+          });
+          Sentry.captureException(reason);
+        });
       }
     }
   }, [hasLoadedFromPrimaryStore, authCredentials, prevAuthCredentials]);
@@ -129,7 +135,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
   useEffect(() => {
     /**
      * Migrates credentials from old auth store to new auth store. Checks stores in order of
-     * increasing age (e.g. checks v2 then v1). Takes the value in the highest version. Clears all
+     * increasing age (although now only has v2 to check). Takes the value in the highest version. Clears all
      * old storage locations.
      * @param newStorageHasData whether most recent data has been found. If this is true, does not
      * attempt any migration and just clears old storage locations
