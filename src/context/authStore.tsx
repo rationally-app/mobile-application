@@ -80,6 +80,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
   );
   const prevAuthCredentials = usePrevious(authCredentials);
 
+  const [, setState] = useState();
   /** Effect to update the store when there are changes to authCredentials */
   useEffect(() => {
     if (hasLoadedFromPrimaryStore) {
@@ -97,7 +98,9 @@ export const AuthStoreContextProvider: FunctionComponent<{
             category: "authStore",
             message: "save failed",
           });
-          Sentry.captureException(reason);
+          setState(() => {
+            throw reason;
+          })
         });
       }
     }
@@ -131,7 +134,6 @@ export const AuthStoreContextProvider: FunctionComponent<{
     setAuthCredentialsMap({});
   }, []);
 
-  const [, setState] = useState();
   useEffect(() => {
     /**
      * Migrates credentials from old auth store to new auth store. Checks stores in order of
