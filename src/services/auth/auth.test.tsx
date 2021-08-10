@@ -1,6 +1,12 @@
-import { requestOTP, LoginError, validateOTP, callLogout, OperatorTokenError } from "./index";
+import {
+  requestOTP,
+  LoginError,
+  validateOTP,
+  callLogout,
+  OperatorTokenError,
+} from "./index";
 import { Sentry } from "../../utils/errorTracking";
-import { NetworkError, SessionError } from "../helpers";
+import { NetworkError } from "../helpers";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -153,61 +159,75 @@ describe("auth", () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ status: "OK" })
+        json: () => Promise.resolve({ status: "OK" }),
       });
-      await expect(callLogout(sessionToken, code, endpoint)).resolves.toEqual(undefined);
-
+      await expect(
+        callLogout(sessionToken, code, endpoint)
+      ).resolves.toBeUndefined();
     });
 
     it("should return normally if SessionError received", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({
-          message: "Invalid authentication token provided"
-        })
+        json: () =>
+          Promise.resolve({
+            message: "Invalid authentication token provided",
+          }),
       });
-      await expect(callLogout(sessionToken, code, endpoint)).resolves.toEqual(undefined);
+      await expect(
+        callLogout(sessionToken, code, endpoint)
+      ).resolves.toBeUndefined();
     });
 
     it("should return normally if Expired error received", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({
-          message: "Auth token is not currently valid"
-        })
+        json: () =>
+          Promise.resolve({
+            message: "Auth token is not currently valid",
+          }),
       });
-      await expect(callLogout(sessionToken, code, endpoint)).resolves.toEqual(undefined);
+      await expect(
+        callLogout(sessionToken, code, endpoint)
+      ).resolves.toBeUndefined();
     });
 
     it("should throw error if operator token error received", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({
-          message: "Unauthorized auth token"
-        })
+        json: () =>
+          Promise.resolve({
+            message: "Unauthorized auth token",
+          }),
       });
-      await expect(callLogout(sessionToken, code, endpoint)).rejects.toThrow(OperatorTokenError);
+      await expect(callLogout(sessionToken, code, endpoint)).rejects.toThrow(
+        OperatorTokenError
+      );
     });
 
     it("should throw an error if missing operator token error received", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        json: () => Promise.resolve({
-          message: "Auth token is of invalid format"
-        })
+        json: () =>
+          Promise.resolve({
+            message: "Auth token is of invalid format",
+          }),
       });
-      await expect(callLogout(sessionToken, code, endpoint)).rejects.toThrow(OperatorTokenError);
+      await expect(callLogout(sessionToken, code, endpoint)).rejects.toThrow(
+        OperatorTokenError
+      );
     });
 
     it("should throw network error if network error received", async () => {
       expect.assertions(1);
       mockFetch.mockRejectedValueOnce(new NetworkError(""));
-      await expect(callLogout(sessionToken, code, endpoint)).rejects.toThrow(NetworkError);
+      await expect(callLogout(sessionToken, code, endpoint)).rejects.toThrow(
+        NetworkError
+      );
     });
-
   });
 });
