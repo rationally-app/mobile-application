@@ -191,6 +191,10 @@ export const mockValidateOTP = async (
   };
 };
 
+/** Error message returned by endpoints without a /auth/logout handler */
+const oldBackendError =
+  "Authorization header requires 'Credential' parameter. Authorization header requires 'Signature' parameter. Authorization header requires 'SignedHeaders' parameter. Authorization header requires existence of either a 'X-Amz-Date' or a 'Date' header. Authorization=";
+
 export const liveCallLogout = async (
   sessionToken: string,
   operatorToken: string,
@@ -222,7 +226,8 @@ export const liveCallLogout = async (
       throw e;
     } else if (
       e instanceof SessionError ||
-      e.message === "Auth token is not currently valid"
+      e.message === "Auth token is not currently valid" ||
+      e.message === oldBackendError + sessionToken
     ) {
       // for this case the session token is already invalidated or past the valid date
       // logoutTodo: is it safe to keep session token there if already past validity date
