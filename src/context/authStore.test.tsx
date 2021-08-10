@@ -48,7 +48,10 @@ describe("AuthStoreContextProvider", () => {
     mockMultiGet.mockReset().mockName("asyncMultiGet");
     mockMultiRemove.mockReset().mockName("asyncMultiRemove");
     mockReadBucket.mockReset().mockName("bucketReadItem");
-    mockWriteBucket.mockReset().mockName("bucketWriteItem").mockResolvedValue(undefined);
+    mockWriteBucket
+      .mockReset()
+      .mockName("bucketWriteItem")
+      .mockResolvedValue(undefined);
     mockCaptureException.mockReset();
   });
 
@@ -453,9 +456,7 @@ describe("AuthStoreContextProvider", () => {
       expiry: 0,
     };
 
-    mockReadBucket.mockResolvedValueOnce(
-      oldData
-    );
+    mockReadBucket.mockResolvedValueOnce(oldData);
 
     mockWriteBucket.mockRejectedValueOnce("could not save");
 
@@ -469,7 +470,9 @@ describe("AuthStoreContextProvider", () => {
                   {JSON.stringify(authCredentials[testCampaignKey])}
                 </Text>
                 <Button
-                  onPress={() => setAuthCredentials(testCampaignKey, newAuthCredential)}
+                  onPress={() =>
+                    setAuthCredentials(testCampaignKey, newAuthCredential)
+                  }
                   title="test button"
                 />
               </>
@@ -484,7 +487,7 @@ describe("AuthStoreContextProvider", () => {
         `{"operatorToken":"operatorToken","sessionToken":"sessionToken","endpoint":"endpoint","expiry":0}`
       );
     });
-    
+
     fireEvent.press(getByText("test button"));
 
     await waitFor(() => {
