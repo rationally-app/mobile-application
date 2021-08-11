@@ -28,6 +28,7 @@ export const validateIdentifierInputs = (
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
+
     if (
       textInputType === "PAYMENT_RECEIPT" &&
       !isMatchRegex(
