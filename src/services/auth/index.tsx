@@ -243,14 +243,14 @@ export const liveCallLogout = async (
       });
       return;
     } else if (
-      e.message === "Unauthorized auth token" ||
-      e.message === "Auth token is of invalid format"
+      e.message === "Auth tokens are mismatched" ||
+      e.message === "Auth token is missing"
     ) {
       // these shouldn't happen because the operator token should be correct
       Sentry.addBreadcrumb({
         category: "logout",
         message: JSON.stringify({
-          status: "failed",
+          status: "operator token error",
           message: e.message,
           ...payload,
           endpoint,
