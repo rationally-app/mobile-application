@@ -51,11 +51,13 @@ export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
     setSelectedCountry(item);
   };
 
+  const trimmedPassportNum: string = (passportNum || "").trim();
+
   useEffect(() => {
-    selectedCountry && passportNum
-      ? setIdInput(`${selectedCountry?.value}-${passportNum}`)
+    selectedCountry && trimmedPassportNum
+      ? setIdInput(`${selectedCountry?.value}-${trimmedPassportNum}`)
       : setIdInput("");
-  }, [selectedCountry, passportNum, setIdInput]);
+  }, [selectedCountry, trimmedPassportNum, setIdInput]);
 
   const getScannerComponent = (): JSX.Element | null => {
     return scannerType !== "NONE" ? (
