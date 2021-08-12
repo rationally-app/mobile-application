@@ -94,10 +94,6 @@ export const AuthStoreContextProvider: FunctionComponent<{
           authCredentialsString,
           prevAuthCredentialsString ?? ""
         ).catch((reason) => {
-          Sentry.addBreadcrumb({
-            category: "authStore",
-            message: "save failed",
-          });
           setState(() => {
             throw reason;
           });
@@ -159,7 +155,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
               authCredentialsString
             );
             setAuthCredentialsMap(authCredentialsFromStore);
-            hasUpdatedData = true; // should this be set b4 parsing? error recovery policy
+            hasUpdatedData = true;
           } catch (e) {
             setState(() => {
               throw new AuthInvalidError(e);
