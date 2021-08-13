@@ -43,11 +43,11 @@ describe("CampaignConfigsStoreContextProvider", () => {
     mockGetItem.mockReset().mockName("asyncGetItem");
     mockSetItem.mockReset().mockName("asyncSetItem");
     mockRemoveItem.mockReset().mockName("asyncRemoveItem");
-    mockReadBucket
+    mockReadBucket.mockReset().mockName("bucketReadItem");
+    mockWriteBucket
       .mockReset()
-      .mockName("bucketReadItem")
-      .mockResolvedValue(null);
-    mockWriteBucket.mockReset().mockName("bucketWriteItem");
+      .mockName("bucketWriteItem")
+      .mockResolvedValue(undefined);
     mockCaptureException.mockReset();
   });
 
@@ -551,7 +551,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
             {({ hasLoadedFromStore, allCampaignConfigs }) => (
               <>
                 {hasLoadedFromStore && (
-                  <Text testID="loaded">{hasLoadedFromStore}</Text>
+                  <Text testID="loaded">{`${hasLoadedFromStore}`}</Text>
                 )}
                 <Text testID="features">
                   {JSON.stringify(
@@ -587,6 +587,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     it("should use v1 storage credentials and migrate to latest store if all later versions are empty", async () => {
       expect.assertions(10);
+      mockReadBucket.mockResolvedValueOnce(null);
       mockGetItem.mockResolvedValueOnce(
         JSON.stringify({
           [testCampaignKey]: {
@@ -603,7 +604,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
             {({ hasLoadedFromStore, allCampaignConfigs }) => (
               <>
                 {hasLoadedFromStore && (
-                  <Text testID="loaded">{hasLoadedFromStore}</Text>
+                  <Text testID="loaded">{`${hasLoadedFromStore}`}</Text>
                 )}
                 <Text testID="features">
                   {JSON.stringify(

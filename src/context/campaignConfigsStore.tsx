@@ -65,6 +65,7 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
 
   const prevAllConfigs = usePrevious(allConfigs);
 
+  const [, setState] = useState();
   useEffect(() => {
     if (hasLoadedFromPrimaryStore) {
       const allConfigsString = JSON.stringify(allConfigs);
@@ -74,7 +75,11 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
           CAMPAIGN_CONFIGS_STORE_KEY,
           allConfigsString,
           prevConfigsString
-        );
+        ).catch((reason) => {
+          setState(() => {
+            throw reason;
+          });
+        });
       }
     }
   }, [hasLoadedFromPrimaryStore, allConfigs, prevAllConfigs]);
@@ -129,13 +134,12 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
     setAllConfigs({});
   }, []);
 
-  const [, setState] = useState();
   useEffect(() => {
     /**
      * Migrates credentials from old config store to new config store. Clears all old storage locations.
      * @param newStorageHasData whether most recent data has been found. If this is true, does not
      * attempt any migration and just clears old storage locations
-     * @returns the updated value of {@link hasUpdatedData}, i.e. true if any updated data was found
+     * @returns the updated value of {@link newStorageHasData}, i.e. true if any updated data was found
      * in the older storage (if {@link newStorageHasData} was passed in as true, it will always return true)
      */
     const migrateOldConfigFromStore = async (
@@ -153,10 +157,10 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
               configString
             );
             setAllConfigs(configStringFromStore);
-            hasUpdatedData = true; // should this be set b4 parsing? error recovery policy
+            hasUpdatedData = true;
           } catch (e) {
             setState(() => {
-              throw new Error(e);
+              throw new CampaignConfigError(e);
             });
           }
         }
