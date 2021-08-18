@@ -25,6 +25,8 @@ const styles = StyleSheet.create({
     fontFamily: "brand-bold",
     fontSize: fontSize(0),
     marginBottom: size(3),
+    flexShrink: 1,
+    maxWidth: "60%",
   },
   quantityText: {
     fontFamily: "brand-bold",
