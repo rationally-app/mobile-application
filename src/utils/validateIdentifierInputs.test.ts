@@ -44,7 +44,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "PAYMENT_RECEIPT",
         },
         {
-          label: "payment receipt with regex and empty value",
+          label: "payment receipt with regex and empty value (optional)",
           value: "",
           validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
           textInputType: "PAYMENT_RECEIPT",
@@ -53,6 +53,31 @@ describe("validateIdentifierInputs", () => {
           label: "payment receipt without regex",
           value: "within20characters",
           textInputType: "PAYMENT_RECEIPT",
+        },
+        {
+          label: "number is (optional)",
+          value: "",
+          textInputType: "NUMBER",
+        },
+        {
+          label: "string is (optional)",
+          value: "",
+          textInputType: "STRING",
+        },
+        {
+          label: "phone number is (optional)",
+          value: "",
+          textInputType: "PHONE_NUMBER",
+        },
+        {
+          label: "payment receipt is (optional)",
+          value: "",
+          textInputType: "PAYMENT_RECEIPT",
+        },
+        {
+          label: "any character validation regex",
+          value: "a1@/~$",
+          validationRegex: "[\\s\\S]*",
         },
       ])
     ).toBe(true);
@@ -157,7 +182,7 @@ describe("validateIdentifierInputs", () => {
     ).toThrow("Enter a valid country code and contact number.");
   });
 
-  it("should throw error if identifier has empty value", () => {
+  it("should throw error if non optional identifier has empty value", () => {
     expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([

@@ -5,6 +5,16 @@ import { ERROR_MESSAGE } from "../context/alert";
 const defaultPhoneNumberValidationRegex = "^\\+[0-9]*$";
 const defaultPaymentReceiptValidationRegex = "^[a-zA-Z0-9]{1,20}$";
 
+/**
+ * Currently there is no indicator of whether an identifier is optional or not.
+ *
+ * Reason being, getQuota does not return the boolean whether an identifier was optional.
+ *
+ * As a temporary measure, we compare the label with '(optional)' to
+ * check whether an identifier is optional.
+ */
+const isOptional = (text: string): boolean => text.slice(-10) === "(optional)";
+
 const isMatchRegex = (text: string, regex?: string): boolean => {
   if (!regex) {
     return true;
@@ -18,15 +28,26 @@ const isUniqueList = (list: string[]): boolean =>
 export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
-  for (const { value, validationRegex, textInputType } of identifierInputs) {
-    if (textInputType === "SINGLE_CHOICE" && !value) {
-      throw new Error(ERROR_MESSAGE.MISSING_WAIVER_INPUT);
+  for (const {
+    label,
+    value,
+    validationRegex,
+    textInputType,
+  } of identifierInputs) {
+    if (isOptional(label) && !value) {
+      return true;
     }
-    if (textInputType !== "PAYMENT_RECEIPT" && !value) {
-      throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
-    }
+
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    }
+    if (!value) {
+      if (textInputType === "SINGLE_CHOICE") {
+        throw new Error(ERROR_MESSAGE.MISSING_WAIVER_INPUT);
+      } else if (textInputType === "PAYMENT_RECEIPT") {
+        throw new Error(ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER);
+      }
+      throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
 
     if (
@@ -37,8 +58,7 @@ export const validateIdentifierInputs = (
       )
     ) {
       throw new Error(ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER);
-    }
-    if (
+    } else if (
       textInputType === "PHONE_NUMBER" &&
       !isMatchRegex(
         value,
@@ -46,10 +66,10 @@ export const validateIdentifierInputs = (
       )
     ) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
-    }
-    if (!isMatchRegex(value, validationRegex)) {
+    } else if (!isMatchRegex(value, validationRegex)) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
+
     if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
