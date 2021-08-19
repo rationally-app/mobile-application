@@ -9,6 +9,16 @@ concurrency:
   group: ${{ github.ref }} # The branch or tag ref that triggered the workflow run.
 
 jobs:
+  lint:
+    runs-on: ubuntu-18.04
+    continue-on-error: false
+    timeout-minutes: 5
+
+    steps:
+      - name: check if PR title follows conventional commits specs
+        uses: amannn/action-semantic-pull-request@v3.4.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   test:
     name: Lint & Test
     runs-on: ubuntu-18.04
