@@ -1,6 +1,12 @@
 import { useState, useCallback, useContext, useEffect } from "react";
 import { postTransaction } from "../../services/quota";
-import { PostTransactionResult, ItemQuota, IdentifierInput } from "../../types";
+import {
+  PostTransactionResult,
+  ItemQuota,
+  IdentifierInput,
+  PolicyIdentifier,
+  CampaignPolicy,
+} from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import { cleanIdentifierInputs } from "../../utils/cleanIdentifierInputs";
 import { ERROR_MESSAGE } from "../../context/alert";
@@ -128,6 +134,17 @@ const mergeWithCart = (
   );
 };
 
+const findOptionalIdentifier = (policies: CampaignPolicy[]): string[] =>
+  policies.flatMap((policy: CampaignPolicy) => {
+    if (!policy.identifiers) return [];
+    return policy.identifiers
+      ?.filter(
+        (identifierInput: PolicyIdentifier) =>
+          identifierInput.isOptional === true
+      )
+      .map((identifierInput) => identifierInput.label);
+  });
+
 export const useCart = (
   ids: string[],
   authKey: string,
@@ -139,13 +156,14 @@ export const useCart = (
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [cartError, setCartError] = useState<Error>();
+  const [optionalIdentifier, setOptionalIdentifier] = useState<string[]>([]);
   const clearCartError = useCallback((): void => setCartError(undefined), []);
   const resetCartState = useCallback((): void => setCartState("DEFAULT"), []);
   const { products, getProduct } = useContext(ProductContext);
   const prevProducts = usePrevious(products);
   const prevIds = usePrevious(ids);
   const prevCartQuota = usePrevious(cartQuota);
-  const { features } = useContext(CampaignConfigContext);
+  const { features, policies } = useContext(CampaignConfigContext);
   /**
    * Update the cart when:
    *  1. An incoming cart quota exists, AND
@@ -168,6 +186,7 @@ export const useCart = (
          * having `cart` as a dependency, preventing an infinite loop.
          */
         setCart((cart) => mergeWithCart(cart, cartQuota, getProduct));
+        setOptionalIdentifier(findOptionalIdentifier(policies));
       } else if (features?.apiVersion === "v2") {
         /**
          * This is a special case for disbursements, where a beneficiary might be
@@ -190,6 +209,7 @@ export const useCart = (
     products,
     prevProducts,
     features,
+    policies,
   ]);
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
@@ -240,7 +260,8 @@ export const useCart = (
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
           const cleanedIdentifierInputs = cleanIdentifierInputs(
-            identifierInputs
+            identifierInputs,
+            optionalIdentifier
           );
           return {
             category,
@@ -308,7 +329,8 @@ export const useCart = (
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
           const cleanedIdentifierInputs = cleanIdentifierInputs(
-            identifierInputs
+            identifierInputs,
+            optionalIdentifier
           );
           allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
           return {
@@ -344,7 +366,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [cart, _completeCheckout]);
+  }, [cart, _completeCheckout, optionalIdentifier]);
 
   return {
     cartState,

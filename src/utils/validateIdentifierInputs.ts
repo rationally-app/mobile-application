@@ -5,16 +5,6 @@ import { ERROR_MESSAGE } from "../context/alert";
 const defaultPhoneNumberValidationRegex = "^\\+[0-9]*$";
 const defaultPaymentReceiptValidationRegex = "^[a-zA-Z0-9]{1,20}$";
 
-/**
- * Currently there is no indicator of whether an identifier is optional or not.
- *
- * Reason being, getQuota does not return the boolean whether an identifier was optional.
- *
- * As a temporary measure, we compare the label with '(optional)' to
- * check whether an identifier is optional.
- */
-const isOptional = (text: string): boolean => text.slice(-10) === "(optional)";
-
 const isMatchRegex = (text: string, regex?: string): boolean => {
   if (!regex) {
     return true;
@@ -29,12 +19,12 @@ export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
   for (const {
-    label,
     value,
     validationRegex,
     textInputType,
+    isOptional,
   } of identifierInputs) {
-    if (isOptional(label) && !value) {
+    if (isOptional && (!value || isNaN(Number(value)))) {
       return true;
     }
 

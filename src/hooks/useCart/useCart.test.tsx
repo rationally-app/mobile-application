@@ -2,7 +2,12 @@ import React, { FunctionComponent } from "react";
 import { renderHook, act } from "@testing-library/react-hooks";
 import { useCart } from "./useCart";
 import { waitFor } from "@testing-library/react-native";
-import { Quota, PostTransactionResult, CampaignPolicy } from "../../types";
+import {
+  Quota,
+  PostTransactionResult,
+  CampaignPolicy,
+  CampaignConfig,
+} from "../../types";
 import { postTransaction } from "../../services/quota";
 import {
   defaultFeatures,
@@ -213,6 +218,26 @@ const defaultProductsIdentifierInputsForCart = [
   },
 ];
 
+const defaultCampaignConfig: CampaignConfig = {
+  features: {
+    ...defaultFeatures,
+    campaignName: "Some Campaign Name",
+  },
+  policies: [
+    {
+      category: "toilet-paper",
+      categoryType: "APPEAL",
+      name: "Toilet Paper",
+      order: 1,
+      quantity: {
+        period: 7,
+        limit: 2,
+      },
+    },
+  ],
+  c13n: {},
+};
+
 const mockQuotaResEmptyQuota: Quota = {
   remainingQuota: [],
   globalQuota: [],
@@ -224,7 +249,9 @@ const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
   products = defaultProducts,
 }) => (
   <ProductContextProvider products={products}>
-    {children}
+    <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+      {children}
+    </CampaignConfigContextProvider>
   </ProductContextProvider>
 );
 
@@ -1144,7 +1171,9 @@ describe("useCart", () => {
             },
           ]}
         >
-          {children}
+          <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+            {children}
+          </CampaignConfigContextProvider>
         </ProductContextProvider>
       );
       const { result } = renderHook(
@@ -1215,7 +1244,9 @@ describe("useCart", () => {
             },
           ]}
         >
-          {children}
+          <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+            {children}
+          </CampaignConfigContextProvider>
         </ProductContextProvider>
       );
       const { result } = renderHook(
@@ -1510,7 +1541,9 @@ describe("useCart", () => {
             { ...defaultProducts[1] },
           ]}
         >
-          {children}
+          <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+            {children}
+          </CampaignConfigContextProvider>
         </ProductContextProvider>
       );
       const { result } = renderHook(
@@ -1577,7 +1610,9 @@ describe("useCart", () => {
             { ...defaultProducts[1] },
           ]}
         >
-          {children}
+          <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+            {children}
+          </CampaignConfigContextProvider>
         </ProductContextProvider>
       );
       const { result } = renderHook(
