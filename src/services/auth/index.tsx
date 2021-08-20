@@ -277,6 +277,7 @@ export const mockCallLogout = async (
   _operatorToken: string,
   _endpoint: string
 ): Promise<void> => {
+  // uncomment to test throwing an error
   // throw new LogoutError("error logging out");
 };
 
