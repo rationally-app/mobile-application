@@ -307,7 +307,15 @@ export const useCart = (
       }
     };
     complete();
-  }, [cart, ids, selectedIdType, authKey, endpoint, features?.apiVersion]);
+  }, [
+    cart,
+    ids,
+    selectedIdType,
+    authKey,
+    endpoint,
+    features?.apiVersion,
+    optionalIdentifier,
+  ]);
 
   const completeCheckout: CartHook["completeCheckout"] = useCallback(() => {
     if (cartState === "PENDING_CONFIRMATION") {
