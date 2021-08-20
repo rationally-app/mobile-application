@@ -263,7 +263,7 @@ describe("LogoutScreen", () => {
   it("should let error boundary handle if NetworkError thrown", async () => {
     expect.assertions(4);
 
-    mockCallLogout.mockRejectedValue(new NetworkError(""));
+    mockCallLogout.mockRejectedValueOnce(new NetworkError(""));
     const showErrorAlert = jest.fn();
 
     render(
@@ -287,7 +287,9 @@ describe("LogoutScreen", () => {
       </ErrorBoundary>
     );
 
-    await waitFor(() => expect(mockCaptureException).toHaveBeenCalledTimes(1));
+    // called twice, one in logout screen when capturing all exceptions and one
+    // at ErrorBoundary
+    await waitFor(() => expect(mockCaptureException).toHaveBeenCalledTimes(2));
     expect(mockCaptureException).toHaveBeenCalledWith(new NetworkError(""));
 
     expect(showErrorAlert).not.toHaveBeenCalled();
