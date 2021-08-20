@@ -223,7 +223,7 @@ describe("LogoutScreen", () => {
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
     expect(mockNavigate).toHaveBeenCalledWith("CampaignLocationsScreen", {
-      autoLoad: false,
+      shouldAutoLoad: false,
     });
     expect(mockClearAuthCredentials).not.toHaveBeenCalled();
     expect(mockClearCampaignConfigs).not.toHaveBeenCalled();

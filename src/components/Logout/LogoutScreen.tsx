@@ -101,7 +101,9 @@ export const LogoutScreen: FunctionComponent<NavigationProps> = ({
         const error: Error = (errorResults[0] as PromiseRejectedResult).reason;
         if (error instanceof LogoutError) {
           showErrorAlert(error);
-          navigation.navigate("CampaignLocationsScreen", { autoLoad: false });
+          navigation.navigate("CampaignLocationsScreen", {
+            shouldAutoLoad: false,
+          });
         } else {
           setState(() => {
             throw error;
