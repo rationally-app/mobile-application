@@ -1,18 +1,14 @@
 import React, { FunctionComponent } from "react";
 import { renderHook, act } from "@testing-library/react-hooks";
-import { findOptionalIdentifier, useCart } from "./useCart";
+import { findOptionalIdentifierInputLabels, useCart } from "./useCart";
 import { waitFor } from "@testing-library/react-native";
-import {
-  Quota,
-  PostTransactionResult,
-  CampaignPolicy,
-  CampaignConfig,
-} from "../../types";
+import { Quota, PostTransactionResult, CampaignPolicy } from "../../types";
 import { postTransaction } from "../../services/quota";
 import {
   defaultFeatures,
   defaultProducts,
   defaultIdentifier,
+  defaultCampaignConfig,
 } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
@@ -218,26 +214,6 @@ const defaultProductsIdentifierInputsForCart = [
   },
 ];
 
-const defaultCampaignConfig: CampaignConfig = {
-  features: {
-    ...defaultFeatures,
-    campaignName: "Some Campaign Name",
-  },
-  policies: [
-    {
-      category: "toilet-paper",
-      categoryType: "APPEAL",
-      name: "Toilet Paper",
-      order: 1,
-      quantity: {
-        period: 7,
-        limit: 2,
-      },
-    },
-  ],
-  c13n: {},
-};
-
 const mockQuotaResEmptyQuota: Quota = {
   remainingQuota: [],
   globalQuota: [],
@@ -318,7 +294,7 @@ describe("useCart", () => {
     });
     it("should find optional identifier properly", () => {
       expect.assertions(1);
-      expect(findOptionalIdentifier(policies)).toStrictEqual([
+      expect(findOptionalIdentifierInputLabels(policies)).toStrictEqual([
         "optional identifier",
         "very optional identifier",
       ]);

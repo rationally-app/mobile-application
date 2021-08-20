@@ -6,6 +6,7 @@ import {
   PolicyIdentifier,
   CampaignPolicy,
   CampaignFeatures,
+  CampaignConfig,
 } from "../../types";
 
 export const defaultTranslationProps: TranslationHook = {
@@ -108,3 +109,22 @@ export const defaultNonAppealProducts: CampaignPolicy[] = [
     ],
   },
 ];
+
+export const defaultCampaignConfig: CampaignConfig = {
+  features: {
+    ...defaultFeatures,
+    campaignName: "Some Campaign Name",
+  },
+  policies: [
+    {
+      category: "toilet-paper",
+      name: "Toilet Paper",
+      order: 1,
+      quantity: {
+        period: 7,
+        limit: 2,
+      },
+    },
+  ],
+  c13n: {},
+};

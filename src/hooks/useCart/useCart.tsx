@@ -1,5 +1,5 @@
 import { useState, useCallback, useContext, useEffect } from "react";
-import _ from "lodash";
+import { flatten } from "lodash";
 import { postTransaction } from "../../services/quota";
 import {
   PostTransactionResult,
@@ -135,18 +135,19 @@ const mergeWithCart = (
   );
 };
 
-export const findOptionalIdentifier = (policies: CampaignPolicy[]): string[] =>
-  _.flatten(
-    policies.map((policy: CampaignPolicy) => {
-      if (!policy.identifiers) return [];
-      return policy.identifiers
-        ?.filter(
-          (identifierInput: PolicyIdentifier) =>
-            identifierInput.isOptional === true
-        )
-        .map((identifierInput) => identifierInput.label);
-    })
-  );
+export const findOptionalIdentifierInputLabels = (
+  policies: CampaignPolicy[]
+): string[] => {
+  const policyIdentifiers: Array<Array<PolicyIdentifier>> = policies
+    .map(({ identifiers }: CampaignPolicy) => identifiers)
+    .filter(
+      (identifiers): identifiers is Array<PolicyIdentifier> => !!identifiers
+    );
+  const flattenedPolicyIdentifiers = flatten(policyIdentifiers);
+  return flattenedPolicyIdentifiers
+    .filter(({ isOptional }: PolicyIdentifier) => !!isOptional)
+    .map(({ label }: PolicyIdentifier) => label);
+};
 
 export const useCart = (
   ids: string[],
@@ -159,7 +160,9 @@ export const useCart = (
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [cartError, setCartError] = useState<Error>();
-  const [optionalIdentifier, setOptionalIdentifier] = useState<string[]>([]);
+  const [optionalIdentifierLabels, setOptionalIdentifierLabels] = useState<
+    string[]
+  >([]);
   const clearCartError = useCallback((): void => setCartError(undefined), []);
   const resetCartState = useCallback((): void => setCartState("DEFAULT"), []);
   const { products, getProduct } = useContext(ProductContext);
@@ -189,7 +192,11 @@ export const useCart = (
          * having `cart` as a dependency, preventing an infinite loop.
          */
         setCart((cart) => mergeWithCart(cart, cartQuota, getProduct));
-        if (policies) setOptionalIdentifier(findOptionalIdentifier(policies));
+        if (policies) {
+          setOptionalIdentifierLabels(
+            findOptionalIdentifierInputLabels(policies)
+          );
+        }
       } else if (features?.apiVersion === "v2") {
         /**
          * This is a special case for disbursements, where a beneficiary might be
@@ -264,7 +271,7 @@ export const useCart = (
         .map(({ category, quantity, identifierInputs }) => {
           const cleanedIdentifierInputs = cleanIdentifierInputs(
             identifierInputs,
-            optionalIdentifier
+            optionalIdentifierLabels
           );
           return {
             category,
@@ -317,7 +324,7 @@ export const useCart = (
     authKey,
     endpoint,
     features?.apiVersion,
-    optionalIdentifier,
+    optionalIdentifierLabels,
   ]);
 
   const completeCheckout: CartHook["completeCheckout"] = useCallback(() => {
@@ -341,7 +348,7 @@ export const useCart = (
         .map(({ category, quantity, identifierInputs }) => {
           const cleanedIdentifierInputs = cleanIdentifierInputs(
             identifierInputs,
-            optionalIdentifier
+            optionalIdentifierLabels
           );
           allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
           return {
@@ -377,7 +384,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [cart, _completeCheckout, optionalIdentifier]);
+  }, [cart, _completeCheckout, optionalIdentifierLabels]);
 
   return {
     cartState,
