@@ -72,7 +72,6 @@ export const LogoutScreen: FunctionComponent<NavigationProps> = ({
       const errorResults = results.filter(
         (result) => result.status === "rejected"
       );
-      console.log(JSON.stringify(errorResults));
       if (errorResults.length > 0) {
         const error: Error = (errorResults[0] as PromiseRejectedResult).reason;
         if (error instanceof LogoutError) {
