@@ -73,7 +73,7 @@ export const LogoutScreen: FunctionComponent<NavigationProps> = ({
         (result) => result.status === "rejected"
       ) as PromiseRejectedResult[];
       if (errorResults.length > 0) {
-        errorResults.forEach(error => Sentry.captureException(error.reason));
+        errorResults.forEach((error) => Sentry.captureException(error.reason));
         const error: Error = errorResults[0].reason;
         if (error instanceof LogoutError) {
           showErrorAlert(error);
