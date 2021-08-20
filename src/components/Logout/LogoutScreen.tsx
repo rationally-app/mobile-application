@@ -58,7 +58,7 @@ export const LogoutScreen: FunctionComponent<NavigationProps> = ({
 
   const [, setState] = useState();
   useEffect(() => {
-    const logoutAllCampaigns: () => Promise<void> = async () => {
+    const logoutAllCampaigns = async (): Promise<void> => {
       setIsLoggingOut(true);
       const results = await allSettled(
         Object.entries(authCredentials).map(
