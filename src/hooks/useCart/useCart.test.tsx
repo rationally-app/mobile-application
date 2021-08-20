@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { renderHook, act } from "@testing-library/react-hooks";
-import { useCart } from "./useCart";
+import { findOptionalIdentifier, useCart } from "./useCart";
 import { waitFor } from "@testing-library/react-native";
 import {
   Quota,
@@ -258,6 +258,71 @@ const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
 describe("useCart", () => {
   beforeEach(() => {
     jest.resetAllMocks();
+  });
+
+  describe("findOptionalIdentifier", () => {
+    let policies: any;
+
+    beforeEach(() => {
+      policies = [
+        {
+          category: "have-identifiers",
+          name: "Have Identifiers",
+          order: 1,
+          quantity: {
+            period: 7,
+            limit: 2,
+          },
+          identifiers: [
+            {
+              label: "optional identifier",
+              value: "",
+              isOptional: true,
+            },
+            {
+              label: "mandatory identifier",
+              value: "very important",
+            },
+          ],
+        },
+        {
+          category: "also-have-identifiers",
+          name: "Have Identifiers",
+          order: 1,
+          quantity: {
+            period: 7,
+            limit: 2,
+          },
+          identifiers: [
+            {
+              label: "very optional identifier",
+              value: "",
+              isOptional: true,
+            },
+            {
+              label: "mandatory identifier",
+              value: "very important",
+            },
+          ],
+        },
+        {
+          category: "no-identifiers",
+          name: "No Identifiers",
+          order: 1,
+          quantity: {
+            period: 7,
+            limit: 2,
+          },
+        },
+      ];
+    });
+    it("should find optional identifier properly", () => {
+      expect.assertions(1);
+      expect(findOptionalIdentifier(policies)).toStrictEqual([
+        "optional identifier",
+        "very optional identifier",
+      ]);
+    });
   });
 
   describe("update cart quantities", () => {

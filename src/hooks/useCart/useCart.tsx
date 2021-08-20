@@ -134,16 +134,18 @@ const mergeWithCart = (
   );
 };
 
-const findOptionalIdentifier = (policies: CampaignPolicy[]): string[] =>
-  policies.flatMap((policy: CampaignPolicy) => {
-    if (!policy.identifiers) return [];
-    return policy.identifiers
-      ?.filter(
-        (identifierInput: PolicyIdentifier) =>
-          identifierInput.isOptional === true
-      )
-      .map((identifierInput) => identifierInput.label);
-  });
+export const findOptionalIdentifier = (policies: CampaignPolicy[]): string[] =>
+  policies
+    .map((policy: CampaignPolicy) => {
+      if (!policy.identifiers) return [];
+      return policy.identifiers
+        ?.filter(
+          (identifierInput: PolicyIdentifier) =>
+            identifierInput.isOptional === true
+        )
+        .map((identifierInput) => identifierInput.label);
+    })
+    .flat(1);
 
 export const useCart = (
   ids: string[],
