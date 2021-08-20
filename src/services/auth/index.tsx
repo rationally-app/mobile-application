@@ -230,12 +230,12 @@ export const liveCallLogout = async (
       e.message === oldBackendError + sessionToken
     ) {
       // for this case the session token is already invalidated or past the valid date
-      // logoutTodo: is it safe to keep session token there if already past validity date
-
+      // TODO: <logout> is it safe to keep session token there if already past validity date
+      // in such cases, session token already can't be used anyway
       Sentry.addBreadcrumb({
         category: "logout",
         message: JSON.stringify({
-          status: "success despite error",
+          status: "session token already invalid on server",
           message: e.message,
           ...payload,
           endpoint,
