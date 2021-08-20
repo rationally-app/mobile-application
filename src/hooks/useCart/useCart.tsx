@@ -186,7 +186,7 @@ export const useCart = (
          * having `cart` as a dependency, preventing an infinite loop.
          */
         setCart((cart) => mergeWithCart(cart, cartQuota, getProduct));
-        setOptionalIdentifier(findOptionalIdentifier(policies));
+        if (policies) setOptionalIdentifier(findOptionalIdentifier(policies));
       } else if (features?.apiVersion === "v2") {
         /**
          * This is a special case for disbursements, where a beneficiary might be
