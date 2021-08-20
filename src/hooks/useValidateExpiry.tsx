@@ -14,7 +14,7 @@ export const useValidateExpiry = (
 ): (() => void) => {
   const setMessageContent = useContext(ImportantMessageSetterContext);
   const { expiry } = useContext(AuthContext);
-  const { logout: logout } = useLogout();
+  const { logout } = useLogout();
 
   const onExpired = useCallback(() => {
     logout(navigationDispatch, {
