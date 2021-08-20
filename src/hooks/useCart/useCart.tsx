@@ -1,4 +1,5 @@
 import { useState, useCallback, useContext, useEffect } from "react";
+import _ from "lodash";
 import { postTransaction } from "../../services/quota";
 import {
   PostTransactionResult,
@@ -135,8 +136,8 @@ const mergeWithCart = (
 };
 
 export const findOptionalIdentifier = (policies: CampaignPolicy[]): string[] =>
-  policies
-    .map((policy: CampaignPolicy) => {
+  _.flatten(
+    policies.map((policy: CampaignPolicy) => {
       if (!policy.identifiers) return [];
       return policy.identifiers
         ?.filter(
@@ -145,7 +146,7 @@ export const findOptionalIdentifier = (policies: CampaignPolicy[]): string[] =>
         )
         .map((identifierInput) => identifierInput.label);
     })
-    .flat(1);
+  );
 
 export const useCart = (
   ids: string[],
