@@ -15,6 +15,7 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { callLogout, LogoutError } from "../../services/auth";
 import { NavigationProps } from "../../types";
 import { Sentry } from "../../utils/errorTracking";
+import { allSettled } from "../../utils/promiseAllSettled";
 import { AppText } from "../Layout/AppText";
 import { Card } from "../Layout/Card";
 import { TopBackground } from "../Layout/TopBackground";
@@ -30,32 +31,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-// hack because react-native does not have Promise.allSettled
-// https://github.com/facebook/react-native/issues/30236
-/**
- * Creates a Promise that is resolved with an array of results when all
- * of the provided Promises resolve or reject.
- * @param values An array of Promises.
- * @returns A new Promise.
- */
-const allSettled: <T>(
-  values: Iterable<Promise<T>>
-) => Promise<PromiseSettledResult<T>[]> = (promises) => {
-  return Promise.all(
-    Array.from(promises).map((promise) =>
-      promise
-        .then((value) => ({
-          status: "fulfilled" as const,
-          value,
-        }))
-        .catch((reason) => ({
-          status: "rejected" as const,
-          reason,
-        }))
-    )
-  );
-};
 
 export const LogoutScreen: FunctionComponent<NavigationProps> = ({
   navigation,
@@ -97,6 +72,7 @@ export const LogoutScreen: FunctionComponent<NavigationProps> = ({
       const errorResults = results.filter(
         (result) => result.status === "rejected"
       );
+      console.log(JSON.stringify(errorResults));
       if (errorResults.length > 0) {
         const error: Error = (errorResults[0] as PromiseRejectedResult).reason;
         if (error instanceof LogoutError) {
