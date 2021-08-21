@@ -9,7 +9,10 @@ import {
   CampaignPolicy,
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import { cleanIdentifierInputs } from "../../utils/cleanIdentifierInputs";
+import {
+  cleanIdentifierInput,
+  tagOptionalIdentifierInput,
+} from "../../utils/utilsIdentifierInput";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
 import { IdentificationContext } from "../../context/identification";
@@ -18,6 +21,8 @@ import { usePrevious } from "../usePrevious";
 import { hasInvalidRemainingQuota } from "../useQuota/useQuota";
 import { DescriptionAlertTypes } from "../../components/CustomerQuota/ItemsSelection/ShowAddonsToggle";
 import { CampaignConfigContext } from "../../context/campaignConfig";
+
+type ModifiedPolicyIdentifier = PolicyIdentifier & { category: string };
 
 export type CartItem = {
   category: string;
@@ -138,15 +143,39 @@ const mergeWithCart = (
 export const findOptionalIdentifierInputLabels = (
   policies: CampaignPolicy[]
 ): string[] => {
-  const policyIdentifiers: Array<Array<PolicyIdentifier>> = policies
-    .map(({ identifiers }: CampaignPolicy) => identifiers)
-    .filter(
-      (identifiers): identifiers is Array<PolicyIdentifier> => !!identifiers
+  const modifiedPolicyIdentifiers: Array<
+    Array<ModifiedPolicyIdentifier>
+  > = policies
+    .map(({ category, identifiers }: CampaignPolicy) => ({
+      category,
+      identifiers,
+    }))
+    .filter(({ identifiers }) => !!identifiers)
+    .filter((groupedIdentifiers): groupedIdentifiers is {
+      category: string;
+      identifiers: PolicyIdentifier[];
+    } => {
+      const { identifiers } = groupedIdentifiers;
+      return !!identifiers;
+    })
+    .map(
+      ({ category, identifiers }): Array<ModifiedPolicyIdentifier> => {
+        const modifiedPolicyIdentifier: Array<ModifiedPolicyIdentifier> = [];
+        identifiers.forEach((identifierInput) => {
+          modifiedPolicyIdentifier.push(
+            Object.assign(identifierInput, { category })
+          );
+        });
+        return modifiedPolicyIdentifier;
+      }
     );
-  const flattenedPolicyIdentifiers = flatten(policyIdentifiers);
+
+  const flattenedPolicyIdentifiers = flatten(modifiedPolicyIdentifiers);
   return flattenedPolicyIdentifiers
-    .filter(({ isOptional }: PolicyIdentifier) => !!isOptional)
-    .map(({ label }: PolicyIdentifier) => label);
+    .filter(({ isOptional }: ModifiedPolicyIdentifier) => !!isOptional)
+    .map(
+      ({ category, label }: ModifiedPolicyIdentifier) => `${category}.${label}`
+    );
 };
 
 export const useCart = (
@@ -269,10 +298,16 @@ export const useCart = (
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
-          const cleanedIdentifierInputs = cleanIdentifierInputs(
-            identifierInputs,
-            optionalIdentifierLabels
-          );
+          const cleanedIdentifierInputs = identifierInputs.map((identifier) => {
+            cleanIdentifierInput(identifier);
+            tagOptionalIdentifierInput(
+              identifier,
+              category,
+              optionalIdentifierLabels
+            );
+            return identifier;
+          });
+
           return {
             category,
             quantity,
@@ -346,10 +381,16 @@ export const useCart = (
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
-          const cleanedIdentifierInputs = cleanIdentifierInputs(
-            identifierInputs,
-            optionalIdentifierLabels
-          );
+          const cleanedIdentifierInputs = identifierInputs.map((identifier) => {
+            cleanIdentifierInput(identifier);
+            tagOptionalIdentifierInput(
+              identifier,
+              category,
+              optionalIdentifierLabels
+            );
+            return identifier;
+          });
+
           allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
           return {
             category,

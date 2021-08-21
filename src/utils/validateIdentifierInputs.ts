@@ -24,7 +24,7 @@ export const validateIdentifierInputs = (
     textInputType,
     isOptional,
   } of identifierInputs) {
-    if (isOptional && (!value || isNaN(Number(value)))) {
+    if (isOptional && !value) {
       return true;
     }
 
