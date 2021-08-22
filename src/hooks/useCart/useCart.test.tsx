@@ -295,8 +295,8 @@ describe("useCart", () => {
     it("should find optional identifier properly", () => {
       expect.assertions(1);
       expect(findOptionalIdentifierInputLabels(policies)).toStrictEqual([
-        "optional identifier",
-        "very optional identifier",
+        "have-identifiers.optional identifier",
+        "also-have-identifiers.very optional identifier",
       ]);
     });
   });
