@@ -207,6 +207,7 @@ export const liveCallLogout = async (
       method: "POST",
       headers: {
         Authorization: sessionToken,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         operatorToken,
