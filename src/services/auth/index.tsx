@@ -244,8 +244,8 @@ export const liveCallLogout = async (
       });
       return;
     } else if (
-      e.message === "Auth tokens are mismatched" ||
-      e.message === "Auth token is missing"
+      e.message === "Operator tokens are mismatched" ||
+      e.message === "Operator token is missing"
     ) {
       // these shouldn't happen because the operator token should be correct
       Sentry.addBreadcrumb({
