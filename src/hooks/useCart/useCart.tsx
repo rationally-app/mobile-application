@@ -143,38 +143,39 @@ const mergeWithCart = (
 export const findOptionalIdentifierInputLabels = (
   policies: CampaignPolicy[]
 ): string[] => {
-  const modifiedPolicyIdentifiers: Array<
-    Array<ModifiedPolicyIdentifier>
-  > = policies
-    .map(({ category, identifiers }: CampaignPolicy) => ({
-      category,
-      identifiers,
-    }))
-    .filter((groupedIdentifiers): groupedIdentifiers is {
+  const policyIdentifiersGroup: Array<
+    Pick<CampaignPolicy, "category" | "identifiers">
+  > = policies.map(({ category, identifiers }: CampaignPolicy) => ({
+    category,
+    identifiers,
+  }));
+
+  const filteredIdentifiers: Array<{
+    category: string;
+    identifiers: ModifiedPolicyIdentifier[];
+  }> = policyIdentifiersGroup.filter(
+    (
+      groupedIdentifiers
+    ): groupedIdentifiers is {
       category: string;
-      identifiers: PolicyIdentifier[];
+      identifiers: ModifiedPolicyIdentifier[];
     } => {
       const { identifiers } = groupedIdentifiers;
       return !!identifiers;
-    })
-    .map(
-      ({ category, identifiers }): Array<ModifiedPolicyIdentifier> => {
-        const modifiedPolicyIdentifier: Array<ModifiedPolicyIdentifier> = [];
-        identifiers
-          .filter(({ isOptional }) => !!isOptional)
-          .forEach((identifierInput) => {
-            modifiedPolicyIdentifier.push(
-              Object.assign(identifierInput, { category })
-            );
-          });
-        return modifiedPolicyIdentifier;
-      }
-    );
-
-  const flattenedPolicyIdentifiers = flatten(modifiedPolicyIdentifiers);
-  return flattenedPolicyIdentifiers.map(
-    ({ category, label }: ModifiedPolicyIdentifier) => `${category}.${label}`
+    }
   );
+
+  const optionalIdentifierInputLabels: Array<
+    Array<string>
+  > = filteredIdentifiers.map(
+    ({ category, identifiers }): Array<string> => {
+      return identifiers
+        .filter(({ isOptional }) => !!isOptional)
+        .map(({ label }) => `${category}.${label}`);
+    }
+  );
+
+  return flatten(optionalIdentifierInputLabels);
 };
 
 export const useCart = (
