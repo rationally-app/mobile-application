@@ -10,7 +10,6 @@ import {
   DrawerContentComponentProps,
   DrawerActions,
 } from "react-navigation-drawer";
-import { useLogout } from "../../hooks/useLogout";
 import { AppText } from "./AppText";
 import { size, color, fontSize } from "../../common/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -19,6 +18,7 @@ import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { logout } from "../Logout/LogoutScreen";
 
 const styles = StyleSheet.create({
   container: {
@@ -98,13 +98,12 @@ export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
 export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponentProps> = ({
   navigation,
 }) => {
-  const { logout } = useLogout();
   const { showConfirmationAlert } = useContext(AlertModalContext);
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
-  }, [logout, navigation.dispatch]);
+  }, [navigation.dispatch]);
 
   const { i18nt } = useTranslate();
 

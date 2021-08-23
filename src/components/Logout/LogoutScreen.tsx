@@ -5,6 +5,7 @@ import React, {
   useState,
 } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { NavigationDispatch, NavigationActions } from "react-navigation";
 import { color, size } from "../../common/styles";
 import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
@@ -31,6 +32,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export const logout = (
+  navigationDispatch: NavigationDispatch | undefined
+): void => {
+  if (!navigationDispatch) {
+    return;
+  }
+  navigationDispatch?.(
+    NavigationActions.navigate({
+      routeName: "LogoutScreen",
+    })
+  );
+};
 
 export const LogoutScreen: FunctionComponent<NavigationProps> = ({
   navigation,
