@@ -25,7 +25,7 @@ describe("cleanIdentifierInput", () => {
         textInputType: "PAYMENT_RECEIPT" as const,
       },
       {
-        label: "payment receipt with regex and whitespace",
+        label: "payment receipt without regex and whitespace",
         value: "1234acbd5678qwer1234",
         validationRegex: "(\\0*|^([A-Za-z0-9])*)$",
         textInputType: "PAYMENT_RECEIPT",
@@ -33,7 +33,7 @@ describe("cleanIdentifierInput", () => {
     ],
     [
       {
-        label: "payment receipt without regex and with whitespace",
+        label: "payment receipt with regex and with whitespace",
         value: " aaaaa  ",
         textInputType: "PAYMENT_RECEIPT" as const,
       },
@@ -44,7 +44,7 @@ describe("cleanIdentifierInput", () => {
       },
     ],
   ])(
-    "should return cleaned input for identifiers with leading/trailing whitespaces",
+    "should return cleaned input for identifiers with leading/trailing whitespace",
     (before, after) => {
       expect.assertions(1);
       cleanIdentifierInput(before);
@@ -73,7 +73,7 @@ describe("cleanIdentifierInput", () => {
       });
     });
 
-    it("should not add isOptional param to optional identifiers", () => {
+    it("should not add isOptional param to non optional identifiers", () => {
       expect.assertions(1);
       const identifier = {
         label: "not optional string",
