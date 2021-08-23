@@ -85,7 +85,7 @@ export class LogoutError extends Error {
   }
 }
 
-export class OperatorTokenError extends LogoutError {
+export class OperatorTokenError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "OperatorTokenError";
