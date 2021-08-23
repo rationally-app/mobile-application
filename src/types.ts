@@ -123,6 +123,7 @@ const IdentifierInput = t.intersection([
     textInputType: TextInputType,
     scanButtonType: ScanButtonType,
     validationRegex: t.string,
+    isOptional: t.boolean,
   }),
 ]);
 

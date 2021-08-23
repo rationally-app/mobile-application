@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { renderHook, act } from "@testing-library/react-hooks";
-import { useCart } from "./useCart";
+import { findOptionalIdentifierInputLabels, useCart } from "./useCart";
 import { waitFor } from "@testing-library/react-native";
 import { Quota, PostTransactionResult, CampaignPolicy } from "../../types";
 import { postTransaction } from "../../services/quota";
@@ -8,6 +8,7 @@ import {
   defaultFeatures,
   defaultProducts,
   defaultIdentifier,
+  defaultCampaignConfig,
 } from "../../test/helpers/defaults";
 import { ProductContextProvider } from "../../context/products";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
@@ -224,13 +225,80 @@ const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
   products = defaultProducts,
 }) => (
   <ProductContextProvider products={products}>
-    {children}
+    <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+      {children}
+    </CampaignConfigContextProvider>
   </ProductContextProvider>
 );
 
 describe("useCart", () => {
   beforeEach(() => {
     jest.resetAllMocks();
+  });
+
+  describe("findOptionalIdentifier", () => {
+    let policies: any;
+
+    beforeEach(() => {
+      policies = [
+        {
+          category: "have-identifiers",
+          name: "Have Identifiers",
+          order: 1,
+          quantity: {
+            period: 7,
+            limit: 2,
+          },
+          identifiers: [
+            {
+              label: "optional identifier",
+              value: "",
+              isOptional: true,
+            },
+            {
+              label: "mandatory identifier",
+              value: "very important",
+            },
+          ],
+        },
+        {
+          category: "also-have-identifiers",
+          name: "Have Identifiers",
+          order: 1,
+          quantity: {
+            period: 7,
+            limit: 2,
+          },
+          identifiers: [
+            {
+              label: "very optional identifier",
+              value: "",
+              isOptional: true,
+            },
+            {
+              label: "mandatory identifier",
+              value: "very important",
+            },
+          ],
+        },
+        {
+          category: "no-identifiers",
+          name: "No Identifiers",
+          order: 1,
+          quantity: {
+            period: 7,
+            limit: 2,
+          },
+        },
+      ];
+    });
+    it("should find optional identifier properly", () => {
+      expect.assertions(1);
+      expect(findOptionalIdentifierInputLabels(policies)).toStrictEqual([
+        "have-identifiers.optional identifier",
+        "also-have-identifiers.very optional identifier",
+      ]);
+    });
   });
 
   describe("update cart quantities", () => {
@@ -1144,7 +1212,9 @@ describe("useCart", () => {
             },
           ]}
         >
-          {children}
+          <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+            {children}
+          </CampaignConfigContextProvider>
         </ProductContextProvider>
       );
       const { result } = renderHook(
@@ -1215,7 +1285,9 @@ describe("useCart", () => {
             },
           ]}
         >
-          {children}
+          <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+            {children}
+          </CampaignConfigContextProvider>
         </ProductContextProvider>
       );
       const { result } = renderHook(
@@ -1510,7 +1582,9 @@ describe("useCart", () => {
             { ...defaultProducts[1] },
           ]}
         >
-          {children}
+          <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+            {children}
+          </CampaignConfigContextProvider>
         </ProductContextProvider>
       );
       const { result } = renderHook(
@@ -1577,7 +1651,9 @@ describe("useCart", () => {
             { ...defaultProducts[1] },
           ]}
         >
-          {children}
+          <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+            {children}
+          </CampaignConfigContextProvider>
         </ProductContextProvider>
       );
       const { result } = renderHook(

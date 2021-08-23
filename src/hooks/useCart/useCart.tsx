@@ -1,8 +1,18 @@
 import { useState, useCallback, useContext, useEffect } from "react";
+import { flatten } from "lodash";
 import { postTransaction } from "../../services/quota";
-import { PostTransactionResult, ItemQuota, IdentifierInput } from "../../types";
+import {
+  PostTransactionResult,
+  ItemQuota,
+  IdentifierInput,
+  PolicyIdentifier,
+  CampaignPolicy,
+} from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import { cleanIdentifierInputs } from "../../utils/cleanIdentifierInputs";
+import {
+  cleanIdentifierInput,
+  tagOptionalIdentifierInput,
+} from "../../utils/utilsIdentifierInput";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { SessionError } from "../../services/helpers";
 import { IdentificationContext } from "../../context/identification";
@@ -11,6 +21,8 @@ import { usePrevious } from "../usePrevious";
 import { hasInvalidRemainingQuota } from "../useQuota/useQuota";
 import { DescriptionAlertTypes } from "../../components/CustomerQuota/ItemsSelection/ShowAddonsToggle";
 import { CampaignConfigContext } from "../../context/campaignConfig";
+
+type ModifiedPolicyIdentifier = PolicyIdentifier & { category: string };
 
 export type CartItem = {
   category: string;
@@ -128,6 +140,44 @@ const mergeWithCart = (
   );
 };
 
+export const findOptionalIdentifierInputLabels = (
+  policies: CampaignPolicy[]
+): string[] => {
+  const policyIdentifiersGroups: Array<
+    Pick<CampaignPolicy, "category" | "identifiers">
+  > = policies.map(({ category, identifiers }: CampaignPolicy) => ({
+    category,
+    identifiers,
+  }));
+
+  const filteredIdentifiers: Array<{
+    category: string;
+    identifiers: ModifiedPolicyIdentifier[];
+  }> = policyIdentifiersGroups.filter(
+    (
+      groupedIdentifiers
+    ): groupedIdentifiers is {
+      category: string;
+      identifiers: ModifiedPolicyIdentifier[];
+    } => {
+      const { identifiers } = groupedIdentifiers;
+      return !!identifiers;
+    }
+  );
+
+  const optionalIdentifierInputLabels: Array<
+    Array<string>
+  > = filteredIdentifiers.map(
+    ({ category, identifiers }): Array<string> => {
+      return identifiers
+        .filter(({ isOptional }) => !!isOptional)
+        .map(({ label }) => `${category}.${label}`);
+    }
+  );
+
+  return flatten(optionalIdentifierInputLabels);
+};
+
 export const useCart = (
   ids: string[],
   authKey: string,
@@ -139,13 +189,16 @@ export const useCart = (
   const [cartState, setCartState] = useState<CartState>("DEFAULT");
   const [checkoutResult, setCheckoutResult] = useState<PostTransactionResult>();
   const [cartError, setCartError] = useState<Error>();
+  const [optionalIdentifierLabels, setOptionalIdentifierLabels] = useState<
+    string[]
+  >([]);
   const clearCartError = useCallback((): void => setCartError(undefined), []);
   const resetCartState = useCallback((): void => setCartState("DEFAULT"), []);
   const { products, getProduct } = useContext(ProductContext);
   const prevProducts = usePrevious(products);
   const prevIds = usePrevious(ids);
   const prevCartQuota = usePrevious(cartQuota);
-  const { features } = useContext(CampaignConfigContext);
+  const { features, policies } = useContext(CampaignConfigContext);
   /**
    * Update the cart when:
    *  1. An incoming cart quota exists, AND
@@ -168,6 +221,11 @@ export const useCart = (
          * having `cart` as a dependency, preventing an infinite loop.
          */
         setCart((cart) => mergeWithCart(cart, cartQuota, getProduct));
+        if (policies) {
+          setOptionalIdentifierLabels(
+            findOptionalIdentifierInputLabels(policies)
+          );
+        }
       } else if (features?.apiVersion === "v2") {
         /**
          * This is a special case for disbursements, where a beneficiary might be
@@ -190,6 +248,7 @@ export const useCart = (
     products,
     prevProducts,
     features,
+    policies,
   ]);
 
   const emptyCart: CartHook["emptyCart"] = useCallback(() => {
@@ -239,9 +298,16 @@ export const useCart = (
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
-          const cleanedIdentifierInputs = cleanIdentifierInputs(
-            identifierInputs
-          );
+          const cleanedIdentifierInputs = identifierInputs.map((identifier) => {
+            cleanIdentifierInput(identifier);
+            tagOptionalIdentifierInput(
+              identifier,
+              category,
+              optionalIdentifierLabels
+            );
+            return identifier;
+          });
+
           return {
             category,
             quantity,
@@ -286,7 +352,15 @@ export const useCart = (
       }
     };
     complete();
-  }, [cart, ids, selectedIdType, authKey, endpoint, features?.apiVersion]);
+  }, [
+    cart,
+    ids,
+    selectedIdType,
+    authKey,
+    endpoint,
+    features?.apiVersion,
+    optionalIdentifierLabels,
+  ]);
 
   const completeCheckout: CartHook["completeCheckout"] = useCallback(() => {
     if (cartState === "PENDING_CONFIRMATION") {
@@ -307,9 +381,16 @@ export const useCart = (
       const transactions = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
-          const cleanedIdentifierInputs = cleanIdentifierInputs(
-            identifierInputs
-          );
+          const cleanedIdentifierInputs = identifierInputs.map((identifier) => {
+            cleanIdentifierInput(identifier);
+            tagOptionalIdentifierInput(
+              identifier,
+              category,
+              optionalIdentifierLabels
+            );
+            return identifier;
+          });
+
           allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
           return {
             category,
@@ -344,7 +425,7 @@ export const useCart = (
     };
 
     checkout();
-  }, [cart, _completeCheckout]);
+  }, [cart, _completeCheckout, optionalIdentifierLabels]);
 
   return {
     cartState,

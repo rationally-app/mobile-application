@@ -18,15 +18,26 @@ const isUniqueList = (list: string[]): boolean =>
 export const validateIdentifierInputs = (
   identifierInputs: IdentifierInput[]
 ): boolean => {
-  for (const { value, validationRegex, textInputType } of identifierInputs) {
-    if (textInputType === "SINGLE_CHOICE" && !value) {
-      throw new Error(ERROR_MESSAGE.MISSING_WAIVER_INPUT);
+  for (const {
+    value,
+    validationRegex,
+    textInputType,
+    isOptional,
+  } of identifierInputs) {
+    if (isOptional && !value) {
+      return true;
     }
-    if (textInputType !== "PAYMENT_RECEIPT" && !value) {
-      throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
-    }
+
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    }
+    if (!value) {
+      if (textInputType === "SINGLE_CHOICE") {
+        throw new Error(ERROR_MESSAGE.MISSING_WAIVER_INPUT);
+      } else if (textInputType === "PAYMENT_RECEIPT") {
+        throw new Error(ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER);
+      }
+      throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     }
 
     if (
@@ -37,8 +48,7 @@ export const validateIdentifierInputs = (
       )
     ) {
       throw new Error(ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER);
-    }
-    if (
+    } else if (
       textInputType === "PHONE_NUMBER" &&
       !isMatchRegex(
         value,
@@ -46,10 +56,10 @@ export const validateIdentifierInputs = (
       )
     ) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
-    }
-    if (!isMatchRegex(value, validationRegex)) {
+    } else if (!isMatchRegex(value, validationRegex)) {
       throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     }
+
     if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
