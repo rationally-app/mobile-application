@@ -143,7 +143,7 @@ const mergeWithCart = (
 export const findOptionalIdentifierInputLabels = (
   policies: CampaignPolicy[]
 ): string[] => {
-  const policyIdentifiersGroup: Array<
+  const policyIdentifiersGroups: Array<
     Pick<CampaignPolicy, "category" | "identifiers">
   > = policies.map(({ category, identifiers }: CampaignPolicy) => ({
     category,
@@ -153,7 +153,7 @@ export const findOptionalIdentifierInputLabels = (
   const filteredIdentifiers: Array<{
     category: string;
     identifiers: ModifiedPolicyIdentifier[];
-  }> = policyIdentifiersGroup.filter(
+  }> = policyIdentifiersGroups.filter(
     (
       groupedIdentifiers
     ): groupedIdentifiers is {
