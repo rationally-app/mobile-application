@@ -150,7 +150,6 @@ export const findOptionalIdentifierInputLabels = (
       category,
       identifiers,
     }))
-    .filter(({ identifiers }) => !!identifiers)
     .filter((groupedIdentifiers): groupedIdentifiers is {
       category: string;
       identifiers: PolicyIdentifier[];
@@ -161,21 +160,21 @@ export const findOptionalIdentifierInputLabels = (
     .map(
       ({ category, identifiers }): Array<ModifiedPolicyIdentifier> => {
         const modifiedPolicyIdentifier: Array<ModifiedPolicyIdentifier> = [];
-        identifiers.forEach((identifierInput) => {
-          modifiedPolicyIdentifier.push(
-            Object.assign(identifierInput, { category })
-          );
-        });
+        identifiers
+          .filter(({ isOptional }) => !!isOptional)
+          .forEach((identifierInput) => {
+            modifiedPolicyIdentifier.push(
+              Object.assign(identifierInput, { category })
+            );
+          });
         return modifiedPolicyIdentifier;
       }
     );
 
   const flattenedPolicyIdentifiers = flatten(modifiedPolicyIdentifiers);
-  return flattenedPolicyIdentifiers
-    .filter(({ isOptional }: ModifiedPolicyIdentifier) => !!isOptional)
-    .map(
-      ({ category, label }: ModifiedPolicyIdentifier) => `${category}.${label}`
-    );
+  return flattenedPolicyIdentifiers.map(
+    ({ category, label }: ModifiedPolicyIdentifier) => `${category}.${label}`
+  );
 };
 
 export const useCart = (
