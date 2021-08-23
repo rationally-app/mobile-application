@@ -194,13 +194,13 @@ describe("auth", () => {
       ).resolves.toBeUndefined();
     });
 
-    it("should throw error if mistmatched operator token error received", async () => {
+    it("should throw error if mismatched operator token error received", async () => {
       expect.assertions(1);
       mockFetch.mockResolvedValueOnce({
         ok: false,
         json: () =>
           Promise.resolve({
-            message: "Auth tokens are mismatched",
+            message: "Operator tokens are mismatched",
           }),
       });
       await expect(callLogout(sessionToken, code, endpoint)).rejects.toThrow(
@@ -214,7 +214,7 @@ describe("auth", () => {
         ok: false,
         json: () =>
           Promise.resolve({
-            message: "Auth token is missing",
+            message: "Operator token is missing",
           }),
       });
       await expect(callLogout(sessionToken, code, endpoint)).rejects.toThrow(
