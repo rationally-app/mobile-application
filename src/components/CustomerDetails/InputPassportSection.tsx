@@ -51,7 +51,9 @@ export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
     setSelectedCountry(item);
   };
 
-  const trimmedPassportNum: string = (passportNum || "").trim();
+  const trimmedPassportNum: string | undefined = passportNum
+    ? passportNum.trim()
+    : passportNum;
 
   useEffect(() => {
     selectedCountry && trimmedPassportNum
