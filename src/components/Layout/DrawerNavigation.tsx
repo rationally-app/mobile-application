@@ -18,7 +18,7 @@ import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { logout } from "../Logout/LogoutScreen";
+import { NavigationActions, NavigationDispatch } from "react-navigation";
 
 const styles = StyleSheet.create({
   container: {
@@ -56,6 +56,17 @@ const styles = StyleSheet.create({
 interface BottomNavigationLink {
   onPress: () => void;
 }
+
+const logout = (navigationDispatch: NavigationDispatch | undefined): void => {
+  if (!navigationDispatch) {
+    return;
+  }
+  navigationDispatch?.(
+    NavigationActions.navigate({
+      routeName: "LogoutScreen",
+    })
+  );
+};
 
 export const BottomNavigationLink: FunctionComponent<BottomNavigationLink> = ({
   children,
