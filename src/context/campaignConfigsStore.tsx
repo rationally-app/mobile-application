@@ -169,6 +169,20 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
         await AsyncStorage.removeItem(CAMPAIGN_CONFIGS_STORE_KEY);
       }
 
+      if (!newStorageHasData) {
+        // migration was attempted
+        if (hasUpdatedData) {
+          Sentry.addBreadcrumb({
+            category: "configMigration",
+            message: "success",
+          });
+        } else {
+          Sentry.addBreadcrumb({
+            category: "configMigration",
+            message: "failure",
+          });
+        }
+      }
       return hasUpdatedData;
     };
 
@@ -192,21 +206,8 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
         });
       }
       setHasLoadedFromPrimaryStore(true);
-      const migrated = await migrateOldConfigFromStore(newStorageHasData);
-      if (!newStorageHasData) {
-        // migration was attempted
-        if (migrated) {
-          Sentry.addBreadcrumb({
-            category: "configMigration",
-            message: "success",
-          });
-        } else {
-          Sentry.addBreadcrumb({
-            category: "configMigration",
-            message: "failure",
-          });
-        }
-      }
+      await migrateOldConfigFromStore(newStorageHasData);
+      
       setHasLoadedFromStore(true);
     };
 
