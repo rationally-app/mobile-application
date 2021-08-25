@@ -12,10 +12,8 @@ import * as auth from "../../services/auth";
 import { CreateProvidersWrapper } from "../../test/helpers/providers";
 import { LoginOTPCard } from "./LoginOTPCard";
 import "../../common/i18n/i18nMock";
-import * as SecureStore from "expo-secure-store";
 
 jest.mock("../../utils/errorTracking");
-jest.mock("expo-secure-store");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
@@ -33,13 +31,6 @@ const OTPInputId = "login-otp-input";
 const submitButtonId = "login-submit-otp-button";
 
 describe("LoginOTPCard", () => {
-  beforeEach(() => {
-    (SecureStore.getItemAsync as jest.MockedFunction<
-      typeof SecureStore.getItemAsync
-    >)
-      .mockResolvedValueOnce("{}")
-      .mockResolvedValue(null);
-  });
   afterEach(() => {
     cleanup();
     jest.resetAllMocks();
