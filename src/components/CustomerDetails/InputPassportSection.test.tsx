@@ -40,9 +40,10 @@ describe("InputPassportSection", () => {
     expect(passportCountryInput[1]!.props["children"]).toEqual("Afghanistan");
 
     fireEvent(passportNumberInput!, "onChange", {
-      nativeEvent: { text: "valid-alternate-id" },
+      nativeEvent: { text: "                valid-alternate-id    " },
     });
-    expect(passportNumberInput!.props["value"]).toEqual("valid-alternate-id");
+
+    expect(setIdInput).toHaveBeenCalledWith("AFG-valid-alternate-id");
 
     fireEvent.press(identityDetailsCheckButton!);
     expect(submitId).toHaveBeenCalledTimes(1);
