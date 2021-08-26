@@ -311,7 +311,10 @@ export const useCart = (
           return {
             category,
             quantity,
-            identifierInputs: cleanedIdentifierInputs,
+            identifierInputs:
+              cleanedIdentifierInputs.length === 0
+                ? undefined
+                : cleanedIdentifierInputs,
           };
         });
       try {
@@ -392,6 +395,9 @@ export const useCart = (
           });
 
           allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
+
+          // TODO: Are these values here actually used?
+          // It seems like only the number of elements is important
           return {
             category,
             quantity,
