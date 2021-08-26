@@ -311,7 +311,10 @@ export const useCart = (
           return {
             category,
             quantity,
-            identifierInputs: cleanedIdentifierInputs,
+            identifierInputs:
+              cleanedIdentifierInputs.length === 0
+                ? undefined
+                : cleanedIdentifierInputs,
           };
         });
       try {
@@ -378,26 +381,23 @@ export const useCart = (
     const checkout = async (): Promise<void> => {
       setCartState("CHECKING_OUT");
       const allCleanedIdentifierInputs: IdentifierInput[] = [];
-      const transactions = Object.values(cart)
-        .filter(({ quantity }) => quantity)
-        .map(({ category, quantity, identifierInputs }) => {
-          const cleanedIdentifierInputs = identifierInputs.map((identifier) => {
-            cleanIdentifierInput(identifier);
-            tagOptionalIdentifierInput(
-              identifier,
-              category,
-              optionalIdentifierLabels
-            );
-            return identifier;
-          });
+      const transactions = Object.values(cart).filter(
+        ({ quantity }) => quantity
+      );
 
-          allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
-          return {
+      transactions.forEach(({ category, identifierInputs }) => {
+        const cleanedIdentifierInputs = identifierInputs.map((identifier) => {
+          cleanIdentifierInput(identifier);
+          tagOptionalIdentifierInput(
+            identifier,
             category,
-            quantity,
-            identifierInputs: cleanedIdentifierInputs,
-          };
+            optionalIdentifierLabels
+          );
+          return identifier;
         });
+
+        allCleanedIdentifierInputs.push(...cleanedIdentifierInputs);
+      });
 
       if (transactions.length === 0) {
         setCartState("DEFAULT");

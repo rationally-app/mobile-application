@@ -1491,6 +1491,60 @@ describe("useCart", () => {
       ]);
     });
 
+    it("should not have identifierInputs property in the transaction request if there are no identifierInputs", async () => {
+      expect.assertions(3);
+      const ids = ["ID1"];
+      const productWithoutIdentifiers = defaultProducts.map((product) => ({
+        ...product,
+        identifiers: undefined,
+      }));
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper: ({ children }) =>
+            wrapper({ children, products: productWithoutIdentifiers }),
+        }
+      );
+
+      await waitFor(() => {
+        result.current.updateCart("toilet-paper", 1);
+      });
+
+      mockPostTransaction.mockReturnValueOnce(mockPostTransactionResult);
+
+      result.current.checkoutCart();
+      await waitFor(() => {
+        expect(result.current.cartState).toBe("PURCHASED");
+      });
+
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          lastTransactionTime: transactionTime,
+          identifierInputs: [], // present in the cart but removed before sending the transaction
+          maxQuantity: 2,
+          quantity: 1,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          lastTransactionTime: transactionTime,
+          identifierInputs: [],
+          maxQuantity: 15,
+          quantity: 0,
+        },
+      ]);
+
+      expect(mockPostTransaction.mock.calls[0][0].transactions).toStrictEqual([
+        {
+          category: "toilet-paper",
+          quantity: 1,
+          identifierInputs: undefined,
+        },
+      ]);
+    });
+
     it("should not be able to complete a transaction without going through checkoutCart", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
