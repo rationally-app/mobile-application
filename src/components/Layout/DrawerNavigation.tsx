@@ -10,7 +10,6 @@ import {
   DrawerContentComponentProps,
   DrawerActions,
 } from "react-navigation-drawer";
-import { useLogout } from "../../hooks/useLogout";
 import { AppText } from "./AppText";
 import { size, color, fontSize } from "../../common/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -19,6 +18,7 @@ import { useDrawerContext, DrawerButton } from "../../context/drawer";
 import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { NavigationActions, NavigationDispatch } from "react-navigation";
 
 const styles = StyleSheet.create({
   container: {
@@ -56,6 +56,17 @@ const styles = StyleSheet.create({
 interface BottomNavigationLink {
   onPress: () => void;
 }
+
+const logout = (navigationDispatch: NavigationDispatch | undefined): void => {
+  if (!navigationDispatch) {
+    return;
+  }
+  navigationDispatch?.(
+    NavigationActions.navigate({
+      routeName: "LogoutScreen",
+    })
+  );
+};
 
 export const BottomNavigationLink: FunctionComponent<BottomNavigationLink> = ({
   children,
@@ -98,13 +109,12 @@ export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
 export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponentProps> = ({
   navigation,
 }) => {
-  const { logout } = useLogout();
   const { showConfirmationAlert } = useContext(AlertModalContext);
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();
   const handleLogout = useCallback((): void => {
     logout(navigation.dispatch);
-  }, [logout, navigation.dispatch]);
+  }, [navigation.dispatch]);
 
   const { i18nt } = useTranslate();
 
