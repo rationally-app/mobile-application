@@ -113,8 +113,8 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
         ]}
       >
         <View style={styles.categoryWrapper}>
+          <View style={styles.labelWrapper}>{label}</View>
           <View>
-            <View style={styles.labelWrapper}>{label}</View>
             <View style={styles.labelWrapper}>{addonsLabel}</View>
           </View>
           <View style={styles.toggleWrapper}>
