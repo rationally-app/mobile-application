@@ -195,7 +195,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
         id,
         products: defaultProducts,
       });
-      setIdInput("");
+      setIdInput(id);
     } catch (e) {
       setIsScanningEnabled(false);
       showErrorAlert(e, () => setIsScanningEnabled(true));
