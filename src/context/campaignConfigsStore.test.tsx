@@ -56,9 +56,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     mockReadBucket.mockResolvedValueOnce(
       JSON.stringify({
         [testCampaignKey]: {
-          features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
         },
       })
     );
@@ -90,9 +90,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
     expect(queryByTestId("loaded")).toBeNull();
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
+      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
+      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
       expect(queryByTestId("loaded")).toHaveTextContent("true");
     });
   });
@@ -163,9 +163,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     mockReadBucket.mockResolvedValueOnce(
       JSON.stringify({
         [testCampaignKey]: {
-          features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
         },
       })
     );
@@ -198,9 +198,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
+      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
+      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
     });
 
     const button = getByText("test button");
@@ -212,9 +212,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
         "{}",
         JSON.stringify({
           [testCampaignKey]: {
-            features: { asd: "asd" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "validFeature" },
+            policies: [{ validPolicy: "validPolicy" }],
+            c13n: { validTranslation: "validTranslation" },
           },
         })
       );
@@ -229,9 +229,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     mockReadBucket.mockResolvedValueOnce(
       JSON.stringify({
         [testCampaignKey]: {
-          features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
         },
       })
     );
@@ -253,9 +253,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
               <Button
                 onPress={() =>
                   setCampaignConfig(testCampaignKey, {
-                    features: { new: "new" },
-                    policies: [{ new: "new" }],
-                    c13n: { new: "new" },
+                    features: { newFeature: "newFeature" },
+                    policies: [{ newPolicy: "newPolicy" }],
+                    c13n: { newTranslation: "newTranslation" },
                   } as any)
                 }
                 title="test button"
@@ -270,9 +270,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
+      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
+      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
     });
 
     const button = getByText("test button");
@@ -283,22 +283,22 @@ describe("CampaignConfigsStoreContextProvider", () => {
         "CAMPAIGN_CONFIGS_STORE",
         JSON.stringify({
           [testCampaignKey]: {
-            features: { new: "new" },
-            policies: [{ new: "new" }],
-            c13n: { new: "new" },
+            features: { newFeature: "newFeature" },
+            policies: [{ newPolicy: "newPolicy" }],
+            c13n: { newTranslation: "newTranslation" },
           },
         }),
         JSON.stringify({
           [testCampaignKey]: {
-            features: { asd: "asd" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "validFeature" },
+            policies: [{ validPolicy: "validPolicy" }],
+            c13n: { validTranslation: "validTranslation" },
           },
         })
       );
-      expect(queryByTestId("features")).toHaveTextContent(`{"new":"new"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"new":"new"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"new":"new"}`);
+      expect(queryByTestId("features")).toHaveTextContent(`{"newFeature":"newFeature"}`);
+      expect(queryByTestId("policies")).toHaveTextContent(`[{"newPolicy":"newPolicy"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"newTranslation":"newTranslation"}`);
     });
   });
 
@@ -307,14 +307,14 @@ describe("CampaignConfigsStoreContextProvider", () => {
     mockReadBucket.mockResolvedValueOnce(
       JSON.stringify({
         [testCampaignKey]: {
-          features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
         },
         "another-test-campaign": {
-          features: { dfg: "dfg" },
-          policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
+          features: { validFeature: "anotherFeature" },
+          policies: [{ validPolicy: "anotherPolicy" }],
+          c13n: { validTranslation: "anotherTranslation" },
         },
       })
     );
@@ -328,9 +328,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
               <Button
                 onPress={() =>
                   setCampaignConfig(testCampaignKey, {
-                    features: { new: "new" },
-                    policies: [{ new: "new" }],
-                    c13n: { new: "new" },
+                    features: { newFeature: "newFeature" },
+                    policies: [{ newPolicy: "newPolicy" }],
+                    c13n: { newTranslation: "newTranslation" },
                   } as any)
                 }
                 title="test button"
@@ -346,7 +346,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     await waitFor(() => {
       expect(queryByTestId("configs")).toHaveTextContent(
-        `{"test-campaign":{"features":{"asd":"asd"},"policies":[{"sdf":"sdf"}],"c13n":{"asdi":"asdi"}},"another-test-campaign":{"features":{"dfg":"dfg"},"policies":[{"sdf":"sdf"}],"c13n":{"asdi":"asdi"}}}`
+        `{"test-campaign":{"features":{"validFeature":"validFeature"},"policies":[{"validPolicy":"validPolicy"}],"c13n":{"validTranslation":"validTranslation"}},"another-test-campaign":{"features":{"validFeature":"anotherFeature"},"policies":[{"validPolicy":"anotherPolicy"}],"c13n":{"validTranslation":"anotherTranslation"}}}`
       );
     });
 
@@ -358,31 +358,31 @@ describe("CampaignConfigsStoreContextProvider", () => {
         "CAMPAIGN_CONFIGS_STORE",
         JSON.stringify({
           [testCampaignKey]: {
-            features: { new: "new" },
-            policies: [{ new: "new" }],
-            c13n: { new: "new" },
+            features: { newFeature: "newFeature" },
+            policies: [{ newPolicy: "newPolicy" }],
+            c13n: { newTranslation: "newTranslation" },
           },
           "another-test-campaign": {
-            features: { dfg: "dfg" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "anotherFeature" },
+            policies: [{ validPolicy: "anotherPolicy" }],
+            c13n: { validTranslation: "anotherTranslation" },
           },
         }),
         JSON.stringify({
           [testCampaignKey]: {
-            features: { asd: "asd" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "validFeature" },
+            policies: [{ validPolicy: "validPolicy" }],
+            c13n: { validTranslation: "validTranslation" },
           },
           "another-test-campaign": {
-            features: { dfg: "dfg" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "anotherFeature" },
+            policies: [{ validPolicy: "anotherPolicy" }],
+            c13n: { validTranslation: "anotherTranslation" },
           },
         })
       );
       expect(queryByTestId("configs")).toHaveTextContent(
-        `{"test-campaign":{"features":{"new":"new"},"policies":[{"new":"new"}],"c13n":{"new":"new"}},"another-test-campaign":{"features":{"dfg":"dfg"},"policies":[{"sdf":"sdf"}],"c13n":{"asdi":"asdi"}}}`
+        `{"test-campaign":{"features":{"newFeature":"newFeature"},"policies":[{"newPolicy":"newPolicy"}],"c13n":{"newTranslation":"newTranslation"}},"another-test-campaign":{"features":{"validFeature":"anotherFeature"},"policies":[{"validPolicy":"anotherPolicy"}],"c13n":{"validTranslation":"anotherTranslation"}}}`
       );
     });
   });
@@ -392,9 +392,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     mockReadBucket.mockResolvedValueOnce(
       JSON.stringify({
         [testCampaignKey]: {
-          features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
         },
       })
     );
@@ -417,8 +417,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
                 onPress={() =>
                   setCampaignConfig(testCampaignKey, {
                     features: null,
-                    policies: [{ new: "new" }],
-                    c13n: { asdi: "asdi" },
+                    policies: [{ newPolicy: "newPolicy" }],
+                    c13n: { validTranslation: "validTranslation" },
                   } as any)
                 }
                 title="test button"
@@ -433,9 +433,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
+      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
+      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
     });
 
     const button = getByText("test button");
@@ -446,22 +446,22 @@ describe("CampaignConfigsStoreContextProvider", () => {
         "CAMPAIGN_CONFIGS_STORE",
         JSON.stringify({
           [testCampaignKey]: {
-            features: { asd: "asd" },
-            policies: [{ new: "new" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "validFeature" },
+            policies: [{ newPolicy: "newPolicy" }],
+            c13n: { validTranslation: "validTranslation" },
           },
         }),
         JSON.stringify({
           [testCampaignKey]: {
-            features: { asd: "asd" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "validFeature" },
+            policies: [{ validPolicy: "validPolicy" }],
+            c13n: { validTranslation: "validTranslation" },
           },
         })
       );
-      expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"new":"new"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
+      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
+      expect(queryByTestId("policies")).toHaveTextContent(`[{"newPolicy":"newPolicy"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
     });
   });
 
@@ -470,9 +470,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     mockReadBucket.mockResolvedValueOnce(
       JSON.stringify({
         [testCampaignKey]: {
-          features: { asd: "asd" },
-          policies: [{ sdf: "sdf" }],
-          c13n: { asdi: "asdi" },
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
         },
       })
     );
@@ -506,9 +506,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"asd":"asd"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"sdf":"sdf"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"asdi":"asdi"}`);
+      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
+      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
+      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
     });
 
     const button = getByText("test button");
@@ -520,9 +520,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
         "{}",
         JSON.stringify({
           [testCampaignKey]: {
-            features: { asd: "asd" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "validFeature" },
+            policies: [{ validPolicy: "validPolicy" }],
+            c13n: { validTranslation: "validTranslation" },
           },
         })
       );
@@ -538,9 +538,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
       mockReadBucket.mockResolvedValueOnce(
         JSON.stringify({
           [testCampaignKey]: {
-            features: { asd: "asd" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "validFeature" },
+            policies: [{ validPolicy: "validPolicy" }],
+            c13n: { validTranslation: "validTranslation" },
           },
         })
       );
@@ -591,9 +591,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
       mockGetItem.mockResolvedValueOnce(
         JSON.stringify({
           [testCampaignKey]: {
-            features: { asd: "asd" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "validFeature" },
+            policies: [{ validPolicy: "validPolicy" }],
+            c13n: { validTranslation: "validTranslation" },
           },
         })
       );
@@ -643,9 +643,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
         "CAMPAIGN_CONFIGS_STORE",
         JSON.stringify({
           [testCampaignKey]: {
-            features: { asd: "asd" },
-            policies: [{ sdf: "sdf" }],
-            c13n: { asdi: "asdi" },
+            features: { validFeature: "validFeature" },
+            policies: [{ validPolicy: "validPolicy" }],
+            c13n: { validTranslation: "validTranslation" },
           },
         }),
         "{}"
