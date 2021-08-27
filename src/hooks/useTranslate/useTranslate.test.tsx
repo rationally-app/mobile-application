@@ -45,8 +45,9 @@ describe("useTranslate", () => {
         },
       },
     };
-    mockReadBucket.mockResolvedValueOnce(JSON.stringify(allCampaignConfigs));
+    mockReadBucket.mockResolvedValue(JSON.stringify(allCampaignConfigs));
   });
+
 
   describe("c13nt", () => {
     beforeAll(() => {
