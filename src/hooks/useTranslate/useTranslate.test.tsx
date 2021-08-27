@@ -9,12 +9,9 @@ import {
 import { defaultFeatures, defaultProducts } from "../../test/helpers/defaults";
 import { TranslationHook, useTranslate } from "./useTranslate";
 import "../../common/i18n/i18nMock";
-import { readFromStoreInBuckets } from "../../utils/bucketStorageHelper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-jest.mock("../../utils/bucketStorageHelper");
-const mockReadBucket = readFromStoreInBuckets as jest.MockedFunction<
-  typeof readFromStoreInBuckets
->;
+const mockGetItem = AsyncStorage.getItem as jest.Mock;
 
 describe("useTranslate", () => {
   let allCampaignConfigs: CampaignConfigsMap;
@@ -45,7 +42,7 @@ describe("useTranslate", () => {
         },
       },
     };
-    mockReadBucket.mockResolvedValue(JSON.stringify(allCampaignConfigs));
+    mockGetItem.mockImplementation(() => JSON.stringify(allCampaignConfigs));
   });
 
   describe("c13nt", () => {

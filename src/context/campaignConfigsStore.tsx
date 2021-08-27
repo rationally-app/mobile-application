@@ -9,11 +9,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CampaignConfig } from "../types";
 import { usePrevious } from "../hooks/usePrevious";
 import { CampaignConfigError } from "../services/campaignConfig";
-import {
-  readFromStoreInBuckets,
-  saveToStoreInBuckets,
-} from "../utils/bucketStorageHelper";
-import { Sentry } from "../utils/errorTracking";
 
 export const CAMPAIGN_CONFIGS_STORE_KEY = "CAMPAIGN_CONFIGS_STORE";
 
@@ -45,19 +40,6 @@ export const CampaignConfigsStoreContext = createContext<CampaignConfigsStoreCon
 export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
   children,
 }) => {
-  /**
-   * This flag marks when {@link allConfigs} is matching with the current state of
-   * the primary store. Any changes after this flag is true should trigger updates to the
-   * primary store.
-   *
-   * This flag should be set to true before any migration happens so that migrations will
-   * update the primary store.
-   *
-   * Similar use case to {@link AuthStoreContextProvider}
-   */
-  const [hasLoadedFromPrimaryStore, setHasLoadedFromPrimaryStore] = useState(
-    false
-  );
   const [hasLoadedFromStore, setHasLoadedFromStore] = useState(false);
   const [allConfigs, setAllConfigs] = useState<
     CampaignConfigsStoreContext["allCampaignConfigs"]
@@ -65,24 +47,15 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
 
   const prevAllConfigs = usePrevious(allConfigs);
 
-  const [, setState] = useState();
   useEffect(() => {
-    if (hasLoadedFromPrimaryStore) {
+    if (hasLoadedFromStore) {
       const allConfigsString = JSON.stringify(allConfigs);
       const prevConfigsString = JSON.stringify(prevAllConfigs);
       if (allConfigsString !== prevConfigsString) {
-        saveToStoreInBuckets(
-          CAMPAIGN_CONFIGS_STORE_KEY,
-          allConfigsString,
-          prevConfigsString
-        ).catch((reason) => {
-          setState(() => {
-            throw reason;
-          });
-        });
+        AsyncStorage.setItem(CAMPAIGN_CONFIGS_STORE_KEY, allConfigsString);
       }
     }
-  }, [hasLoadedFromPrimaryStore, allConfigs, prevAllConfigs]);
+  }, [hasLoadedFromStore, allConfigs, prevAllConfigs]);
 
   const setCampaignConfig: CampaignConfigsStoreContext["setCampaignConfig"] = useCallback(
     (key, newConfig) => {
@@ -134,81 +107,27 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
     setAllConfigs({});
   }, []);
 
+  const [, setState] = useState();
   useEffect(() => {
-    /**
-     * Migrates credentials from old config store to new config store. Clears all old storage locations.
-     * @param newStorageHasData whether most recent data has been found. If this is true, does not
-     * attempt any migration and just clears old storage locations
-     * @returns the updated value of {@link newStorageHasData}, i.e. true if any updated data was found
-     * in the older storage (if {@link newStorageHasData} was passed in as true, it will always return true)
-     */
-    const migrateOldConfigFromStore = async (
-      newStorageHasData: boolean
-    ): Promise<boolean> => {
-      let hasUpdatedData = newStorageHasData;
-      // check v1 storage
-      if (!hasUpdatedData) {
-        const configString = await AsyncStorage.getItem(
-          CAMPAIGN_CONFIGS_STORE_KEY
-        );
-        if (configString) {
-          try {
-            const configStringFromStore: CampaignConfigsMap = JSON.parse(
-              configString
-            );
-            setAllConfigs(configStringFromStore);
-            hasUpdatedData = true;
-          } catch (e) {
-            setState(() => {
-              throw new CampaignConfigError(e);
-            });
-          }
-        }
-      }
-      if (hasUpdatedData) {
-        await AsyncStorage.removeItem(CAMPAIGN_CONFIGS_STORE_KEY);
-      }
-
-      if (!newStorageHasData) {
-        // migration was attempted
-        if (hasUpdatedData) {
-          Sentry.addBreadcrumb({
-            category: "configMigration",
-            message: "success",
-          });
-        } else {
-          Sentry.addBreadcrumb({
-            category: "configMigration",
-            message: "failure",
-          });
-        }
-      }
-      return hasUpdatedData;
-    };
-
     const loadCampaignConfigFromStore = async (): Promise<void> => {
-      let newStorageHasData = false;
+      const campaignConfigsString = await AsyncStorage.getItem(
+        CAMPAIGN_CONFIGS_STORE_KEY
+      );
+      if (!campaignConfigsString) {
+        setHasLoadedFromStore(true);
+        return;
+      }
       try {
-        const campaignConfigsString = await readFromStoreInBuckets(
-          CAMPAIGN_CONFIGS_STORE_KEY
+        const allCampaignConfigsFromStore: CampaignConfigsMap = JSON.parse(
+          campaignConfigsString
         );
-        if (campaignConfigsString !== null) {
-          const campaignConfigsFromStore = JSON.parse(campaignConfigsString);
-          setAllConfigs((prev) => ({
-            ...prev,
-            ...campaignConfigsFromStore,
-          }));
-          newStorageHasData = true;
-        }
+        setAllConfigs(allCampaignConfigsFromStore);
+        setHasLoadedFromStore(true);
       } catch (e) {
         setState(() => {
           throw new CampaignConfigError(e);
         });
       }
-      setHasLoadedFromPrimaryStore(true);
-      await migrateOldConfigFromStore(newStorageHasData);
-
-      setHasLoadedFromStore(true);
     };
 
     loadCampaignConfigFromStore();
