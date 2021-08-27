@@ -207,7 +207,7 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
       }
       setHasLoadedFromPrimaryStore(true);
       await migrateOldConfigFromStore(newStorageHasData);
-      
+
       setHasLoadedFromStore(true);
     };
 

@@ -90,9 +90,15 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
     expect(queryByTestId("loaded")).toBeNull();
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
+      expect(queryByTestId("features")).toHaveTextContent(
+        `{"validFeature":"validFeature"}`
+      );
+      expect(queryByTestId("policies")).toHaveTextContent(
+        `[{"validPolicy":"validPolicy"}]`
+      );
+      expect(queryByTestId("c13n")).toHaveTextContent(
+        `{"validTranslation":"validTranslation"}`
+      );
       expect(queryByTestId("loaded")).toHaveTextContent("true");
     });
   });
@@ -198,9 +204,15 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
+      expect(queryByTestId("features")).toHaveTextContent(
+        `{"validFeature":"validFeature"}`
+      );
+      expect(queryByTestId("policies")).toHaveTextContent(
+        `[{"validPolicy":"validPolicy"}]`
+      );
+      expect(queryByTestId("c13n")).toHaveTextContent(
+        `{"validTranslation":"validTranslation"}`
+      );
     });
 
     const button = getByText("test button");
@@ -270,9 +282,15 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
+      expect(queryByTestId("features")).toHaveTextContent(
+        `{"validFeature":"validFeature"}`
+      );
+      expect(queryByTestId("policies")).toHaveTextContent(
+        `[{"validPolicy":"validPolicy"}]`
+      );
+      expect(queryByTestId("c13n")).toHaveTextContent(
+        `{"validTranslation":"validTranslation"}`
+      );
     });
 
     const button = getByText("test button");
@@ -296,9 +314,15 @@ describe("CampaignConfigsStoreContextProvider", () => {
           },
         })
       );
-      expect(queryByTestId("features")).toHaveTextContent(`{"newFeature":"newFeature"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"newPolicy":"newPolicy"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"newTranslation":"newTranslation"}`);
+      expect(queryByTestId("features")).toHaveTextContent(
+        `{"newFeature":"newFeature"}`
+      );
+      expect(queryByTestId("policies")).toHaveTextContent(
+        `[{"newPolicy":"newPolicy"}]`
+      );
+      expect(queryByTestId("c13n")).toHaveTextContent(
+        `{"newTranslation":"newTranslation"}`
+      );
     });
   });
 
@@ -433,9 +457,15 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
+      expect(queryByTestId("features")).toHaveTextContent(
+        `{"validFeature":"validFeature"}`
+      );
+      expect(queryByTestId("policies")).toHaveTextContent(
+        `[{"validPolicy":"validPolicy"}]`
+      );
+      expect(queryByTestId("c13n")).toHaveTextContent(
+        `{"validTranslation":"validTranslation"}`
+      );
     });
 
     const button = getByText("test button");
@@ -459,9 +489,15 @@ describe("CampaignConfigsStoreContextProvider", () => {
           },
         })
       );
-      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"newPolicy":"newPolicy"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
+      expect(queryByTestId("features")).toHaveTextContent(
+        `{"validFeature":"validFeature"}`
+      );
+      expect(queryByTestId("policies")).toHaveTextContent(
+        `[{"newPolicy":"newPolicy"}]`
+      );
+      expect(queryByTestId("c13n")).toHaveTextContent(
+        `{"validTranslation":"validTranslation"}`
+      );
     });
   });
 
@@ -506,9 +542,15 @@ describe("CampaignConfigsStoreContextProvider", () => {
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
     await waitFor(() => {
-      expect(queryByTestId("features")).toHaveTextContent(`{"validFeature":"validFeature"}`);
-      expect(queryByTestId("policies")).toHaveTextContent(`[{"validPolicy":"validPolicy"}]`);
-      expect(queryByTestId("c13n")).toHaveTextContent(`{"validTranslation":"validTranslation"}`);
+      expect(queryByTestId("features")).toHaveTextContent(
+        `{"validFeature":"validFeature"}`
+      );
+      expect(queryByTestId("policies")).toHaveTextContent(
+        `[{"validPolicy":"validPolicy"}]`
+      );
+      expect(queryByTestId("c13n")).toHaveTextContent(
+        `{"validTranslation":"validTranslation"}`
+      );
     });
 
     const button = getByText("test button");

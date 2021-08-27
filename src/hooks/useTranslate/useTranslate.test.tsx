@@ -48,7 +48,6 @@ describe("useTranslate", () => {
     mockReadBucket.mockResolvedValue(JSON.stringify(allCampaignConfigs));
   });
 
-
   describe("c13nt", () => {
     beforeAll(() => {
       // eslint-disable-next-line react/display-name
