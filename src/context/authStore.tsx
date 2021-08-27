@@ -137,7 +137,7 @@ export const AuthStoreContextProvider: FunctionComponent<{
      * old storage locations.
      * @param newStorageHasData whether most recent data has been found. If this is true, does not
      * attempt any migration and just clears old storage locations
-     * @returns the updated value of {@link hasUpdatedData}, i.e. true if any updated data was found
+     * @returns the updated value of {@link newStorageHasData}, i.e. true if any updated data was found
      * in the older storage (if {@link newStorageHasData} was passed in as true, it will always return true)
      */
     const migrateOldAuthFromStore = async (
