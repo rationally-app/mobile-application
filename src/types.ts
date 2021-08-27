@@ -28,10 +28,6 @@ export const OTPResponse = t.intersection([
   }),
 ]);
 
-export const LogoutResponse = t.type({
-  status: t.literal("OK"),
-});
-
 export type SessionCredentials = t.TypeOf<typeof SessionCredentials>;
 export type OTPResponse = t.TypeOf<typeof OTPResponse>;
 

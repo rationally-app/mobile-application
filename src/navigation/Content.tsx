@@ -17,13 +17,11 @@ import { StackViewTransitionConfigs } from "react-navigation-stack";
 import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
-import { LogoutScreen } from "../components/Logout/LogoutScreen";
 
 const SwitchNavigator = createSwitchNavigator(
   {
     LoginScreen: { screen: LoginScreen, path: "login" },
     CampaignInitialisationScreen,
-    LogoutScreen,
     DrawerNavigator: createDrawerNavigator(
       {
         CampaignLocationsScreen,

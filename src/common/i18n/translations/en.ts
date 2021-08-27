@@ -127,9 +127,6 @@ export const en: Translations = {
   identifierSelectionInput: {
     placeholder: "Select reason",
   },
-  logoutScreen: {
-    loggingOut: "Logging out",
-  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "Already used",
@@ -439,12 +436,6 @@ export const en: Translations = {
     invalidDeviceCode: {
       title: "Invalid input",
       body: "Scan item again or get a new item from your in-charge.",
-      primaryActionText: "OK",
-    },
-    systemErrorLogoutIssue: {
-      title: "System error",
-      body:
-        "Unable to logout from all campaigns. Try to logout again later or contact your in-charge of the problem persists.",
       primaryActionText: "OK",
     },
     dynamicContentFallback: {

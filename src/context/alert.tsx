@@ -80,7 +80,6 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   ScannerError: "errorScanning",
   LimitReachedError: "scanLimitReached",
   NotEligibleError: "notEligible",
-  LogoutError: "systemErrorLogoutIssue",
 };
 
 const getTranslationKeyFromError = (error: Error): string => {
