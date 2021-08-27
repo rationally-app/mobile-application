@@ -167,20 +167,6 @@ export const AuthStoreContextProvider: FunctionComponent<{
         await AsyncStorage.removeItem(AUTH_CREDENTIALS_STORE_KEY);
       }
 
-      if (!newStorageHasData) {
-        // migration was attempted
-        if (hasUpdatedData) {
-          Sentry.addBreadcrumb({
-            category: "authMigration",
-            message: "success",
-          });
-        } else {
-          Sentry.addBreadcrumb({
-            category: "authMigration",
-            message: "failure",
-          });
-        }
-      }
       return hasUpdatedData;
     };
 
@@ -206,7 +192,21 @@ export const AuthStoreContextProvider: FunctionComponent<{
       }
       setHasLoadedFromPrimaryStore(true);
       if (shouldMigrate) {
-        await migrateOldAuthFromStore(newStorageHasData);
+        const migrated = await migrateOldAuthFromStore(newStorageHasData);
+        if (!newStorageHasData) {
+          // migration was attempted
+          if (migrated) {
+            Sentry.addBreadcrumb({
+              category: "authMigration",
+              message: "success",
+            });
+          } else {
+            Sentry.addBreadcrumb({
+              category: "authMigration",
+              message: "failure",
+            });
+          }
+        }
       }
       setHasLoadedFromStore(true);
     };
