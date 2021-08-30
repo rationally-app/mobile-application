@@ -142,7 +142,7 @@ jobs:
       - name: Parse Asset URL
         id: androidUrl
         run: |
-          ASSET_URL=$(cat buildLogAndroid.txt | tail | egrep -o 'https?://expo\.io/artifacts/[^ ]+')
+          ASSET_URL=$(cat buildLogAndroid.txt | tail | egrep -o 'https?://expo\.dev/artifacts/[^ ]+')
           echo The android url is $ASSET_URL
           echo "::set-output name=assetUrl::$ASSET_URL"
       - name: Download APK Asset
@@ -183,7 +183,7 @@ jobs:
       - name: Parse Asset URL
         id: iosUrl
         run: |
-          ASSET_URL=$(cat buildLogIOS.txt | tail | egrep -o 'https?://expo\.io/artifacts/[^ ]+')
+          ASSET_URL=$(cat buildLogIOS.txt | tail | egrep -o 'https?://expo\.dev/artifacts/[^ ]+')
           echo The IOS url is $ASSET_URL
           echo "::set-output name=assetUrl::$ASSET_URL"
       - name: Download IPA Asset
