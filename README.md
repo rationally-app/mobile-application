@@ -41,28 +41,6 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
    - `npm run storybook`: If you'd like to use Storybook for development
 8. Open Expo and launch the app
 
-9. To fix the network issues on expo app in terms of backend api not reachable :
-
-   - import deleteStoreInBuckets from src/utils/bucketStorageHelper.ts
-   - to replace useEffect hook in `authStore.tsx`.
-   - then refresh the app. it will show the login screen
-   - after everything is done revert all changes in `authStore.tsx`.
-
-   ```
-   import {deleteStoreInBuckets} from "../utils/bucketStorageHelper";
-
-   useEffect(() => {
-    if (hasLoadedFromPrimaryStore) {
-      const authCredentialsString = JSON.stringify(authCredentials);
-      const prevAuthCredentialsString = JSON.stringify(prevAuthCredentials);
-      // do a top level check to see if there are any changes
-      if (authCredentialsString) {
-        deleteStoreInBuckets(AUTH_CREDENTIALS_STORE_KEY, authCredentialsString);
-      }
-    }
-   }, [hasLoadedFromPrimaryStore, authCredentials, prevAuthCredentials]);
-   ```
-
 ## Testing
 
 ```
@@ -101,3 +79,27 @@ with:
    myToken: ${{ secrets.GITHUB_TOKEN }}
    base-ref: <base-tag> # e.g. prod-0
 ```
+
+## Troubleshooting
+
+1. To fix the network issues on expo app in terms of backend api not reachable :
+
+   - import deleteStoreInBuckets from src/utils/bucketStorageHelper.ts
+   - to replace useEffect hook in `authStore.tsx`.
+   - then refresh the app. it will show the login screen
+   - after everything is done revert all changes in `authStore.tsx`.
+
+   ```
+   import {deleteStoreInBuckets} from "../utils/bucketStorageHelper";
+
+   useEffect(() => {
+    if (hasLoadedFromPrimaryStore) {
+      const authCredentialsString = JSON.stringify(authCredentials);
+      const prevAuthCredentialsString = JSON.stringify(prevAuthCredentials);
+      // do a top level check to see if there are any changes
+      if (authCredentialsString) {
+        deleteStoreInBuckets(AUTH_CREDENTIALS_STORE_KEY, authCredentialsString);
+      }
+    }
+   }, [hasLoadedFromPrimaryStore, authCredentials, prevAuthCredentials]);
+   ```
