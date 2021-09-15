@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - uses: expo/expo-github-action@v5
+      - uses: expo/expo-github-action@6.0.0
         with:
           expo-packager: npm
           expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
@@ -119,7 +119,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v3.x
-      - uses: expo/expo-github-action@v5
+      - uses: expo/expo-github-action@6.0.0
         with:
           expo-packager: npm
           expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
@@ -160,7 +160,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v3.x
-      - uses: expo/expo-github-action@v5
+      - uses: expo/expo-github-action@6.0.0
         with:
           expo-packager: npm
           expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
