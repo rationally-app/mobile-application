@@ -38,12 +38,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   toggleWrapper: {
-    flex: 1,
+    flex: 0.5,
     alignItems: "flex-end",
   },
   addonsWrapper: {
     marginRight: size(1),
-    flex: 1,
+    flex: 0.5,
   },
   toggle: {
     borderWidth: 1,
@@ -113,10 +113,10 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
         ]}
       >
         <View style={styles.categoryWrapper}>
-          <View>
-            <View style={styles.labelWrapper}>{label}</View>
+          <View style={styles.labelWrapper}>{label}</View>
+          {addonsLabel && (
             <View style={styles.labelWrapper}>{addonsLabel}</View>
-          </View>
+          )}
           <View style={styles.toggleWrapper}>
             <Toggle isChecked={isChecked} />
           </View>
