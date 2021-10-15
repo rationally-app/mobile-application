@@ -220,6 +220,12 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
               clearCartError()
             );
             break;
+          case ERROR_MESSAGE.LOCK_ERROR:
+            clearCartError();
+            showErrorAlert(cartError, () => {
+              navigation.navigate("CampaignLocationsScreen");
+            });
+            break;
           case ERROR_MESSAGE.INVALID_QUANTITY:
           case ERROR_MESSAGE.MISSING_SELECTION:
           case ERROR_MESSAGE.MISSING_DISBURSEMENTS:
