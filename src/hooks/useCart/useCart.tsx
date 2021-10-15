@@ -330,7 +330,9 @@ export const useCart = (
         setCartState("PURCHASED");
       } catch (e) {
         setCartState("DEFAULT");
-        if (
+        if (e.message === "Requested lock is already taken") {
+          setCartError(new Error(ERROR_MESSAGE.LOCK_ERROR));
+        } else if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"
         ) {
           setCartError(new Error(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT));
