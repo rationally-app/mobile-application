@@ -1,8 +1,9 @@
+import * as Updates from "expo-updates";
 import React, { FunctionComponent } from "react";
 import { View, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { size, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
-import * as Updates from "expo-updates";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import AlertIcon from "../../../assets/icons/alert.svg";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
@@ -41,11 +42,25 @@ const styles = StyleSheet.create({
   },
   restartButton: {
     position: "absolute",
-    bottom: size(4),
+    bottom: size(12),
     marginHorizontal: size(4),
     marginTop: size(5),
     maxWidth: 512,
     width: "100%",
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignSelf: "center",
+    paddingHorizontal: size(4),
+    paddingVertical: size(3),
+    marginHorizontal: size(4),
+    marginBottom: size(4),
+    maxWidth: 512,
+    width: "100%",
+  },
+  logoutText: {
+    fontSize: fontSize(0),
+    fontFamily: "brand-bold",
   },
 });
 
@@ -99,6 +114,9 @@ export const ErrorBoundaryContent: FunctionComponent<{
           fullWidth={true}
         />
       </View>
+      <TouchableOpacity style={styles.logoutButton} onPress={() => {}}>
+        <AppText style={styles.logoutText}>Logout</AppText>
+      </TouchableOpacity>
     </View>
   );
 };
