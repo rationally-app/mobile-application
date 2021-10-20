@@ -73,7 +73,7 @@ export const ErrorBoundaryContent: FunctionComponent<{
     ? `(${errorName} ${formatDateTime(Date.now())})`
     : undefined;
 
-  let header, body, restartButtonText;
+  let header, body, restartButtonText, logoutButtonText;
 
   switch (errorName) {
     case "NetworkError": {
@@ -84,6 +84,11 @@ export const ErrorBoundaryContent: FunctionComponent<{
         "networkError",
         "primaryActionText"
       );
+      logoutButtonText = i18nt(
+        "errorMessages",
+        "networkError",
+        "secondaryActionText"
+      );
       break;
     }
     default: {
@@ -93,6 +98,11 @@ export const ErrorBoundaryContent: FunctionComponent<{
         "errorMessages",
         "systemError",
         "primaryActionText"
+      );
+      logoutButtonText = i18nt(
+        "errorMessages",
+        "systemError",
+        "secondaryActionText"
       );
     }
   }
@@ -114,8 +124,10 @@ export const ErrorBoundaryContent: FunctionComponent<{
           fullWidth={true}
         />
       </View>
-      <TouchableOpacity style={styles.logoutButton} onPress={() => {}}>
-        <AppText style={styles.logoutText}>Logout</AppText>
+      <TouchableOpacity
+        style={styles.logoutButton}
+      >
+        <AppText style={styles.logoutText}>{logoutButtonText}</AppText>
       </TouchableOpacity>
     </View>
   );

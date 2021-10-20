@@ -276,11 +276,13 @@ export const en: Translations = {
       body:
         "We are currently facing connectivity issues. Try restarting the app or contact Govtech if the problem persists.",
       primaryActionText: "Restart app",
+      secondaryActionText: "Logout",
     },
     networkError: {
       title: "Network error",
       body: "You are offline. Try to connect and try again.",
       primaryActionText: "Retry",
+      secondaryActionText: "Logout",
     },
     wrongPaymentReceiptNumber: {
       title: "Wrong format",
