@@ -143,7 +143,7 @@ export const ErrorBoundaryContent: FunctionComponent<{
       </View>
       <TouchableOpacity
         style={styles.logoutButton}
-        onPress={async () => await handleLogout(AUTH_CREDENTIALS_STORE_KEY)}
+        onPress={() => handleLogout(AUTH_CREDENTIALS_STORE_KEY)}
       >
         <AppText style={styles.logoutText}>{logoutButtonText}</AppText>
       </TouchableOpacity>
