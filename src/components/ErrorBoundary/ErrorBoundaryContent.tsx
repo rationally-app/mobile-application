@@ -1,8 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Updates from "expo-updates";
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { size, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: size(4),
     paddingVertical: size(3),
     marginHorizontal: size(4),
-    marginBottom: size(4),
+    marginBottom: size(3),
     maxWidth: 512,
     width: "100%",
   },
@@ -141,12 +140,14 @@ export const ErrorBoundaryContent: FunctionComponent<{
           fullWidth={true}
         />
       </View>
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={() => handleLogout(AUTH_CREDENTIALS_STORE_KEY)}
-      >
-        <AppText style={styles.logoutText}>{logoutButtonText}</AppText>
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => handleLogout(AUTH_CREDENTIALS_STORE_KEY)}
+        >
+          <AppText style={styles.logoutText}>{logoutButtonText}</AppText>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
