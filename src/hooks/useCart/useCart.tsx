@@ -415,10 +415,13 @@ export const useCart = (
         return;
       }
 
-      const hasPaymentReceipt = allCleanedIdentifierInputs.find(
-        (identifierInput) => identifierInput.textInputType === "PAYMENT_RECEIPT"
+      // change state to PENDING if payment receipt exists and is not optional
+      const hasRequiredPaymentReceipt = allCleanedIdentifierInputs.find(
+        (identifierInput) =>
+          identifierInput.textInputType === "PAYMENT_RECEIPT" &&
+          !identifierInput.isOptional
       );
-      if (hasPaymentReceipt) {
+      if (hasRequiredPaymentReceipt) {
         setCartState("PENDING_CONFIRMATION");
         return;
       }
