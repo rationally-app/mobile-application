@@ -274,7 +274,7 @@ export const en: Translations = {
     systemError: {
       title: "System error",
       body:
-        "We are currently facing connectivity issues. Try restarting the app or logout if the problem persists",
+        "We are currently facing connectivity issues. Try restarting the app or logout if the problem persists.",
       primaryActionText: "Restart app",
       secondaryActionText: "Logout",
     },
