@@ -264,8 +264,7 @@ export const zh: Translations = {
     },
     systemError: {
       title: "系统错误",
-      body:
-        "连接目前出现问题。请重启应用程序。如果问题持续出现，请联系政府科技局。",
+      body: "连接目前出现问题。请重启应用程序。如果问题持续出现，请试着登出。",
       primaryActionText: "重启应用程序",
       secondaryActionText: "登出",
     },
