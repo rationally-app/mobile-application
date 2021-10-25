@@ -45,23 +45,21 @@ const styles = StyleSheet.create({
     marginTop: size(4),
     fontSize: fontSize(-3),
   },
+  buttonContainer: {
+    maxWidth: 512,
+    width: "100%",
+    marginBottom: size(4),
+  },
   restartButton: {
-    position: "absolute",
-    bottom: size(12),
-    marginHorizontal: size(4),
-    marginTop: size(5),
     maxWidth: 512,
     width: "100%",
   },
   logoutButton: {
-    flexDirection: "row",
-    alignSelf: "center",
-    paddingHorizontal: size(4),
-    paddingVertical: size(3),
-    marginHorizontal: size(4),
-    marginBottom: size(3),
     maxWidth: 512,
     width: "100%",
+    paddingHorizontal: size(4),
+    paddingVertical: size(3),
+    alignItems: "center",
   },
   logoutText: {
     fontSize: fontSize(0),
@@ -74,7 +72,7 @@ export const ErrorBoundaryContent: FunctionComponent<{
 }> = ({ errorName }) => {
   const { i18nt } = useTranslate();
 
-  const handleLogout = async (storageKey: string): Promise<void> => {
+  const handleTotalReset = async (storageKey: string): Promise<void> => {
     // get latest secureStore value from bucket
     const oldValue = await readFromStoreInBuckets(storageKey);
 
@@ -133,20 +131,22 @@ export const ErrorBoundaryContent: FunctionComponent<{
           <AppText style={styles.errorDescription}>{errorDescription}</AppText>
         )}
       </View>
-      <View style={styles.restartButton}>
-        <DarkButton
-          text={restartButtonText}
-          onPress={() => Updates.reloadAsync()}
-          fullWidth={true}
-        />
-      </View>
-      <View>
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={() => handleLogout(AUTH_CREDENTIALS_STORE_KEY)}
-        >
-          <AppText style={styles.logoutText}>{logoutButtonText}</AppText>
-        </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <View style={styles.restartButton}>
+          <DarkButton
+            text={restartButtonText}
+            onPress={() => Updates.reloadAsync()}
+            fullWidth={true}
+          />
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={() => handleTotalReset(AUTH_CREDENTIALS_STORE_KEY)}
+          >
+            <AppText style={styles.logoutText}>{logoutButtonText}</AppText>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
