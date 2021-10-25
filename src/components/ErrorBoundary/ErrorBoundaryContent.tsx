@@ -1,11 +1,17 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Updates from "expo-updates";
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { size, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
-import * as Updates from "expo-updates";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import AlertIcon from "../../../assets/icons/alert.svg";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import {
+  deleteStoreInBuckets,
+  readFromStoreInBuckets,
+} from "../../utils/bucketStorageHelper";
+import { AUTH_CREDENTIALS_STORE_KEY } from "../../context/authStore";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
 
 const styles = StyleSheet.create({
@@ -39,13 +45,25 @@ const styles = StyleSheet.create({
     marginTop: size(4),
     fontSize: fontSize(-3),
   },
-  restartButton: {
-    position: "absolute",
-    bottom: size(4),
-    marginHorizontal: size(4),
-    marginTop: size(5),
+  buttonContainer: {
     maxWidth: 512,
     width: "100%",
+    marginBottom: size(4),
+  },
+  restartButton: {
+    maxWidth: 512,
+    width: "100%",
+  },
+  logoutButton: {
+    maxWidth: 512,
+    width: "100%",
+    paddingHorizontal: size(4),
+    paddingVertical: size(3),
+    alignItems: "center",
+  },
+  logoutText: {
+    fontSize: fontSize(0),
+    fontFamily: "brand-bold",
   },
 });
 
@@ -54,11 +72,22 @@ export const ErrorBoundaryContent: FunctionComponent<{
 }> = ({ errorName }) => {
   const { i18nt } = useTranslate();
 
+  const handleTotalReset = async (storageKey: string): Promise<void> => {
+    // get latest secureStore value from bucket
+    const oldValue = await readFromStoreInBuckets(storageKey);
+
+    // clear device storage
+    await deleteStoreInBuckets(storageKey, oldValue);
+    await AsyncStorage.clear();
+
+    Updates.reloadAsync();
+  };
+
   const errorDescription = errorName
     ? `(${errorName} ${formatDateTime(Date.now())})`
     : undefined;
 
-  let header, body, restartButtonText;
+  let header, body, restartButtonText, logoutButtonText;
 
   switch (errorName) {
     case "NetworkError": {
@@ -69,6 +98,11 @@ export const ErrorBoundaryContent: FunctionComponent<{
         "networkError",
         "primaryActionText"
       );
+      logoutButtonText = i18nt(
+        "errorMessages",
+        "networkError",
+        "secondaryActionText"
+      );
       break;
     }
     default: {
@@ -78,6 +112,11 @@ export const ErrorBoundaryContent: FunctionComponent<{
         "errorMessages",
         "systemError",
         "primaryActionText"
+      );
+      logoutButtonText = i18nt(
+        "errorMessages",
+        "systemError",
+        "secondaryActionText"
       );
     }
   }
@@ -92,12 +131,22 @@ export const ErrorBoundaryContent: FunctionComponent<{
           <AppText style={styles.errorDescription}>{errorDescription}</AppText>
         )}
       </View>
-      <View style={styles.restartButton}>
-        <DarkButton
-          text={restartButtonText}
-          onPress={() => Updates.reloadAsync()}
-          fullWidth={true}
-        />
+      <View style={styles.buttonContainer}>
+        <View style={styles.restartButton}>
+          <DarkButton
+            text={restartButtonText}
+            onPress={() => Updates.reloadAsync()}
+            fullWidth={true}
+          />
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={() => handleTotalReset(AUTH_CREDENTIALS_STORE_KEY)}
+          >
+            <AppText style={styles.logoutText}>{logoutButtonText}</AppText>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
