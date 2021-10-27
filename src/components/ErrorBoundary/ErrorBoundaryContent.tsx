@@ -74,13 +74,15 @@ export const ErrorBoundaryContent: FunctionComponent<{
   const { i18nt } = useTranslate();
 
   const handleTotalReset = async (storageKeys: string[]): Promise<void> => {
-    storageKeys.forEach(async (key) => {
-      // get latest secureStore value from selected key bucket
-      const oldValue = await readFromStoreInBuckets(key);
+    await Promise.all(
+      storageKeys.map(async (key) => {
+        // get latest secureStore value from selected key bucket
+        const oldValue = await readFromStoreInBuckets(key);
 
-      // clear selected key bucket
-      await deleteStoreInBuckets(key, oldValue);
-    });
+        // clear selected key bucket
+        await deleteStoreInBuckets(key, oldValue);
+      })
+    );
     // clear async storage
     await AsyncStorage.clear();
 
