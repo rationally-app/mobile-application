@@ -12,6 +12,7 @@ import {
   readFromStoreInBuckets,
 } from "../../utils/bucketStorageHelper";
 import { AUTH_CREDENTIALS_STORE_KEY } from "../../context/authStore";
+import { CAMPAIGN_CONFIGS_STORE_KEY } from "../../context/campaignConfigsStore";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
 
 const styles = StyleSheet.create({
@@ -72,12 +73,17 @@ export const ErrorBoundaryContent: FunctionComponent<{
 }> = ({ errorName }) => {
   const { i18nt } = useTranslate();
 
-  const handleTotalReset = async (storageKey: string): Promise<void> => {
-    // get latest secureStore value from bucket
-    const oldValue = await readFromStoreInBuckets(storageKey);
+  const handleTotalReset = async (storageKeys: string[]): Promise<void> => {
+    await Promise.all(
+      storageKeys.map(async (key) => {
+        // get latest secureStore value from selected key bucket
+        const oldValue = await readFromStoreInBuckets(key);
 
-    // clear device storage
-    await deleteStoreInBuckets(storageKey, oldValue);
+        // clear selected key bucket
+        await deleteStoreInBuckets(key, oldValue);
+      })
+    );
+    // clear async storage
     await AsyncStorage.clear();
 
     Updates.reloadAsync();
@@ -142,7 +148,12 @@ export const ErrorBoundaryContent: FunctionComponent<{
         <View>
           <TouchableOpacity
             style={styles.logoutButton}
-            onPress={() => handleTotalReset(AUTH_CREDENTIALS_STORE_KEY)}
+            onPress={() =>
+              handleTotalReset([
+                AUTH_CREDENTIALS_STORE_KEY,
+                CAMPAIGN_CONFIGS_STORE_KEY,
+              ])
+            }
           >
             <AppText style={styles.logoutText}>{logoutButtonText}</AppText>
           </TouchableOpacity>
