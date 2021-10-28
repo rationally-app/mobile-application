@@ -82,13 +82,11 @@ export const ErrorBoundaryContent: FunctionComponent<{
         // clear selected key bucket
         await deleteStoreInBuckets(key, oldValue);
       })
-    )
-      .then(
-        async () =>
-          // clear async storage
-          await AsyncStorage.clear()
-      )
-      .then(() => Updates.reloadAsync());
+    );
+    // clear async storage
+    await AsyncStorage.clear();
+
+    Updates.reloadAsync();
   };
 
   const errorDescription = errorName
