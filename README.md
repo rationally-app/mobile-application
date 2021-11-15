@@ -76,7 +76,7 @@ If you're releasing this for the first time, you need to create a tag to specify
 ```
 uses: metcalfc/changelog-generator@v0.4.0
 with:
-   myToken: ${{ secrets.GITHUB_TOKEN }}
+   myToken: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
    base-ref: <base-tag> # e.g. prod-0
 ```
 

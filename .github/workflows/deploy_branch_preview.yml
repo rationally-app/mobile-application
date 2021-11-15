@@ -18,7 +18,7 @@ jobs:
       - name: check if PR title follows conventional commits specs
         uses: amannn/action-semantic-pull-request@v3.4.2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
   test:
     name: Lint & Test
     runs-on: ubuntu-18.04
@@ -118,7 +118,7 @@ jobs:
       - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
           EXPO_PROJECT: "@supplyallytest/rationally"
         with:
           message: |
