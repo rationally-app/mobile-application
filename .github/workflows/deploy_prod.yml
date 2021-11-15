@@ -99,7 +99,7 @@ jobs:
           echo ::set-output name=previousTag::$(echo "${MATCHING_TAGS}" | tail -n1)
       - name: Generate Changelog
         id: changelog
-        uses: metcalfc/changelog-generator@v1.0.0
+        uses: metcalfc/changelog-generator@v2.0.0
         with:
           myToken: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
           head-ref: ${{ steps.setTags.outputs.latestTag }}
