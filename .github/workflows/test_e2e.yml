@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: "rationally-app/mobile-e2e"
-          token: ${{ secrets.MUSKET_DEV_GITHUB_ACCESS_TOKEN }}
+          token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x

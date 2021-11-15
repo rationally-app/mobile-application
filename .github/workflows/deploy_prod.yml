@@ -101,7 +101,7 @@ jobs:
         id: changelog
         uses: metcalfc/changelog-generator@v1.0.0
         with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
+          myToken: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
           head-ref: ${{ steps.setTags.outputs.latestTag }}
           base-ref: ${{ steps.setTags.outputs.previousTag }}
       - name: Creating Release
@@ -110,7 +110,7 @@ jobs:
           body: |
             Changes in this Release: 
             ${{ steps.changelog.outputs.changelog }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
           name: Release ${{ env.GITHUB_REF_SLUG }}
           allowUpdates: true
   build_android:
@@ -150,7 +150,7 @@ jobs:
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
           file: ./supplyally-${{ env.GITHUB_REF_SLUG }}.apk
           asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.apk
           tag: ${{ github.ref }}
@@ -191,7 +191,7 @@ jobs:
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
           file: ./supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
           asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
           tag: ${{ github.ref }}
