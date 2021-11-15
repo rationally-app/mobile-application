@@ -24,7 +24,7 @@ jobs:
         with:
           repository: "rationally-app/mobile-e2e"
           token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2.4.1
         with:
           node-version: 12.x
       - uses: actions/setup-python@v2
