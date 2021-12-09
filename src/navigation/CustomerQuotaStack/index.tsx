@@ -12,6 +12,7 @@ import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore"
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import DailyStatisticsScreen from "./DailyStatisticsScreen";
+import { useTheme } from "../../context/theme";
 
 const Stack = createStackNavigator(
   {
@@ -49,11 +50,19 @@ const CustomerQuotaStack: FunctionComponent<NavigationInjectedProps> & {
   const { allCampaignConfigs } = useContext(CampaignConfigsStoreContext);
   const hasDataFromStore = authCredentials[key] && allCampaignConfigs[key];
 
+  const { setTheme } = useTheme();
   useEffect(() => {
     if (!hasDataFromStore) {
       navigation.navigate("CampaignLocationsScreen");
     }
   }, [hasDataFromStore, navigation]);
+
+  useEffect(() => {
+    const { features } = allCampaignConfigs[key]!;
+    if (features) {
+      setTheme(features.theme);
+    }
+  }, [allCampaignConfigs, key, setTheme]);
 
   return hasDataFromStore ? (
     <AuthContextProvider authCredentials={authCredentials[key]!}>

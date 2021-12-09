@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AppText } from "../Layout/AppText";
 import { format, isSameDay } from "date-fns";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { useTheme } from "../../context/theme";
 
 interface TitleStatisticComponent {
   totalCount: number | null;
@@ -25,14 +26,12 @@ const styles = StyleSheet.create({
   smallText: {
     textAlign: "center",
     width: "100%",
-    color: "white",
   },
   statText: {
     fontFamily: "brand-bold",
     textAlign: "center",
     flexDirection: "column",
     width: "100%",
-    color: "white",
     fontSize: fontSize(7),
   },
   dateText: {
@@ -62,14 +61,32 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
   onPressPrevDay,
   onPressNextDay,
 }) => {
+  const { theme } = useTheme();
   const { i18nt } = useTranslate();
   return (
     <View style={styles.appHeaderWrapper}>
-      <AppText style={styles.smallText}>
+      <AppText
+        style={{
+          ...styles.smallText,
+          color: theme.statisticsScreen.smallTextColor,
+        }}
+      >
         {i18nt("statisticsScreen", "distributedAmount")}
       </AppText>
-      <AppText style={styles.statText}>{totalCount?.toLocaleString()}</AppText>
-      <AppText style={styles.smallText}>
+      <AppText
+        style={{
+          ...styles.statText,
+          color: theme.statisticsScreen.statTextColor,
+        }}
+      >
+        {totalCount?.toLocaleString()}
+      </AppText>
+      <AppText
+        style={{
+          ...styles.smallText,
+          color: theme.statisticsScreen.smallTextColor,
+        }}
+      >
         {i18nt("statisticsScreen", "lastDistributedTiming", undefined, {
           dateTime:
             lastTransactionTime !== null
@@ -83,7 +100,7 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
             <MaterialCommunityIcons
               name="chevron-left"
               size={size(4)}
-              color="white"
+              color={theme.statisticsScreen.enabledChevron}
               style={styles.chevron}
               accessibilityLabel="title-statistics-chevron-left"
               testID="title-statistics-chevron-left"
@@ -91,7 +108,12 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
             />
           </View>
         </TouchableOpacity>
-        <AppText style={styles.dateText}>
+        <AppText
+          style={{
+            ...styles.dateText,
+            color: theme.statisticsScreen.dateTextColor,
+          }}
+        >
           {format(new Date(currentTimestamp), "dd MMM yyyy")}
         </AppText>
         <TouchableOpacity onPress={onPressNextDay}>
@@ -100,9 +122,16 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
               name="chevron-right"
               size={size(4)}
               color={
-                isSameDay(currentTimestamp, Date.now()) ? "#597585" : "white"
+                isSameDay(currentTimestamp, Date.now())
+                  ? theme.statisticsScreen.disabledChevron
+                  : theme.statisticsScreen.enabledChevron
               }
-              style={styles.chevron}
+              style={{
+                ...styles.chevron,
+                opacity: isSameDay(currentTimestamp, Date.now())
+                  ? theme.statisticsScreen.disabledChevronOpacity
+                  : theme.statisticsScreen.enabledChevronOpacity,
+              }}
               accessibilityLabel="title-statistics-chevron-right"
               testID="title-statistics-chevron-right"
               accessible={true}

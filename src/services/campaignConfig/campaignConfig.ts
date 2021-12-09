@@ -66,6 +66,7 @@ const mockGetCampaignConfig = async (
         scannerType: "CODE_39",
         validation: "NRIC",
       },
+      theme: "DEFAULT",
     },
     policies: [
       {

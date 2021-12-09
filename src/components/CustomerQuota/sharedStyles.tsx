@@ -9,13 +9,11 @@ export const sharedStyles = StyleSheet.create({
   },
   successfulResultWrapper: {
     paddingTop: size(3),
-    backgroundColor: color("green", 10),
     borderColor: color("green", 30),
   },
   failureResultWrapper: {
     paddingTop: size(3),
     paddingBottom: size(4),
-    backgroundColor: color("red", 10),
     borderColor: color("red", 30),
   },
   ctaButtonsWrapper: {

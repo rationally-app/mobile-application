@@ -79,6 +79,9 @@ export type CustomTheme = {
     disabledChevron: string;
     disabledChevronOpacity: number;
   };
+  alertModal: {
+    titleColor: string;
+  };
 };
 
 export const govWalletTheme: CustomTheme = {
@@ -159,6 +162,9 @@ export const govWalletTheme: CustomTheme = {
     disabledChevron: "#424242",
     disabledChevronOpacity: 0.25,
   },
+  alertModal: {
+    titleColor: "#424242",
+  },
 };
 
 export const sallyTheme: CustomTheme = {
@@ -204,7 +210,7 @@ export const sallyTheme: CustomTheme = {
   },
   checkoutSuccessCard: {
     backgroundColor: color("green", 10),
-    thumbsUpIconColor: "#3C9618",
+    thumbsUpIconColor: color("blue-green", 40),
   },
   checkoutUnsuccessfulCard: {
     backgroundColor: color("red", 10),
@@ -219,8 +225,8 @@ export const sallyTheme: CustomTheme = {
   },
   collectCustomerDetails: {
     statsIconColor: color("blue", 50),
-    needHelpIcon: color("blue", 50),
-    needHelpText: color("blue", 50),
+    needHelpIcon: color("blue", 40),
+    needHelpText: color("blue", 40),
   },
   //TODO: check if we wanna change id input at all
   idInput: {
@@ -238,5 +244,8 @@ export const sallyTheme: CustomTheme = {
     enabledChevronOpacity: 1,
     disabledChevron: "#597585",
     disabledChevronOpacity: 1,
+  },
+  alertModal: {
+    titleColor: color("blue", 50),
   },
 };

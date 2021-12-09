@@ -23,6 +23,7 @@ import {
   sortTransactionsByCategory,
   BIG_NUMBER,
 } from "../utils";
+import { useTheme } from "../../../context/theme";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -46,6 +47,8 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
   ids,
   onCancel,
 }) => {
+  const { theme } = useTheme();
+
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { sessionToken, endpoint } = useContext(AuthContext);
@@ -81,12 +84,20 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
   );
   return (
     <View>
-      <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
-        <View style={sharedStyles.failureResultWrapper}>
+      <CustomerCard
+        ids={ids}
+        headerBackgroundColor={theme.customerCard.unsuccessfulHeaderColor}
+      >
+        <View
+          style={{
+            ...sharedStyles.failureResultWrapper,
+            backgroundColor: theme.checkoutUnsuccessfulCard.backgroundColor,
+          }}
+        >
           <View style={sharedStyles.resultWrapper}>
             <FontAwesome
               name="thumbs-down"
-              color={color("red", 60)}
+              color={theme.checkoutUnsuccessfulCard.thumbsDownIconColor}
               style={sharedStyles.icon}
             />
             <View style={sharedStyles.statusTitleWrapper}>

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { color, size, fontSize } from "../../common/styles";
+import { size, fontSize } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -7,6 +7,7 @@ import { withNavigation } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppText } from "../Layout/AppText";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { useTheme } from "../../context/theme";
 
 interface StatisticsHeader extends NavigationProps {
   mode?: AppMode;
@@ -58,6 +59,7 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
     navigation.navigate("CollectCustomerDetailsScreen");
   };
 
+  const { theme } = useTheme();
   const { i18nt } = useTranslate();
 
   return (
@@ -67,10 +69,13 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
           style={styles.backIcon}
           name="chevron-left"
           size={size(4)}
-          color={color("grey", 0)}
+          color={theme.statisticsScreen.headerBackButtonColor}
         />
         <AppText
-          style={styles.backText}
+          style={{
+            ...styles.backText,
+            color: theme.statisticsScreen.headerBackButtonColor,
+          }}
           accessibilityLabel="statistics-header-back-button"
           testID="statistics-header-back-button"
           accessible={true}
@@ -79,7 +84,10 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
         </AppText>
       </TouchableOpacity>
       <AppText
-        style={styles.header}
+        style={{
+          ...styles.header,
+          color: theme.statisticsScreen.headerTextColor,
+        }}
         accessibilityLabel="statistics-header-title"
         testID="statistics-header-title"
         accessible={true}
@@ -90,7 +98,7 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
         <MaterialCommunityIcons
           name="menu"
           size={size(4)}
-          color={color("grey", 0)}
+          color={theme.statisticsScreen.headerDrawerButtonColor}
         />
       </TouchableOpacity>
     </View>

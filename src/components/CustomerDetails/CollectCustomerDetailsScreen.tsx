@@ -13,7 +13,7 @@ import {
   BackHandler,
   TouchableOpacity,
 } from "react-native";
-import { size, fontSize, color } from "../../common/styles";
+import { size, fontSize } from "../../common/styles";
 import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
@@ -48,6 +48,7 @@ import {
 } from "../../context/identification";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { extractPassportIdFromEvent } from "../../utils/passportScanning";
+import { useTheme } from "../../context/theme";
 
 const styles = StyleSheet.create({
   content: {
@@ -99,6 +100,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
     });
   }, []);
 
+  const { theme } = useTheme();
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
@@ -313,7 +315,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               style={styles.statsIcon}
               name="poll"
               size={size(2)}
-              color={color("blue", 50)}
+              color={theme.collectCustomerDetails.statsIconColor}
             />
             <AppText
               style={styles.statsText}
