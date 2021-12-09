@@ -1,6 +1,6 @@
 import { ERROR_MESSAGE } from "../context/alert";
 
-const validate = (inputPassport: string): boolean => {
+export const validate = (inputPassport: string): boolean => {
   const passportRegex = "^[A-Za-z]{1,3}-[a-zA-Z0-9]{5,9}$";
   return inputPassport.match(passportRegex) !== null;
 };

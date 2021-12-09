@@ -1,13 +1,14 @@
-import { PolicyIdentifier } from "../../../types";
-import { ItemNoQuota } from "./ItemNoQuota";
-import { ItemCheckbox } from "./ItemCheckbox";
-import { ItemStepper } from "./ItemStepper";
 import { StyleSheet, View } from "react-native";
 import React, { FunctionComponent, useContext } from "react";
+import { ItemCheckbox } from "./ItemCheckbox";
+import { ItemIdentifiersCard } from "./ItemIdentifiersCard";
+import { ItemNoQuota } from "./ItemNoQuota";
+import { ItemStepper } from "./ItemStepper";
 import { CartHook, CartItem } from "../../../hooks/useCart/useCart";
 import { size } from "../../../common/styles";
 import { ProductContext } from "../../../context/products";
-import { ItemIdentifiersCard } from "./ItemIdentifiersCard";
+import { PolicyIdentifier } from "../../../types";
+import { validate as validatePassport } from "../../../utils/validatePassport";
 
 const styles = StyleSheet.create({
   cartItemComponent: {
@@ -26,18 +27,34 @@ const isPodCampaign = (cartItemCategory: string): boolean =>
   cartItemCategory.includes("tt-token");
 
 /**
- * Check if pod is chargeable
+ * Check if pod is chargeable.
  *
+ * Redemption of the first token is chargeable for passport customer.
+ *
+ * @param id customerId
  * @param identifiers policy identifiers
  * @param cartItem policy cart item
  */
 const isPodChargeable = (
+  id: string,
   identifiers: PolicyIdentifier[],
   cartItem: CartItem
-): boolean =>
-  identifiers.length > 0 &&
-  cartItem.category.includes("tt-token-lost") &&
-  cartItem.descriptionAlert === "*chargeable";
+): boolean => {
+  if (identifiers.length > 0) {
+    if (cartItem.category.includes("tt-token-lost")) {
+      if (cartItem.descriptionAlert === "*chargeable") {
+        return true;
+      }
+    } else if (validatePassport(id)) {
+      if (cartItem.category.includes("tt-token")) {
+        if (cartItem.descriptionAlert === "*chargeable") {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+};
 
 /**
  * Filters out the payment receipt identifier if not required
@@ -81,7 +98,8 @@ export const Item: FunctionComponent<{
   // Conditional check if receipt field should be removed,
   // only applied for Pod distribution
   if (isPodCampaign(cartItem.category)) {
-    if (!isPodChargeable(identifiers, cartItem)) {
+    // Pod distribution can only redeem for 1 user at a time
+    if (!isPodChargeable(ids[0], identifiers, cartItem)) {
       ({ newIdentifiers, newCartItem } = removePaymentReceiptField(
         identifiers,
         cartItem
