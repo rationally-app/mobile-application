@@ -377,6 +377,13 @@ describe("pod related utils", () => {
       ).toStrictEqual(false);
     });
 
+    it("should return false if there are no identifiers", () => {
+      expect.assertions(1);
+      expect(isPodChargeable(customerId, [], validCartItem)).toStrictEqual(
+        false
+      );
+    });
+
     describe("for passport customer", () => {
       customerId = "AFG-A111111";
 
