@@ -2,15 +2,25 @@ import {
   defaultIdentifier,
   defaultTranslationProps,
 } from "../../test/helpers/defaults";
-import { PastTransactionsResult, CampaignPolicy } from "../../types";
+import {
+  PastTransactionsResult,
+  CampaignPolicy,
+  PolicyIdentifier,
+  IdentifierInput,
+} from "../../types";
 import {
   formatQuantityText,
   sortTransactionsByOrder,
   groupTransactionsByCategory,
   sortTransactionsByCategory,
   TransactionsByCategoryMap,
+  isPodCampaign,
+  isPodChargeable,
+  removePaymentReceiptField,
 } from "./utils";
 import "../../common/i18n/i18nMock";
+import { CartItem } from "../../hooks/useCart/useCart";
+import { number } from "fp-ts";
 
 describe("formatQuantityText", () => {
   it("should return only the quantity when no unit is given", () => {
@@ -272,6 +282,134 @@ describe("Utility functions by category", () => {
           order: 2,
         },
       ]);
+    });
+  });
+});
+
+describe("pod related utils", () => {
+  const transactionTime = new Date(2020, 3, 1);
+  const defaultProductsIdentifierInputsForCart: IdentifierInput[] = [
+    {
+      label: "Voucher",
+      scanButtonType: "BARCODE",
+      textInputType: "STRING",
+      value: "",
+    },
+    {
+      label: "Token",
+      scanButtonType: "QR",
+      textInputType: "STRING",
+      value: "",
+    },
+  ];
+
+  let customerId = "S0000001I";
+  let validCartItem: CartItem;
+  let validIdentifiers: PolicyIdentifier[];
+  beforeEach(() => {
+    validCartItem = {
+      category: "toilet-paper",
+      descriptionAlert: undefined,
+      identifierInputs: defaultProductsIdentifierInputsForCart,
+      quantity: 1,
+      lastTransactionTime: transactionTime,
+      maxQuantity: 2,
+    };
+
+    validIdentifiers = [
+      {
+        label: "Voucher",
+        textInput: { visible: true, disabled: false, type: "STRING" },
+        scanButton: {
+          visible: true,
+          disabled: false,
+          type: "BARCODE",
+          text: "Scan",
+        },
+      },
+      {
+        label: "Token",
+        textInput: { visible: true, disabled: true, type: "STRING" },
+        scanButton: {
+          visible: true,
+          disabled: false,
+          type: "QR",
+          text: "Scan",
+        },
+      },
+    ];
+  });
+
+  describe("isPodCampaign", () => {
+    it("should return true for pod campaign", () => {
+      expect.assertions(1);
+      validCartItem["category"] = "tt-token";
+      expect(isPodCampaign(validCartItem.category)).toStrictEqual(true);
+    });
+
+    it("should return false for non-pod campaign", () => {
+      expect.assertions(1);
+      expect(isPodCampaign(validCartItem.category)).toStrictEqual(false);
+    });
+  });
+
+  describe("isPodChargeable", () => {
+    it("should return true for tt-token-lost category", () => {
+      expect.assertions(1);
+      validCartItem["category"] = "tt-token-lost";
+      validCartItem["descriptionAlert"] = "*chargeable";
+      expect(
+        isPodChargeable(customerId, validIdentifiers, validCartItem)
+      ).toStrictEqual(true);
+    });
+
+    describe("for passport customer", () => {
+      customerId = "AFG-A111111";
+
+      it("should return true for tt-token category", () => {
+        expect.assertions(1);
+        validCartItem["category"] = "tt-token";
+        expect(
+          isPodChargeable(customerId, validIdentifiers, validCartItem)
+        ).toStrictEqual(true);
+      });
+    });
+  });
+
+  describe("removePaymentReceiptField", () => {
+    it("should remove payment receipt field properly", () => {
+      expect.assertions(1);
+      validCartItem.identifierInputs.push({
+        label: "Payment receipt number",
+        scanButtonType: "QR",
+        textInputType: "PAYMENT_RECEIPT",
+        value: "",
+      });
+      expect(
+        removePaymentReceiptField(
+          [
+            ...validIdentifiers,
+            {
+              label: "Payment receipt number",
+              textInput: {
+                visible: true,
+                disabled: true,
+                type: "PAYMENT_RECEIPT",
+              },
+              scanButton: {
+                visible: true,
+                disabled: false,
+                type: "QR",
+                text: "Scan",
+              },
+            },
+          ],
+          validCartItem
+        )
+      ).toStrictEqual({
+        newIdentifiers: validIdentifiers,
+        newCartItem: validCartItem,
+      });
     });
   });
 });
