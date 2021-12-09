@@ -4,12 +4,12 @@ import {
   CampaignPolicy,
   PastTransactionsResult,
   PolicyIdentifier,
+  ValidationType,
 } from "../../types";
 import { getIdentifierInputDisplay } from "../../utils/getIdentifierInputDisplay";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
 import { TranslationHook } from "../../hooks/useTranslate/useTranslate";
 import { CartItem } from "../../hooks/useCart/useCart";
-import { validate as validatePassport } from "../../utils/validatePassport";
 
 export const BIG_NUMBER = 99999;
 
@@ -157,7 +157,7 @@ export const isPodCampaign = (cartItemCategory: string): boolean =>
  * @param cartItem policy cart item
  */
 export const isPodChargeable = (
-  id: string,
+  idType: ValidationType,
   identifiers: PolicyIdentifier[],
   cartItem: CartItem
 ): boolean => {
@@ -166,7 +166,7 @@ export const isPodChargeable = (
       if (cartItem.descriptionAlert === "*chargeable") {
         return true;
       }
-    } else if (validatePassport(id)) {
+    } else if (idType === "PASSPORT") {
       if (cartItem.category.includes("tt-token")) {
         return true;
       }

@@ -7,6 +7,7 @@ import {
   CampaignPolicy,
   PolicyIdentifier,
   IdentifierInput,
+  ValidationType,
 } from "../../types";
 import {
   formatQuantityText,
@@ -302,7 +303,7 @@ describe("pod related utils", () => {
     },
   ];
 
-  let customerId = "S0000001I";
+  let idType = "NRIC" as ValidationType;
   let validCartItem: CartItem;
   let validIdentifiers: PolicyIdentifier[];
   beforeEach(() => {
@@ -358,7 +359,7 @@ describe("pod related utils", () => {
       validCartItem["category"] = "tt-token-lost";
       validCartItem["descriptionAlert"] = "*chargeable";
       expect(
-        isPodChargeable(customerId, validIdentifiers, validCartItem)
+        isPodChargeable(idType, validIdentifiers, validCartItem)
       ).toStrictEqual(true);
     });
 
@@ -366,39 +367,37 @@ describe("pod related utils", () => {
       expect.assertions(1);
       validCartItem["category"] = "tt-token-lost";
       expect(
-        isPodChargeable(customerId, validIdentifiers, validCartItem)
+        isPodChargeable(idType, validIdentifiers, validCartItem)
       ).toStrictEqual(false);
     });
 
     it("should return false for non-pod category", () => {
       expect.assertions(1);
       expect(
-        isPodChargeable(customerId, validIdentifiers, validCartItem)
+        isPodChargeable(idType, validIdentifiers, validCartItem)
       ).toStrictEqual(false);
     });
 
     it("should return false if there are no identifiers", () => {
       expect.assertions(1);
-      expect(isPodChargeable(customerId, [], validCartItem)).toStrictEqual(
-        false
-      );
+      expect(isPodChargeable(idType, [], validCartItem)).toStrictEqual(false);
     });
 
     describe("for passport customer", () => {
-      customerId = "AFG-A111111";
+      idType = "PASSPORT";
 
       it("should return true for tt-token category", () => {
         expect.assertions(1);
         validCartItem["category"] = "tt-token";
         expect(
-          isPodChargeable(customerId, validIdentifiers, validCartItem)
+          isPodChargeable(idType, validIdentifiers, validCartItem)
         ).toStrictEqual(true);
       });
 
       it("should return false for non-pod category", () => {
         expect.assertions(1);
         expect(
-          isPodChargeable(customerId, validIdentifiers, validCartItem)
+          isPodChargeable(idType, validIdentifiers, validCartItem)
         ).toStrictEqual(false);
       });
     });
