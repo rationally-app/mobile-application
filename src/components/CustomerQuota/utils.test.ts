@@ -362,6 +362,21 @@ describe("pod related utils", () => {
       ).toStrictEqual(true);
     });
 
+    it("should return false for tt-token-lost category if it's not *chargeable", () => {
+      expect.assertions(1);
+      validCartItem["category"] = "tt-token-lost";
+      expect(
+        isPodChargeable(customerId, validIdentifiers, validCartItem)
+      ).toStrictEqual(false);
+    });
+
+    it("should return false for non-pod category", () => {
+      expect.assertions(1);
+      expect(
+        isPodChargeable(customerId, validIdentifiers, validCartItem)
+      ).toStrictEqual(false);
+    });
+
     describe("for passport customer", () => {
       customerId = "AFG-A111111";
 
@@ -371,6 +386,13 @@ describe("pod related utils", () => {
         expect(
           isPodChargeable(customerId, validIdentifiers, validCartItem)
         ).toStrictEqual(true);
+      });
+
+      it("should return false for non-pod category", () => {
+        expect.assertions(1);
+        expect(
+          isPodChargeable(customerId, validIdentifiers, validCartItem)
+        ).toStrictEqual(false);
       });
     });
   });
