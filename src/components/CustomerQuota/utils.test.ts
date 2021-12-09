@@ -20,7 +20,6 @@ import {
 } from "./utils";
 import "../../common/i18n/i18nMock";
 import { CartItem } from "../../hooks/useCart/useCart";
-import { number } from "fp-ts";
 
 describe("formatQuantityText", () => {
   it("should return only the quantity when no unit is given", () => {
