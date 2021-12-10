@@ -110,11 +110,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
         }}
       >
         <TopBackground
-          style={{
-            height: "50%",
-            maxHeight: "auto",
-            backgroundColor: "#FFF2F2",
-          }}
+          style={{ height: "50%", maxHeight: "auto" }}
           mode={config.appMode}
         />
         <View style={styles.content}>

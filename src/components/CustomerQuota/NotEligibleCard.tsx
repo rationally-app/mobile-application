@@ -7,6 +7,7 @@ import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { useTheme } from "../../context/theme";
 
 const NotEligibleTransactionTitle: FunctionComponent = () => {
   const { i18nt } = useTranslate();
@@ -42,19 +43,24 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
   ids,
   onCancel,
 }) => {
+  const { theme } = useTheme();
   const { i18nt } = useTranslate();
   return (
     <View>
-      <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
+      <CustomerCard
+        ids={ids}
+        headerBackgroundColor={theme.customerCard.unsuccessfulHeaderColor}
+      >
         <View
           style={[
             sharedStyles.resultWrapper,
             sharedStyles.failureResultWrapper,
+            { backgroundColor: theme.checkoutUnsuccessfulCard.backgroundColor },
           ]}
         >
           <FontAwesome
             name="thumbs-down"
-            color={color("red", 60)}
+            color={theme.checkoutUnsuccessfulCard.thumbsDownIconColor}
             style={sharedStyles.icon}
           />
           <AppText

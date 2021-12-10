@@ -52,8 +52,8 @@ export type CustomTheme = {
   };
   customerCard: {
     userIconColor: string;
-    successfulHeaderColor: string;
-    unsuccessfulHeaderColor: string;
+    successfulHeaderColor: ViewStyle["backgroundColor"];
+    unsuccessfulHeaderColor: ViewStyle["backgroundColor"];
     idTextColor: string;
     idLabelColor: string;
   };
@@ -91,6 +91,7 @@ export const govWalletTheme: CustomTheme = {
     return <GovWalletAppLogo />;
   },
   appTextColor: "#424242",
+  // FFF2F2
   topBackground: {
     production: {
       primaryColor: "#FAFAFA",
@@ -135,8 +136,8 @@ export const govWalletTheme: CustomTheme = {
   },
   customerCard: {
     userIconColor: "#424242",
-    successfulHeaderColor: "#FFFFFF", //TODO: confirm this
-    unsuccessfulHeaderColor: "#FFFFFF", //TODO: confirm this
+    successfulHeaderColor: "#FFFFFF" as ViewStyle["backgroundColor"], //TODO: confirm this
+    unsuccessfulHeaderColor: "#FFFFFF" as ViewStyle["backgroundColor"], //TODO: confirm this
     idTextColor: "#424242",
     idLabelColor: "#424242",
   },
