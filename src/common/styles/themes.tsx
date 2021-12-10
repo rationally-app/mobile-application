@@ -90,6 +90,7 @@ export const govWalletTheme: CustomTheme = {
     return <GovWalletAppLogo />;
   },
   appTextColor: "#424242",
+  // FFF2F2
   topBackground: {
     production: {
       primaryColor: "#F5F5F5",
