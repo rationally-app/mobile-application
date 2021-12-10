@@ -1,9 +1,15 @@
 import { differenceInSeconds } from "date-fns";
 import { Transaction, TransactionsGroup } from "./TransactionsGroup";
-import { CampaignPolicy, PastTransactionsResult } from "../../types";
+import {
+  CampaignPolicy,
+  PastTransactionsResult,
+  PolicyIdentifier,
+  ValidationType,
+} from "../../types";
 import { getIdentifierInputDisplay } from "../../utils/getIdentifierInputDisplay";
 import { formatDateTime } from "../../utils/dateTimeFormatter";
 import { TranslationHook } from "../../hooks/useTranslate/useTranslate";
+import { CartItem } from "../../hooks/useCart/useCart";
 
 export const BIG_NUMBER = 99999;
 
@@ -130,4 +136,68 @@ export const groupTransactionsByCategory = (
   });
 
   return transactionsByCategoryMap;
+};
+
+/**
+ * Check if the campaign contains tt-token
+ * to indicate pod campaign
+ *
+ * @param cartItemCategory category of item
+ */
+export const isPodCampaign = (cartItemCategory: string): boolean =>
+  cartItemCategory.includes("tt-token");
+
+/**
+ * Check if pod is chargeable.
+ *
+ * Redemption of the first token is chargeable for passport customer.
+ *
+ * @param id customerId
+ * @param identifiers policy identifiers
+ * @param cartItem policy cart item
+ */
+export const isPodChargeable = (
+  idType: ValidationType,
+  identifiers: PolicyIdentifier[],
+  cartItem: CartItem
+): boolean => {
+  if (identifiers.length > 0) {
+    if (cartItem.category.includes("tt-token-lost")) {
+      if (cartItem.descriptionAlert === "*chargeable") {
+        return true;
+      }
+    } else if (idType === "PASSPORT") {
+      if (cartItem.category.includes("tt-token")) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+/**
+ * Filters out the payment receipt identifier if not required
+ * which happens when pod is not chargeable
+ * Shape of identifiers and cartItem.identifierInputs are slightly different and
+ * hence require to filter separately
+ *
+ * @param identifiers identifiers that can be modified
+ * @param cartItem cartItem containing identifiers that can be modified
+ */
+export const removePaymentReceiptField = (
+  identifiers: PolicyIdentifier[],
+  cartItem: CartItem
+): {
+  newIdentifiers: PolicyIdentifier[];
+  newCartItem: CartItem;
+} => {
+  identifiers = identifiers.filter(
+    (identifier: { label: string }) =>
+      identifier.label != "Payment receipt number"
+  );
+  cartItem.identifierInputs = cartItem.identifierInputs.filter(
+    (identifier) => identifier.label != "Payment receipt number"
+  );
+
+  return { newIdentifiers: identifiers, newCartItem: cartItem };
 };

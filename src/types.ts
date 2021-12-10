@@ -88,6 +88,14 @@ const ScanButtonType = t.union([
   t.literal("CODE_39"),
 ]);
 
+const ValidationType = t.union([
+  t.literal("NRIC"),
+  t.literal("PASSPORT"),
+  t.literal("REGEX"),
+  t.literal("UIN"),
+  t.literal("EMAIL"),
+]);
+
 const PolicyIdentifier = t.intersection([
   t.type({
     label: t.string,
@@ -157,13 +165,7 @@ const IdentificationFlag = t.intersection([
       t.literal("QR"),
       t.literal("NONE"),
     ]),
-    validation: t.union([
-      t.literal("NRIC"),
-      t.literal("PASSPORT"),
-      t.literal("REGEX"),
-      t.literal("UIN"),
-      t.literal("EMAIL"),
-    ]),
+    validation: ValidationType,
   }),
   t.partial({
     label: t.string,
@@ -196,6 +198,7 @@ export const CampaignConfig = t.type({
 
 export type TextInputType = t.TypeOf<typeof TextInputType>;
 export type ScanButtonType = t.TypeOf<typeof ScanButtonType>;
+export type ValidationType = t.TypeOf<typeof ValidationType>;
 export type CategoryType = t.TypeOf<typeof CategoryType>;
 export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
 export type IdentificationFlag = t.TypeOf<typeof IdentificationFlag>;
