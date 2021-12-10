@@ -114,13 +114,11 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
       >
         <View style={styles.categoryWrapper}>
           <View style={styles.labelWrapper}>{label}</View>
-          {addonsLabel && (
-            <View style={styles.labelWrapper}>{addonsLabel}</View>
-          )}
           <View style={styles.toggleWrapper}>
             <Toggle isChecked={isChecked} />
           </View>
         </View>
+        {addonsLabel && <View style={styles.labelWrapper}>{addonsLabel}</View>}
         {addons && <View style={styles.addonsWrapper}>{addons}</View>}
       </View>
     </TouchableHighlight>
