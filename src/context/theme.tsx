@@ -1,6 +1,7 @@
 import React, {
   createContext,
   FunctionComponent,
+  useCallback,
   useContext,
   useState,
 } from "react";
@@ -22,15 +23,17 @@ export const ThemeContext = createContext<ThemeContext>({
 
 export const ThemeContextProvider: FunctionComponent = ({ children }) => {
   const [theme, setThemeValue] = useState(sallyTheme);
-  // const { features } = useContext(CampaignConfigContext);
 
-  const setTheme = (themeName?: string): void => {
-    if (themeName === "GOV_WALLET") {
-      setThemeValue(govWalletTheme);
-    } else {
-      setThemeValue(sallyTheme);
-    }
-  };
+  const setTheme = useCallback(
+    (themeName?: string) => {
+      if (themeName === "GOV_WALLET") {
+        setThemeValue(govWalletTheme);
+      } else {
+        setThemeValue(sallyTheme);
+      }
+    },
+    [setThemeValue]
+  );
 
   return (
     <ThemeContext.Provider value={{ theme: theme, setTheme }}>
