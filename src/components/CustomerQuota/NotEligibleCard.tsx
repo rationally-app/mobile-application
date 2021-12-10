@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { View } from "react-native";
 import { CustomerCard } from "./CustomerCard";
 import { AppText } from "../Layout/AppText";
-import { color, size } from "../../common/styles";
+import { size } from "../../common/styles";
 import { sharedStyles } from "./sharedStyles";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { FontAwesome } from "@expo/vector-icons";
