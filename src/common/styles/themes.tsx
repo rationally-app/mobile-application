@@ -65,11 +65,6 @@ export type CustomTheme = {
     needHelpIcon: string;
     needHelpText: string;
   };
-  //TODO: check if we wanna change id input at all
-  idInput: {
-    inputMinWidth: string;
-    inputAndButtonFlexDirection: string;
-  };
   statisticsScreen: {
     topBackgroundColor?: string;
     headerBackButtonColor: string;
@@ -149,11 +144,6 @@ export const govWalletTheme: CustomTheme = {
     needHelpIcon: "#424242",
     needHelpText: "#424242",
   },
-  //TODO: check if we wanna change id input at all
-  idInput: {
-    inputMinWidth: "100%",
-    inputAndButtonFlexDirection: "column",
-  },
   statisticsScreen: {
     topBackgroundColor: "#FFF2F2",
     headerBackButtonColor: "#424242",
@@ -232,11 +222,6 @@ export const sallyTheme: CustomTheme = {
     statsIconColor: color("blue", 50),
     needHelpIcon: color("blue", 40),
     needHelpText: color("blue", 40),
-  },
-  //TODO: check if we wanna change id input at all
-  idInput: {
-    inputMinWidth: "0%",
-    inputAndButtonFlexDirection: "row",
   },
   statisticsScreen: {
     headerBackButtonColor: "white",
