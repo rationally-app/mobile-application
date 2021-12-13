@@ -26,7 +26,7 @@ export const ThemeContextProvider: FunctionComponent = ({ children }) => {
 
   const setTheme = useCallback(
     (themeName?: string) => {
-      if (themeName === "GOV_WALLET") {
+      if (themeName === "GOVWALLET") {
         setThemeValue(govWalletTheme);
       } else {
         setThemeValue(sallyTheme);

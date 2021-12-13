@@ -86,7 +86,7 @@ export type CustomTheme = {
 };
 
 export const govWalletTheme: CustomTheme = {
-  name: "GOV_WALLET",
+  name: "GOVWALLET",
   // eslint-disable-next-line react/display-name
   logo: (): ReactElement => {
     return <GovWalletAppLogo />;
