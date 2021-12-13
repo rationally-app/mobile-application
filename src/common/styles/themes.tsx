@@ -94,12 +94,12 @@ export const govWalletTheme: CustomTheme = {
   appTextColor: "#424242",
   topBackground: {
     production: {
-      primaryColor: color("grey", 0),
-      secondaryColor: "#FAFAFA",
+      primaryColor: "#F5F5F5",
+      secondaryColor: "#F5F5F5",
     },
     staging: {
-      primaryColor: "#FAFAFA",
-      secondaryColor: "#FAFAFA",
+      primaryColor: "#F5F5F5",
+      secondaryColor: "#F5F5F5",
     },
   },
   darkButton: {

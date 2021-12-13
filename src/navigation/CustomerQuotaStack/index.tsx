@@ -31,6 +31,7 @@ const Stack = createStackNavigator(
   },
   {
     headerMode: "none",
+    cardStyle: { backgroundColor: "#F5F5F5" },
     transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
     navigationOptions: {
       gesturesEnabled: true,
