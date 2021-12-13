@@ -112,14 +112,10 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
         }}
       >
         <TopBackground
-<<<<<<< HEAD
           style={{
             height: "50%",
             maxHeight: "auto",
           }}
-=======
-          style={{ height: "50%", maxHeight: "auto" }}
->>>>>>> cb54f887 (feat: set unsuccessful theme colours for all related cards)
           mode={config.appMode}
           customPrimaryColor={theme.statisticsScreen.topBackgroundColor}
         />
