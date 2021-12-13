@@ -123,7 +123,7 @@ export const govWalletTheme: CustomTheme = {
     },
   },
   drawer: {
-    openButtonColor: "#C92031",
+    openButtonColor: "#424242",
     generalButtonColor: "#424242",
   },
   checkoutSuccessCard: {
