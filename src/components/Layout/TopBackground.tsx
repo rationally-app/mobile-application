@@ -6,18 +6,22 @@ import { useTheme } from "../../context/theme";
 
 interface TopBackground extends ViewProps {
   mode?: AppMode;
+  customPrimaryColor?: string;
 }
 
 export const TopBackground: FunctionComponent<TopBackground> = ({
   style,
   mode = AppMode.production,
+  customPrimaryColor,
 }) => {
   const { theme } = useTheme();
 
   const isProduction = mode === AppMode.production;
-  const primaryColor = isProduction
-    ? theme.topBackground.production.primaryColor
-    : theme.topBackground.staging.primaryColor;
+  const primaryColor =
+    customPrimaryColor ??
+    (isProduction
+      ? theme.topBackground.production.primaryColor
+      : theme.topBackground.staging.primaryColor);
   const secondaryColor = isProduction
     ? theme.topBackground.production.secondaryColor
     : theme.topBackground.staging.secondaryColor;

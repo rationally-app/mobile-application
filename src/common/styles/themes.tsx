@@ -68,6 +68,7 @@ export type CustomTheme = {
     inputAndButtonFlexDirection: string;
   };
   statisticsScreen: {
+    topBackgroundColor?: string;
     headerBackButtonColor: string;
     headerTextColor: string;
     headerDrawerButtonColor: string;
@@ -91,10 +92,9 @@ export const govWalletTheme: CustomTheme = {
     return <GovWalletAppLogo />;
   },
   appTextColor: "#424242",
-  // FFF2F2
   topBackground: {
     production: {
-      primaryColor: "#FAFAFA",
+      primaryColor: color("grey", 0),
       secondaryColor: "#FAFAFA",
     },
     staging: {
@@ -115,11 +115,11 @@ export const govWalletTheme: CustomTheme = {
   secondaryButton: {
     enabled: {
       borderColor: "#C92031" as ViewStyle["borderColor"],
-      textColor: "#C92031", // todo: typing
+      textColor: "#C92031",
     },
     disabled: {
       borderColor: color("grey", 40) as ViewStyle["borderColor"],
-      textColor: color("grey", 40), // todo: typing
+      textColor: color("grey", 40),
     },
   },
   drawer: {
@@ -136,8 +136,8 @@ export const govWalletTheme: CustomTheme = {
   },
   customerCard: {
     userIconColor: "#424242",
-    successfulHeaderColor: "#FFFFFF" as ViewStyle["backgroundColor"], //TODO: confirm this
-    unsuccessfulHeaderColor: "#FFFFFF" as ViewStyle["backgroundColor"], //TODO: confirm this
+    successfulHeaderColor: "#FFFFFF" as ViewStyle["backgroundColor"],
+    unsuccessfulHeaderColor: "#FFFFFF" as ViewStyle["backgroundColor"],
     idTextColor: "#424242",
     idLabelColor: "#424242",
   },
@@ -152,6 +152,7 @@ export const govWalletTheme: CustomTheme = {
     inputAndButtonFlexDirection: "column",
   },
   statisticsScreen: {
+    topBackgroundColor: "#FFF2F2",
     headerBackButtonColor: "#424242",
     headerTextColor: "#424242",
     headerDrawerButtonColor: "#424242",
