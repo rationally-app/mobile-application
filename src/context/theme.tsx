@@ -36,7 +36,7 @@ export const ThemeContextProvider: FunctionComponent = ({ children }) => {
   );
 
   return (
-    <ThemeContext.Provider value={{ theme: theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );
