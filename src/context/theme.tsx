@@ -8,6 +8,7 @@ import React, {
 import {
   CustomTheme,
   govWalletTheme,
+  GOVWALLET_THEME_NAME,
   sallyTheme,
 } from "../common/styles/themes";
 
@@ -26,7 +27,7 @@ export const ThemeContextProvider: FunctionComponent = ({ children }) => {
 
   const setTheme = useCallback(
     (themeName?: string) => {
-      if (themeName === "GOVWALLET") {
+      if (themeName === GOVWALLET_THEME_NAME) {
         setThemeValue(govWalletTheme);
       } else {
         setThemeValue(sallyTheme);

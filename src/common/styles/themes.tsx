@@ -4,6 +4,9 @@ import AppLogo from "../../../assets/Logo.svg";
 import GovWalletAppLogo from "../../../assets/gw-logo.svg";
 import { color } from "../../common/styles";
 
+export const SALLY_THEME_NAME = "DEFAULT";
+export const GOVWALLET_THEME_NAME = "GOVWALLET";
+
 export type CustomTheme = {
   name: string;
   logo: () => ReactElement;
@@ -86,7 +89,7 @@ export type CustomTheme = {
 };
 
 export const govWalletTheme: CustomTheme = {
-  name: "GOVWALLET",
+  name: GOVWALLET_THEME_NAME,
   // eslint-disable-next-line react/display-name
   logo: (): ReactElement => {
     return <GovWalletAppLogo />;
@@ -170,7 +173,7 @@ export const govWalletTheme: CustomTheme = {
 };
 
 export const sallyTheme: CustomTheme = {
-  name: "DEFAULT",
+  name: SALLY_THEME_NAME,
   // eslint-disable-next-line react/display-name
   logo: (): ReactElement => {
     return <AppLogo />;
