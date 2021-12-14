@@ -29,6 +29,7 @@ import {
   TranslationHook,
   useTranslate,
 } from "../../../hooks/useTranslate/useTranslate";
+import { useTheme } from "../../../context/theme";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -154,6 +155,8 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
   onCancel,
   quotaResponse,
 }) => {
+  const { theme } = useTheme();
+
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);
 
   const { policies: allProducts } = useContext(CampaignConfigContext);
@@ -200,12 +203,20 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   return (
     <View>
-      <CustomerCard ids={ids}>
-        <View style={sharedStyles.successfulResultWrapper}>
+      <CustomerCard
+        ids={ids}
+        headerBackgroundColor={theme.customerCard.successfulHeaderColor}
+      >
+        <View
+          style={{
+            ...sharedStyles.successfulResultWrapper,
+            backgroundColor: theme.checkoutSuccessCard.backgroundColor,
+          }}
+        >
           <View style={sharedStyles.resultWrapper}>
             <FontAwesome
               name="thumbs-up"
-              color={color("blue-green", 40)}
+              color={theme.checkoutSuccessCard.thumbsUpIconColor}
               style={sharedStyles.icon}
             />
             <AppText style={sharedStyles.statusTitleWrapper}>

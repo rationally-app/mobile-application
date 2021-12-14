@@ -11,6 +11,7 @@ import { AppText } from "../Layout/AppText";
 import { Feather } from "@expo/vector-icons";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { useTheme } from "../../context/theme";
 
 const styles = StyleSheet.create({
   header: {
@@ -18,7 +19,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: borderRadius(3),
     paddingHorizontal: size(2),
     paddingVertical: size(2),
-    backgroundColor: color("blue-green", 40),
     flexDirection: "row",
     alignItems: "flex-start",
   },
@@ -27,12 +27,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   idLabel: {
-    color: color("grey", 0),
     fontSize: fontSize(-2),
     marginBottom: 2,
   },
   idText: {
-    color: color("grey", 0),
     fontSize: fontSize(1),
     fontFamily: "brand-bold",
     lineHeight: 1.2 * fontSize(1),
@@ -83,6 +81,7 @@ export const CustomerCard: FunctionComponent<{
   onAddId?: () => void;
   headerBackgroundColor?: ViewStyle["backgroundColor"];
 }> = ({ ids, onAddId, headerBackgroundColor, children }) => {
+  const { theme } = useTheme();
   const { i18nt } = useTranslate();
   return (
     <Card
@@ -100,15 +99,30 @@ export const CustomerCard: FunctionComponent<{
             : {},
         ]}
       >
-        <Feather name="user" size={size(3)} color={color("grey", 0)} />
+        <Feather
+          name="user"
+          size={size(3)}
+          color={theme.customerCard.userIconColor}
+        />
         <View style={styles.headerText}>
-          <AppText style={styles.idLabel}>
+          <AppText
+            style={{
+              color: theme.customerCard.idLabelColor,
+              ...styles.idLabel,
+            }}
+          >
             {ids.length > 1
               ? i18nt("customerQuotaScreen", "idNumbers")
               : i18nt("customerQuotaScreen", "idNumber")}
           </AppText>
           {ids.map((id) => (
-            <AppText key={id} style={styles.idText}>
+            <AppText
+              key={id}
+              style={{
+                color: theme.customerCard.idTextColor,
+                ...styles.idText,
+              }}
+            >
               {id}
             </AppText>
           ))}

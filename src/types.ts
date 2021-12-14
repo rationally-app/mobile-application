@@ -185,6 +185,7 @@ const CampaignFeatures = t.intersection([
   t.partial({
     alternateIds: t.array(IdentificationFlag),
     apiVersion: t.union([t.literal("v1"), t.literal("v2")]),
+    theme: t.union([t.literal("DEFAULT"), t.literal("GOVWALLET")]),
   }),
 ]);
 

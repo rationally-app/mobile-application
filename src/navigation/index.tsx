@@ -12,6 +12,7 @@ import { DrawerContextProvider } from "../context/drawer";
 import { CampaignConfigsStoreContextProvider } from "../context/campaignConfigsStore";
 import { IdentificationContextProvider } from "../context/identification";
 import "../common/i18n/i18nSetup";
+import { ThemeContextProvider } from "../context/theme";
 
 const App = (): ReactElement => {
   return (
@@ -22,6 +23,7 @@ const App = (): ReactElement => {
             ConfigContextProvider,
             AuthStoreContextProvider,
             CampaignConfigsStoreContextProvider,
+            ThemeContextProvider,
             HelpModalContextProvider,
             AlertModalContextProvider,
             ImportantMessageContextProvider,

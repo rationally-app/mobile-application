@@ -8,6 +8,7 @@ import {
 } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import i18n from "i18n-js";
+import { SALLY_THEME_NAME } from "../../common/styles/themes";
 
 export class CampaignConfigError extends Error {
   constructor(message: string) {
@@ -66,6 +67,7 @@ const mockGetCampaignConfig = async (
         scannerType: "CODE_39",
         validation: "NRIC",
       },
+      theme: SALLY_THEME_NAME,
     },
     policies: [
       {

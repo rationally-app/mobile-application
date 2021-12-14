@@ -12,6 +12,7 @@ import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore"
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import DailyStatisticsScreen from "./DailyStatisticsScreen";
+import { useTheme } from "../../context/theme";
 
 const Stack = createStackNavigator(
   {
@@ -30,6 +31,7 @@ const Stack = createStackNavigator(
   },
   {
     headerMode: "none",
+    cardStyle: { backgroundColor: "#F5F5F5" },
     transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
     navigationOptions: {
       gesturesEnabled: true,
@@ -49,11 +51,19 @@ const CustomerQuotaStack: FunctionComponent<NavigationInjectedProps> & {
   const { allCampaignConfigs } = useContext(CampaignConfigsStoreContext);
   const hasDataFromStore = authCredentials[key] && allCampaignConfigs[key];
 
+  const { setTheme } = useTheme();
   useEffect(() => {
     if (!hasDataFromStore) {
       navigation.navigate("CampaignLocationsScreen");
     }
   }, [hasDataFromStore, navigation]);
+
+  useEffect(() => {
+    const { features } = allCampaignConfigs[key]!;
+    if (features) {
+      setTheme(features.theme);
+    }
+  }, [allCampaignConfigs, key, setTheme]);
 
   return hasDataFromStore ? (
     <AuthContextProvider authCredentials={authCredentials[key]!}>

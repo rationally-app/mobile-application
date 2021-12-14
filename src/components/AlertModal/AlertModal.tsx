@@ -6,13 +6,13 @@ import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import {
   borderRadius,
-  color,
   fontSize,
   shadow,
   size,
   normalize,
 } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
+import { useTheme } from "../../context/theme";
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontFamily: "brand-bold",
     fontSize: normalize(fontSize(2)),
-    color: color("blue", 50),
     textAlign: "center",
   },
   modalDescription: {
@@ -94,13 +93,18 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
   onCancel,
   onExit,
 }) => {
+  const { theme } = useTheme();
   const PrimaryButton = alertType === "WARN" ? DangerButton : DarkButton;
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           {alertType === "ERROR" && <AlertIcon style={styles.alertIcon} />}
-          <AppText style={styles.modalTitle}>{title}</AppText>
+          <AppText
+            style={{ ...styles.modalTitle, color: theme.alertModal.titleColor }}
+          >
+            {title}
+          </AppText>
           {description ? (
             <AppText style={styles.modalDescription}>{description}</AppText>
           ) : null}

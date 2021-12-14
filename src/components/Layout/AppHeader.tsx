@@ -1,11 +1,12 @@
 import React, { FunctionComponent } from "react";
-import { color, size } from "../../common/styles";
+import { size } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { withNavigation } from "react-navigation";
 import { NavigationProps } from "../../types";
 import { AppName } from "./AppName";
+import { useTheme } from "../../context/theme";
 
 interface AppHeader extends NavigationProps {
   mode?: AppMode;
@@ -24,6 +25,8 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   mode = AppMode.production,
   navigation,
 }) => {
+  const { theme } = useTheme();
+
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();
     navigation.openDrawer();
@@ -36,7 +39,7 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
         <MaterialCommunityIcons
           name="menu"
           size={size(4)}
-          color={color("grey", 0)}
+          color={theme.drawer.openButtonColor}
           accessibilityLabel="drawer-nav-open-button"
           testID="drawer-nav-open-button"
           accessible={true}

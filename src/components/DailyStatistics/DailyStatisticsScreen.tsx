@@ -26,6 +26,7 @@ import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
+import { useTheme } from "../../context/theme";
 
 const styles = StyleSheet.create({
   content: {
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
 const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   navigation,
 }) => {
+  const { theme } = useTheme();
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -110,8 +112,12 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
         }}
       >
         <TopBackground
-          style={{ height: "50%", maxHeight: "auto" }}
+          style={{
+            height: "50%",
+            maxHeight: "auto",
+          }}
           mode={config.appMode}
+          customPrimaryColor={theme.statisticsScreen.topBackgroundColor}
         />
         <View style={styles.content}>
           <View style={styles.headerText}>

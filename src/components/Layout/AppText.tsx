@@ -1,23 +1,28 @@
 import React, { FunctionComponent } from "react";
 import { TextProps, Text } from "react-native";
-import { fontSize, color } from "../../common/styles";
+import { fontSize } from "../../common/styles";
+import { useTheme } from "../../context/theme";
 
 export const AppText: FunctionComponent<TextProps> = ({
   children,
   style,
   ...props
-}) => (
-  <Text
-    style={[
-      {
-        fontFamily: "brand-regular",
-        fontSize: fontSize(0),
-        color: color("blue", 50),
-      },
-      style,
-    ]}
-    {...props}
-  >
-    {children}
-  </Text>
-);
+}) => {
+  const { theme } = useTheme();
+
+  return (
+    <Text
+      style={[
+        {
+          fontFamily: "brand-regular",
+          fontSize: fontSize(0),
+          color: theme.appTextColor,
+        },
+        style,
+      ]}
+      {...props}
+    >
+      {children}
+    </Text>
+  );
+};

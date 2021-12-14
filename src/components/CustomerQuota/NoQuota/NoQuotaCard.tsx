@@ -33,6 +33,7 @@ import { AlertModalContext } from "../../../context/alert";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { AuthContext } from "../../../context/auth";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
+import { useTheme } from "../../../context/theme";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -148,14 +149,23 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
     ? quotaResponse!.globalQuota[0]
     : undefined;
 
+  const { theme } = useTheme();
   return (
     <View>
-      <CustomerCard ids={ids} headerBackgroundColor={color("red", 60)}>
-        <View style={sharedStyles.failureResultWrapper}>
+      <CustomerCard
+        ids={ids}
+        headerBackgroundColor={theme.customerCard.unsuccessfulHeaderColor}
+      >
+        <View
+          style={{
+            ...sharedStyles.failureResultWrapper,
+            backgroundColor: theme.checkoutUnsuccessfulCard.backgroundColor,
+          }}
+        >
           <View style={sharedStyles.resultWrapper}>
             <FontAwesome
               name="thumbs-down"
-              color={color("red", 60)}
+              color={theme.checkoutUnsuccessfulCard.thumbsDownIconColor}
               style={sharedStyles.icon}
             />
             <AppText

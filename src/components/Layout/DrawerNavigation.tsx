@@ -19,6 +19,7 @@ import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { NavigationActions, NavigationDispatch } from "react-navigation";
+import { useTheme } from "../../context/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -87,6 +88,7 @@ export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
   onPress,
   accessibilityLabel = "drawer-nav-button",
 }) => {
+  const { theme } = useTheme();
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -97,7 +99,7 @@ export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
         <MaterialCommunityIcons
           name={icon}
           size={size(2.5)}
-          color={color("blue", 50)}
+          color={theme.drawer.generalButtonColor}
           style={{ marginRight: size(2) }}
         />
         <AppText style={styles.navLinkText}>{label}</AppText>
