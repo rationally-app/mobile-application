@@ -49,6 +49,7 @@ import {
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { extractPassportIdFromEvent } from "../../utils/passportScanning";
 import { useTheme } from "../../context/theme";
+import { GOVWALLET_THEME_NAME } from "../../common/styles/themes";
 
 const styles = StyleSheet.create({
   content: {
@@ -303,7 +304,12 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               </AppText>
             )}
             <AppText>
-              {i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
+              {theme.name === GOVWALLET_THEME_NAME
+                ? i18nt(
+                    "collectCustomerDetailsScreen",
+                    "recordEligibleMerchantQr"
+                  )
+                : i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
             </AppText>
             {getInputComponent()}
           </Card>

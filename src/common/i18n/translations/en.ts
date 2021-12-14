@@ -29,6 +29,11 @@ export const en: Translations = {
     goToStatistics: "Go to statistics",
     nationalityInputLabel: "Nationality (non-Singaporean)",
     passportInputLabel: "Passport number",
+    /**
+     * GovWallet related copy changes below
+     */
+    recordEligibleMerchantQr: "Record eligible merchant’s payment QR",
+    record: "Record",
   },
   idScanner: {
     enterIdManually: "Enter ID manually",
@@ -92,6 +97,14 @@ export const en: Translations = {
     valid: "Valid",
     complete: "Complete",
     quantity: "qty",
+    /**
+     * GovWallet-related copy changes below
+     */
+    recorded: "Recorded!",
+    recordedItems: "Item(s) recorded:",
+    previouslyRecordedRecent: "Previously recorded %{time} ago%{today}.",
+    previouslyRecordedDate: "Previously recorded on %{dateTime}%{today}.",
+    previouslyRecordedItems: "Items(s) recorded previously:",
   },
   checkoutUnsuccessfulScreen: {
     unsuccessful: "Unsuccessful return!",

@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { TextInput, View, StyleSheet, TextInputProps } from "react-native";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
+import { useTheme } from "../../context/theme";
 import { AppText } from "./AppText";
 
 const styles = StyleSheet.create({
@@ -18,13 +19,9 @@ const styles = StyleSheet.create({
   },
   inputEditable: {
     backgroundColor: color("grey", 0),
-    borderColor: color("blue", 50),
-    color: color("blue", 50),
   },
   inputNotEditable: {
     backgroundColor: color("grey", 10),
-    borderColor: color("grey", 40),
-    color: color("grey", 40),
   },
 });
 
@@ -39,26 +36,43 @@ export const InputWithLabel: FunctionComponent<InputWithLabel> = ({
   editable = true,
   accessibilityLabel = "input-with-label",
   ...props
-}) => (
-  <View>
-    <AppText
-      style={styles.label}
-      accessibilityLabel={`${accessibilityLabel}-label`}
-      testID={`${accessibilityLabel}-label`}
-      accessible={true}
-    >
-      {label}
-    </AppText>
-    <TextInput
-      style={[
-        styles.input,
-        ...(editable ? [styles.inputEditable] : [styles.inputNotEditable]),
-      ]}
-      editable={editable}
-      accessibilityLabel={`${accessibilityLabel}-input`}
-      testID={`${accessibilityLabel}-input`}
-      accessible={true}
-      {...props}
-    />
-  </View>
-);
+}) => {
+  const { theme } = useTheme();
+  return (
+    <View>
+      <AppText
+        style={styles.label}
+        accessibilityLabel={`${accessibilityLabel}-label`}
+        testID={`${accessibilityLabel}-label`}
+        accessible={true}
+      >
+        {label}
+      </AppText>
+      <TextInput
+        style={[
+          styles.input,
+          ...(editable
+            ? [
+                {
+                  ...styles.inputEditable,
+                  color: theme.inputWithLabel.editableInputTextColor,
+                  borderColor: theme.inputWithLabel.editableInputBorderColor,
+                },
+              ]
+            : [
+                {
+                  ...styles.inputNotEditable,
+                  color: theme.inputWithLabel.notEditableInputTextColor,
+                  borderColor: theme.inputWithLabel.notEditableInputBorderColor,
+                },
+              ]),
+        ]}
+        editable={editable}
+        accessibilityLabel={`${accessibilityLabel}-input`}
+        testID={`${accessibilityLabel}-input`}
+        accessible={true}
+        {...props}
+      />
+    </View>
+  );
+};
