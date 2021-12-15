@@ -91,13 +91,13 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCar
         <View
           style={{
             ...sharedStyles.failureResultWrapper,
-            backgroundColor: theme.checkoutUnsuccessCard.backgroundColor,
+            backgroundColor: theme.checkoutUnsuccessfulCard.backgroundColor,
           }}
         >
           <View style={sharedStyles.resultWrapper}>
             <FontAwesome
               name="thumbs-down"
-              color={theme.checkoutUnsuccessCard.thumbsDownIconColor}
+              color={theme.checkoutUnsuccessfulCard.thumbsDownIconColor}
               style={sharedStyles.icon}
             />
             <View style={sharedStyles.statusTitleWrapper}>

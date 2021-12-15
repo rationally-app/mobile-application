@@ -50,7 +50,7 @@ const transactionsGroupAppeal: TransactionInterface[] = [
 ];
 
 storiesOf("CustomerQuota", module)
-  .add("PurchaseUnsuccessCard", () => (
+  .add("PurchaseUnsuccessfulCard", () => (
     <View style={{ margin: size(3) }}>
       <CheckoutUnsuccessfulCard ids={ids} onCancel={() => undefined} />
     </View>

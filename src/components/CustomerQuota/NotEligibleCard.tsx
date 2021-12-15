@@ -55,12 +55,12 @@ export const NotEligibleCard: FunctionComponent<NotEligibleCard> = ({
           style={[
             sharedStyles.resultWrapper,
             sharedStyles.failureResultWrapper,
-            { backgroundColor: theme.checkoutUnsuccessCard.backgroundColor },
+            { backgroundColor: theme.checkoutUnsuccessfulCard.backgroundColor },
           ]}
         >
           <FontAwesome
             name="thumbs-down"
-            color={theme.checkoutUnsuccessCard.thumbsDownIconColor}
+            color={theme.checkoutUnsuccessfulCard.thumbsDownIconColor}
             style={sharedStyles.icon}
           />
           <AppText

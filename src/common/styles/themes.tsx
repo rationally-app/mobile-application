@@ -55,7 +55,7 @@ export type CustomTheme = {
     backgroundColor: string;
     thumbsUpIconColor: string;
   };
-  checkoutUnsuccessCard: {
+  checkoutUnsuccessfulCard: {
     backgroundColor: string;
     thumbsDownIconColor: string;
   };
@@ -140,7 +140,7 @@ export const govWalletTheme: CustomTheme = {
     backgroundColor: "#F8FFED",
     thumbsUpIconColor: "#3C9618",
   },
-  checkoutUnsuccessCard: {
+  checkoutUnsuccessfulCard: {
     backgroundColor: "#FFF2F2",
     thumbsDownIconColor: "#C92031",
   },
@@ -225,7 +225,7 @@ export const sallyTheme: CustomTheme = {
     backgroundColor: color("green", 10),
     thumbsUpIconColor: color("blue-green", 40),
   },
-  checkoutUnsuccessCard: {
+  checkoutUnsuccessfulCard: {
     backgroundColor: color("red", 10),
     thumbsDownIconColor: color("red", 60),
   },

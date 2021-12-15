@@ -160,13 +160,13 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
         <View
           style={{
             ...sharedStyles.failureResultWrapper,
-            backgroundColor: theme.checkoutUnsuccessCard.backgroundColor,
+            backgroundColor: theme.checkoutUnsuccessfulCard.backgroundColor,
           }}
         >
           <View style={sharedStyles.resultWrapper}>
             <FontAwesome
               name="thumbs-down"
-              color={theme.checkoutUnsuccessCard.thumbsDownIconColor}
+              color={theme.checkoutUnsuccessfulCard.thumbsDownIconColor}
               style={sharedStyles.icon}
             />
             <AppText
