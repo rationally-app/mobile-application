@@ -104,7 +104,7 @@ export const en: Translations = {
     recordedItems: "Item(s) recorded:",
     previouslyRecordedRecent: "Previously recorded %{time} ago%{today}.",
     previouslyRecordedDate: "Previously recorded on %{dateTime}%{today}.",
-    previouslyRecordedItems: "Items(s) recorded previously:",
+    previouslyRecordedItems: "Item(s) recorded previously:",
   },
   checkoutUnsuccessfulScreen: {
     unsuccessful: "Unsuccessful return!",
