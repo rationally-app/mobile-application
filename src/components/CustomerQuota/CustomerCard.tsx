@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
   },
   childrenWrapper: {
     overflow: "hidden",
-    borderBottomLeftRadius: borderRadius(4),
-    borderBottomRightRadius: borderRadius(4),
+    borderBottomLeftRadius: borderRadius(3),
+    borderBottomRightRadius: borderRadius(3),
   },
 });
 
