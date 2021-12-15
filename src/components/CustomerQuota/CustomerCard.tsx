@@ -96,7 +96,7 @@ export const CustomerCard: FunctionComponent<{
           styles.header,
           headerBackgroundColor
             ? { backgroundColor: headerBackgroundColor }
-            : {},
+            : { backgroundColor: theme.customerCard.successfulHeaderColor },
         ]}
       >
         <Feather
