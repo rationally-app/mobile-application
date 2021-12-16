@@ -96,31 +96,32 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
   onToggle,
 }) => {
   return (
-    <TouchableHighlight
-      onPress={() => {
-        onToggle(!isChecked);
-        if (Platform.OS === "android") {
-          Vibration.vibrate(10);
-        }
-      }}
-      underlayColor="transparent"
-      activeOpacity={1}
+    <View
+      style={[
+        styles.wrapper,
+        isChecked ? styles.wrapperChecked : styles.wrapperUnchecked,
+      ]}
     >
-      <View
-        style={[
-          styles.wrapper,
-          isChecked ? styles.wrapperChecked : styles.wrapperUnchecked,
-        ]}
-      >
-        <View style={styles.categoryWrapper}>
-          <View style={styles.labelWrapper}>{label}</View>
-          <View style={styles.toggleWrapper}>
-            <Toggle isChecked={isChecked} />
-          </View>
-        </View>
-        {addonsLabel && <View style={styles.labelWrapper}>{addonsLabel}</View>}
-        {addons && <View style={styles.addonsWrapper}>{addons}</View>}
+      <View style={styles.categoryWrapper}>
+        <View style={styles.labelWrapper}>{label}</View>
+
+        <TouchableHighlight
+          style={styles.toggleWrapper}
+          onPress={() => {
+            onToggle(!isChecked);
+            if (Platform.OS === "android") {
+              Vibration.vibrate(10);
+            }
+          }}
+          underlayColor="transparent"
+          activeOpacity={1}
+        >
+          <Toggle isChecked={isChecked} />
+        </TouchableHighlight>
       </View>
-    </TouchableHighlight>
+
+      {addonsLabel && <View style={styles.labelWrapper}>{addonsLabel}</View>}
+      {addons && <View style={styles.addonsWrapper}>{addons}</View>}
+    </View>
   );
 };
