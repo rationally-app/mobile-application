@@ -11,6 +11,12 @@ export type CustomTheme = {
   name: string;
   logo: () => ReactElement;
   appTextColor: string;
+  inputWithLabel: {
+    editableInputTextColor: string;
+    editableInputBorderColor: string;
+    notEditableInputTextColor: string;
+    notEditableInputBorderColor: string;
+  };
   topBackground: {
     production: {
       primaryColor: string;
@@ -90,6 +96,12 @@ export const govWalletTheme: CustomTheme = {
     return <GovWalletAppLogo />;
   },
   appTextColor: "#424242",
+  inputWithLabel: {
+    editableInputTextColor: "#424242",
+    editableInputBorderColor: "#BDBDBD",
+    notEditableInputTextColor: color("grey", 40),
+    notEditableInputBorderColor: color("grey", 40),
+  },
   topBackground: {
     production: {
       primaryColor: "#F5F5F5",
@@ -130,7 +142,7 @@ export const govWalletTheme: CustomTheme = {
   },
   checkoutUnsuccessfulCard: {
     backgroundColor: "#FFF2F2",
-    thumbsDownIconColor: "C92031",
+    thumbsDownIconColor: "#C92031",
   },
   customerCard: {
     userIconColor: "#424242",
@@ -169,6 +181,12 @@ export const sallyTheme: CustomTheme = {
     return <AppLogo />;
   },
   appTextColor: color("blue", 50),
+  inputWithLabel: {
+    editableInputTextColor: color("blue", 50),
+    editableInputBorderColor: color("blue", 50),
+    notEditableInputTextColor: color("grey", 40),
+    notEditableInputBorderColor: color("grey", 40),
+  },
   topBackground: {
     production: {
       primaryColor: color("blue", 50),
