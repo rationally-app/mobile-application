@@ -116,6 +116,7 @@ export const Checkbox: FunctionComponent<Checkbox> = ({
           underlayColor="transparent"
           activeOpacity={1}
           testID="item-checkbox"
+          accessibilityLabel="item-checkbox"
         >
           <Toggle isChecked={isChecked} />
         </TouchableHighlight>
