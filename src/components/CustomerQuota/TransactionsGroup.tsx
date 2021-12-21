@@ -33,6 +33,7 @@ export const styles = StyleSheet.create({
   },
   itemDetail: {
     fontSize: fontSize(-1),
+    marginRight: size(3),
   },
   appealLabel: {
     fontSize: fontSize(-1),

@@ -333,6 +333,12 @@ export const mockPastTransactions = async (
         category: "toilet-paper",
         quantity: 1,
         transactionTime,
+        identifierInputs: [
+          {
+            label: "toilet-paper label",
+            value: `${"loremipsum".repeat(15)}`,
+          },
+        ],
       },
       {
         category: "instant-noodles",
@@ -348,6 +354,17 @@ export const mockPastTransactions = async (
         category: "vouchers",
         quantity: 5,
         transactionTime,
+      },
+      {
+        category: "store",
+        quantity: 1,
+        transactionTime,
+        identifierInputs: [
+          {
+            label: "store label",
+            value: `${"loremipsum".repeat(15)}`,
+          },
+        ],
       },
     ],
   };
