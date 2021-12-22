@@ -143,5 +143,10 @@ describe("fullPhoneNumberValidator", () => {
     expect(fullPhoneNumberValidator("+6598261749")).toBe(true);
     expect(fullPhoneNumberValidator("+6598219374")).toBe(true);
     expect(fullPhoneNumberValidator("+6580230000")).toBe(true);
+
+    expect(fullPhoneNumberValidator("+6530230000")).toBe(true);
+    expect(fullPhoneNumberValidator("+6530230000")).toBe(true);
+    expect(fullPhoneNumberValidator("+6560230000")).toBe(true);
+    expect(fullPhoneNumberValidator("+6560230000")).toBe(true);
   });
 });
