@@ -1,7 +1,7 @@
 import { PhoneNumberUtil, PhoneNumber } from "google-libphonenumber";
 
 const DEFAULT_COUNTRY_CODE = "+65";
-const DEFAULT_SG_PHONE_NUMBER_REGEX = /^[3689][0-9]{7}$/g;
+const DEFAULT_SG_PHONE_NUMBER_REGEX = /^[3689][0-9]{7}$/;
 
 export const createFullNumber = (countryCode: string, number: string): string =>
   `${countryCode}${number}`.replace(/\s/g, "");

@@ -138,11 +138,16 @@ describe("fullPhoneNumberValidator", () => {
   });
 
   it("should return true for valid phone numbers", () => {
-    expect.assertions(4);
+    expect.assertions(12);
     expect(fullPhoneNumberValidator("+6596247612")).toBe(true);
     expect(fullPhoneNumberValidator("+6598261749")).toBe(true);
     expect(fullPhoneNumberValidator("+6598219374")).toBe(true);
     expect(fullPhoneNumberValidator("+6580230000")).toBe(true);
+
+    expect(fullPhoneNumberValidator("+6581111111")).toBe(true);
+    expect(fullPhoneNumberValidator("+6581221222")).toBe(true);
+    expect(fullPhoneNumberValidator("+6591111111")).toBe(true);
+    expect(fullPhoneNumberValidator("+6591222122")).toBe(true);
 
     expect(fullPhoneNumberValidator("+6530230000")).toBe(true);
     expect(fullPhoneNumberValidator("+6530230000")).toBe(true);
