@@ -49,7 +49,6 @@ import {
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { extractPassportIdFromEvent } from "../../utils/passportScanning";
 import { useTheme } from "../../context/theme";
-import { GOVWALLET_THEME_NAME } from "../../common/styles/themes";
 
 const styles = StyleSheet.create({
   content: {
@@ -270,6 +269,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const tCampaignName = c13nt(features?.campaignName ?? "");
+  const checkEligibleItemsKey = "checkEligibleItems";
 
   return (
     <>
@@ -304,12 +304,9 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               </AppText>
             )}
             <AppText>
-              {theme.name === GOVWALLET_THEME_NAME
-                ? i18nt(
-                    "collectCustomerDetailsScreen",
-                    "recordEligibleMerchantQr"
-                  )
-                : i18nt("collectCustomerDetailsScreen", "checkEligibleItems")}
+              {c13nt(checkEligibleItemsKey) !== checkEligibleItemsKey
+                ? c13nt(checkEligibleItemsKey)
+                : i18nt("collectCustomerDetailsScreen", checkEligibleItemsKey)}
             </AppText>
             {getInputComponent()}
           </Card>

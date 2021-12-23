@@ -34,7 +34,6 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { AuthContext } from "../../../context/auth";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../../context/theme";
-import { GOVWALLET_THEME_NAME } from "../../../common/styles/themes";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -126,6 +125,7 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   const translationProps = useTranslate();
   const { i18nt, c13nt } = translationProps;
+  const previouslyRedeemedItemsKey = "previouslyRedeemedItems";
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
@@ -213,14 +213,12 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                     {`${c13nt(
                       "checkoutSuccessPreviousItems",
                       undefined,
-                      theme.name === GOVWALLET_THEME_NAME
-                        ? i18nt(
-                            "checkoutSuccessScreen",
-                            "previouslyRecordedItems"
-                          )
+                      c13nt(previouslyRedeemedItemsKey) !==
+                        previouslyRedeemedItemsKey
+                        ? c13nt(previouslyRedeemedItemsKey)
                         : i18nt(
                             "checkoutSuccessScreen",
-                            "previouslyRedeemedItems"
+                            previouslyRedeemedItemsKey
                           )
                     )}`}
                   </AppText>

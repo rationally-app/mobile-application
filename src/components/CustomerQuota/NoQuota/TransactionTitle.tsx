@@ -7,32 +7,24 @@ import {
   formatTimeDifference,
 } from "../../../utils/dateTimeFormatter";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
-import { useTheme } from "../../../context/theme";
-import { GOVWALLET_THEME_NAME } from "../../../common/styles/themes";
 
 export const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
   toggleTimeSensitiveTitle: boolean;
 }> = ({ transactionTime, toggleTimeSensitiveTitle }) => {
-  const { theme } = useTheme();
-  const { i18nt } = useTranslate();
+  const { c13nt, i18nt } = useTranslate();
+  const limitReachedDateKey = "limitReachedDate";
   const today = toggleTimeSensitiveTitle
     ? `${i18nt("checkoutSuccessScreen", "today")}`
     : "";
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {theme.name === GOVWALLET_THEME_NAME
-          ? i18nt(
-              "checkoutSuccessScreen",
-              "previouslyRecordedDate",
-              undefined,
-              {
-                dateTime: formatDateTime(transactionTime),
-                today,
-              }
-            )
-          : i18nt("checkoutSuccessScreen", "limitReachedDate", undefined, {
+        {c13nt(limitReachedDateKey) !== limitReachedDateKey
+          ? c13nt(limitReachedDateKey)
+              .replace("${dateTime}", formatDateTime(transactionTime))
+              .replace("${today}", today)
+          : i18nt("checkoutSuccessScreen", limitReachedDateKey, undefined, {
               dateTime: formatDateTime(transactionTime),
               today,
             })}
@@ -46,28 +38,27 @@ export const RecentTransactionTitle: FunctionComponent<{
   transactionTime: Date;
   toggleTimeSensitiveTitle: boolean;
 }> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => {
-  const { theme } = useTheme();
-  const { i18nt } = useTranslate();
+  const { c13nt, i18nt } = useTranslate();
+  const limitReachedRecentKey = "limitReachedRecent";
   const today = toggleTimeSensitiveTitle
     ? `${i18nt("checkoutSuccessScreen", "today")}`
     : "";
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {theme.name === GOVWALLET_THEME_NAME
-          ? `${i18nt(
+        {c13nt(limitReachedRecentKey) !== limitReachedRecentKey
+          ? c13nt(limitReachedRecentKey)
+              .replace("${time}", formatTimeDifference(now, transactionTime))
+              .replace("${today}", today)
+          : `${i18nt(
               "checkoutSuccessScreen",
-              "previouslyRecordedRecent",
+              limitReachedRecentKey,
               undefined,
               {
                 time: formatTimeDifference(now, transactionTime),
                 today,
               }
-            )}`
-          : `${i18nt("checkoutSuccessScreen", "limitReachedRecent", undefined, {
-              time: formatTimeDifference(now, transactionTime),
-              today,
-            })}`}
+            )}`}
       </AppText>
     </>
   );

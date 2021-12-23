@@ -30,7 +30,6 @@ import {
   useTranslate,
 } from "../../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../../context/theme";
-import { GOVWALLET_THEME_NAME } from "../../../common/styles/themes";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -179,6 +178,8 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   const translationProps = useTranslate();
   const { c13nt, i18nt } = translationProps;
+  const redeemedKey = "redeemed";
+  const redeemedItemsKey = "redeemedItems";
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
     allProducts || [],
@@ -230,9 +231,9 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                 {`${c13nt(
                   "checkoutSuccessTitle",
                   undefined,
-                  theme.name === GOVWALLET_THEME_NAME
-                    ? i18nt("checkoutSuccessScreen", "recorded")
-                    : i18nt("checkoutSuccessScreen", "redeemed")
+                  c13nt(redeemedKey) !== redeemedKey
+                    ? c13nt(redeemedKey)
+                    : i18nt("checkoutSuccessScreen", redeemedKey)
                 )}`}
               </AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
@@ -247,9 +248,9 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                 {`${c13nt(
                   "checkoutSuccessDescription",
                   undefined,
-                  theme.name === GOVWALLET_THEME_NAME
-                    ? i18nt("checkoutSuccessScreen", "recordedItems")
-                    : i18nt("checkoutSuccessScreen", "redeemedItems")
+                  c13nt(redeemedItemsKey) !== redeemedItemsKey
+                    ? c13nt(redeemedItemsKey)
+                    : i18nt("checkoutSuccessScreen", redeemedItemsKey)
                 )}`}
               </AppText>
               <View style={styles.checkoutItemsList}>
