@@ -132,16 +132,39 @@ describe("countryCodeValidator", () => {
 
 describe("fullPhoneNumberValidator", () => {
   it("should return false for invalid phone numbers", () => {
-    expect.assertions(2);
+    expect.assertions(12);
     expect(fullPhoneNumberValidator("+659")).toBe(false);
     expect(fullPhoneNumberValidator("+191234567")).toBe(false);
+
+    expect(fullPhoneNumberValidator("+658234567890")).toBe(false);
+    expect(fullPhoneNumberValidator("+659234567")).toBe(false);
+
+    expect(fullPhoneNumberValidator("+6502345678")).toBe(false);
+    expect(fullPhoneNumberValidator("+6512345678")).toBe(false);
+    expect(fullPhoneNumberValidator("+6522345678")).toBe(false);
+    expect(fullPhoneNumberValidator("+6542345678")).toBe(false);
+    expect(fullPhoneNumberValidator("+6552345678")).toBe(false);
+    expect(fullPhoneNumberValidator("+6572345678")).toBe(false);
+
+    expect(fullPhoneNumberValidator("+65!@#$%^&*")).toBe(false);
+    expect(fullPhoneNumberValidator("+65😋😋😋😋😋")).toBe(false);
   });
 
   it("should return true for valid phone numbers", () => {
-    expect.assertions(4);
+    expect.assertions(12);
     expect(fullPhoneNumberValidator("+6596247612")).toBe(true);
     expect(fullPhoneNumberValidator("+6598261749")).toBe(true);
     expect(fullPhoneNumberValidator("+6598219374")).toBe(true);
     expect(fullPhoneNumberValidator("+6580230000")).toBe(true);
+
+    expect(fullPhoneNumberValidator("+6581111111")).toBe(true);
+    expect(fullPhoneNumberValidator("+6581221222")).toBe(true);
+    expect(fullPhoneNumberValidator("+6591111111")).toBe(true);
+    expect(fullPhoneNumberValidator("+6591222122")).toBe(true);
+
+    expect(fullPhoneNumberValidator("+6530230000")).toBe(true);
+    expect(fullPhoneNumberValidator("+6530230000")).toBe(true);
+    expect(fullPhoneNumberValidator("+6560230000")).toBe(true);
+    expect(fullPhoneNumberValidator("+6560230000")).toBe(true);
   });
 });
