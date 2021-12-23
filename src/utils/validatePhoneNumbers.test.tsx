@@ -132,7 +132,7 @@ describe("countryCodeValidator", () => {
 
 describe("fullPhoneNumberValidator", () => {
   it("should return false for invalid phone numbers", () => {
-    expect.assertions(13);
+    expect.assertions(12);
     expect(fullPhoneNumberValidator("+659")).toBe(false);
     expect(fullPhoneNumberValidator("+191234567")).toBe(false);
 
