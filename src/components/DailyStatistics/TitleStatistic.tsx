@@ -6,7 +6,9 @@ import { AppText } from "../Layout/AppText";
 import { format, isSameDay } from "date-fns";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../context/theme";
-import { GOVWALLET_THEME_NAME } from "../../common/styles/themes";
+
+const distributedAmount = "distributedAmount";
+const lastDistributedTiming = "lastDistributedTiming";
 
 interface TitleStatisticComponent {
   totalCount: number | null;
@@ -63,8 +65,8 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
   onPressNextDay,
 }) => {
   const { theme } = useTheme();
-  const { i18nt } = useTranslate();
-  const recordedDate = {
+  const { i18nt, c13nt } = useTranslate();
+  const dateTime = {
     dateTime:
       lastTransactionTime !== null ? format(lastTransactionTime, "h:mma") : "-",
   };
@@ -76,9 +78,9 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
           color: theme.statisticsScreen.smallTextColor,
         }}
       >
-        {theme.name === GOVWALLET_THEME_NAME
-          ? i18nt("statisticsScreen", "recordedQty")
-          : i18nt("statisticsScreen", "distributedAmount")}
+        {c13nt(distributedAmount) !== distributedAmount
+          ? c13nt(distributedAmount)
+          : i18nt("statisticsScreen", distributedAmount)}
       </AppText>
       <AppText
         style={{
@@ -94,18 +96,16 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
           color: theme.statisticsScreen.smallTextColor,
         }}
       >
-        {theme.name === GOVWALLET_THEME_NAME
-          ? i18nt(
-              "statisticsScreen",
-              "lastRecordedTiming",
-              undefined,
-              recordedDate
+        {c13nt(lastDistributedTiming) !== lastDistributedTiming
+          ? c13nt(lastDistributedTiming).replace(
+              "%{dateTime}",
+              dateTime.dateTime
             )
           : i18nt(
               "statisticsScreen",
-              "lastDistributedTiming",
+              lastDistributedTiming,
               undefined,
-              recordedDate
+              dateTime
             )}
       </AppText>
       <View style={styles.dateToggle}>

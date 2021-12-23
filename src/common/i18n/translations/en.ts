@@ -123,11 +123,6 @@ export const en: Translations = {
     title: "Statistics",
     back: "Back",
     quantity: "qty",
-    /**
-     * GovWallet-related copy changes below
-     */
-    recordedQty: "You have recorded",
-    lastRecordedTiming: "Last recorded at %{dateTime}",
   },
   notEligibleScreen: {
     notEligible: "Not eligible",

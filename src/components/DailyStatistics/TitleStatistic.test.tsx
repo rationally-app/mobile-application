@@ -1,12 +1,36 @@
 import { render, cleanup } from "@testing-library/react-native";
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { TitleStatistic } from "./TitleStatistic";
 import "../../common/i18n/i18nMock";
 import { ThemeContext } from "../../../src/context/theme";
 import { govWalletTheme } from "../../../src/common/styles/themes";
+import { CampaignConfigContext } from "../../../src/context/campaignConfig";
 
 const onPressPrevDay = jest.fn();
 const onPressNextDay = jest.fn();
+
+const GovWalletCampaignWrapper: FunctionComponent = ({
+  children,
+}): JSX.Element => {
+  return (
+    <ThemeContext.Provider
+      value={{ theme: govWalletTheme, setTheme: () => {} }}
+    >
+      <CampaignConfigContext.Provider
+        value={{
+          policies: null,
+          features: null,
+          c13n: {
+            distributedAmount: "You have recorded",
+            lastDistributedTiming: "Last recorded at %{dateTime}",
+          },
+        }}
+      >
+        {children}
+      </CampaignConfigContext.Provider>
+    </ThemeContext.Provider>
+  );
+};
 
 describe("TitleStatistic", () => {
   afterEach(() => {
@@ -51,9 +75,7 @@ describe("TitleStatistic", () => {
   it("should render correctly for GovWallet", async () => {
     expect.assertions(4);
     const { queryByText } = render(
-      <ThemeContext.Provider
-        value={{ theme: govWalletTheme, setTheme: () => {} }}
-      >
+      <GovWalletCampaignWrapper>
         <TitleStatistic
           totalCount={999}
           currentTimestamp={0}
@@ -61,7 +83,7 @@ describe("TitleStatistic", () => {
           onPressPrevDay={onPressPrevDay}
           onPressNextDay={onPressNextDay}
         />
-      </ThemeContext.Provider>
+      </GovWalletCampaignWrapper>
     );
 
     expect(queryByText("You have recorded")).not.toBeNull();
@@ -73,9 +95,7 @@ describe("TitleStatistic", () => {
   it("should render null correctly for GovWallet", async () => {
     expect.assertions(4);
     const { queryByText, queryByDisplayValue } = render(
-      <ThemeContext.Provider
-        value={{ theme: govWalletTheme, setTheme: () => {} }}
-      >
+      <GovWalletCampaignWrapper>
         <TitleStatistic
           totalCount={null}
           currentTimestamp={0}
@@ -83,7 +103,7 @@ describe("TitleStatistic", () => {
           onPressPrevDay={onPressPrevDay}
           onPressNextDay={onPressNextDay}
         />
-      </ThemeContext.Provider>
+      </GovWalletCampaignWrapper>
     );
 
     expect(queryByText("You have recorded")).not.toBeNull();

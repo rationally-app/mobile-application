@@ -162,7 +162,10 @@ storiesOf("Statistics", module)
           value={{
             policies: products,
             features: null,
-            c13n: {},
+            c13n: {
+              distributedAmount: "You have recorded",
+              lastDistributedTiming: "Last recorded at %{dateTime}",
+            },
           }}
         >
           {reactNavigationDecorator(Story)}
