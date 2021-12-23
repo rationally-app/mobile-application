@@ -66,10 +66,9 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
 }) => {
   const { theme } = useTheme();
   const { i18nt, c13nt } = useTranslate();
-  const dateTime = {
-    dateTime:
-      lastTransactionTime !== null ? format(lastTransactionTime, "h:mma") : "-",
-  };
+  const formattedLastTransactionTime =
+    lastTransactionTime !== null ? format(lastTransactionTime, "h:mma") : "-";
+
   return (
     <View style={styles.appHeaderWrapper}>
       <AppText
@@ -99,14 +98,11 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
         {c13nt(lastDistributedTiming) !== lastDistributedTiming
           ? c13nt(lastDistributedTiming).replace(
               "%{dateTime}",
-              dateTime.dateTime
+              formattedLastTransactionTime
             )
-          : i18nt(
-              "statisticsScreen",
-              lastDistributedTiming,
-              undefined,
-              dateTime
-            )}
+          : i18nt("statisticsScreen", lastDistributedTiming, undefined, {
+              dateTime: formattedLastTransactionTime,
+            })}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>
