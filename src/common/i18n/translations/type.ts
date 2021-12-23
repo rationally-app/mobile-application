@@ -119,6 +119,11 @@ export type Translations = {
     title: string;
     back: string;
     quantity: string;
+    /**
+     * GovWallet-related copy changes below
+     */
+    recordedQty: string;
+    lastRecordedTiming: string;
   };
   notEligibleScreen: {
     notEligible: string;

@@ -30,6 +30,7 @@ export const mockGetStatistics = async (
   _endpoint: string,
   _operatorTokens: string[]
 ): Promise<DailyStatisticsResult> => {
+  const theDayBeforeYest = getTime(subDays(Date.now(), 2));
   const yesterday = getTime(subDays(Date.now(), 1));
   const today = Date.now();
   const tomorrow = getTime(addDays(Date.now(), 1));
@@ -81,6 +82,21 @@ export const mockGetStatistics = async (
           category: "vouchers",
           quantity: 20,
           transactionTime: new Date(yesterday),
+        },
+      ],
+    };
+  } else if (isSameDay(_currentTimestamp, theDayBeforeYest)) {
+    return {
+      pastTransactions: [
+        {
+          category: "store",
+          quantity: 1,
+          transactionTime: new Date(theDayBeforeYest),
+        },
+        {
+          category: "store",
+          quantity: 5,
+          transactionTime: new Date(theDayBeforeYest),
         },
       ],
     };

@@ -6,6 +6,7 @@ import { AppText } from "../Layout/AppText";
 import { format, isSameDay } from "date-fns";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../context/theme";
+import { GOVWALLET_THEME_NAME } from "../../common/styles/themes";
 
 interface TitleStatisticComponent {
   totalCount: number | null;
@@ -63,6 +64,10 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
 }) => {
   const { theme } = useTheme();
   const { i18nt } = useTranslate();
+  const recordedDate = {
+    dateTime:
+      lastTransactionTime !== null ? format(lastTransactionTime, "h:mma") : "-",
+  };
   return (
     <View style={styles.appHeaderWrapper}>
       <AppText
@@ -71,7 +76,9 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
           color: theme.statisticsScreen.smallTextColor,
         }}
       >
-        {i18nt("statisticsScreen", "distributedAmount")}
+        {theme.name === GOVWALLET_THEME_NAME
+          ? i18nt("statisticsScreen", "recordedQty")
+          : i18nt("statisticsScreen", "distributedAmount")}
       </AppText>
       <AppText
         style={{
@@ -87,12 +94,19 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
           color: theme.statisticsScreen.smallTextColor,
         }}
       >
-        {i18nt("statisticsScreen", "lastDistributedTiming", undefined, {
-          dateTime:
-            lastTransactionTime !== null
-              ? format(lastTransactionTime, "h:mma")
-              : "-",
-        })}
+        {theme.name === GOVWALLET_THEME_NAME
+          ? i18nt(
+              "statisticsScreen",
+              "lastRecordedTiming",
+              undefined,
+              recordedDate
+            )
+          : i18nt(
+              "statisticsScreen",
+              "lastDistributedTiming",
+              undefined,
+              recordedDate
+            )}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>
