@@ -7,7 +7,9 @@ import { RedeemedItem } from "../../../src/components/CustomerQuota/CheckoutSucc
 import { PurchasedItem } from "../../../src/components/CustomerQuota/CheckoutSuccess/PurchasedItem";
 import { Quota, CampaignPolicy } from "../../../src/types";
 import { CampaignConfigContext } from "../../../src/context/campaignConfig";
+import { ThemeContext } from "../../../src/context/theme";
 import { ItemQuantities } from "../../../src/components/CustomerQuota/types";
+import { govWalletTheme } from "../../../src/common/styles/themes";
 
 const products: CampaignPolicy[] = [
   {
@@ -41,6 +43,24 @@ const products: CampaignPolicy[] = [
   },
 ];
 
+const records: CampaignPolicy[] = [
+  {
+    category: "store",
+    name: "🏢 Store",
+    description: "",
+    order: 1,
+    quantity: {
+      period: 1,
+      limit: 1,
+      default: 1,
+      unit: {
+        type: "POSTFIX",
+        label: " qty",
+      },
+    },
+  },
+];
+
 const quotaResponse: Quota = {
   remainingQuota: [
     { category: "toilet-paper", quantity: 1 },
@@ -54,6 +74,12 @@ const quotaResponse: Quota = {
     { category: "toilet-paper", quantity: Number.MAX_SAFE_INTEGER },
     { category: "chocolate", quantity: Number.MAX_SAFE_INTEGER },
   ],
+};
+
+const recordQuotaResponse: Quota = {
+  remainingQuota: [{ category: "store", quantity: 1 }],
+  globalQuota: [{ category: "store", quantity: 1 }],
+  localQuota: [{ category: "store", quantity: Number.MAX_SAFE_INTEGER }],
 };
 
 const itemQuantities: ItemQuantities = {
@@ -99,4 +125,25 @@ storiesOf("CustomerQuota", module)
     >
       <PurchasedItem itemQuantities={itemQuantities} />
     </View>
+  ))
+  .add("PurchaseSuccessCard (GovWallet)", () => (
+    <ThemeContext.Provider
+      value={{ theme: govWalletTheme, setTheme: () => {} }}
+    >
+      <CampaignConfigContext.Provider
+        value={{
+          policies: records,
+          features: null,
+          c13n: {},
+        }}
+      >
+        <View key="3" style={{ margin: size(3) }}>
+          <CheckoutSuccessCard
+            ids={["S01115A000"]}
+            onCancel={() => null}
+            quotaResponse={recordQuotaResponse}
+          />
+        </View>
+      </CampaignConfigContext.Provider>
+    </ThemeContext.Provider>
   ));
