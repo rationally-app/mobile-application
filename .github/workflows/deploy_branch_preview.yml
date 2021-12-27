@@ -39,6 +39,8 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-	
             ${{ runner.os }}-build-	
             ${{ runner.os }}-
+      - name: Set access
+        run: npm config set //npm.pkg.github.com/:_authToken $GH_TOKEN_SUPPLYALLY_BOT
       - name: Install Packages
         run: npm install
       - name: Typecheck
