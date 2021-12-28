@@ -4,10 +4,11 @@ import { ERROR_MESSAGE } from "../context/alert";
 const validate = (nricInput: string): boolean => {
   // validation rules
   const nricRegex = /(\D)(\d{7})(\D)/;
-  const nricTypeRegex = /S|T|F|G/;
+  const nricTypeRegex = /S|T|F|G|M/;
   const weightArr = [2, 7, 6, 5, 4, 3, 2];
   const nricLetterST = ["J", "Z", "I", "H", "G", "F", "E", "D", "C", "B", "A"];
   const nricLetterFG = ["X", "W", "U", "T", "R", "Q", "P", "N", "M", "L", "K"];
+  const nricLetterM = ["K", "L", "J", "N", "P", "Q", "R", "T", "U", "W", "X"];
 
   // set nric to all uppercase to remove case sensitivity
   const nric = nricInput.toUpperCase();
@@ -35,8 +36,11 @@ const validate = (nricInput: string): boolean => {
   }
 
   // if the nric type is T or G, add 4 to the total
+  // else if the nric type is M, add 3 to the total
   if (["T", "G"].indexOf(nricType) >= 0) {
     total += 4;
+  } else if (["M"].indexOf(nricType) >= 0) {
+    total += 3;
   }
 
   // check last letter of nric for local
@@ -44,10 +48,12 @@ const validate = (nricInput: string): boolean => {
   const nricLetter = nricArr[3];
   if (["S", "T"].indexOf(nricType) >= 0) {
     return nricLetterST[letterIndex] === nricLetter;
+  } else if (["T", "G"].indexOf(nricType) >= 0) {
+    // check last letter of nric for foreigners
+    return nricLetterFG[letterIndex] === nricLetter;
   }
-
-  // check last letter of nric for foreigners
-  return nricLetterFG[letterIndex] === nricLetter;
+  // M nric type logic is slightly different
+  return nricLetterM[11 - letterIndex - 1] === nricLetter;
 };
 
 export const validateAndCleanNric = (inputNric: string): string => {
