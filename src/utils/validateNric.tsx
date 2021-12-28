@@ -37,7 +37,7 @@ const validate = (nricInput: string): boolean => {
 
   // if the nric type is T or G, add 4 to the total
   // else if the nric type is M, add 3 to the total
-  if (["T", "G"].indexOf(nricType) >= 0) {
+  if (["F", "G"].indexOf(nricType) >= 0) {
     total += 4;
   } else if (["M"].indexOf(nricType) >= 0) {
     total += 3;
@@ -48,7 +48,7 @@ const validate = (nricInput: string): boolean => {
   const nricLetter = nricArr[3];
   if (["S", "T"].indexOf(nricType) >= 0) {
     return nricLetterST[letterIndex] === nricLetter;
-  } else if (["T", "G"].indexOf(nricType) >= 0) {
+  } else if (["F", "G"].indexOf(nricType) >= 0) {
     // check last letter of nric for foreigners
     return nricLetterFG[letterIndex] === nricLetter;
   }

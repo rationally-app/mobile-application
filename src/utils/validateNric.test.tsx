@@ -32,6 +32,9 @@ describe("validateAndCleanNric", () => {
     expect(() => validateAndCleanNric("M1234873S")).toThrow(errorMessage);
     expect(() => validateAndCleanNric("M4398273E")).toThrow(errorMessage);
     expect(() => validateAndCleanNric("M2987349P")).toThrow(errorMessage);
+    expect(() => validateAndCleanNric("G1234873S")).toThrow(errorMessage);
+    expect(() => validateAndCleanNric("G4398273E")).toThrow(errorMessage);
+    expect(() => validateAndCleanNric("F2987349P")).toThrow(errorMessage);
     expect(() => validateAndCleanNric("2821462")).toThrow(errorMessage);
   });
 });
