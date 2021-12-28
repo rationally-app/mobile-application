@@ -41,10 +41,10 @@ jobs:
             ${{ runner.os }}-
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $GITHUB_TOKEN
+         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
          npm install
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
         run: npx --no-install tsc --noEmit
       - name: Check Lint
@@ -87,10 +87,10 @@ jobs:
             ${{ runner.os }}-
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $GITHUB_TOKEN
+         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
          npm install
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
         id: latestBinaryVersion
         run: |
