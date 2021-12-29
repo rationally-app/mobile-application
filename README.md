@@ -14,12 +14,12 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
 2. Install [`expo-cli`](https://docs.expo.io/workflow/expo-cli/) globally
 3. Login to Expo using `expo login`. Ask someone for the credentials.
 4. Install Expo on your mobile device and/or simulator and login with the same account. When using a mobile device for testing, [it needs to be on the same network.](https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet)
-   5.Setup Auth for our private package @rationally-app-payment-qr-parser
+5. Setup Auth for our private package @rationally-app-payment-qr-parser
    1. Create a new gitHub personal access token([PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)) with `repo` and `read:packages` permissions
    2. in terminal, run this command`npm login --scope=@rationally-app --registry=https://npm.pkg.github.com`
    3. type your username, followed by the personal access token created with step 1 as your password, and your email
-5. Install dependencies: `npm install`
-6. This step only applies if you are on a windows machine. If not, skip this step.
+6. Install dependencies: `npm install`
+7. This step only applies if you are on a windows machine. If not, skip this step.
    - open `package.json` and replace the `scripts` object with the following:
 
 ```json
