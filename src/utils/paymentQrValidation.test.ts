@@ -13,6 +13,6 @@ describe("paymentQrValidate Test", () => {
   it("should retrun false if invalid qr payload", () => {
     expect.hasAssertions();
 
-    expect(paymentQrValidate("invalid sgqrPayload")).toBe(true);
+    expect(paymentQrValidate("invalid sgqrPayload")).toBe(false);
   });
 });
