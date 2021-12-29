@@ -33,8 +33,10 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-	
             ${{ runner.os }}-build-	
             ${{ runner.os }}-
-      - name: Setup auth
-        run: npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+      - name: Setup NPM Token
+        run: npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+        env:
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Install Packages
         run: npm install
       - name: Typecheck

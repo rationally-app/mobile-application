@@ -224,7 +224,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
           </View>
         </IdScannerCamera>
       ) : (
-        <View style={{ flex: 2 }}>
+        <View style={{ flex: 1 }}>
           <LoadingView />
         </View>
       )}
