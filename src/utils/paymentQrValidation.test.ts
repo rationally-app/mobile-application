@@ -1,6 +1,6 @@
 import { parseAndValidateSGQR } from "@rationally-app/payment-qr-parser";
 
-describe("SGQR Service Test", () => {
+describe("parseAndValidateSGQR Test", () => {
   it("should parse SGQR payload properly", () => {
     expect.hasAssertions();
 
