@@ -22,7 +22,7 @@ jobs:
       - name: Install Packages
         run: |
          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm install
+         npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
@@ -65,7 +65,7 @@ jobs:
       - name: Install Packages
         run: |
          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm install
+         npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
@@ -136,7 +136,7 @@ jobs:
       - name: Install Packages
         run: |
          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm install
+         npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Build Android Release
@@ -181,7 +181,7 @@ jobs:
       - name: Install Packages
         run: |
          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm install
+         npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Build IOS Release
