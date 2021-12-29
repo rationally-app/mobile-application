@@ -37,7 +37,7 @@ const validate = (nricInput: string): boolean => {
 
   // if the nric type is T or G, add 4 to the total
   // else if the nric type is M, add 3 to the total
-  if (["F", "G"].indexOf(nricType) >= 0) {
+  if (["T", "G"].indexOf(nricType) >= 0) {
     total += 4;
   } else if (["M"].indexOf(nricType) >= 0) {
     total += 3;
