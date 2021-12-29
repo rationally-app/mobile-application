@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
 interface InputPassportSection {
   scannerType: "CODE_39" | "QR" | "NONE";
   openCamera: () => void;
+  idInput: string;
   setIdInput: (id: string) => void;
   submitId: () => void;
 }
@@ -39,6 +40,7 @@ interface InputPassportSection {
 export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
   scannerType,
   openCamera,
+  idInput,
   setIdInput,
   submitId,
 }) => {
@@ -60,6 +62,13 @@ export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
       ? setIdInput(`${selectedCountry?.value}-${trimmedPassportNum}`)
       : setIdInput("");
   }, [selectedCountry, trimmedPassportNum, setIdInput]);
+
+  useEffect(() => {
+    if (idInput === "") {
+      setPassportNum(undefined);
+      setSelectedCountry(undefined);
+    }
+  }, [idInput]);
 
   const getScannerComponent = (): JSX.Element | null => {
     return scannerType !== "NONE" ? (
