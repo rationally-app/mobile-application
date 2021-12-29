@@ -2,7 +2,7 @@ import { validateAndCleanNric } from "./validateNric";
 
 describe("validateAndCleanNric", () => {
   it("should return cleaned nric for valid nric number", () => {
-    expect.assertions(14);
+    expect.assertions(18);
     // https://en.wikipedia.org/wiki/National_Registration_Identity_Card
     expect(validateAndCleanNric("S0000001I")).toBe("S0000001I");
     expect(validateAndCleanNric("S0000002G")).toBe("S0000002G");
@@ -12,6 +12,10 @@ describe("validateAndCleanNric", () => {
     expect(validateAndCleanNric("M0000002N")).toBe("M0000002N");
     expect(validateAndCleanNric("M0000003L")).toBe("M0000003L");
     expect(validateAndCleanNric("M0000004X")).toBe("M0000004X");
+    expect(validateAndCleanNric("F2143781Q")).toBe("F2143781Q");
+    expect(validateAndCleanNric("F8761312R")).toBe("F8761312R");
+    expect(validateAndCleanNric("T1928347F")).toBe("T1928347F");
+    expect(validateAndCleanNric("T7189231F")).toBe("T7189231F");
     expect(validateAndCleanNric("  S0000004C")).toBe("S0000004C");
     expect(validateAndCleanNric("  S0000004C    ")).toBe("S0000004C");
     expect(validateAndCleanNric("G1234567X")).toBe("G1234567X");
@@ -21,7 +25,7 @@ describe("validateAndCleanNric", () => {
   });
 
   it("should throw error for invalid NRIC", () => {
-    expect.assertions(10);
+    expect.assertions(16);
     const errorMessage = "Enter or scan a valid ID number.";
     expect(() => validateAndCleanNric("S0000001A")).toThrow(errorMessage);
     expect(() => validateAndCleanNric("123AS0000001I")).toThrow(errorMessage);
@@ -35,6 +39,9 @@ describe("validateAndCleanNric", () => {
     expect(() => validateAndCleanNric("G1234873S")).toThrow(errorMessage);
     expect(() => validateAndCleanNric("G4398273E")).toThrow(errorMessage);
     expect(() => validateAndCleanNric("F2987349P")).toThrow(errorMessage);
+    expect(() => validateAndCleanNric("F2128749P")).toThrow(errorMessage);
+    expect(() => validateAndCleanNric("T8728729U")).toThrow(errorMessage);
+    expect(() => validateAndCleanNric("T2916239R")).toThrow(errorMessage);
     expect(() => validateAndCleanNric("2821462")).toThrow(errorMessage);
   });
 });
