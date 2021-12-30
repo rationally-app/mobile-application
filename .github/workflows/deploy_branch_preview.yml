@@ -42,6 +42,7 @@ jobs:
       - name: Install Packages
         run: |
          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+         npm config set always-auth true
          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
