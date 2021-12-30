@@ -79,6 +79,7 @@ const TextInputType = t.union([
   t.literal("PHONE_NUMBER"),
   t.literal("PAYMENT_RECEIPT"),
   t.literal("SINGLE_CHOICE"),
+  t.literal("PAYMENT_QR"),
 ]);
 
 const ScanButtonType = t.union([
