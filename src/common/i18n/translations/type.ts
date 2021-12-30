@@ -26,11 +26,6 @@ export type Translations = {
     goToStatistics: string;
     nationalityInputLabel: string;
     passportInputLabel: string;
-    /**
-     * GovWallet-related copy changes below
-     */
-    recordEligibleMerchantQr?: string;
-    record?: string;
   };
   idScanner: {
     enterIdManually: string;
@@ -94,14 +89,6 @@ export type Translations = {
     valid: string;
     complete: string;
     quantity: string;
-    /**
-     * GovWallet-related copy changes below
-     */
-    recorded?: string;
-    recordedItems?: string;
-    previouslyRecordedRecent?: string;
-    previouslyRecordedDate?: string;
-    previouslyRecordedItems?: string;
   };
   checkoutUnsuccessfulScreen: {
     unsuccessful: string;

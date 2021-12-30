@@ -7,35 +7,30 @@ import {
   formatTimeDifference,
 } from "../../../utils/dateTimeFormatter";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
-import { useTheme } from "../../../context/theme";
-import { GOVWALLET_THEME_NAME } from "../../../common/styles/themes";
 
 export const DistantTransactionTitle: FunctionComponent<{
   transactionTime: Date;
   toggleTimeSensitiveTitle: boolean;
 }> = ({ transactionTime, toggleTimeSensitiveTitle }) => {
-  const { theme } = useTheme();
-  const { i18nt } = useTranslate();
+  const { c13nt, i18nt } = useTranslate();
+
   const today = toggleTimeSensitiveTitle
     ? `${i18nt("checkoutSuccessScreen", "today")}`
     : "";
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {theme.name === GOVWALLET_THEME_NAME
-          ? i18nt(
-              "checkoutSuccessScreen",
-              "previouslyRecordedDate",
-              undefined,
-              {
-                dateTime: formatDateTime(transactionTime),
-                today,
-              }
-            )
-          : i18nt("checkoutSuccessScreen", "limitReachedDate", undefined, {
-              dateTime: formatDateTime(transactionTime),
-              today,
-            })}
+        {`${c13nt(
+          "limitReachedDate",
+          undefined,
+          i18nt("checkoutSuccessScreen", "limitReachedDate", undefined, {
+            dateTime: formatDateTime(transactionTime),
+            today,
+          })
+        )}`
+          // TODO: move this functionality into c13nt
+          .replace("%{dateTime}", formatDateTime(transactionTime))
+          .replace("%{today}", today)}
       </AppText>
     </>
   );
@@ -46,28 +41,24 @@ export const RecentTransactionTitle: FunctionComponent<{
   transactionTime: Date;
   toggleTimeSensitiveTitle: boolean;
 }> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => {
-  const { theme } = useTheme();
-  const { i18nt } = useTranslate();
+  const { c13nt, i18nt } = useTranslate();
   const today = toggleTimeSensitiveTitle
     ? `${i18nt("checkoutSuccessScreen", "today")}`
     : "";
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {theme.name === GOVWALLET_THEME_NAME
-          ? `${i18nt(
-              "checkoutSuccessScreen",
-              "previouslyRecordedRecent",
-              undefined,
-              {
-                time: formatTimeDifference(now, transactionTime),
-                today,
-              }
-            )}`
-          : `${i18nt("checkoutSuccessScreen", "limitReachedRecent", undefined, {
-              time: formatTimeDifference(now, transactionTime),
-              today,
-            })}`}
+        {`${c13nt(
+          "limitReachedRecent",
+          undefined,
+          i18nt("checkoutSuccessScreen", "limitReachedRecent", undefined, {
+            dateTime: formatDateTime(transactionTime),
+            today,
+          })
+        )}`
+          // TODO: move this functionality into c13nt
+          .replace("%{time}", formatTimeDifference(now, transactionTime))
+          .replace("%{today}", today)}
       </AppText>
     </>
   );

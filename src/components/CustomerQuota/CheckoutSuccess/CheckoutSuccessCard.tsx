@@ -30,7 +30,6 @@ import {
   useTranslate,
 } from "../../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../../context/theme";
-import { GOVWALLET_THEME_NAME } from "../../../common/styles/themes";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -228,11 +227,9 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                 accessible={true}
               >
                 {`${c13nt(
-                  "checkoutSuccessTitle",
+                  "redeemed",
                   undefined,
-                  theme.name === GOVWALLET_THEME_NAME
-                    ? i18nt("checkoutSuccessScreen", "recorded")
-                    : i18nt("checkoutSuccessScreen", "redeemed")
+                  i18nt("checkoutSuccessScreen", "redeemed")
                 )}`}
               </AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
@@ -245,11 +242,9 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             <View>
               <AppText>
                 {`${c13nt(
-                  "checkoutSuccessDescription",
+                  "redeemedItems",
                   undefined,
-                  theme.name === GOVWALLET_THEME_NAME
-                    ? i18nt("checkoutSuccessScreen", "recordedItems")
-                    : i18nt("checkoutSuccessScreen", "redeemedItems")
+                  i18nt("checkoutSuccessScreen", "redeemedItems")
                 )}`}
               </AppText>
               <View style={styles.checkoutItemsList}>

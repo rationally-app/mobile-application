@@ -7,8 +7,6 @@ import { AppText } from "../Layout/AppText";
 import { SecondaryButton } from "../Layout/Buttons/SecondaryButton";
 import { size, color, fontSize } from "../../common/styles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { useTheme } from "../../context/theme";
-import { GOVWALLET_THEME_NAME } from "../../common/styles/themes";
 
 const styles = StyleSheet.create({
   scanButtonWrapper: {
@@ -57,8 +55,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
   submitId,
   keyboardType,
 }) => {
-  const { theme } = useTheme();
-  const { i18nt } = useTranslate();
+  const { i18nt, c13nt } = useTranslate();
   return (
     <>
       <View style={styles.scanButtonWrapper}>
@@ -93,11 +90,11 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
           />
         </View>
         <SecondaryButton
-          text={
-            theme.name === GOVWALLET_THEME_NAME
-              ? i18nt("collectCustomerDetailsScreen", "record")
-              : i18nt("collectCustomerDetailsScreen", "check")
-          }
+          text={`${c13nt(
+            "check",
+            undefined,
+            i18nt("collectCustomerDetailsScreen", "check")
+          )}`}
           onPress={submitId}
           accessibilityLabel="identity-details-check-button"
         />
