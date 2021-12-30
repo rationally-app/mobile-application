@@ -38,7 +38,7 @@ jobs:
           npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
           npm config set always-auth true
       - name: Install Packages
-        run: npm install
+        run: npm ci
       - name: Typecheck
         run: npx --no-install tsc --noEmit
       - name: Check Lint
