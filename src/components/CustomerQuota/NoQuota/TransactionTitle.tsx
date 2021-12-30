@@ -28,6 +28,7 @@ export const DistantTransactionTitle: FunctionComponent<{
             today,
           })
         )}`
+          // TODO: move this functionality into c13nt
           .replace("%{dateTime}", formatDateTime(transactionTime))
           .replace("%{today}", today)}
       </AppText>
@@ -55,6 +56,7 @@ export const RecentTransactionTitle: FunctionComponent<{
             today,
           })
         )}`
+          // TODO: move this functionality into c13nt
           .replace("%{time}", formatTimeDifference(now, transactionTime))
           .replace("%{today}", today)}
       </AppText>
