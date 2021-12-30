@@ -13,21 +13,23 @@ export const DistantTransactionTitle: FunctionComponent<{
   toggleTimeSensitiveTitle: boolean;
 }> = ({ transactionTime, toggleTimeSensitiveTitle }) => {
   const { c13nt, i18nt } = useTranslate();
-  const limitReachedDateKey = "limitReachedDate";
+
   const today = toggleTimeSensitiveTitle
     ? `${i18nt("checkoutSuccessScreen", "today")}`
     : "";
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {c13nt(limitReachedDateKey) !== limitReachedDateKey
-          ? c13nt(limitReachedDateKey)
-              .replace("${dateTime}", formatDateTime(transactionTime))
-              .replace("${today}", today)
-          : i18nt("checkoutSuccessScreen", limitReachedDateKey, undefined, {
-              dateTime: formatDateTime(transactionTime),
-              today,
-            })}
+        {`${c13nt(
+          "limitReachedDate",
+          undefined,
+          i18nt("checkoutSuccessScreen", "limitReachedDate", undefined, {
+            dateTime: formatDateTime(transactionTime),
+            today,
+          })
+        )}`
+          .replace("%{dateTime}", formatDateTime(transactionTime))
+          .replace("%{today}", today)}
       </AppText>
     </>
   );
@@ -39,26 +41,22 @@ export const RecentTransactionTitle: FunctionComponent<{
   toggleTimeSensitiveTitle: boolean;
 }> = ({ now, transactionTime, toggleTimeSensitiveTitle }) => {
   const { c13nt, i18nt } = useTranslate();
-  const limitReachedRecentKey = "limitReachedRecent";
   const today = toggleTimeSensitiveTitle
     ? `${i18nt("checkoutSuccessScreen", "today")}`
     : "";
   return (
     <>
       <AppText style={sharedStyles.statusTitle}>
-        {c13nt(limitReachedRecentKey) !== limitReachedRecentKey
-          ? c13nt(limitReachedRecentKey)
-              .replace("${time}", formatTimeDifference(now, transactionTime))
-              .replace("${today}", today)
-          : `${i18nt(
-              "checkoutSuccessScreen",
-              limitReachedRecentKey,
-              undefined,
-              {
-                time: formatTimeDifference(now, transactionTime),
-                today,
-              }
-            )}`}
+        {`${c13nt(
+          "limitReachedRecent",
+          undefined,
+          i18nt("checkoutSuccessScreen", "limitReachedRecent", undefined, {
+            dateTime: formatDateTime(transactionTime),
+            today,
+          })
+        )}`
+          .replace("%{time}", formatTimeDifference(now, transactionTime))
+          .replace("%{today}", today)}
       </AppText>
     </>
   );

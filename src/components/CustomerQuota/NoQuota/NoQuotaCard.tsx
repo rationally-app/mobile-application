@@ -125,7 +125,6 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
 
   const translationProps = useTranslate();
   const { i18nt, c13nt } = translationProps;
-  const previouslyRedeemedItemsKey = "previouslyRedeemedItems";
   const transactionsByCategoryMap = groupTransactionsByCategory(
     sortedTransactions,
     allProducts || [],
@@ -211,15 +210,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
                 <View>
                   <AppText style={styles.wrapper}>
                     {`${c13nt(
-                      "checkoutSuccessPreviousItems",
+                      "previouslyRedeemedItems",
                       undefined,
-                      c13nt(previouslyRedeemedItemsKey) !==
-                        previouslyRedeemedItemsKey
-                        ? c13nt(previouslyRedeemedItemsKey)
-                        : i18nt(
-                            "checkoutSuccessScreen",
-                            previouslyRedeemedItemsKey
-                          )
+                      i18nt("checkoutSuccessScreen", "previouslyRedeemedItems")
                     )}`}
                   </AppText>
                   {transactionsByCategoryList.map(

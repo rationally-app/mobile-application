@@ -269,7 +269,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
   };
 
   const tCampaignName = c13nt(features?.campaignName ?? "");
-  const checkEligibleItemsKey = "checkEligibleItems";
 
   return (
     <>
@@ -304,9 +303,11 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
               </AppText>
             )}
             <AppText>
-              {c13nt(checkEligibleItemsKey) !== checkEligibleItemsKey
-                ? c13nt(checkEligibleItemsKey)
-                : i18nt("collectCustomerDetailsScreen", checkEligibleItemsKey)}
+              {`${c13nt(
+                "checkEligibleItems",
+                undefined,
+                i18nt("collectCustomerDetailsScreen", "checkEligibleItems")
+              )}`}
             </AppText>
             {getInputComponent()}
           </Card>

@@ -178,8 +178,6 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
 
   const translationProps = useTranslate();
   const { c13nt, i18nt } = translationProps;
-  const redeemedKey = "redeemed";
-  const redeemedItemsKey = "redeemedItems";
   const transactionsByTimeMap = groupTransactionsByTime(
     sortedTransactions,
     allProducts || [],
@@ -229,11 +227,9 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                 accessible={true}
               >
                 {`${c13nt(
-                  "checkoutSuccessTitle",
+                  "redeemed",
                   undefined,
-                  c13nt(redeemedKey) !== redeemedKey
-                    ? c13nt(redeemedKey)
-                    : i18nt("checkoutSuccessScreen", redeemedKey)
+                  i18nt("checkoutSuccessScreen", "redeemed")
                 )}`}
               </AppText>
               {showGlobalQuota && firstGlobalQuota!.quotaRefreshTime ? (
@@ -246,11 +242,9 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             <View>
               <AppText>
                 {`${c13nt(
-                  "checkoutSuccessDescription",
+                  "redeemedItems",
                   undefined,
-                  c13nt(redeemedItemsKey) !== redeemedItemsKey
-                    ? c13nt(redeemedItemsKey)
-                    : i18nt("checkoutSuccessScreen", redeemedItemsKey)
+                  i18nt("checkoutSuccessScreen", "redeemedItems")
                 )}`}
               </AppText>
               <View style={styles.checkoutItemsList}>

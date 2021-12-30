@@ -56,7 +56,6 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
   keyboardType,
 }) => {
   const { i18nt, c13nt } = useTranslate();
-  const checkKey = "check";
   return (
     <>
       <View style={styles.scanButtonWrapper}>
@@ -91,11 +90,11 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
           />
         </View>
         <SecondaryButton
-          text={
-            c13nt(checkKey) !== checkKey
-              ? c13nt(checkKey)
-              : i18nt("collectCustomerDetailsScreen", checkKey)
-          }
+          text={`${c13nt(
+            "check",
+            undefined,
+            i18nt("collectCustomerDetailsScreen", "check")
+          )}`}
           onPress={submitId}
           accessibilityLabel="identity-details-check-button"
         />
