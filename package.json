@@ -15,7 +15,6 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "@rationally-app/nric-validator": "^1.1.2",
     "@rationally-app/payment-qr-parser": "^1.1.1",
     "@react-native-async-storage/async-storage": "^1.15.5",
     "date-fns": "^2.21.1",
