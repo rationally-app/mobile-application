@@ -34,9 +34,9 @@ jobs:
             ${{ runner.os }}-build-	
             ${{ runner.os }}-
       - name: Install Packages
-        run: 
-          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
+        run: |
+         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+         npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
