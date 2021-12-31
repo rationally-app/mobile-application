@@ -167,9 +167,7 @@ export const isPodChargeable = (
         return true;
       }
     } else if (idType === "PASSPORT") {
-      if (cartItem.category.includes("tt-token")) {
-        return true;
-      }
+      return true;
     }
   }
   return false;
