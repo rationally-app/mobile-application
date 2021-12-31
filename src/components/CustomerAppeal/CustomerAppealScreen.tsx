@@ -24,6 +24,7 @@ import {
 } from "./ReasonSelection/ReasonSelectionCard";
 import { pushRoute, navigateHome } from "../../common/navigation";
 import { AuthContext } from "../../context/auth";
+import { IdentificationContext } from "../../context/identification";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { useQuota } from "../../hooks/useQuota/useQuota";
@@ -68,6 +69,7 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
 
   const [ids] = useState(navigation.getParam("ids"));
   const { policies: allProducts } = useContext(CampaignConfigContext);
+  const { selectedIdType } = useContext(IdentificationContext);
 
   const onCancel = useCallback((): void => {
     navigateHome(navigation);
@@ -108,25 +110,33 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
               descriptionAlert,
             });
           } else if (typeof policyThreshold === "string") {
-            /**
-             * Policy threshold is string when its visibility is conditional to other policy that is
-             * written on the threshold.
-             *
-             * Some assumptions that are made:
-             * - Policies with dependencies on other policies should be defined after their dependents
-             * - Policies with dependencies show up depending on whether its dependent policy's
-             *   descriptionAlert is shown
-             */
-            const dependentReason = result.find(
-              (reason) =>
-                reason.descriptionAlert && reason.category === policyThreshold
-            );
-            if (dependentReason && policy.alert) {
-              result.push({
-                category: policy.category,
-                description: policy.name,
-                descriptionAlert: policy.alert.label,
-              });
+            if (
+              !(
+                selectedIdType.validation === "PASSPORT" &&
+                policy.category === "tt-token-lost-waive"
+              )
+            ) {
+              /**
+               * Policy threshold is string when its visibility is conditional to other policy that is
+               * written on the threshold.
+               *
+               * Some assumptions that are made:
+               * - Policies with dependencies on other policies should be defined after their dependents
+               * - Policies with dependencies show up depending on whether its dependent policy's
+               *   descriptionAlert is shown
+               */
+              const dependentReason = result.find(
+                (reason) =>
+                  reason.descriptionAlert && reason.category === policyThreshold
+              );
+              console.log(dependentReason);
+              if (dependentReason && policy.alert) {
+                result.push({
+                  category: policy.category,
+                  description: policy.name,
+                  descriptionAlert: policy.alert.label,
+                });
+              }
             }
           } else {
             result.push({
