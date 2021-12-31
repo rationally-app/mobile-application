@@ -7,9 +7,6 @@ import { format, isSameDay } from "date-fns";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../context/theme";
 
-const distributedAmount = "distributedAmount";
-const lastDistributedTiming = "lastDistributedTiming";
-
 interface TitleStatisticComponent {
   totalCount: number | null;
   currentTimestamp: number;
@@ -77,9 +74,11 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
           color: theme.statisticsScreen.smallTextColor,
         }}
       >
-        {c13nt(distributedAmount) !== distributedAmount
-          ? c13nt(distributedAmount)
-          : i18nt("statisticsScreen", distributedAmount)}
+        {`${c13nt(
+          "distributedAmount",
+          undefined,
+          i18nt("statisticsScreen", "distributedAmount")
+        )}`}
       </AppText>
       <AppText
         style={{
@@ -95,14 +94,15 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
           color: theme.statisticsScreen.smallTextColor,
         }}
       >
-        {c13nt(lastDistributedTiming) !== lastDistributedTiming
-          ? c13nt(lastDistributedTiming).replace(
-              "%{dateTime}",
-              formattedLastTransactionTime
-            )
-          : i18nt("statisticsScreen", lastDistributedTiming, undefined, {
-              dateTime: formattedLastTransactionTime,
-            })}
+        {`${c13nt(
+          "lastDistributedTiming",
+          undefined,
+          i18nt("statisticsScreen", "lastDistributedTiming", undefined, {
+            dateTime: formattedLastTransactionTime,
+          })
+        )
+          // TODO: move this functionality into c13nt
+          .replace("%{dateTime}", formattedLastTransactionTime)}`}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>
