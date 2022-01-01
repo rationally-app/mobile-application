@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2.5.1
         with:
           node-version: 12.x
       - name: Cache Node Modules
@@ -55,7 +55,7 @@ jobs:
       - name: Fetch Tags
         run: |
           git fetch --prune --unshallow --tags -f
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2.5.1
         with:
           node-version: 12.x
       - uses: expo/expo-github-action@v5
