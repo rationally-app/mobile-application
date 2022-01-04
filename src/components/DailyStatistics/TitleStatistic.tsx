@@ -62,7 +62,10 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
   onPressNextDay,
 }) => {
   const { theme } = useTheme();
-  const { i18nt } = useTranslate();
+  const { i18nt, c13nt } = useTranslate();
+  const formattedLastTransactionTime =
+    lastTransactionTime !== null ? format(lastTransactionTime, "h:mma") : "-";
+
   return (
     <View style={styles.appHeaderWrapper}>
       <AppText
@@ -71,7 +74,11 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
           color: theme.statisticsScreen.smallTextColor,
         }}
       >
-        {i18nt("statisticsScreen", "distributedAmount")}
+        {`${c13nt(
+          "distributedAmount",
+          undefined,
+          i18nt("statisticsScreen", "distributedAmount")
+        )}`}
       </AppText>
       <AppText
         style={{
@@ -87,12 +94,15 @@ export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent>
           color: theme.statisticsScreen.smallTextColor,
         }}
       >
-        {i18nt("statisticsScreen", "lastDistributedTiming", undefined, {
-          dateTime:
-            lastTransactionTime !== null
-              ? format(lastTransactionTime, "h:mma")
-              : "-",
-        })}
+        {`${c13nt(
+          "lastDistributedTiming",
+          undefined,
+          i18nt("statisticsScreen", "lastDistributedTiming", undefined, {
+            dateTime: formattedLastTransactionTime,
+          })
+        )
+          // TODO: move this functionality into c13nt
+          .replace("%{dateTime}", formattedLastTransactionTime)}`}
       </AppText>
       <View style={styles.dateToggle}>
         <TouchableOpacity onPress={onPressPrevDay}>
