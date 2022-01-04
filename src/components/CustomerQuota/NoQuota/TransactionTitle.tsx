@@ -52,7 +52,7 @@ export const RecentTransactionTitle: FunctionComponent<{
           "limitReachedRecent",
           undefined,
           i18nt("checkoutSuccessScreen", "limitReachedRecent", undefined, {
-            dateTime: formatDateTime(transactionTime),
+            time: formatTimeDifference(now, transactionTime),
             today,
           })
         )}`
