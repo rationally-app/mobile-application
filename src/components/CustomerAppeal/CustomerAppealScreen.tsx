@@ -129,7 +129,6 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
                 (reason) =>
                   reason.descriptionAlert && reason.category === policyThreshold
               );
-              console.log(dependentReason);
               if (dependentReason && policy.alert) {
                 result.push({
                   category: policy.category,

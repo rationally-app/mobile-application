@@ -354,7 +354,7 @@ describe("pod related utils", () => {
   });
 
   describe("isPodChargeable", () => {
-    beforeEach(() => {
+    beforeAll(() => {
       idType = "NRIC";
     });
 
@@ -390,7 +390,7 @@ describe("pod related utils", () => {
     });
 
     describe("for passport customer", () => {
-      beforeEach(() => {
+      beforeAll(() => {
         idType = "PASSPORT";
       });
 
