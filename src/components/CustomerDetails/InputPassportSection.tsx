@@ -64,6 +64,8 @@ export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
   }, [selectedCountry, trimmedPassportNum, setIdInput]);
 
   useEffect(() => {
+    // Change both states to default value to sync the submitted
+    // input field state (idInput) with the local states.
     if (idInput === "") {
       setPassportNum(undefined);
       setSelectedCountry(undefined);
