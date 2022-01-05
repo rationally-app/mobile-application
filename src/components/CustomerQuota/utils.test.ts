@@ -303,7 +303,7 @@ describe("pod related utils", () => {
     },
   ];
 
-  let idType = "NRIC" as ValidationType;
+  let idType: ValidationType;
   let validCartItem: CartItem;
   let validIdentifiers: PolicyIdentifier[];
   beforeEach(() => {
@@ -354,37 +354,45 @@ describe("pod related utils", () => {
   });
 
   describe("isPodChargeable", () => {
-    it("should return true for tt-token-lost category", () => {
-      expect.assertions(1);
-      validCartItem["category"] = "tt-token-lost";
-      validCartItem["descriptionAlert"] = "*chargeable";
-      expect(
-        isPodChargeable(idType, validIdentifiers, validCartItem)
-      ).toStrictEqual(true);
+    beforeAll(() => {
+      idType = "NRIC";
     });
 
-    it("should return false for tt-token-lost category if it's not *chargeable", () => {
-      expect.assertions(1);
-      validCartItem["category"] = "tt-token-lost";
-      expect(
-        isPodChargeable(idType, validIdentifiers, validCartItem)
-      ).toStrictEqual(false);
-    });
+    describe("for non-passport customer", () => {
+      it("should return true for tt-token-lost category", () => {
+        expect.assertions(1);
+        validCartItem["category"] = "tt-token-lost";
+        validCartItem["descriptionAlert"] = "*chargeable";
+        expect(
+          isPodChargeable(idType, validIdentifiers, validCartItem)
+        ).toStrictEqual(true);
+      });
 
-    it("should return false for non-pod category", () => {
-      expect.assertions(1);
-      expect(
-        isPodChargeable(idType, validIdentifiers, validCartItem)
-      ).toStrictEqual(false);
-    });
+      it("should return false for tt-token-lost category if it's not *chargeable", () => {
+        expect.assertions(1);
+        validCartItem["category"] = "tt-token-lost";
+        expect(
+          isPodChargeable(idType, validIdentifiers, validCartItem)
+        ).toStrictEqual(false);
+      });
 
-    it("should return false if there are no identifiers", () => {
-      expect.assertions(1);
-      expect(isPodChargeable(idType, [], validCartItem)).toStrictEqual(false);
+      it("should return false for non-pod category", () => {
+        expect.assertions(1);
+        expect(
+          isPodChargeable(idType, validIdentifiers, validCartItem)
+        ).toStrictEqual(false);
+      });
+
+      it("should return false if there are no identifiers", () => {
+        expect.assertions(1);
+        expect(isPodChargeable(idType, [], validCartItem)).toStrictEqual(false);
+      });
     });
 
     describe("for passport customer", () => {
-      idType = "PASSPORT";
+      beforeAll(() => {
+        idType = "PASSPORT";
+      });
 
       it("should return true for tt-token category", () => {
         expect.assertions(1);
@@ -394,11 +402,11 @@ describe("pod related utils", () => {
         ).toStrictEqual(true);
       });
 
-      it("should return false for non-pod category", () => {
+      it("should return true for any category", () => {
         expect.assertions(1);
         expect(
           isPodChargeable(idType, validIdentifiers, validCartItem)
-        ).toStrictEqual(false);
+        ).toStrictEqual(true);
       });
     });
   });
