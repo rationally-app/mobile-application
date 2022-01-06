@@ -77,6 +77,7 @@ const InputPassportSectionItem = (): ReactElement => {
       <InputPassportSection
         scannerType={"NONE"}
         openCamera={() => null}
+        idInput=""
         setIdInput={() => null}
         submitId={() => alert("Submitted")}
       />
