@@ -103,6 +103,18 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
               policyLimit - quotaResponse.quantity >= policyThreshold
             ) {
               descriptionAlert = policy.alert.label;
+              /**
+               * Passport user is always charged for token and lost token redemption.
+               *
+               * This special if condition is used to prevent further change to the main policy scheme
+               * since this is a special case
+               */
+            } else if (
+              policy.alert &&
+              selectedIdType.validation === "PASSPORT" &&
+              policy.category === "tt-token-lost"
+            ) {
+              descriptionAlert = policy.alert.label;
             }
             result.push({
               category: policy.category,

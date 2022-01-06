@@ -7,6 +7,7 @@ import {
   IdentifierInput,
   PolicyIdentifier,
   CampaignPolicy,
+  ValidationType,
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import {
@@ -74,6 +75,7 @@ const getItem = (
 const mergeWithCart = (
   cart: Cart,
   quota: ItemQuota[],
+  idType: ValidationType,
   getProduct: ProductContextValue["getProduct"]
 ): Cart => {
   quota.sort((itemOne, itemTwo) => {
@@ -104,11 +106,21 @@ const mergeWithCart = (
       let descriptionAlert: DescriptionAlertTypes | undefined = undefined;
       if (product && product.alert) {
         if (typeof product.alert.threshold === "number") {
-          const expandedQuota = product.quantity.limit - remainingQuantity;
-          descriptionAlert =
-            expandedQuota >= product.alert.threshold
-              ? (product.alert.label as DescriptionAlertTypes)
-              : undefined;
+          /**
+           * Passport user is always charged for token and lost token redemption.
+           *
+           * This special if condition is used to prevent further change to the main policy scheme
+           * since this is a special case
+           */
+          if (idType === "PASSPORT" && category === "tt-token-lost") {
+            descriptionAlert = product.alert.label as DescriptionAlertTypes;
+          } else {
+            const expandedQuota = product.quantity.limit - remainingQuantity;
+            descriptionAlert =
+              expandedQuota >= product.alert.threshold
+                ? (product.alert.label as DescriptionAlertTypes)
+                : undefined;
+          }
         } else {
           /**
            * Since the reason item of policies with dependencies only shows up when
@@ -220,7 +232,9 @@ export const useCart = (
          * Caveat: We must use a callback within this setState to avoid
          * having `cart` as a dependency, preventing an infinite loop.
          */
-        setCart((cart) => mergeWithCart(cart, cartQuota, getProduct));
+        setCart((cart) =>
+          mergeWithCart(cart, cartQuota, selectedIdType.validation, getProduct)
+        );
         if (policies) {
           setOptionalIdentifierLabels(
             findOptionalIdentifierInputLabels(policies)
@@ -241,6 +255,7 @@ export const useCart = (
     }
   }, [
     cartQuota,
+    selectedIdType.validation,
     getProduct,
     prevCartQuota,
     ids,
