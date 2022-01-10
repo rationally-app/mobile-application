@@ -227,7 +227,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
                 accessible={true}
               >
                 {`${c13nt(
-                  "redeemed",
+                  "checkoutSuccessTitle",
                   undefined,
                   i18nt("checkoutSuccessScreen", "redeemed")
                 )}`}
@@ -242,7 +242,7 @@ export const CheckoutSuccessCard: FunctionComponent<CheckoutSuccessCard> = ({
             <View>
               <AppText>
                 {`${c13nt(
-                  "redeemedItems",
+                  "checkoutSuccessDescription",
                   undefined,
                   i18nt("checkoutSuccessScreen", "redeemedItems")
                 )}`}
