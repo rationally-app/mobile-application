@@ -19,7 +19,6 @@ describe("InputPassportSection", () => {
       <InputPassportSection
         scannerType={"NONE"}
         openCamera={openCamera}
-        idInput=""
         setIdInput={setIdInput}
         submitId={submitId}
       />

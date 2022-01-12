@@ -238,7 +238,6 @@ const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedPro
       <InputPassportSection
         scannerType={selectedIdType.scannerType}
         openCamera={() => setShouldShowCamera(true)}
-        idInput={idInput}
         setIdInput={setIdInput}
         submitId={() => onCheck(idInput)}
       />

@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
 interface InputPassportSection {
   scannerType: "CODE_39" | "QR" | "NONE";
   openCamera: () => void;
-  idInput: string;
   setIdInput: (id: string) => void;
   submitId: () => void;
 }
@@ -40,7 +39,6 @@ interface InputPassportSection {
 export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
   scannerType,
   openCamera,
-  idInput,
   setIdInput,
   submitId,
 }) => {
@@ -62,15 +60,6 @@ export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
       ? setIdInput(`${selectedCountry?.value}-${trimmedPassportNum}`)
       : setIdInput("");
   }, [selectedCountry, trimmedPassportNum, setIdInput]);
-
-  useEffect(() => {
-    // Change both states to default value to sync the submitted
-    // input field state (idInput) with the local states.
-    if (idInput === "") {
-      setPassportNum(undefined);
-      setSelectedCountry(undefined);
-    }
-  }, [idInput]);
 
   const getScannerComponent = (): JSX.Element | null => {
     return scannerType !== "NONE" ? (
