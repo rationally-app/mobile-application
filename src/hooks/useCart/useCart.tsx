@@ -11,6 +11,7 @@ import {
   Transaction,
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
+import { updateTransactionsPaymentQRIdentifiers } from "../../utils/paymentQRHelper";
 import {
   cleanIdentifierInput,
   tagOptionalIdentifierInput,
@@ -333,6 +334,9 @@ export const useCart = (
                 : cleanedIdentifierInputs,
           };
         });
+
+      updateTransactionsPaymentQRIdentifiers(transactions);
+
       try {
         const transactionResponse = await postTransaction({
           ids,
