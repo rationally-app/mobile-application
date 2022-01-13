@@ -8,6 +8,7 @@ import {
   PolicyIdentifier,
   CampaignPolicy,
   ValidationType,
+  Transaction,
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
 import {
@@ -310,7 +311,7 @@ export const useCart = (
    */
   const _completeCheckout = useCallback(() => {
     const complete = async (): Promise<void> => {
-      const transactions = Object.values(cart)
+      const transactions: Array<Transaction> = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
           const cleanedIdentifierInputs = identifierInputs.map((identifier) => {
