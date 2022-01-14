@@ -14,6 +14,9 @@ describe("tests for findValueByKey", () => {
         nets: {
           terminalId: "1234567890",
           merchantId: "0987654321",
+          nestedObject: {
+            nestedProperty: "This is nested",
+          },
         },
       },
       merchantName: "Merchant name",
@@ -27,9 +30,16 @@ describe("tests for findValueByKey", () => {
     );
   });
 
-  it("should find nested value by key properly", () => {
+  it("should find two-layer nested value by key properly", () => {
     expect.assertions(1);
     expect(findValueByKey("terminalId", records)).toStrictEqual("1234567890");
+  });
+
+  it("should find three-layer nested value by key properly", () => {
+    expect.assertions(1);
+    expect(findValueByKey("nestedProperty", records)).toStrictEqual(
+      "This is nested"
+    );
   });
 
   it("should return `undefined` if key does not exist", () => {
