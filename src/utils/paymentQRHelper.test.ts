@@ -39,10 +39,10 @@ describe("tests for findValueByKey", () => {
 });
 
 describe("tests for updateTransactionsPaymentQRIdentifiers", () => {
-  let transactions: Array<Transaction>;
+  let transactionsBeforeUpdate: Array<Transaction>;
 
   beforeEach(() => {
-    transactions = [
+    transactionsBeforeUpdate = [
       {
         category: "category-a",
         quantity: 1,
@@ -69,8 +69,8 @@ describe("tests for updateTransactionsPaymentQRIdentifiers", () => {
 
   it("should update identifiers properly", () => {
     expect.assertions(1);
-    updateTransactionsPaymentQRIdentifiers(transactions);
-    expect(transactions).toStrictEqual([
+    updateTransactionsPaymentQRIdentifiers(transactionsBeforeUpdate);
+    expect(transactionsBeforeUpdate).toStrictEqual([
       {
         category: "category-a",
         quantity: 1,
