@@ -1,7 +1,7 @@
 import { Transaction } from "../types";
 import {
   findValueByKey,
-  updateTransactionsPaymentQRIdentifiers,
+  getUpdatedTransactionsPaymentQRIdentifiers,
 } from "./paymentQRHelper";
 
 describe("tests for findValueByKey", () => {
@@ -48,7 +48,7 @@ describe("tests for findValueByKey", () => {
   });
 });
 
-describe("tests for updateTransactionsPaymentQRIdentifiers", () => {
+describe("tests for getUpdatedTransactionsPaymentQRIdentifiers", () => {
   let transactionsBeforeUpdate: Array<Transaction>;
 
   beforeEach(() => {
@@ -72,15 +72,22 @@ describe("tests for updateTransactionsPaymentQRIdentifiers", () => {
             validationRegex: "^[a-zA-Z0-9 ]*$",
             textInputType: "STRING",
           },
+          {
+            label: "propertyThatDoesNotExist",
+            isOptional: true,
+            value: "",
+            textInputType: "STRING",
+          },
         ],
       },
     ];
   });
 
-  it("should update identifiers properly", () => {
+  it("should return updated transactions with identifiers properly", () => {
     expect.assertions(1);
-    updateTransactionsPaymentQRIdentifiers(transactionsBeforeUpdate);
-    expect(transactionsBeforeUpdate).toStrictEqual([
+    expect(
+      getUpdatedTransactionsPaymentQRIdentifiers(transactionsBeforeUpdate)
+    ).toStrictEqual([
       {
         category: "category-a",
         quantity: 1,
@@ -98,6 +105,12 @@ describe("tests for updateTransactionsPaymentQRIdentifiers", () => {
             isOptional: true,
             value: "UDDERS UPPER THOMSON",
             validationRegex: "^[a-zA-Z0-9 ]*$",
+            textInputType: "STRING",
+          },
+          {
+            label: "propertyThatDoesNotExist",
+            isOptional: true,
+            value: "",
             textInputType: "STRING",
           },
         ],

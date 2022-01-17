@@ -11,7 +11,7 @@ import {
   Transaction,
 } from "../../types";
 import { validateIdentifierInputs } from "../../utils/validateIdentifierInputs";
-import { updateTransactionsPaymentQRIdentifiers } from "../../utils/paymentQRHelper";
+import { getUpdatedTransactionsPaymentQRIdentifiers } from "../../utils/paymentQRHelper";
 import {
   cleanIdentifierInput,
   tagOptionalIdentifierInput,
@@ -312,7 +312,7 @@ export const useCart = (
    */
   const _completeCheckout = useCallback(() => {
     const complete = async (): Promise<void> => {
-      const transactions: Array<Transaction> = Object.values(cart)
+      let transactions: Array<Transaction> = Object.values(cart)
         .filter(({ quantity }) => quantity)
         .map(({ category, quantity, identifierInputs }) => {
           const cleanedIdentifierInputs = identifierInputs.map((identifier) => {
@@ -335,7 +335,7 @@ export const useCart = (
           };
         });
 
-      updateTransactionsPaymentQRIdentifiers(transactions);
+      transactions = getUpdatedTransactionsPaymentQRIdentifiers(transactions);
 
       try {
         const transactionResponse = await postTransaction({

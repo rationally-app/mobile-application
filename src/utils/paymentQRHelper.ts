@@ -1,5 +1,5 @@
 import { parseAndValidateSGQR } from "@rationally-app/payment-qr-parser";
-import { Transaction } from "../types";
+import { IdentifierInput, Transaction } from "../types";
 
 /**
  * Returns the value of the first element in the provided record key.
@@ -31,7 +31,7 @@ export const findValueByKey = (
 };
 
 /**
- * Update transaction identifiers using parsed payment QR payload values.
+ * Returns transaction identifiers updated using parsed payment QR payload values.
  *
  * Each transaction's identifiers contain identifiers with `textInputType` `PAYMENT_QR`, which
  * are payment QR payloads that shall be parsed.
@@ -40,12 +40,17 @@ export const findValueByKey = (
  * their `label` matches a key in the parsed payment QR payload. Only identifiers in the same
  * transaction are updated.
  *
+ * If no matching values are found, the value remains an empty string.
+ *
  * @param transactions Array of transaction data
  */
-export const updateTransactionsPaymentQRIdentifiers = (
+export const getUpdatedTransactionsPaymentQRIdentifiers = (
   transactions: Array<Transaction>
-): void => {
-  transactions.forEach(({ identifierInputs }) => {
+): Array<Transaction> => {
+  return transactions.map((transaction) => {
+    const { identifierInputs } = transaction;
+    let newIdentifierInputs: Array<IdentifierInput> | undefined;
+
     if (identifierInputs) {
       const paymentQRPayload = identifierInputs.find(
         ({ textInputType }) => textInputType === "PAYMENT_QR"
@@ -58,15 +63,19 @@ export const updateTransactionsPaymentQRIdentifiers = (
           paymentQRPayload
         ) as Record<string, unknown>;
 
-        identifierInputs.forEach(
-          ({ textInputType, isOptional, label, value }, index) => {
-            if (textInputType !== "PAYMENT_QR" && isOptional) {
-              identifierInputs[index].value =
-                findValueByKey(label, paymentQRRecords) ?? value;
-            }
+        newIdentifierInputs = identifierInputs.map((identifierInput, index) => {
+          const { textInputType, isOptional, label, value } = identifierInput;
+          let newValue: string = value;
+
+          if (textInputType !== "PAYMENT_QR" && isOptional) {
+            newValue = findValueByKey(label, paymentQRRecords) ?? value;
           }
-        );
+
+          return { ...identifierInput, value: newValue };
+        });
       }
     }
+
+    return { ...transaction, identifierInputs: newIdentifierInputs };
   });
 };
