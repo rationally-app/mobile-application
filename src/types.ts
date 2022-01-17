@@ -127,7 +127,7 @@ const PolicyIdentifier = t.intersection([
   }),
 ]);
 
-const IdentifierInput = t.intersection([
+export const IdentifierInput = t.intersection([
   t.type({
     label: t.string,
     value: t.string,
