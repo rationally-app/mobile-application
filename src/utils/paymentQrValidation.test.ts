@@ -10,7 +10,7 @@ describe("paymentQrValidate Test", () => {
     expect(paymentQrValidate(sgqrPayload)).toBe(true);
   });
 
-  it("should retrun false if invalid qr payload", () => {
+  it("should return false if invalid qr payload", () => {
     expect.assertions(1);
 
     expect(paymentQrValidate("invalid sgqrPayload")).toBe(false);
