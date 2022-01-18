@@ -61,9 +61,7 @@ export const getUpdatedTransactionsPaymentQRIdentifiers = (
       )?.value;
 
       if (paymentQRPayload) {
-        const paymentQR = parsePaymentQR(paymentQRPayload, {
-          source: "UPDATE_TXN_PAYMENT_QR_IDENTIFIERS",
-        }) as PaymentQR;
+        const paymentQR = parsePaymentQR(paymentQRPayload) as PaymentQR;
         paymentQR.merchantAccountInformation = pick(
           paymentQR.merchantAccountInformation,
           ["nets"]

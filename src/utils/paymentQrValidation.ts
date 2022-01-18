@@ -8,9 +8,7 @@ import { pick } from "lodash";
 
 const paymentQrValidate = (paymentQr: string): boolean => {
   try {
-    const paymentQR = parsePaymentQR(paymentQr, {
-      source: "PAYMENT_QR_VALIDATE",
-    });
+    const paymentQR = parsePaymentQR(paymentQr);
     const supportedPaymentMerchantAccounts = pick(
       paymentQR.merchantAccountInformation,
       ["nets"]
