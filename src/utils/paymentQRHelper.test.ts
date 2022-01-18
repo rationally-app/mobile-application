@@ -136,6 +136,7 @@ describe("tests for getUpdatedTransactionsPaymentQRIdentifiers for NETS", () => 
   let merchantNameIdentifierInput: IdentifierInput;
   let merchantIdIdentifierInput: IdentifierInput;
   let terminalIdIdentifierInput: IdentifierInput;
+  let qrTypeIdentifierInput: IdentifierInput;
 
   beforeAll(() => {
     paymentQRPayloadWithNETS =
@@ -162,6 +163,12 @@ describe("tests for getUpdatedTransactionsPaymentQRIdentifiers for NETS", () => 
     };
     terminalIdIdentifierInput = {
       label: "terminalId",
+      isOptional: true,
+      value: "",
+      textInputType: "STRING",
+    };
+    qrTypeIdentifierInput = {
+      label: "qrType",
       isOptional: true,
       value: "",
       textInputType: "STRING",
@@ -193,6 +200,38 @@ describe("tests for getUpdatedTransactionsPaymentQRIdentifiers for NETS", () => 
           { ...merchantNameIdentifierInput, value: "FOOD XYZ PTE LTD" },
           { ...merchantIdIdentifierInput, value: "000111870324000" },
           { ...terminalIdIdentifierInput, value: "88587201" },
+        ],
+      },
+    ]);
+  });
+
+  it("should return updated transactions with identifiers properly if property does not exist", () => {
+    expect.assertions(1);
+
+    expect(
+      getUpdatedTransactionsPaymentQRIdentifiers([
+        {
+          category: "category-a",
+          quantity: 1,
+          identifierInputs: [
+            { ...paymentQRIdentifierInput, value: paymentQRPayloadWithNETS },
+            merchantNameIdentifierInput,
+            merchantIdIdentifierInput,
+            terminalIdIdentifierInput,
+            qrTypeIdentifierInput,
+          ],
+        },
+      ])
+    ).toStrictEqual([
+      {
+        category: "category-a",
+        quantity: 1,
+        identifierInputs: [
+          { ...paymentQRIdentifierInput, value: paymentQRPayloadWithNETS },
+          { ...merchantNameIdentifierInput, value: "FOOD XYZ PTE LTD" },
+          { ...merchantIdIdentifierInput, value: "000111870324000" },
+          { ...terminalIdIdentifierInput, value: "88587201" },
+          { ...qrTypeIdentifierInput },
         ],
       },
     ]);
