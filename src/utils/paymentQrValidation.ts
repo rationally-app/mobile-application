@@ -7,7 +7,7 @@ import {
 import { pick } from "lodash";
 import { ERROR_MESSAGE } from "../context/alert";
 
-const paymentQrValidate = (payload: string): boolean => {
+const isValidPaymentQR = (payload: string): boolean => {
   try {
     const paymentQR = parsePaymentQR(payload);
     const supportedPaymentMerchantAccounts = pick(
@@ -33,4 +33,4 @@ const paymentQrValidate = (payload: string): boolean => {
   }
 };
 
-export default paymentQrValidate;
+export default isValidPaymentQR;
