@@ -34,6 +34,11 @@ import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import {
+  PaymentQRDeformedError,
+  PaymentQRMissingInfoError,
+  UnsupportedPaymentQRError,
+} from "../../utils/paymentQrValidation";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -180,13 +185,19 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     }
 
     if (cartError) {
-      if (cartError instanceof SessionError) {
-        clearCartError();
-        expireSession();
-        showErrorAlert(cartError, () => {
-          navigation.navigate("CampaignLocationsScreen");
-        });
-        return;
+      switch (true) {
+        case cartError instanceof SessionError:
+          clearCartError();
+          expireSession();
+          showErrorAlert(cartError, () => {
+            navigation.navigate("CampaignLocationsScreen");
+          });
+          return;
+        case cartError instanceof PaymentQRDeformedError ||
+          cartError instanceof PaymentQRMissingInfoError ||
+          cartError instanceof UnsupportedPaymentQRError:
+          showErrorAlert(cartError, () => clearCartError());
+          return;
       }
       if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
         switch (cartError.message) {
