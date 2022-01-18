@@ -2,7 +2,7 @@ import { ERROR_MESSAGE } from "../context/alert";
 import isValidPaymentQR, {
   PaymentQRDeformedError,
   PaymentQRMissingInfoError,
-  UnsupportedPaymentQRError,
+  PaymentQRUnsupportedError,
 } from "./paymentQrValidation";
 
 describe("isValidPaymentQR Test", () => {
@@ -48,7 +48,7 @@ describe("tests for errors thrown during isValidPaymentQR", () => {
     const payloadWithoutNETS =
       "00020101021126520008com.grab0136c99990dc-ab89-442f-accb-1fd96dd4eff627330015sg.com.dash.www0110000000901628460010com.myfave0128https://myfave.com/qr/6ntdz329360009SG.AIRPAY0119936009180000000468751810007SG.SGQR01121809112DE3C7020701.000703065743700402010503105060400000708202012105204581253037025802SG5920UDDERS UPPER THOMSON6009Singapore63047AEC";
     expect(() => isValidPaymentQR(payloadWithoutNETS)).toThrow(
-      new UnsupportedPaymentQRError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+      new PaymentQRUnsupportedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
     );
   });
 });

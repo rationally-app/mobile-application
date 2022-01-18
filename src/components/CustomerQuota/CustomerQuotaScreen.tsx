@@ -37,7 +37,7 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import {
   PaymentQRDeformedError,
   PaymentQRMissingInfoError,
-  UnsupportedPaymentQRError,
+  PaymentQRUnsupportedError,
 } from "../../utils/paymentQrValidation";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
@@ -195,7 +195,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           return;
         case cartError instanceof PaymentQRDeformedError ||
           cartError instanceof PaymentQRMissingInfoError ||
-          cartError instanceof UnsupportedPaymentQRError:
+          cartError instanceof PaymentQRUnsupportedError:
           showErrorAlert(cartError, () => clearCartError());
           return;
       }

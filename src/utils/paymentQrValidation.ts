@@ -16,7 +16,7 @@ export class PaymentQRMissingInfoError extends Error {
   }
 }
 
-export class UnsupportedPaymentQRError extends Error {
+export class PaymentQRUnsupportedError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "UnsupportedPaymentQRError";
@@ -35,7 +35,7 @@ const isValidPaymentQR = (payload: string): boolean => {
     ).some((information) => information);
 
     if (!isPaymentQRSupported) {
-      throw new UnsupportedPaymentQRError(
+      throw new PaymentQRUnsupportedError(
         ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
       );
     }
@@ -49,7 +49,7 @@ const isValidPaymentQR = (payload: string): boolean => {
         ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
       );
     }
-    throw new UnsupportedPaymentQRError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    throw new PaymentQRUnsupportedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
   }
 };
 
