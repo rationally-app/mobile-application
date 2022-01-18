@@ -35,21 +35,21 @@ const isValidPaymentQR = (payload: string): boolean => {
     ).some((information) => information);
 
     if (!isPaymentQRSupported) {
-      throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+      throw new UnsupportedPaymentQRError(
+        ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+      );
     }
 
     return isPaymentQRSupported;
-  } catch (e) {
-    if (e instanceof PaymentQRDeformedError) {
+  } catch (e: any) {
+    if (e.name === "PaymentQRDeformedError") {
       throw new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
-    } else if (e instanceof SGQRParseError) {
-      throw new SGQRParseError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
-    } else if (e instanceof PaymentQRMissingInfoError) {
+    } else if (e.name === "PaymentQRMissingInfoError") {
       throw new PaymentQRMissingInfoError(
         ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
       );
     }
-    throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    throw new UnsupportedPaymentQRError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
   }
 };
 
