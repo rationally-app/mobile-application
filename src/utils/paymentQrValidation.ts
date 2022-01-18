@@ -5,10 +5,11 @@ import {
   SGQRParseError,
 } from "@rationally-app/payment-qr-parser";
 import { pick } from "lodash";
+import { ERROR_MESSAGE } from "../context/alert";
 
-const paymentQrValidate = (paymentQr: string): boolean => {
+const paymentQrValidate = (payload: string): boolean => {
   try {
-    const paymentQR = parsePaymentQR(paymentQr);
+    const paymentQR = parsePaymentQR(payload);
     const supportedPaymentMerchantAccounts = pick(
       paymentQR.merchantAccountInformation,
       ["nets"]
@@ -19,15 +20,16 @@ const paymentQrValidate = (paymentQr: string): boolean => {
 
     return isPaymentQRSupported;
   } catch (e) {
-    // TODO: Catch errors
     if (e instanceof PaymentQRDeformedError) {
-      throw new PaymentQRDeformedError();
+      throw new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     } else if (e instanceof SGQRParseError) {
-      throw new SGQRParseError();
+      throw new SGQRParseError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     } else if (e instanceof PaymentQRMissingInfoError) {
-      throw new PaymentQRMissingInfoError();
+      throw new PaymentQRMissingInfoError(
+        ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+      );
     }
-    return false;
+    throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
   }
 };
 

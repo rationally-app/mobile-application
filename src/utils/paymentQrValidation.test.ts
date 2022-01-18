@@ -1,3 +1,9 @@
+import {
+  PaymentQRDeformedError,
+  PaymentQRMissingInfoError,
+  SGQRParseError,
+} from "@rationally-app/payment-qr-parser";
+import { ERROR_MESSAGE } from "../context/alert";
 import paymentQrValidate from "./paymentQrValidation";
 
 describe("paymentQrValidate Test", () => {
@@ -10,17 +16,39 @@ describe("paymentQrValidate Test", () => {
     expect(paymentQrValidate(sgqrPayload)).toBe(true);
   });
 
-  it("should return false if invalid qr payload", () => {
-    expect.assertions(1);
-
-    expect(paymentQrValidate("invalid sgqrPayload")).toBe(false);
-  });
-
   // TODO: Refine test when policy is used to filter supported payment rails
   it("should return false if payload does not contain NETS", () => {
     expect.assertions(1);
     const payloadWithoutNETS =
       "00020101021126520008com.grab0136c99990dc-ab89-442f-accb-1fd96dd4eff627330015sg.com.dash.www0110000000901628460010com.myfave0128https://myfave.com/qr/6ntdz329360009SG.AIRPAY0119936009180000000468751810007SG.SGQR01121809112DE3C7020701.000703065743700402010503105060400000708202012105204581253037025802SG5920UDDERS UPPER THOMSON6009Singapore63047AEC";
     expect(paymentQrValidate(payloadWithoutNETS)).toStrictEqual(false);
+  });
+});
+
+describe("tests for errors thrown during paymentQrValidate", () => {
+  it("should throw error when parsing deformed payment QR payload", () => {
+    expect.assertions(1);
+    const deformedPaymentQRPayload = "deformedPayload";
+    expect(() => paymentQrValidate(deformedPaymentQRPayload)).toThrow(
+      new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+    );
+  });
+
+  it("should throw error when parsing invalid SGQR payload", () => {
+    expect.assertions(1);
+    const invalidSGQRPayload =
+      "0002010102112636009SG.PAYNOW010120210200408850D030115204000053037025802SG5913EZB PTE. LTD.6009Singapore6304C65";
+    expect(() => paymentQrValidate(invalidSGQRPayload)).toThrow(
+      new SGQRParseError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+    );
+  });
+
+  it("should throw error when parsing SGQR payload with missing info", () => {
+    expect.assertions(1);
+    const missingInfoSGQRPayload =
+      "00020101021126370009SG.PAYNOW010130210200408850D030115204000053037025802SG5913EZB PTE. LTD.6009Singapore63043F6B";
+    expect(() => paymentQrValidate(missingInfoSGQRPayload)).toThrow(
+      new PaymentQRMissingInfoError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+    );
   });
 });
