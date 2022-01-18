@@ -1,11 +1,27 @@
-import {
-  parsePaymentQR,
-  PaymentQRDeformedError,
-  PaymentQRMissingInfoError,
-  SGQRParseError,
-} from "@rationally-app/payment-qr-parser";
+import { parsePaymentQR } from "@rationally-app/payment-qr-parser";
 import { pick } from "lodash";
 import { ERROR_MESSAGE } from "../context/alert";
+
+export class PaymentQRDeformedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PaymentQRDeformedError";
+  }
+}
+
+export class PaymentQRMissingInfoError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PaymentQRMissingInfoError";
+  }
+}
+
+export class UnsupportedPaymentQRError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UnsupportedPaymentQRError";
+  }
+}
 
 const isValidPaymentQR = (payload: string): boolean => {
   try {
