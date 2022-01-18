@@ -128,6 +128,39 @@ describe("tests for getUpdatedTransactionsPaymentQRIdentifiers for non-NETS", ()
       },
     ]);
   });
+
+  it("should return transactions with identifiers properly if PAYMENT_QR identifier does not exist", () => {
+    expect.assertions(1);
+    expect(
+      getUpdatedTransactionsPaymentQRIdentifiers([
+        {
+          category: "category-a",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...paymentQRIdentifierInput,
+              value: paymentQRPayloadWithoutNETS,
+              textInputType: "STRING",
+            },
+            merchantIdIdentifierInput,
+          ],
+        },
+      ])
+    ).toStrictEqual([
+      {
+        category: "category-a",
+        quantity: 1,
+        identifierInputs: [
+          {
+            ...paymentQRIdentifierInput,
+            value: paymentQRPayloadWithoutNETS,
+            textInputType: "STRING",
+          },
+          merchantIdIdentifierInput,
+        ],
+      },
+    ]);
+  });
 });
 
 describe("tests for getUpdatedTransactionsPaymentQRIdentifiers for NETS", () => {
@@ -232,6 +265,43 @@ describe("tests for getUpdatedTransactionsPaymentQRIdentifiers for NETS", () => 
           { ...merchantIdIdentifierInput, value: "000111870324000" },
           { ...terminalIdIdentifierInput, value: "88587201" },
           { ...qrTypeIdentifierInput },
+        ],
+      },
+    ]);
+  });
+
+  it("should return transactions with identifiers properly if PAYMENT_QR identifier does not exist", () => {
+    expect.assertions(1);
+    expect(
+      getUpdatedTransactionsPaymentQRIdentifiers([
+        {
+          category: "category-a",
+          quantity: 1,
+          identifierInputs: [
+            {
+              ...paymentQRIdentifierInput,
+              value: paymentQRPayloadWithNETS,
+              textInputType: "STRING",
+            },
+            merchantNameIdentifierInput,
+            merchantIdIdentifierInput,
+            terminalIdIdentifierInput,
+          ],
+        },
+      ])
+    ).toStrictEqual([
+      {
+        category: "category-a",
+        quantity: 1,
+        identifierInputs: [
+          {
+            ...paymentQRIdentifierInput,
+            value: paymentQRPayloadWithNETS,
+            textInputType: "STRING",
+          },
+          merchantNameIdentifierInput,
+          merchantIdIdentifierInput,
+          terminalIdIdentifierInput,
         ],
       },
     ]);

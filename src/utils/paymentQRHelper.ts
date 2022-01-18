@@ -51,7 +51,9 @@ export const getUpdatedTransactionsPaymentQRIdentifiers = (
 ): Array<Transaction> => {
   return transactions.map((transaction) => {
     const { identifierInputs } = transaction;
-    let newIdentifierInputs: Array<IdentifierInput> | undefined;
+    let newIdentifierInputs:
+      | Array<IdentifierInput>
+      | undefined = identifierInputs;
 
     if (identifierInputs) {
       const paymentQRPayload = identifierInputs.find(
