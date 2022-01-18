@@ -61,6 +61,7 @@ export const getUpdatedTransactionsPaymentQRIdentifiers = (
       )?.value;
 
       if (paymentQRPayload) {
+        // We can safely parse payment QR here since it has been validated upstream
         const paymentQR = parsePaymentQR(paymentQRPayload) as PaymentQR;
         paymentQR.merchantAccountInformation = pick(
           paymentQR.merchantAccountInformation,
