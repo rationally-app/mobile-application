@@ -440,5 +440,23 @@ export const zh: Translations = {
     dynamicContentFallback: {
       minutes: "几",
     },
+    deformedQR: {
+      // TODO: Put zh translation for this
+      title: "Deformed QR",
+      body: "请扫描有效的编号。",
+      primaryActionText: "确定",
+    },
+    missingInfoInQR: {
+      // TODO: Put zh translation for this
+      title: "Missing info in QR",
+      body: "请扫描有效的编号。",
+      primaryActionText: "确定",
+    },
+    unsupportedQR: {
+      // TODO: Put zh translation for this
+      title: "Unsupported QR",
+      body: "请扫描有效的编号。",
+      primaryActionText: "确定",
+    },
   },
 };

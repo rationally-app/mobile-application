@@ -452,5 +452,20 @@ export const en: Translations = {
     dynamicContentFallback: {
       minutes: "a few",
     },
+    deformedQR: {
+      title: "Deformed QR",
+      body: "Scan a valid code.",
+      primaryActionText: "OK",
+    },
+    missingInfoInQR: {
+      title: "Missing info in QR",
+      body: "Scan a valid code.",
+      primaryActionText: "OK",
+    },
+    unsupportedQR: {
+      title: "Unsupported QR",
+      body: "Scan a valid code.",
+      primaryActionText: "OK",
+    },
   },
 };
