@@ -1,11 +1,16 @@
-import { parseAndValidateSGQR } from "@rationally-app/payment-qr-parser";
+import {
+  parsePaymentQR,
+  PaymentQRDeformedError,
+  PaymentQRMissingInfoError,
+  SGQRParseError,
+} from "@rationally-app/payment-qr-parser";
 import { pick } from "lodash";
 
 const paymentQrValidate = (paymentQr: string): boolean => {
   try {
-    // TODO: Expand support for payment QRs
-    const paymentQR = parseAndValidateSGQR(paymentQr);
-    // TODO: Use policy to filter supported payment rails
+    const paymentQR = parsePaymentQR(paymentQr, {
+      source: "PAYMENT_QR_VALIDATE",
+    });
     const supportedPaymentMerchantAccounts = pick(
       paymentQR.merchantAccountInformation,
       ["nets"]
@@ -16,6 +21,14 @@ const paymentQrValidate = (paymentQr: string): boolean => {
 
     return isPaymentQRSupported;
   } catch (e) {
+    // TODO: Catch errors
+    if (e instanceof PaymentQRDeformedError) {
+      throw new PaymentQRDeformedError();
+    } else if (e instanceof SGQRParseError) {
+      throw new SGQRParseError();
+    } else if (e instanceof PaymentQRMissingInfoError) {
+      throw new PaymentQRMissingInfoError();
+    }
     return false;
   }
 };
