@@ -18,6 +18,10 @@ const isValidPaymentQR = (payload: string): boolean => {
       supportedPaymentMerchantAccounts
     ).some((information) => information);
 
+    if (!isPaymentQRSupported) {
+      throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    }
+
     return isPaymentQRSupported;
   } catch (e) {
     if (e instanceof PaymentQRDeformedError) {
