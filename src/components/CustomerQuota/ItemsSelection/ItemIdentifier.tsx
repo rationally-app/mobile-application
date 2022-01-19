@@ -56,40 +56,42 @@ export const ItemIdentifier: FunctionComponent<{
 
   return (
     <>
-      <View style={styles.inputAndButtonWrapper}>
-        {textInput.visible &&
-          (textInput.type === "PHONE_NUMBER" ? (
-            <IdentifierPhoneNumberInput
-              addMarginRight={scanButton.visible}
-              label={c13nt(label)}
-              onPhoneNumberChange={onManualInput}
-              value={inputValue}
+      {(textInput.visible || scanButton.visible) && (
+        <View style={styles.inputAndButtonWrapper}>
+          {textInput.visible &&
+            (textInput.type === "PHONE_NUMBER" ? (
+              <IdentifierPhoneNumberInput
+                addMarginRight={scanButton.visible}
+                label={c13nt(label)}
+                onPhoneNumberChange={onManualInput}
+                value={inputValue}
+              />
+            ) : textInput.type === "SINGLE_CHOICE" ? (
+              <IdentifierSelectionInput
+                addMarginRight={scanButton.visible}
+                label={c13nt(label)}
+                onSelectDropdown={onManualInput}
+                dropdownItems={textInput.choices}
+              />
+            ) : (
+              <IdentifierTextInput
+                addMarginRight={scanButton.visible}
+                editable={!textInput.disabled}
+                label={c13nt(label)}
+                onChange={onManualInput}
+                type={textInput.type}
+                value={inputValue}
+              />
+            ))}
+          {scanButton.visible && (
+            <IdentifierScanButton
+              disabled={scanButton.disabled}
+              fullWidth={!textInput.visible}
+              onPress={() => setShouldShowCamera(true)}
             />
-          ) : textInput.type === "SINGLE_CHOICE" ? (
-            <IdentifierSelectionInput
-              addMarginRight={scanButton.visible}
-              label={c13nt(label)}
-              onSelectDropdown={onManualInput}
-              dropdownItems={textInput.choices}
-            />
-          ) : (
-            <IdentifierTextInput
-              addMarginRight={scanButton.visible}
-              editable={!textInput.disabled}
-              label={c13nt(label)}
-              onChange={onManualInput}
-              type={textInput.type}
-              value={inputValue}
-            />
-          ))}
-        {scanButton.visible && (
-          <IdentifierScanButton
-            disabled={scanButton.disabled}
-            fullWidth={!textInput.visible}
-            onPress={() => setShouldShowCamera(true)}
-          />
-        )}
-      </View>
+          )}
+        </View>
+      )}
       {shouldShowCamera && (
         <IdentifierScanModal
           setShouldShowCamera={setShouldShowCamera}
