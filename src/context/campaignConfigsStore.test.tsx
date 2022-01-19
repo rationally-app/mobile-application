@@ -156,13 +156,13 @@ describe("CampaignConfigsStoreContextProvider", () => {
       </ErrorBoundary>
     );
 
-    await waitFor(() => {
-      expect(mockReadBucket).toHaveBeenCalledTimes(1);
-    });
+    expect(mockReadBucket).toHaveBeenCalledTimes(1);
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
-    expect(mockCaptureException).toHaveBeenCalledTimes(1);
-  });
+    await waitFor(() => {
+      expect(mockCaptureException).toHaveBeenCalledTimes(1);
+    });
+  }, 60000);
 
   it("should clear the campaign configs and from asyncstorage when clear function is called", async () => {
     expect.assertions(10);
