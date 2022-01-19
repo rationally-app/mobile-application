@@ -83,9 +83,9 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   LimitReachedError: "scanLimitReached",
   NotEligibleError: "notEligible",
   LogoutError: "systemErrorLogoutIssue",
-  PaymentQRDeformedError: "deformedQR",
-  PaymentQRMissingInfoError: "missingInfoInQR",
-  UnsupportedPaymentQRError: "unsupportedQR",
+  PaymentQRDeformedError: "deformedPaymentQR",
+  PaymentQRMissingInfoError: "missingInfoInPaymentQR",
+  UnsupportedPaymentQRError: "unsupportedPaymentMethodInPaymentQR",
 };
 
 const getTranslationKeyFromError = (error: Error): string => {

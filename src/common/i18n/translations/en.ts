@@ -452,17 +452,17 @@ export const en: Translations = {
     dynamicContentFallback: {
       minutes: "a few",
     },
-    deformedQR: {
+    deformedPaymentQR: {
       title: "Deformed payment QR",
       body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
-    missingInfoInQR: {
+    missingInfoInPaymentQR: {
       title: "Missing info in payment QR",
       body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
-    unsupportedQR: {
+    unsupportedPaymentMethodInPaymentQR: {
       title: "Unsupported payment method",
       body: "Enter or scan a valid code.",
       primaryActionText: "OK",
