@@ -1,6 +1,7 @@
 import { parsePaymentQR } from "@rationally-app/payment-qr-parser";
 import { pick } from "lodash";
 import { ERROR_MESSAGE } from "../context/alert";
+import { Sentry } from "./errorTracking";
 
 export class PaymentQRDeformedError extends Error {
   constructor(message: string) {
@@ -42,6 +43,12 @@ const isValidPaymentQR = (payload: string): boolean => {
 
     return isPaymentQRSupported;
   } catch (e: any) {
+    Sentry.addBreadcrumb({
+      category: "paymentQR",
+      message: payload,
+    });
+    Sentry.captureException(e);
+
     if (e.name === "PaymentQRMissingInfoError") {
       throw new PaymentQRMissingInfoError(
         ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
