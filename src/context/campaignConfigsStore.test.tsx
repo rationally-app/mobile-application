@@ -217,10 +217,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
       );
     });
 
-    await act(async () => {
-      const button = getByText("test button");
-      fireEvent.press(button);
-    });
+    const button = getByText("test button");
+    fireEvent.press(button);
 
     expect(mockWriteBucket).toHaveBeenCalledTimes(1);
     expect(mockWriteBucket).toHaveBeenCalledWith(
@@ -296,10 +294,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
       );
     });
 
-    await act(async () => {
-      const button = getByText("test button");
-      fireEvent.press(button);
-    });
+    const button = getByText("test button");
+    fireEvent.press(button);
 
     expect(mockWriteBucket).toHaveBeenCalledTimes(1);
     expect(mockWriteBucket).toHaveBeenCalledWith(
@@ -378,10 +374,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
       );
     });
 
-    await act(async () => {
-      const button = getByText("test button");
-      fireEvent.press(button);
-    });
+    const button = getByText("test button");
+    fireEvent.press(button);
 
     expect(mockWriteBucket).toHaveBeenCalledTimes(1);
     expect(mockWriteBucket).toHaveBeenCalledWith(
@@ -473,10 +467,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
       );
     });
 
-    await act(async () => {
-      const button = getByText("test button");
-      fireEvent.press(button);
-    });
+    const button = getByText("test button");
+    fireEvent.press(button);
 
     expect(mockWriteBucket).toHaveBeenCalledTimes(1);
     expect(mockWriteBucket).toHaveBeenCalledWith(
@@ -559,10 +551,8 @@ describe("CampaignConfigsStoreContextProvider", () => {
       );
     });
 
-    await act(async () => {
-      const button = getByText("test button");
-      fireEvent.press(button);
-    });
+    const button = getByText("test button");
+    fireEvent.press(button);
 
     expect(mockWriteBucket).toHaveBeenCalledTimes(1);
     expect(mockWriteBucket).toHaveBeenCalledWith(
