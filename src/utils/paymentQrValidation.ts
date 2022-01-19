@@ -42,18 +42,12 @@ const isValidPaymentQR = (payload: string): boolean => {
 
     return isPaymentQRSupported;
   } catch (e: any) {
-    if (
-      e.name === "PaymentQRDeformedError" ||
-      e.name === "SGQRParseError" ||
-      e.name === "NETSQRParseError"
-    ) {
-      throw new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
-    } else if (e.name === "PaymentQRMissingInfoError") {
+    if (e.name === "PaymentQRMissingInfoError") {
       throw new PaymentQRMissingInfoError(
         ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
       );
     }
-    throw new PaymentQRUnsupportedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    throw new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
   }
 };
 
