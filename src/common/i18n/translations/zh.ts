@@ -441,21 +441,18 @@ export const zh: Translations = {
       minutes: "几",
     },
     deformedQR: {
-      // TODO: Put zh translation for this
-      title: "Deformed QR",
-      body: "请扫描有效的编号。",
+      title: "Deformed payment QR",
+      body: "请输入或扫描有效的编号。",
       primaryActionText: "确定",
     },
     missingInfoInQR: {
-      // TODO: Put zh translation for this
-      title: "Missing info in QR",
-      body: "请扫描有效的编号。",
+      title: "Missing info in payment QR",
+      body: "请输入或扫描有效的编号。",
       primaryActionText: "确定",
     },
     unsupportedQR: {
-      // TODO: Put zh translation for this
-      title: "Unsupported QR",
-      body: "请扫描有效的编号。",
+      title: "Unsupported payment method",
+      body: "请输入或扫描有效的编号。",
       primaryActionText: "确定",
     },
   },
