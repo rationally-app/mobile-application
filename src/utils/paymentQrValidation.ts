@@ -19,7 +19,7 @@ export class PaymentQRMissingInfoError extends Error {
 export class PaymentQRUnsupportedError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "UnsupportedPaymentQRError";
+    this.name = "PaymentQRUnsupportedError";
   }
 }
 
