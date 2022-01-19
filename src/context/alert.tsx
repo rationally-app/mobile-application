@@ -85,7 +85,7 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   LogoutError: "systemErrorLogoutIssue",
   PaymentQRDeformedError: "deformedPaymentQR",
   PaymentQRMissingInfoError: "missingInfoInPaymentQR",
-  UnsupportedPaymentQRError: "unsupportedPaymentMethodInPaymentQR",
+  PaymentQRUnsupportedError: "unsupportedPaymentMethodInPaymentQR",
 };
 
 const getTranslationKeyFromError = (error: Error): string => {
