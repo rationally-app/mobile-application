@@ -149,7 +149,7 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
     const newData = dropdownItems.filter((item) => {
       return c13nt(item.value, undefined, item.label)
         .toUpperCase()
-        .includes(text.toUpperCase());
+        .includes(text.trim().replace(/\s+/g, " ").toUpperCase());
     });
     setFilterState(newData);
   };
