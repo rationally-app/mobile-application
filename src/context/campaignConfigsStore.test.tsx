@@ -12,7 +12,6 @@ import {
   readFromStoreInBuckets,
   saveToStoreInBuckets,
 } from "../utils/bucketStorageHelper";
-import { act } from "react-test-renderer";
 
 jest.mock("../utils/bucketStorageHelper");
 
@@ -141,7 +140,6 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
   it("should call Sentry when the campaign config from the store is malformed", async () => {
     expect.assertions(3);
-    jest.setTimeout(60000);
     mockReadBucket.mockResolvedValueOnce("malformed object");
 
     render(
@@ -158,12 +156,12 @@ describe("CampaignConfigsStoreContextProvider", () => {
       </ErrorBoundary>
     );
 
-    expect(mockReadBucket).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(mockReadBucket).toHaveBeenCalledTimes(1);
+    });
     expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
 
-    await waitFor(() => {
-      expect(mockCaptureException).toHaveBeenCalledTimes(1);
-    });
+    expect(mockCaptureException).toHaveBeenCalledTimes(1);
   });
 
   it("should clear the campaign configs and from asyncstorage when clear function is called", async () => {
