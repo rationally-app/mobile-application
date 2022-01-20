@@ -65,7 +65,7 @@ export enum ERROR_MESSAGE {
 
 const errorNameToTranslationKeyMappings: Record<string, string> = {
   CampaignConfigError: "systemErrorConnectivityIssues",
-  SessionError: "expiredQR",
+  SessionError: "expiredSession",
   PastTransactionError: "systemErrorServerIssues",
   QuotaError: "systemErrorConnectivityIssues",
   LockError: "systemErrorConnectivityIssues",

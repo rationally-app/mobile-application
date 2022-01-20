@@ -210,6 +210,11 @@ export const zh: Translations = {
       body: "仅限于在有效期内使用您的QR码。",
       primaryActionText: "确定",
     },
+    expiredSession: {
+      title: "过期",
+      body: "请扫描您的负责人提供的QR码再次登录。",
+      primaryActionText: "确定",
+    },
     expiredOTP: {
       title: "过期",
       body: "获取新的一次性密码后再试一次。",

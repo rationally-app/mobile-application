@@ -218,6 +218,11 @@ export const en: Translations = {
       body: "Only use your QR code during the validity period.",
       primaryActionText: "OK",
     },
+    expiredSession: {
+      title: "Expired",
+      body: "Login again with the QR code provided by your in-charge",
+      primaryActionText: "OK",
+    },
     expiredOTP: {
       title: "Expired",
       body: "Get a new OTP and try again.",
