@@ -1,24 +1,14 @@
-import { parsePaymentQR } from "@rationally-app/payment-qr-parser";
+import {
+  parsePaymentQR,
+  PaymentQRMissingInfoError,
+  PaymentQRDeformedError,
+} from "@rationally-app/payment-qr-parser";
 import { pick } from "lodash";
 import { ERROR_MESSAGE } from "../context/alert";
 import { Sentry } from "./errorTracking";
 
-export class PaymentQRDeformedError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "PaymentQRDeformedError";
-  }
-}
-
-export class PaymentQRMissingInfoError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "PaymentQRMissingInfoError";
-  }
-}
-
 export class PaymentQRUnsupportedError extends Error {
-  constructor(message: string) {
+  constructor(message?: string) {
     super(message);
     this.name = "PaymentQRUnsupportedError";
   }
@@ -49,7 +39,11 @@ const isValidPaymentQR = (payload: string): boolean => {
     });
     Sentry.captureException(e);
 
-    if (e.name === "PaymentQRMissingInfoError") {
+    if (e instanceof PaymentQRUnsupportedError) {
+      throw new PaymentQRUnsupportedError(
+        ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+      );
+    } else if (e instanceof PaymentQRMissingInfoError) {
       throw new PaymentQRMissingInfoError(
         ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
       );

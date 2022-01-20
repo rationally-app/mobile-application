@@ -1,7 +1,6 @@
 import {
   PaymentQRDeformedError,
   PaymentQRMissingInfoError,
-  SGQRParseError,
 } from "@rationally-app/payment-qr-parser";
 import { ERROR_MESSAGE } from "../context/alert";
 import { validateIdentifierInputs } from "./validateIdentifierInputs";
@@ -344,7 +343,9 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
             "00020101021126520008com.grab0136c99990dc-ab89-442f-accb-1fd96dd4eff627330015sg.com.dash.www0110000000901628460010com.myfave0128https://myfave.com/qr/6ntdz329360009SG.AIRPAY0119936009180000000468751810007SG.SGQR01121809112DE3C7020701.000703065743700402010503105060400000708202012105204581253037025802SG5920UDDERS UPPER THOMSON6009Singapore63047AEC",
         },
       ])
-    ).toThrow(new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT));
+    ).toThrow(
+      new PaymentQRUnsupportedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+    );
   });
 
   it("should throw error when it contains deformed payment QR payload", () => {
@@ -377,7 +378,9 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
             "0002010102112636009SG.PAYNOW010120210200408850D030115204000053037025802SG5913EZB PTE. LTD.6009Singapore6304C65",
         },
       ])
-    ).toThrow(new SGQRParseError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT));
+    ).toThrow(
+      new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+    );
   });
 
   it("should throw error when it contains SGQR payload with missing info", () => {

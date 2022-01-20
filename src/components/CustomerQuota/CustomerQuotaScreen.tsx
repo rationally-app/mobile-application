@@ -34,11 +34,11 @@ import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { PaymentQRUnsupportedError } from "../../utils/paymentQrValidation";
 import {
   PaymentQRDeformedError,
   PaymentQRMissingInfoError,
-  PaymentQRUnsupportedError,
-} from "../../utils/paymentQrValidation";
+} from "@rationally-app/payment-qr-parser";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
