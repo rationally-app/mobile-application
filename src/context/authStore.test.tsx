@@ -146,7 +146,7 @@ describe("AuthStoreContextProvider", () => {
     await waitFor(() => {
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
-  });
+  }, 60000);
 
   it("should clear the auth credentials and from asyncstorage when clear function is called", async () => {
     expect.assertions(6);

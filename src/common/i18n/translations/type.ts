@@ -482,5 +482,20 @@ export type Translations = {
     dynamicContentFallback: {
       minutes: string;
     };
+    deformedPaymentQR: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    missingInfoInPaymentQR: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    unsupportedPaymentMethodInPaymentQR: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
   };
 };

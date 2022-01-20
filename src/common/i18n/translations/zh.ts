@@ -440,5 +440,20 @@ export const zh: Translations = {
     dynamicContentFallback: {
       minutes: "几",
     },
+    deformedPaymentQR: {
+      title: "Deformed payment QR",
+      body: "请输入或扫描有效的编号。",
+      primaryActionText: "确定",
+    },
+    missingInfoInPaymentQR: {
+      title: "Missing info in payment QR",
+      body: "请输入或扫描有效的编号。",
+      primaryActionText: "确定",
+    },
+    unsupportedPaymentMethodInPaymentQR: {
+      title: "Unsupported payment method",
+      body: "请输入或扫描有效的编号。",
+      primaryActionText: "确定",
+    },
   },
 };

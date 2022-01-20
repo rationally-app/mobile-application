@@ -1,4 +1,4 @@
-import { parseAndValidateSGQR } from "@rationally-app/payment-qr-parser";
+import { parsePaymentQR } from "@rationally-app/payment-qr-parser";
 import { PaymentQR } from "@rationally-app/payment-qr-parser/dist/paymentQr/types";
 import { pick } from "lodash";
 import { IdentifierInput, Transaction } from "../types";
@@ -61,10 +61,8 @@ export const getUpdatedTransactionsPaymentQRIdentifiers = (
       )?.value;
 
       if (paymentQRPayload) {
-        // TODO: Expand support for payment QRs
-        // TODO: Perform preliminary parsing to determine payload type, then perform parsing
-        const paymentQR = parseAndValidateSGQR(paymentQRPayload) as PaymentQR;
-        // TODO: Use policy to filter supported payment rails
+        // We can safely parse payment QR here since it has been validated upstream
+        const paymentQR = parsePaymentQR(paymentQRPayload) as PaymentQR;
         paymentQR.merchantAccountInformation = pick(
           paymentQR.merchantAccountInformation,
           ["nets"]

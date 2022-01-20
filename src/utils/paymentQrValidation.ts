@@ -1,11 +1,22 @@
-import { parseAndValidateSGQR } from "@rationally-app/payment-qr-parser";
+import {
+  parsePaymentQR,
+  PaymentQRMissingInfoError,
+  PaymentQRDeformedError,
+} from "@rationally-app/payment-qr-parser";
 import { pick } from "lodash";
+import { ERROR_MESSAGE } from "../context/alert";
+import { Sentry } from "./errorTracking";
 
-const paymentQrValidate = (paymentQr: string): boolean => {
+export class PaymentQRUnsupportedError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = "PaymentQRUnsupportedError";
+  }
+}
+
+const isValidPaymentQR = (payload: string): boolean => {
   try {
-    // TODO: Expand support for payment QRs
-    const paymentQR = parseAndValidateSGQR(paymentQr);
-    // TODO: Use policy to filter supported payment rails
+    const paymentQR = parsePaymentQR(payload);
     const supportedPaymentMerchantAccounts = pick(
       paymentQR.merchantAccountInformation,
       ["nets"]
@@ -14,10 +25,31 @@ const paymentQrValidate = (paymentQr: string): boolean => {
       supportedPaymentMerchantAccounts
     ).some((information) => information);
 
+    if (!isPaymentQRSupported) {
+      throw new PaymentQRUnsupportedError(
+        ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+      );
+    }
+
     return isPaymentQRSupported;
-  } catch (e) {
-    return false;
+  } catch (e: any) {
+    Sentry.addBreadcrumb({
+      category: "paymentQR",
+      message: payload,
+    });
+    Sentry.captureException(e);
+
+    if (e instanceof PaymentQRUnsupportedError) {
+      throw new PaymentQRUnsupportedError(
+        ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+      );
+    } else if (e instanceof PaymentQRMissingInfoError) {
+      throw new PaymentQRMissingInfoError(
+        ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+      );
+    }
+    throw new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
   }
 };
 
-export default paymentQrValidate;
+export default isValidPaymentQR;

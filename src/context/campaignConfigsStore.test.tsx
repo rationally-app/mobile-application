@@ -162,7 +162,7 @@ describe("CampaignConfigsStoreContextProvider", () => {
     await waitFor(() => {
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
-  });
+  }, 60000);
 
   it("should clear the campaign configs and from asyncstorage when clear function is called", async () => {
     expect.assertions(10);
@@ -217,23 +217,22 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await waitFor(() => {
-      expect(mockWriteBucket).toHaveBeenCalledTimes(1);
-      expect(mockWriteBucket).toHaveBeenCalledWith(
-        "CAMPAIGN_CONFIGS_STORE",
-        "{}",
-        JSON.stringify({
-          [testCampaignKey]: {
-            features: { validFeature: "validFeature" },
-            policies: [{ validPolicy: "validPolicy" }],
-            c13n: { validTranslation: "validTranslation" },
-          },
-        })
-      );
-      expect(queryByTestId("features")).toHaveTextContent("");
-      expect(queryByTestId("policies")).toHaveTextContent("");
-      expect(queryByTestId("c13n")).toHaveTextContent("");
-    });
+
+    expect(mockWriteBucket).toHaveBeenCalledTimes(1);
+    expect(mockWriteBucket).toHaveBeenCalledWith(
+      "CAMPAIGN_CONFIGS_STORE",
+      "{}",
+      JSON.stringify({
+        [testCampaignKey]: {
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
+        },
+      })
+    );
+    expect(queryByTestId("features")).toHaveTextContent("");
+    expect(queryByTestId("policies")).toHaveTextContent("");
+    expect(queryByTestId("c13n")).toHaveTextContent("");
   });
 
   it("should add a campaign config properly", async () => {
@@ -295,35 +294,34 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await waitFor(() => {
-      expect(mockWriteBucket).toHaveBeenCalledTimes(1);
-      expect(mockWriteBucket).toHaveBeenCalledWith(
-        "CAMPAIGN_CONFIGS_STORE",
-        JSON.stringify({
-          [testCampaignKey]: {
-            features: { newFeature: "newFeature" },
-            policies: [{ newPolicy: "newPolicy" }],
-            c13n: { newTranslation: "newTranslation" },
-          },
-        }),
-        JSON.stringify({
-          [testCampaignKey]: {
-            features: { validFeature: "validFeature" },
-            policies: [{ validPolicy: "validPolicy" }],
-            c13n: { validTranslation: "validTranslation" },
-          },
-        })
-      );
-      expect(queryByTestId("features")).toHaveTextContent(
-        `{"newFeature":"newFeature"}`
-      );
-      expect(queryByTestId("policies")).toHaveTextContent(
-        `[{"newPolicy":"newPolicy"}]`
-      );
-      expect(queryByTestId("c13n")).toHaveTextContent(
-        `{"newTranslation":"newTranslation"}`
-      );
-    });
+
+    expect(mockWriteBucket).toHaveBeenCalledTimes(1);
+    expect(mockWriteBucket).toHaveBeenCalledWith(
+      "CAMPAIGN_CONFIGS_STORE",
+      JSON.stringify({
+        [testCampaignKey]: {
+          features: { newFeature: "newFeature" },
+          policies: [{ newPolicy: "newPolicy" }],
+          c13n: { newTranslation: "newTranslation" },
+        },
+      }),
+      JSON.stringify({
+        [testCampaignKey]: {
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
+        },
+      })
+    );
+    expect(queryByTestId("features")).toHaveTextContent(
+      `{"newFeature":"newFeature"}`
+    );
+    expect(queryByTestId("policies")).toHaveTextContent(
+      `[{"newPolicy":"newPolicy"}]`
+    );
+    expect(queryByTestId("c13n")).toHaveTextContent(
+      `{"newTranslation":"newTranslation"}`
+    );
   });
 
   it("should add a campaign config properly when there are existing configs for other campaigns", async () => {
@@ -376,39 +374,38 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await waitFor(() => {
-      expect(mockWriteBucket).toHaveBeenCalledTimes(1);
-      expect(mockWriteBucket).toHaveBeenCalledWith(
-        "CAMPAIGN_CONFIGS_STORE",
-        JSON.stringify({
-          [testCampaignKey]: {
-            features: { newFeature: "newFeature" },
-            policies: [{ newPolicy: "newPolicy" }],
-            c13n: { newTranslation: "newTranslation" },
-          },
-          "another-test-campaign": {
-            features: { validFeature: "anotherFeature" },
-            policies: [{ validPolicy: "anotherPolicy" }],
-            c13n: { validTranslation: "anotherTranslation" },
-          },
-        }),
-        JSON.stringify({
-          [testCampaignKey]: {
-            features: { validFeature: "validFeature" },
-            policies: [{ validPolicy: "validPolicy" }],
-            c13n: { validTranslation: "validTranslation" },
-          },
-          "another-test-campaign": {
-            features: { validFeature: "anotherFeature" },
-            policies: [{ validPolicy: "anotherPolicy" }],
-            c13n: { validTranslation: "anotherTranslation" },
-          },
-        })
-      );
-      expect(queryByTestId("configs")).toHaveTextContent(
-        `{"test-campaign":{"features":{"newFeature":"newFeature"},"policies":[{"newPolicy":"newPolicy"}],"c13n":{"newTranslation":"newTranslation"}},"another-test-campaign":{"features":{"validFeature":"anotherFeature"},"policies":[{"validPolicy":"anotherPolicy"}],"c13n":{"validTranslation":"anotherTranslation"}}}`
-      );
-    });
+
+    expect(mockWriteBucket).toHaveBeenCalledTimes(1);
+    expect(mockWriteBucket).toHaveBeenCalledWith(
+      "CAMPAIGN_CONFIGS_STORE",
+      JSON.stringify({
+        [testCampaignKey]: {
+          features: { newFeature: "newFeature" },
+          policies: [{ newPolicy: "newPolicy" }],
+          c13n: { newTranslation: "newTranslation" },
+        },
+        "another-test-campaign": {
+          features: { validFeature: "anotherFeature" },
+          policies: [{ validPolicy: "anotherPolicy" }],
+          c13n: { validTranslation: "anotherTranslation" },
+        },
+      }),
+      JSON.stringify({
+        [testCampaignKey]: {
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
+        },
+        "another-test-campaign": {
+          features: { validFeature: "anotherFeature" },
+          policies: [{ validPolicy: "anotherPolicy" }],
+          c13n: { validTranslation: "anotherTranslation" },
+        },
+      })
+    );
+    expect(queryByTestId("configs")).toHaveTextContent(
+      `{"test-campaign":{"features":{"newFeature":"newFeature"},"policies":[{"newPolicy":"newPolicy"}],"c13n":{"newTranslation":"newTranslation"}},"another-test-campaign":{"features":{"validFeature":"anotherFeature"},"policies":[{"validPolicy":"anotherPolicy"}],"c13n":{"validTranslation":"anotherTranslation"}}}`
+    );
   });
 
   it("should add the campaign config properly when some null keys are input", async () => {
@@ -470,35 +467,34 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await waitFor(() => {
-      expect(mockWriteBucket).toHaveBeenCalledTimes(1);
-      expect(mockWriteBucket).toHaveBeenCalledWith(
-        "CAMPAIGN_CONFIGS_STORE",
-        JSON.stringify({
-          [testCampaignKey]: {
-            features: { validFeature: "validFeature" },
-            policies: [{ newPolicy: "newPolicy" }],
-            c13n: { validTranslation: "validTranslation" },
-          },
-        }),
-        JSON.stringify({
-          [testCampaignKey]: {
-            features: { validFeature: "validFeature" },
-            policies: [{ validPolicy: "validPolicy" }],
-            c13n: { validTranslation: "validTranslation" },
-          },
-        })
-      );
-      expect(queryByTestId("features")).toHaveTextContent(
-        `{"validFeature":"validFeature"}`
-      );
-      expect(queryByTestId("policies")).toHaveTextContent(
-        `[{"newPolicy":"newPolicy"}]`
-      );
-      expect(queryByTestId("c13n")).toHaveTextContent(
-        `{"validTranslation":"validTranslation"}`
-      );
-    });
+
+    expect(mockWriteBucket).toHaveBeenCalledTimes(1);
+    expect(mockWriteBucket).toHaveBeenCalledWith(
+      "CAMPAIGN_CONFIGS_STORE",
+      JSON.stringify({
+        [testCampaignKey]: {
+          features: { validFeature: "validFeature" },
+          policies: [{ newPolicy: "newPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
+        },
+      }),
+      JSON.stringify({
+        [testCampaignKey]: {
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
+        },
+      })
+    );
+    expect(queryByTestId("features")).toHaveTextContent(
+      `{"validFeature":"validFeature"}`
+    );
+    expect(queryByTestId("policies")).toHaveTextContent(
+      `[{"newPolicy":"newPolicy"}]`
+    );
+    expect(queryByTestId("c13n")).toHaveTextContent(
+      `{"validTranslation":"validTranslation"}`
+    );
   });
 
   it("should remove a campaign config properly", async () => {
@@ -555,23 +551,22 @@ describe("CampaignConfigsStoreContextProvider", () => {
 
     const button = getByText("test button");
     fireEvent.press(button);
-    await waitFor(() => {
-      expect(mockWriteBucket).toHaveBeenCalledTimes(1);
-      expect(mockWriteBucket).toHaveBeenCalledWith(
-        "CAMPAIGN_CONFIGS_STORE",
-        "{}",
-        JSON.stringify({
-          [testCampaignKey]: {
-            features: { validFeature: "validFeature" },
-            policies: [{ validPolicy: "validPolicy" }],
-            c13n: { validTranslation: "validTranslation" },
-          },
-        })
-      );
-      expect(queryByTestId("features")).toHaveTextContent("");
-      expect(queryByTestId("policies")).toHaveTextContent("");
-      expect(queryByTestId("c13n")).toHaveTextContent("");
-    });
+
+    expect(mockWriteBucket).toHaveBeenCalledTimes(1);
+    expect(mockWriteBucket).toHaveBeenCalledWith(
+      "CAMPAIGN_CONFIGS_STORE",
+      "{}",
+      JSON.stringify({
+        [testCampaignKey]: {
+          features: { validFeature: "validFeature" },
+          policies: [{ validPolicy: "validPolicy" }],
+          c13n: { validTranslation: "validTranslation" },
+        },
+      })
+    );
+    expect(queryByTestId("features")).toHaveTextContent("");
+    expect(queryByTestId("policies")).toHaveTextContent("");
+    expect(queryByTestId("c13n")).toHaveTextContent("");
   });
 
   describe("migration from v1 to v2 storage", () => {

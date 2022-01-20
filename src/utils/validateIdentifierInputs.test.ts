@@ -1,3 +1,12 @@
+import {
+  PaymentQRDeformedError,
+  PaymentQRMissingInfoError,
+  sgqrInvalidRazerPay,
+  sgqrInvalidSupportedMerchantAccount,
+  sgqrNETSQRPayload,
+} from "@rationally-app/payment-qr-parser";
+import { ERROR_MESSAGE } from "../context/alert";
+import { PaymentQRUnsupportedError } from "./paymentQrValidation";
 import { validateIdentifierInputs } from "./validateIdentifierInputs";
 
 describe("validateIdentifierInputs", () => {
@@ -305,5 +314,90 @@ describe("validateIdentifierInputs", () => {
         },
       ])
     ).toThrow("Enter or scan a valid code.");
+  });
+});
+
+describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
+  it("should return true if it contains valid SGQR payload with NETS", () => {
+    expect.assertions(1);
+    expect(
+      validateIdentifierInputs([
+        {
+          label: "Payment QR",
+          scanButtonType: "QR",
+          validationRegex: "[\\s\\S]*",
+          textInputType: "PAYMENT_QR",
+          value: sgqrNETSQRPayload,
+        },
+      ])
+    ).toStrictEqual(true);
+  });
+
+  it("should return false if it contains valid SGQR payload without NETS", () => {
+    expect.assertions(1);
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment QR",
+          scanButtonType: "QR",
+          validationRegex: "[\\s\\S]*",
+          textInputType: "PAYMENT_QR",
+          value: sgqrInvalidRazerPay,
+        },
+      ])
+    ).toThrow(
+      new PaymentQRUnsupportedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+    );
+  });
+
+  it("should throw error when it contains deformed payment QR payload", () => {
+    expect.assertions(1);
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment QR",
+          scanButtonType: "QR",
+          validationRegex: "[\\s\\S]*",
+          textInputType: "PAYMENT_QR",
+          value: "deformedPayload",
+        },
+      ])
+    ).toThrow(
+      new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+    );
+  });
+
+  it("should throw error when it contains invalid SGQR payload", () => {
+    expect.assertions(1);
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment QR",
+          scanButtonType: "QR",
+          validationRegex: "[\\s\\S]*",
+          textInputType: "PAYMENT_QR",
+          value: sgqrNETSQRPayload.substring(0, sgqrNETSQRPayload.length - 1),
+        },
+      ])
+    ).toThrow(
+      new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+    );
+  });
+
+  it("should throw error when it contains SGQR payload with missing info", () => {
+    expect.assertions(1);
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment QR",
+          scanButtonType: "QR",
+          validationRegex: "[\\s\\S]*",
+          textInputType: "PAYMENT_QR",
+          value: sgqrInvalidSupportedMerchantAccount,
+        },
+      ])
+    ).toThrow(
+      new PaymentQRMissingInfoError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+    );
   });
 });

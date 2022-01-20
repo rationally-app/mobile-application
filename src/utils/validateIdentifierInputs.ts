@@ -1,7 +1,7 @@
 import { IdentifierInput } from "../types";
 import { fullPhoneNumberValidator } from "./validatePhoneNumbers";
 import { ERROR_MESSAGE } from "../context/alert";
-import paymentQrValidate from "./paymentQrValidation";
+import isValidPaymentQR from "./paymentQrValidation";
 
 const defaultPhoneNumberValidationRegex = "^\\+[0-9]*$";
 const defaultPaymentReceiptValidationRegex = "^[a-zA-Z0-9]{1,20}$";
@@ -65,8 +65,12 @@ export const validateIdentifierInputs = (
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     }
 
-    if (textInputType === "PAYMENT_QR" && !paymentQrValidate(value)) {
-      throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    if (textInputType === "PAYMENT_QR") {
+      try {
+        isValidPaymentQR(value);
+      } catch (e) {
+        throw e;
+      }
     }
   }
 
