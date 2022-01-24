@@ -16,7 +16,10 @@ export class PaymentQRUnsupportedError extends Error {
 
 const isValidPaymentQR = (payload: string): boolean => {
   try {
-    const paymentQR = parsePaymentQR(payload);
+    const paymentQR = parsePaymentQR(payload, {
+      source: "PAYMENT_QR_IS_VALID",
+      checkExpiry: false,
+    });
     const supportedPaymentMerchantAccounts = pick(
       paymentQR.merchantAccountInformation,
       ["nets"]
