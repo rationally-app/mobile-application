@@ -62,7 +62,10 @@ export const getUpdatedTransactionsPaymentQRIdentifiers = (
 
       if (paymentQRPayload) {
         // We can safely parse payment QR here since it has been validated upstream
-        const paymentQR = parsePaymentQR(paymentQRPayload) as PaymentQR;
+        const paymentQR = parsePaymentQR(paymentQRPayload, {
+          source: "PAYMENT_QR_IDENTIFIERS_UPDATE",
+          checkExpiry: false,
+        }) as PaymentQR;
         paymentQR.merchantAccountInformation = pick(
           paymentQR.merchantAccountInformation,
           ["nets"]
