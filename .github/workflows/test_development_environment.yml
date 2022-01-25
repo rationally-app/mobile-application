@@ -30,13 +30,18 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-	
-            ${{ runner.os }}-build-	
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Setup NPM Token
         run: npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Install Packages
-        run: npm ci
+        run: |
+          cd "${{ env.PR_NUMBER }}/v2"
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
+        env:
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
         run: npx --no-install tsc --noEmit
       - name: Check Lint
