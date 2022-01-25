@@ -94,9 +94,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
 
   useEffect(() => {
     if (error) {
-      showErrorAlert(new Error(ERROR_MESSAGE.SERVER_ERROR), () =>
-        navigateHome(navigation)
-      );
+      showErrorAlert(error, () => navigateHome(navigation));
     }
   }, [error, navigation, showErrorAlert]);
 
