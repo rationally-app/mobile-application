@@ -12,7 +12,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint . --ext .ts,.tsx,.mdx --max-warnings 0",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "nuke-cache": "rm -rf $TMPDIR/metro-cache"
   },
   "dependencies": {
     "@rationally-app/nric-validator": "^1.1.3",
