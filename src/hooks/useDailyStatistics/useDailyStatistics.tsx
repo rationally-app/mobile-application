@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { usePrevious } from "../usePrevious";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { getDailyStatistics } from "../../services/statistics";
@@ -17,6 +17,7 @@ export type StatisticsHook = {
   }[];
   error?: Error;
   loading: boolean;
+  clearDailyStatisticsError: () => void;
 };
 
 export const useDailyStatistics = (
@@ -40,6 +41,11 @@ export const useDailyStatistics = (
   const { policies } = useContext(CampaignConfigContext);
   const prevTimestamp = usePrevious(currentTimestamp);
   const translationProps = useTranslate();
+
+  const clearDailyStatisticsError = useCallback(
+    (): void => setError(undefined),
+    []
+  );
 
   useEffect(() => {
     const fetchDailyStatistics = async (): Promise<void> => {
@@ -95,5 +101,6 @@ export const useDailyStatistics = (
     transactionHistory,
     error,
     loading,
+    clearDailyStatisticsError,
   };
 };
