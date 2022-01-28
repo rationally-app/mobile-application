@@ -218,6 +218,12 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    expiredSession: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
     expiredOTP: {
       title: string;
       body?: string;

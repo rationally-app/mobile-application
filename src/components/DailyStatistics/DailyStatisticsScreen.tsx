@@ -3,12 +3,14 @@ import React, {
   useEffect,
   useContext,
   useState,
+  useCallback,
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { size, fontSize } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { AuthContext } from "../../context/auth";
+import { AuthStoreContext } from "../../context/authStore";
 import { useConfigContext } from "../../context/config";
 import { withNavigationFocus } from "react-navigation";
 import { TitleStatistic } from "./TitleStatistic";
@@ -22,11 +24,12 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime, isSameDay } from "date-fns";
-import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
+import { AlertModalContext } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
 import { useTheme } from "../../context/theme";
+import { SessionError } from "../../services/helpers";
 
 const styles = StyleSheet.create({
   content: {
@@ -65,6 +68,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   const showHelpModal = useContext(HelpModalContext);
   const { showErrorAlert } = useContext(AlertModalContext);
   const { sessionToken, endpoint, operatorToken } = useContext(AuthContext);
+  const { setAuthCredentials } = useContext(AuthStoreContext);
   const [currentTimestamp, setCurrentTimestamp] = useState(Date.now());
 
   const {
@@ -73,6 +77,7 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     transactionHistory,
     error,
     loading,
+    clearDailyStatisticsError,
   } = useDailyStatistics(
     sessionToken,
     endpoint,
@@ -92,13 +97,36 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
     }
   };
 
+  const expireSession = useCallback(() => {
+    const key = `${operatorToken}${endpoint}`;
+    setAuthCredentials(key, {
+      operatorToken,
+      endpoint,
+      sessionToken,
+      expiry: new Date().getTime(),
+    });
+  }, [setAuthCredentials, endpoint, operatorToken, sessionToken]);
+
   useEffect(() => {
     if (error) {
-      showErrorAlert(new Error(ERROR_MESSAGE.SERVER_ERROR), () =>
-        navigateHome(navigation)
-      );
+      if (error instanceof SessionError) {
+        clearDailyStatisticsError();
+        expireSession();
+        showErrorAlert(error, () => {
+          navigation.navigate("CampaignLocationsScreen");
+        });
+        return;
+      }
+
+      showErrorAlert(error, () => navigateHome(navigation));
     }
-  }, [error, navigation, showErrorAlert]);
+  }, [
+    error,
+    navigation,
+    clearDailyStatisticsError,
+    expireSession,
+    showErrorAlert,
+  ]);
 
   return (
     <>

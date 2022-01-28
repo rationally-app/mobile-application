@@ -1,6 +1,6 @@
 import { IS_MOCK } from "../../config";
 import { DailyStatisticsResult } from "../../types";
-import { fetchWithValidator, ValidationError } from "../helpers";
+import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 import { subDays, addDays, getTime, isSameDay } from "date-fns";
 
@@ -148,6 +148,8 @@ export const liveGetStatistics = async (
   } catch (e) {
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
+    } else if (e instanceof SessionError) {
+      throw e;
     }
 
     throw new StatisticsError(e.message);
