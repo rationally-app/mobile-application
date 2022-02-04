@@ -908,7 +908,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set cartError with message 'Enter or scan a code' when there are multiple identifiers and at least one is empty", async () => {
+    it("should set cartError with message 'Scan a code' when there are multiple identifiers and at least one is empty", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -936,7 +936,9 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.cartError?.message).toBe("Enter or scan a code.");
+      expect(result.current.cartError?.message).toBe(
+        ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -971,7 +973,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set cartError with message 'Enter or scan a code' when there is one identifier and it is empty", async () => {
+    it("should set cartError with message 'Scan a code' when there is one identifier and it is empty", async () => {
       expect.assertions(3);
 
       const ids = ["ID1"];
@@ -1007,7 +1009,9 @@ describe("useCart", () => {
         result.current.checkoutCart();
       });
 
-      expect(result.current.cartError?.message).toBe("Enter or scan a code.");
+      expect(result.current.cartError?.message).toBe(
+        ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
+      );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
         {
@@ -1028,7 +1032,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set cartError with message 'Enter or scan a different code.' when identifier values are identical in the same category", async () => {
+    it("should set cartError with message 'Scan a different code.' when identifier values are identical in the same category", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -1057,7 +1061,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.cartError?.message).toBe(
-        "Enter or scan a different code."
+        ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -1093,7 +1097,7 @@ describe("useCart", () => {
       ]);
     });
 
-    it("should set cartError with message 'Enter or scan a different code.' when some identifier values are identical across different categories", async () => {
+    it("should set cartError with message 'Scan a different code.' when some identifier values are identical across different categories", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
       const { result } = renderHook(
@@ -1136,7 +1140,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.cartError?.message).toBe(
-        "Enter or scan a different code."
+        ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([
@@ -1310,7 +1314,7 @@ describe("useCart", () => {
       });
 
       expect(result.current.cartError?.message).toBe(
-        "Enter or scan a valid code."
+        ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
       );
       expect(result.current.cartState).toBe("DEFAULT");
       expect(result.current.cart).toStrictEqual([

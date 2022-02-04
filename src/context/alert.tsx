@@ -23,17 +23,17 @@ export enum CONFIRMATION_MESSAGE {
 }
 
 export enum ERROR_MESSAGE {
-  DUPLICATE_IDENTIFIER_INPUT = "Enter or scan a different code.",
+  DUPLICATE_IDENTIFIER_INPUT = "Scan a different code.",
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
   MISSING_WAIVER_INPUT = "Enter a valid waiver reason",
-  INVALID_IDENTIFIER_INPUT = "Enter or scan a valid code.",
-  MISSING_IDENTIFIER_INPUT = "Enter or scan a code.",
+  INVALID_IDENTIFIER_INPUT = "Scan a valid code.",
+  MISSING_IDENTIFIER_INPUT = "Scan a code.",
   INVALID_VOUCHER_INPUT = "Enter a valid voucher code.",
   MISSING_VOUCHER_INPUT = "Enter a voucher code.",
   INVALID_POD_INPUT = "Scan a valid device code.",
   MISSING_POD_INPUT = "Scan a device code.",
   INVALID_POD_IDENTIFIER = "Scan item again or get a new item from your in-charge.",
-  ALREADY_USED_POD_IDENTIFIER = "Enter or scan an unique code.",
+  ALREADY_USED_POD_IDENTIFIER = "Scan an unique code.",
   INVALID_PHONE_NUMBER = "Enter a valid contact number.",
   INVALID_COUNTRY_CODE = "Enter a valid country code.",
   INVALID_PHONE_AND_COUNTRY_CODE = "Enter a valid country code and contact number.",
@@ -248,9 +248,6 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
         buttonTexts: {
           primaryActionText:
             i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",
-          secondaryActionText: i18n.t(
-            `errorMessages.${translationKey}.secondaryActionText`
-          ),
         },
         visible: true,
         onOk: !!onClickPrimaryAction ? onClickPrimaryAction : () => {},
@@ -278,9 +275,6 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
         buttonTexts: {
           primaryActionText: i18n.t(
             `errorMessages.${translationKey}.primaryActionText`
-          ),
-          secondaryActionText: i18n.t(
-            `errorMessages.${translationKey}.secondaryActionText`
           ),
         },
         visible: true,

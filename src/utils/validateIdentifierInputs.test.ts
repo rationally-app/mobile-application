@@ -146,7 +146,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER",
         },
       ])
-    ).toThrow("Enter or scan a valid code.");
+    ).toThrow(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     expect(() =>
       validateIdentifierInputs([
         {
@@ -156,7 +156,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING",
         },
       ])
-    ).toThrow("Enter or scan a valid code.");
+    ).toThrow(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
   });
 
   it("should throw error if at least one of the identifiers is an invalid number", () => {
@@ -169,7 +169,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER",
         },
       ])
-    ).toThrow("Enter or scan a valid code.");
+    ).toThrow(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
     expect(() =>
       validateIdentifierInputs([
         {
@@ -178,7 +178,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "NUMBER",
         },
       ])
-    ).toThrow("Enter or scan a valid code.");
+    ).toThrow(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
   });
 
   it("should throw error if at least one of the identifiers is an invalid phone number", () => {
@@ -213,7 +213,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING",
         },
       ])
-    ).toThrow("Enter or scan a code.");
+    ).toThrow(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
     expect(() =>
       validateIdentifierInputs([
         {
@@ -227,7 +227,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING",
         },
       ])
-    ).toThrow("Enter or scan a code.");
+    ).toThrow(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
   });
 
   it("should throw error if there are duplicate values", () => {
@@ -250,7 +250,7 @@ describe("validateIdentifierInputs", () => {
           textInputType: "STRING",
         },
       ])
-    ).toThrow("Enter or scan a different code.");
+    ).toThrow(ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT);
   });
 
   it("should throw the specific error if the textInputType is payment receipt", () => {
@@ -313,7 +313,7 @@ describe("validateIdentifierInputs", () => {
           validationRegex: "[\\s\\S]*",
         },
       ])
-    ).toThrow("Enter or scan a valid code.");
+    ).toThrow("Scan a valid code.");
   });
 });
 

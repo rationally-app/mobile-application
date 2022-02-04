@@ -321,7 +321,7 @@ export const zh: Translations = {
     },
     alreadyUsedCode: {
       title: "已使用",
-      body: "请输入独特的编号。",
+      body: "请扫描独特的编号。",
       primaryActionText: "确定",
     },
     alreadyUsedItem: {
@@ -331,7 +331,7 @@ export const zh: Translations = {
     },
     wrongFormatCode: {
       title: "格式错误",
-      body: "请输入或扫描有效的编号。",
+      body: "请扫描有效的编号。",
       primaryActionText: "确定",
     },
     incompleteWaiveReason: {
@@ -341,7 +341,7 @@ export const zh: Translations = {
     },
     incompleteEntryCode: {
       title: "资料输入不完整",
-      body: "请输入或扫描编号。",
+      body: "请扫描编号。",
       primaryActionText: "确定",
     },
     wrongFormatNotValidDeviceCode: {
@@ -447,17 +447,17 @@ export const zh: Translations = {
     },
     deformedPaymentQR: {
       title: "Deformed payment QR",
-      body: "请输入或扫描有效的编号。",
+      body: "请扫描有效的编号。",
       primaryActionText: "确定",
     },
     missingInfoInPaymentQR: {
       title: "Missing info in payment QR",
-      body: "请输入或扫描有效的编号。",
+      body: "请扫描编号。",
       primaryActionText: "确定",
     },
     unsupportedPaymentMethodInPaymentQR: {
       title: "Unsupported payment method",
-      body: "请输入或扫描有效的编号。",
+      body: "请扫描有效的编号。",
       primaryActionText: "确定",
     },
   },
