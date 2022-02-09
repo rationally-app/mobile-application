@@ -27,7 +27,9 @@ export enum ERROR_MESSAGE {
   DUPLICATE_POD_INPUT = "Scan another item that is not tagged to any ID number.",
   MISSING_WAIVER_INPUT = "Enter a valid waiver reason",
   INVALID_IDENTIFIER_INPUT = "Enter or scan a valid code.",
+  INVALID_IDENTIFIER_INPUT_TEXT_DISABLED = "Scan a valid code.",
   MISSING_IDENTIFIER_INPUT = "Enter or scan a code.",
+  MISSING_IDENTIFIER_INPUT_TEXT_DISABLED = "Scan a code.",
   INVALID_VOUCHER_INPUT = "Enter a valid voucher code.",
   MISSING_VOUCHER_INPUT = "Enter a voucher code.",
   INVALID_POD_INPUT = "Scan a valid device code.",
@@ -98,9 +100,11 @@ const getTranslationKeyFromError = (error: Error): string => {
 const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.DUPLICATE_IDENTIFIER_INPUT]: "alreadyUsedCode",
   [ERROR_MESSAGE.DUPLICATE_POD_INPUT]: "alreadyUsedItem",
+  [ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT_TEXT_DISABLED]: "wrongFormatCode",
   [ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT]: "wrongFormatCode",
   [ERROR_MESSAGE.MISSING_WAIVER_INPUT]: "incompleteWaiveReason",
   [ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT]: "incompleteEntryCode",
+  [ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT_TEXT_DISABLED]: "incompleteEntryCode",
   [ERROR_MESSAGE.MISSING_VOUCHER_INPUT]: "incompleteEntryVoucherCode",
   [ERROR_MESSAGE.INVALID_POD_INPUT]: "wrongFormatNotValidDeviceCode",
   [ERROR_MESSAGE.MISSING_POD_INPUT]: "incompleteEntryScanDeviceCode",
@@ -238,13 +242,27 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
       dynamicContent?: Record<string, string>
     ): void => {
       const translationKey = getTranslationKeyFromError(error);
+
+      const errDescription = i18n.t(
+        `errorMessages.${translationKey}.body`,
+        dynamicContent
+      );
+
       showAlert({
         alertType: "ERROR",
         title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Error",
-        description: i18n.t(
-          `errorMessages.${translationKey}.body`,
-          dynamicContent
-        ),
+        description:
+          /*
+            Error message (description in i18n) would omit "Enter or" in the 
+            description if text entry is disabled.
+          */
+          error.message ===
+            ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT_TEXT_DISABLED ||
+          error.message === ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT_TEXT_DISABLED
+            ? errDescription
+                .replace("Enter or ", "")
+                .replace(/(^\w)/g, (m) => m.toUpperCase())
+            : errDescription,
         buttonTexts: {
           primaryActionText:
             i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",

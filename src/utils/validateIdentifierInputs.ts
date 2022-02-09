@@ -24,13 +24,22 @@ export const validateIdentifierInputs = (
     validationRegex,
     textInputType,
     isOptional,
+    isTextInputDisabled,
   } of identifierInputs) {
     if (isOptional && !value) {
       return true;
     }
 
+    const invalidIdentifierInputErr = isTextInputDisabled
+      ? ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT_TEXT_DISABLED
+      : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT;
+
+    const missingIdentifierInputErr = isTextInputDisabled
+      ? ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT_TEXT_DISABLED
+      : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT;
+
     if (textInputType === "NUMBER" && isNaN(Number(value))) {
-      throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+      throw new Error(invalidIdentifierInputErr);
     }
     if (!value) {
       if (textInputType === "SINGLE_CHOICE") {
@@ -38,7 +47,7 @@ export const validateIdentifierInputs = (
       } else if (textInputType === "PAYMENT_RECEIPT") {
         throw new Error(ERROR_MESSAGE.INVALID_PAYMENT_RECEIPT_NUMBER);
       }
-      throw new Error(ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT);
+      throw new Error(missingIdentifierInputErr);
     }
 
     if (
@@ -58,7 +67,7 @@ export const validateIdentifierInputs = (
     ) {
       throw new Error(ERROR_MESSAGE.INVALID_PHONE_AND_COUNTRY_CODE);
     } else if (!isMatchRegex(value, validationRegex)) {
-      throw new Error(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+      throw new Error(invalidIdentifierInputErr);
     }
 
     if (textInputType === "PHONE_NUMBER" && !fullPhoneNumberValidator(value)) {
@@ -69,6 +78,7 @@ export const validateIdentifierInputs = (
       try {
         isValidPaymentQR(value);
       } catch (e) {
+        e.message = invalidIdentifierInputErr;
         throw e;
       }
     }

@@ -102,6 +102,9 @@ const mergeWithCart = (
             ...(textInput.type ? { textInputType: textInput.type } : {}),
             ...(scanButton.type ? { scanButtonType: scanButton.type } : {}),
             ...(validationRegex ? { validationRegex } : {}),
+            ...(textInput.disabled
+              ? { isTextInputDisabled: textInput.disabled }
+              : {}),
           })
         ) || [];
 
