@@ -276,6 +276,9 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
           primaryActionText: i18n.t(
             `errorMessages.${translationKey}.primaryActionText`
           ),
+          secondaryActionText: i18n.t(
+            `errorMessages.${translationKey}.secondaryActionText`
+          ),
         },
         visible: true,
         onOk: onClickPrimaryAction,
