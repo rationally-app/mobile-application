@@ -76,9 +76,8 @@ export const validateIdentifierInputs = (
 
     if (textInputType === "PAYMENT_QR") {
       try {
-        isValidPaymentQR(value);
+        isValidPaymentQR(value, isTextInputDisabled);
       } catch (e) {
-        e.message = invalidIdentifierInputErr;
         throw e;
       }
     }

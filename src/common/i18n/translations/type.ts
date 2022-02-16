@@ -361,6 +361,12 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    wrongFormatCodeTextDisabled: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
     incompleteWaiveReason: {
       title: string;
       body?: string;
@@ -368,6 +374,12 @@ export type Translations = {
       secondaryActionText?: string;
     };
     incompleteEntryCode: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
+    incompleteEntryCodeTextDisabled: {
       title: string;
       body?: string;
       primaryActionText: string;
@@ -499,6 +511,21 @@ export type Translations = {
       primaryActionText: string;
     };
     unsupportedPaymentMethodInPaymentQR: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    deformedPaymentQRTextDisabled: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    missingInfoInPaymentQRTextDisabled: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    unsupportedPaymentMethodInPaymentQRTextDisabled: {
       title: string;
       body?: string;
       primaryActionText: string;

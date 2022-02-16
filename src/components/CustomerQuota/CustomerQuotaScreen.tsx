@@ -34,7 +34,12 @@ import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { PaymentQRUnsupportedError } from "../../utils/paymentQrValidation";
+import {
+  PaymentQRUnsupportedError,
+  PaymentQRUnsupportedErrorTextDisabled,
+  PaymentQRMissingInfoErrorDisabled,
+  PaymentQRDeformedErrorTextDisabled,
+} from "../../utils/paymentQrValidation";
 import {
   PaymentQRDeformedError,
   PaymentQRMissingInfoError,
@@ -195,7 +200,10 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           return;
         case cartError instanceof PaymentQRDeformedError ||
           cartError instanceof PaymentQRMissingInfoError ||
-          cartError instanceof PaymentQRUnsupportedError:
+          cartError instanceof PaymentQRUnsupportedError ||
+          cartError instanceof PaymentQRUnsupportedErrorTextDisabled ||
+          cartError instanceof PaymentQRMissingInfoErrorDisabled ||
+          cartError instanceof PaymentQRDeformedErrorTextDisabled:
           showErrorAlert(cartError, () => clearCartError());
           return;
       }
