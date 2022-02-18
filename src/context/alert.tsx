@@ -63,6 +63,12 @@ export enum ERROR_MESSAGE {
   INVALID_MERCHANT_CODE = "Invalid merchant code",
   INVALID_EMAIL_ADDRESS = "Enter valid email address",
   MISSING_DISBURSEMENTS = "Eligible identity does not have quota. Contact your in-charge to resolve this issue.",
+  PAYMENT_QR_DEFORMED = "Payment QR is deformed. Enter or scan a valid code.",
+  PAYMENT_QR_DEFORMED_TEXT_DISABLED = "Payment QR is deformed. Scan a valid code.",
+  PAYMENT_QR_MISSING = "Payment QR is missing. Enter or scan a valid code.",
+  PAYMENT_QR_MISSING_TEXT_DISABLED = "Payment QR is missing. Scan a valid code",
+  PAYMENT_QR_UNSUPPORTED = "Payment QR is unsupported. Enter or scan a valid code.",
+  PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED = "Payment QR is unsupported. Scan a valid code",
 }
 
 const errorNameToTranslationKeyMappings: Record<string, string> = {
@@ -85,13 +91,6 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   LimitReachedError: "scanLimitReached",
   NotEligibleError: "notEligible",
   LogoutError: "systemErrorLogoutIssue",
-  PaymentQRDeformedError: "deformedPaymentQR",
-  PaymentQRMissingInfoError: "missingInfoInPaymentQR",
-  PaymentQRUnsupportedError: "unsupportedPaymentMethodInPaymentQR",
-  PaymentQRDeformedErrorTextDisabled: "deformedPaymentQRTextDisabled",
-  PaymentQRMissingInfoErrorTextDisabled: "missingInfoInPaymentQRTextDisabled",
-  PaymentQRUnsupportedErrorTextDisabled:
-    "unsupportedPaymentMethodInPaymentQRTextDisabled",
 };
 
 const getTranslationKeyFromError = (error: Error): string => {
@@ -144,6 +143,15 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.INVALID_MERCHANT_CODE]: "invalidMerchantCode",
   [ERROR_MESSAGE.INVALID_EMAIL_ADDRESS]: "wrongFormatEmailAddress",
   [ERROR_MESSAGE.MISSING_DISBURSEMENTS]: "missingDisbursements",
+  [ERROR_MESSAGE.PAYMENT_QR_DEFORMED]: "deformedPaymentQR",
+  [ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED]:
+    "deformedPaymentQRTextDisabled",
+  [ERROR_MESSAGE.PAYMENT_QR_MISSING]: "missingInfoInPaymentQR",
+  [ERROR_MESSAGE.PAYMENT_QR_MISSING_TEXT_DISABLED]:
+    "missingInfoInPaymentQRTextDisabled",
+  [ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED]: "unsupportedPaymentMethodInPaymentQR",
+  [ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED]:
+    "unsupportedPaymentMethodInPaymentQRTextDisabled",
   [CONFIRMATION_MESSAGE.PAYMENT_COLLECTION]:
     CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
   [CONFIRMATION_MESSAGE.CONFIRM_LOGOUT]: CONFIRMATION_MESSAGE.CONFIRM_LOGOUT,

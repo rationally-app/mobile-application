@@ -1,37 +1,22 @@
 import {
   parsePaymentQR,
   PaymentQRMissingInfoError,
-  PaymentQRDeformedError,
 } from "@rationally-app/payment-qr-parser";
 import { pick } from "lodash";
 import { ERROR_MESSAGE } from "../context/alert";
 import { Sentry } from "./errorTracking";
 
-export class PaymentQRUnsupportedError extends Error {
+export class PaymentQRError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = "PaymentQRError";
+  }
+}
+
+class PaymentQRUnsupportedError extends Error {
   constructor(message?: string) {
     super(message);
     this.name = "PaymentQRUnsupportedError";
-  }
-}
-
-export class PaymentQRUnsupportedErrorTextDisabled extends Error {
-  constructor(message?: string) {
-    super(message);
-    this.name = "PaymentQRUnsupportedErrorTextDisabled";
-  }
-}
-
-export class PaymentQRMissingInfoErrorDisabled extends Error {
-  constructor(message?: string) {
-    super(message);
-    this.name = "PaymentQRMissingInfoErrorDisabled";
-  }
-}
-
-export class PaymentQRDeformedErrorTextDisabled extends Error {
-  constructor(message?: string) {
-    super(message);
-    this.name = "PaymentQRDeformedErrorTextDisabled";
   }
 }
 
@@ -65,26 +50,24 @@ const isValidPaymentQR = (
       message: payload,
     });
     Sentry.captureException(e);
-
     if (e instanceof PaymentQRUnsupportedError) {
-      throw isTextInputDisabled
-        ? new PaymentQRUnsupportedErrorTextDisabled(
-            ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT_TEXT_DISABLED
-          )
-        : new PaymentQRUnsupportedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+      throw new PaymentQRError(
+        isTextInputDisabled
+          ? ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED
+          : ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED
+      );
     } else if (e instanceof PaymentQRMissingInfoError) {
-      throw isTextInputDisabled
-        ? new PaymentQRMissingInfoErrorDisabled(
-            ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT_TEXT_DISABLED
-          )
-        : new PaymentQRMissingInfoError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+      throw new PaymentQRError(
+        isTextInputDisabled
+          ? ERROR_MESSAGE.PAYMENT_QR_MISSING_TEXT_DISABLED
+          : ERROR_MESSAGE.PAYMENT_QR_MISSING
+      );
     }
-
-    throw isTextInputDisabled
-      ? new PaymentQRDeformedErrorTextDisabled(
-          ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT_TEXT_DISABLED
-        )
-      : new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    throw new PaymentQRError(
+      isTextInputDisabled
+        ? ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED
+        : ERROR_MESSAGE.PAYMENT_QR_DEFORMED
+    );
   }
 };
 

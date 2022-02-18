@@ -34,16 +34,7 @@ import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import {
-  PaymentQRUnsupportedError,
-  PaymentQRUnsupportedErrorTextDisabled,
-  PaymentQRMissingInfoErrorDisabled,
-  PaymentQRDeformedErrorTextDisabled,
-} from "../../utils/paymentQrValidation";
-import {
-  PaymentQRDeformedError,
-  PaymentQRMissingInfoError,
-} from "@rationally-app/payment-qr-parser";
+import { PaymentQRError } from "../../utils/paymentQrValidation";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -198,12 +189,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             navigation.navigate("CampaignLocationsScreen");
           });
           return;
-        case cartError instanceof PaymentQRDeformedError ||
-          cartError instanceof PaymentQRMissingInfoError ||
-          cartError instanceof PaymentQRUnsupportedError ||
-          cartError instanceof PaymentQRUnsupportedErrorTextDisabled ||
-          cartError instanceof PaymentQRMissingInfoErrorDisabled ||
-          cartError instanceof PaymentQRDeformedErrorTextDisabled:
+        case cartError instanceof PaymentQRError:
           showErrorAlert(cartError, () => clearCartError());
           return;
       }

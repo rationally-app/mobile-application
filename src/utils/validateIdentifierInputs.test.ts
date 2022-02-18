@@ -1,12 +1,10 @@
 import {
-  PaymentQRDeformedError,
-  PaymentQRMissingInfoError,
   sgqrInvalidRazerPay,
   sgqrInvalidSupportedMerchantAccount,
   sgqrNETSQRPayload,
 } from "@rationally-app/payment-qr-parser";
 import { ERROR_MESSAGE } from "../context/alert";
-import { PaymentQRUnsupportedError } from "./paymentQrValidation";
+import { PaymentQRError } from "./paymentQrValidation";
 import { validateIdentifierInputs } from "./validateIdentifierInputs";
 
 describe("validateIdentifierInputs", () => {
@@ -136,7 +134,7 @@ describe("validateIdentifierInputs", () => {
   });
 
   it("should throw error if at least one of the identifiers does not match the given regex pattern", () => {
-    expect.assertions(2);
+    expect.assertions(3);
     expect(() =>
       validateIdentifierInputs([
         {
@@ -157,10 +155,21 @@ describe("validateIdentifierInputs", () => {
         },
       ])
     ).toThrow("Enter or scan a valid code.");
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "string identifier with regex and text input disabled",
+          value: "-HELLO-",
+          validationRegex: "^[0-9A-Z]$",
+          textInputType: "STRING",
+          isTextInputDisabled: true,
+        },
+      ])
+    ).toThrow(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT_TEXT_DISABLED);
   });
 
   it("should throw error if at least one of the identifiers is an invalid number", () => {
-    expect.assertions(2);
+    expect.assertions(3);
     expect(() =>
       validateIdentifierInputs([
         {
@@ -179,6 +188,16 @@ describe("validateIdentifierInputs", () => {
         },
       ])
     ).toThrow("Enter or scan a valid code.");
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "number identifier with text input disabled",
+          value: "123string",
+          textInputType: "NUMBER",
+          isTextInputDisabled: true,
+        },
+      ])
+    ).toThrow(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT_TEXT_DISABLED);
   });
 
   it("should throw error if at least one of the identifiers is an invalid phone number", () => {
@@ -302,7 +321,7 @@ describe("validateIdentifierInputs", () => {
   });
 
   it("should throw the specific error if the textInputType is payment qr", () => {
-    expect.assertions(1);
+    expect.assertions(2);
 
     expect(() =>
       validateIdentifierInputs([
@@ -314,6 +333,18 @@ describe("validateIdentifierInputs", () => {
         },
       ])
     ).toThrow("Enter or scan a valid code.");
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "payment qr with text input disabled",
+          value: "invalid payment qr",
+          textInputType: "PAYMENT_QR",
+          validationRegex: "[\\s\\S]*",
+          isTextInputDisabled: true,
+        },
+      ])
+    ).toThrow(ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED);
   });
 });
 
@@ -334,7 +365,7 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
   });
 
   it("should return false if it contains valid SGQR payload without NETS", () => {
-    expect.assertions(1);
+    expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([
         {
@@ -345,13 +376,26 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
           value: sgqrInvalidRazerPay,
         },
       ])
+    ).toThrow(new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED));
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment QR with text input disabled",
+          scanButtonType: "QR",
+          validationRegex: "[\\s\\S]*",
+          textInputType: "PAYMENT_QR",
+          value: sgqrInvalidRazerPay,
+          isTextInputDisabled: true,
+        },
+      ])
     ).toThrow(
-      new PaymentQRUnsupportedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED)
     );
   });
 
   it("should throw error when it contains deformed payment QR payload", () => {
-    expect.assertions(1);
+    expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([
         {
@@ -362,13 +406,25 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
           value: "deformedPayload",
         },
       ])
+    ).toThrow(new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED));
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment QR with text input disabled",
+          scanButtonType: "QR",
+          validationRegex: "[\\s\\S]*",
+          textInputType: "PAYMENT_QR",
+          value: "deformedPayload",
+          isTextInputDisabled: true,
+        },
+      ])
     ).toThrow(
-      new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED)
     );
   });
 
   it("should throw error when it contains invalid SGQR payload", () => {
-    expect.assertions(1);
+    expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([
         {
@@ -379,13 +435,26 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
           value: sgqrNETSQRPayload.substring(0, sgqrNETSQRPayload.length - 1),
         },
       ])
+    ).toThrow(new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED));
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment QR with text input disabled",
+          scanButtonType: "QR",
+          validationRegex: "[\\s\\S]*",
+          textInputType: "PAYMENT_QR",
+          value: sgqrNETSQRPayload.substring(0, sgqrNETSQRPayload.length - 1),
+          isTextInputDisabled: true,
+        },
+      ])
     ).toThrow(
-      new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED)
     );
   });
 
   it("should throw error when it contains SGQR payload with missing info", () => {
-    expect.assertions(1);
+    expect.assertions(2);
     expect(() =>
       validateIdentifierInputs([
         {
@@ -396,8 +465,21 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
           value: sgqrInvalidSupportedMerchantAccount,
         },
       ])
+    ).toThrow(new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_MISSING));
+
+    expect(() =>
+      validateIdentifierInputs([
+        {
+          label: "Payment QR with text input disabled",
+          scanButtonType: "QR",
+          validationRegex: "[\\s\\S]*",
+          textInputType: "PAYMENT_QR",
+          value: sgqrInvalidSupportedMerchantAccount,
+          isTextInputDisabled: true,
+        },
+      ])
     ).toThrow(
-      new PaymentQRMissingInfoError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_MISSING_TEXT_DISABLED)
     );
   });
 });
