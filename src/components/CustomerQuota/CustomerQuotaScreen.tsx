@@ -34,7 +34,11 @@ import { SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { PaymentQRError } from "../../utils/paymentQrValidation";
+import { PaymentQRUnsupportedError } from "../../utils/paymentQrValidation";
+import {
+  PaymentQRDeformedError,
+  PaymentQRMissingInfoError,
+} from "@rationally-app/payment-qr-parser";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -189,8 +193,10 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             navigation.navigate("CampaignLocationsScreen");
           });
           return;
-        case cartError instanceof PaymentQRError:
-          showErrorAlert(cartError, () => clearCartError());
+        case cartError instanceof PaymentQRDeformedError ||
+          cartError instanceof PaymentQRMissingInfoError ||
+          cartError instanceof PaymentQRUnsupportedError:
+          showErrorAlert(new Error(cartError.message), () => clearCartError());
           return;
       }
       if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {

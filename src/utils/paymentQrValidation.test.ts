@@ -1,10 +1,14 @@
 import {
+  PaymentQRDeformedError,
+  PaymentQRMissingInfoError,
   sgqrInvalidRazerPay,
   sgqrInvalidSupportedMerchantAccount,
   sgqrNETSQRPayload,
 } from "@rationally-app/payment-qr-parser";
 import { ERROR_MESSAGE } from "../context/alert";
-import isValidPaymentQR, { PaymentQRError } from "./paymentQrValidation";
+import isValidPaymentQR, {
+  PaymentQRUnsupportedError,
+} from "./paymentQrValidation";
 
 describe("isValidPaymentQR Test", () => {
   it("should parse SGQR payload properly", () => {
@@ -19,10 +23,12 @@ describe("tests for errors thrown during isValidPaymentQR", () => {
     expect.assertions(2);
     const deformedPaymentQRPayload = "deformedPayload";
     expect(() => isValidPaymentQR(deformedPaymentQRPayload)).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED)
+      new PaymentQRDeformedError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED)
     );
     expect(() => isValidPaymentQR(deformedPaymentQRPayload, true)).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED)
+      new PaymentQRDeformedError(
+        ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED
+      )
     );
   });
 
@@ -33,10 +39,12 @@ describe("tests for errors thrown during isValidPaymentQR", () => {
       sgqrNETSQRPayload.length - 1
     );
     expect(() => isValidPaymentQR(invalidSGQRPayload)).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED)
+      new PaymentQRDeformedError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED)
     );
     expect(() => isValidPaymentQR(invalidSGQRPayload, true)).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED)
+      new PaymentQRDeformedError(
+        ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED
+      )
     );
   });
 
@@ -44,10 +52,12 @@ describe("tests for errors thrown during isValidPaymentQR", () => {
     expect.assertions(2);
     const missingInfoSGQRPayload = sgqrInvalidSupportedMerchantAccount;
     expect(() => isValidPaymentQR(missingInfoSGQRPayload)).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_MISSING)
+      new PaymentQRMissingInfoError(ERROR_MESSAGE.PAYMENT_QR_MISSING)
     );
     expect(() => isValidPaymentQR(missingInfoSGQRPayload, true)).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_MISSING_TEXT_DISABLED)
+      new PaymentQRMissingInfoError(
+        ERROR_MESSAGE.PAYMENT_QR_MISSING_TEXT_DISABLED
+      )
     );
   });
 
@@ -55,10 +65,12 @@ describe("tests for errors thrown during isValidPaymentQR", () => {
     expect.assertions(2);
     const payloadWithoutNETS = sgqrInvalidRazerPay;
     expect(() => isValidPaymentQR(payloadWithoutNETS)).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED)
+      new PaymentQRUnsupportedError(ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED)
     );
     expect(() => isValidPaymentQR(payloadWithoutNETS, true)).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED)
+      new PaymentQRUnsupportedError(
+        ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED
+      )
     );
   });
 });

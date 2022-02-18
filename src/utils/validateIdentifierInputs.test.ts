@@ -1,10 +1,12 @@
 import {
+  PaymentQRDeformedError,
+  PaymentQRMissingInfoError,
   sgqrInvalidRazerPay,
   sgqrInvalidSupportedMerchantAccount,
   sgqrNETSQRPayload,
 } from "@rationally-app/payment-qr-parser";
 import { ERROR_MESSAGE } from "../context/alert";
-import { PaymentQRError } from "./paymentQrValidation";
+import { PaymentQRUnsupportedError } from "./paymentQrValidation";
 import { validateIdentifierInputs } from "./validateIdentifierInputs";
 
 describe("validateIdentifierInputs", () => {
@@ -376,7 +378,9 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
           value: sgqrInvalidRazerPay,
         },
       ])
-    ).toThrow(new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED));
+    ).toThrow(
+      new PaymentQRUnsupportedError(ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED)
+    );
 
     expect(() =>
       validateIdentifierInputs([
@@ -390,7 +394,9 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
         },
       ])
     ).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED)
+      new PaymentQRUnsupportedError(
+        ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED
+      )
     );
   });
 
@@ -406,7 +412,7 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
           value: "deformedPayload",
         },
       ])
-    ).toThrow(new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED));
+    ).toThrow(new PaymentQRDeformedError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED));
     expect(() =>
       validateIdentifierInputs([
         {
@@ -419,7 +425,9 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
         },
       ])
     ).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED)
+      new PaymentQRDeformedError(
+        ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED
+      )
     );
   });
 
@@ -435,7 +443,7 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
           value: sgqrNETSQRPayload.substring(0, sgqrNETSQRPayload.length - 1),
         },
       ])
-    ).toThrow(new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED));
+    ).toThrow(new PaymentQRDeformedError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED));
 
     expect(() =>
       validateIdentifierInputs([
@@ -449,7 +457,9 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
         },
       ])
     ).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED)
+      new PaymentQRDeformedError(
+        ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED
+      )
     );
   });
 
@@ -465,7 +475,7 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
           value: sgqrInvalidSupportedMerchantAccount,
         },
       ])
-    ).toThrow(new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_MISSING));
+    ).toThrow(new PaymentQRMissingInfoError(ERROR_MESSAGE.PAYMENT_QR_MISSING));
 
     expect(() =>
       validateIdentifierInputs([
@@ -479,7 +489,9 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
         },
       ])
     ).toThrow(
-      new PaymentQRError(ERROR_MESSAGE.PAYMENT_QR_MISSING_TEXT_DISABLED)
+      new PaymentQRMissingInfoError(
+        ERROR_MESSAGE.PAYMENT_QR_MISSING_TEXT_DISABLED
+      )
     );
   });
 });
