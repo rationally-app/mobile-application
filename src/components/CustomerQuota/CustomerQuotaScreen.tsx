@@ -196,7 +196,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
         case cartError instanceof PaymentQRDeformedError ||
           cartError instanceof PaymentQRMissingInfoError ||
           cartError instanceof PaymentQRUnsupportedError:
-          showErrorAlert(new Error(cartError.message), () => clearCartError());
+          showErrorAlert(cartError, () => clearCartError());
           return;
       }
       if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
