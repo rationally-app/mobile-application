@@ -200,22 +200,30 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           return;
       }
       if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {
+        const invalidIdentifierInputErrMsg =
+          ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT ||
+          ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT_TEXT_DISABLED;
+
+        const missingIdentifierInputErrMsg =
+          ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT ||
+          ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT_TEXT_DISABLED;
+
         switch (cartError.message) {
-          case ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT:
+          case missingIdentifierInputErrMsg:
             const missingIdentifierInputError = new Error(
               campaignFeatures?.campaignName === "TT Tokens"
                 ? ERROR_MESSAGE.MISSING_POD_INPUT
                 : campaignFeatures?.campaignName.includes("Vouchers")
                 ? ERROR_MESSAGE.MISSING_VOUCHER_INPUT
-                : ERROR_MESSAGE.MISSING_IDENTIFIER_INPUT
+                : missingIdentifierInputErrMsg
             );
             showErrorAlert(missingIdentifierInputError, () => clearCartError());
             break;
-          case ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT:
+          case invalidIdentifierInputErrMsg:
             const invalidIdentifierInputError = new Error(
               campaignFeatures?.campaignName === "TT Tokens"
                 ? ERROR_MESSAGE.INVALID_POD_INPUT
-                : ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+                : invalidIdentifierInputErrMsg
             );
             Sentry.captureException(invalidIdentifierInputError);
             showErrorAlert(invalidIdentifierInputError, () => clearCartError());

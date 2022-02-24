@@ -1,7 +1,7 @@
 import {
   parsePaymentQR,
-  PaymentQRMissingInfoError,
   PaymentQRDeformedError,
+  PaymentQRMissingInfoError,
 } from "@rationally-app/payment-qr-parser";
 import { pick } from "lodash";
 import { ERROR_MESSAGE } from "../context/alert";
@@ -14,7 +14,10 @@ export class PaymentQRUnsupportedError extends Error {
   }
 }
 
-const isValidPaymentQR = (payload: string): boolean => {
+const isValidPaymentQR = (
+  payload: string,
+  isTextInputDisabled?: boolean
+): boolean => {
   try {
     const paymentQR = parsePaymentQR(payload, {
       source: "PAYMENT_QR_IS_VALID",
@@ -41,17 +44,24 @@ const isValidPaymentQR = (payload: string): boolean => {
       message: payload,
     });
     Sentry.captureException(e);
-
     if (e instanceof PaymentQRUnsupportedError) {
       throw new PaymentQRUnsupportedError(
-        ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+        isTextInputDisabled
+          ? ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED
+          : ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED
       );
     } else if (e instanceof PaymentQRMissingInfoError) {
       throw new PaymentQRMissingInfoError(
-        ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT
+        isTextInputDisabled
+          ? ERROR_MESSAGE.PAYMENT_QR_MISSING_TEXT_DISABLED
+          : ERROR_MESSAGE.PAYMENT_QR_MISSING
       );
     }
-    throw new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT);
+    throw new PaymentQRDeformedError(
+      isTextInputDisabled
+        ? ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED
+        : ERROR_MESSAGE.PAYMENT_QR_DEFORMED
+    );
   }
 };
 

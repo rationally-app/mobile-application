@@ -344,6 +344,11 @@ export const en: Translations = {
       body: "Enter or scan a valid code.",
       primaryActionText: "OK",
     },
+    wrongFormatCodeTextDisabled: {
+      title: "Wrong format",
+      body: "Scan a valid code.",
+      primaryActionText: "OK",
+    },
     incompleteWaiveReason: {
       title: "Incomplete entry",
       body: "Enter a valid waive reason.",
@@ -352,6 +357,11 @@ export const en: Translations = {
     incompleteEntryCode: {
       title: "Incomplete entry",
       body: "Enter or scan a valid code.",
+      primaryActionText: "OK",
+    },
+    incompleteEntryCodeTextDisabled: {
+      title: "Incomplete entry",
+      body: "Scan a valid code.",
       primaryActionText: "OK",
     },
     wrongFormatNotValidDeviceCode: {
@@ -470,6 +480,21 @@ export const en: Translations = {
     unsupportedPaymentMethodInPaymentQR: {
       title: "Unsupported payment method",
       body: "Enter or scan a valid code.",
+      primaryActionText: "OK",
+    },
+    deformedPaymentQRTextDisabled: {
+      title: "Deformed payment QR",
+      body: "Scan a valid code.",
+      primaryActionText: "OK",
+    },
+    missingInfoInPaymentQRTextDisabled: {
+      title: "Missing info in payment QR",
+      body: "Scan a valid code.",
+      primaryActionText: "OK",
+    },
+    unsupportedPaymentMethodInPaymentQRTextDisabled: {
+      title: "Unsupported payment method",
+      body: "Scan a valid code.",
       primaryActionText: "OK",
     },
   },

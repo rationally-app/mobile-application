@@ -20,37 +20,57 @@ describe("isValidPaymentQR Test", () => {
 
 describe("tests for errors thrown during isValidPaymentQR", () => {
   it("should throw error when parsing deformed payment QR payload", () => {
-    expect.assertions(1);
+    expect.assertions(2);
     const deformedPaymentQRPayload = "deformedPayload";
     expect(() => isValidPaymentQR(deformedPaymentQRPayload)).toThrow(
-      new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+      new PaymentQRDeformedError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED)
+    );
+    expect(() => isValidPaymentQR(deformedPaymentQRPayload, true)).toThrow(
+      new PaymentQRDeformedError(
+        ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED
+      )
     );
   });
 
   it("should throw error when parsing invalid SGQR payload", () => {
-    expect.assertions(1);
+    expect.assertions(2);
     const invalidSGQRPayload = sgqrNETSQRPayload.substring(
       0,
       sgqrNETSQRPayload.length - 1
     );
     expect(() => isValidPaymentQR(invalidSGQRPayload)).toThrow(
-      new PaymentQRDeformedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+      new PaymentQRDeformedError(ERROR_MESSAGE.PAYMENT_QR_DEFORMED)
+    );
+    expect(() => isValidPaymentQR(invalidSGQRPayload, true)).toThrow(
+      new PaymentQRDeformedError(
+        ERROR_MESSAGE.PAYMENT_QR_DEFORMED_TEXT_DISABLED
+      )
     );
   });
 
   it("should throw error when parsing SGQR payload with missing info", () => {
-    expect.assertions(1);
+    expect.assertions(2);
     const missingInfoSGQRPayload = sgqrInvalidSupportedMerchantAccount;
     expect(() => isValidPaymentQR(missingInfoSGQRPayload)).toThrow(
-      new PaymentQRMissingInfoError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+      new PaymentQRMissingInfoError(ERROR_MESSAGE.PAYMENT_QR_MISSING)
+    );
+    expect(() => isValidPaymentQR(missingInfoSGQRPayload, true)).toThrow(
+      new PaymentQRMissingInfoError(
+        ERROR_MESSAGE.PAYMENT_QR_MISSING_TEXT_DISABLED
+      )
     );
   });
 
   it("should throw error when parsing payment QR payload without NETS", () => {
-    expect.assertions(1);
+    expect.assertions(2);
     const payloadWithoutNETS = sgqrInvalidRazerPay;
     expect(() => isValidPaymentQR(payloadWithoutNETS)).toThrow(
-      new PaymentQRUnsupportedError(ERROR_MESSAGE.INVALID_IDENTIFIER_INPUT)
+      new PaymentQRUnsupportedError(ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED)
+    );
+    expect(() => isValidPaymentQR(payloadWithoutNETS, true)).toThrow(
+      new PaymentQRUnsupportedError(
+        ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED
+      )
     );
   });
 });

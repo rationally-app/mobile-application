@@ -137,6 +137,7 @@ export const IdentifierInput = t.intersection([
     scanButtonType: ScanButtonType,
     validationRegex: t.string,
     isOptional: t.boolean,
+    isTextInputDisabled: t.boolean,
   }),
 ]);
 
