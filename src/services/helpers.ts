@@ -23,6 +23,14 @@ export class NetworkError extends Error {
   }
 }
 
+const timeoutAfter = (seconds: number): Promise<Error> => {
+  return new Promise((resolve, _reject) => {
+    setTimeout(() => {
+      resolve(new Error(`request timed-out after ${seconds} seconds`));
+    }, seconds * 1000);
+  });
+};
+
 export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
@@ -30,7 +38,12 @@ export async function fetchWithValidator<T, O, I>(
 ): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(requestInfo, init);
+    response = await Promise.race<Response>([
+      fetch(requestInfo, init),
+      timeoutAfter(10).then((timeoutError) => {
+        throw timeoutError;
+      }),
+    ]);
   } catch (e) {
     throw new NetworkError(e.message);
   }
