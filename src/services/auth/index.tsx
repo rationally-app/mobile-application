@@ -169,6 +169,8 @@ export const liveValidateOTP = async (
       throw new OTPWrongError(e.message, false);
     } else if (e.message === "Wrong OTP entered, last try remaining") {
       throw new OTPWrongError(e.message, true);
+    } else if (e.message === "OTP must be 6 digits") {
+      throw new OTPWrongError(e.message, false);
     } else if (e.message === "OTP expired") {
       throw new OTPExpiredError(e.message);
     } else if (e.message === "OTP cannot be empty") {
