@@ -85,7 +85,7 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   LoginError: "systemErrorLoginIssue",
   AuthTakenError: "alreadyUsedQRCode",
   AuthExpiredError: "expiredQR",
-  AuthNotFoundError: "expiredQR",
+  AuthNotFoundError: "invalidInputQR",
   AuthInvalidError: "wrongFormatQRScanAgain",
   ScannerError: "errorScanning",
   LimitReachedError: "scanLimitReached",
