@@ -185,6 +185,50 @@ describe("LoginOTPCard", () => {
       expect(onSuccess).not.toHaveBeenCalled();
     });
 
+    it("when OTP is less than 6 digits", async () => {
+      expect.assertions(6);
+      mockValidateOTP.mockRejectedValue(
+        new auth.OTPWrongError("OTP must be 6 digits", false)
+      );
+
+      const { getByTestId, queryByText } = render(
+        <CreateProvidersWrapper
+          providers={[
+            { provider: AuthStoreContextProvider },
+            { provider: AlertModalContextProvider },
+          ]}
+        >
+          <LoginOTPCard
+            resetStage={resetStage}
+            fullMobileNumber={fullPhoneNumber}
+            operatorToken={operatorToken}
+            endpoint={endpoint}
+            handleRequestOTP={mockHandleRequestOTP}
+            onSuccess={onSuccess}
+          />
+        </CreateProvidersWrapper>
+      );
+
+      const OTPInput = getByTestId(OTPInputId);
+      const submitButton = getByTestId(submitButtonId);
+
+      fireEvent(OTPInput, "onChange", {
+        nativeEvent: { text: "00" },
+      });
+      expect(OTPInput.props["value"]).toEqual("00");
+
+      fireEvent.press(submitButton);
+      expect(queryByText("Submit")).toBeNull();
+      expect(mockValidateOTP).toHaveBeenCalledTimes(1);
+
+      await waitFor(() => {
+        expect(queryByText("Invalid input")).not.toBeNull();
+        expect(queryByText("Enter OTP again.")).not.toBeNull();
+      });
+
+      expect(onSuccess).not.toHaveBeenCalled();
+    });
+
     it("when OTP has expired", async () => {
       expect.assertions(6);
       mockValidateOTP.mockRejectedValue(
