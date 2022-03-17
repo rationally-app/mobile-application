@@ -46,6 +46,7 @@ export async function fetchWithValidator<T, O, I>(
     const controller = typeof AbortController
       ? {
           signal: undefined,
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           abort: () => {},
         }
       : new AbortController();
