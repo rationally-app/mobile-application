@@ -38,9 +38,12 @@ export async function fetchWithValidator<T, O, I>(
 ): Promise<T> {
   let response: Response;
   try {
+    const controller = new AbortController();
+    const signal = controller.signal;
     response = await Promise.race<Response>([
-      fetch(requestInfo, init),
+      fetch(requestInfo, { ...init, signal }),
       timeoutAfter(10).then((timeoutError) => {
+        controller.abort();
         throw timeoutError;
       }),
     ]);
