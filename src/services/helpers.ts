@@ -37,11 +37,20 @@ export async function fetchWithValidator<T, O, I>(
   init?: RequestInit
 ): Promise<T> {
   let response: Response;
+  /*
+   * AbortController() is supported globally for Jest with Node v15 and Jest v27 and above.
+   * Thus, logic is added to check if AbortController is valid for Jest testing purpose only.
+   * TODO: Remove the logic check when node and jest version is compatible.
+   */
   try {
-    const controller = new AbortController();
-    const signal = controller.signal;
+    const controller = typeof AbortController
+      ? {
+          signal: undefined,
+          abort: () => {},
+        }
+      : new AbortController();
     response = await Promise.race<Response>([
-      fetch(requestInfo, { ...init, signal }),
+      fetch(requestInfo, { ...init, signal: controller.signal }),
       timeoutAfter(10).then((timeoutError) => {
         controller.abort();
         throw timeoutError;
