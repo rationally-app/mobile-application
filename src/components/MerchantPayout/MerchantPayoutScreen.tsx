@@ -76,23 +76,20 @@ const styles = StyleSheet.create({
   },
 });
 
-export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
-  navigation,
-  isFocused,
-}) => {
+export const MerchantPayoutScreen: FunctionComponent<
+  NavigationFocusInjectedProps
+> = ({ navigation, isFocused }) => {
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
   const [merchantCode, setMerchantCode] = useState("");
-  const [showAllValidVouchersModal, setShowAllValidVouchersModal] = useState(
-    false
-  );
+  const [showAllValidVouchersModal, setShowAllValidVouchersModal] =
+    useState(false);
   const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
-  const { showWarnAlert, showErrorAlert, showConfirmationAlert } = useContext(
-    AlertModalContext
-  );
+  const { showWarnAlert, showErrorAlert, showConfirmationAlert } =
+    useContext(AlertModalContext);
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 
@@ -324,6 +321,5 @@ export const MerchantPayoutScreen: FunctionComponent<NavigationFocusInjectedProp
   );
 };
 
-export const MerchantPayoutScreenContainer = withNavigationFocus(
-  MerchantPayoutScreen
-);
+export const MerchantPayoutScreenContainer =
+  withNavigationFocus(MerchantPayoutScreen);

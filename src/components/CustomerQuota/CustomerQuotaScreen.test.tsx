@@ -29,12 +29,10 @@ const mockNavigate: any = {
 };
 
 jest.mock("react-navigation", () => ({
-  withNavigation: (Component: FunctionComponent) => (props: any) => (
-    <Component navigation={mockNavigate} {...props} />
-  ),
-  withNavigationFocus: (Component: FunctionComponent) => (props: any) => (
-    <Component navigation={mockNavigate} {...props} />
-  ),
+  withNavigation: (Component: FunctionComponent) => (props: any) =>
+    <Component navigation={mockNavigate} {...props} />,
+  withNavigationFocus: (Component: FunctionComponent) => (props: any) =>
+    <Component navigation={mockNavigate} {...props} />,
 }));
 
 const mockProduct: CampaignPolicy[] = [

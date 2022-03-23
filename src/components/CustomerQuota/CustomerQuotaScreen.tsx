@@ -87,9 +87,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { showErrorAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
-  const [updateAfterPurchased, setUpdateAfterPurchased] = useState<boolean>(
-    false
-  );
+  const [updateAfterPurchased, setUpdateAfterPurchased] =
+    useState<boolean>(false);
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 

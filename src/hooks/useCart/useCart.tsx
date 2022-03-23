@@ -182,15 +182,12 @@ export const findOptionalIdentifierInputLabels = (
     }
   );
 
-  const optionalIdentifierInputLabels: Array<
-    Array<string>
-  > = filteredIdentifiers.map(
-    ({ category, identifiers }): Array<string> => {
+  const optionalIdentifierInputLabels: Array<Array<string>> =
+    filteredIdentifiers.map(({ category, identifiers }): Array<string> => {
       return identifiers
         .filter(({ isOptional }) => !!isOptional)
         .map(({ label }) => `${category}.${label}`);
-    }
-  );
+    });
 
   return flatten(optionalIdentifierInputLabels);
 };

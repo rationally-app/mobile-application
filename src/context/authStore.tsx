@@ -72,9 +72,8 @@ export const AuthStoreContextProvider: FunctionComponent<{
    *
    * Documented in [#398](https://github.com/rationally-app/mobile-application/pull/398)
    */
-  const [hasLoadedFromPrimaryStore, setHasLoadedFromPrimaryStore] = useState(
-    false
-  );
+  const [hasLoadedFromPrimaryStore, setHasLoadedFromPrimaryStore] =
+    useState(false);
   const [authCredentials, setAuthCredentialsMap] = useState<AuthCredentialsMap>(
     {}
   );
@@ -102,18 +101,16 @@ export const AuthStoreContextProvider: FunctionComponent<{
     }
   }, [hasLoadedFromPrimaryStore, authCredentials, prevAuthCredentials]);
 
-  const setAuthCredentials: AuthStoreContext["setAuthCredentials"] = useCallback(
-    (key, newAuthCredentials) => {
+  const setAuthCredentials: AuthStoreContext["setAuthCredentials"] =
+    useCallback((key, newAuthCredentials) => {
       setAuthCredentialsMap((prevCredentials) => ({
         ...prevCredentials,
         [key]: newAuthCredentials,
       }));
-    },
-    []
-  );
+    }, []);
 
-  const removeAuthCredentials: AuthStoreContext["removeAuthCredentials"] = useCallback(
-    (key) => {
+  const removeAuthCredentials: AuthStoreContext["removeAuthCredentials"] =
+    useCallback((key) => {
       setAuthCredentialsMap((prevCredentials) => {
         const {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -122,13 +119,12 @@ export const AuthStoreContextProvider: FunctionComponent<{
         } = prevCredentials;
         return remainingCredentials;
       });
-    },
-    []
-  );
+    }, []);
 
-  const clearAuthCredentials: AuthStoreContext["clearAuthCredentials"] = useCallback(() => {
-    setAuthCredentialsMap({});
-  }, []);
+  const clearAuthCredentials: AuthStoreContext["clearAuthCredentials"] =
+    useCallback(() => {
+      setAuthCredentialsMap({});
+    }, []);
 
   useEffect(() => {
     /**

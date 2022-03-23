@@ -89,10 +89,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const CollectCustomerDetailsScreen: FunctionComponent<NavigationFocusInjectedProps> = ({
-  navigation,
-  isFocused,
-}) => {
+const CollectCustomerDetailsScreen: FunctionComponent<
+  NavigationFocusInjectedProps
+> = ({ navigation, isFocused }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
