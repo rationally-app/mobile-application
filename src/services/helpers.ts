@@ -23,14 +23,40 @@ export class NetworkError extends Error {
   }
 }
 
+const timeoutAfter = (seconds: number): Promise<Error> => {
+  return new Promise((resolve, _reject) => {
+    setTimeout(() => {
+      resolve(new Error(`request timed-out after ${seconds} seconds`));
+    }, seconds * 1000);
+  });
+};
+
 export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
   init?: RequestInit
 ): Promise<T> {
   let response: Response;
+  /*
+   * AbortController() is supported globally for Jest with Node v15 and Jest v27 and above.
+   * Thus, logic is added to check if AbortController is valid for Jest testing purpose only.
+   * TODO: Remove the logic check when node and jest version is compatible.
+   */
   try {
-    response = await fetch(requestInfo, init);
+    const controller = typeof AbortController
+      ? {
+          signal: undefined,
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          abort: () => {},
+        }
+      : new AbortController();
+    response = await Promise.race<Response>([
+      fetch(requestInfo, { ...init, signal: controller.signal }),
+      timeoutAfter(10).then((timeoutError) => {
+        controller.abort();
+        throw timeoutError;
+      }),
+    ]);
   } catch (e) {
     throw new NetworkError(e.message);
   }
