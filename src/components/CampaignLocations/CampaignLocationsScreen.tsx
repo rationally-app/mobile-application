@@ -76,10 +76,8 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
   const messageContent = useContext(ImportantMessageContentContext);
   const showHelpModal = useContext(HelpModalContext);
 
-  const {
-    hasLoadedFromStore: hasLoadedAuthFromStore,
-    authCredentials,
-  } = useContext(AuthStoreContext);
+  const { hasLoadedFromStore: hasLoadedAuthFromStore, authCredentials } =
+    useContext(AuthStoreContext);
   const {
     hasLoadedFromStore: hasLoadedCampaignConfigFromStore,
     allCampaignConfigs,

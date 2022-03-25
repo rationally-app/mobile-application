@@ -12,7 +12,9 @@ interface KeyboardAvoidingScrollView {
   scrollViewContentContainerStyle?: ScrollViewProps["contentContainerStyle"];
 }
 
-export const KeyboardAvoidingScrollView: FunctionComponent<KeyboardAvoidingScrollView> = ({
+export const KeyboardAvoidingScrollView: FunctionComponent<
+  KeyboardAvoidingScrollView
+> = ({
   keyboardAvoidingViewStyle = {},
   scrollViewContentContainerStyle = { alignItems: "center" },
   children,

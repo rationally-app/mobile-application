@@ -13,12 +13,10 @@ const mockDate = jest.spyOn(global.Date, "now");
 const mockNavigate: any = { navigate: jest.fn() };
 
 jest.mock("react-navigation", () => ({
-  withNavigation: (Component: FunctionComponent) => (props: any) => (
-    <Component navigation={mockNavigate} {...props} />
-  ),
-  withNavigationFocus: (Component: FunctionComponent) => (props: any) => (
-    <Component navigation={mockNavigate} {...props} />
-  ),
+  withNavigation: (Component: FunctionComponent) => (props: any) =>
+    <Component navigation={mockNavigate} {...props} />,
+  withNavigationFocus: (Component: FunctionComponent) => (props: any) =>
+    <Component navigation={mockNavigate} {...props} />,
 }));
 
 const mockTransactionHistory = [
