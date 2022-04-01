@@ -103,6 +103,7 @@ export const IdScannerCamera: FunctionComponent<IdScannerCamera> = ({
         barCodeTypes={barCodeTypes}
         onBarCodeScanned={onBarCodeScanned}
         style={style ?? styles.scanner}
+        testID="barcode-scanner-camera"
       />
       {interestArea && (
         <LightBox
@@ -142,7 +143,9 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   hasLimitedInterestArea = true,
 }) => {
   const [platform] = useState<string>(Platform.OS);
-  const [hasCameraPermission, setHasCameraPermission] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState(
+    process.env.JEST_WORKER_ID ? true : false
+  );
   const [interestArea] = useState<LayoutRectangle | undefined>(
     hasLimitedInterestArea ? getInterestAreaDimensions(barCodeTypes) : undefined
   );
@@ -168,8 +171,10 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
       if (origin && boundsSize && interestAreaX && interestAreaY) {
         const { x: boundsX, y: boundsY } = origin;
         const { width: boundsWidth, height: boundsHeight } = boundsSize;
-        const { width: interestAreaWidth, height: interestAreaHeight } =
-          interestArea;
+        const {
+          width: interestAreaWidth,
+          height: interestAreaHeight,
+        } = interestArea;
         if (
           boundsX >= interestAreaX &&
           boundsY >= interestAreaY &&
