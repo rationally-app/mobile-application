@@ -37,12 +37,9 @@ interface LoginMobileNumberCard {
   handleRequestOTP: (fullMobileNumber: string) => Promise<boolean>;
 }
 
-export const LoginMobileNumberCard: FunctionComponent<LoginMobileNumberCard> = ({
-  setLoginStage,
-  setMobileNumber,
-  setCountryCode,
-  handleRequestOTP,
-}) => {
+export const LoginMobileNumberCard: FunctionComponent<
+  LoginMobileNumberCard
+> = ({ setLoginStage, setMobileNumber, setCountryCode, handleRequestOTP }) => {
   const { config } = useContext(ConfigContext);
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCodeValue] = useState(

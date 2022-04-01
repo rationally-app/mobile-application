@@ -171,10 +171,8 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
       if (origin && boundsSize && interestAreaX && interestAreaY) {
         const { x: boundsX, y: boundsY } = origin;
         const { width: boundsWidth, height: boundsHeight } = boundsSize;
-        const {
-          width: interestAreaWidth,
-          height: interestAreaHeight,
-        } = interestArea;
+        const { width: interestAreaWidth, height: interestAreaHeight } =
+          interestArea;
         if (
           boundsX >= interestAreaX &&
           boundsY >= interestAreaY &&

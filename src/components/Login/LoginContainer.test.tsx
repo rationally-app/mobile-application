@@ -159,7 +159,7 @@ describe("LoginContainer", () => {
       ttl: expiry,
     });
 
-    const { getByTestId, queryByTestId, queryByText } = render(
+    const { getByTestId, queryByTestId } = render(
       <InitialisationContainer navigation={mockNavigation} />
     );
     const scanButton = getByTestId(scanButtonId);
