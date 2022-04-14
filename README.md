@@ -39,11 +39,24 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
 }
 ```
 
-7. Run one of the following to start development:
+8. Run one of the following to start development:
    - `npm run start`
    - `npm run start:mock`: If you'd like to mock the APIs
    - `npm run storybook`: If you'd like to use Storybook for development
-8. Open Expo and launch the app
+9. Open Expo and launch the app
+
+### Tools
+
+#### Markdown lint
+
+We use [`remark`](https://github.com/remarkjs/remark-lint) for linting `.md` files.
+
+```bash
+npm run markdown:lint
+```
+
+Install the [`remark`](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-remark) VSCode extension to lint your markdown files.
+
 
 ## Testing
 
