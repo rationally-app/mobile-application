@@ -9,7 +9,7 @@ concurrency:
   group: ${{ github.ref }} # The branch or tag ref that triggered the workflow run.
 
 jobs:
-  lint:
+  pr_title_lint:
     runs-on: ubuntu-18.04
     continue-on-error: false
     timeout-minutes: 5
@@ -22,7 +22,22 @@ jobs:
           # using github token for external/dependabot PR,
           # personal access tokens in secrets will not be accessible in
           # pipeline for external user PRs
-
+  markdown_lint:
+    name: Markdown Lint
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install Packages
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
+        env:
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+      - name: Check Markdown Lint
+        run: npm run markdown:lint
   test:
     name: Lint & Test
     runs-on: ubuntu-18.04
@@ -45,16 +60,14 @@ jobs:
             ${{ runner.os }}-
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm ci
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
         run: npx --no-install tsc --noEmit
       - name: Check Lint
         run: npm run lint
-      - name: Check Markdown Lint
-        run: npm run markdown:lint
       - name: Set Timezone to +8 (Ubuntu)
         run: sudo timedatectl set-timezone Asia/Singapore
       - name: Test
@@ -93,8 +106,8 @@ jobs:
             ${{ runner.os }}-
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm ci
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
