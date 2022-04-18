@@ -10,6 +10,7 @@ concurrency:
 
 jobs:
   pr_title_lint:
+    name: PR Title Lint
     runs-on: ubuntu-18.04
     continue-on-error: false
     timeout-minutes: 5
