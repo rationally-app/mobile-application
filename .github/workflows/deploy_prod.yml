@@ -11,6 +11,22 @@ concurrency:
   group: ${{ github.ref }} # The branch or tag ref that triggered the workflow run.
 
 jobs:
+  markdown_lint:
+    name: Markdown Lint
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install Packages
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
+        env:
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+      - name: Check Markdown Lint
+        run: npm run markdown:lint
   test:
     name: Lint & Test
     runs-on: ubuntu-18.04
@@ -21,16 +37,14 @@ jobs:
           node-version: 12.x
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm ci
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
         run: npx --no-install tsc --noEmit
       - name: Check Lint
         run: npm run lint
-      - name: Check Markdown Lint
-        run: npm run markdown:lint
       - name: Set Timezone to +8 (Ubuntu)
         run: sudo timedatectl set-timezone Asia/Singapore
       - name: Test
@@ -66,8 +80,8 @@ jobs:
           echo "::set-output name=releaseChannel::$RELEASE_CHANNEL"
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm ci
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
@@ -137,8 +151,8 @@ jobs:
           expo-cache: true
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm ci
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Build Android Release
@@ -183,8 +197,8 @@ jobs:
           expo-cache: true
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm ci
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Build IOS Release
