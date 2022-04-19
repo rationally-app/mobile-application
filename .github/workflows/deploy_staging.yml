@@ -12,6 +12,22 @@ concurrency:
   group: ${{ github.ref }} # The branch or tag ref that triggered the workflow run.
 
 jobs:
+  markdown_lint:
+    name: Markdown Lint
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install Packages
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
+        env:
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+      - name: Check Markdown Lint
+        run: npm run markdown:lint
   test:
     name: Lint & Test
     runs-on: ubuntu-18.04
@@ -34,8 +50,8 @@ jobs:
             ${{ runner.os }}-
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm ci
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
@@ -66,8 +82,8 @@ jobs:
           expo-cache: true
       - name: Install Packages
         run: |
-         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-         npm ci
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
