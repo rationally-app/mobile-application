@@ -177,17 +177,17 @@ const IdentificationFlag = t.intersection([
 
 const CampaignFeatures = t.intersection([
   t.type({
+    campaignName: t.string,
+    id: IdentificationFlag,
     minAppBinaryVersion: t.string,
     minAppBuildVersion: t.number,
-    campaignName: t.string,
-    transactionGrouping: t.boolean,
-    flowType: t.string,
-    id: IdentificationFlag,
   }),
   t.partial({
     alternateIds: t.array(IdentificationFlag),
     apiVersion: t.union([t.literal("v1"), t.literal("v2")]),
+    flowType: t.string,
     theme: t.union([t.literal("DEFAULT"), t.literal("GOVWALLET")]),
+    transactionGrouping: t.boolean,
   }),
 ]);
 
