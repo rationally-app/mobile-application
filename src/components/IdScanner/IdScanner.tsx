@@ -143,6 +143,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   hasLimitedInterestArea = true,
 }) => {
   const [platform] = useState<string>(Platform.OS);
+  // Camera permission granted in default for Jest tests.
   const [hasCameraPermission, setHasCameraPermission] = useState(
     process.env.JEST_WORKER_ID ? true : false
   );

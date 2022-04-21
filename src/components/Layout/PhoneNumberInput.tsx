@@ -110,7 +110,7 @@ export const PhoneNumberInput: FunctionComponent<{
           keyboardType="phone-pad"
           value={countryCodeValue}
           onChangeText={onChangeCountryCode}
-          testID={"login-country-code-input"}
+          testID="login-country-code-input"
         />
         <AppText style={styles.hyphen}>-</AppText>
         <TextInput
