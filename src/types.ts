@@ -100,16 +100,6 @@ const ValidationType = t.union([
 const PolicyIdentifier = t.intersection([
   t.type({
     label: t.string,
-    textInput: t.intersection([
-      t.type({
-        visible: t.boolean,
-        disabled: t.boolean,
-      }),
-      t.partial({
-        type: TextInputType,
-        choices: t.array(PolicyChoices),
-      }),
-    ]),
     scanButton: t.intersection([
       t.type({
         visible: t.boolean,
@@ -120,10 +110,20 @@ const PolicyIdentifier = t.intersection([
         text: t.string,
       }),
     ]),
+    textInput: t.intersection([
+      t.type({
+        disabled: t.boolean,
+        visible: t.boolean,
+      }),
+      t.partial({
+        choices: t.array(PolicyChoices),
+        type: TextInputType,
+      }),
+    ]),
   }),
   t.partial({
-    validationRegex: t.string,
     isOptional: t.boolean,
+    validationRegex: t.string,
   }),
 ]);
 
