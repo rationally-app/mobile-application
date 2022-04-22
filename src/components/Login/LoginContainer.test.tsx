@@ -24,7 +24,6 @@ const otp = "000000";
 const expiry = new Date(2030, 0, 1);
 
 const barcodeScannerId = "barcode-scanner-camera";
-const buttonWithLoading = "dark-button-display-loading";
 const loginScanViewId = "login-scan-view";
 const loginMobileViewId = "login-mobile-number-view";
 const loginOTPViewId = "login-otp-card-view";
@@ -42,6 +41,18 @@ const mockCaptureException = jest.fn();
 
 const mockDeepLink = jest.fn();
 jest.spyOn(Linking, "parseInitialURLAsync").mockImplementation(mockDeepLink);
+
+jest.mock("expo-camera", () => {
+  return {
+    Camera: {
+      requestPermissionsAsync: () => {
+        return {
+          status: "granted",
+        };
+      },
+    },
+  };
+});
 
 const mockRequestOTP = jest.spyOn(auth, "requestOTP");
 const mockValidateOTP = jest.spyOn(auth, "validateOTP");
@@ -80,25 +91,24 @@ describe("LoginContainer", () => {
     });
   });
 
-  it("should render Id scanner", () => {
+  it("should render Id scanner", async () => {
     expect.assertions(1);
     const { getByTestId } = render(
       <InitialisationContainer navigation={mockNavigation} />
     );
-
     const scanButton = getByTestId(scanButtonId);
-    fireEvent.press(scanButton);
+    await act(async () => fireEvent.press(scanButton));
     expect(getByTestId(barcodeScannerId)).not.toBeNull();
   });
 
-  it("valid QR detected and should render LoginMobileNumberCard", () => {
+  it("valid QR detected and should render LoginMobileNumberCard", async () => {
     expect.assertions(1);
     const { getByTestId } = render(
       <InitialisationContainer navigation={mockNavigation} />
     );
 
     const scanButton = getByTestId(scanButtonId);
-    fireEvent.press(scanButton);
+    await act(async () => fireEvent.press(scanButton));
     fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
       nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
     });
@@ -106,14 +116,14 @@ describe("LoginContainer", () => {
   });
 
   it("submit valid hp number and country code, and button should render loading", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
     mockRequestOTP.mockResolvedValueOnce({ status: "OK" });
 
     const { getByTestId, queryByText } = render(
       <InitialisationContainer navigation={mockNavigation} />
     );
     const scanButton = getByTestId(scanButtonId);
-    fireEvent.press(scanButton);
+    await act(async () => fireEvent.press(scanButton));
     fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
       nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
     });
@@ -123,9 +133,8 @@ describe("LoginContainer", () => {
     const countryCodeInput = getByTestId(countryCodeInputId);
     fireEvent(phoneNumberInput, "onChangeText", phoneNumber);
     fireEvent(countryCodeInput, "onChangeCountryCode", countryCode);
-    fireEvent.press(loginSendOTPButton);
+    await act(async () => fireEvent.press(loginSendOTPButton));
     expect(queryByText("Send OTP")).toBeNull();
-    expect(getByTestId(buttonWithLoading)).not.toBeNull();
   });
 
   it("OTP requested successfully and should render LoginOTPCard", async () => {
@@ -136,7 +145,7 @@ describe("LoginContainer", () => {
       <InitialisationContainer navigation={mockNavigation} />
     );
     const scanButton = getByTestId(scanButtonId);
-    fireEvent.press(scanButton);
+    await act(async () => fireEvent.press(scanButton));
     fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
       nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
     });
@@ -146,8 +155,8 @@ describe("LoginContainer", () => {
     const countryCodeInput = getByTestId(countryCodeInputId);
     fireEvent(phoneNumberInput, "onChangeText", phoneNumber);
     fireEvent(countryCodeInput, "onChangeCountryCode", countryCode);
-    fireEvent.press(loginSendOTPButton);
-    await waitFor(() => expect(getByTestId(loginOTPViewId)).not.toBeNull());
+    await act(async () => fireEvent.press(loginSendOTPButton));
+    expect(getByTestId(loginOTPViewId)).not.toBeNull();
   });
 
   it("OTP submitted successfully and navigate to CampaignInitialisationScreen", async () => {
@@ -162,7 +171,7 @@ describe("LoginContainer", () => {
       <InitialisationContainer navigation={mockNavigation} />
     );
     const scanButton = getByTestId(scanButtonId);
-    fireEvent.press(scanButton);
+    await act(async () => fireEvent.press(scanButton));
     fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
       nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
     });
@@ -199,7 +208,7 @@ describe("LoginContainer", () => {
   });
 
   describe("should show error modal", () => {
-    it("invalid QR detected", () => {
+    it("invalid QR detected", async () => {
       expect.assertions(2);
       const { getByTestId, queryByText } = render(
         <CreateProvidersWrapper
@@ -210,7 +219,7 @@ describe("LoginContainer", () => {
       );
 
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"keys": "${key}","endpoint": "${endpoint}"}` },
       });
@@ -222,7 +231,7 @@ describe("LoginContainer", () => {
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
 
-    it("country code input is invalid", () => {
+    it("country code input is invalid", async () => {
       expect.assertions(1);
       const { getByTestId, queryByText } = render(
         <CreateProvidersWrapper
@@ -233,7 +242,7 @@ describe("LoginContainer", () => {
       );
 
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
       });
@@ -247,7 +256,7 @@ describe("LoginContainer", () => {
       expect(queryByText("Enter a valid country code.")).not.toBeNull();
     });
 
-    it("hp number input is invalid", () => {
+    it("hp number input is invalid", async () => {
       expect.assertions(1);
       const { getByTestId, queryByText } = render(
         <CreateProvidersWrapper
@@ -258,7 +267,7 @@ describe("LoginContainer", () => {
       );
 
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
       });
@@ -272,7 +281,7 @@ describe("LoginContainer", () => {
       expect(queryByText("Enter a valid contact number.")).not.toBeNull();
     });
 
-    it("hp number input is empty", () => {
+    it("hp number input is empty", async () => {
       expect.assertions(1);
       const { getByTestId, queryByText } = render(
         <CreateProvidersWrapper
@@ -283,7 +292,7 @@ describe("LoginContainer", () => {
       );
 
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
       });
@@ -310,7 +319,7 @@ describe("LoginContainer", () => {
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
       });
@@ -347,7 +356,7 @@ describe("LoginContainer", () => {
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
       });
@@ -389,7 +398,7 @@ describe("LoginContainer", () => {
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
       });
@@ -427,7 +436,7 @@ describe("LoginContainer", () => {
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
       });
@@ -465,7 +474,7 @@ describe("LoginContainer", () => {
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
       });
@@ -498,7 +507,7 @@ describe("LoginContainer", () => {
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
-      fireEvent.press(scanButton);
+      await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
         nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
       });

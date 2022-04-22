@@ -44,11 +44,7 @@ export const DarkButton: FunctionComponent<DarkButton> = ({
       accessibilityLabel={accessibilityLabel}
     >
       {isLoading ? (
-        <ActivityIndicator
-          size="small"
-          color={color("grey", 0)}
-          testID="dark-button-display-loading"
-        />
+        <ActivityIndicator size="small" color={color("grey", 0)} />
       ) : (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {icon && (
