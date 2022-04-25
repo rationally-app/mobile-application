@@ -100,16 +100,6 @@ const ValidationType = t.union([
 const PolicyIdentifier = t.intersection([
   t.type({
     label: t.string,
-    textInput: t.intersection([
-      t.type({
-        visible: t.boolean,
-        disabled: t.boolean,
-      }),
-      t.partial({
-        type: TextInputType,
-        choices: t.array(PolicyChoices),
-      }),
-    ]),
     scanButton: t.intersection([
       t.type({
         visible: t.boolean,
@@ -120,10 +110,20 @@ const PolicyIdentifier = t.intersection([
         text: t.string,
       }),
     ]),
+    textInput: t.intersection([
+      t.type({
+        disabled: t.boolean,
+        visible: t.boolean,
+      }),
+      t.partial({
+        choices: t.array(PolicyChoices),
+        type: TextInputType,
+      }),
+    ]),
   }),
   t.partial({
-    validationRegex: t.string,
     isOptional: t.boolean,
+    validationRegex: t.string,
   }),
 ]);
 
@@ -177,17 +177,17 @@ const IdentificationFlag = t.intersection([
 
 const CampaignFeatures = t.intersection([
   t.type({
+    campaignName: t.string,
+    id: IdentificationFlag,
     minAppBinaryVersion: t.string,
     minAppBuildVersion: t.number,
-    campaignName: t.string,
-    transactionGrouping: t.boolean,
-    flowType: t.string,
-    id: IdentificationFlag,
   }),
   t.partial({
     alternateIds: t.array(IdentificationFlag),
     apiVersion: t.union([t.literal("v1"), t.literal("v2")]),
+    flowType: t.string,
     theme: t.union([t.literal("DEFAULT"), t.literal("GOVWALLET")]),
+    transactionGrouping: t.boolean,
   }),
 ]);
 
