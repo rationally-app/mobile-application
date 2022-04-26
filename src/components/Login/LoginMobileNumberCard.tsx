@@ -87,7 +87,10 @@ export const LoginMobileNumberCard: FunctionComponent<
   return (
     <Card>
       <AppText>{i18nt("loginMobileNumberCard", "enterMobileNumber")}</AppText>
-      <View style={styles.inputAndButtonWrapper}>
+      <View
+        style={styles.inputAndButtonWrapper}
+        testID="login-mobile-number-view"
+      >
         <PhoneNumberInput
           countryCodeValue={countryCode}
           label={i18nt("loginMobileNumberCard", "mobileNumber")}

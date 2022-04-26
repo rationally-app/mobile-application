@@ -21,8 +21,10 @@ const setCountryCode = jest.fn();
 const mockHandleRequestOTP = jest.fn().mockResolvedValue(true);
 
 const OTPInputId = "login-phone-number-input";
+const countryCodeInputId = "login-country-code-input";
 const submitButtonId = "login-send-otp-button";
 const invalidMessage = "Enter a valid contact number.";
+const invalidCountryCode = "Enter a valid country code.";
 
 describe("LoginMobileNumberCard", () => {
   afterEach(() => {
@@ -112,6 +114,40 @@ describe("LoginMobileNumberCard", () => {
 
       fireEvent.press(submitButton);
       expect(queryByText(invalidMessage)).not.toBeNull();
+
+      await waitFor(() => {
+        expect(mockHandleRequestOTP).not.toHaveBeenCalled();
+        expect(setMobileNumber).not.toHaveBeenCalled();
+        expect(setCountryCode).not.toHaveBeenCalled();
+        expect(setLoginState).not.toHaveBeenCalled();
+      });
+    });
+
+    it("when country code input is invalid", async () => {
+      expect.assertions(7);
+      const { getByTestId, queryByText } = render(
+        <CreateProvidersWrapper
+          providers={[{ provider: AlertModalContextProvider }]}
+        >
+          <LoginMobileNumberCard
+            setLoginStage={setLoginState}
+            setMobileNumber={setMobileNumber}
+            setCountryCode={setCountryCode}
+            handleRequestOTP={mockHandleRequestOTP}
+          />
+        </CreateProvidersWrapper>
+      );
+      const phoneNumberInput = getByTestId(OTPInputId);
+      const submitButton = getByTestId(submitButtonId);
+      const countryCodeInput = getByTestId(countryCodeInputId);
+
+      fireEvent(phoneNumberInput, "onChangeText", "888888888");
+      expect(phoneNumberInput.props["value"]).toEqual("888888888");
+      fireEvent(countryCodeInput, "onChangeCountryCode", "+900");
+      expect(countryCodeInput.props["value"]).toEqual("+900");
+
+      fireEvent.press(submitButton);
+      expect(queryByText(invalidCountryCode)).not.toBeNull();
 
       await waitFor(() => {
         expect(mockHandleRequestOTP).not.toHaveBeenCalled();

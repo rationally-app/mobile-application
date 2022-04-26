@@ -26,7 +26,7 @@ export const LoginScanCard: FunctionComponent<LoginScanCard> = ({
   return (
     <Card>
       <AppText>{i18nt("loginScanCard", "loginWithQR")}</AppText>
-      <View style={styles.scanButtonWrapper}>
+      <View style={styles.scanButtonWrapper} testID="login-scan-view">
         <DarkButton
           text={i18nt("loginScanCard", "scanToLogin")}
           onPress={onToggleScanner}

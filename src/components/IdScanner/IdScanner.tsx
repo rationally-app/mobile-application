@@ -103,6 +103,7 @@ export const IdScannerCamera: FunctionComponent<IdScannerCamera> = ({
         barCodeTypes={barCodeTypes}
         onBarCodeScanned={onBarCodeScanned}
         style={style ?? styles.scanner}
+        testID="barcode-scanner-camera"
       />
       {interestArea && (
         <LightBox

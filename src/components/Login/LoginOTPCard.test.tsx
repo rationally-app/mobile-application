@@ -16,10 +16,12 @@ import * as SecureStore from "expo-secure-store";
 
 jest.mock("../../utils/errorTracking");
 jest.mock("expo-secure-store");
+
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
 const mockValidateOTP = jest.spyOn(auth, "validateOTP");
+jest.spyOn(global, "setTimeout");
 
 const resetStage = jest.fn();
 const mockHandleRequestOTP = jest.fn().mockReturnValue(true);
@@ -45,6 +47,7 @@ describe("LoginOTPCard", () => {
   afterEach(() => {
     cleanup();
     jest.resetAllMocks();
+    jest.useRealTimers();
   });
 
   it("should submit the OTP successfully on pressing submit", async () => {
@@ -92,6 +95,50 @@ describe("LoginOTPCard", () => {
         sessionToken: "my-session-token",
       });
     });
+  });
+
+  it("button to resend OTP should be disabled for 30 seconds", async () => {
+    expect.assertions(2);
+    jest.useFakeTimers();
+    const { queryByText } = render(
+      <CreateProvidersWrapper
+        providers={[{ provider: AuthStoreContextProvider }]}
+      >
+        <LoginOTPCard
+          resetStage={resetStage}
+          fullMobileNumber={fullPhoneNumber}
+          operatorToken={operatorToken}
+          endpoint={endpoint}
+          handleRequestOTP={mockHandleRequestOTP}
+          onSuccess={onSuccess}
+        />
+      </CreateProvidersWrapper>
+    );
+    expect(queryByText("Resend")).toBeNull();
+    jest.advanceTimersByTime(29999);
+    expect(queryByText("Resend")).toBeNull();
+  });
+
+  it("button to resend OTP should be enable after 30 seconds", async () => {
+    expect.assertions(2);
+    jest.useFakeTimers();
+    const { queryByText } = render(
+      <CreateProvidersWrapper
+        providers={[{ provider: AuthStoreContextProvider }]}
+      >
+        <LoginOTPCard
+          resetStage={resetStage}
+          fullMobileNumber={fullPhoneNumber}
+          operatorToken={operatorToken}
+          endpoint={endpoint}
+          handleRequestOTP={mockHandleRequestOTP}
+          onSuccess={onSuccess}
+        />
+      </CreateProvidersWrapper>
+    );
+    expect(queryByText("Resend")).toBeNull();
+    jest.advanceTimersByTime(30000);
+    expect(queryByText("Resend")).not.toBeNull();
   });
 
   describe("should show error modal", () => {
