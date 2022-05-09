@@ -29,7 +29,7 @@ import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
 import { useTheme } from "../../context/theme";
-import { SessionError } from "../../services/helpers";
+import { NetworkError, SessionError } from "../../services/helpers";
 
 const styles = StyleSheet.create({
   content: {
@@ -109,15 +109,17 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
 
   useEffect(() => {
     if (error) {
-      if (error instanceof SessionError) {
-        clearDailyStatisticsError();
-        expireSession();
-        showErrorAlert(error, () => {
-          navigation.navigate("CampaignLocationsScreen");
-        });
-        return;
+      switch (true) {
+        case error instanceof NetworkError:
+          throw error; // Let error boundary handle.
+        case error instanceof SessionError:
+          clearDailyStatisticsError();
+          expireSession();
+          showErrorAlert(error, () => {
+            navigation.navigate("CampaignLocationsScreen");
+          });
+          return;
       }
-
       showErrorAlert(error, () => navigateHome(navigation));
     }
   }, [

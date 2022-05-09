@@ -10,6 +10,7 @@ import { Sentry } from "../../utils/errorTracking";
 import { ERROR_MESSAGE } from "../../context/alert";
 import { IdentificationContext } from "../../context/identification";
 import { CampaignConfigContext } from "../../context/campaignConfig";
+import { NetworkError } from "../../services/helpers";
 
 export type PastTransactionHook = {
   pastTransactionsResult: PastTransactionsResult["pastTransactions"] | null;
@@ -57,9 +58,13 @@ export const usePastTransaction = (
         }
       } catch (error) {
         Sentry.captureException("Unable to fetch past transactions");
-        setError(
-          new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
-        );
+        if (error instanceof NetworkError) {
+          setError(error);
+        } else {
+          setError(
+            new PastTransactionError(ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR)
+          );
+        }
       } finally {
         if (isMounted()) {
           setLoading(false);

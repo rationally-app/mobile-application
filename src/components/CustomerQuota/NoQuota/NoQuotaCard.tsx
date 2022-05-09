@@ -34,6 +34,7 @@ import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { AuthContext } from "../../../context/auth";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../../context/theme";
+import { NetworkError } from "../../../services/helpers";
 
 const DURATION_THRESHOLD_SECONDS = 60 * 10; // 10 minutes
 const MAX_TRANSACTIONS_TO_DISPLAY = 5;
@@ -109,6 +110,9 @@ export const NoQuotaCard: FunctionComponent<NoQuotaCard> = ({
   const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
     if (error) {
+      if (error instanceof NetworkError) {
+        throw error; // Let error boundary handle.
+      }
       showErrorAlert(error);
     }
   }, [error, showErrorAlert]);

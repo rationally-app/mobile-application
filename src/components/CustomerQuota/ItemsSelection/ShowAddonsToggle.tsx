@@ -19,6 +19,7 @@ import {
   sortTransactionsByCategory,
 } from "../utils";
 import { TransactionsGroup } from "../TransactionsGroup";
+import { NetworkError } from "../../../services/helpers";
 
 const styles = StyleSheet.create({
   descriptionAlert: {
@@ -64,6 +65,9 @@ export const ShowAddonsToggle: FunctionComponent<{
   const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
     if (error) {
+      if (error instanceof NetworkError) {
+        throw error; // Let error boundary handle.
+      }
       showErrorAlert(error);
     }
   }, [error, showErrorAlert]);

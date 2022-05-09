@@ -6,7 +6,12 @@ import {
   PastTransactionsResult,
   IdentificationFlag,
 } from "../../types";
-import { fetchWithValidator, ValidationError, SessionError } from "../helpers";
+import {
+  fetchWithValidator,
+  ValidationError,
+  SessionError,
+  NetworkError,
+} from "../helpers";
 import { Sentry } from "../../utils/errorTracking";
 
 export class NotEligibleError extends Error {
@@ -220,7 +225,9 @@ export const liveGetQuota = async (
     });
     return response;
   } catch (e) {
-    if (e instanceof ValidationError) {
+    if (e instanceof NetworkError) {
+      throw e;
+    } else if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
     // Currently the standalone mystique throws "User is not eligible" if not whitelisted,
@@ -307,7 +314,9 @@ export const livePostTransaction = async ({
     );
     return response;
   } catch (e) {
-    if (e instanceof ValidationError) {
+    if (e instanceof NetworkError) {
+      throw e;
+    } else if (e instanceof ValidationError) {
       Sentry.captureException(e);
     } else if (e instanceof SessionError) {
       throw e;
@@ -406,7 +415,9 @@ export const livePastTransactions = async (
     );
     return response;
   } catch (e) {
-    if (e instanceof ValidationError) {
+    if (e instanceof NetworkError) {
+      throw e;
+    } else if (e instanceof ValidationError) {
       Sentry.captureException(e);
     } else if (e instanceof SessionError) {
       throw e;
