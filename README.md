@@ -19,6 +19,7 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
 4.  Install Expo on your mobile device and/or simulator and login with the same account. When using a mobile device for testing, [it needs to be on the same network.](https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet)
 
 5.  Setup Auth for our private package @rationally-app-payment-qr-parser
+
     1.  Create a new gitHub personal access token([PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)) with `repo` and `read:packages` permissions
     2.  in terminal, run this command`npm login --scope=@rationally-app --registry=https://npm.pkg.github.com`
     3.  type your username, followed by the personal access token created with step 1 as your password, and your email
@@ -27,10 +28,10 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
 
 7.  This step only applies if you are on a windows machine. If not, skip this step.
 
-    -   open `package.json` and replace the `scripts` object with the following:
+    - open `package.json` and replace the `scripts` object with the following:
 
-        ```json
-        {
+      ```json
+      {
         "start": "set APP_BUILD_VERSION=1 && set APP_BINARY_VERSION=dev && set START_STORYBOOK=false && expo start",
         "start:mock": "set APP_BUILD_VERSION=1 && set APP_BINARY_VERSION=dev && set MOCK=true && expo start",
         "test": "jest",
@@ -43,13 +44,14 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
         "eject": "expo eject",
         "lint": "eslint . --ext .ts,.tsx,.mdx --max-warnings 0",
         "lint:fix": "npm run lint -- --fix"
-        }
-        ```
+      }
+      ```
 
 8.  Run one of the following to start development:
-    -   `npm run start`
-    -   `npm run start:mock`: If you'd like to mock the APIs
-    -   `npm run storybook`: If you'd like to use Storybook for development
+
+    - `npm run start`
+    - `npm run start:mock`: If you'd like to mock the APIs
+    - `npm run storybook`: If you'd like to use Storybook for development
 
 9.  Open Expo and launch the app
 
@@ -99,30 +101,35 @@ If you're releasing this for the first time, you need to create a tag to specify
 ```yaml
 uses: metcalfc/changelog-generator@v0.4.0
 with:
-   myToken: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-   base-ref: <base-tag> # e.g. prod-0
+  myToken: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+  base-ref: <base-tag> # e.g. prod-0
 ```
 
 ## Troubleshooting
 
 1.  To fix the network issues on expo app in terms of backend api not reachable :
 
-    -   import deleteStoreInBuckets from src/utils/bucketStorageHelper.ts
-    -   to replace useEffect hook in `authStore.tsx`.
-    -   then refresh the app. it will show the login screen
-    -   after everything is done revert all changes in `authStore.tsx`.
+    - import deleteStoreInBuckets from src/utils/bucketStorageHelper.ts
+    - to replace useEffect hook in `authStore.tsx`.
+    - then refresh the app. it will show the login screen
+    - after everything is done revert all changes in `authStore.tsx`.
 
-        ```typescript
-        import {deleteStoreInBuckets} from "../utils/bucketStorageHelper";
+      ```typescript
+      import { deleteStoreInBuckets } from "../utils/bucketStorageHelper";
 
-        useEffect(() => {
+      useEffect(() => {
         if (hasLoadedFromPrimaryStore) {
           const authCredentialsString = JSON.stringify(authCredentials);
           const prevAuthCredentialsString = JSON.stringify(prevAuthCredentials);
           // do a top level check to see if there are any changes
           if (authCredentialsString) {
-            deleteStoreInBuckets(AUTH_CREDENTIALS_STORE_KEY, authCredentialsString);
+            deleteStoreInBuckets(
+              AUTH_CREDENTIALS_STORE_KEY,
+              authCredentialsString
+            );
           }
         }
-        }, [hasLoadedFromPrimaryStore, authCredentials, prevAuthCredentials]);
-        ```
+      }, [hasLoadedFromPrimaryStore, authCredentials, prevAuthCredentials]);
+      ```
+
+// testing this PR for DOMAIN_FORMAT regex
