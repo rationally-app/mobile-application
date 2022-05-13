@@ -24,6 +24,7 @@ import {
   BIG_NUMBER,
 } from "../utils";
 import { useTheme } from "../../../context/theme";
+import { NetworkError } from "../../../services/helpers";
 
 const MAX_TRANSACTIONS_TO_DISPLAY = 1;
 
@@ -62,6 +63,9 @@ export const CheckoutUnsuccessfulCard: FunctionComponent<
   const { showErrorAlert } = useContext(AlertModalContext);
   useEffect(() => {
     if (error) {
+      if (error instanceof NetworkError) {
+        throw error; // Let error boundary handle.
+      }
       showErrorAlert(error);
     }
   }, [error, showErrorAlert]);

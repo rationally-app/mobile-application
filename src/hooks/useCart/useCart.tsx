@@ -17,7 +17,7 @@ import {
   tagOptionalIdentifierInput,
 } from "../../utils/utilsIdentifierInput";
 import { ERROR_MESSAGE } from "../../context/alert";
-import { SessionError } from "../../services/helpers";
+import { SessionError, NetworkError } from "../../services/helpers";
 import { IdentificationContext } from "../../context/identification";
 import { ProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
@@ -350,7 +350,9 @@ export const useCart = (
         setCartState("PURCHASED");
       } catch (e) {
         setCartState("DEFAULT");
-        if (e.message === "Requested lock is already taken") {
+        if (e instanceof NetworkError) {
+          setCartError(e);
+        } else if (e.message === "Requested lock is already taken") {
           setCartError(new Error(ERROR_MESSAGE.LOCK_ERROR));
         } else if (
           e.message === "Invalid Purchase Request: Duplicate identifier inputs"

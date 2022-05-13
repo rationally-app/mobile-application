@@ -30,7 +30,7 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
-import { SessionError } from "../../services/helpers";
+import { NetworkError, SessionError } from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
@@ -171,13 +171,16 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
      * We check for quota errors first because the cart relies on the quota.
      */
     if (quotaError) {
-      if (quotaError instanceof SessionError) {
-        clearQuotaError();
-        expireSession();
-        showErrorAlert(quotaError, () => {
-          navigation.navigate("CampaignLocationsScreen");
-        });
-        return;
+      switch (true) {
+        case quotaError instanceof NetworkError:
+          throw quotaError; // Let error boundary handle.
+        case quotaError instanceof SessionError:
+          clearQuotaError();
+          expireSession();
+          showErrorAlert(quotaError, () => {
+            navigation.navigate("CampaignLocationsScreen");
+          });
+          return;
       }
       showErrorAlert(quotaError, () => navigation.goBack());
       return;
@@ -192,6 +195,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             navigation.navigate("CampaignLocationsScreen");
           });
           return;
+        case cartError instanceof NetworkError:
+          throw cartError; // Let error boundary handle.
         case cartError instanceof PaymentQRDeformedError ||
           cartError instanceof PaymentQRMissingInfoError ||
           cartError instanceof PaymentQRUnsupportedError:

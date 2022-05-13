@@ -109,6 +109,9 @@ export const liveRequestOTP = async (
     );
     return response;
   } catch (e) {
+    if (e instanceof NetworkError) {
+      throw e;
+    }
     if (e.message === "Auth token already in use") {
       throw new AuthTakenError(e.message);
     } else if (e.message === "Auth token is not currently valid") {
@@ -160,7 +163,9 @@ export const liveValidateOTP = async (
     );
     return response;
   } catch (e) {
-    if (e instanceof ValidationError) {
+    if (e instanceof NetworkError) {
+      throw e;
+    } else if (e instanceof ValidationError) {
       Sentry.captureException(e);
     }
     if (e.message.match(/Try again in [1-9] minutes?\./)) {
