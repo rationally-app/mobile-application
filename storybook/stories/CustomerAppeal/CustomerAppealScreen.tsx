@@ -64,7 +64,7 @@ storiesOf("Screen", module)
     return (
       <View>
         <CustomerAppealScreen
-          navigation={{ ...navigation, ...{ getParam: () => ["S1412284B"] } }}
+          navigation={{ ...navigation, ...{ getParam: () => ["S0000001I"] } }}
         />
       </View>
     );
