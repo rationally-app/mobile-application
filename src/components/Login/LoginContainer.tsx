@@ -239,8 +239,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       try {
         const { key, endpoint } = decodeQr(qrCode);
         Vibration.vibrate(50);
-        if (!RegExp(DOMAIN_FORMAT).test(endpoint))
+        if (!RegExp(DOMAIN_FORMAT).test(endpoint)) {
           throw new LoginRegexError(ERROR_MESSAGE.LOGIN_REGEX_ERROR);
+        }
         setTempAuthCredentials({
           endpoint,
           operatorToken: key,
