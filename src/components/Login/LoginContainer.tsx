@@ -50,6 +50,7 @@ import {
 import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
+import { NetworkError } from "../../services/helpers";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -160,7 +161,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       lastResendWarningMessageRef.current = response.warning ?? "";
       return true;
     } catch (e) {
-      if (e instanceof LoginError) {
+      if (e instanceof LoginError || e instanceof NetworkError) {
         showErrorAlert(e, () => resetStage(), { minutes: e.message });
       } else {
         setState(() => {
