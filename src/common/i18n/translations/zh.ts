@@ -317,6 +317,11 @@ export const zh: Translations = {
       body: "请向您的负责人索取新QR码。",
       primaryActionText: "确定",
     },
+    wrongFormatRegexQR: {
+      title: "格式错误",
+      body: "请向您的负责人索取新QR码后再试一次。",
+      primaryActionText: "确定",
+    },
     alreadyUsedCode: {
       title: "已使用",
       body: "请输入独特的编号。",

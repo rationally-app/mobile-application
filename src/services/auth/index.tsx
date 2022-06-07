@@ -22,6 +22,13 @@ export class LoginLockedError extends LoginError {
   }
 }
 
+export class LoginRegexError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "LoginRegexError";
+  }
+}
+
 export class AuthError extends LoginError {
   constructor(message: string) {
     super(message);

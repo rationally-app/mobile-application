@@ -36,7 +36,12 @@ import { Banner } from "../Layout/Banner";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import * as Linking from "expo-linking";
 import { DOMAIN_FORMAT } from "../../config";
-import { requestOTP, LoginError, AuthError } from "../../services/auth";
+import {
+  requestOTP,
+  LoginError,
+  LoginRegexError,
+  AuthError,
+} from "../../services/auth";
 import {
   AlertModalContext,
   CONFIRMATION_MESSAGE,
@@ -234,8 +239,9 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       try {
         const { key, endpoint } = decodeQr(qrCode);
         Vibration.vibrate(50);
-        if (!RegExp(DOMAIN_FORMAT).test(endpoint))
-          throw new Error(ERROR_MESSAGE.AUTH_FAILURE_INVALID_TOKEN);
+        if (!RegExp(DOMAIN_FORMAT).test(endpoint)) {
+          throw new LoginRegexError(ERROR_MESSAGE.LOGIN_REGEX_ERROR);
+        }
         setTempAuthCredentials({
           endpoint,
           operatorToken: key,
@@ -245,7 +251,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
         Sentry.captureException(error);
-        if (e instanceof AuthError) {
+        if (e instanceof AuthError || e instanceof LoginRegexError) {
           showErrorAlert(e);
         } else {
           setState(() => {
