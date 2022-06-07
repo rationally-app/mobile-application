@@ -343,6 +343,12 @@ export type Translations = {
       primaryActionText: string;
       secondaryActionText?: string;
     };
+    wrongFormatRegexQR: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+      secondaryActionText?: string;
+    };
     alreadyUsedCode: {
       title: string;
       body?: string;

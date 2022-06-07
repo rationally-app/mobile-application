@@ -83,6 +83,7 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   OTPEmptyError: "emptyOTP",
   LoginLockedError: "disabledAccess",
   LoginError: "systemErrorLoginIssue",
+  LoginRegexError: "wrongFormatRegexQR",
   AuthTakenError: "alreadyUsedQRCode",
   AuthExpiredError: "expiredQR",
   AuthNotFoundError: "wrongFormatQRGetNew",

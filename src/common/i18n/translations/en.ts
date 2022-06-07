@@ -320,6 +320,11 @@ export const en: Translations = {
       body: "Get a new QR code from your in-charge.",
       primaryActionText: "OK",
     },
+    wrongFormatRegexQR: {
+      title: "Wrong format",
+      body: "Get new QR code from your in-charge and try again.",
+      primaryActionText: "OK",
+    },
     alreadyUsedCode: {
       title: "Already Used",
       body: "Enter or scan a unique code.",
