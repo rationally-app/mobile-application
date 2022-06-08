@@ -14,6 +14,7 @@ import { CreateProvidersWrapper } from "../../test/helpers/providers";
 import { AlertModalContextProvider } from "../../context/alert";
 import * as auth from "../../services/auth";
 import "../../common/i18n/i18nMock";
+import { NetworkError } from "../../services/helpers";
 
 const key = "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4";
 const endpoint = "https://somewhere.com";
@@ -432,6 +433,40 @@ describe("LoginContainer", () => {
         )
       ).not.toBeNull();
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
+    });
+
+    it("if network request fails when requesting for otp", async () => {
+      expect.assertions(2);
+      mockRequestOTP.mockRejectedValueOnce(
+        new NetworkError("Network request failed")
+      );
+
+      const { getByTestId, queryByText } = render(
+        <CreateProvidersWrapper
+          providers={[{ provider: AlertModalContextProvider }]}
+        >
+          <InitialisationContainer navigation={mockNavigation} />
+        </CreateProvidersWrapper>
+      );
+      const scanButton = getByTestId(scanButtonId);
+      await act(async () => fireEvent.press(scanButton));
+      fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
+        nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
+      });
+
+      const phoneNumberInput = getByTestId(phoneInputId);
+      const loginSendOTPButton = getByTestId(loginSendOTPButtonId);
+      fireEvent(phoneNumberInput, "onChangeText", phoneNumber);
+      fireEvent.press(loginSendOTPButton);
+      await act(async () => fireEvent.press(loginSendOTPButton));
+
+      expect(queryByText("System error")).not.toBeNull();
+      expect(
+        queryByText(
+          "We are currently facing connectivity issues.\nTry again later or contact your in-charge if the problem persists."
+        )
+      ).not.toBeNull();
+      // TODO: add sentry for this flow
     });
 
     it("OTP is less than 6 digits", async () => {

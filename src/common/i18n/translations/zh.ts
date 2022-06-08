@@ -185,7 +185,7 @@ export const zh: Translations = {
       secondaryActionText: "不须要",
     },
     systemErrorConnectivityIssues: {
-      title: "连接目前出现问题。",
+      title: "系统错误",
       body: "连接目前出现问题。\n请稍后再试。如果问题持续出现，请联系您的负责人。",
       primaryActionText: "确定",
     },

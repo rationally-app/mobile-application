@@ -51,6 +51,7 @@ export enum ERROR_MESSAGE {
   DUPLICATE_ID = "Enter or scan a different ID number.",
   QUOTA_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   LOCK_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
+  NETWORK_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   SERVER_ERROR = "We are currently facing server issues. Contact your in-charge if the problem persists.",
   OTP_EMPTY = "OTP cannot be empty, enter OTP again",
   OTP_ERROR = "Enter OTP again.",
@@ -93,6 +94,7 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   LimitReachedError: "scanLimitReached",
   NotEligibleError: "notEligible",
   LogoutError: "systemErrorLogoutIssue",
+  NetworkError: "systemErrorConnectivityIssues",
 };
 
 const getTranslationKeyFromError = (error: Error): string => {
@@ -133,6 +135,7 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.DUPLICATE_ID]: "alreadyUsedDifferentIDNumber",
   [ERROR_MESSAGE.QUOTA_ERROR]: "systemErrorConnectivityIssues",
   [ERROR_MESSAGE.LOCK_ERROR]: "systemErrorConnectivityIssues",
+  [ERROR_MESSAGE.NETWORK_ERROR]: "systemErrorConnectivityIssues",
   [ERROR_MESSAGE.SERVER_ERROR]: "systemErrorServerIssues",
   [ERROR_MESSAGE.OTP_EMPTY]: "emptyOTP",
   [ERROR_MESSAGE.OTP_ERROR]: "invalidInputOTP",
