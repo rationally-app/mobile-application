@@ -39,6 +39,7 @@ import {
   PaymentQRDeformedError,
   PaymentQRMissingInfoError,
 } from "@rationally-app/payment-qr-parser";
+import { useGovWalletBalance } from "../../hooks/govwallet/useGovWalletBalance/useGovWalletBalance";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -100,6 +101,12 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     updateQuota,
     clearQuotaError,
   } = useQuota(ids, sessionToken, endpoint);
+
+  const {
+    govWalletBalanceState,
+    govWalletBalanceError,
+    clearGovWalletBalanceError,
+  } = useGovWalletBalance(ids, sessionToken, endpoint);
 
   const {
     cartState,
@@ -164,7 +171,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [setAuthCredentials, endpoint, operatorToken, sessionToken]);
 
   useEffect(() => {
-    if (!cartError && !quotaError) {
+    if (!cartError && !quotaError && !govWalletBalanceError) {
       return;
     }
     /**
@@ -183,6 +190,22 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           return;
       }
       showErrorAlert(quotaError, () => navigation.goBack());
+      return;
+    }
+
+    if (govWalletBalanceError) {
+      switch (true) {
+        case govWalletBalanceError instanceof NetworkError:
+          throw govWalletBalanceError; // Let error boundary handle.
+        case govWalletBalanceError instanceof SessionError:
+          clearGovWalletBalanceError();
+          expireSession();
+          showErrorAlert(govWalletBalanceError, () => {
+            navigation.navigate("CampaignLocationsScreen");
+          });
+          return;
+      }
+      showErrorAlert(govWalletBalanceError, () => navigation.goBack());
       return;
     }
 
@@ -273,6 +296,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     showErrorAlert,
     quotaError,
     clearQuotaError,
+    govWalletBalanceError,
+    clearGovWalletBalanceError,
   ]);
 
   useEffect(() => {
@@ -320,7 +345,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           />
         ) : cartState === "UNSUCCESSFUL" ? (
           <CheckoutUnsuccessfulCard ids={ids} onCancel={onCancel} />
-        ) : quotaState === "NO_QUOTA" ? (
+        ) : quotaState === "NO_QUOTA" ||
+          // TODO: Confirm that this state should show NoQuotaCard
+          govWalletBalanceState === "INSUFFICIENT" ? (
           <NoQuotaCard
             ids={ids}
             cart={cart}
