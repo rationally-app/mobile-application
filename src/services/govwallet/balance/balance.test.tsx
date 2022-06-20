@@ -1,6 +1,5 @@
 import { getGovWalletBalance, GovWalletBalanceError } from ".";
-import { GovWalletAccountDetail } from "../../../hooks/govwallet/useGovWalletBalance/useGovWalletBalance";
-import { GovWalletBalance } from "../../../types";
+import { GovWalletAccountDetail, GovWalletBalance } from "../../../types";
 import { Sentry } from "../../../utils/errorTracking";
 import { NetworkError, SessionError } from "../../helpers";
 

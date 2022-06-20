@@ -309,6 +309,8 @@ export const GovWalletAccountDetail = t.type({
   balance: t.number,
 });
 
+export type GovWalletAccountDetail = t.TypeOf<typeof GovWalletAccountDetail>;
+
 export const GovWalletBalance = t.type({
   customerId: t.string,
   accountDetails: t.array(GovWalletAccountDetail),
