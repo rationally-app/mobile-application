@@ -10,6 +10,7 @@ export type GovWalletBalanceHook = {
   govWalletBalanceState: GovWalletBalanceState;
   govWalletBalanceError?: Error;
   updateGovWalletBalance: () => void;
+  clearGovWalletBalanceError: () => void;
 };
 
 /**
@@ -32,6 +33,11 @@ export const useGovWalletBalance = (
   const [govWalletBalanceState, setGovWalletBalanceState] =
     useState<GovWalletBalanceState>("DEFAULT");
   const [govWalletBalanceError, setGovWalletBalanceError] = useState<Error>();
+
+  const clearGovWalletBalanceError = useCallback(
+    (): void => setGovWalletBalanceError(undefined),
+    []
+  );
 
   const updateGovWalletBalance: GovWalletBalanceHook["updateGovWalletBalance"] =
     useCallback(() => {
@@ -73,5 +79,6 @@ export const useGovWalletBalance = (
     govWalletBalanceState,
     govWalletBalanceError,
     updateGovWalletBalance,
+    clearGovWalletBalanceError,
   };
 };
