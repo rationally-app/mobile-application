@@ -15,13 +15,6 @@ export class GovWalletBalanceError extends Error {
   }
 }
 
-export class GovWalletInsufficientBalanceError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "GovWalletInsufficientBalanceError";
-  }
-}
-
 const mockGetGovWalletBalance = async (
   id: string,
   _authKey: string,
