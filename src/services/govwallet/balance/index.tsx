@@ -64,8 +64,6 @@ const liveGetGovWalletBalance = async (
         },
         body: JSON.stringify({
           id,
-          // TODO: Remove this once mock endpoint is ready
-          campaign: "foo",
         }),
       }
     );
