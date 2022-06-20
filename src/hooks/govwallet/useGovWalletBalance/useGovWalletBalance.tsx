@@ -7,7 +7,6 @@ import { usePrevious } from "../../usePrevious";
 export type GovWalletBalanceState = "DEFAULT" | "SUFFICIENT" | "INSUFFICIENT";
 
 export type GovWalletBalanceHook = {
-  govWalletBalance?: number;
   govWalletBalanceState: GovWalletBalanceState;
   govWalletBalanceError?: Error;
   updateGovWalletBalance: () => void;
@@ -28,8 +27,6 @@ export const useGovWalletBalance = (
   authKey: string,
   endpoint: string
 ): GovWalletBalanceHook => {
-  let govWalletBalance: number | undefined;
-
   const { features } = useContext(CampaignConfigContext);
   const prevIds = usePrevious(ids);
   const [govWalletBalanceState, setGovWalletBalanceState] =
@@ -73,7 +70,6 @@ export const useGovWalletBalance = (
   }, [features, prevIds, ids, updateGovWalletBalance]);
 
   return {
-    govWalletBalance,
     govWalletBalanceState,
     govWalletBalanceError,
     updateGovWalletBalance,
