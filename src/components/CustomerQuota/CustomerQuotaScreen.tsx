@@ -347,7 +347,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           <CheckoutUnsuccessfulCard ids={ids} onCancel={onCancel} />
         ) : quotaState === "NO_QUOTA" ||
           // TODO: Confirm that this state should show NoQuotaCard
-          govWalletBalanceState === "INSUFFICIENT" ? (
+          govWalletBalanceState === "INELIGIBLE" ? (
           <NoQuotaCard
             ids={ids}
             cart={cart}

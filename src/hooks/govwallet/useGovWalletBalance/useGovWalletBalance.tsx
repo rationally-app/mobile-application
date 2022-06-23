@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { getGovWalletBalance } from "../../../services/govwallet/balance";
 
-export type GovWalletBalanceState = "DEFAULT" | "SUFFICIENT" | "INSUFFICIENT";
+export type GovWalletBalanceState = "DEFAULT" | "ELIGIBLE" | "INELIGIBLE";
 
 export type GovWalletBalanceHook = {
   govWalletBalanceState: GovWalletBalanceState;
@@ -46,16 +46,16 @@ export const useGovWalletBalance = (
 
           const results = await Promise.all(getBalancePromises);
 
-          // We only retrieve the balance of the first account
-          const areAllBalancesSufficient = results.every(
+          // We only check the eligibility of the balance of the first account
+          const areAllBalancesEligible = results.every(
             // Check if balance is strictly equals to 10000 cents
             ({ accountDetails }) => accountDetails[0].balance === 10000
           );
 
-          if (!areAllBalancesSufficient) {
-            setGovWalletBalanceState("INSUFFICIENT");
+          if (!areAllBalancesEligible) {
+            setGovWalletBalanceState("INELIGIBLE");
           } else {
-            setGovWalletBalanceState("SUFFICIENT");
+            setGovWalletBalanceState("ELIGIBLE");
           }
         } catch (e: unknown) {
           const error = e as Error;

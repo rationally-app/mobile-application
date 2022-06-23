@@ -67,7 +67,7 @@ describe("checkGovWalletBalance toggle", () => {
 
     expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("SUFFICIENT");
+    expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
 
@@ -93,7 +93,7 @@ describe("govWalletBalanceState states", () => {
     jest.clearAllMocks();
   });
 
-  it("should return 'SUFFICIENT' if balance is strictly equal to 10000 cents", async () => {
+  it("should return 'ELIGIBLE' if balance is strictly equal to 10000 cents", async () => {
     expect.assertions(3);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
@@ -107,11 +107,11 @@ describe("govWalletBalanceState states", () => {
 
     expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("SUFFICIENT");
+    expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
 
-  it("should return 'INSUFFICIENT' if balance is more than 10000 cents", async () => {
+  it("should return 'INELIGIBLE' if balance is more than 10000 cents", async () => {
     expect.assertions(3);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
@@ -125,11 +125,11 @@ describe("govWalletBalanceState states", () => {
 
     expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("INSUFFICIENT");
+    expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
 
-  it("should return 'INSUFFICIENT' if balance is less than 10000 cents", async () => {
+  it("should return 'INELIGIBLE' if balance is less than 10000 cents", async () => {
     expect.assertions(3);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
@@ -143,7 +143,7 @@ describe("govWalletBalanceState states", () => {
 
     expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("INSUFFICIENT");
+    expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
 
