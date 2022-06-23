@@ -51,8 +51,8 @@ export const useGovWalletBalance = (
 
           // We only retrieve the balance of the first account
           const areAllBalancesSufficient = results.every(
-            // Check if balance is equals to 10000 cents
-            ({ accountDetails }) => accountDetails[0].balance >= 10000
+            // Check if balance is strictly equals to 10000 cents
+            ({ accountDetails }) => accountDetails[0].balance === 10000
           );
 
           if (!areAllBalancesSufficient) {
