@@ -1,7 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { getGovWalletBalance } from "../../../services/govwallet/balance";
-import { usePrevious } from "../../usePrevious";
 
 export type GovWalletBalanceState = "DEFAULT" | "SUFFICIENT" | "INSUFFICIENT";
 
