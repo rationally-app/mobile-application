@@ -188,6 +188,7 @@ const CampaignFeatures = t.intersection([
     flowType: t.string,
     theme: t.union([t.literal("DEFAULT"), t.literal("GOVWALLET")]),
     transactionGrouping: t.boolean,
+    checkGovWalletBalance: t.boolean,
   }),
 ]);
 
@@ -291,3 +292,28 @@ export const DailyStatisticsResult = t.type({
 
 export type DailyStatistics = t.TypeOf<typeof DailyStatistics>;
 export type DailyStatisticsResult = t.TypeOf<typeof DailyStatisticsResult>;
+
+/**
+ * GovWallet response types used for response validation
+ */
+
+export const GovWalletAccountDetail = t.type({
+  accountId: t.string,
+  created: t.string,
+  modified: t.string,
+  entity: t.string,
+  accountType: t.string,
+  category: t.string,
+  campaign: t.string,
+  activationStatus: t.string,
+  balance: t.number,
+});
+
+export type GovWalletAccountDetail = t.TypeOf<typeof GovWalletAccountDetail>;
+
+export const GovWalletBalance = t.type({
+  customerId: t.string,
+  accountDetails: t.array(GovWalletAccountDetail),
+});
+
+export type GovWalletBalance = t.TypeOf<typeof GovWalletBalance>;
