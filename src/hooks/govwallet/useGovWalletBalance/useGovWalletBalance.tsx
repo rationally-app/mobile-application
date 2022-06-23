@@ -1,4 +1,3 @@
-import { isEqual } from "lodash";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { getGovWalletBalance } from "../../../services/govwallet/balance";
@@ -29,7 +28,6 @@ export const useGovWalletBalance = (
   endpoint: string
 ): GovWalletBalanceHook => {
   const { features } = useContext(CampaignConfigContext);
-  const prevIds = usePrevious(ids);
   const [govWalletBalanceState, setGovWalletBalanceState] =
     useState<GovWalletBalanceState>("DEFAULT");
   const [govWalletBalanceError, setGovWalletBalanceError] = useState<Error>();
@@ -70,10 +68,10 @@ export const useGovWalletBalance = (
     }, [ids, authKey, endpoint]);
 
   useEffect(() => {
-    if (features?.checkGovWalletBalance && !isEqual(prevIds, ids)) {
+    if (features?.checkGovWalletBalance) {
       updateGovWalletBalance();
     }
-  }, [features, prevIds, ids, updateGovWalletBalance]);
+  }, [features, updateGovWalletBalance]);
 
   return {
     govWalletBalanceState,
