@@ -1,9 +1,9 @@
-import React, { ReactElement, useRef, useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import {
-  createAppContainer,
-  createSwitchNavigator,
-  NavigationContainerComponent,
-} from "react-navigation";
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
+
 import CustomerQuotaStack from "./CustomerQuotaStack";
 import MerchantPayoutStack from "./MerchantPayoutStack";
 import { StatusBar, View, Platform } from "react-native";
@@ -11,53 +11,62 @@ import LoginScreen from "./LoginScreen";
 import { useAppState } from "../hooks/useAppState";
 import { useCheckUpdates } from "../hooks/useCheckUpdates";
 import * as Linking from "expo-linking";
-import { createDrawerNavigator } from "react-navigation-drawer";
+import {
+  createDrawerNavigator,
+  DrawerNavigationOptions,
+} from "@react-navigation/drawer";
 import { DrawerNavigationComponent } from "../components/Layout/DrawerNavigation";
-import { StackViewTransitionConfigs } from "react-navigation-stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+  StackNavigationOptions,
+} from "@react-navigation/stack";
 import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
 import { LogoutScreen } from "../components/Logout/LogoutScreen";
 
-const SwitchNavigator = createSwitchNavigator(
-  {
-    LoginScreen: { screen: LoginScreen, path: "login" },
-    CampaignInitialisationScreen,
-    LogoutScreen,
-    DrawerNavigator: createDrawerNavigator(
-      {
-        CampaignLocationsScreen,
-        CustomerQuotaStack: {
-          screen: CustomerQuotaStack,
-        },
-        MerchantPayoutStack: {
-          screen: MerchantPayoutStack,
-        },
-      },
-      {
-        drawerPosition: "right",
-        drawerType: "slide",
-        contentComponent: DrawerNavigationComponent,
-        navigationOptions: {
-          transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
-          navigationOptions: {
-            gesturesEnabled: true,
-          },
-        },
-      }
-    ),
-  },
-  { initialRouteName: "DrawerNavigator" }
-);
-
-const AppContainer = createAppContainer(SwitchNavigator);
+const Drawer = createDrawerNavigator();
+const drawerNavigatorScreenOptions: DrawerNavigationOptions = {
+  ...TransitionPresets.SlideFromRightIOS,
+  drawerPosition: "right",
+  drawerType: "slide",
+  headerShown: false,
+};
+function DrawerNavigator(): JSX.Element {
+  return (
+    <Drawer.Navigator
+      drawerContent={DrawerNavigationComponent}
+      screenOptions={drawerNavigatorScreenOptions}
+    >
+      <Drawer.Screen
+        name="CampaignLocationsScreen"
+        component={CampaignLocationsScreen}
+      />
+      <Drawer.Screen name="CustomerQuotaStack" component={CustomerQuotaStack} />
+      <Drawer.Screen
+        name="MerchantPayoutStack"
+        component={MerchantPayoutStack}
+      />
+    </Drawer.Navigator>
+  );
+}
+const Stack = createStackNavigator();
+const screenOptions: StackNavigationOptions = {
+  ...TransitionPresets.SlideFromRightIOS,
+  gestureEnabled: true,
+  headerShown: false,
+};
 
 export const Content = (): ReactElement => {
-  const navigatorRef = useRef<NavigationContainerComponent>(null);
+  const navigatorRef = useNavigationContainerRef();
   const appState = useAppState();
-  const prefix = Linking.makeUrl("/");
+  const prefix = Linking.createURL("/");
 
   const checkUpdates = useCheckUpdates();
+  const linking = {
+    prefixes: [prefix],
+  };
 
   useEffect(() => {
     if (appState === "active") {
@@ -76,7 +85,20 @@ export const Content = (): ReactElement => {
             Platform.OS === "android" && !__DEV__ ? StatusBar.currentHeight : 0, // padding is used to prevent content from going behind the status bar on Android production builds
         }}
       >
-        <AppContainer ref={navigatorRef} uriPrefix={prefix} />
+        <NavigationContainer ref={navigatorRef} linking={linking}>
+          <Stack.Navigator
+            initialRouteName={"LoginScreen"}
+            screenOptions={screenOptions}
+          >
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            <Stack.Screen
+              name="CampaignInitialisationScreen"
+              component={CampaignInitialisationScreen}
+            />
+            <Stack.Screen name="LogoutScreen" component={LogoutScreen} />
+            <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
+          </Stack.Navigator>
+        </NavigationContainer>
       </View>
     </>
   );

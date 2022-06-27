@@ -1,55 +1,51 @@
-import { NavigationProps } from "../types";
+import { NavigationProps, RootDrawerParamList } from "../types";
 import {
-  StackActions,
+  // StackActions,
   NavigationActions,
   NavigationReplaceActionPayload,
 } from "react-navigation";
 
+import { StackActions, CommonActions } from "@react-navigation/native";
+
 export const replaceRoute = (
-  navigation: NavigationProps["navigation"],
+  navigation: NavigationProps<keyof RootDrawerParamList>["navigation"],
   routeName: string,
   params?: NavigationReplaceActionPayload["params"]
 ): boolean => {
-  const action = StackActions.replace({ routeName, params });
-  return navigation.dispatch(action);
+  return navigation.dispatch(StackActions.replace(routeName, { params }));
 };
 
 // This resets the entire stack and puts the navigated route right on top of the home page
 export const resetRoute = (
-  navigation: NavigationProps["navigation"],
+  navigation: NavigationProps<keyof RootDrawerParamList>["navigation"],
   routeName: string,
   params?: NavigationReplaceActionPayload["params"]
 ): boolean => {
-  const action = StackActions.reset({
+  const action = CommonActions.reset({
     index: 1,
     actions: [
-      NavigationActions.navigate({ routeName: "CollectCustomerDetailsScreen" }),
-      NavigationActions.navigate({ routeName, params }),
+      { name: "CollectCustomerDetailsScreen" },
+      { name: routeName, params },
     ],
   });
   return navigation.dispatch(action);
 };
 
 export const pushRoute = (
-  navigation: NavigationProps["navigation"],
+  navigation: NavigationProps<keyof RootDrawerParamList>["navigation"],
   routeName: string,
   params?: NavigationReplaceActionPayload["params"]
 ): boolean => {
-  const action = StackActions.push({
-    routeName: routeName,
-    params: params,
-  });
+  const action = StackActions.push(routeName, params);
   return navigation.dispatch(action);
 };
 
 export const navigateHome = (
-  navigation: NavigationProps["navigation"]
+  navigation: NavigationProps<keyof RootDrawerParamList>["navigation"]
 ): boolean => {
   const action = StackActions.reset({
     index: 0,
-    actions: [
-      NavigationActions.navigate({ routeName: "CollectCustomerDetailsScreen" }),
-    ],
+    routes: [{ name: "CollectCustomerDetailsScreen" }],
   });
   return navigation.dispatch(action);
 };

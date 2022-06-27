@@ -6,10 +6,9 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import {
-  DrawerContentComponentProps,
-  DrawerActions,
-} from "react-navigation-drawer";
+import { DrawerActions } from "@react-navigation/native";
+import { DrawerContentComponentProps } from "@react-navigation/drawer";
+import { useNavigation } from "@react-navigation/native";
 import { AppText } from "./AppText";
 import { size, color, fontSize } from "../../common/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";

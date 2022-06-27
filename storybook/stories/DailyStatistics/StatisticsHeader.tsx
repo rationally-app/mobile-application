@@ -6,7 +6,7 @@ import { TitleStatistic } from "../../../src/components/DailyStatistics/TitleSta
 import { TransactionHistoryCard } from "../../../src/components/DailyStatistics/TransactionHistoryCard";
 import { size, color } from "../../../src/common/styles";
 import { createAppContainer } from "react-navigation";
-import { createDrawerNavigator } from "react-navigation-drawer";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { addDays, subDays, getTime, isSameDay } from "date-fns";
 
 const reactNavigationDecorator = (story: any): JSX.Element => {
