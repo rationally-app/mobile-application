@@ -1,16 +1,41 @@
 import * as t from "io-ts";
 import { DateFromNumber } from "io-ts-types/lib/DateFromNumber";
-import { NavigationParams, NavigationRoute } from "react-navigation";
-import { NavigationDrawerProp } from "react-navigation-drawer";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { RouteProp } from "@react-navigation/native";
 
-export interface NavigationProps {
-  navigation: NavigationDrawerProp<NavigationRoute, NavigationParams>;
+export type RootDrawerParamList = {
+  CampaignLocationsScreen: {
+    shouldAutoLoad: boolean;
+  };
+  CustomerQuotaStack: undefined;
+  MerchantPayoutStack: undefined;
+  // CampaignInitialisationScreen: { authCredentials: AuthCredentials }; // ??
+  // LoginScreen: undefined; // ?
+};
+
+export type MerchantPayoutStackRoutes = {
+  MerchantPayoutStack: {
+    operatorToken: string;
+    endpoint: string;
+  };
+  PayoutFeedbackScreen: undefined;
+};
+
+export type CampaignParamList = {
+  CampaignInitialisationScreen: {
+    authCredentials: AuthCredentials;
+  };
+};
+
+export interface NavigationProps<RouteName extends keyof RootDrawerParamList> {
+  navigation: DrawerNavigationProp<RootDrawerParamList, RouteName>;
+  route: RouteProp<RootDrawerParamList, RouteName>;
 }
 
 export type AuthCredentials = {
   operatorToken: string;
-  sessionToken: string;
   endpoint: string;
+  sessionToken: string;
   expiry: number;
 };
 

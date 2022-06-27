@@ -3,12 +3,12 @@ import { size } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { withNavigation } from "react-navigation";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { NavigationProps } from "../../types";
 import { AppName } from "./AppName";
 import { useTheme } from "../../context/theme";
 
-interface AppHeader extends NavigationProps {
+interface AppHeader extends NavigationProps<"CampaignInitialisationScreen"> {
   mode?: AppMode;
 }
 
@@ -23,13 +23,13 @@ const styles = StyleSheet.create({
 
 export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   mode = AppMode.production,
-  navigation,
 }) => {
   const { theme } = useTheme();
+  const navigation = useNavigation();
 
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();
-    navigation.openDrawer();
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   return (
@@ -49,4 +49,4 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   );
 };
 
-export const AppHeader = withNavigation(AppHeaderComponent);
+export const AppHeader = AppHeaderComponent;

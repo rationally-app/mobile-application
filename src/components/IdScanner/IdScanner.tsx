@@ -150,7 +150,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
 
   useEffect(() => {
     const askForCameraPermission = async (): Promise<void> => {
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       if (status === "granted") {
         setHasCameraPermission(true);
       } else {
