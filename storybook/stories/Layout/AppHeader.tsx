@@ -6,7 +6,7 @@ import { View } from "react-native";
 import { size, color } from "../../../src/common/styles";
 import { AppMode } from "../../../src/context/config";
 import { createAppContainer } from "react-navigation";
-import { createDrawerNavigator } from "react-navigation-drawer";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const reactNavigationDecorator = (story: any): JSX.Element => {
   const Screen = (): any => story();

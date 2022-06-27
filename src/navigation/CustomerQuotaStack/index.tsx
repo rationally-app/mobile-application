@@ -1,7 +1,9 @@
 import {
   createStackNavigator,
-  StackViewTransitionConfigs,
-} from "react-navigation-stack";
+  TransitionPresets,
+  StackNavigationOptions,
+} from "@react-navigation/stack";
+
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerAppealScreen from "./CustomerAppealScreen";
 import { CustomerQuotaProxy } from "../../components/CustomerQuota/CustomerQuotaProxy";
@@ -14,34 +16,18 @@ import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import DailyStatisticsScreen from "./DailyStatisticsScreen";
 import { useTheme } from "../../context/theme";
 
-const Stack = createStackNavigator(
-  {
-    CollectCustomerDetailsScreen: {
-      screen: CollectCustomerDetailsScreen,
-    },
-    CustomerQuotaProxy: {
-      screen: CustomerQuotaProxy,
-    },
-    CustomerAppealScreen: {
-      screen: CustomerAppealScreen,
-    },
-    DailyStatisticsScreen: {
-      screen: DailyStatisticsScreen,
-    },
-  },
-  {
-    headerMode: "none",
-    cardStyle: { backgroundColor: "#F5F5F5" },
-    transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
-    navigationOptions: {
-      gesturesEnabled: true,
-    },
-  }
-);
+const Stack = createStackNavigator();
 
-const CustomerQuotaStack: FunctionComponent<NavigationInjectedProps> & {
-  router: unknown;
-} = ({ navigation }) => {
+const screenOptions: StackNavigationOptions = {
+  cardStyle: { backgroundColor: "#F5F5F5" },
+  ...TransitionPresets.SlideFromRightIOS,
+  gestureEnabled: true,
+  headerShown: false,
+};
+
+const CustomerQuotaStack: FunctionComponent<NavigationInjectedProps> = ({
+  navigation,
+}) => {
   const operatorToken = navigation.getParam("operatorToken");
   const endpoint = navigation.getParam("endpoint");
 
@@ -68,12 +54,28 @@ const CustomerQuotaStack: FunctionComponent<NavigationInjectedProps> & {
   return hasDataFromStore ? (
     <AuthContextProvider authCredentials={authCredentials[key]!}>
       <CampaignConfigContextProvider campaignConfig={allCampaignConfigs[key]!}>
-        <Stack navigation={navigation} />
+        {/* <Stack navigation={navigation} /> */}
+        <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            name="CollectCustomerDetailsScreen"
+            component={CollectCustomerDetailsScreen}
+          />
+          <Stack.Screen
+            name="CustomerQuotaProxy"
+            component={CustomerQuotaProxy}
+          />
+          <Stack.Screen
+            name="CustomerAppealScreen"
+            component={CustomerAppealScreen}
+          />
+          <Stack.Screen
+            name="DailyStatisticsScreen"
+            component={DailyStatisticsScreen}
+          />
+        </Stack.Navigator>
       </CampaignConfigContextProvider>
     </AuthContextProvider>
   ) : null;
 };
-
-CustomerQuotaStack.router = Stack.router;
 
 export default CustomerQuotaStack;

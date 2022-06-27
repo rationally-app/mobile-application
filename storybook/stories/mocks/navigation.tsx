@@ -1,6 +1,6 @@
 import React from "react";
 import { createAppContainer } from "react-navigation";
-import { createDrawerNavigator } from "react-navigation-drawer";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 let params: any = {};
 
 export const navigation: any = {

@@ -1,14 +1,18 @@
 import React, {
-  FunctionComponent,
   useEffect,
   useCallback,
   useState,
   useContext,
+  FunctionComponent,
 } from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { StyleSheet, View } from "react-native";
 import { size } from "../../common/styles";
-import { NavigationProps, AuthCredentials } from "../../types";
+import {
+  AuthCredentials,
+  CampaignParamList,
+  NavigationProps,
+} from "../../types";
 import { UpdateByRestartingAlert } from "./UpdateByRestartingAlert";
 import { UpdateFromAppStoreAlert } from "./UpdateFromAppStoreAlert";
 import { LoadingView } from "../Loading";
@@ -22,6 +26,7 @@ import { checkVersion } from "./utils";
 import { NetworkError, SessionError } from "../../services/helpers";
 import { AuthStoreContext } from "../../context/authStore";
 import { IdentificationContext } from "../../context/identification";
+import { StackScreenProps } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -46,9 +51,18 @@ export class UpdateError extends Error {
   }
 }
 
+type CampaignInitialisationScreenProp = StackScreenProps<
+  CampaignParamList,
+  "CampaignInitialisationScreen"
+> &
+  NavigationProps<"CampaignInitialisationScreen">;
+
 export const CampaignInitialisationScreen: FunctionComponent<
-  NavigationProps
-> = ({ navigation }) => {
+  CampaignInitialisationScreenProp
+> = ({
+  navigation,
+  route,
+}: StackScreenProps<CampaignParamList, "CampaignInitialisationScreen">) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -58,8 +72,7 @@ export const CampaignInitialisationScreen: FunctionComponent<
 
   const { resetSelectedIdType } = useContext(IdentificationContext);
 
-  const authCredentials: AuthCredentials =
-    navigation.getParam("authCredentials");
+  const authCredentials: AuthCredentials = route.params.authCredentials;
   const {
     hasLoadedFromStore,
     allCampaignConfigs,

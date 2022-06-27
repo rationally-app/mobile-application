@@ -27,6 +27,7 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { sortBy } from "lodash";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { useRoute, useNavigation } from "@react-navigation/core";
 
 const styles = StyleSheet.create({
   content: {
@@ -57,9 +58,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
-  navigation,
-}) => {
+export const CampaignLocationsScreen: FunctionComponent<
+  NavigationProps<"CampaignLocationsScreen">
+> = () => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -71,7 +72,10 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
    * Determines whether the app should automatically load a campaign if there
    * is only one existing campaign
    */
-  const shouldAutoLoad: boolean = navigation.getParam("shouldAutoLoad") ?? true;
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  const shouldAutoLoad: boolean = route?.params?.shouldAutoLoad ?? true;
 
   const messageContent = useContext(ImportantMessageContentContext);
   const showHelpModal = useContext(HelpModalContext);
@@ -88,6 +92,12 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
   const { i18nt, c13nt } = useTranslate();
 
   useEffect(() => {
+    /**
+     * Determines whether the app should automatically load a campaign if there
+     * is only one existing campaign
+     */
+    const shouldAutoLoad2: boolean = route.params?.shouldAutoLoad ?? true; // ?
+
     setDrawerButtons([
       {
         icon: "map-marker-plus",
@@ -100,7 +110,9 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
         icon: "map-search",
         label: i18nt("navigationDrawer", "changeChampaign"),
         onPress: () => {
-          navigation.navigate("CampaignLocationsScreen");
+          navigation.navigate("CampaignLocationsScreen", {
+            shouldAutoLoad: shouldAutoLoad2, // ?
+          });
         },
       },
     ]);
@@ -110,6 +122,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     navigation,
     setDrawerButtons,
     i18nt,
+    route, // ?
   ]);
 
   const navigateToCampaignLocation = useCallback(

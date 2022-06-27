@@ -46,7 +46,7 @@ jest.spyOn(Linking, "parseInitialURLAsync").mockImplementation(mockDeepLink);
 jest.mock("expo-camera", () => {
   return {
     Camera: {
-      requestPermissionsAsync: () => {
+      requestCameraPermissionsAsync: () => {
         return {
           status: "granted",
         };
