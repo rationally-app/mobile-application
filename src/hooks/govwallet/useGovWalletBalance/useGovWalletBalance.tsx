@@ -11,6 +11,13 @@ export type GovWalletBalanceHook = {
   clearGovWalletBalanceError: () => void;
 };
 
+export class GovWalletBalanceError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "GovWalletBalanceError";
+  }
+}
+
 /**
  * A React Hook that checks the GovWallet balance of specified IDs.
  *
@@ -29,7 +36,8 @@ export const useGovWalletBalance = (
   const { features } = useContext(CampaignConfigContext);
   const [govWalletBalanceState, setGovWalletBalanceState] =
     useState<GovWalletBalanceState>("DEFAULT");
-  const [govWalletBalanceError, setGovWalletBalanceError] = useState<Error>();
+  const [govWalletBalanceError, setGovWalletBalanceError] =
+    useState<GovWalletBalanceError>();
 
   const clearGovWalletBalanceError = useCallback(
     (): void => setGovWalletBalanceError(undefined),
