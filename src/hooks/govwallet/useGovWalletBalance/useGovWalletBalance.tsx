@@ -54,13 +54,26 @@ export const useGovWalletBalance = (
 
           const results = await Promise.all(getBalancePromises);
 
+          // We only check the activation status of the first account
+          const areAllAccountsActivated = results.every(
+            ({ accountDetails }) =>
+              accountDetails[0].activationStatus === "ACTIVATED"
+          );
+
           // We only check the eligibility of the balance of the first account
           const areAllBalancesEligible = results.every(
             // Check if balance is strictly equals to 10000 cents
             ({ accountDetails }) => accountDetails[0].balance === 10000
           );
 
-          if (!areAllBalancesEligible) {
+          if (!areAllAccountsActivated) {
+            setGovWalletBalanceError(
+              new GovWalletBalanceError(
+                "Some GovWallet accounts are deactivated."
+              )
+            );
+            setGovWalletBalanceState("INELIGIBLE");
+          } else if (!areAllBalancesEligible) {
             setGovWalletBalanceState("INELIGIBLE");
           } else {
             setGovWalletBalanceState("ELIGIBLE");

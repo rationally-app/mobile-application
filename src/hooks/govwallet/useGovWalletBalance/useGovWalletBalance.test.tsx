@@ -7,7 +7,10 @@ import {
   defaultProducts,
 } from "../../../test/helpers/defaults";
 import { CampaignConfig } from "../../../types";
-import { useGovWalletBalance } from "./useGovWalletBalance";
+import {
+  GovWalletBalanceError,
+  useGovWalletBalance,
+} from "./useGovWalletBalance";
 import { ProductContextProvider } from "../../../context/products";
 import { CampaignConfigContextProvider } from "../../../context/campaignConfig";
 import { NetworkError } from "../../../services/helpers";
@@ -49,7 +52,7 @@ describe("checkGovWalletBalance toggle", () => {
     ids = ["S0000000J"];
 
     mockGetGovWalletBalance.mockResolvedValue({
-      accountDetails: [{ balance: 10000 }],
+      accountDetails: [{ activationStatus: "ACTIVATED", balance: 10000 }],
     });
   });
 
@@ -85,8 +88,11 @@ describe("checkGovWalletBalance toggle", () => {
 });
 
 describe("govWalletBalanceState states", () => {
+  let activationStatus: string;
+
   beforeAll(() => {
     ids = ["S0000000J"];
+    activationStatus = "ACTIVATED";
   });
 
   beforeEach(() => {
@@ -97,7 +103,7 @@ describe("govWalletBalanceState states", () => {
     expect.assertions(3);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
-      accountDetails: [{ balance: 10000 }],
+      accountDetails: [{ activationStatus, balance: 10000 }],
     });
 
     const { result, waitForNextUpdate } = renderHook(
@@ -115,7 +121,7 @@ describe("govWalletBalanceState states", () => {
     expect.assertions(3);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
-      accountDetails: [{ balance: 10001 }],
+      accountDetails: [{ activationStatus, balance: 10001 }],
     });
 
     const { result, waitForNextUpdate } = renderHook(
@@ -133,7 +139,7 @@ describe("govWalletBalanceState states", () => {
     expect.assertions(3);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
-      accountDetails: [{ balance: 9999 }],
+      accountDetails: [{ activationStatus, balance: 9999 }],
     });
 
     const { result, waitForNextUpdate } = renderHook(
@@ -144,6 +150,27 @@ describe("govWalletBalanceState states", () => {
     expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
+    expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return error if account activation status is 'DEACTIVATED'", async () => {
+    expect.assertions(4);
+
+    mockGetGovWalletBalance.mockResolvedValueOnce({
+      accountDetails: [{ activationStatus: "DEACTIVATED", balance: 10000 }],
+    });
+
+    const { result, waitForNextUpdate } = renderHook(
+      () => useGovWalletBalance(ids, key, endpoint),
+      { wrapper }
+    );
+
+    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    await waitForNextUpdate();
+    expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
+    expect(result.current.govWalletBalanceError).toStrictEqual(
+      new GovWalletBalanceError("Some GovWallet accounts are deactivated.")
+    );
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
 
