@@ -50,7 +50,6 @@ export enum ERROR_MESSAGE {
   INVALID_ID = "Enter or scan a valid ID number.",
   DUPLICATE_ID = "Enter or scan a different ID number.",
   QUOTA_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
-  GOVWALLET_BALANCE_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   LOCK_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   NETWORK_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   SERVER_ERROR = "We are currently facing server issues. Contact your in-charge if the problem persists.",
@@ -72,6 +71,8 @@ export enum ERROR_MESSAGE {
   PAYMENT_QR_MISSING_TEXT_DISABLED = "Payment QR is missing. Scan a valid code",
   PAYMENT_QR_UNSUPPORTED = "Payment QR is unsupported. Enter or scan a valid code.",
   PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED = "Payment QR is unsupported. Scan a valid code",
+  GOVWALLET_BALANCE_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
+  GOVWALLET_ACCOUNT_DEACTIVATED_ERROR = "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
 }
 
 const errorNameToTranslationKeyMappings: Record<string, string> = {
@@ -161,6 +162,8 @@ const messageToTranslationKeyMappings: Record<string, string> = {
   [ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED]: "unsupportedPaymentMethodInPaymentQR",
   [ERROR_MESSAGE.PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED]:
     "unsupportedPaymentMethodInPaymentQRTextDisabled",
+  [ERROR_MESSAGE.GOVWALLET_ACCOUNT_DEACTIVATED_ERROR]:
+    ERROR_MESSAGE.GOVWALLET_ACCOUNT_DEACTIVATED_ERROR,
   [CONFIRMATION_MESSAGE.PAYMENT_COLLECTION]:
     CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
   [CONFIRMATION_MESSAGE.CONFIRM_LOGOUT]: CONFIRMATION_MESSAGE.CONFIRM_LOGOUT,
