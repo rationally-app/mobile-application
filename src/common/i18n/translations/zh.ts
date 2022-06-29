@@ -487,5 +487,10 @@ export const zh: Translations = {
       body: "请扫描有效的编号。",
       primaryActionText: "确定",
     },
+    govwalletAccountDeactivated: {
+      title: "Unsupported payment method",
+      body: "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
+      primaryActionText: "确定",
+    },
   },
 };
