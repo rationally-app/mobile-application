@@ -488,7 +488,7 @@ export const zh: Translations = {
       primaryActionText: "确定",
     },
     govwalletAccountDeactivated: {
-      title: "Unsupported payment method",
+      title: "Deactivated account",
       body: "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
       primaryActionText: "确定",
     },

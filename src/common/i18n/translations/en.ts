@@ -491,7 +491,7 @@ export const en: Translations = {
       primaryActionText: "OK",
     },
     govwalletAccountDeactivated: {
-      title: "Error",
+      title: "Deactivated account",
       body: "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
       primaryActionText: "OK",
     },
