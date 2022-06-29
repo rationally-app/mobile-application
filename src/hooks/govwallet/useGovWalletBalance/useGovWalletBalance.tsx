@@ -69,7 +69,7 @@ export const useGovWalletBalance = (
           if (!areAllAccountsActivated) {
             setGovWalletBalanceError(
               new GovWalletBalanceError(
-                "Some GovWallet accounts are deactivated."
+                "Eligible identity's account has been deactivated. Inform your in-charge about this issue."
               )
             );
             setGovWalletBalanceState("INELIGIBLE");
