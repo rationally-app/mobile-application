@@ -80,7 +80,6 @@ const errorNameToTranslationKeyMappings: Record<string, string> = {
   SessionError: "expiredSession",
   PastTransactionError: "systemErrorServerIssues",
   QuotaError: "systemErrorConnectivityIssues",
-  GovWalletBalanceError: "systemErrorConnectivityIssues",
   LockError: "systemErrorConnectivityIssues",
   OTPWrongError: "invalidInputOTP",
   OTPWrongErrorLastTry: "invalidInputOTPOneMoreInvalid",
