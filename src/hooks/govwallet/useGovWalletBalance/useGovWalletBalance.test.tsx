@@ -169,7 +169,9 @@ describe("govWalletBalanceState states", () => {
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
     expect(result.current.govWalletBalanceError).toStrictEqual(
-      new GovWalletBalanceError("Some GovWallet accounts are deactivated.")
+      new GovWalletBalanceError(
+        "Eligible identity's account has been deactivated. Inform your in-charge about this issue."
+      )
     );
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
