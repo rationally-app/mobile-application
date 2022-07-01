@@ -490,5 +490,10 @@ export const en: Translations = {
       body: "Scan a valid code.",
       primaryActionText: "OK",
     },
+    govwalletAccountDeactivated: {
+      title: "Deactivated account",
+      body: "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
+      primaryActionText: "OK",
+    },
   },
 };

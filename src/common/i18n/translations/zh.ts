@@ -487,5 +487,10 @@ export const zh: Translations = {
       body: "请扫描有效的编号。",
       primaryActionText: "确定",
     },
+    govwalletAccountDeactivated: {
+      title: "停用账户",
+      body: "账户已停止使用。请联系您的负责人。",
+      primaryActionText: "确定",
+    },
   },
 };

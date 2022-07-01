@@ -536,5 +536,10 @@ export type Translations = {
       body?: string;
       primaryActionText: string;
     };
+    govwalletAccountDeactivated: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
   };
 };
