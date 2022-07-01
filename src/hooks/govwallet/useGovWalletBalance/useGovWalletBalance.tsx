@@ -6,7 +6,7 @@ export type GovWalletBalanceState = "DEFAULT" | "ELIGIBLE" | "INELIGIBLE";
 
 export type GovWalletBalanceHook = {
   govWalletBalanceState: GovWalletBalanceState;
-  govWalletBalanceInCents?: number;
+  govWalletBalanceInCents: number;
   govWalletBalanceError?: Error;
   updateGovWalletBalance: () => void;
   clearGovWalletBalanceError: () => void;
@@ -37,8 +37,12 @@ export const useGovWalletBalance = (
   const { features } = useContext(CampaignConfigContext);
   const [govWalletBalanceState, setGovWalletBalanceState] =
     useState<GovWalletBalanceState>("DEFAULT");
+  /**
+   * Balance is defined with default `0` since it will never be
+   * `undefined` when used.
+   */
   const [govWalletBalanceInCents, setGovWalletBalanceInCents] =
-    useState<number>();
+    useState<number>(0);
   const [govWalletBalanceError, setGovWalletBalanceError] =
     useState<GovWalletBalanceError>();
 
@@ -51,7 +55,7 @@ export const useGovWalletBalance = (
     useCallback(() => {
       const update = async (): Promise<void> => {
         try {
-          setGovWalletBalanceInCents(undefined);
+          setGovWalletBalanceInCents(0);
 
           const getBalancePromises = ids.flatMap((id) =>
             getGovWalletBalance(id, authKey, endpoint)
