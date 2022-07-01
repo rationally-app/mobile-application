@@ -493,8 +493,8 @@ export const zh: Translations = {
       primaryActionText: "确定",
     },
     govwalletAccountDeactivated: {
-      title: "Deactivated account",
-      body: "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
+      title: "停用账户",
+      body: "账户已停止使用。请联系您的负责人。",
       primaryActionText: "确定",
     },
   },
