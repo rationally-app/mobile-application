@@ -127,6 +127,11 @@ export const zh: Translations = {
   logoutScreen: {
     loggingOut: "正在登出中",
   },
+  govWalletIncorrectBalanceScreen: {
+    govWalletIncorrectBalanceTitle: "金额不正确",
+    govWalletIncorrectBalanceDescription: "无法分发。现有金额是 ${%balance}。",
+    govWalletIncorrectBalanceDescriptionWithoutBalance: "无法分发。",
+  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "已使用",

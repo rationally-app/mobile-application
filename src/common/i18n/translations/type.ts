@@ -122,6 +122,11 @@ export type Translations = {
   logoutScreen: {
     loggingOut: string;
   };
+  govWalletIncorrectBalanceScreen: {
+    govWalletIncorrectBalanceTitle: string;
+    govWalletIncorrectBalanceDescription: string;
+    govWalletIncorrectBalanceDescriptionWithoutBalance: string;
+  };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: string;
