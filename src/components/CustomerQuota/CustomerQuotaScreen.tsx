@@ -106,6 +106,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     govWalletBalanceState,
     govWalletBalanceError,
     clearGovWalletBalanceError,
+    govWalletBalanceInCents,
   } = useGovWalletBalance(ids, sessionToken, endpoint);
 
   const {

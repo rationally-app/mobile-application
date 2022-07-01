@@ -6,6 +6,7 @@ export type GovWalletBalanceState = "DEFAULT" | "ELIGIBLE" | "INELIGIBLE";
 
 export type GovWalletBalanceHook = {
   govWalletBalanceState: GovWalletBalanceState;
+  govWalletBalanceInCents?: number;
   govWalletBalanceError?: Error;
   updateGovWalletBalance: () => void;
   clearGovWalletBalanceError: () => void;
@@ -36,6 +37,8 @@ export const useGovWalletBalance = (
   const { features } = useContext(CampaignConfigContext);
   const [govWalletBalanceState, setGovWalletBalanceState] =
     useState<GovWalletBalanceState>("DEFAULT");
+  const [govWalletBalanceInCents, setGovWalletBalanceInCents] =
+    useState<number>();
   const [govWalletBalanceError, setGovWalletBalanceError] =
     useState<GovWalletBalanceError>();
 
@@ -48,6 +51,8 @@ export const useGovWalletBalance = (
     useCallback(() => {
       const update = async (): Promise<void> => {
         try {
+          setGovWalletBalanceInCents(undefined);
+
           const getBalancePromises = ids.flatMap((id) =>
             getGovWalletBalance(id, authKey, endpoint)
           );
@@ -76,6 +81,8 @@ export const useGovWalletBalance = (
           } else if (!areAllBalancesEligible) {
             setGovWalletBalanceState("INELIGIBLE");
           } else {
+            // We only retrieve the balance of the first account
+            setGovWalletBalanceInCents(results[0].accountDetails[0].balance);
             setGovWalletBalanceState("ELIGIBLE");
           }
         } catch (e: unknown) {
@@ -98,5 +105,6 @@ export const useGovWalletBalance = (
     govWalletBalanceError,
     updateGovWalletBalance,
     clearGovWalletBalanceError,
+    govWalletBalanceInCents,
   };
 };
