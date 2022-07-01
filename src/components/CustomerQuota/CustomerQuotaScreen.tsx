@@ -40,6 +40,7 @@ import {
   PaymentQRMissingInfoError,
 } from "@rationally-app/payment-qr-parser";
 import { useGovWalletBalance } from "../../hooks/govwallet/useGovWalletBalance/useGovWalletBalance";
+import { GovWalletIncorrectBalanceCard } from "./GovWallet/IncorrectBalanceCard";
 
 type CustomerQuotaProps = NavigationProps & { navIds: string[] };
 
@@ -346,9 +347,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           />
         ) : cartState === "UNSUCCESSFUL" ? (
           <CheckoutUnsuccessfulCard ids={ids} onCancel={onCancel} />
-        ) : quotaState === "NO_QUOTA" ||
-          // TODO: Confirm that this state should show NoQuotaCard
-          govWalletBalanceState === "INELIGIBLE" ? (
+        ) : quotaState === "NO_QUOTA" ? (
           <NoQuotaCard
             ids={ids}
             cart={cart}
@@ -359,6 +358,12 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           />
         ) : quotaState === "NOT_ELIGIBLE" ? (
           <NotEligibleCard ids={ids} onCancel={onCancel} />
+        ) : govWalletBalanceState === "INELIGIBLE" ? (
+          <GovWalletIncorrectBalanceCard
+            ids={ids}
+            onCancel={onCancel}
+            govWalletBalanceInCents={govWalletBalanceInCents}
+          />
         ) : (
           <ItemsSelectionCard
             ids={ids}
