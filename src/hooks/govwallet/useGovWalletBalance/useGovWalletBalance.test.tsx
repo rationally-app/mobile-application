@@ -68,7 +68,9 @@ describe("checkGovWalletBalance toggle", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toStrictEqual(
+      "FETCHING_BALANCE"
+    );
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
@@ -111,7 +113,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toStrictEqual(
+      "FETCHING_BALANCE"
+    );
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
@@ -129,7 +133,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toStrictEqual(
+      "FETCHING_BALANCE"
+    );
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
@@ -147,7 +153,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toStrictEqual(
+      "FETCHING_BALANCE"
+    );
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
@@ -165,7 +173,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toStrictEqual(
+      "FETCHING_BALANCE"
+    );
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
     expect(result.current.govWalletBalanceError).toStrictEqual(
@@ -188,7 +198,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toStrictEqual(
+      "FETCHING_BALANCE"
+    );
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
