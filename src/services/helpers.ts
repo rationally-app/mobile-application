@@ -27,7 +27,7 @@ export class ErrorWithCodes extends Error {
   statusCode: number;
   errorCode?: string;
 
-  constructor(message: string, statusCode: number, errorCode?: string) {
+  constructor(message: string, statusCode = 500, errorCode?: string) {
     super(message);
     this.name = "ErrorWithCodes";
     this.statusCode = statusCode;
