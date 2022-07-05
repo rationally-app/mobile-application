@@ -72,7 +72,7 @@ const liveGetGovWalletBalance = async (
       Sentry.captureException(error);
     }
 
-    throw new GovWalletBalanceError(error.message);
+    throw e;
   }
 };
 
