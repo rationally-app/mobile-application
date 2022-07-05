@@ -75,6 +75,9 @@ export const useGovWalletBalance = (
             ({ accountDetails }) => accountDetails[0].balance === 10000
           );
 
+          // We only retrieve the balance of the first account
+          setGovWalletBalanceInCents(results[0].accountDetails[0].balance);
+
           if (!areAllAccountsActivated) {
             setGovWalletBalanceError(
               new GovWalletBalanceError(
@@ -85,8 +88,6 @@ export const useGovWalletBalance = (
           } else if (!areAllBalancesEligible) {
             setGovWalletBalanceState("INELIGIBLE");
           } else {
-            // We only retrieve the balance of the first account
-            setGovWalletBalanceInCents(results[0].accountDetails[0].balance);
             setGovWalletBalanceState("ELIGIBLE");
           }
         } catch (e: unknown) {
