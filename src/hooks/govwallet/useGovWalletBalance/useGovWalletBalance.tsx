@@ -97,6 +97,7 @@ export const useGovWalletBalance = (
           }
         } catch (e: unknown) {
           const error = e as Error;
+          setGovWalletBalanceState("DEFAULT");
           setGovWalletBalanceError(error);
         }
       };
