@@ -7,13 +7,10 @@ import {
   defaultProducts,
 } from "../../../test/helpers/defaults";
 import { CampaignConfig } from "../../../types";
-import {
-  GovWalletBalanceError,
-  useGovWalletBalance,
-} from "./useGovWalletBalance";
+import { useGovWalletBalance } from "./useGovWalletBalance";
 import { ProductContextProvider } from "../../../context/products";
 import { CampaignConfigContextProvider } from "../../../context/campaignConfig";
-import { NetworkError } from "../../../services/helpers";
+import { ErrorWithCodes, NetworkError } from "../../../services/helpers";
 
 jest.mock("../../../services/govwallet/balance");
 const mockGetGovWalletBalance = getGovWalletBalance as jest.Mock;
@@ -179,8 +176,9 @@ describe("govWalletBalanceState states", () => {
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
     expect(result.current.govWalletBalanceError).toStrictEqual(
-      new GovWalletBalanceError(
-        "Eligible identity's account has been deactivated. Inform your in-charge about this issue."
+      new ErrorWithCodes(
+        "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
+        400
       )
     );
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);

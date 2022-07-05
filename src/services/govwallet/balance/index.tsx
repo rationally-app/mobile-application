@@ -1,19 +1,13 @@
 import { GovWalletBalance } from "../../../types";
 import { IS_MOCK } from "../../../config";
 import {
+  ErrorWithCodes,
   fetchWithValidator,
   NetworkError,
   SessionError,
   ValidationError,
 } from "../../helpers";
 import { Sentry } from "../../../utils/errorTracking";
-
-export class GovWalletBalanceError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "GovWalletBalanceError";
-  }
-}
 
 const mockGetGovWalletBalance = async (
   id: string,
@@ -49,7 +43,7 @@ const liveGetGovWalletBalance = async (
   let response: GovWalletBalance;
 
   if (id.length <= 0) {
-    throw new GovWalletBalanceError("No ID was provided");
+    throw new ErrorWithCodes("No ID was provided", 400);
   }
 
   try {
