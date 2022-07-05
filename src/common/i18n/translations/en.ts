@@ -500,5 +500,25 @@ export const en: Translations = {
       body: "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
       primaryActionText: "OK",
     },
+    http500Error: {
+      title: "System error",
+      body: "Internal Server Error. Inform your in-charge about this issue.",
+      primaryActionText: "OK",
+    },
+    http502Error: {
+      title: "System error",
+      body: "Bad Gateway. Inform your in-charge about this issue.",
+      primaryActionText: "OK",
+    },
+    http503Error: {
+      title: "System error",
+      body: "Service Unavailable. Inform your in-charge about this issue.",
+      primaryActionText: "OK",
+    },
+    http504Error: {
+      title: "System error",
+      body: "Gateway Timeout. Inform your in-charge about this issue.",
+      primaryActionText: "OK",
+    },
   },
 };

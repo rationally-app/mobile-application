@@ -545,5 +545,25 @@ export type Translations = {
       body?: string;
       primaryActionText: string;
     };
+    http500Error: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    http502Error: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    http503Error: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
+    http504Error: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
   };
 };
