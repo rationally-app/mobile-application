@@ -46,7 +46,8 @@ const timeoutAfter = (seconds: number): Promise<Error> => {
 export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
-  init?: RequestInit
+  init?: RequestInit,
+  includeCodes = false
 ): Promise<T> {
   let response: Response;
   /*
@@ -83,7 +84,7 @@ export async function fetchWithValidator<T, O, I>(
       throw new SessionError(json.message);
     }
 
-    if (json.errorCode || statusCode) {
+    if (includeCodes && (json.errorCode || statusCode)) {
       throw new ErrorWithCodes(message, statusCode, json.errorCode);
     }
 

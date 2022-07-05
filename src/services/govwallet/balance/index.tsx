@@ -59,7 +59,8 @@ const liveGetGovWalletBalance = async (
         body: JSON.stringify({
           id,
         }),
-      }
+      },
+      true
     );
 
     return response;
