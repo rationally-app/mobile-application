@@ -8,6 +8,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useTranslate } from "../../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../../context/theme";
 import { formatCentsAsDollarsAndCents } from "../../../utils/currencyFormatter";
+import { size } from "../../../common/styles";
 
 const GovWalletIncorrectBalanceTitle: FunctionComponent = () => {
   const { i18nt, c13nt } = useTranslate();
@@ -31,7 +32,7 @@ const GovWalletIncorrectBalanceDescription: FunctionComponent<{
   const { i18nt, c13nt } = useTranslate();
 
   return (
-    <AppText style={sharedStyles.statusTitle}>
+    <AppText style={{ marginBottom: size(1) }}>
       {c13nt(
         "govWalletIncorrectBalanceDescription",
         undefined,
