@@ -195,7 +195,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
       return;
     }
 
-    if (govWalletBalanceError) {
+    if (quotaState === "DEFAULT" && govWalletBalanceError) {
       switch (true) {
         case govWalletBalanceError instanceof NetworkError:
           throw govWalletBalanceError; // Let error boundary handle.
@@ -296,6 +296,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     expireSession,
     navigation,
     showErrorAlert,
+    quotaState,
     quotaError,
     clearQuotaError,
     govWalletBalanceError,
