@@ -23,22 +23,14 @@ export class NetworkError extends Error {
   }
 }
 
-export class ErrorWithStatusCode extends Error {
+export class ErrorWithCodes extends Error {
   statusCode: number;
+  errorCode?: string;
 
-  constructor(message: string, statusCode: number) {
+  constructor(message: string, statusCode: number, errorCode?: string) {
     super(message);
-    this.name = "ErrorWithCode";
+    this.name = "ErrorWithCodes";
     this.statusCode = statusCode;
-  }
-}
-
-export class ErrorWithErrorCode extends ErrorWithStatusCode {
-  errorCode: string;
-
-  constructor(message: string, statusCode: number, errorCode: string) {
-    super(message, statusCode);
-    this.name = "ErrorWithCode";
     this.errorCode = errorCode;
   }
 }
@@ -91,12 +83,8 @@ export async function fetchWithValidator<T, O, I>(
       throw new SessionError(json.message);
     }
 
-    if (json.errorCode) {
-      throw new ErrorWithErrorCode(message, statusCode, json.errorCode);
-    }
-
-    if (statusCode) {
-      throw new ErrorWithStatusCode(message, statusCode);
+    if (json.errorCode || statusCode) {
+      throw new ErrorWithCodes(message, statusCode, json.errorCode);
     }
 
     throw new Error(message);
