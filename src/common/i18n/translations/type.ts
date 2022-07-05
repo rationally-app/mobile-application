@@ -125,7 +125,6 @@ export type Translations = {
   govWalletIncorrectBalanceScreen: {
     govWalletIncorrectBalanceTitle: string;
     govWalletIncorrectBalanceDescription: string;
-    govWalletIncorrectBalanceDescriptionWithoutBalance: string;
   };
   errorMessages: {
     alreadyUsedDifferentIDNumber: {

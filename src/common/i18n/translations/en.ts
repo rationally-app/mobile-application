@@ -134,8 +134,6 @@ export const en: Translations = {
     govWalletIncorrectBalanceTitle: "Incorrect balance",
     govWalletIncorrectBalanceDescription:
       "Not entitled to collect items. Current balance is $%{balance}.",
-    govWalletIncorrectBalanceDescriptionWithoutBalance:
-      "Not entitled to collect items.",
   },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
