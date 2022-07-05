@@ -2,10 +2,15 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { getGovWalletBalance } from "../../../services/govwallet/balance";
 
-export type GovWalletBalanceState = "DEFAULT" | "ELIGIBLE" | "INELIGIBLE";
+export type GovWalletBalanceState =
+  | "DEFAULT"
+  | "FETCHING_BALANCE"
+  | "ELIGIBLE"
+  | "INELIGIBLE";
 
 export type GovWalletBalanceHook = {
   govWalletBalanceState: GovWalletBalanceState;
+  govWalletBalanceInCents: number;
   govWalletBalanceError?: Error;
   updateGovWalletBalance: () => void;
   clearGovWalletBalanceError: () => void;
@@ -36,6 +41,12 @@ export const useGovWalletBalance = (
   const { features } = useContext(CampaignConfigContext);
   const [govWalletBalanceState, setGovWalletBalanceState] =
     useState<GovWalletBalanceState>("DEFAULT");
+  /**
+   * Balance is defined with default `0` since it will never be
+   * `undefined` when used.
+   */
+  const [govWalletBalanceInCents, setGovWalletBalanceInCents] =
+    useState<number>(0);
   const [govWalletBalanceError, setGovWalletBalanceError] =
     useState<GovWalletBalanceError>();
 
@@ -48,6 +59,9 @@ export const useGovWalletBalance = (
     useCallback(() => {
       const update = async (): Promise<void> => {
         try {
+          setGovWalletBalanceInCents(0);
+          setGovWalletBalanceState("FETCHING_BALANCE");
+
           const getBalancePromises = ids.flatMap((id) =>
             getGovWalletBalance(id, authKey, endpoint)
           );
@@ -66,6 +80,9 @@ export const useGovWalletBalance = (
             ({ accountDetails }) => accountDetails[0].balance === 10000
           );
 
+          // We only retrieve the balance of the first account
+          setGovWalletBalanceInCents(results[0].accountDetails[0].balance);
+
           if (!areAllAccountsActivated) {
             setGovWalletBalanceError(
               new GovWalletBalanceError(
@@ -80,6 +97,7 @@ export const useGovWalletBalance = (
           }
         } catch (e: unknown) {
           const error = e as Error;
+          setGovWalletBalanceState("DEFAULT");
           setGovWalletBalanceError(error);
         }
       };
@@ -98,5 +116,6 @@ export const useGovWalletBalance = (
     govWalletBalanceError,
     updateGovWalletBalance,
     clearGovWalletBalanceError,
+    govWalletBalanceInCents,
   };
 };

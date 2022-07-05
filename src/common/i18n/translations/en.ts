@@ -130,6 +130,11 @@ export const en: Translations = {
   logoutScreen: {
     loggingOut: "Logging out",
   },
+  govWalletIncorrectBalanceScreen: {
+    govWalletIncorrectBalanceTitle: "Incorrect balance",
+    govWalletIncorrectBalanceDescription:
+      "Not entitled to collect items. Current balance is $%{balance}.",
+  },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
       title: "Already used",
