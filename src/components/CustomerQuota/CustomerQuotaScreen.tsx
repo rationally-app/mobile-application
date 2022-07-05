@@ -368,7 +368,10 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           <ItemsSelectionCard
             ids={ids}
             addId={addId}
-            isLoading={cartState === "CHECKING_OUT"}
+            isLoading={
+              cartState === "CHECKING_OUT" ||
+              govWalletBalanceState === "FETCHING_BALANCE"
+            }
             hasPendingConfirmation={cartState === "PENDING_CONFIRMATION"}
             checkoutCart={checkoutCart}
             completeCheckout={completeCheckout}

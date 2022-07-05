@@ -2,7 +2,11 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { getGovWalletBalance } from "../../../services/govwallet/balance";
 
-export type GovWalletBalanceState = "DEFAULT" | "ELIGIBLE" | "INELIGIBLE";
+export type GovWalletBalanceState =
+  | "DEFAULT"
+  | "FETCHING_BALANCE"
+  | "ELIGIBLE"
+  | "INELIGIBLE";
 
 export type GovWalletBalanceHook = {
   govWalletBalanceState: GovWalletBalanceState;
@@ -56,6 +60,7 @@ export const useGovWalletBalance = (
       const update = async (): Promise<void> => {
         try {
           setGovWalletBalanceInCents(0);
+          setGovWalletBalanceState("FETCHING_BALANCE");
 
           const getBalancePromises = ids.flatMap((id) =>
             getGovWalletBalance(id, authKey, endpoint)
