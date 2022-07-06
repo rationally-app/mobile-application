@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { getGovWalletBalance } from "../../../services/govwallet/balance";
+import { ErrorWithCodes } from "../../../services/helpers";
 
 export type GovWalletBalanceState =
   | "DEFAULT"
@@ -15,13 +16,6 @@ export type GovWalletBalanceHook = {
   updateGovWalletBalance: () => void;
   clearGovWalletBalanceError: () => void;
 };
-
-export class GovWalletBalanceError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "GovWalletBalanceError";
-  }
-}
 
 /**
  * A React Hook that checks the GovWallet balance of specified IDs.
@@ -47,8 +41,7 @@ export const useGovWalletBalance = (
    */
   const [govWalletBalanceInCents, setGovWalletBalanceInCents] =
     useState<number>(0);
-  const [govWalletBalanceError, setGovWalletBalanceError] =
-    useState<GovWalletBalanceError>();
+  const [govWalletBalanceError, setGovWalletBalanceError] = useState<Error>();
 
   const clearGovWalletBalanceError = useCallback(
     (): void => setGovWalletBalanceError(undefined),
@@ -85,8 +78,9 @@ export const useGovWalletBalance = (
 
           if (!areAllAccountsActivated) {
             setGovWalletBalanceError(
-              new GovWalletBalanceError(
-                "Eligible identity's account has been deactivated. Inform your in-charge about this issue."
+              new ErrorWithCodes(
+                "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
+                400
               )
             );
             setGovWalletBalanceState("INELIGIBLE");

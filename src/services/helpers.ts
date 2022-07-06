@@ -23,6 +23,18 @@ export class NetworkError extends Error {
   }
 }
 
+export class ErrorWithCodes extends Error {
+  statusCode: number;
+  errorCode?: string;
+
+  constructor(message: string, statusCode = 500, errorCode?: string) {
+    super(message);
+    this.name = "ErrorWithCodes";
+    this.statusCode = statusCode;
+    this.errorCode = errorCode;
+  }
+}
+
 const timeoutAfter = (seconds: number): Promise<Error> => {
   return new Promise((resolve, _reject) => {
     setTimeout(() => {
@@ -34,7 +46,8 @@ const timeoutAfter = (seconds: number): Promise<Error> => {
 export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
-  init?: RequestInit
+  init?: RequestInit,
+  includeCodes = false
 ): Promise<T> {
   let response: Response;
   /*
@@ -62,10 +75,20 @@ export async function fetchWithValidator<T, O, I>(
   }
 
   const json = await response.json();
+  const statusCode = response.status;
+
   if (!response.ok) {
-    if (json.message === "Invalid authentication token provided")
+    const message = json.message ?? "Fetch failed";
+
+    if (json.message === "Invalid authentication token provided") {
       throw new SessionError(json.message);
-    throw new Error(json.message ?? "Fetch failed");
+    }
+
+    if (includeCodes && (json.errorCode || statusCode)) {
+      throw new ErrorWithCodes(message, statusCode, json.errorCode);
+    }
+
+    throw new Error(message);
   }
 
   const decoded = validator.decode(json);

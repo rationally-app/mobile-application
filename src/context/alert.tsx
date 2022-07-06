@@ -10,6 +10,7 @@ import {
   AlertModalProps,
 } from "../components/AlertModal/AlertModal";
 import i18n from "i18n-js";
+import { ErrorWithCodes } from "../services/helpers";
 
 export enum WARNING_MESSAGE {
   CANCEL_ENTRY = "cancelEntry",
@@ -265,17 +266,49 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
       onClickPrimaryAction?: () => void,
       dynamicContent?: Record<string, string>
     ): void => {
-      const translationKey = getTranslationKeyFromError(error);
+      let translationKey = getTranslationKeyFromError(error);
+
+      let title = i18n.t(`errorMessages.${translationKey}.title`);
+      let description = i18n.t(
+        `errorMessages.${translationKey}.body`,
+        dynamicContent
+      );
+      let primaryButtonText = i18n.t(
+        `errorMessages.${translationKey}.primaryActionText`
+      );
+
+      /**
+       * Defining error dialog properties for ErrorWithCodes.
+       *
+       * For HTTP 400 errors, the title is the error code, and
+       * the description is the error message.
+       *
+       * For HTTP 50X errors, the properties are located in their respective
+       * translation keys (e.g. errorMessages.http500Error).
+       */
+      if (!title && !description && error instanceof ErrorWithCodes) {
+        translationKey = `http${error.statusCode}Error`;
+
+        title =
+          error.errorCode ??
+          i18n.t(`errorMessages.${translationKey}.title`) ??
+          "Error";
+
+        description =
+          error.message ??
+          i18n.t(`errorMessages.${translationKey}.description`);
+
+        primaryButtonText = i18n.t(
+          `errorMessages.${translationKey}.primaryButtonText`
+        );
+      }
+
       showAlert({
         alertType: "ERROR",
-        title: i18n.t(`errorMessages.${translationKey}.title`) ?? "Error",
-        description: i18n.t(
-          `errorMessages.${translationKey}.body`,
-          dynamicContent
-        ),
+        title: title ?? "Error",
+        description,
         buttonTexts: {
-          primaryActionText:
-            i18n.t(`errorMessages.${translationKey}.primaryActionText`) ?? "OK",
+          primaryActionText: primaryButtonText ?? "OK",
         },
         visible: true,
         onOk: !!onClickPrimaryAction ? onClickPrimaryAction : () => {},

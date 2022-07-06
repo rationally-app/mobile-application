@@ -1,7 +1,12 @@
-import { getGovWalletBalance, GovWalletBalanceError } from ".";
+import { getGovWalletBalance } from ".";
 import { GovWalletAccountDetail, GovWalletBalance } from "../../../types";
 import { Sentry } from "../../../utils/errorTracking";
-import { NetworkError, SessionError } from "../../helpers";
+import {
+  ErrorWithCodes,
+  NetworkError,
+  SessionError,
+  ValidationError,
+} from "../../helpers";
 
 const mockFetch = jest.fn();
 jest.spyOn(global, "fetch").mockImplementation(mockFetch);
@@ -53,7 +58,7 @@ describe("Getting GovWallet Balance", () => {
     expect.assertions(1);
 
     await expect(getGovWalletBalance("", authKey, endpoint)).rejects.toThrow(
-      GovWalletBalanceError
+      ErrorWithCodes
     );
   });
 
@@ -94,7 +99,7 @@ describe("Getting GovWallet Balance", () => {
 
     await expect(
       getGovWalletBalance(customerId, authKey, endpoint)
-    ).rejects.toThrow(GovWalletBalanceError);
+    ).rejects.toThrow(ValidationError);
 
     expect(mockCaptureException).toHaveBeenCalledTimes(1);
   });
@@ -109,7 +114,7 @@ describe("Getting GovWallet Balance", () => {
 
     await expect(
       getGovWalletBalance(customerId, authKey, endpoint)
-    ).rejects.toThrow(GovWalletBalanceError);
+    ).rejects.toThrow(Error);
 
     await expect(
       getGovWalletBalance(customerId, authKey, endpoint)

@@ -7,13 +7,10 @@ import {
   defaultProducts,
 } from "../../../test/helpers/defaults";
 import { CampaignConfig } from "../../../types";
-import {
-  GovWalletBalanceError,
-  useGovWalletBalance,
-} from "./useGovWalletBalance";
+import { useGovWalletBalance } from "./useGovWalletBalance";
 import { ProductContextProvider } from "../../../context/products";
 import { CampaignConfigContextProvider } from "../../../context/campaignConfig";
-import { NetworkError } from "../../../services/helpers";
+import { ErrorWithCodes, NetworkError } from "../../../services/helpers";
 
 jest.mock("../../../services/govwallet/balance");
 const mockGetGovWalletBalance = getGovWalletBalance as jest.Mock;
@@ -179,8 +176,9 @@ describe("govWalletBalanceState states", () => {
     await waitForNextUpdate();
     expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
     expect(result.current.govWalletBalanceError).toStrictEqual(
-      new GovWalletBalanceError(
-        "Eligible identity's account has been deactivated. Inform your in-charge about this issue."
+      new ErrorWithCodes(
+        "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
+        400
       )
     );
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
@@ -206,6 +204,50 @@ describe("govWalletBalanceState states", () => {
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
     expect(result.current.govWalletBalanceError).toStrictEqual(
       new NetworkError("Network error")
+    );
+  });
+
+  it("should return 'DEFAULT' and error if a HTTP 400 error occurred", async () => {
+    expect.assertions(4);
+
+    mockGetGovWalletBalance.mockRejectedValue(
+      new ErrorWithCodes("Invalid customerId", 400, "F00B4R")
+    );
+
+    const { result, waitForNextUpdate } = renderHook(
+      () => useGovWalletBalance(ids, key, endpoint),
+      { wrapper }
+    );
+
+    expect(result.current.govWalletBalanceState).toStrictEqual(
+      "FETCHING_BALANCE"
+    );
+    await waitForNextUpdate();
+    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
+    expect(result.current.govWalletBalanceError).toStrictEqual(
+      new ErrorWithCodes("Invalid customerId", 400, "F00B4R")
+    );
+  });
+
+  it("should return 'DEFAULT' and error if a HTTP 500 error occurred", async () => {
+    expect.assertions(4);
+
+    mockGetGovWalletBalance.mockRejectedValue(new ErrorWithCodes("", 500));
+
+    const { result, waitForNextUpdate } = renderHook(
+      () => useGovWalletBalance(ids, key, endpoint),
+      { wrapper }
+    );
+
+    expect(result.current.govWalletBalanceState).toStrictEqual(
+      "FETCHING_BALANCE"
+    );
+    await waitForNextUpdate();
+    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
+    expect(result.current.govWalletBalanceError).toStrictEqual(
+      new ErrorWithCodes("", 500)
     );
   });
 });

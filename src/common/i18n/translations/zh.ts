@@ -496,5 +496,26 @@ export const zh: Translations = {
       body: "账户已停止使用。请联系您的负责人。",
       primaryActionText: "确定",
     },
+    // TODO: HTTP error translations below will be done at a later date
+    http500Error: {
+      title: "System error",
+      body: "Internal Server Error. Inform your in-charge about this issue.",
+      primaryActionText: "OK",
+    },
+    http502Error: {
+      title: "System error",
+      body: "Bad Gateway. Inform your in-charge about this issue.",
+      primaryActionText: "OK",
+    },
+    http503Error: {
+      title: "System error",
+      body: "Service Unavailable. Inform your in-charge about this issue.",
+      primaryActionText: "OK",
+    },
+    http504Error: {
+      title: "System error",
+      body: "Gateway Timeout. Inform your in-charge about this issue.",
+      primaryActionText: "OK",
+    },
   },
 };
