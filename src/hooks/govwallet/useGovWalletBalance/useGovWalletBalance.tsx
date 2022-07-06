@@ -20,7 +20,7 @@ export type GovWalletBalanceHook = {
 /**
  * A React Hook that checks the GovWallet balance of specified IDs.
  *
- * Note that this hook only works if `checkGovWalletBalance` is set to `true` in `features`.
+ * Note that this hook only works if `isPayNowTransaction` is set to `true` in `features`.
  *
  * @param ids An array of customer IDs
  * @param authKey Authentication key used to call backend APIs
@@ -100,7 +100,7 @@ export const useGovWalletBalance = (
     }, [ids, authKey, endpoint]);
 
   useEffect(() => {
-    if (features?.checkGovWalletBalance) {
+    if (features?.isPayNowTransaction) {
       updateGovWalletBalance();
     }
   }, [features, updateGovWalletBalance]);

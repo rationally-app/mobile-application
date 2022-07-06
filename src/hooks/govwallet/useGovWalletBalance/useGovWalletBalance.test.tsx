@@ -22,7 +22,7 @@ const testCampaignConfig: CampaignConfig = {
   ...defaultCampaignConfig,
   features: {
     ...defaultFeatures,
-    checkGovWalletBalance: true,
+    isPayNowTransaction: true,
   },
 };
 
@@ -44,7 +44,7 @@ const wrapperWithToggleOff: FunctionComponent = ({ children }) => (
 
 let ids: string[];
 
-describe("checkGovWalletBalance toggle", () => {
+describe("isPayNowTransaction toggle", () => {
   beforeAll(() => {
     ids = ["S0000000J"];
 
