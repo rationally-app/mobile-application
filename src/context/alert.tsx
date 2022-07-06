@@ -280,27 +280,27 @@ export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
       /**
        * Defining error dialog properties for ErrorWithCodes.
        *
-       * For HTTP 400 errors, the title is the error code, and
-       * the description is the error message.
-       *
        * For HTTP 50X errors, the properties are located in their respective
        * translation keys (e.g. errorMessages.http500Error).
+       *
+       * For all other HTTP errors, the title is the error code, and
+       * the description is the error message.
        */
       if (!title && !description && error instanceof ErrorWithCodes) {
-        translationKey = `http${error.statusCode}Error`;
+        const { message, statusCode, errorCode } = error;
 
-        title =
-          error.errorCode ??
-          i18n.t(`errorMessages.${translationKey}.title`) ??
-          "Error";
+        translationKey = `http${statusCode}Error`;
 
-        description =
-          error.message ??
-          i18n.t(`errorMessages.${translationKey}.description`);
-
-        primaryButtonText = i18n.t(
-          `errorMessages.${translationKey}.primaryButtonText`
-        );
+        if (statusCode >= 500) {
+          title = i18n.t(`errorMessages.${translationKey}.title`);
+          description = i18n.t(`errorMessages.${translationKey}.body`);
+          primaryButtonText = i18n.t(
+            `errorMessages.${translationKey}.primaryActionText`
+          );
+        } else {
+          title = errorCode ?? "Error";
+          description = message;
+        }
       }
 
       showAlert({
