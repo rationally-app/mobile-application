@@ -49,6 +49,7 @@ interface PostTransaction {
   key: string;
   endpoint: string;
   apiVersion?: string;
+  isPayNowTransaction?: boolean;
 }
 
 export const mockGetQuota = async (
@@ -288,17 +289,19 @@ export const livePostTransaction = async ({
   key,
   transactions,
   apiVersion,
+  isPayNowTransaction,
 }: PostTransaction): Promise<PostTransactionResult> => {
   if (ids.length === 0) {
     throw new PostTransactionError("No ID was provided");
   }
   // format version with forward slash, to be added into endpoint, i.e. /v1
   const version = apiVersion ? `/${apiVersion}` : "";
+  const suffix = isPayNowTransaction ? "paynow" : "";
 
   try {
     const response = await fetchWithValidator(
       PostTransactionResult,
-      `${endpoint}${version}/transactions`,
+      `${endpoint}${version}/transactions/${suffix}`,
       {
         method: "POST",
         headers: {
