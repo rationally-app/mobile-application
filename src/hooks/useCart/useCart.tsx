@@ -345,6 +345,7 @@ export const useCart = (
           transactions,
           endpoint,
           apiVersion: features?.apiVersion,
+          isPayNowTransaction: features?.isPayNowTransaction,
         });
         setCheckoutResult(transactionResponse);
         setCartState("PURCHASED");
@@ -386,6 +387,7 @@ export const useCart = (
     authKey,
     endpoint,
     features?.apiVersion,
+    features?.isPayNowTransaction,
     optionalIdentifierLabels,
   ]);
 
