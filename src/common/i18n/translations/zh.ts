@@ -129,7 +129,8 @@ export const zh: Translations = {
   },
   govWalletIncorrectBalanceScreen: {
     govWalletIncorrectBalanceTitle: "金额不正确",
-    govWalletIncorrectBalanceDescription: "无法分发。现有金额是 $%{balance}。",
+    govWalletIncorrectBalanceDescription:
+      "无法领取物品。现有账户余额是 $%{balance}。",
   },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
