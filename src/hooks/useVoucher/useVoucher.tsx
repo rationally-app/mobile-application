@@ -3,7 +3,6 @@ import { validateMerchantCode } from "../../utils/validateMerchantCode";
 import { Voucher, PostTransactionResult, Transaction } from "../../types";
 import { postTransaction } from "../../services/quota";
 import { IdentificationContext } from "../../context/identification";
-import { CampaignConfigContext } from "../../context/campaignConfig";
 
 type CheckoutVouchersState =
   | "DEFAULT"
@@ -49,7 +48,6 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
     [vouchers]
   );
 
-  const { features } = useContext(CampaignConfigContext);
   const checkoutVouchers: VoucherHook["checkoutVouchers"] = useCallback(
     (merchantCode) => {
       setCheckoutVouchersState("CONSUMING_VOUCHER");
@@ -81,7 +79,6 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
             key: authKey,
             transactions,
             endpoint,
-            isPayNowTransaction: features?.isPayNowTransaction,
           });
           setCheckoutResult(transactionResponse);
           setCheckoutVouchersState("RESULT_RETURNED");
@@ -92,7 +89,7 @@ export const useVoucher = (authKey: string, endpoint: string): VoucherHook => {
 
       checkout();
     },
-    [authKey, endpoint, features?.isPayNowTransaction, selectedIdType, vouchers]
+    [authKey, endpoint, selectedIdType, vouchers]
   );
 
   return {
