@@ -133,7 +133,7 @@ export const en: Translations = {
   govWalletIncorrectBalanceScreen: {
     govWalletIncorrectBalanceTitle: "Incorrect balance",
     govWalletIncorrectBalanceDescription:
-      "Not entitled to collect items. Current balance is $%{balance}.",
+      "Not entitled to redeem item(s). Current balance is $%{balance}.",
   },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
