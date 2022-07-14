@@ -323,6 +323,9 @@ export const livePostTransaction = async ({
       Sentry.captureException(e);
     } else if (e instanceof SessionError) {
       throw e;
+    } else if (isPayNowTransaction) {
+      // this is to let all errors bubble upwards
+      throw e;
     }
     throw new PostTransactionError(e.message);
   }
