@@ -148,7 +148,29 @@ describe("postTransaction", () => {
     ).rejects.toThrow(PostTransactionError);
   });
 
-  it("should throw error if there were issues fetching", async () => {
+  it("should throw error if there were issues with querying the endpoint", async () => {
+    expect.assertions(1);
+    mockFetch.mockRejectedValueOnce(new Error("Network error"));
+
+    await expect(postTransaction(postTransactionParams)).rejects.toThrow(
+      NetworkError
+    );
+  });
+
+  it("should throw error if there was an issue with authentication", async () => {
+    expect.assertions(1);
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      json: () =>
+        Promise.resolve({ message: "Invalid authentication token provided" }),
+    });
+
+    await expect(postTransaction(postTransactionParams)).rejects.toThrow(
+      SessionError
+    );
+  });
+});
+
     expect.assertions(1);
     mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
