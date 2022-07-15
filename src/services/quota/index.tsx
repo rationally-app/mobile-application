@@ -297,6 +297,7 @@ export const livePostTransaction = async ({
   // format version with forward slash, to be added into endpoint, i.e. /v1
   const version = apiVersion ? `/${apiVersion}` : "";
   const suffix = isPayNowTransaction ? "paynow" : "";
+  const includeErrorCodes = isPayNowTransaction ?? false;
 
   try {
     const response = await fetchWithValidator(
@@ -314,7 +315,7 @@ export const livePostTransaction = async ({
           transaction: transactions,
         }),
       },
-      true
+      includeErrorCodes
     );
     return response;
   } catch (e) {
