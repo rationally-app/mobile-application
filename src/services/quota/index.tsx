@@ -42,7 +42,7 @@ export class PastTransactionError extends Error {
   }
 }
 
-interface PostTransaction {
+export interface PostTransaction {
   ids: string[];
   identificationFlag: IdentificationFlag;
   transactions: Transaction[];

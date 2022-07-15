@@ -1,8 +1,6 @@
 import {
   getQuota,
-  postTransaction,
   QuotaError,
-  PostTransactionError,
   getPastTransactions,
   PastTransactionError,
 } from "./index";
@@ -145,32 +143,6 @@ const mockGetQuotaResponseMultipleId = {
     ...t,
     quantity: Number.MAX_SAFE_INTEGER,
   })),
-};
-
-const postTransactionParams = {
-  ids: ["S0000000J"],
-  identificationFlag,
-  transactions: [{ category: "product-1", quantity: 2, identifiers: [] }],
-  key,
-  endpoint,
-};
-
-const mockPostTransactionResponse = {
-  transactions: [
-    {
-      transaction: transactions,
-      timestamp: timestamp.getTime(),
-    },
-  ],
-};
-
-const mockPostTransactionResult = {
-  transactions: [
-    {
-      transaction: transactions,
-      timestamp,
-    },
-  ],
 };
 
 const mockPastTransactionsResponse = {
@@ -316,95 +288,6 @@ describe("quota", () => {
       await expect(
         getQuota(["S0000000J"], identificationFlag, key, endpoint)
       ).rejects.toThrow("Network error");
-    });
-  });
-
-  describe("postTransaction", () => {
-    it("should return the correct success result", async () => {
-      expect.assertions(1);
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockPostTransactionResponse),
-      });
-      const result = await postTransaction(postTransactionParams);
-      expect(result).toEqual(mockPostTransactionResult);
-    });
-
-    it("should return the correct success result even with additional version param", async () => {
-      expect.assertions(1);
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockPostTransactionResponse),
-      });
-      const result = await postTransaction({
-        ...postTransactionParams,
-        apiVersion: "v2",
-      });
-      expect(result).toEqual(mockPostTransactionResult);
-    });
-
-    it("should throw error if no ID was provided", async () => {
-      expect.assertions(1);
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        json: () => Promise.resolve({ message: "No ID was provided" }),
-      });
-
-      await expect(
-        postTransaction({ ...postTransactionParams, ids: [] })
-      ).rejects.toThrow(PostTransactionError);
-    });
-
-    it("should throw error if result is malformed", async () => {
-      expect.assertions(1);
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            t: mockPostTransactionResult.transactions,
-          }),
-      });
-
-      await expect(postTransaction(postTransactionParams)).rejects.toThrow(
-        PostTransactionError
-      );
-    });
-
-    it("should capture exception through sentry if result is malformed", async () => {
-      expect.assertions(2);
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            t: mockPostTransactionResult.transactions,
-          }),
-      });
-
-      await expect(postTransaction(postTransactionParams)).rejects.toThrow(
-        PostTransactionError
-      );
-      expect(mockCaptureException).toHaveBeenCalledTimes(1);
-    });
-
-    it("should throw error if quota could not be retrieved", async () => {
-      expect.assertions(1);
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        json: () => Promise.resolve({ message: "Invalid customer ID" }),
-      });
-
-      await expect(
-        postTransaction({ ...postTransactionParams, ids: ["invalid-id"] })
-      ).rejects.toThrow(PostTransactionError);
-    });
-
-    it("should throw error if there were issues fetching", async () => {
-      expect.assertions(1);
-      mockFetch.mockRejectedValueOnce(new Error("Network error"));
-
-      await expect(postTransaction(postTransactionParams)).rejects.toThrow(
-        "Network error"
-      );
     });
   });
 
