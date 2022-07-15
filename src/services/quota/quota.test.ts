@@ -192,7 +192,7 @@ describe("quota", () => {
         key,
         endpoint
       );
-      expect(quota).toEqual(mockGetQuotaResultSingleId);
+      expect(quota).toStrictEqual(mockGetQuotaResultSingleId);
     });
 
     it("should return the quota of an ID if version is passed in", async () => {
@@ -208,7 +208,7 @@ describe("quota", () => {
         endpoint,
         "v2" // version from features
       );
-      expect(quota).toEqual(mockGetQuotaResultSingleId);
+      expect(quota).toStrictEqual(mockGetQuotaResultSingleId);
     });
 
     it("should return the combined quota of multiple IDs", async () => {
@@ -223,7 +223,7 @@ describe("quota", () => {
         key,
         endpoint
       );
-      expect(quota).toEqual(mockGetQuotaResponseMultipleId);
+      expect(quota).toStrictEqual(mockGetQuotaResponseMultipleId);
     });
 
     it("should throw error if no ID was provided", async () => {
@@ -304,7 +304,7 @@ describe("quota", () => {
         key,
         endpoint
       );
-      expect(pastTransactionsResult).toEqual(mockPastTransactionsResult);
+      expect(pastTransactionsResult).toStrictEqual(mockPastTransactionsResult);
     });
 
     it("should return past transactions with additional version param", async () => {
@@ -322,7 +322,7 @@ describe("quota", () => {
         false,
         "v2"
       );
-      expect(pastTransactionsResult).toEqual(mockPastTransactionsResult);
+      expect(pastTransactionsResult).toStrictEqual(mockPastTransactionsResult);
     });
 
     it("should throw error if no ID was provided", async () => {
@@ -386,7 +386,7 @@ describe("quota", () => {
           method: "POST",
         }
       );
-      expect(pastTransactionsResult).toEqual(
+      expect(pastTransactionsResult).toStrictEqual(
         mockPastTransactionsWithSameCategoryResult
       );
     });
