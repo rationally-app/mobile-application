@@ -313,7 +313,8 @@ export const livePostTransaction = async ({
           identificationFlag,
           transaction: transactions,
         }),
-      }
+      },
+      true
     );
     return response;
   } catch (e) {
