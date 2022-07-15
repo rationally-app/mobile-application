@@ -17,7 +17,11 @@ import {
   tagOptionalIdentifierInput,
 } from "../../utils/utilsIdentifierInput";
 import { ERROR_MESSAGE } from "../../context/alert";
-import { SessionError, NetworkError } from "../../services/helpers";
+import {
+  SessionError,
+  NetworkError,
+  ErrorWithCodes,
+} from "../../services/helpers";
 import { IdentificationContext } from "../../context/identification";
 import { ProductContext, ProductContextValue } from "../../context/products";
 import { usePrevious } from "../usePrevious";
@@ -351,7 +355,11 @@ export const useCart = (
         setCartState("PURCHASED");
       } catch (e) {
         setCartState("DEFAULT");
-        if (e instanceof NetworkError) {
+        if (
+          e instanceof NetworkError ||
+          e instanceof SessionError ||
+          e instanceof ErrorWithCodes
+        ) {
           setCartError(e);
         } else if (e.message === "Requested lock is already taken") {
           setCartError(new Error(ERROR_MESSAGE.LOCK_ERROR));
@@ -372,8 +380,6 @@ export const useCart = (
           e.message === "Invalid Purchase Request: Item already used"
         ) {
           setCartError(new Error(ERROR_MESSAGE.ALREADY_USED_POD_IDENTIFIER));
-        } else if (e instanceof SessionError) {
-          setCartError(e);
         } else {
           setCartError(new Error(ERROR_MESSAGE.SERVER_ERROR));
         }
