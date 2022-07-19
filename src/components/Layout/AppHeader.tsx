@@ -3,12 +3,12 @@ import { size } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { NavigationProps } from "../../types";
 import { AppName } from "./AppName";
 import { useTheme } from "../../context/theme";
 
-interface AppHeader extends NavigationProps<"CampaignInitialisationScreen"> {
+interface AppHeader extends NavigationProps<"CustomerQuotaStack"> {
   mode?: AppMode;
 }
 

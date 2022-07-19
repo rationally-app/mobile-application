@@ -1,30 +1,54 @@
 import * as t from "io-ts";
 import { DateFromNumber } from "io-ts-types/lib/DateFromNumber";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
+import {
+  DrawerNavigationProp,
+  DrawerScreenProps,
+} from "@react-navigation/drawer";
 import { RouteProp } from "@react-navigation/native";
 
 export type RootDrawerParamList = {
   CampaignLocationsScreen: {
     shouldAutoLoad: boolean;
   };
-  CustomerQuotaStack: undefined;
-  MerchantPayoutStack: undefined;
-  // CampaignInitialisationScreen: { authCredentials: AuthCredentials }; // ??
-  // LoginScreen: undefined; // ?
+  CustomerQuotaStack: CustomerQuotaStackParamList;
+  MerchantPayoutStack: MerchantPayoutStackParamList;
 };
 
-export type MerchantPayoutStackRoutes = {
-  MerchantPayoutStack: {
-    operatorToken: string;
-    endpoint: string;
-  };
-  PayoutFeedbackScreen: undefined;
-};
-
-export type CampaignParamList = {
+export type RootStackParamList = {
   CampaignInitialisationScreen: {
     authCredentials: AuthCredentials;
   };
+  LoginScreen: undefined;
+  DrawerNavigator: RootDrawerParamList;
+  LogoutScreen: undefined;
+};
+
+export type MerchantPayoutStackParamList = {
+  MerchantPayoutScreen: {
+    operatorToken: string;
+    endpoint: string;
+  };
+  PayoutFeedbackScreen: {
+    checkoutResult: PostTransactionResult;
+    merchantCode: string;
+  };
+};
+
+export type CustomerQuotaStackParamList = {
+  CollectCustomerDetailsScreen: undefined;
+  CustomerQuotaProxy: {
+    operatorToken: string;
+    endpoint: string;
+    ids: string[];
+    products: CampaignPolicy[];
+  };
+  CustomerQuotaScreen: {
+    navIds: string[];
+  };
+  CustomerAppealScreen: {
+    ids: string[];
+  };
+  DailyStatisticsScreen: undefined;
 };
 
 export interface NavigationProps<RouteName extends keyof RootDrawerParamList> {

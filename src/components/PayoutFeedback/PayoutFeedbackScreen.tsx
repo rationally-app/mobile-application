@@ -1,6 +1,9 @@
 import React, { FunctionComponent, useContext } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { NavigationProps, PostTransactionResult } from "../../types";
+import {
+  MerchantPayoutStackParamList,
+  PostTransactionResult,
+} from "../../types";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { useConfigContext } from "../../context/config";
@@ -17,6 +20,7 @@ import { Card } from "../Layout/Card";
 import { sharedStyles } from "../CustomerQuota/CheckoutSuccess/sharedStyles";
 import { sharedStyles as sharedCardStyles } from "../CustomerQuota/sharedStyles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { StackScreenProps } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
   content: {
@@ -71,22 +75,25 @@ const styles = StyleSheet.create({
     marginTop: size(5),
   },
 });
-
-export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
+type Props = StackScreenProps<
+  MerchantPayoutStackParamList,
+  "PayoutFeedbackScreen"
+>;
+export const PayoutFeedbackScreen: FunctionComponent<Props> = ({
   navigation,
+  route,
 }) => {
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const checkoutResult: PostTransactionResult =
-    navigation.getParam("checkoutResult");
+  const checkoutResult: PostTransactionResult = route.params?.checkoutResult;
   const voucherArr = checkoutResult.transactions.filter(
     (transaction) =>
       transaction.transaction.filter((obj) => obj.category === "voucher")
         .length > 0
   );
   const itemQuantities = voucherArr.length;
-  const merchantCode: string = navigation.getParam("merchantCode");
+  const merchantCode: string = route.params?.merchantCode;
 
   const { i18nt } = useTranslate();
 
@@ -177,7 +184,7 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
             fullWidth={true}
             text={i18nt("merchantFlowScreen", "nextMerchant")}
             onPress={() => {
-              navigation.navigate("MerchantPayoutScreen");
+              navigation.navigate("MerchantPayoutScreen", {});
             }}
           />
         </View>

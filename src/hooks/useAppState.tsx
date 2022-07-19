@@ -13,10 +13,8 @@ export const useAppState = (): AppStateStatus => {
   };
 
   useEffect(() => {
-    AppState.addEventListener("change", onChange);
-    return () => {
-      AppState.removeEventListener("change", onChange);
-    };
+    const onChangeHandler = AppState.addEventListener("change", onChange);
+    return () => onChangeHandler.remove();
   }, []);
 
   return appState;
