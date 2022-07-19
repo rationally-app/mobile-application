@@ -13,7 +13,7 @@ import {
   Vibration,
   BackHandler,
 } from "react-native";
-import { NavigationProps, AuthCredentials } from "../../types";
+import { AuthCredentials, RootStackParamList } from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { size, borderRadius, color } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
@@ -51,6 +51,7 @@ import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
 import { NetworkError } from "../../services/helpers";
+import { StackScreenProps } from "@react-navigation/stack";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -97,7 +98,12 @@ const CloseButton: FunctionComponent<{
   </View>
 );
 
-export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
+type Props = StackScreenProps<
+  RootStackParamList,
+  "CampaignInitialisationScreen"
+>;
+
+export const InitialisationContainer: FunctionComponent<Props> = ({
   navigation,
 }) => {
   useEffect(() => {
@@ -173,7 +179,12 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   };
 
   const onPressClose = (): void => {
-    navigation.navigate("CampaignLocationsScreen");
+    navigation.navigate("DrawerNavigator", {
+      screen: "CampaignLocationsScreen",
+      params: {
+        shouldAutoLoad: true,
+      },
+    });
   };
 
   const onSuccess = (authCredentials: AuthCredentials): void => {
@@ -227,9 +238,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         return false;
       }
     );
-    return () => {
-      backHandler.remove();
-    };
+    return () => backHandler.remove();
   }, [shouldShowCamera]);
 
   const onBarCodeScanned: BarCodeScannedCallback = (event) => {

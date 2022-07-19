@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { transform } from "lodash";
 import { StyleSheet, View } from "react-native";
-import { NavigationProps } from "../../types";
+import { CustomerQuotaStackParamList } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
@@ -29,6 +29,7 @@ import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { StackScreenProps } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -56,9 +57,14 @@ const styles = StyleSheet.create({
     marginBottom: size(1.5),
   },
 });
+type Props = StackScreenProps<
+  CustomerQuotaStackParamList,
+  "CustomerAppealScreen"
+>;
 
-export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
+export const CustomerAppealScreen: FunctionComponent<Props> = ({
   navigation,
+  route,
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -67,12 +73,12 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
-  const [ids] = useState(navigation.getParam("ids"));
+  const [ids] = useState(route.params?.ids ?? undefined);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { selectedIdType } = useContext(IdentificationContext);
 
   const onCancel = useCallback((): void => {
-    navigateHome(navigation);
+    navigateHome(navigation.getParent("RootDrawer"));
   }, [navigation]);
 
   const messageContent = useContext(ImportantMessageContentContext);

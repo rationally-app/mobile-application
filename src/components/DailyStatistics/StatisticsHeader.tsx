@@ -3,13 +3,12 @@ import { size, fontSize } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { withNavigation } from "react-navigation";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { NavigationProps } from "../../types";
 import { AppText } from "../Layout/AppText";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../context/theme";
-
-interface StatisticsHeader extends NavigationProps {
+interface StatisticsHeader extends NavigationProps<"CustomerQuotaStack"> {
   mode?: AppMode;
 }
 
@@ -47,12 +46,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
-  navigation,
-}) => {
+export const StatisticsHeaderComponent: FunctionComponent<
+  StatisticsHeader
+> = ({}) => {
+  const navigation = useNavigation();
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();
-    navigation.openDrawer();
+    // navigation.openDrawer();
+    DrawerActions.openDrawer();
   };
 
   const onPressBack = (): void => {
@@ -105,4 +106,4 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
   );
 };
 
-export const StatisticsHeader = withNavigation(StatisticsHeaderComponent);
+export const StatisticsHeader = StatisticsHeaderComponent;

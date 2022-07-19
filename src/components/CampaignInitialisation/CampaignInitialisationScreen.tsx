@@ -8,11 +8,7 @@ import React, {
 import { Sentry } from "../../utils/errorTracking";
 import { StyleSheet, View } from "react-native";
 import { size } from "../../common/styles";
-import {
-  AuthCredentials,
-  CampaignParamList,
-  NavigationProps,
-} from "../../types";
+import { AuthCredentials, RootStackParamList } from "../../types";
 import { UpdateByRestartingAlert } from "./UpdateByRestartingAlert";
 import { UpdateFromAppStoreAlert } from "./UpdateFromAppStoreAlert";
 import { LoadingView } from "../Loading";
@@ -51,18 +47,15 @@ export class UpdateError extends Error {
   }
 }
 
-type CampaignInitialisationScreenProp = StackScreenProps<
-  CampaignParamList,
+type Props = StackScreenProps<
+  RootStackParamList,
   "CampaignInitialisationScreen"
-> &
-  NavigationProps<"CampaignInitialisationScreen">;
+>;
 
-export const CampaignInitialisationScreen: FunctionComponent<
-  CampaignInitialisationScreenProp
-> = ({
+export const CampaignInitialisationScreen: FunctionComponent<Props> = ({
   navigation,
   route,
-}: StackScreenProps<CampaignParamList, "CampaignInitialisationScreen">) => {
+}) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -72,7 +65,7 @@ export const CampaignInitialisationScreen: FunctionComponent<
 
   const { resetSelectedIdType } = useContext(IdentificationContext);
 
-  const authCredentials: AuthCredentials = route.params.authCredentials;
+  const authCredentials: AuthCredentials = route.params?.authCredentials;
   const {
     hasLoadedFromStore,
     allCampaignConfigs,
@@ -121,7 +114,12 @@ export const CampaignInitialisationScreen: FunctionComponent<
           expiry: new Date().getTime(),
         });
         showErrorAlert(updateCampaignConfigError, () =>
-          navigation.navigate("CampaignLocationsScreen")
+          navigation.navigate("DrawerNavigator", {
+            screen: "CampaignLocationsScreen",
+            params: {
+              shouldAutoLoad: true,
+            },
+          })
         );
       } else if (updateCampaignConfigError instanceof NetworkError) {
         throw updateCampaignConfigError;
@@ -146,15 +144,21 @@ export const CampaignInitialisationScreen: FunctionComponent<
     if (campaignConfig?.features?.flowType) {
       switch (campaignConfig?.features?.flowType) {
         case "DEFAULT":
-          navigation.navigate("CustomerQuotaStack", {
-            operatorToken: authCredentials.operatorToken,
-            endpoint: authCredentials.endpoint,
+          navigation.navigate("DrawerNavigator", {
+            screen: "CustomerQuotaStack",
+            params: {
+              operatorToken: authCredentials.operatorToken,
+              endpoint: authCredentials.endpoint,
+            },
           });
           break;
         case "MERCHANT":
-          navigation.navigate("MerchantPayoutStack", {
-            operatorToken: authCredentials.operatorToken,
-            endpoint: authCredentials.endpoint,
+          navigation.navigate("DrawerNavigator", {
+            screen: "MerchantPayoutStack",
+            params: {
+              operatorToken: authCredentials.operatorToken,
+              endpoint: authCredentials.endpoint,
+            },
           });
           break;
       }

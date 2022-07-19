@@ -1,7 +1,6 @@
 import { NavigationProps, RootDrawerParamList } from "../types";
 import {
   // StackActions,
-  NavigationActions,
   NavigationReplaceActionPayload,
 } from "react-navigation";
 
@@ -9,41 +8,38 @@ import { StackActions, CommonActions } from "@react-navigation/native";
 
 export const replaceRoute = (
   navigation: NavigationProps<keyof RootDrawerParamList>["navigation"],
-  routeName: string,
+  name: string,
   params?: NavigationReplaceActionPayload["params"]
 ): boolean => {
-  return navigation.dispatch(StackActions.replace(routeName, { params }));
+  return navigation.dispatch(StackActions.replace(name, { params }));
 };
 
 // This resets the entire stack and puts the navigated route right on top of the home page
 export const resetRoute = (
   navigation: NavigationProps<keyof RootDrawerParamList>["navigation"],
-  routeName: string,
+  name: string,
   params?: NavigationReplaceActionPayload["params"]
 ): boolean => {
   const action = CommonActions.reset({
     index: 1,
-    actions: [
-      { name: "CollectCustomerDetailsScreen" },
-      { name: routeName, params },
-    ],
+    routes: [{ name: "CollectCustomerDetailsScreen" }, { name: name, params }],
   });
   return navigation.dispatch(action);
 };
 
 export const pushRoute = (
   navigation: NavigationProps<keyof RootDrawerParamList>["navigation"],
-  routeName: string,
+  name: string,
   params?: NavigationReplaceActionPayload["params"]
 ): boolean => {
-  const action = StackActions.push(routeName, params);
+  const action = StackActions.push(name, params);
   return navigation.dispatch(action);
 };
 
 export const navigateHome = (
   navigation: NavigationProps<keyof RootDrawerParamList>["navigation"]
 ): boolean => {
-  const action = StackActions.reset({
+  const action = CommonActions.reset({
     index: 0,
     routes: [{ name: "CollectCustomerDetailsScreen" }],
   });

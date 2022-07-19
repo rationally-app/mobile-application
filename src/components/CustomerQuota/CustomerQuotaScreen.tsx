@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
-import { NavigationProps } from "../../types";
+import { CustomerQuotaStackParamList } from "../../types";
 import { color, size } from "../../common/styles";
 import { AuthContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -29,7 +29,6 @@ import { NotEligibleCard } from "./NotEligibleCard";
 import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
-import { navigateHome, replaceRoute } from "../../common/navigation";
 import {
   ErrorWithCodes,
   NetworkError,
@@ -45,8 +44,8 @@ import {
 } from "@rationally-app/payment-qr-parser";
 import { useGovWalletBalance } from "../../hooks/govwallet/useGovWalletBalance/useGovWalletBalance";
 import { GovWalletIncorrectBalanceCard } from "./GovWallet/IncorrectBalanceCard";
-
-type CustomerQuotaProps = NavigationProps & { navIds: string[] };
+import { StackScreenProps } from "@react-navigation/stack";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -75,10 +74,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
-  navigation,
-  navIds,
-}) => {
+type Props = StackScreenProps<
+  CustomerQuotaStackParamList,
+  "CustomerQuotaScreen"
+> & { navIds: string[] };
+
+export const CustomerQuotaScreen: FunctionComponent<Props> = () => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -86,11 +87,15 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     });
   }, []);
 
+  const route = useRoute();
+  const navigation = useNavigation();
+
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const { operatorToken, sessionToken, endpoint } = useContext(AuthContext);
   const showHelpModal = useContext(HelpModalContext);
   const { showErrorAlert } = useContext(AlertModalContext);
+  const navIds = route.params?.navIds;
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
   const [updateAfterPurchased, setUpdateAfterPurchased] =
@@ -134,7 +139,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, [cartState]);
 
   const onCancel = useCallback((): void => {
-    navigateHome(navigation);
+    navigation.navigate({ key: "CollectCustomerDetailsScreen" });
   }, [navigation]);
 
   const onBack = useCallback((): void => {
@@ -146,25 +151,26 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   }, []);
 
   const onAppeal = useCallback((): void => {
-    replaceRoute(navigation, "CustomerAppealScreen", { ids });
+    navigation.navigate({ key: "CustomerAppealScreen", params: { ids } });
   }, [ids, navigation]);
 
   const onNextId = useCallback((): void => {
-    navigateHome(navigation);
+    navigation.navigate({ key: "CollectCustomerDetailsScreen" });
   }, [navigation]);
 
   useEffect(() => {
     if (cartState !== "PURCHASED") return;
 
     const onBackPress = (): boolean => {
-      navigateHome(navigation);
+      navigation.navigate({ key: "CollectCustomerDetailsScreen" });
       return true;
     };
 
-    BackHandler.addEventListener("hardwareBackPress", onBackPress);
-    return () => {
-      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      onBackPress
+    );
+    return () => backHandler.remove();
   }, [cartState, navigation]);
 
   const expireSession = useCallback(() => {
@@ -192,7 +198,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           clearQuotaError();
           expireSession();
           showErrorAlert(quotaError, () => {
-            navigation.navigate("CampaignLocationsScreen");
+            navigation.navigate("CampaignLocationsScreen", {
+              shouldAutoLoad: true,
+            });
           });
           return;
       }
@@ -222,7 +230,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           clearCartError();
           expireSession();
           showErrorAlert(cartError, () => {
-            navigation.navigate("CampaignLocationsScreen");
+            // navigation.navigate("CampaignLocationsScreen", {
+            //   shouldAutoLoad: true,
+            // });
           });
           return;
         case cartError instanceof NetworkError:
@@ -281,7 +291,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           case ERROR_MESSAGE.LOCK_ERROR:
             clearCartError();
             showErrorAlert(cartError, () => {
-              navigation.navigate("CampaignLocationsScreen");
+              navigation.navigate({ key: "CampaignLocationsScreen" });
             });
             break;
           case ERROR_MESSAGE.INVALID_QUANTITY:

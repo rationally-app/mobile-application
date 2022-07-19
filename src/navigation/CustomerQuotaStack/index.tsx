@@ -2,21 +2,27 @@ import {
   createStackNavigator,
   TransitionPresets,
   StackNavigationOptions,
+  StackScreenProps,
 } from "@react-navigation/stack";
 
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
 import CustomerAppealScreen from "./CustomerAppealScreen";
 import { CustomerQuotaProxy } from "../../components/CustomerQuota/CustomerQuotaProxy";
 import React, { FunctionComponent, useContext, useEffect } from "react";
-import { NavigationInjectedProps } from "react-navigation";
 import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import DailyStatisticsScreen from "./DailyStatisticsScreen";
 import { useTheme } from "../../context/theme";
+import { CustomerQuotaStackParamList } from "../../types";
 
-const Stack = createStackNavigator();
+type Props = StackScreenProps<
+  CustomerQuotaStackParamList,
+  "CustomerQuotaProxy"
+>;
+
+const Stack = createStackNavigator<CustomerQuotaStackParamList>();
 
 const screenOptions: StackNavigationOptions = {
   cardStyle: { backgroundColor: "#F5F5F5" },
@@ -25,11 +31,12 @@ const screenOptions: StackNavigationOptions = {
   headerShown: false,
 };
 
-const CustomerQuotaStack: FunctionComponent<NavigationInjectedProps> = ({
+const CustomerQuotaStack: FunctionComponent<Props> = ({
   navigation,
+  route,
 }) => {
-  const operatorToken = navigation.getParam("operatorToken");
-  const endpoint = navigation.getParam("endpoint");
+  const operatorToken = route.params?.operatorToken;
+  const endpoint = route.params?.endpoint;
 
   const key = `${operatorToken}${endpoint}`;
 
@@ -40,7 +47,8 @@ const CustomerQuotaStack: FunctionComponent<NavigationInjectedProps> = ({
   const { setTheme } = useTheme();
   useEffect(() => {
     if (!hasDataFromStore) {
-      navigation.navigate("CampaignLocationsScreen");
+      const drawerNavigation = navigation.getParent("RootDrawer");
+      drawerNavigation?.navigate("CampaignLocationsScreen");
     }
   }, [hasDataFromStore, navigation]);
 

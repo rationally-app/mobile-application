@@ -25,6 +25,7 @@ import { CampaignInitialisationScreen } from "../components/CampaignInitialisati
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
 import { LogoutScreen } from "../components/Logout/LogoutScreen";
+import { RootStackParamList } from "../types";
 import { isRootedExperimentalAsync } from "expo-device";
 
 export class RootedDeviceDetectedError extends Error {
@@ -44,6 +45,7 @@ const drawerNavigatorScreenOptions: DrawerNavigationOptions = {
 function DrawerNavigator(): JSX.Element {
   return (
     <Drawer.Navigator
+      id="RootDrawer"
       drawerContent={DrawerNavigationComponent}
       screenOptions={drawerNavigatorScreenOptions}
     >
@@ -59,7 +61,7 @@ function DrawerNavigator(): JSX.Element {
     </Drawer.Navigator>
   );
 }
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 const screenOptions: StackNavigationOptions = {
   ...TransitionPresets.SlideFromRightIOS,
   gestureEnabled: true,
@@ -106,6 +108,7 @@ export const Content = (): ReactElement => {
       >
         <NavigationContainer ref={navigatorRef} linking={linking}>
           <Stack.Navigator
+            id="RootStack"
             initialRouteName={"LoginScreen"}
             screenOptions={screenOptions}
           >
