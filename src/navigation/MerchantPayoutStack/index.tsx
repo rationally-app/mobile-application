@@ -11,26 +11,20 @@ import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
-import { MerchantPayoutStackRoutes, NavigationProps } from "../../types";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { MerchantPayoutStackParamList, RootDrawerParamList } from "../../types";
+import { DrawerScreenProps } from "@react-navigation/drawer";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<MerchantPayoutStackParamList>();
 
 const screenOptions: StackNavigationOptions = {
   ...TransitionPresets.SlideFromRightIOS,
   gestureEnabled: true,
   headerShown: false,
 };
-type MerchantPayoutProp = StackScreenProps<
-  MerchantPayoutStackRoutes,
-  "MerchantPayoutStack"
-> &
-  NavigationProps<"MerchantPayoutStack">;
 
-const MerchantPayoutStack: FunctionComponent<MerchantPayoutProp> = (
-  navigation,
-  route
-) => {
+const MerchantPayoutStack: FunctionComponent<
+  DrawerScreenProps<RootDrawerParamList, "MerchantPayoutStack">
+> = (navigation, route) => {
   const operatorToken = route.params.operatorToken;
   const endpoint = route.params.endpoint;
 
@@ -42,7 +36,7 @@ const MerchantPayoutStack: FunctionComponent<MerchantPayoutProp> = (
 
   useEffect(() => {
     if (!hasDataFromStore) {
-      navigation.navigate({ name: "CampaignLocationsScreen" });
+      navigation.navigate("CampaignLocationsScreen");
     }
   }, [hasDataFromStore, navigation]);
 

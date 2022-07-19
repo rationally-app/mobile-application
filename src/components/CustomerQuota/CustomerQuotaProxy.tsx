@@ -1,21 +1,28 @@
 import React, { FunctionComponent } from "react";
-import { NavigationProps, CampaignPolicy } from "../../types";
+import { CampaignPolicy, CustomerQuotaStackParamList } from "../../types";
 import { ProductContextProvider } from "../../context/products";
 import { CustomerQuotaScreen } from "./CustomerQuotaScreen";
+import { StackScreenProps } from "@react-navigation/stack";
 
-export const CustomerQuotaProxy: FunctionComponent<NavigationProps> = ({
+type Props = StackScreenProps<
+  CustomerQuotaStackParamList,
+  "CustomerQuotaProxy"
+>;
+
+export const CustomerQuotaProxy: FunctionComponent<Props> = ({
   navigation,
+  route,
 }) => {
   // coming from NRIC screen, it will be a string
   // coming from appeal, it can be an array if group appeal is supported
-  const navId = navigation.getParam("id");
-  const navIds = Array.isArray(navId) ? navId : [navId];
+  const navId = route.params?.id;
+  const navIds: string[] = Array.isArray(navId) ? navId : [navId];
 
-  const selectedProducts: CampaignPolicy[] = navigation.getParam("products");
+  const selectedProducts: CampaignPolicy[] = route.params?.products;
 
   return (
     <ProductContextProvider products={selectedProducts}>
-      <CustomerQuotaScreen navigation={navigation} navIds={navIds} />
+      <CustomerQuotaScreen navIds={navIds} />
     </ProductContextProvider>
   );
 };

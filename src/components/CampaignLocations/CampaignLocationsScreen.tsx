@@ -18,7 +18,11 @@ import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { HelpModalContext } from "../../context/help";
 import { AuthStoreContext } from "../../context/authStore";
 import { CampaignLocationsListItem } from "./CampaignLocationsListItem";
-import { NavigationProps, AuthCredentials } from "../../types";
+import {
+  AuthCredentials,
+  RootStackParamList,
+  RootDrawerParamList,
+} from "../../types";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { useDrawerContext } from "../../context/drawer";
@@ -27,7 +31,9 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { sortBy } from "lodash";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { useRoute, useNavigation } from "@react-navigation/core";
+import { DrawerScreenProps } from "@react-navigation/drawer";
+import { StackScreenProps } from "@react-navigation/stack";
+import { CompositeScreenProps } from "@react-navigation/core";
 
 const styles = StyleSheet.create({
   content: {
@@ -59,8 +65,11 @@ const styles = StyleSheet.create({
 });
 
 export const CampaignLocationsScreen: FunctionComponent<
-  NavigationProps<"CampaignLocationsScreen">
-> = () => {
+  CompositeScreenProps<
+    DrawerScreenProps<RootDrawerParamList, "CampaignLocationsScreen">,
+    StackScreenProps<RootStackParamList>
+  >
+> = ({ navigation, route }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -72,9 +81,6 @@ export const CampaignLocationsScreen: FunctionComponent<
    * Determines whether the app should automatically load a campaign if there
    * is only one existing campaign
    */
-  const navigation = useNavigation();
-  const route = useRoute();
-
   const shouldAutoLoad: boolean = route?.params?.shouldAutoLoad ?? true;
 
   const messageContent = useContext(ImportantMessageContentContext);
@@ -103,7 +109,8 @@ export const CampaignLocationsScreen: FunctionComponent<
         icon: "map-marker-plus",
         label: i18nt("navigationDrawer", "addCampaign"),
         onPress: () => {
-          navigation.navigate("LoginScreen");
+          const rootStackNav = navigation.getParent("RootStack");
+          rootStackNav?.navigate("LoginScreen");
         },
       },
       {
@@ -127,9 +134,11 @@ export const CampaignLocationsScreen: FunctionComponent<
 
   const navigateToCampaignLocation = useCallback(
     (authCredentials: AuthCredentials): void => {
-      navigation.navigate("CampaignInitialisationScreen", {
-        authCredentials,
-      });
+      // const rootStackNav = navigation.getParent("RootStack");
+      // rootStackNav?.navigate("CampaignInitialisationScreen", {
+      //   authCredentials,
+      // });
+      navigation.navigate("CampaignInitialisationScreen", { authCredentials });
     },
     [navigation]
   );
@@ -146,6 +155,9 @@ export const CampaignLocationsScreen: FunctionComponent<
         navigateToCampaignLocation(Object.values(authCredentials)[0]);
       } else if (numCampaignLocations === 0) {
         // Automatically go to the Login Screen to add a campaign
+
+        // const rootStackNav = navigation.getParent("RootStack");
+        // rootStackNav?.navigate("LoginScreen");
         navigation.navigate("LoginScreen");
       }
     }

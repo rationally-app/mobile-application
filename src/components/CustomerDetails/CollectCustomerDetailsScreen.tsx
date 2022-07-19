@@ -19,10 +19,7 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
-import {
-  withNavigationFocus,
-  NavigationFocusInjectedProps,
-} from "react-navigation";
+import { NavigationFocusInjectedProps } from "react-navigation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IdScanner } from "../IdScanner/IdScanner";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
@@ -49,6 +46,7 @@ import {
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { extractPassportIdFromEvent } from "../../utils/passportScanning";
 import { useTheme } from "../../context/theme";
+import { useIsFocused } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   content: {
@@ -91,14 +89,14 @@ const styles = StyleSheet.create({
 
 const CollectCustomerDetailsScreen: FunctionComponent<
   NavigationFocusInjectedProps
-> = ({ navigation, isFocused }) => {
+> = ({ navigation }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
       message: "CollectCustomerDetailsScreen",
     });
   }, []);
-
+  const isFocused = useIsFocused();
   const { theme } = useTheme();
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
@@ -148,9 +146,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<
         return false;
       }
     );
-    return () => {
-      backHandler.remove();
-    };
+    return () => backHandler.remove();
   }, [shouldShowCamera]);
 
   useEffect(() => {
@@ -347,6 +343,5 @@ const CollectCustomerDetailsScreen: FunctionComponent<
   );
 };
 
-export const CollectCustomerDetailsScreenContainer = withNavigationFocus(
-  CollectCustomerDetailsScreen
-);
+export const CollectCustomerDetailsScreenContainer =
+  CollectCustomerDetailsScreen;
