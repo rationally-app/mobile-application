@@ -191,7 +191,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           clearQuotaError();
           expireSession();
           showErrorAlert(quotaError, () => {
-            navigation.navigate("CampaignLocationsScreen");
+            navigation.goBack();
           });
           return;
       }
