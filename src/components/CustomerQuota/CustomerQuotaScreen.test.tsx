@@ -18,6 +18,8 @@ import { Sentry } from "../../utils/errorTracking";
 import { defaultFeatures } from "../../test/helpers/defaults";
 import { CreateProvidersWrapper } from "../../test/helpers/providers";
 import "../../common/i18n/i18nMock";
+// import { ErrorWithCodes } from "../../services/helpers";
+// import { AlertModalContextProvider } from "../../context/alert";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -574,4 +576,71 @@ describe("CustomerQuotaScreen", () => {
       });
     });
   });
+
+  // describe.only("should update the error", () => {
+  //   describe("when cartState is", () => {
+  //     it("DEFAULT", async () => {
+  //       expect.hasAssertions();
+  //       // expect.assertions(93);
+
+  //       const mockCheckoutCart = jest.fn();
+  //       mockUseCart.mockReturnValue({
+  //         cartState: "DEFAULT",
+  //         cart: mockCart,
+  //         emptyCart: () => null,
+  //         updateCart: () => null,
+  //         checkoutCart: mockCheckoutCart,
+  //         completeCheckout: () => null,
+  //         cartError: new ErrorWithCodes("user error", 400, "ABC"),
+  //         clearCartError: () => null,
+  //         resetCartState: () => null,
+  //       });
+  //       mockUseQuota.mockReturnValue({
+  //         quotaResponse: mockQuotaResponse,
+  //         allQuotaResponse: mockQuotaResponse,
+  //         quotaState: "DEFAULT",
+  //         quotaError: undefined,
+  //         updateQuota: () => null,
+  //         clearQuotaError: () => null,
+  //       });
+
+  //       const { queryByText, queryByTestId } = render(
+  //         <CreateProvidersWrapper
+  //           providers={[
+  //             {
+  //               provider: CampaignConfigContextProvider,
+  //               props: { campaignConfig: allCampaignConfigs.campaignA },
+  //             },
+  //             {
+  //               provider: ProductContextProvider,
+  //               props: { products: mockProduct },
+  //             },
+  //             { provider: AlertModalContextProvider },
+  //           ]}
+  //         >
+  //           <CustomerQuotaScreen
+  //             navigation={mockNavigate}
+  //             navIds={["valid-id"]}
+  //           />
+  //         </CreateProvidersWrapper>
+  //       );
+
+  //       const checkoutButton = queryByTestId("items-selection-checkout-button");
+  //       expect(checkoutButton).not.toBeNull();
+
+  //       expect(queryByText("valid-id")).not.toBeNull();
+  //       expect(queryByText("🧻 Toilet Paper")).not.toBeNull();
+  //       expect(queryByText("🍜 Instant Noodles")).not.toBeNull();
+  //       expect(queryByText("🍫 Chocolate")).not.toBeNull();
+  //       expect(queryByText("Funfair Vouchers")).not.toBeNull();
+
+  //       fireEvent.press(checkoutButton!);
+  //       await waitFor(() => {
+  //         expect(mockCheckoutCart).toHaveBeenCalledTimes(1);
+  //       });
+  //       // expect(queryByTestId("alertModal")).toBeNull();
+  //       expect(queryByTestId("checkout-unsuccessful-title")).not.toBeNull();
+  //     });
+  //   });
+  // });
 });
