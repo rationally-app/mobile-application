@@ -96,7 +96,12 @@ export const AlertModal: FunctionComponent<AlertModalProps> = ({
   const { theme } = useTheme();
   const PrimaryButton = alertType === "WARN" ? DangerButton : DarkButton;
   return (
-    <Modal animationType="fade" transparent={true} visible={visible}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      testID="alertModal"
+    >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           {alertType === "ERROR" && <AlertIcon style={styles.alertIcon} />}

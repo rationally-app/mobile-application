@@ -42,7 +42,7 @@ export class PastTransactionError extends Error {
   }
 }
 
-interface PostTransaction {
+export interface PostTransaction {
   ids: string[];
   identificationFlag: IdentificationFlag;
   transactions: Transaction[];
@@ -297,6 +297,7 @@ export const livePostTransaction = async ({
   // format version with forward slash, to be added into endpoint, i.e. /v1
   const version = apiVersion ? `/${apiVersion}` : "";
   const suffix = isPayNowTransaction ? "paynow" : "";
+  const includeErrorCodes = isPayNowTransaction ?? false;
 
   try {
     const response = await fetchWithValidator(
@@ -313,7 +314,8 @@ export const livePostTransaction = async ({
           identificationFlag,
           transaction: transactions,
         }),
-      }
+      },
+      includeErrorCodes
     );
     return response;
   } catch (e) {
@@ -322,6 +324,9 @@ export const livePostTransaction = async ({
     } else if (e instanceof ValidationError) {
       Sentry.captureException(e);
     } else if (e instanceof SessionError) {
+      throw e;
+    } else if (isPayNowTransaction) {
+      // this is to let all errors bubble upwards
       throw e;
     }
     throw new PostTransactionError(e.message);

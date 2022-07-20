@@ -30,7 +30,11 @@ import { KeyboardAvoidingScrollView } from "../Layout/KeyboardAvoidingScrollView
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext, ERROR_MESSAGE } from "../../context/alert";
 import { navigateHome, replaceRoute } from "../../common/navigation";
-import { NetworkError, SessionError } from "../../services/helpers";
+import {
+  ErrorWithCodes,
+  NetworkError,
+  SessionError,
+} from "../../services/helpers";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { AuthStoreContext } from "../../context/authStore";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
@@ -226,6 +230,11 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           cartError instanceof PaymentQRMissingInfoError ||
           cartError instanceof PaymentQRUnsupportedError:
           showErrorAlert(cartError, () => clearCartError());
+          return;
+        case cartError instanceof ErrorWithCodes:
+          showErrorAlert(cartError, () => {
+            navigation.navigate("CollectCustomerDetailsScreen");
+          });
           return;
       }
       if (cartState === "DEFAULT" || cartState === "CHECKING_OUT") {

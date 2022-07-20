@@ -14,6 +14,7 @@ import { ProductContextProvider } from "../../context/products";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import { CampaignConfigsStoreContextProvider } from "../../context/campaignConfigsStore";
 import { ERROR_MESSAGE } from "../../context/alert";
+import { ErrorWithCodes } from "../../services/helpers";
 
 jest.mock("../../services/quota");
 const mockPostTransaction = postTransaction as jest.Mock;
@@ -1328,6 +1329,144 @@ describe("useCart", () => {
           lastTransactionTime: transactionTime,
           maxQuantity: 2,
           quantity: 1,
+        },
+      ]);
+    });
+
+    it("should set a 400 cartError when there is an ErrorWithCode with status code 400", async () => {
+      expect.assertions(3);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await waitFor(() => {
+        result.current.updateCart("toilet-paper", 2, [
+          {
+            label: "first",
+            value: "first",
+            textInputType: "STRING",
+          },
+        ]);
+        result.current.updateCart("chocolate", 5, [
+          {
+            label: "last",
+            value: "last",
+            textInputType: "STRING",
+          },
+        ]);
+      });
+
+      mockPostTransaction.mockRejectedValueOnce(
+        new ErrorWithCodes("user error", 400, "ABC")
+      );
+
+      await waitFor(() => {
+        result.current.checkoutCart();
+      });
+
+      expect(result.current.cartError?.message).toBe("user error");
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "first",
+              textInputType: "STRING",
+              value: "first",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "last",
+              textInputType: "STRING",
+              value: "last",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5,
+        },
+      ]);
+    });
+
+    it("should set a 50X cartError when there is an ErrorWithCode with status code 500", async () => {
+      expect.assertions(3);
+      const ids = ["ID1"];
+      const { result } = renderHook(
+        () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
+        {
+          wrapper,
+        }
+      );
+
+      await waitFor(() => {
+        result.current.updateCart("toilet-paper", 2, [
+          {
+            label: "first",
+            value: "first",
+            textInputType: "STRING",
+          },
+        ]);
+        result.current.updateCart("chocolate", 5, [
+          {
+            label: "last",
+            value: "last",
+            textInputType: "STRING",
+          },
+        ]);
+      });
+
+      mockPostTransaction.mockRejectedValueOnce(
+        new ErrorWithCodes("server error", 500)
+      );
+
+      await waitFor(() => {
+        result.current.checkoutCart();
+      });
+
+      expect(result.current.cartError?.message).toBe("server error");
+      expect(result.current.cartState).toBe("DEFAULT");
+      expect(result.current.cart).toStrictEqual([
+        {
+          category: "toilet-paper",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "first",
+              textInputType: "STRING",
+              value: "first",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 2,
+          quantity: 2,
+        },
+        {
+          category: "chocolate",
+          descriptionAlert: undefined,
+          identifierInputs: [
+            {
+              label: "last",
+              textInputType: "STRING",
+              value: "last",
+            },
+          ],
+          lastTransactionTime: transactionTime,
+          maxQuantity: 15,
+          quantity: 5,
         },
       ]);
     });
