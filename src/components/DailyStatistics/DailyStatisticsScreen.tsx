@@ -25,7 +25,7 @@ import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime, isSameDay } from "date-fns";
 import { AlertModalContext } from "../../context/alert";
 import { navigateHome } from "../../common/navigation";
-import { NavigationProps, RootDrawerParamList } from "../../types";
+import { NavigationProps } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
 import { useTheme } from "../../context/theme";
 import { NetworkError, SessionError } from "../../services/helpers";

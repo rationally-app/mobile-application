@@ -1,9 +1,6 @@
 import * as t from "io-ts";
 import { DateFromNumber } from "io-ts-types/lib/DateFromNumber";
-import {
-  DrawerNavigationProp,
-  DrawerScreenProps,
-} from "@react-navigation/drawer";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { RouteProp } from "@react-navigation/native";
 
 export type RootDrawerParamList = {

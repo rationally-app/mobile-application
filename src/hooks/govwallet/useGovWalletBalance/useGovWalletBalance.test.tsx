@@ -39,13 +39,13 @@ describe("useGovWalletBalance", () => {
       </ProductContextProvider>
     );
 
-    const wrapperWithToggleOff: FunctionComponent = ({ children }) => (
-      <ProductContextProvider products={defaultProducts}>
-        <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
-          {children}
-        </CampaignConfigContextProvider>
-      </ProductContextProvider>
-    );
+const wrapperWithToggleOff: FunctionComponent = ({ children }) => (
+  <ProductContextProvider products={defaultProducts}>
+    <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
+      {children}
+    </CampaignConfigContextProvider>
+  </ProductContextProvider>
+);
 
     let ids: string[];
 
@@ -279,64 +279,14 @@ describe("useGovWalletBalance", () => {
           { wrapper }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "FETCHING_BALANCE"
-        );
-        await waitForNextUpdate();
-        expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
-        expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
-        expect(result.current.govWalletBalanceError).toStrictEqual(
-          new ErrorWithCodes("", 500)
-        );
-      });
-    });
-  });
-
-  describe("when govwalletExactBalanceValue -1 or undefined", () => {
-    const testCampaignConfig: CampaignConfig = {
-      ...defaultCampaignConfig,
-      features: {
-        ...defaultFeatures,
-        isPayNowTransaction: true,
-        govwalletExactBalanceValue: -1,
-      },
-    };
-
-    const wrapper: FunctionComponent = ({ children }) => (
-      <ProductContextProvider products={defaultProducts}>
-        <CampaignConfigContextProvider campaignConfig={testCampaignConfig}>
-          {children}
-        </CampaignConfigContextProvider>
-      </ProductContextProvider>
+    expect(result.current.govWalletBalanceState).toStrictEqual(
+      "FETCHING_BALANCE"
     );
-
-    let ids: string[];
-
-    it("should not check balance exact match", async () => {
-      expect.assertions(3);
-      ids = ["S0000000J"];
-
-      mockGetGovWalletBalance.mockResolvedValue({
-        accountDetails: [
-          {
-            activationStatus: "ACTIVATED",
-            balance: 100000,
-            modified: "2022-07-25T11:57:50.000+08:00",
-          },
-        ],
-      });
-
-      const { result, waitForNextUpdate } = renderHook(
-        () => useGovWalletBalance(ids, key, endpoint),
-        { wrapper }
-      );
-
-      expect(result.current.govWalletBalanceState).toStrictEqual(
-        "FETCHING_BALANCE"
-      );
-      await waitForNextUpdate();
-      expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
-      expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
-    });
+    await waitForNextUpdate();
+    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
+    expect(result.current.govWalletBalanceError).toStrictEqual(
+      new ErrorWithCodes("", 500)
+    );
   });
 });

@@ -14,7 +14,7 @@ describe("passportScanning", () => {
           }),
         };
 
-        expect(extractPassportIdFromEvent(event)).toStrictEqual("ABC-12345");
+        expect(extractPassportIdFromEvent(event)).toBe("ABC-12345");
       });
     });
 
@@ -28,7 +28,7 @@ describe("passportScanning", () => {
             }),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if passportId is a boolean", () => {
@@ -39,7 +39,7 @@ describe("passportScanning", () => {
             }),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if passportId is a number", () => {
@@ -50,7 +50,7 @@ describe("passportScanning", () => {
             }),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if passportId is an array", () => {
@@ -61,7 +61,7 @@ describe("passportScanning", () => {
             }),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if passportId is an empty object", () => {
@@ -72,7 +72,7 @@ describe("passportScanning", () => {
             }),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if passportId is a non-empty object", () => {
@@ -85,7 +85,7 @@ describe("passportScanning", () => {
             }),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if passportId is undefined", () => {
@@ -96,7 +96,7 @@ describe("passportScanning", () => {
             }),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
       });
 
@@ -107,7 +107,7 @@ describe("passportScanning", () => {
             data: JSON.stringify(null),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if data is an empty object", () => {
@@ -116,7 +116,7 @@ describe("passportScanning", () => {
             data: JSON.stringify({}),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if data is an object without 'passportId' property", () => {
@@ -127,7 +127,7 @@ describe("passportScanning", () => {
             }),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if data is a string", () => {
@@ -136,7 +136,7 @@ describe("passportScanning", () => {
             data: JSON.stringify("123"),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if data is a boolean", () => {
@@ -145,7 +145,7 @@ describe("passportScanning", () => {
             data: JSON.stringify(true),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if data is number", () => {
@@ -154,7 +154,7 @@ describe("passportScanning", () => {
             data: JSON.stringify(123456789),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if data is array", () => {
@@ -163,7 +163,7 @@ describe("passportScanning", () => {
             data: JSON.stringify([]),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
 
         it("should return empty string if data is undefined", () => {
@@ -172,7 +172,7 @@ describe("passportScanning", () => {
             data: JSON.stringify(undefined),
           };
 
-          expect(extractPassportIdFromEvent(event)).toStrictEqual("");
+          expect(extractPassportIdFromEvent(event)).toBe("");
         });
       });
     });
