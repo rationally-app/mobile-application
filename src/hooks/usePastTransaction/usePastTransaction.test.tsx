@@ -217,7 +217,7 @@ describe("usePastTransaction", () => {
         { wrapper }
       );
 
-      expect(result.current.loading).toStrictEqual(true);
+      expect(result.current.loading).toBe(true);
 
       await waitForNextUpdate();
 
@@ -259,7 +259,7 @@ describe("usePastTransaction", () => {
           transactionTime: new Date(1596530356432),
         },
       ]);
-      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.loading).toBe(false);
       expect(result.current.error).toBeNull();
     });
 
@@ -275,7 +275,7 @@ describe("usePastTransaction", () => {
       await waitForNextUpdate();
 
       expect(result.current.pastTransactionsResult).toStrictEqual([]);
-      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.loading).toBe(false);
       expect(result.current.error).toBeNull();
     });
 
@@ -297,7 +297,7 @@ describe("usePastTransaction", () => {
       expect(result.current.error?.message).toStrictEqual(
         ERROR_MESSAGE.PAST_TRANSACTIONS_ERROR
       );
-      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.loading).toBe(false);
     });
   });
 
@@ -316,7 +316,7 @@ describe("usePastTransaction", () => {
         { wrapper }
       );
 
-      expect(result.current.loading).toStrictEqual(true);
+      expect(result.current.loading).toBe(true);
 
       await waitForNextUpdate();
 
@@ -346,7 +346,7 @@ describe("usePastTransaction", () => {
           transactionTime: new Date(1596530356220),
         },
       ]);
-      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.loading).toBe(false);
       expect(result.current.error).toBeNull();
     });
   });
@@ -363,7 +363,7 @@ describe("usePastTransaction", () => {
         { wrapper }
       );
 
-      expect(result.current.loading).toStrictEqual(true);
+      expect(result.current.loading).toBe(true);
 
       await waitForNextUpdate();
 
@@ -417,7 +417,7 @@ describe("usePastTransaction", () => {
           transactionTime: new Date(1596530356432),
         },
       ]);
-      expect(result.current.loading).toStrictEqual(false);
+      expect(result.current.loading).toBe(false);
       expect(result.current.error).toBeNull();
     });
   });

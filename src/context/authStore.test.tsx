@@ -531,9 +531,9 @@ describe("AuthStoreContextProvider", () => {
       expect(mockReadBucket).toHaveBeenCalledWith("AUTH_STORE");
       expect(queryByTestId("loaded")).toBeNull();
 
-      expect(await waitFor(() => getByTestId("loaded"))).toHaveTextContent(
-        "true"
-      );
+      await expect(
+        waitFor(() => getByTestId("loaded"))
+      ).resolves.toHaveTextContent("true");
 
       expect(mockGetItem).toHaveBeenCalledTimes(0);
       expect(mockRemoveItem).toHaveBeenCalledTimes(1);
@@ -579,9 +579,9 @@ describe("AuthStoreContextProvider", () => {
       expect(mockReadBucket).toHaveBeenCalledWith("AUTH_STORE");
       expect(queryByTestId("loaded")).toBeNull();
 
-      expect(await waitFor(() => getByTestId("loaded"))).toHaveTextContent(
-        "true"
-      );
+      await expect(
+        waitFor(() => getByTestId("loaded"))
+      ).resolves.toHaveTextContent("true");
 
       expect(mockGetItem).toHaveBeenCalledTimes(1);
       expect(mockGetItem).toHaveBeenCalledWith("AUTH_STORE");

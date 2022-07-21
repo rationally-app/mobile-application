@@ -204,7 +204,7 @@ describe("bucket storage helpers", () => {
       expect(mockSecureGetItem).toHaveBeenCalledTimes(2);
       expect(mockSecureGetItem).toHaveBeenNthCalledWith(1, testKey + "_0");
       expect(mockSecureGetItem).toHaveBeenNthCalledWith(2, testKey + "_1");
-      expect(result).toStrictEqual("");
+      expect(result).toBe("");
     });
   });
 

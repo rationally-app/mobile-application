@@ -25,28 +25,24 @@ import { CartItem } from "../../hooks/useCart/useCart";
 describe("formatQuantityText", () => {
   it("should return only the quantity when no unit is given", () => {
     expect.assertions(2);
-    expect(formatQuantityText(2)).toStrictEqual("2");
-    expect(formatQuantityText(0)).toStrictEqual("0");
+    expect(formatQuantityText(2)).toBe("2");
+    expect(formatQuantityText(0)).toBe("0");
   });
 
   it("should return the unit and quantity when prefix unit is given", () => {
     expect.assertions(2);
-    expect(formatQuantityText(2, { type: "PREFIX", label: "$" })).toStrictEqual(
-      "$2"
+    expect(formatQuantityText(2, { type: "PREFIX", label: "$" })).toBe("$2");
+    expect(formatQuantityText(0, { type: "PREFIX", label: "SGD " })).toBe(
+      "SGD 0"
     );
-    expect(
-      formatQuantityText(0, { type: "PREFIX", label: "SGD " })
-    ).toStrictEqual("SGD 0");
   });
 
   it("should return the quantity and unit when postfix unit is given", () => {
     expect.assertions(2);
-    expect(
-      formatQuantityText(2, { type: "POSTFIX", label: "kg" })
-    ).toStrictEqual("2kg");
-    expect(
-      formatQuantityText(0, { type: "POSTFIX", label: " pack(s)" })
-    ).toStrictEqual("0 pack(s)");
+    expect(formatQuantityText(2, { type: "POSTFIX", label: "kg" })).toBe("2kg");
+    expect(formatQuantityText(0, { type: "POSTFIX", label: " pack(s)" })).toBe(
+      "0 pack(s)"
+    );
   });
 });
 
@@ -344,12 +340,12 @@ describe("pod related utils", () => {
     it("should return true for pod campaign", () => {
       expect.assertions(1);
       validCartItem["category"] = "tt-token";
-      expect(isPodCampaign(validCartItem.category)).toStrictEqual(true);
+      expect(isPodCampaign(validCartItem.category)).toBe(true);
     });
 
     it("should return false for non-pod campaign", () => {
       expect.assertions(1);
-      expect(isPodCampaign(validCartItem.category)).toStrictEqual(false);
+      expect(isPodCampaign(validCartItem.category)).toBe(false);
     });
   });
 
@@ -363,29 +359,29 @@ describe("pod related utils", () => {
         expect.assertions(1);
         validCartItem["category"] = "tt-token-lost";
         validCartItem["descriptionAlert"] = "*chargeable";
-        expect(
-          isPodChargeable(idType, validIdentifiers, validCartItem)
-        ).toStrictEqual(true);
+        expect(isPodChargeable(idType, validIdentifiers, validCartItem)).toBe(
+          true
+        );
       });
 
       it("should return false for tt-token-lost category if it's not *chargeable", () => {
         expect.assertions(1);
         validCartItem["category"] = "tt-token-lost";
-        expect(
-          isPodChargeable(idType, validIdentifiers, validCartItem)
-        ).toStrictEqual(false);
+        expect(isPodChargeable(idType, validIdentifiers, validCartItem)).toBe(
+          false
+        );
       });
 
       it("should return false for non-pod category", () => {
         expect.assertions(1);
-        expect(
-          isPodChargeable(idType, validIdentifiers, validCartItem)
-        ).toStrictEqual(false);
+        expect(isPodChargeable(idType, validIdentifiers, validCartItem)).toBe(
+          false
+        );
       });
 
       it("should return false if there are no identifiers", () => {
         expect.assertions(1);
-        expect(isPodChargeable(idType, [], validCartItem)).toStrictEqual(false);
+        expect(isPodChargeable(idType, [], validCartItem)).toBe(false);
       });
     });
 
@@ -397,16 +393,16 @@ describe("pod related utils", () => {
       it("should return true for tt-token category", () => {
         expect.assertions(1);
         validCartItem["category"] = "tt-token";
-        expect(
-          isPodChargeable(idType, validIdentifiers, validCartItem)
-        ).toStrictEqual(true);
+        expect(isPodChargeable(idType, validIdentifiers, validCartItem)).toBe(
+          true
+        );
       });
 
       it("should return true for any category", () => {
         expect.assertions(1);
-        expect(
-          isPodChargeable(idType, validIdentifiers, validCartItem)
-        ).toStrictEqual(true);
+        expect(isPodChargeable(idType, validIdentifiers, validCartItem)).toBe(
+          true
+        );
       });
     });
   });

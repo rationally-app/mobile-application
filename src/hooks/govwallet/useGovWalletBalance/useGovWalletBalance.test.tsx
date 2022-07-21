@@ -65,11 +65,9 @@ describe("isPayNowTransaction toggle", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual(
-      "FETCHING_BALANCE"
-    );
+    expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
+    expect(result.current.govWalletBalanceState).toBe("ELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
 
@@ -81,7 +79,7 @@ describe("isPayNowTransaction toggle", () => {
       { wrapper: wrapperWithToggleOff }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toBe("DEFAULT");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(0);
   });
 });
@@ -110,11 +108,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual(
-      "FETCHING_BALANCE"
-    );
+    expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
+    expect(result.current.govWalletBalanceState).toBe("ELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
 
@@ -130,11 +126,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual(
-      "FETCHING_BALANCE"
-    );
+    expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
+    expect(result.current.govWalletBalanceState).toBe("INELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
 
@@ -150,11 +144,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual(
-      "FETCHING_BALANCE"
-    );
+    expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
+    expect(result.current.govWalletBalanceState).toBe("INELIGIBLE");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
   });
 
@@ -170,11 +162,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual(
-      "FETCHING_BALANCE"
-    );
+    expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("INELIGIBLE");
+    expect(result.current.govWalletBalanceState).toBe("INELIGIBLE");
     expect(result.current.govWalletBalanceError).toStrictEqual(
       new ErrorWithCodes(
         "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
@@ -196,11 +186,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual(
-      "FETCHING_BALANCE"
-    );
+    expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toBe("DEFAULT");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
     expect(result.current.govWalletBalanceError).toStrictEqual(
       new NetworkError("Network error")
@@ -219,11 +207,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual(
-      "FETCHING_BALANCE"
-    );
+    expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toBe("DEFAULT");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
     expect(result.current.govWalletBalanceError).toStrictEqual(
       new ErrorWithCodes("Invalid customerId", 400, "F00B4R")
@@ -240,11 +226,9 @@ describe("govWalletBalanceState states", () => {
       { wrapper }
     );
 
-    expect(result.current.govWalletBalanceState).toStrictEqual(
-      "FETCHING_BALANCE"
-    );
+    expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
     await waitForNextUpdate();
-    expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+    expect(result.current.govWalletBalanceState).toBe("DEFAULT");
     expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
     expect(result.current.govWalletBalanceError).toStrictEqual(
       new ErrorWithCodes("", 500)
