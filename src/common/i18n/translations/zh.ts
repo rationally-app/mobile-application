@@ -278,7 +278,7 @@ export const zh: Translations = {
     },
     networkError: {
       title: "网络连接问题",
-      body: "您已断线。请尝试连接并重试。",
+      body: "请重试。如果问题持续出现，请联系您的负责人。",
       primaryActionText: "重试",
       secondaryActionText: "登出",
     },

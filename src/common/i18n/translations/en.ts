@@ -281,7 +281,7 @@ export const en: Translations = {
     },
     networkError: {
       title: "Network error",
-      body: "You are offline. Try to connect and try again.",
+      body: "Try again or contact your in-charge if the problem persists.",
       primaryActionText: "Retry",
       secondaryActionText: "Logout",
     },
