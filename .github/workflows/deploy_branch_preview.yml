@@ -75,7 +75,6 @@ jobs:
         run: npm run test -- --coverage
   deploy_branch_preview:
     name: Deploy Branch Preview
-    needs: test
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
