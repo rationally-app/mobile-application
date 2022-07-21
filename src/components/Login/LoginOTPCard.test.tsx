@@ -77,7 +77,7 @@ describe("LoginOTPCard", () => {
     fireEvent(OTPInput, "onChange", {
       nativeEvent: { text: "000000" },
     });
-    expect(OTPInput.props["value"]).toEqual("000000");
+    expect(OTPInput.props["value"]).toBe("000000");
 
     fireEvent.press(submitButton);
     expect(queryByText("Submit")).toBeNull();
@@ -172,7 +172,7 @@ describe("LoginOTPCard", () => {
       fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "000000" },
       });
-      expect(OTPInput.props["value"]).toEqual("000000");
+      expect(OTPInput.props["value"]).toBe("000000");
 
       fireEvent.press(submitButton);
       expect(queryByText("Submit")).toBeNull();
@@ -216,7 +216,7 @@ describe("LoginOTPCard", () => {
       fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "000000" },
       });
-      expect(OTPInput.props["value"]).toEqual("000000");
+      expect(OTPInput.props["value"]).toBe("000000");
 
       fireEvent.press(submitButton);
       expect(queryByText("Submit")).toBeNull();
@@ -264,7 +264,7 @@ describe("LoginOTPCard", () => {
       fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "00" },
       });
-      expect(OTPInput.props["value"]).toEqual("00");
+      expect(OTPInput.props["value"]).toBe("00");
 
       fireEvent.press(submitButton);
       expect(queryByText("Submit")).toBeNull();
@@ -308,7 +308,7 @@ describe("LoginOTPCard", () => {
       fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "000000" },
       });
-      expect(OTPInput.props["value"]).toEqual("000000");
+      expect(OTPInput.props["value"]).toBe("000000");
 
       fireEvent.press(submitButton);
       expect(queryByText("Submit")).toBeNull();
@@ -390,7 +390,7 @@ describe("LoginOTPCard", () => {
       fireEvent(OTPInput, "onChange", {
         nativeEvent: { text: "000000" },
       });
-      expect(OTPInput.props["value"]).toEqual("000000");
+      expect(OTPInput.props["value"]).toBe("000000");
 
       fireEvent.press(submitButton);
       expect(queryByText("Submit")).toBeNull();

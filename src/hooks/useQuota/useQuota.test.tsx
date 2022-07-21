@@ -519,7 +519,7 @@ describe("useQuota", () => {
       );
       await waitForNextUpdate();
 
-      expect(result.current.quotaState).toStrictEqual("DEFAULT");
+      expect(result.current.quotaState).toBe("DEFAULT");
     });
 
     it("should set quota state to NO_QUOTA if non-appeal products quantities are zero", async () => {
@@ -540,7 +540,7 @@ describe("useQuota", () => {
       );
       await waitForNextUpdate();
 
-      expect(result.current.quotaState).toStrictEqual("NO_QUOTA");
+      expect(result.current.quotaState).toBe("NO_QUOTA");
     });
   });
 

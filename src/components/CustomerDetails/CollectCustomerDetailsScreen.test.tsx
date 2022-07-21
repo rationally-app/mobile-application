@@ -102,7 +102,7 @@ describe("CollectCustomerDetailsScreen", () => {
       fireEvent(identityDetailsInput!, "onChange", {
         nativeEvent: { text: "valid-id" },
       });
-      expect(identityDetailsInput!.props["value"]).toEqual("valid-id");
+      expect(identityDetailsInput!.props["value"]).toBe("valid-id");
 
       fireEvent.press(checkButton!);
       expect(mockValidateAndCleanId).toHaveBeenCalledTimes(1);
@@ -142,7 +142,7 @@ describe("CollectCustomerDetailsScreen", () => {
       fireEvent(identityDetailsInput!, "onChange", {
         nativeEvent: { text: "invalid-id" },
       });
-      expect(identityDetailsInput!.props["value"]).toEqual("invalid-id");
+      expect(identityDetailsInput!.props["value"]).toBe("invalid-id");
 
       fireEvent.press(checkButton!);
       expect(mockValidateAndCleanId).toHaveBeenCalledTimes(1);
@@ -199,7 +199,7 @@ describe("CollectCustomerDetailsScreen", () => {
       fireEvent(passportNumberInput!, "onChange", {
         nativeEvent: { text: "valid-alternate-id" },
       });
-      expect(passportNumberInput!.props["value"]).toEqual("valid-alternate-id");
+      expect(passportNumberInput!.props["value"]).toBe("valid-alternate-id");
 
       fireEvent.press(checkButton!);
       expect(mockValidateAndCleanId).toHaveBeenCalledTimes(1);
@@ -254,9 +254,7 @@ describe("CollectCustomerDetailsScreen", () => {
       fireEvent(passportNumberInput!, "onChange", {
         nativeEvent: { text: "invalid-alternate-id" },
       });
-      expect(passportNumberInput!.props["value"]).toEqual(
-        "invalid-alternate-id"
-      );
+      expect(passportNumberInput!.props["value"]).toBe("invalid-alternate-id");
 
       fireEvent.press(checkButton!);
       expect(mockValidateAndCleanId).toHaveBeenCalledTimes(1);

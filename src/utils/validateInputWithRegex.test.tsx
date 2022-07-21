@@ -23,16 +23,14 @@ describe("validate", () => {
 describe("validateAndCleanRegexInput", () => {
   it("should return uppercased input id and remove trailing and leading whitespaces", () => {
     expect.assertions(4);
-    expect(validateAndCleanRegexInput("asd", alphanumericRegex)).toEqual("ASD");
-    expect(validateAndCleanRegexInput("asDF", alphanumericRegex)).toEqual(
-      "ASDF"
-    );
+    expect(validateAndCleanRegexInput("asd", alphanumericRegex)).toBe("ASD");
+    expect(validateAndCleanRegexInput("asDF", alphanumericRegex)).toBe("ASDF");
     expect(
       validateAndCleanRegexInput("              ASD       ", alphanumericRegex)
-    ).toEqual("ASD");
-    expect(
-      validateAndCleanRegexInput("  asDF       ", alphanumericRegex)
-    ).toEqual("ASDF");
+    ).toBe("ASD");
+    expect(validateAndCleanRegexInput("  asDF       ", alphanumericRegex)).toBe(
+      "ASDF"
+    );
   });
 
   it("should throw error when the id is invalid", () => {

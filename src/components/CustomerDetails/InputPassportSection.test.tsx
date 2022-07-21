@@ -38,7 +38,7 @@ describe("InputPassportSection", () => {
     expect(identityDetailsCheckButton).not.toBeNull();
 
     fireEvent.press(selectedCountry!);
-    expect(passportCountryInput[1]!.props["children"]).toEqual("Afghanistan");
+    expect(passportCountryInput[1]!.props["children"]).toBe("Afghanistan");
 
     fireEvent(passportNumberInput!, "onChange", {
       nativeEvent: { text: "                valid-alternate-id    " },

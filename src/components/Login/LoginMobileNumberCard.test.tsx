@@ -47,7 +47,7 @@ describe("LoginMobileNumberCard", () => {
     const submitButton = getByTestId(submitButtonId);
 
     fireEvent(phoneNumberInput, "onChangeText", "88888888");
-    expect(phoneNumberInput.props["value"]).toEqual("8888 8888");
+    expect(phoneNumberInput.props["value"]).toBe("8888 8888");
 
     fireEvent.press(submitButton);
     expect(queryByText("Send OTP")).toBeNull();
@@ -79,7 +79,7 @@ describe("LoginMobileNumberCard", () => {
       const submitButton = getByTestId(submitButtonId);
 
       fireEvent(phoneNumberInput, "onChangeText", "");
-      expect(phoneNumberInput.props["value"]).toEqual("");
+      expect(phoneNumberInput.props["value"]).toBe("");
 
       fireEvent.press(submitButton);
       expect(queryByText(invalidMessage)).not.toBeNull();
@@ -110,7 +110,7 @@ describe("LoginMobileNumberCard", () => {
       const submitButton = getByTestId(submitButtonId);
 
       fireEvent(phoneNumberInput, "onChangeText", "888888888");
-      expect(phoneNumberInput.props["value"]).toEqual("888888888");
+      expect(phoneNumberInput.props["value"]).toBe("888888888");
 
       fireEvent.press(submitButton);
       expect(queryByText(invalidMessage)).not.toBeNull();
@@ -142,9 +142,9 @@ describe("LoginMobileNumberCard", () => {
       const countryCodeInput = getByTestId(countryCodeInputId);
 
       fireEvent(phoneNumberInput, "onChangeText", "888888888");
-      expect(phoneNumberInput.props["value"]).toEqual("888888888");
+      expect(phoneNumberInput.props["value"]).toBe("888888888");
       fireEvent(countryCodeInput, "onChangeCountryCode", "+900");
-      expect(countryCodeInput.props["value"]).toEqual("+900");
+      expect(countryCodeInput.props["value"]).toBe("+900");
 
       fireEvent.press(submitButton);
       expect(queryByText(invalidCountryCode)).not.toBeNull();

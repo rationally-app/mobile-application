@@ -2,7 +2,6 @@ import {
   createStackNavigator,
   TransitionPresets,
   StackNavigationOptions,
-  StackScreenProps,
 } from "@react-navigation/stack";
 import MerchantPayoutScreen from "./MerchantPayoutScreen";
 import PayoutFeedbackScreen from "./PayoutFeedbackScreen";

@@ -48,10 +48,17 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["**/*.test.tsx", "storybook/**/*.tsx"],
+      files: [
+        "**/*.test.tsx",
+        "storybook/**/*.tsx",
+        "*.tsx",
+        "*.ts",
+        "**/*.tsx",
+      ],
       rules: {
         "@typescript-eslint/no-empty-function": "off",
         "jest/prefer-strict-equal": "off",
+        "jest/require-hook": "off",
       },
     },
   ],
