@@ -6,7 +6,7 @@ on: [pull_request]
 # When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress,
 # the queued job or workflow will be pending.
 concurrency:
-  group: ${{ github.ref }} # The branch or tag ref that triggered the workflow run.
+  group: ${{ github.ref }}-deploy-branch-preview # The branch or tag ref that triggered the workflow run.
 
 jobs:
   pr_title_lint:
@@ -75,7 +75,6 @@ jobs:
         run: npm run test -- --coverage
   deploy_branch_preview:
     name: Deploy Branch Preview
-    needs: test
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
