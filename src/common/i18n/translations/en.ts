@@ -133,7 +133,7 @@ export const en: Translations = {
   govWalletIncorrectBalanceScreen: {
     govWalletIncorrectBalanceTitle: "Incorrect balance",
     govWalletIncorrectBalanceDescription:
-      "Not entitled to redeem item(s). Current balance is $%{balance}.",
+      "Not entitled to redeem item(s). Current balance is $%{balance} as of $%{lastModifiedDate}.",
   },
   errorMessages: {
     alreadyUsedDifferentIDNumber: {
@@ -143,7 +143,8 @@ export const en: Translations = {
     },
     alreadyUsedQRCode: {
       title: "Already used",
-      body: "Get a new QR code that is not tagged to any contact number from your in-charge.",
+      body:
+        "Get a new QR code that is not tagged to any contact number from your in-charge.",
       primaryActionText: "OK",
     },
     disabledAccess: {
@@ -188,28 +189,33 @@ export const en: Translations = {
     },
     resendOTP: {
       title: "Resend OTP?",
-      body: "After 1 more OTP request, you will have to wait 3 minutes before trying again.",
+      body:
+        "After 1 more OTP request, you will have to wait 3 minutes before trying again.",
       primaryActionText: "Resend",
       secondaryActionText: "No",
     },
     systemErrorConnectivityIssues: {
       title: "System error",
-      body: "We are currently facing connectivity issues.\nTry again later or contact your in-charge if the problem persists.",
+      body:
+        "We are currently facing connectivity issues.\nTry again later or contact your in-charge if the problem persists.",
       primaryActionText: "OK",
     },
     systemErrorValidityPeriod: {
       title: "System error",
-      body: "We could not find the validity period.\nGet new QR code from your in-charge and try again.",
+      body:
+        "We could not find the validity period.\nGet new QR code from your in-charge and try again.",
       primaryActionText: "OK",
     },
     systemErrorLoginIssue: {
       title: "System error",
-      body: "We are currently facing login issues.\nGet a new QR code from your in-charge.",
+      body:
+        "We are currently facing login issues.\nGet a new QR code from your in-charge.",
       primaryActionText: "OK",
     },
     systemErrorServerIssue: {
       title: "System error",
-      body: "We are currently facing a server issue. Contact your in-charge if the problem persists.",
+      body:
+        "We are currently facing a server issue. Contact your in-charge if the problem persists.",
       primaryActionText: "OK",
     },
     expiredQR: {
@@ -234,7 +240,8 @@ export const en: Translations = {
     },
     invalidInputOTPOneMoreInvalid: {
       title: "Invalid input",
-      body: "Enter OTP again. After 1 more invalid OTP entry, you will have to wait 3 minutes before trying again.",
+      body:
+        "Enter OTP again. After 1 more invalid OTP entry, you will have to wait 3 minutes before trying again.",
       primaryActionText: "OK",
     },
     invalidInputIDNumber: {
@@ -259,7 +266,8 @@ export const en: Translations = {
     },
     paymentCollected: {
       title: "Payment collected?",
-      body: "This action cannot be undone. Proceed only when payment has been collected.",
+      body:
+        "This action cannot be undone. Proceed only when payment has been collected.",
       primaryActionText: "Collected",
       secondaryActionText: "No",
     },
@@ -275,7 +283,8 @@ export const en: Translations = {
     },
     systemError: {
       title: "System error",
-      body: "We are currently facing connectivity issues. Try restarting the app or logout if the problem persists.",
+      body:
+        "We are currently facing connectivity issues. Try restarting the app or logout if the problem persists.",
       primaryActionText: "Restart app",
       secondaryActionText: "Logout",
     },
@@ -392,7 +401,8 @@ export const en: Translations = {
     },
     missingDisbursements: {
       title: "System error",
-      body: "Eligible identity does not have quota. Contact your in-charge to resolve this issue.",
+      body:
+        "Eligible identity does not have quota. Contact your in-charge to resolve this issue.",
       primaryActionText: "OK",
     },
     categoryDoesNotExist: {
@@ -402,7 +412,8 @@ export const en: Translations = {
     },
     systemErrorServerIssues: {
       title: "System error",
-      body: "We are currently facing server issues. Try again later or contact your in-charge if the problem persists",
+      body:
+        "We are currently facing server issues. Try again later or contact your in-charge if the problem persists",
       primaryActionText: "OK",
     },
     discardTransaction: {
@@ -459,7 +470,8 @@ export const en: Translations = {
     },
     systemErrorLogoutIssue: {
       title: "System error",
-      body: "Unable to logout from all campaigns. Try to logout again later or contact your in-charge of the problem persists.",
+      body:
+        "Unable to logout from all campaigns. Try to logout again later or contact your in-charge of the problem persists.",
       primaryActionText: "OK",
     },
     dynamicContentFallback: {
@@ -497,7 +509,8 @@ export const en: Translations = {
     },
     govwalletAccountDeactivated: {
       title: "Deactivated account",
-      body: "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
+      body:
+        "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
       primaryActionText: "OK",
     },
     http500Error: {

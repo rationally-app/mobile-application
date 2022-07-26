@@ -114,12 +114,14 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   const [loginStage, setLoginStage] = useState<LoginStage>("SCAN");
   const [countryCode, setCountryCode] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
-  const [tempAuthCredentials, setTempAuthCredentials] =
-    useState<Pick<AuthCredentials, "endpoint" | "operatorToken">>();
+  const [tempAuthCredentials, setTempAuthCredentials] = useState<
+    Pick<AuthCredentials, "endpoint" | "operatorToken">
+  >();
   const showHelpModal = useContext(HelpModalContext);
   const messageContent = useContext(ImportantMessageContentContext);
-  const { showConfirmationAlert, showErrorAlert } =
-    useContext(AlertModalContext);
+  const { showConfirmationAlert, showErrorAlert } = useContext(
+    AlertModalContext
+  );
   const lastResendWarningMessageRef = useRef("");
 
   useEffect(() => {

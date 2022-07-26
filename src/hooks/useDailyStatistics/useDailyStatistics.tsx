@@ -28,10 +28,12 @@ export const useDailyStatistics = (
 ): StatisticsHook => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error>();
-  const [totalCount, setTotalCount] =
-    useState<StatisticsHook["totalCount"]>(null);
-  const [lastTransactionTime, setLastTransactionTime] =
-    useState<StatisticsHook["lastTransactionTime"]>(null);
+  const [totalCount, setTotalCount] = useState<StatisticsHook["totalCount"]>(
+    null
+  );
+  const [lastTransactionTime, setLastTransactionTime] = useState<
+    StatisticsHook["lastTransactionTime"]
+  >(null);
   const [transactionHistory, setTransactionHistory] = useState<
     StatisticsHook["transactionHistory"]
   >([]);
@@ -55,12 +57,14 @@ export const useDailyStatistics = (
           endpoint,
           [operatorToken]
         );
-        const { summarisedTransactionHistory, summarisedTotalCount } =
-          countTotalTransactionsAndByCategory(
-            response.pastTransactions,
-            policies,
-            translationProps
-          );
+        const {
+          summarisedTransactionHistory,
+          summarisedTotalCount,
+        } = countTotalTransactionsAndByCategory(
+          response.pastTransactions,
+          policies,
+          translationProps
+        );
         setTransactionHistory(
           summarisedTransactionHistory.sort(sortTransactionsByOrder)
         );

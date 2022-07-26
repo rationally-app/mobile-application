@@ -32,14 +32,15 @@ export interface CampaignConfigsStoreContext {
   clearCampaignConfigs: () => void;
 }
 
-export const CampaignConfigsStoreContext =
-  createContext<CampaignConfigsStoreContext>({
+export const CampaignConfigsStoreContext = createContext<CampaignConfigsStoreContext>(
+  {
     hasLoadedFromStore: false,
     allCampaignConfigs: {},
     setCampaignConfig: () => undefined,
     removeCampaignConfig: () => undefined,
     clearCampaignConfigs: () => undefined,
-  });
+  }
+);
 
 export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
   children,
@@ -54,8 +55,9 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
    *
    * Similar use case to {@link AuthStoreContextProvider}
    */
-  const [hasLoadedFromPrimaryStore, setHasLoadedFromPrimaryStore] =
-    useState(false);
+  const [hasLoadedFromPrimaryStore, setHasLoadedFromPrimaryStore] = useState(
+    false
+  );
   const [hasLoadedFromStore, setHasLoadedFromStore] = useState(false);
   const [allConfigs, setAllConfigs] = useState<
     CampaignConfigsStoreContext["allCampaignConfigs"]
@@ -82,8 +84,8 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
     }
   }, [hasLoadedFromPrimaryStore, allConfigs, prevAllConfigs]);
 
-  const setCampaignConfig: CampaignConfigsStoreContext["setCampaignConfig"] =
-    useCallback((key, newConfig) => {
+  const setCampaignConfig: CampaignConfigsStoreContext["setCampaignConfig"] = useCallback(
+    (key, newConfig) => {
       if (!newConfig) {
         return;
       }
@@ -110,10 +112,12 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
           [key]: mergedConfig,
         };
       });
-    }, []);
+    },
+    []
+  );
 
-  const removeCampaignConfig: CampaignConfigsStoreContext["removeCampaignConfig"] =
-    useCallback(async (key) => {
+  const removeCampaignConfig: CampaignConfigsStoreContext["removeCampaignConfig"] = useCallback(
+    async (key) => {
       if (!key) {
         return;
       }
@@ -122,12 +126,13 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
         const { [key]: configToBeRemoved, ...remainingConfigs } = prevConfigs;
         return remainingConfigs;
       });
-    }, []);
+    },
+    []
+  );
 
-  const clearCampaignConfigs: CampaignConfigsStoreContext["clearCampaignConfigs"] =
-    useCallback(async () => {
-      setAllConfigs({});
-    }, []);
+  const clearCampaignConfigs: CampaignConfigsStoreContext["clearCampaignConfigs"] = useCallback(async () => {
+    setAllConfigs({});
+  }, []);
 
   useEffect(() => {
     /**
@@ -148,8 +153,9 @@ export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
         );
         if (configString) {
           try {
-            const configStringFromStore: CampaignConfigsMap =
-              JSON.parse(configString);
+            const configStringFromStore: CampaignConfigsMap = JSON.parse(
+              configString
+            );
             setAllConfigs(configStringFromStore);
             hasUpdatedData = true;
           } catch (e) {

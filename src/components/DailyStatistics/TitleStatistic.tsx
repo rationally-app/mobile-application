@@ -54,9 +54,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const TitleStatisticComponent: FunctionComponent<
-  TitleStatisticComponent
-> = ({
+export const TitleStatisticComponent: FunctionComponent<TitleStatisticComponent> = ({
   totalCount,
   currentTimestamp,
   lastTransactionTime,

@@ -44,9 +44,10 @@ interface CheckoutUnsuccessfulCard {
  * - Redeemed token and returned token does not have the same id
  * - Have not redeemed the token but attempted to return
  */
-export const CheckoutUnsuccessfulCard: FunctionComponent<
-  CheckoutUnsuccessfulCard
-> = ({ ids, onCancel }) => {
+export const CheckoutUnsuccessfulCard: FunctionComponent<CheckoutUnsuccessfulCard> = ({
+  ids,
+  onCancel,
+}) => {
   const { theme } = useTheme();
 
   const [isShowFullList, setIsShowFullList] = useState<boolean>(false);

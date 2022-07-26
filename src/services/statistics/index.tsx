@@ -128,8 +128,10 @@ export const liveGetStatistics = async (
   endpoint: string,
   operatorTokens: string[]
 ): Promise<DailyStatisticsResult> => {
-  const { startTransactionTime, endTransactionTime } =
-    getDailyTransactionTimestampRange(currentTimestamp);
+  const {
+    startTransactionTime,
+    endTransactionTime,
+  } = getDailyTransactionTimestampRange(currentTimestamp);
 
   try {
     return await fetchWithValidator(

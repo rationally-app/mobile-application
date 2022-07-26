@@ -32,8 +32,9 @@ export const useDrawerContext = (): DrawerContext =>
   useContext<DrawerContext>(DrawerContext);
 
 export const DrawerContextProvider: FunctionComponent = ({ children }) => {
-  const [drawerButtons, setDrawerButtons] =
-    useState<DrawerButton[]>(DEFAULT_BUTTONS);
+  const [drawerButtons, setDrawerButtons] = useState<DrawerButton[]>(
+    DEFAULT_BUTTONS
+  );
 
   const clearDrawerButtons = useCallback((): void => {
     setDrawerButtons(DEFAULT_BUTTONS);

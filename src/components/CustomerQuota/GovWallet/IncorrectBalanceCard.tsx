@@ -28,7 +28,8 @@ const GovWalletIncorrectBalanceTitle: FunctionComponent = () => {
 
 const GovWalletIncorrectBalanceDescription: FunctionComponent<{
   govWalletBalanceInCents: number;
-}> = ({ govWalletBalanceInCents }) => {
+  lastModifiedDate: string;
+}> = ({ govWalletBalanceInCents, lastModifiedDate }) => {
   const { i18nt, c13nt } = useTranslate();
 
   return (
@@ -40,7 +41,10 @@ const GovWalletIncorrectBalanceDescription: FunctionComponent<{
           "govWalletIncorrectBalanceScreen",
           "govWalletIncorrectBalanceDescription",
           undefined,
-          { balance: formatCentsAsDollarsAndCents(govWalletBalanceInCents) }
+          {
+            balance: formatCentsAsDollarsAndCents(govWalletBalanceInCents),
+            lastModifiedDate,
+          }
         )
       )}
     </AppText>
@@ -51,14 +55,18 @@ interface GovWalletIncorrectBalanceCard {
   ids: string[];
   onCancel: () => void;
   govWalletBalanceInCents: number;
+  lastModifiedDate: string;
 }
 
 /**
  * This card is shown when the user balance is not accurate in GovWallet
  */
-export const GovWalletIncorrectBalanceCard: FunctionComponent<
-  GovWalletIncorrectBalanceCard
-> = ({ ids, onCancel, govWalletBalanceInCents }) => {
+export const GovWalletIncorrectBalanceCard: FunctionComponent<GovWalletIncorrectBalanceCard> = ({
+  ids,
+  onCancel,
+  govWalletBalanceInCents,
+  lastModifiedDate,
+}) => {
   const { theme } = useTheme();
   const { i18nt } = useTranslate();
 
@@ -91,6 +99,7 @@ export const GovWalletIncorrectBalanceCard: FunctionComponent<
           <View>
             <GovWalletIncorrectBalanceDescription
               govWalletBalanceInCents={govWalletBalanceInCents}
+              lastModifiedDate={lastModifiedDate}
             />
           </View>
         </View>

@@ -93,8 +93,9 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
   const { showErrorAlert } = useContext(AlertModalContext);
   const [ids, setIds] = useState<string[]>(navIds);
   const { features: campaignFeatures } = useContext(CampaignConfigContext);
-  const [updateAfterPurchased, setUpdateAfterPurchased] =
-    useState<boolean>(false);
+  const [updateAfterPurchased, setUpdateAfterPurchased] = useState<boolean>(
+    false
+  );
 
   const { setAuthCredentials } = useContext(AuthStoreContext);
 
@@ -112,6 +113,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     govWalletBalanceError,
     clearGovWalletBalanceError,
     govWalletBalanceInCents,
+    lastModifiedDate,
   } = useGovWalletBalance(ids, sessionToken, endpoint);
 
   const {
@@ -374,6 +376,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             ids={ids}
             onCancel={onCancel}
             govWalletBalanceInCents={govWalletBalanceInCents}
+            lastModifiedDate={lastModifiedDate}
           />
         ) : (
           <ItemsSelectionCard

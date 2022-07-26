@@ -18,11 +18,8 @@ export const ItemStepper: FunctionComponent<{
 }> = ({ cartItem, updateCart }) => {
   const { category, quantity, maxQuantity } = cartItem;
   const { getProduct } = useContext(ProductContext);
-  const {
-    name = category,
-    description,
-    quantity: productQuantity,
-  } = getProduct(category) || {};
+  const { name = category, description, quantity: productQuantity } =
+    getProduct(category) || {};
 
   const [stepperValue, setStepperValue] = useState(quantity);
 

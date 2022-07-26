@@ -56,8 +56,10 @@ export const useCheckVoucherValidity = (
   authKey: string,
   endpoint: string
 ): useCheckVoucherValidity => {
-  const [checkValidityState, setCheckValidityState] =
-    useState<CheckValidityState>("DEFAULT");
+  const [
+    checkValidityState,
+    setCheckValidityState,
+  ] = useState<CheckValidityState>("DEFAULT");
   const [validityResult, setValidityResult] = useState<Voucher>();
   const [error, setError] = useState<Error>();
   const { selectedIdType } = useContext(IdentificationContext);

@@ -17,8 +17,9 @@ type MessageContent = {
   };
 };
 
-export const ImportantMessageContentContext =
-  createContext<MessageContent | null>(null);
+export const ImportantMessageContentContext = createContext<MessageContent | null>(
+  null
+);
 export const ImportantMessageSetterContext = createContext<
   Dispatch<SetStateAction<MessageContent | null>>
   // eslint-disable-next-line @typescript-eslint/no-empty-function

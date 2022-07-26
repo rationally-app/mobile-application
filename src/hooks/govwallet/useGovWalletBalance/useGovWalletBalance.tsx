@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { getGovWalletBalance } from "../../../services/govwallet/balance";
 import { ErrorWithCodes } from "../../../services/helpers";
+import { formatGovWalletDateToSallyDateFormat } from "../../../utils/dateTimeFormatter";
 
 export type GovWalletBalanceState =
   | "DEFAULT"
@@ -12,6 +13,7 @@ export type GovWalletBalanceState =
 export type GovWalletBalanceHook = {
   govWalletBalanceState: GovWalletBalanceState;
   govWalletBalanceInCents: number;
+  lastModifiedDate: string;
   govWalletBalanceError?: Error;
   updateGovWalletBalance: () => void;
   clearGovWalletBalanceError: () => void;
@@ -33,71 +35,82 @@ export const useGovWalletBalance = (
   endpoint: string
 ): GovWalletBalanceHook => {
   const { features } = useContext(CampaignConfigContext);
-  const [govWalletBalanceState, setGovWalletBalanceState] =
-    useState<GovWalletBalanceState>("DEFAULT");
+  const [
+    govWalletBalanceState,
+    setGovWalletBalanceState,
+  ] = useState<GovWalletBalanceState>("DEFAULT");
   /**
    * Balance is defined with default `0` since it will never be
    * `undefined` when used.
    */
-  const [govWalletBalanceInCents, setGovWalletBalanceInCents] =
-    useState<number>(0);
+  const [
+    govWalletBalanceInCents,
+    setGovWalletBalanceInCents,
+  ] = useState<number>(0);
   const [govWalletBalanceError, setGovWalletBalanceError] = useState<Error>();
+  const [lastModifiedDate, setLastModifiedDate] = useState<string>("");
 
   const clearGovWalletBalanceError = useCallback(
     (): void => setGovWalletBalanceError(undefined),
     []
   );
 
-  const updateGovWalletBalance: GovWalletBalanceHook["updateGovWalletBalance"] =
-    useCallback(() => {
-      const update = async (): Promise<void> => {
-        try {
-          setGovWalletBalanceInCents(0);
-          setGovWalletBalanceState("FETCHING_BALANCE");
+  const updateGovWalletBalance: GovWalletBalanceHook["updateGovWalletBalance"] = useCallback(() => {
+    const update = async (): Promise<void> => {
+      try {
+        setGovWalletBalanceInCents(0);
+        setLastModifiedDate("");
+        setGovWalletBalanceState("FETCHING_BALANCE");
 
-          const getBalancePromises = ids.flatMap((id) =>
-            getGovWalletBalance(id, authKey, endpoint)
+        const getBalancePromises = ids.flatMap((id) =>
+          getGovWalletBalance(id, authKey, endpoint)
+        );
+
+        const results = await Promise.all(getBalancePromises);
+
+        // We only check the activation status of the first account
+        const areAllAccountsActivated = results.every(
+          ({ accountDetails }) =>
+            accountDetails[0].activationStatus === "ACTIVATED"
+        );
+
+        // We only check the eligibility of the balance of the first account
+        const areAllBalancesEligible = results.every(
+          // Check if balance is strictly equals to 10000 cents
+          ({ accountDetails }) => accountDetails[0].balance === 10000
+        );
+
+        // We only retrieve the balance of the first account
+        setGovWalletBalanceInCents(results[0].accountDetails[0].balance);
+
+        setLastModifiedDate(
+          formatGovWalletDateToSallyDateFormat(
+            results[0].accountDetails[0].modified
+          )
+        );
+
+        if (!areAllAccountsActivated) {
+          setGovWalletBalanceError(
+            new ErrorWithCodes(
+              "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
+              400
+            )
           );
-
-          const results = await Promise.all(getBalancePromises);
-
-          // We only check the activation status of the first account
-          const areAllAccountsActivated = results.every(
-            ({ accountDetails }) =>
-              accountDetails[0].activationStatus === "ACTIVATED"
-          );
-
-          // We only check the eligibility of the balance of the first account
-          const areAllBalancesEligible = results.every(
-            // Check if balance is strictly equals to 10000 cents
-            ({ accountDetails }) => accountDetails[0].balance === 10000
-          );
-
-          // We only retrieve the balance of the first account
-          setGovWalletBalanceInCents(results[0].accountDetails[0].balance);
-
-          if (!areAllAccountsActivated) {
-            setGovWalletBalanceError(
-              new ErrorWithCodes(
-                "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
-                400
-              )
-            );
-            setGovWalletBalanceState("INELIGIBLE");
-          } else if (!areAllBalancesEligible) {
-            setGovWalletBalanceState("INELIGIBLE");
-          } else {
-            setGovWalletBalanceState("ELIGIBLE");
-          }
-        } catch (e: unknown) {
-          const error = e as Error;
-          setGovWalletBalanceState("DEFAULT");
-          setGovWalletBalanceError(error);
+          setGovWalletBalanceState("INELIGIBLE");
+        } else if (!areAllBalancesEligible) {
+          setGovWalletBalanceState("INELIGIBLE");
+        } else {
+          setGovWalletBalanceState("ELIGIBLE");
         }
-      };
+      } catch (e: unknown) {
+        const error = e as Error;
+        setGovWalletBalanceState("DEFAULT");
+        setGovWalletBalanceError(error);
+      }
+    };
 
-      update();
-    }, [ids, authKey, endpoint]);
+    update();
+  }, [ids, authKey, endpoint]);
 
   useEffect(() => {
     if (features?.isPayNowTransaction) {
@@ -111,5 +124,6 @@ export const useGovWalletBalance = (
     updateGovWalletBalance,
     clearGovWalletBalanceError,
     govWalletBalanceInCents,
+    lastModifiedDate,
   };
 };

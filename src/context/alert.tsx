@@ -217,8 +217,9 @@ export const AlertModalContext = createContext<AlertModalContext>({
 });
 
 export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
-  const [alertProps, setAlertProps] =
-    useState<AlertModalProps>(defaultAlertProps);
+  const [alertProps, setAlertProps] = useState<AlertModalProps>(
+    defaultAlertProps
+  );
 
   const showAlert: (props: AlertModalProps) => void = useCallback(
     (props: AlertModalProps) => {

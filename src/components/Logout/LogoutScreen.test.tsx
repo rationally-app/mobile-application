@@ -20,11 +20,13 @@ jest.mock("../../services/auth", () => ({
 }));
 jest.mock("react-navigation", () => ({
   // eslint-disable-next-line react/display-name
-  withNavigation: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={{ navigate: mockNavigate }} {...props} />,
+  withNavigation: (Component: FunctionComponent) => (props: any) => (
+    <Component navigation={{ navigate: mockNavigate }} {...props} />
+  ),
   // eslint-disable-next-line react/display-name
-  withNavigationFocus: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={{ navigate: mockNavigate }} {...props} />,
+  withNavigationFocus: (Component: FunctionComponent) => (props: any) => (
+    <Component navigation={{ navigate: mockNavigate }} {...props} />
+  ),
 }));
 
 const mockCaptureException = Sentry.captureException as jest.MockedFunction<

@@ -49,7 +49,13 @@ describe("isPayNowTransaction toggle", () => {
     ids = ["S0000000J"];
 
     mockGetGovWalletBalance.mockResolvedValue({
-      accountDetails: [{ activationStatus: "ACTIVATED", balance: 10000 }],
+      accountDetails: [
+        {
+          activationStatus: "ACTIVATED",
+          balance: 10000,
+          modified: "2022-07-25T11:57:50.000+08:00",
+        },
+      ],
     });
   });
 
@@ -102,7 +108,13 @@ describe("govWalletBalanceState states", () => {
     expect.assertions(3);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
-      accountDetails: [{ activationStatus, balance: 10000 }],
+      accountDetails: [
+        {
+          activationStatus,
+          balance: 10000,
+          modified: "2022-07-25T11:57:50.000+08:00",
+        },
+      ],
     });
 
     const { result, waitForNextUpdate } = renderHook(
@@ -122,7 +134,13 @@ describe("govWalletBalanceState states", () => {
     expect.assertions(3);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
-      accountDetails: [{ activationStatus, balance: 10001 }],
+      accountDetails: [
+        {
+          activationStatus,
+          balance: 10001,
+          modified: "2022-07-25T11:57:50.000+08:00",
+        },
+      ],
     });
 
     const { result, waitForNextUpdate } = renderHook(
@@ -142,7 +160,13 @@ describe("govWalletBalanceState states", () => {
     expect.assertions(3);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
-      accountDetails: [{ activationStatus, balance: 9999 }],
+      accountDetails: [
+        {
+          activationStatus,
+          balance: 9999,
+          modified: "2022-07-25T11:57:50.000+08:00",
+        },
+      ],
     });
 
     const { result, waitForNextUpdate } = renderHook(
@@ -162,7 +186,13 @@ describe("govWalletBalanceState states", () => {
     expect.assertions(4);
 
     mockGetGovWalletBalance.mockResolvedValueOnce({
-      accountDetails: [{ activationStatus: "DEACTIVATED", balance: 10000 }],
+      accountDetails: [
+        {
+          activationStatus: "DEACTIVATED",
+          balance: 10000,
+          modified: "2022-07-25T11:57:50.000+08:00",
+        },
+      ],
     });
 
     const { result, waitForNextUpdate } = renderHook(

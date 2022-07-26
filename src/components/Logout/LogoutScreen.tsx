@@ -44,8 +44,11 @@ export const LogoutScreen: FunctionComponent<NavigationProps> = ({
 
   const { i18nt } = useTranslate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { authCredentials, removeAuthCredentials, clearAuthCredentials } =
-    useContext(AuthStoreContext);
+  const {
+    authCredentials,
+    removeAuthCredentials,
+    clearAuthCredentials,
+  } = useContext(AuthStoreContext);
   const { removeCampaignConfig, clearCampaignConfigs } = useContext(
     CampaignConfigsStoreContext
   );

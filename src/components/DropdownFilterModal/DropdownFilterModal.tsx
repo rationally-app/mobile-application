@@ -137,8 +137,9 @@ export const DropdownFilterModal: FunctionComponent<DropdownFilterModal> = ({
   closeModal,
 }) => {
   const { c13nt } = useTranslate();
-  const [filterState, setFilterState] =
-    useState<PolicyChoices[]>(dropdownItems);
+  const [filterState, setFilterState] = useState<PolicyChoices[]>(
+    dropdownItems
+  );
 
   useEffect(() => {
     setFilterState(dropdownItems);

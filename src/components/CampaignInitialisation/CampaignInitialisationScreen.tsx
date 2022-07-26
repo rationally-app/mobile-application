@@ -46,9 +46,9 @@ export class UpdateError extends Error {
   }
 }
 
-export const CampaignInitialisationScreen: FunctionComponent<
-  NavigationProps
-> = ({ navigation }) => {
+export const CampaignInitialisationScreen: FunctionComponent<NavigationProps> = ({
+  navigation,
+}) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -58,8 +58,9 @@ export const CampaignInitialisationScreen: FunctionComponent<
 
   const { resetSelectedIdType } = useContext(IdentificationContext);
 
-  const authCredentials: AuthCredentials =
-    navigation.getParam("authCredentials");
+  const authCredentials: AuthCredentials = navigation.getParam(
+    "authCredentials"
+  );
   const {
     hasLoadedFromStore,
     allCampaignConfigs,
@@ -82,8 +83,9 @@ export const CampaignInitialisationScreen: FunctionComponent<
   const key = `${authCredentials.operatorToken}${authCredentials.endpoint}`;
   const campaignConfig = allCampaignConfigs[key];
 
-  const [hasAttemptedToUpdateConfig, setHasAttemptedToUpdateConfig] =
-    useState(false);
+  const [hasAttemptedToUpdateConfig, setHasAttemptedToUpdateConfig] = useState(
+    false
+  );
   useEffect(() => {
     if (hasLoadedFromStore && !hasAttemptedToUpdateConfig) {
       updateCampaignConfig(campaignConfig, setCampaignConfig);

@@ -108,9 +108,9 @@ export const DrawerButtonComponent: FunctionComponent<DrawerButton> = ({
   );
 };
 
-export const DrawerNavigationComponent: FunctionComponent<
-  DrawerContentComponentProps
-> = ({ navigation }) => {
+export const DrawerNavigationComponent: FunctionComponent<DrawerContentComponentProps> = ({
+  navigation,
+}) => {
   const { showConfirmationAlert } = useContext(AlertModalContext);
   const showHelpModal = useContext(HelpModalContext);
   const { drawerButtons } = useDrawerContext();

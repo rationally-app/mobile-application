@@ -51,43 +51,40 @@ export const useUpdateCampaignConfig = (
   const [result, setResult] = useState<CampaignConfig>();
   const [error, setError] = useState<Error>();
 
-  const updateCampaignConfig: UpdateCampaignConfigHook["updateCampaignConfig"] =
-    useCallback(
-      (currentCampaignConfig, setCampaignConfig) => {
-        const fetchCampaignConfig = async (): Promise<void> => {
-          setError(undefined);
-          setResult(undefined);
-          const configHashes = await generateConfigHashes(
-            currentCampaignConfig
+  const updateCampaignConfig: UpdateCampaignConfigHook["updateCampaignConfig"] = useCallback(
+    (currentCampaignConfig, setCampaignConfig) => {
+      const fetchCampaignConfig = async (): Promise<void> => {
+        setError(undefined);
+        setResult(undefined);
+        const configHashes = await generateConfigHashes(currentCampaignConfig);
+
+        setFetchingState("FETCHING_CONFIG");
+        try {
+          const campaignConfigResponse = await getCampaignConfig(
+            sessionToken,
+            endpoint,
+            configHashes
           );
-
-          setFetchingState("FETCHING_CONFIG");
-          try {
-            const campaignConfigResponse = await getCampaignConfig(
-              sessionToken,
-              endpoint,
-              configHashes
+          const configs = Object.values(campaignConfigResponse);
+          if (configs.some((c) => !!c)) {
+            setCampaignConfig(
+              `${operatorToken}${endpoint}`,
+              campaignConfigResponse
             );
-            const configs = Object.values(campaignConfigResponse);
-            if (configs.some((c) => !!c)) {
-              setCampaignConfig(
-                `${operatorToken}${endpoint}`,
-                campaignConfigResponse
-              );
-              setResult(campaignConfigResponse);
-              setFetchingState("RETURNED_NEW_UPDATES");
-            } else {
-              setFetchingState("RETURNED_NO_UPDATES");
-            }
-          } catch (e) {
-            setError(e);
+            setResult(campaignConfigResponse);
+            setFetchingState("RETURNED_NEW_UPDATES");
+          } else {
+            setFetchingState("RETURNED_NO_UPDATES");
           }
-        };
+        } catch (e) {
+          setError(e);
+        }
+      };
 
-        fetchCampaignConfig();
-      },
-      [endpoint, operatorToken, sessionToken]
-    );
+      fetchCampaignConfig();
+    },
+    [endpoint, operatorToken, sessionToken]
+  );
 
   const clearError = useCallback(() => {
     setError(undefined);
