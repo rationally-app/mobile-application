@@ -324,7 +324,8 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
 
   const { i18nt } = useTranslate();
 
-  return quotaState === "FETCHING_QUOTA" ? (
+  return quotaState === "FETCHING_QUOTA" ||
+    govWalletBalanceState === "FETCHING_BALANCE" ? (
     <View style={styles.loadingWrapper}>
       <TopBackground style={{ height: "100%", maxHeight: "auto" }} />
       <Card>
@@ -378,10 +379,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
           <ItemsSelectionCard
             ids={ids}
             addId={addId}
-            isLoading={
-              cartState === "CHECKING_OUT" ||
-              govWalletBalanceState === "FETCHING_BALANCE"
-            }
+            isLoading={cartState === "CHECKING_OUT"}
             hasPendingConfirmation={cartState === "PENDING_CONFIRMATION"}
             checkoutCart={checkoutCart}
             completeCheckout={completeCheckout}
