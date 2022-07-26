@@ -13,6 +13,7 @@
     "eject": "expo eject",
     "lint": "eslint . --ext .ts,.tsx,.mdx --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
+    "typecheck": "npx --no-install tsc --noEmit",
     "nuke-cache": "rm -rf $TMPDIR/metro-cache",
     "markdown:lint": "npx remark --frail ."
   },
