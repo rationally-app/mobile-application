@@ -60,9 +60,8 @@ export const ItemsSelectionCard: FunctionComponent<ItemsSelectionCard> = ({
   const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const { features } = useContext(CampaignConfigContext);
   const { products } = useContext(ProductContext);
-  const { showWarnAlert, showConfirmationAlert, showErrorAlert } = useContext(
-    AlertModalContext
-  );
+  const { showWarnAlert, showConfirmationAlert, showErrorAlert } =
+    useContext(AlertModalContext);
 
   useEffect(() => {
     if (!hasPendingConfirmation) {

@@ -191,8 +191,7 @@ export const zh: Translations = {
     },
     systemErrorConnectivityIssues: {
       title: "系统错误",
-      body:
-        "连接目前出现问题。\n请稍后再试。如果问题持续出现，请联系您的负责人。",
+      body: "连接目前出现问题。\n请稍后再试。如果问题持续出现，请联系您的负责人。",
       primaryActionText: "确定",
     },
     systemErrorValidityPeriod: {
@@ -232,8 +231,7 @@ export const zh: Translations = {
     },
     invalidInputOTPOneMoreInvalid: {
       title: "输入无效",
-      body:
-        "请再次输入一次性密码。若再输入无效的一次性密码，您须等待3分钟才能再试。",
+      body: "请再次输入一次性密码。若再输入无效的一次性密码，您须等待3分钟才能再试。",
       primaryActionText: "确定",
     },
     invalidInputIDNumber: {
@@ -458,8 +456,7 @@ export const zh: Translations = {
     },
     systemErrorLogoutIssue: {
       title: "系统错误",
-      body:
-        "无法登出所有活动。请稍后再试着登出。如果问题持续出现，请联系您的负责人。",
+      body: "无法登出所有活动。请稍后再试着登出。如果问题持续出现，请联系您的负责人。",
       primaryActionText: "确定",
     },
     dynamicContentFallback: {

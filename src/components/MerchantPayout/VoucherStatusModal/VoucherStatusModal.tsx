@@ -98,7 +98,8 @@ export const VoucherStatusModal: FunctionComponent<VoucherStatusModal> = ({
   } else if (error instanceof NotEligibleError) {
     card = <InvalidCard title={title} details={details} closeModal={onExit} />;
   } else if (error instanceof InvalidVoucherError) {
-    const secondsFromLatestTransaction = error.getSecondsFromLatestTransaction();
+    const secondsFromLatestTransaction =
+      error.getSecondsFromLatestTransaction();
     const title =
       secondsFromLatestTransaction > 0 ? (
         secondsFromLatestTransaction > DURATION_THRESHOLD_SECONDS ? (

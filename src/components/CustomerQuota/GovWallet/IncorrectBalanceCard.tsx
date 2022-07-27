@@ -61,12 +61,9 @@ interface GovWalletIncorrectBalanceCard {
 /**
  * This card is shown when the user balance is not accurate in GovWallet
  */
-export const GovWalletIncorrectBalanceCard: FunctionComponent<GovWalletIncorrectBalanceCard> = ({
-  ids,
-  onCancel,
-  govWalletBalanceInCents,
-  lastModifiedDate,
-}) => {
+export const GovWalletIncorrectBalanceCard: FunctionComponent<
+  GovWalletIncorrectBalanceCard
+> = ({ ids, onCancel, govWalletBalanceInCents, lastModifiedDate }) => {
   const { theme } = useTheme();
   const { i18nt } = useTranslate();
 

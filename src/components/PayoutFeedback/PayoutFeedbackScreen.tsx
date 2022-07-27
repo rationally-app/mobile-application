@@ -78,9 +78,8 @@ export const PayoutFeedbackScreen: FunctionComponent<NavigationProps> = ({
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
-  const checkoutResult: PostTransactionResult = navigation.getParam(
-    "checkoutResult"
-  );
+  const checkoutResult: PostTransactionResult =
+    navigation.getParam("checkoutResult");
   const voucherArr = checkoutResult.transactions.filter(
     (transaction) =>
       transaction.transaction.filter((obj) => obj.category === "voucher")

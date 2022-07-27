@@ -36,9 +36,11 @@ const submitButtonId = "login-submit-otp-button";
 
 describe("LoginOTPCard", () => {
   beforeEach(() => {
-    (SecureStore.getItemAsync as jest.MockedFunction<
-      typeof SecureStore.getItemAsync
-    >)
+    (
+      SecureStore.getItemAsync as jest.MockedFunction<
+        typeof SecureStore.getItemAsync
+      >
+    )
       .mockResolvedValueOnce("{}")
       .mockResolvedValue(null);
   });

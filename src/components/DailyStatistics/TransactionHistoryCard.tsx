@@ -57,10 +57,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export const TransactionHistoryCardComponent: FunctionComponent<TransactionHistoryCardComponent> = ({
-  transactionHistory,
-  loading,
-}) => {
+export const TransactionHistoryCardComponent: FunctionComponent<
+  TransactionHistoryCardComponent
+> = ({ transactionHistory, loading }) => {
   const { c13nt, i18nt } = useTranslate();
 
   return (
