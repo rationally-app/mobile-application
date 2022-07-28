@@ -19,3 +19,7 @@ export const formatTimeDifference = (
   }
   return formatDistance(start, end);
 };
+
+export const formatGovWalletDateToSallyDateFormat = (date: string): string => {
+  return formatDateTime(new Date(date));
+};

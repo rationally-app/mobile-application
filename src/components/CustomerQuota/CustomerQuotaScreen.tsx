@@ -112,6 +112,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
     govWalletBalanceError,
     clearGovWalletBalanceError,
     govWalletBalanceInCents,
+    lastModifiedDate,
   } = useGovWalletBalance(ids, sessionToken, endpoint);
 
   const {
@@ -374,6 +375,7 @@ export const CustomerQuotaScreen: FunctionComponent<CustomerQuotaProps> = ({
             ids={ids}
             onCancel={onCancel}
             govWalletBalanceInCents={govWalletBalanceInCents}
+            lastModifiedDate={lastModifiedDate}
           />
         ) : (
           <ItemsSelectionCard

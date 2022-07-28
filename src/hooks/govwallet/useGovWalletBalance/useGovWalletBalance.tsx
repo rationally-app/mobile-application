@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { CampaignConfigContext } from "../../../context/campaignConfig";
 import { getGovWalletBalance } from "../../../services/govwallet/balance";
 import { ErrorWithCodes } from "../../../services/helpers";
+import { formatGovWalletDateToSallyDateFormat } from "../../../utils/dateTimeFormatter";
 
 export type GovWalletBalanceState =
   | "DEFAULT"
@@ -12,6 +13,7 @@ export type GovWalletBalanceState =
 export type GovWalletBalanceHook = {
   govWalletBalanceState: GovWalletBalanceState;
   govWalletBalanceInCents: number;
+  lastModifiedDate: string;
   govWalletBalanceError?: Error;
   updateGovWalletBalance: () => void;
   clearGovWalletBalanceError: () => void;
@@ -42,6 +44,7 @@ export const useGovWalletBalance = (
   const [govWalletBalanceInCents, setGovWalletBalanceInCents] =
     useState<number>(0);
   const [govWalletBalanceError, setGovWalletBalanceError] = useState<Error>();
+  const [lastModifiedDate, setLastModifiedDate] = useState<string>("");
 
   const clearGovWalletBalanceError = useCallback(
     (): void => setGovWalletBalanceError(undefined),
@@ -53,6 +56,7 @@ export const useGovWalletBalance = (
       const update = async (): Promise<void> => {
         try {
           setGovWalletBalanceInCents(0);
+          setLastModifiedDate("");
           setGovWalletBalanceState("FETCHING_BALANCE");
 
           const getBalancePromises = ids.flatMap((id) =>
@@ -75,6 +79,12 @@ export const useGovWalletBalance = (
 
           // We only retrieve the balance of the first account
           setGovWalletBalanceInCents(results[0].accountDetails[0].balance);
+
+          setLastModifiedDate(
+            formatGovWalletDateToSallyDateFormat(
+              results[0].accountDetails[0].modified
+            )
+          );
 
           if (!areAllAccountsActivated) {
             setGovWalletBalanceError(
@@ -111,5 +121,6 @@ export const useGovWalletBalance = (
     updateGovWalletBalance,
     clearGovWalletBalanceError,
     govWalletBalanceInCents,
+    lastModifiedDate,
   };
 };
