@@ -22,7 +22,7 @@ describe("formatDate", () => {
 
 describe("formatGovWalletDateTimeToSallyTimestamp", () => {
   it("should return the correct date format", () => {
-    expect.assertions(4);
+    expect.assertions(5);
     expect(
       formatGovWalletDateToSallyDateFormat("2022-07-25T11:57:50.000+08:00")
     ).toBe("25 Jul 2022, 11:57AM");
@@ -35,5 +35,8 @@ describe("formatGovWalletDateTimeToSallyTimestamp", () => {
     expect(
       formatGovWalletDateToSallyDateFormat("2024-02-29T23:59:59.000+08:00")
     ).toBe("29 Feb 2024, 11:59PM");
+    expect(
+      formatGovWalletDateToSallyDateFormat("2024-02-29T23:59:59.000+00:00")
+    ).toBe("1 Mar 2024, 7:59AM");
   });
 });
