@@ -32,7 +32,7 @@
     "expo-linking": "~2.3.1",
     "expo-localization": "~10.2.0",
     "expo-secure-store": "~9.0.1",
-    "expo-updates": "~0.8.0",
+    "expo-updates": "~0.10.14",
     "fp-ts": "^2.9.5",
     "google-libphonenumber": "^3.2.22",
     "io-ts": "^2.2.16",
