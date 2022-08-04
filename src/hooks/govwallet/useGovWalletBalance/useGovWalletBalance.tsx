@@ -73,8 +73,12 @@ export const useGovWalletBalance = (
 
           // We only check the eligibility of the balance of the first account
           const areAllBalancesEligible = results.every(
-            // Check if balance is strictly equals to 10000 cents
-            ({ accountDetails }) => accountDetails[0].balance === 10000
+            // if govwalletExactBalanceValue == -1 or undefined, dont check exact value
+            ({ accountDetails }) =>
+              accountDetails[0].balance ===
+                features?.govwalletExactBalanceValue ||
+              features?.govwalletExactBalanceValue === -1 ||
+              features?.govwalletExactBalanceValue === undefined
           );
 
           // We only retrieve the balance of the first account
@@ -107,7 +111,7 @@ export const useGovWalletBalance = (
       };
 
       update();
-    }, [ids, authKey, endpoint]);
+    }, [ids, authKey, endpoint, features?.govwalletExactBalanceValue]);
 
   useEffect(() => {
     if (features?.isPayNowTransaction) {

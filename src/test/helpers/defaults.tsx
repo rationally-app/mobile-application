@@ -29,6 +29,7 @@ export const defaultFeatures: CampaignFeatures = {
   flowType: "DEFAULT",
   id: { type: "STRING", scannerType: "QR", validation: "NRIC" },
   isPayNowTransaction: false,
+  govwalletExactBalanceValue: 10000,
 };
 
 export const defaultProducts: CampaignPolicy[] = [
