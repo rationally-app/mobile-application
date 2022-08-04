@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useEffect } from "react";
+import React, { ReactElement, useRef, useEffect, useState } from "react";
 import {
   createAppContainer,
   createSwitchNavigator,
@@ -18,6 +18,8 @@ import { CampaignInitialisationScreen } from "../components/CampaignInitialisati
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
 import { LogoutScreen } from "../components/Logout/LogoutScreen";
+import { isRootedExperimentalAsync, isDevice } from "expo-device";
+import { isUndefined } from "lodash";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -56,6 +58,7 @@ export const Content = (): ReactElement => {
   const navigatorRef = useRef<NavigationContainerComponent>(null);
   const appState = useAppState();
   const prefix = Linking.makeUrl("/");
+  const [rooted, setRooted] = useState<boolean | undefined>(undefined);
 
   const checkUpdates = useCheckUpdates();
 
@@ -65,6 +68,16 @@ export const Content = (): ReactElement => {
       updateI18nLocale();
     }
   }, [appState, checkUpdates]);
+
+  useEffect(() => {
+    isRootedExperimentalAsync().then((result) => {
+      setRooted(result);
+    });
+  }, []);
+
+  if (__DEV__ && !isUndefined(rooted) && !rooted) {
+    throw new Error("rooted device");
+  }
 
   return (
     <>
