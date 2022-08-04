@@ -58,6 +58,10 @@ jest.mock("expo-camera", () => {
 const mockRequestOTP = jest.spyOn(auth, "requestOTP");
 const mockValidateOTP = jest.spyOn(auth, "validateOTP");
 
+const mockRoute: any = {
+  params: {},
+};
+
 describe("LoginContainer", () => {
   afterEach(() => {
     mockCaptureException.mockReset();
@@ -70,7 +74,7 @@ describe("LoginContainer", () => {
   it("should render LoginScanCard", () => {
     expect.assertions(1);
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     expect(getByTestId(loginScanViewId)).not.toBeNull();
   });
@@ -84,7 +88,7 @@ describe("LoginContainer", () => {
     );
 
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
 
     await waitFor(() => {
@@ -95,7 +99,7 @@ describe("LoginContainer", () => {
   it("should render Id scanner", async () => {
     expect.assertions(1);
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
@@ -105,7 +109,7 @@ describe("LoginContainer", () => {
   it("valid QR detected and should render LoginMobileNumberCard", async () => {
     expect.assertions(1);
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
 
     const scanButton = getByTestId(scanButtonId);
@@ -121,7 +125,7 @@ describe("LoginContainer", () => {
     mockRequestOTP.mockResolvedValueOnce({ status: "OK" });
 
     const { getByTestId, queryByText } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
@@ -143,7 +147,7 @@ describe("LoginContainer", () => {
     mockRequestOTP.mockResolvedValueOnce({ status: "OK" });
 
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
@@ -169,7 +173,7 @@ describe("LoginContainer", () => {
     });
 
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
@@ -215,7 +219,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -244,7 +251,10 @@ describe("LoginContainer", () => {
           <CreateProvidersWrapper
             providers={[{ provider: AlertModalContextProvider }]}
           >
-            <InitialisationContainer navigation={mockNavigation} />
+            <InitialisationContainer
+              navigation={mockNavigation}
+              route={mockRoute}
+            />
           </CreateProvidersWrapper>
         );
 
@@ -266,7 +276,10 @@ describe("LoginContainer", () => {
           <CreateProvidersWrapper
             providers={[{ provider: AlertModalContextProvider }]}
           >
-            <InitialisationContainer navigation={mockNavigation} />
+            <InitialisationContainer
+              navigation={mockNavigation}
+              route={mockRoute}
+            />
           </CreateProvidersWrapper>
         );
 
@@ -289,7 +302,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -314,7 +330,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -339,7 +358,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -367,7 +389,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -404,7 +429,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -445,7 +473,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -480,7 +511,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -518,7 +552,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -556,7 +593,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -589,7 +629,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);

@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { transform } from "lodash";
 import { StyleSheet, View } from "react-native";
-import { CustomerQuotaStackParamList } from "../../types";
+import { CustomerAppealNavigationProps } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
@@ -22,14 +22,13 @@ import {
   ReasonSelectionCard,
   Reason,
 } from "./ReasonSelection/ReasonSelectionCard";
-import { pushRoute, navigateHome } from "../../common/navigation";
 import { AuthContext } from "../../context/auth";
 import { IdentificationContext } from "../../context/identification";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { StackScreenProps } from "@react-navigation/stack";
+import { CommonActions, StackActions } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -57,15 +56,10 @@ const styles = StyleSheet.create({
     marginBottom: size(1.5),
   },
 });
-type Props = StackScreenProps<
-  CustomerQuotaStackParamList,
-  "CustomerAppealScreen"
->;
 
-export const CustomerAppealScreen: FunctionComponent<Props> = ({
-  navigation,
-  route,
-}) => {
+export const CustomerAppealScreen: FunctionComponent<
+  CustomerAppealNavigationProps
+> = ({ navigation, route }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -78,7 +72,14 @@ export const CustomerAppealScreen: FunctionComponent<Props> = ({
   const { selectedIdType } = useContext(IdentificationContext);
 
   const onCancel = useCallback((): void => {
-    navigateHome(navigation.getParent("RootDrawer"));
+    // navigateHome(navigation.getParent("RootDrawer"));
+    // navigateHome(navigation);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "CollectCustomerDetailsScreen" }],
+      })
+    );
   }, [navigation]);
 
   const messageContent = useContext(ImportantMessageContentContext);
@@ -175,10 +176,16 @@ export const CustomerAppealScreen: FunctionComponent<Props> = ({
       );
       return;
     }
-    pushRoute(navigation, "CustomerQuotaProxy", {
-      id: ids,
-      products: [appealProduct],
-    });
+    // pushRoute(navigation, "CustomerQuotaProxy", {
+    //   id: ids,
+    //   products: [appealProduct],
+    // });
+    navigation.dispatch(
+      StackActions.push("CustomerQuotaProxy", {
+        id: ids,
+        products: [appealProduct],
+      })
+    );
   };
 
   return (
