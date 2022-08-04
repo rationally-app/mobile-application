@@ -71,15 +71,18 @@ export const useGovWalletBalance = (
               accountDetails[0].activationStatus === "ACTIVATED"
           );
 
-          // We only check the eligibility of the balance of the first account
-          const areAllBalancesEligible = results.every(
-            // if govwalletExactBalanceValue == -1 or undefined, dont check exact value
-            ({ accountDetails }) =>
-              accountDetails[0].balance ===
-                features?.govwalletExactBalanceValue ||
-              features?.govwalletExactBalanceValue === -1 ||
-              features?.govwalletExactBalanceValue === undefined
-          );
+          // if govwalletExactBalanceValue == -1 or undefined, dont check exact value. Will catch on GW side if insufficient
+          const isCheckForExactBalance =
+            (features?.govwalletExactBalanceValue ?? -1) >= 0;
+
+          // We only check the eligibility of the balance of the first account if isCheckForExactBalance is true
+          const areAllBalancesEligible = isCheckForExactBalance
+            ? results.every(
+                ({ accountDetails }) =>
+                  accountDetails[0].balance ===
+                  features?.govwalletExactBalanceValue
+              )
+            : true;
 
           // We only retrieve the balance of the first account
           setGovWalletBalanceInCents(results[0].accountDetails[0].balance);
