@@ -1,4 +1,4 @@
-import { NavigationProps, RootDrawerParamList } from "../types";
+import { CustomerQuotaStackNavigationProp } from "../types";
 import {
   // StackActions,
   NavigationReplaceActionPayload,
@@ -7,7 +7,7 @@ import {
 import { StackActions, CommonActions } from "@react-navigation/native";
 
 export const replaceRoute = (
-  navigation: NavigationProps<keyof RootDrawerParamList>["navigation"],
+  navigation: CustomerQuotaStackNavigationProp,
   name: string,
   params?: NavigationReplaceActionPayload["params"]
 ): boolean => {
@@ -16,7 +16,7 @@ export const replaceRoute = (
 
 // This resets the entire stack and puts the navigated route right on top of the home page
 export const resetRoute = (
-  navigation: NavigationProps<keyof RootDrawerParamList>["navigation"],
+  navigation: CustomerQuotaStackNavigationProp,
   name: string,
   params?: NavigationReplaceActionPayload["params"]
 ): boolean => {
@@ -28,7 +28,7 @@ export const resetRoute = (
 };
 
 export const pushRoute = (
-  navigation: NavigationProps<keyof RootDrawerParamList>["navigation"],
+  navigation: CustomerQuotaStackNavigationProp,
   name: string,
   params?: NavigationReplaceActionPayload["params"]
 ): boolean => {
@@ -37,7 +37,7 @@ export const pushRoute = (
 };
 
 export const navigateHome = (
-  navigation: NavigationProps<keyof RootDrawerParamList>["navigation"]
+  navigation: CustomerQuotaStackNavigationProp
 ): boolean => {
   const action = CommonActions.reset({
     index: 0,

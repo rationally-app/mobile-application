@@ -14,6 +14,6 @@ module.exports = {
   ],
   setupFilesAfterEnv: ["./jest.setup.ts"],
   transformIgnorePatterns: [
-    "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|@react-native-async-storage|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|async-storage|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)",
+    "node_modules/(?!(jest-)|react-clone-referenced-element|@react-native-community|@react-native-async-storage|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|react-native|@react-native/.*|async-storage|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)",
   ],
 };

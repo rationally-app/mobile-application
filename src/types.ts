@@ -1,7 +1,15 @@
 import * as t from "io-ts";
 import { DateFromNumber } from "io-ts-types/lib/DateFromNumber";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { RouteProp } from "@react-navigation/native";
+import {
+  DrawerNavigationProp,
+  DrawerScreenProps,
+} from "@react-navigation/drawer";
+import {
+  CompositeNavigationProp,
+  CompositeScreenProps,
+  RouteProp,
+} from "@react-navigation/native";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 
 export type RootDrawerParamList = {
   CampaignLocationsScreen: {
@@ -53,6 +61,47 @@ export interface NavigationProps<RouteName extends keyof RootDrawerParamList> {
   route: RouteProp<RootDrawerParamList, RouteName>;
 }
 
+export type DrawerNavigationProps = CompositeScreenProps<
+  DrawerScreenProps<RootDrawerParamList>,
+  StackScreenProps<RootStackParamList>
+>;
+
+export type CustomerQuotaStackNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<
+    CustomerQuotaStackParamList,
+    keyof CustomerQuotaStackParamList
+  >,
+  CompositeNavigationProp<
+    DrawerNavigationProp<RootDrawerParamList>,
+    StackNavigationProp<RootStackParamList>
+  >
+>;
+
+export type CustomerQuotaNavigationProps = CompositeScreenProps<
+  StackScreenProps<CustomerQuotaStackParamList, "CustomerQuotaScreen">,
+  CompositeScreenProps<
+    DrawerScreenProps<RootDrawerParamList>,
+    StackScreenProps<RootStackParamList>
+  >
+>;
+
+export type CustomerAppealNavigationProps = CompositeScreenProps<
+  StackScreenProps<CustomerQuotaStackParamList, "CustomerAppealScreen">,
+  CompositeScreenProps<
+    DrawerScreenProps<RootDrawerParamList>,
+    StackScreenProps<RootStackParamList>
+  >
+>;
+
+export type DailyStatisticsNavigationProps = CompositeScreenProps<
+  StackScreenProps<CustomerQuotaStackParamList, "DailyStatisticsScreen">,
+  CompositeScreenProps<
+    DrawerScreenProps<RootDrawerParamList>,
+    StackScreenProps<RootStackParamList>
+  >
+>;
+
+//
 export type AuthCredentials = {
   operatorToken: string;
   endpoint: string;
