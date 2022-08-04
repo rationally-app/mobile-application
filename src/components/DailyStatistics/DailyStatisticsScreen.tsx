@@ -29,6 +29,7 @@ import { NavigationProps } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
 import { useTheme } from "../../context/theme";
 import { NetworkError, SessionError } from "../../services/helpers";
+import { CommonActions } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   content: {
@@ -121,7 +122,15 @@ const DailyStatisticsScreen: FunctionComponent<
           });
           return;
       }
-      showErrorAlert(error, () => navigateHome(navigation));
+      showErrorAlert(error, () => {
+        // navigateHome(navigation)
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "CollectCustomerDetailsScreen" }],
+          })
+        );
+      });
     }
   }, [
     error,

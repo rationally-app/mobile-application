@@ -6,7 +6,10 @@ import React, {
   useContext,
 } from "react";
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
-import { CustomerQuotaStackParamList } from "../../types";
+import {
+  CustomerQuotaNavigationProps,
+  CustomerQuotaStackParamList,
+} from "../../types";
 import { color, size } from "../../common/styles";
 import { AuthContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -74,20 +77,18 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = StackScreenProps<
-  CustomerQuotaStackParamList,
-  "CustomerQuotaScreen"
-> & { navIds: string[] };
+type Props = CustomerQuotaNavigationProps & { navIds: string[] };
 
-export const CustomerQuotaScreen: FunctionComponent<Props> = ({ navIds }) => {
+export const CustomerQuotaScreen: FunctionComponent<Props> = ({
+  navigation,
+  navIds,
+}) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
       message: "CustomerQuotaScreen",
     });
   }, []);
-
-  const navigation = useNavigation();
 
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
@@ -204,11 +205,8 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({ navIds }) => {
           clearQuotaError();
           expireSession();
           showErrorAlert(quotaError, () => {
-            navigation.navigate("DrawerNavigator", {
-              screen: "CampaignLocationsScreen",
-              params: {
-                shouldAutoLoad: true,
-              },
+            navigation.navigate("CampaignLocationsScreen", {
+              shouldAutoLoad: true,
             });
           });
           return;
@@ -225,11 +223,8 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({ navIds }) => {
           clearGovWalletBalanceError();
           expireSession();
           showErrorAlert(govWalletBalanceError, () => {
-            navigation.navigate("DrawerNavigator", {
-              screen: "CampaignLocationsScreen",
-              params: {
-                shouldAutoLoad: true,
-              },
+            navigation.navigate("CampaignLocationsScreen", {
+              shouldAutoLoad: true,
             });
           });
           return;
@@ -244,11 +239,8 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({ navIds }) => {
           clearCartError();
           expireSession();
           showErrorAlert(cartError, () => {
-            navigation.navigate("DrawerNavigator", {
-              screen: "CampaignLocationsScreen",
-              params: {
-                shouldAutoLoad: true,
-              },
+            navigation.navigate("CampaignLocationsScreen", {
+              shouldAutoLoad: true,
             });
           });
           return;
@@ -354,7 +346,6 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({ navIds }) => {
 
   const { i18nt } = useTranslate();
 
-  console.log("ids", ids);
   return quotaState === "FETCHING_QUOTA" ? (
     <View style={styles.loadingWrapper}>
       <TopBackground style={{ height: "100%", maxHeight: "auto" }} />

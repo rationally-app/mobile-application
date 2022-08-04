@@ -21,6 +21,7 @@ import {
   TransitionPresets,
   StackNavigationOptions,
 } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
@@ -53,6 +54,9 @@ function DrawerNavigator(): JSX.Element {
   );
 }
 const Stack = createStackNavigator<RootStackParamList>();
+// TODO consider using NativeStack
+// const Stack = createNativeStackNavigator<RootStackParamList>();
+// https://reactnavigation.org/docs/native-stack-navigator
 const screenOptions: StackNavigationOptions = {
   ...TransitionPresets.SlideFromRightIOS,
   gestureEnabled: true,
