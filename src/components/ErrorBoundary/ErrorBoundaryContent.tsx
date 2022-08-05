@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Updates from "expo-updates";
 import React, { FunctionComponent } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, BackHandler } from "react-native";
 import { size, fontSize } from "../../common/styles";
 import { AppText } from "../Layout/AppText";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
@@ -93,37 +93,65 @@ export const ErrorBoundaryContent: FunctionComponent<{
     ? `(${errorName} ${formatDateTime(Date.now())})`
     : undefined;
 
-  let header, body, restartButtonText, logoutButtonText;
+  let header,
+    body,
+    primaryButtonText,
+    secondaryButtonText,
+    primaryButtonOnPress,
+    secondaryButtonOnPress;
 
   switch (errorName) {
     case "NetworkError": {
       header = i18nt("errorMessages", "networkError", "title");
       body = i18nt("errorMessages", "networkError", "body");
-      restartButtonText = i18nt(
+      primaryButtonText = i18nt(
         "errorMessages",
         "networkError",
         "primaryActionText"
       );
-      logoutButtonText = i18nt(
+      secondaryButtonText = i18nt(
         "errorMessages",
         "networkError",
         "secondaryActionText"
       );
+      primaryButtonOnPress = () => Updates.reloadAsync();
+      secondaryButtonOnPress = () =>
+        handleTotalReset([
+          AUTH_CREDENTIALS_STORE_KEY,
+          CAMPAIGN_CONFIGS_STORE_KEY,
+        ]);
+      break;
+    }
+    case "RootedDeviceDetectedError": {
+      header = i18nt("errorMessages", "rootedDeviceDetected", "title");
+      body = i18nt("errorMessages", "rootedDeviceDetected", "body");
+      primaryButtonText = i18nt(
+        "errorMessages",
+        "rootedDeviceDetected",
+        "primaryActionText"
+      );
+      primaryButtonOnPress = () => BackHandler.exitApp();
       break;
     }
     default: {
       header = i18nt("errorMessages", "systemError", "title");
       body = i18nt("errorMessages", "systemError", "body");
-      restartButtonText = i18nt(
+      primaryButtonText = i18nt(
         "errorMessages",
         "systemError",
         "primaryActionText"
       );
-      logoutButtonText = i18nt(
+      secondaryButtonText = i18nt(
         "errorMessages",
         "systemError",
         "secondaryActionText"
       );
+      primaryButtonOnPress = () => Updates.reloadAsync();
+      secondaryButtonOnPress = () =>
+        handleTotalReset([
+          AUTH_CREDENTIALS_STORE_KEY,
+          CAMPAIGN_CONFIGS_STORE_KEY,
+        ]);
     }
   }
 
@@ -140,24 +168,21 @@ export const ErrorBoundaryContent: FunctionComponent<{
       <View style={styles.buttonContainer}>
         <View style={styles.restartButton}>
           <DarkButton
-            text={restartButtonText}
-            onPress={() => Updates.reloadAsync()}
+            text={primaryButtonText}
+            onPress={primaryButtonOnPress}
             fullWidth={true}
           />
         </View>
-        <View>
-          <TouchableOpacity
-            style={styles.logoutButton}
-            onPress={() =>
-              handleTotalReset([
-                AUTH_CREDENTIALS_STORE_KEY,
-                CAMPAIGN_CONFIGS_STORE_KEY,
-              ])
-            }
-          >
-            <AppText style={styles.logoutText}>{logoutButtonText}</AppText>
-          </TouchableOpacity>
-        </View>
+        {secondaryButtonText ? (
+          <View>
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={secondaryButtonOnPress}
+            >
+              <AppText style={styles.logoutText}>{secondaryButtonText}</AppText>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </View>
     </View>
   );

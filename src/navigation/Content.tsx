@@ -18,8 +18,14 @@ import { CampaignInitialisationScreen } from "../components/CampaignInitialisati
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
 import { LogoutScreen } from "../components/Logout/LogoutScreen";
-import { isRootedExperimentalAsync, isDevice } from "expo-device";
-import { isUndefined } from "lodash";
+import { isRootedExperimentalAsync } from "expo-device";
+
+export class RootedDeviceDetectedError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = "RootedDeviceDetectedError";
+  }
+}
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -56,9 +62,9 @@ const AppContainer = createAppContainer(SwitchNavigator);
 
 export const Content = (): ReactElement => {
   const navigatorRef = useRef<NavigationContainerComponent>(null);
+  const [rooted, setRooted] = useState<boolean | undefined>(undefined);
   const appState = useAppState();
   const prefix = Linking.makeUrl("/");
-  const [rooted, setRooted] = useState<boolean | undefined>(undefined);
 
   const checkUpdates = useCheckUpdates();
 
@@ -75,8 +81,8 @@ export const Content = (): ReactElement => {
     });
   }, []);
 
-  if (__DEV__ && !isUndefined(rooted) && !rooted) {
-    throw new Error("rooted device");
+  if (!__DEV__ && rooted === true) {
+    throw new RootedDeviceDetectedError();
   }
 
   return (

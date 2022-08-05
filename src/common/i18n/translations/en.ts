@@ -500,6 +500,11 @@ export const en: Translations = {
       body: "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
       primaryActionText: "OK",
     },
+    rootedDeviceDetected: {
+      title: "Security issue",
+      body: "This device appears to be jailbroken.\nInstall SupplyAlly app on another device for security reason.",
+      primaryActionText: "Exit app",
+    },
     http500Error: {
       title: "System error",
       body: "Internal Server Error. Inform your in-charge about this issue.",
