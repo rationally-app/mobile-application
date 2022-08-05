@@ -7,6 +7,7 @@ import {
 import {
   CompositeNavigationProp,
   CompositeScreenProps,
+  NavigatorScreenParams,
   RouteProp,
 } from "@react-navigation/native";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
@@ -24,7 +25,7 @@ export type RootStackParamList = {
     authCredentials: AuthCredentials;
   };
   LoginScreen: undefined;
-  DrawerNavigator: RootDrawerParamList;
+  DrawerNavigator: NavigatorScreenParams<RootDrawerParamList>;
   LogoutScreen: undefined;
 };
 
@@ -61,6 +62,7 @@ export interface NavigationProps<RouteName extends keyof RootDrawerParamList> {
   route: RouteProp<RootDrawerParamList, RouteName>;
 }
 
+export type RootNavigationProp = StackScreenProps<RootStackParamList>;
 export type DrawerNavigationProps = CompositeScreenProps<
   DrawerScreenProps<RootDrawerParamList>,
   StackScreenProps<RootStackParamList>
@@ -77,6 +79,14 @@ export type CustomerQuotaStackNavigationProp = CompositeNavigationProp<
   >
 >;
 
+export type CollectCustomerDetailsScreenNavigationProps = CompositeScreenProps<
+  StackScreenProps<CustomerQuotaStackParamList, "CollectCustomerDetailsScreen">,
+  CompositeScreenProps<
+    DrawerScreenProps<RootDrawerParamList>,
+    StackScreenProps<RootStackParamList>
+  >
+>;
+
 export type CustomerQuotaNavigationProps = CompositeScreenProps<
   StackScreenProps<CustomerQuotaStackParamList, "CustomerQuotaScreen">,
   CompositeScreenProps<
@@ -85,7 +95,7 @@ export type CustomerQuotaNavigationProps = CompositeScreenProps<
   >
 >;
 
-export type CustomerAppealNavigationProps = CompositeScreenProps<
+export type CustomerAppealScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<CustomerQuotaStackParamList, "CustomerAppealScreen">,
   CompositeScreenProps<
     DrawerScreenProps<RootDrawerParamList>,
@@ -93,12 +103,9 @@ export type CustomerAppealNavigationProps = CompositeScreenProps<
   >
 >;
 
-export type DailyStatisticsNavigationProps = CompositeScreenProps<
-  StackScreenProps<CustomerQuotaStackParamList, "DailyStatisticsScreen">,
-  CompositeScreenProps<
-    DrawerScreenProps<RootDrawerParamList>,
-    StackScreenProps<RootStackParamList>
-  >
+export type DailyStatisticsScreenNavigationProps = StackScreenProps<
+  CustomerQuotaStackParamList,
+  "DailyStatisticsScreen"
 >;
 
 //

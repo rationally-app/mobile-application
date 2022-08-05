@@ -46,10 +46,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export const StatisticsHeaderComponent: FunctionComponent<
-  StatisticsHeader
-> = ({}) => {
-  const navigation = useNavigation();
+export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
+  navigation,
+}) => {
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();
     // navigation.openDrawer();
@@ -57,7 +56,7 @@ export const StatisticsHeaderComponent: FunctionComponent<
   };
 
   const onPressBack = (): void => {
-    navigation.navigate("CollectCustomerDetailsScreen");
+    navigation.navigate({ key: "CollectCustomerDetailsScreen" });
   };
 
   const { theme } = useTheme();

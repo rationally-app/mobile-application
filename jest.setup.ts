@@ -6,3 +6,4 @@ jest.mock("@react-native-async-storage/async-storage", () => mockAsyncStorage);
 jest.mock("react-native/Libraries/Vibration/Vibration", () => ({
   vibrate: () => "Vibration.vibrate",
 }));
+jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");

@@ -23,9 +23,9 @@ const styles = StyleSheet.create({
 
 export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   mode = AppMode.production,
+  navigation,
 }) => {
   const { theme } = useTheme();
-  const navigation = useNavigation();
 
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();

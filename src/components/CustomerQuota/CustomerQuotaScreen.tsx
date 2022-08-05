@@ -6,10 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
-import {
-  CustomerQuotaNavigationProps,
-  CustomerQuotaStackParamList,
-} from "../../types";
+import { CustomerQuotaNavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
 import { AuthContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -47,8 +44,6 @@ import {
 } from "@rationally-app/payment-qr-parser";
 import { useGovWalletBalance } from "../../hooks/govwallet/useGovWalletBalance/useGovWalletBalance";
 import { GovWalletIncorrectBalanceCard } from "./GovWallet/IncorrectBalanceCard";
-import { StackScreenProps } from "@react-navigation/stack";
-import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
