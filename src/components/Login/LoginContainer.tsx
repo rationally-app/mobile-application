@@ -257,6 +257,7 @@ export const InitialisationContainer: FunctionComponent<Props> = ({
           operatorToken: key,
         });
         setIsLoading(false);
+        console.log('setLoginStage("MOBILE_NUMBER")');
         setLoginStage("MOBILE_NUMBER");
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);

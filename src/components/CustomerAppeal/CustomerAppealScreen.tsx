@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { transform } from "lodash";
 import { StyleSheet, View } from "react-native";
-import { CustomerAppealNavigationProps } from "../../types";
+import { CustomerAppealScreenNavigationProps } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 });
 
 export const CustomerAppealScreen: FunctionComponent<
-  CustomerAppealNavigationProps
+  CustomerAppealScreenNavigationProps
 > = ({ navigation, route }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({

@@ -64,6 +64,7 @@ export const DropdownFilterInput: FunctionComponent<DropdownFilterInput> = ({
       <AppText style={styles.label}>{label}</AppText>
       {/* need a View because Android is not able to response to onTouchStart on a non-editable TextInput*/}
       <View
+        testID={"dropdown-filter-view"}
         onTouchStart={() => {
           openModal();
         }}

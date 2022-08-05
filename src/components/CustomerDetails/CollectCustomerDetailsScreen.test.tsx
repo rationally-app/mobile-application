@@ -5,7 +5,7 @@ import {
   fireEvent,
   waitFor,
 } from "@testing-library/react-native";
-import React, { FunctionComponent } from "react";
+import React from "react";
 import { Sentry } from "../../utils/errorTracking";
 import * as validateIdentification from "../../utils/validateIdentification";
 import { CampaignConfigsMap } from "../../context/campaignConfigsStore";
@@ -13,7 +13,7 @@ import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import { AlertModalContextProvider, ERROR_MESSAGE } from "../../context/alert";
 import { CreateProvidersWrapper } from "../../test/helpers/providers";
 import { defaultFeatures, defaultProducts } from "../../test/helpers/defaults";
-import { CollectCustomerDetailsScreenContainer } from "./CollectCustomerDetailsScreen";
+import { CollectCustomerDetailsScreen } from "./CollectCustomerDetailsScreen";
 import "../../common/i18n/i18nMock";
 import { IdentificationContextProvider } from "../../context/identification";
 
@@ -21,7 +21,24 @@ jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
-const mockNavigate = { navigate: jest.fn() };
+const mockedUseNavigation = jest.fn();
+jest.mock("@react-navigation/native", () => {
+  const actualNav = jest.requireActual("@react-navigation/native");
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: mockedUseNavigation,
+    }),
+    useIsFocused: jest.fn(),
+  };
+});
+
+const mockNavigate: any = {
+  navigate: jest.fn(),
+};
+const mockRoute: any = {
+  params: {},
+};
 const mockValidateAndCleanId = jest.spyOn(
   validateIdentification,
   "validateAndCleanId"
@@ -32,13 +49,6 @@ const alternateIdInputTestId = "input-with-label-input";
 const checkButtonText = "Check";
 const passportCountryInputPlaceholderText = "Search country";
 const COUNTRY = "Afghanistan";
-
-jest.mock("react-navigation", () => ({
-  withNavigation: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={mockNavigate} {...props} />,
-  withNavigationFocus: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={mockNavigate} {...props} />,
-}));
 
 describe("CollectCustomerDetailsScreen", () => {
   let allCampaignConfigs: CampaignConfigsMap;
@@ -90,7 +100,10 @@ describe("CollectCustomerDetailsScreen", () => {
             { provider: IdentificationContextProvider },
           ]}
         >
-          <CollectCustomerDetailsScreenContainer />
+          <CollectCustomerDetailsScreen
+            navigation={mockNavigate}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -130,7 +143,10 @@ describe("CollectCustomerDetailsScreen", () => {
             { provider: IdentificationContextProvider },
           ]}
         >
-          <CollectCustomerDetailsScreenContainer />
+          <CollectCustomerDetailsScreen
+            navigation={mockNavigate}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -172,7 +188,10 @@ describe("CollectCustomerDetailsScreen", () => {
             { provider: IdentificationContextProvider },
           ]}
         >
-          <CollectCustomerDetailsScreenContainer />
+          <CollectCustomerDetailsScreen
+            navigation={mockNavigate}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -182,6 +201,10 @@ describe("CollectCustomerDetailsScreen", () => {
       fireEvent.press(alternateIdTab!);
       expect(queryByText("Passport number")).not.toBeNull();
 
+      const viewDropdownModal = queryByTestId("dropdown-filter-view");
+      if (viewDropdownModal) {
+        fireEvent(viewDropdownModal, "onTouchStart");
+      }
       const passportNumberInput = queryByTestId(alternateIdInputTestId);
       const passportCountryInput = queryAllByPlaceholderText(
         passportCountryInputPlaceholderText
@@ -227,7 +250,10 @@ describe("CollectCustomerDetailsScreen", () => {
             { provider: IdentificationContextProvider },
           ]}
         >
-          <CollectCustomerDetailsScreenContainer />
+          <CollectCustomerDetailsScreen
+            navigation={mockNavigate}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -237,6 +263,10 @@ describe("CollectCustomerDetailsScreen", () => {
       fireEvent.press(alternateIdTab!);
       expect(queryByText("Passport number")).not.toBeNull();
 
+      const viewDropdownModal = queryByTestId("dropdown-filter-view");
+      if (viewDropdownModal) {
+        fireEvent(viewDropdownModal, "onTouchStart");
+      }
       const passportNumberInput = queryByTestId(alternateIdInputTestId);
       const passportCountryInput = queryAllByPlaceholderText(
         passportCountryInputPlaceholderText
