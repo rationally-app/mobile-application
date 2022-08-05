@@ -7,6 +7,7 @@ import {
   SessionError,
   ValidationError,
 } from "../../helpers";
+import { defaultFeatures } from "../../../test/helpers/defaults";
 
 const mockFetch = jest.fn();
 jest.spyOn(global, "fetch").mockImplementation(mockFetch);
@@ -28,7 +29,7 @@ const accountDetailWithSufficientBalance: GovWalletAccountDetail = {
   category: "credits",
   campaign: "campaign",
   activationStatus: "ACTIVATED",
-  balance: 10000,
+  balance: defaultFeatures.govwalletExactBalanceValue ?? 10000,
 };
 
 const response: GovWalletBalance = {

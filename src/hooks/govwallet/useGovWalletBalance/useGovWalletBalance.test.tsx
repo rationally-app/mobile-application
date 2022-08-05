@@ -57,7 +57,7 @@ describe("useGovWalletBalance", () => {
           accountDetails: [
             {
               activationStatus: "ACTIVATED",
-              balance: 10000,
+              balance: defaultFeatures.govwalletExactBalanceValue,
               modified: "2022-07-25T11:57:50.000+08:00",
             },
           ],
@@ -105,14 +105,14 @@ describe("useGovWalletBalance", () => {
         jest.clearAllMocks();
       });
 
-      it("should return 'ELIGIBLE' if balance is strictly equal to 10000 cents", async () => {
+      it("should return 'ELIGIBLE' if balance is strictly equal to defaultFeatures.govwalletExactBalanceValue", async () => {
         expect.assertions(3);
 
         mockGetGovWalletBalance.mockResolvedValueOnce({
           accountDetails: [
             {
               activationStatus,
-              balance: 10000,
+              balance: defaultFeatures.govwalletExactBalanceValue,
               modified: "2022-07-25T11:57:50.000+08:00",
             },
           ],
@@ -131,7 +131,7 @@ describe("useGovWalletBalance", () => {
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
       });
 
-      it("should return 'INELIGIBLE' if balance is more than 10000 cents", async () => {
+      it("should return 'INELIGIBLE' if balance is more than defaultFeatures.govwalletExactBalanceValue", async () => {
         expect.assertions(3);
 
         mockGetGovWalletBalance.mockResolvedValueOnce({
@@ -159,7 +159,7 @@ describe("useGovWalletBalance", () => {
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
       });
 
-      it("should return 'INELIGIBLE' if balance is less than 10000 cents", async () => {
+      it("should return 'INELIGIBLE' if balance is less than defaultFeatures.govwalletExactBalanceValue", async () => {
         expect.assertions(3);
 
         mockGetGovWalletBalance.mockResolvedValueOnce({
@@ -194,7 +194,7 @@ describe("useGovWalletBalance", () => {
           accountDetails: [
             {
               activationStatus: "DEACTIVATED",
-              balance: 10000,
+              balance: defaultFeatures.govwalletExactBalanceValue,
               modified: "2022-07-25T11:57:50.000+08:00",
             },
           ],
