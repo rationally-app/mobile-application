@@ -189,6 +189,7 @@ const CampaignFeatures = t.intersection([
     theme: t.union([t.literal("DEFAULT"), t.literal("GOVWALLET")]),
     transactionGrouping: t.boolean,
     isPayNowTransaction: t.boolean,
+    govwalletExactBalanceValue: t.number,
   }),
 ]);
 

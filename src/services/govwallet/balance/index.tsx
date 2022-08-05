@@ -8,6 +8,7 @@ import {
   ValidationError,
 } from "../../helpers";
 import { Sentry } from "../../../utils/errorTracking";
+import { defaultFeatures } from "../../../test/helpers/defaults";
 
 const mockGetGovWalletBalance = async (
   id: string,
@@ -29,7 +30,7 @@ const mockGetGovWalletBalance = async (
         category: "credits",
         campaign: "campaign",
         activationStatus: "ACTIVATED",
-        balance: 10000,
+        balance: defaultFeatures.govwalletExactBalanceValue ?? 10000,
       },
     ],
   };
