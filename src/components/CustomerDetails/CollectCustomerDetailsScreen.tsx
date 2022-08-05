@@ -38,7 +38,10 @@ import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext } from "../../context/alert";
 import { InputSelection } from "./InputSelection";
 import { InputPassportSection } from "./InputPassportSection";
-import { IdentificationFlag } from "../../types";
+import {
+  CollectCustomerDetailsScreenNavigationProps,
+  IdentificationFlag,
+} from "../../types";
 import {
   IdentificationContext,
   defaultSelectedIdType,
@@ -87,8 +90,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const CollectCustomerDetailsScreen: FunctionComponent<
-  NavigationFocusInjectedProps
+export const CollectCustomerDetailsScreen: FunctionComponent<
+  CollectCustomerDetailsScreenNavigationProps
 > = ({ navigation }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -96,8 +99,8 @@ const CollectCustomerDetailsScreen: FunctionComponent<
       message: "CollectCustomerDetailsScreen",
     });
   }, []);
-  const isFocused = useIsFocused();
   const { theme } = useTheme();
+  const isFocused = useIsFocused();
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
@@ -342,6 +345,3 @@ const CollectCustomerDetailsScreen: FunctionComponent<
     </>
   );
 };
-
-export const CollectCustomerDetailsScreenContainer =
-  CollectCustomerDetailsScreen;

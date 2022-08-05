@@ -24,7 +24,6 @@ import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime, isSameDay } from "date-fns";
 import { AlertModalContext } from "../../context/alert";
-import { navigateHome } from "../../common/navigation";
 import { NavigationProps } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
 import { useTheme } from "../../context/theme";
@@ -53,8 +52,8 @@ const styles = StyleSheet.create({
 });
 
 const DailyStatisticsScreen: FunctionComponent<
-  NavigationProps<"CustomerQuotaStack">
-> = ({ navigation }) => {
+  NavigationProps<"CustomerQuotaStack"> // TODO refactor this to be for DailyStatisticsScreen
+> = ({ navigation, route }) => {
   const { theme } = useTheme();
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -161,7 +160,11 @@ const DailyStatisticsScreen: FunctionComponent<
         />
         <View style={styles.content}>
           <View style={styles.headerText}>
-            <StatisticsHeader mode={config.appMode} />
+            <StatisticsHeader
+              mode={config.appMode}
+              navigation={navigation}
+              route={route}
+            />
             <TitleStatistic
               totalCount={totalCount ?? 0}
               currentTimestamp={currentTimestamp}

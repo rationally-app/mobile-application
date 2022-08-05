@@ -1,3 +1,3 @@
-import { CollectCustomerDetailsScreenContainer } from "../../components/CustomerDetails/CollectCustomerDetailsScreen";
+import { CollectCustomerDetailsScreen } from "../../components/CustomerDetails/CollectCustomerDetailsScreen";
 
-export default CollectCustomerDetailsScreenContainer;
+export default CollectCustomerDetailsScreen;
