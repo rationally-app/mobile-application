@@ -138,7 +138,8 @@ describe("useGovWalletBalance", () => {
           accountDetails: [
             {
               activationStatus,
-              balance: 10001,
+              balance:
+                (defaultFeatures.govwalletExactBalanceValue ?? 10000) + 1,
               modified: "2022-07-25T11:57:50.000+08:00",
             },
           ],
@@ -166,7 +167,8 @@ describe("useGovWalletBalance", () => {
           accountDetails: [
             {
               activationStatus,
-              balance: 9999,
+              balance:
+                (defaultFeatures.govwalletExactBalanceValue ?? 10000) - 1,
               modified: "2022-07-25T11:57:50.000+08:00",
             },
           ],
