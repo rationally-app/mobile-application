@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Updates from "expo-updates";
+import { reloadAsync } from "expo-updates";
 import React, { FunctionComponent } from "react";
 import { View, StyleSheet, TouchableOpacity, BackHandler } from "react-native";
 import { size, fontSize } from "../../common/styles";
@@ -86,7 +86,7 @@ export const ErrorBoundaryContent: FunctionComponent<{
     // clear async storage
     await AsyncStorage.clear();
 
-    Updates.reloadAsync();
+    reloadAsync();
   };
 
   const errorDescription = errorName
@@ -114,7 +114,7 @@ export const ErrorBoundaryContent: FunctionComponent<{
         "networkError",
         "secondaryActionText"
       );
-      primaryButtonOnPress = () => Updates.reloadAsync();
+      primaryButtonOnPress = () => reloadAsync();
       secondaryButtonOnPress = () =>
         handleTotalReset([
           AUTH_CREDENTIALS_STORE_KEY,
@@ -146,7 +146,7 @@ export const ErrorBoundaryContent: FunctionComponent<{
         "systemError",
         "secondaryActionText"
       );
-      primaryButtonOnPress = () => Updates.reloadAsync();
+      primaryButtonOnPress = () => reloadAsync();
       secondaryButtonOnPress = () =>
         handleTotalReset([
           AUTH_CREDENTIALS_STORE_KEY,
