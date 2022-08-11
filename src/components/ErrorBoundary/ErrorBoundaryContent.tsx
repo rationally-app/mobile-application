@@ -51,11 +51,11 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: size(4),
   },
-  restartButton: {
+  primaryButton: {
     maxWidth: 512,
     width: "100%",
   },
-  logoutButton: {
+  secondaryButton: {
     maxWidth: 512,
     width: "100%",
     paddingHorizontal: size(4),
@@ -166,7 +166,7 @@ export const ErrorBoundaryContent: FunctionComponent<{
         )}
       </View>
       <View style={styles.buttonContainer}>
-        <View style={styles.restartButton}>
+        <View style={styles.primaryButton}>
           <DarkButton
             text={primaryButtonText}
             onPress={primaryButtonOnPress}
@@ -176,7 +176,7 @@ export const ErrorBoundaryContent: FunctionComponent<{
         {secondaryButtonText ? (
           <View>
             <TouchableOpacity
-              style={styles.logoutButton}
+              style={styles.secondaryButton}
               onPress={secondaryButtonOnPress}
             >
               <AppText style={styles.logoutText}>{secondaryButtonText}</AppText>
