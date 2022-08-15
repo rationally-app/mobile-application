@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
 
 export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   mode = AppMode.production,
-  navigation,
 }) => {
+  const navigation = useNavigation();
   const { theme } = useTheme();
 
   const onPressOpenDrawer = (): void => {
