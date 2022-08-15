@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useEffect } from "react";
+import React, { ReactElement, useRef, useEffect, useState } from "react";
 import {
   createAppContainer,
   createSwitchNavigator,
@@ -18,6 +18,14 @@ import { CampaignInitialisationScreen } from "../components/CampaignInitialisati
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
 import { LogoutScreen } from "../components/Logout/LogoutScreen";
+import { isRootedExperimentalAsync } from "expo-device";
+
+export class RootedDeviceDetectedError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = "RootedDeviceDetectedError";
+  }
+}
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -54,6 +62,7 @@ const AppContainer = createAppContainer(SwitchNavigator);
 
 export const Content = (): ReactElement => {
   const navigatorRef = useRef<NavigationContainerComponent>(null);
+  const [rooted, setRooted] = useState<boolean | undefined>(undefined);
   const appState = useAppState();
   const prefix = Linking.makeUrl("/");
 
@@ -65,6 +74,16 @@ export const Content = (): ReactElement => {
       updateI18nLocale();
     }
   }, [appState, checkUpdates]);
+
+  useEffect(() => {
+    isRootedExperimentalAsync().then((result) => {
+      setRooted(result);
+    });
+  }, []);
+
+  if (!__DEV__ && rooted === true) {
+    throw new RootedDeviceDetectedError();
+  }
 
   return (
     <>

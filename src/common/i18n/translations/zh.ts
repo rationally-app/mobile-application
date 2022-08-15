@@ -497,6 +497,11 @@ export const zh: Translations = {
       body: "账户已停止使用。请联系您的负责人。",
       primaryActionText: "确定",
     },
+    rootedDeviceDetected: {
+      title: "安全问题",
+      body: "此设备似乎已越狱。出于安全原因，请使用其他设备安装 SupplyAlly app。",
+      primaryActionText: "退出程序",
+    },
     // TODO: HTTP error translations below will be done at a later date
     http500Error: {
       title: "System error",
