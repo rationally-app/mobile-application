@@ -33,11 +33,7 @@ import { sortBy } from "lodash";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { StackScreenProps } from "@react-navigation/stack";
-import {
-  CompositeScreenProps,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/core";
+import { CompositeScreenProps } from "@react-navigation/core";
 import { useConfigContext } from "../../context/config";
 
 const styles = StyleSheet.create({
@@ -74,15 +70,13 @@ export const CampaignLocationsScreen: FunctionComponent<
     DrawerScreenProps<RootDrawerParamList, "CampaignLocationsScreen">,
     StackScreenProps<RootStackParamList>
   >
-> = () => {
+> = ({ navigation, route }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
       message: "CampaignLocationsScreen",
     });
   }, []);
-  const navigation = useNavigation();
-  const route = useRoute();
 
   const { config } = useConfigContext();
   /**
@@ -115,15 +109,18 @@ export const CampaignLocationsScreen: FunctionComponent<
         icon: "map-marker-plus",
         label: i18nt("navigationDrawer", "addCampaign"),
         onPress: () => {
-          navigation.navigate({ key: "LoginScreen" });
+          navigation.navigate("LoginScreen");
         },
       },
       {
         icon: "map-search",
         label: i18nt("navigationDrawer", "changeChampaign"),
         onPress: () => {
-          navigation.navigate("CampaignLocationsScreen", {
-            shouldAutoLoad,
+          navigation.navigate({
+            key: "CampaignLocationsScreen",
+            params: {
+              shouldAutoLoad,
+            },
           });
         },
       },
@@ -139,7 +136,10 @@ export const CampaignLocationsScreen: FunctionComponent<
 
   const navigateToCampaignLocation = useCallback(
     (authCredentials: AuthCredentials): void => {
-      navigation.navigate("CampaignInitialisationScreen", { authCredentials });
+      navigation.navigate({
+        key: "CampaignInitialisationScreen",
+        params: { authCredentials },
+      });
     },
     [navigation]
   );
@@ -156,7 +156,7 @@ export const CampaignLocationsScreen: FunctionComponent<
         navigateToCampaignLocation(Object.values(authCredentials)[0]);
       } else if (numCampaignLocations === 0) {
         // Automatically go to the Login Screen to add a campaign
-        navigation.navigate({ key: "LoginScreen" });
+        navigation.navigate("LoginScreen");
       }
     }
   }, [
