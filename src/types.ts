@@ -103,9 +103,12 @@ export type CustomerAppealScreenNavigationProps = CompositeScreenProps<
   >
 >;
 
-export type DailyStatisticsScreenNavigationProps = StackScreenProps<
-  CustomerQuotaStackParamList,
-  "DailyStatisticsScreen"
+export type DailyStatisticsScreenProps = CompositeScreenProps<
+  StackScreenProps<CustomerQuotaStackParamList, "DailyStatisticsScreen">,
+  CompositeScreenProps<
+    DrawerScreenProps<RootDrawerParamList>,
+    StackScreenProps<RootStackParamList>
+  >
 >;
 
 //

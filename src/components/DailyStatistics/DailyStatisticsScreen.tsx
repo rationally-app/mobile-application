@@ -24,7 +24,7 @@ import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime, isSameDay } from "date-fns";
 import { AlertModalContext } from "../../context/alert";
-import { NavigationProps } from "../../types";
+import { DailyStatisticsScreenProps } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
 import { useTheme } from "../../context/theme";
 import { NetworkError, SessionError } from "../../services/helpers";
@@ -51,9 +51,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const DailyStatisticsScreen: FunctionComponent<
-  NavigationProps<"CustomerQuotaStack"> // TODO refactor this to be for DailyStatisticsScreen
-> = ({ navigation, route }) => {
+const DailyStatisticsScreen: FunctionComponent<DailyStatisticsScreenProps> = ({
+  navigation,
+  route,
+}) => {
   const { theme } = useTheme();
   useEffect(() => {
     Sentry.addBreadcrumb({

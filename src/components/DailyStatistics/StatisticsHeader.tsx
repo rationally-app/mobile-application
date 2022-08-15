@@ -3,12 +3,12 @@ import { size, fontSize } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
-import { NavigationProps } from "../../types";
+import { DrawerActions } from "@react-navigation/native";
+import { DailyStatisticsScreenProps } from "../../types";
 import { AppText } from "../Layout/AppText";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../context/theme";
-interface StatisticsHeader extends NavigationProps<"CustomerQuotaStack"> {
+interface StatisticsHeader extends DailyStatisticsScreenProps {
   mode?: AppMode;
 }
 
@@ -51,12 +51,11 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
 }) => {
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();
-    // navigation.openDrawer();
-    DrawerActions.openDrawer();
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   const onPressBack = (): void => {
-    navigation.navigate({ key: "CollectCustomerDetailsScreen" });
+    navigation.navigate("CollectCustomerDetailsScreen");
   };
 
   const { theme } = useTheme();
