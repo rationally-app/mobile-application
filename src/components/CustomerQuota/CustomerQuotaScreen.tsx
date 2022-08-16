@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
-import { CustomerQuotaNavigationProps } from "../../types";
+import { CustomerQuotaScreenNavigationProps } from "../../types";
 import { color, size } from "../../common/styles";
 import { AuthContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -72,11 +72,11 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = CustomerQuotaNavigationProps & { navIds: string[] };
+type Props = CustomerQuotaScreenNavigationProps & { navIds: string[] };
 
 export const CustomerQuotaScreen: FunctionComponent<Props> = ({
-  navigation,
   navIds,
+  navigation,
 }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
@@ -133,10 +133,7 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
   }, [cartState]);
 
   const onCancel = useCallback((): void => {
-    navigation.navigate({
-      name: "DrawerNavigator",
-      key: "CollectCustomerDetailsScreen",
-    });
+    navigation.navigate("CollectCustomerDetailsScreen");
   }, [navigation]);
 
   const onBack = useCallback((): void => {
@@ -152,10 +149,7 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
   }, [ids, navigation]);
 
   const onNextId = useCallback((): void => {
-    navigation.navigate({
-      name: "DrawerNavigator",
-      key: "CollectCustomerDetailsScreen",
-    });
+    navigation.navigate("CollectCustomerDetailsScreen");
   }, [navigation]);
 
   useEffect(() => {

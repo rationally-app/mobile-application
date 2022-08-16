@@ -45,7 +45,7 @@ export type CustomerQuotaStackParamList = {
   CustomerQuotaProxy: {
     operatorToken: string;
     endpoint: string;
-    ids: string[];
+    id: string;
     products: CampaignPolicy[];
   };
   CustomerQuotaScreen: {
@@ -87,8 +87,17 @@ export type CollectCustomerDetailsScreenNavigationProps = CompositeScreenProps<
   >
 >;
 
-export type CustomerQuotaNavigationProps = CompositeScreenProps<
-  StackScreenProps<CustomerQuotaStackParamList, "CustomerQuotaScreen">,
+export type CustomerQuotaProxyNavigationProps = CompositeScreenProps<
+  StackScreenProps<CustomerQuotaStackParamList, "CustomerQuotaProxy">,
+  CompositeScreenProps<
+    DrawerScreenProps<RootDrawerParamList>,
+    StackScreenProps<RootStackParamList>
+  >
+>;
+
+export type CustomerQuotaScreenNavigationProps = CompositeScreenProps<
+  | StackScreenProps<CustomerQuotaStackParamList, "CustomerQuotaScreen">
+  | StackScreenProps<CustomerQuotaStackParamList, "CustomerQuotaProxy">,
   CompositeScreenProps<
     DrawerScreenProps<RootDrawerParamList>,
     StackScreenProps<RootStackParamList>
