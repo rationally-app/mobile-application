@@ -74,6 +74,7 @@ export enum ERROR_MESSAGE {
   PAYMENT_QR_UNSUPPORTED_TEXT_DISABLED = "Payment QR is unsupported. Scan a valid code",
   GOVWALLET_BALANCE_ERROR = "We are currently facing connectivity issues. Try again later or contact your in-charge if the problem persists.",
   GOVWALLET_ACCOUNT_DEACTIVATED_ERROR = "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
+  GOVWALLET_ACCOUNT_INVALID = "Invalid identity. Inform your in-charge about this issue.",
 }
 
 const errorNameToTranslationKeyMappings: Record<string, string> = {
@@ -164,6 +165,7 @@ const messageToTranslationKeyMappings: Record<string, string> = {
     "unsupportedPaymentMethodInPaymentQRTextDisabled",
   [ERROR_MESSAGE.GOVWALLET_ACCOUNT_DEACTIVATED_ERROR]:
     "govwalletAccountDeactivated",
+  [ERROR_MESSAGE.GOVWALLET_ACCOUNT_INVALID]: "govWalletAccountInvalid",
   [CONFIRMATION_MESSAGE.PAYMENT_COLLECTION]:
     CONFIRMATION_MESSAGE.PAYMENT_COLLECTION,
   [CONFIRMATION_MESSAGE.CONFIRM_LOGOUT]: CONFIRMATION_MESSAGE.CONFIRM_LOGOUT,
