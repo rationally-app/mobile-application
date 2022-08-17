@@ -545,6 +545,11 @@ export type Translations = {
       body?: string;
       primaryActionText: string;
     };
+    govWalletAccountInvalid: {
+      title: string;
+      body?: string;
+      primaryActionText: string;
+    };
     rootedDeviceDetected: {
       title: string;
       body?: string;
