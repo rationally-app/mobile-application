@@ -19,6 +19,7 @@ import { CampaignLocationsScreen } from "../components/CampaignLocations/Campaig
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
 import { LogoutScreen } from "../components/Logout/LogoutScreen";
 import { isRootedExperimentalAsync } from "expo-device";
+import JailMonkey from "jail-monkey";
 
 export class RootedDeviceDetectedError extends Error {
   constructor(message?: string) {
@@ -77,7 +78,8 @@ export const Content = (): ReactElement => {
 
   useEffect(() => {
     isRootedExperimentalAsync().then((result) => {
-      setRooted(result);
+      const jailBrokenResult = JailMonkey.isJailBroken() || result;
+      setRooted(jailBrokenResult);
     });
   }, []);
 

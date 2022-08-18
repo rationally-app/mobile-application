@@ -38,6 +38,7 @@
     "io-ts": "^2.2.16",
     "io-ts-reporters": "^1.2.2",
     "io-ts-types": "^0.5.16",
+    "jail-monkey": "^2.7.0",
     "lodash": "^4.17.21",
     "react": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
