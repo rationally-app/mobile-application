@@ -21,7 +21,6 @@ import {
   TransitionPresets,
   StackNavigationOptions,
 } from "@react-navigation/stack";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CampaignInitialisationScreen } from "../components/CampaignInitialisation/CampaignInitialisationScreen";
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
