@@ -8,7 +8,6 @@ import {
   CompositeNavigationProp,
   CompositeScreenProps,
   NavigatorScreenParams,
-  RouteProp,
 } from "@react-navigation/native";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 
@@ -57,12 +56,6 @@ export type CustomerQuotaStackParamList = {
   DailyStatisticsScreen: undefined;
 };
 
-export interface NavigationProps<RouteName extends keyof RootDrawerParamList> {
-  navigation: DrawerNavigationProp<RootDrawerParamList, RouteName>;
-  route: RouteProp<RootDrawerParamList, RouteName>;
-}
-
-export type RootNavigationProp = StackScreenProps<RootStackParamList>;
 export type DrawerNavigationProps = CompositeScreenProps<
   DrawerScreenProps<RootDrawerParamList>,
   StackScreenProps<RootStackParamList>

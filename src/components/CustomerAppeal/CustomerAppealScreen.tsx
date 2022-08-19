@@ -72,8 +72,6 @@ export const CustomerAppealScreen: FunctionComponent<
   const { selectedIdType } = useContext(IdentificationContext);
 
   const onCancel = useCallback((): void => {
-    // navigateHome(navigation.getParent("RootDrawer"));
-    // navigateHome(navigation);
     navigation.dispatch(
       CommonActions.reset({
         index: 0,

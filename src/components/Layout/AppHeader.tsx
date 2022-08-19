@@ -4,11 +4,10 @@ import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
-import { NavigationProps } from "../../types";
 import { AppName } from "./AppName";
 import { useTheme } from "../../context/theme";
 
-interface AppHeader extends NavigationProps<"CustomerQuotaStack"> {
+interface AppHeader {
   mode?: AppMode;
 }
 

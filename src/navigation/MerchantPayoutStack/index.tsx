@@ -2,6 +2,7 @@ import {
   createStackNavigator,
   TransitionPresets,
   StackNavigationOptions,
+  StackScreenProps,
 } from "@react-navigation/stack";
 import MerchantPayoutScreen from "./MerchantPayoutScreen";
 import PayoutFeedbackScreen from "./PayoutFeedbackScreen";
@@ -11,6 +12,7 @@ import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore"
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import { MerchantPayoutStackParamList, RootDrawerParamList } from "../../types";
+import { CompositeScreenProps } from "@react-navigation/native";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 
 const Stack = createStackNavigator<MerchantPayoutStackParamList>();
@@ -21,9 +23,14 @@ const screenOptions: StackNavigationOptions = {
   headerShown: false,
 };
 
-const MerchantPayoutStack: FunctionComponent<
-  DrawerScreenProps<RootDrawerParamList, "MerchantPayoutStack">
-> = (navigation, route) => {
+type Props = CompositeScreenProps<
+  StackScreenProps<MerchantPayoutStackParamList, "MerchantPayoutScreen">,
+  DrawerScreenProps<RootDrawerParamList>
+>;
+const MerchantPayoutStack: FunctionComponent<Props> = ({
+  navigation,
+  route,
+}) => {
   const operatorToken = route.params.operatorToken;
   const endpoint = route.params.endpoint;
 
@@ -35,7 +42,7 @@ const MerchantPayoutStack: FunctionComponent<
 
   useEffect(() => {
     if (!hasDataFromStore) {
-      navigation.navigate("CampaignLocationsScreen");
+      navigation.getParent()?.navigate("CampaignLocationsScreen");
     }
   }, [hasDataFromStore, navigation]);
 

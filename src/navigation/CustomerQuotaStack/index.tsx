@@ -47,8 +47,7 @@ const CustomerQuotaStack: FunctionComponent<Props> = ({
   const { setTheme } = useTheme();
   useEffect(() => {
     if (!hasDataFromStore) {
-      const drawerNavigation = navigation.getParent("RootDrawer");
-      drawerNavigation?.navigate("CampaignLocationsScreen");
+      navigation.getParent()?.navigate("CampaignLocationsScreen");
     }
   }, [hasDataFromStore, navigation]);
 
