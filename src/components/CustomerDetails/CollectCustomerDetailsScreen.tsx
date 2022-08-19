@@ -19,7 +19,6 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
-import { NavigationFocusInjectedProps } from "react-navigation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IdScanner } from "../IdScanner/IdScanner";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
