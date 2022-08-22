@@ -140,11 +140,6 @@ export const CampaignInitialisationScreen: FunctionComponent<
     // Reset IdentificationContext when adding or switching between campaigns
     resetSelectedIdType();
 
-    console.log(
-      "HELLO navigation - CampaignInitialisationScreen",
-      authCredentials.operatorToken,
-      authCredentials.endpoint
-    );
     if (campaignConfig?.features?.flowType) {
       switch (campaignConfig?.features?.flowType) {
         case "DEFAULT":

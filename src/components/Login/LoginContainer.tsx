@@ -258,7 +258,6 @@ export const InitialisationContainer: FunctionComponent<
           operatorToken: key,
         });
         setIsLoading(false);
-        console.log('setLoginStage("MOBILE_NUMBER")');
         setLoginStage("MOBILE_NUMBER");
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
