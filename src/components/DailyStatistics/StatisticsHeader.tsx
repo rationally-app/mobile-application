@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
-import { DailyStatisticsScreenProps } from "../../types";
+import { DailyStatisticsScreenProps, Screens } from "../../types";
 import { AppText } from "../Layout/AppText";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../context/theme";
@@ -55,7 +55,7 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
   };
 
   const onPressBack = (): void => {
-    navigation.navigate("CollectCustomerDetailsScreen");
+    navigation.navigate(Screens.CollectCustomerDetailsScreen);
   };
 
   const { theme } = useTheme();

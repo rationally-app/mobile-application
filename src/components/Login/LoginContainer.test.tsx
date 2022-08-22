@@ -200,7 +200,7 @@ describe("LoginContainer", () => {
       endpoint
     );
     expect(mockNavigation.navigate).toHaveBeenCalledWith(
-      "CampaignInitialisationScreen",
+      "Campaign Initialisation Screen",
       {
         authCredentials: {
           operatorToken: key,

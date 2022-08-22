@@ -8,7 +8,13 @@ import React, {
 import { Sentry } from "../../utils/errorTracking";
 import { StyleSheet, View } from "react-native";
 import { size } from "../../common/styles";
-import { AuthCredentials, RootStackParamList } from "../../types";
+import {
+  AuthCredentials,
+  CampaignInitialisationScreenNavigationProps,
+  Drawers,
+  Screens,
+  Stacks,
+} from "../../types";
 import { UpdateByRestartingAlert } from "./UpdateByRestartingAlert";
 import { UpdateFromAppStoreAlert } from "./UpdateFromAppStoreAlert";
 import { LoadingView } from "../Loading";
@@ -22,7 +28,6 @@ import { checkVersion } from "./utils";
 import { NetworkError, SessionError } from "../../services/helpers";
 import { AuthStoreContext } from "../../context/authStore";
 import { IdentificationContext } from "../../context/identification";
-import { StackScreenProps } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -47,15 +52,9 @@ export class UpdateError extends Error {
   }
 }
 
-type Props = StackScreenProps<
-  RootStackParamList,
-  "CampaignInitialisationScreen"
->;
-
-export const CampaignInitialisationScreen: FunctionComponent<Props> = ({
-  navigation,
-  route,
-}) => {
+export const CampaignInitialisationScreen: FunctionComponent<
+  CampaignInitialisationScreenNavigationProps
+> = ({ navigation, route }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -114,8 +113,8 @@ export const CampaignInitialisationScreen: FunctionComponent<Props> = ({
           expiry: new Date().getTime(),
         });
         showErrorAlert(updateCampaignConfigError, () =>
-          navigation.navigate("DrawerNavigator", {
-            screen: "CampaignLocationsScreen",
+          navigation.navigate(Drawers.MainDrawer, {
+            screen: Screens.CampaignLocationsScreen,
             params: {
               shouldAutoLoad: true,
             },
@@ -144,20 +143,27 @@ export const CampaignInitialisationScreen: FunctionComponent<Props> = ({
     if (campaignConfig?.features?.flowType) {
       switch (campaignConfig?.features?.flowType) {
         case "DEFAULT":
-          navigation.navigate("DrawerNavigator", {
-            screen: "CustomerQuotaStack",
+          navigation.navigate(Drawers.MainDrawer, {
+            screen: Stacks.CustomerQuotaStack,
             params: {
-              operatorToken: authCredentials.operatorToken,
-              endpoint: authCredentials.endpoint,
+              screen: Screens.CollectCustomerDetailsScreen,
+              params: {
+                operatorToken: authCredentials.operatorToken,
+                endpoint: authCredentials.endpoint,
+              },
             },
           });
+
           break;
         case "MERCHANT":
-          navigation.navigate("DrawerNavigator", {
-            screen: "MerchantPayoutStack",
+          navigation.navigate(Drawers.MainDrawer, {
+            screen: Stacks.MerchantPayoutStack,
             params: {
-              operatorToken: authCredentials.operatorToken,
-              endpoint: authCredentials.endpoint,
+              screen: Screens.MerchantPayoutScreen,
+              params: {
+                operatorToken: authCredentials.operatorToken,
+                endpoint: authCredentials.endpoint,
+              },
             },
           });
           break;

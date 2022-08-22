@@ -25,7 +25,7 @@ import { CampaignInitialisationScreen } from "../components/CampaignInitialisati
 import { CampaignLocationsScreen } from "../components/CampaignLocations/CampaignLocationsScreen";
 import { updateI18nLocale } from "../common/i18n/i18nSetup";
 import { LogoutScreen } from "../components/Logout/LogoutScreen";
-import { RootStackParamList } from "../types";
+import { Drawers, RootStackParams, Screens, Stacks } from "../types";
 import { isRootedExperimentalAsync } from "expo-device";
 
 export class RootedDeviceDetectedError extends Error {
@@ -50,20 +50,23 @@ function DrawerNavigator(): JSX.Element {
       screenOptions={drawerNavigatorScreenOptions}
     >
       <Drawer.Screen
-        name="CampaignLocationsScreen"
+        name={Screens.CampaignLocationsScreen}
         component={CampaignLocationsScreen}
       />
-      <Drawer.Screen name="CustomerQuotaStack" component={CustomerQuotaStack} />
       <Drawer.Screen
-        name="MerchantPayoutStack"
+        name={Stacks.CustomerQuotaStack}
+        component={CustomerQuotaStack}
+      />
+      <Drawer.Screen
+        name={Stacks.MerchantPayoutStack}
         component={MerchantPayoutStack}
       />
     </Drawer.Navigator>
   );
 }
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<RootStackParams>();
 // TODO consider using NativeStack
-// const Stack = createNativeStackNavigator<RootStackParamList>();
+// const Stack = createNativeStackNavigator<RootStackParams>();
 // https://reactnavigation.org/docs/native-stack-navigator
 const screenOptions: StackNavigationOptions = {
   ...TransitionPresets.SlideFromRightIOS,
@@ -112,16 +115,22 @@ export const Content = (): ReactElement => {
         <NavigationContainer ref={navigatorRef} linking={linking}>
           <Stack.Navigator
             id="RootStack"
-            initialRouteName={"LoginScreen"}
+            initialRouteName={Screens.LoginScreen}
             screenOptions={screenOptions}
           >
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            <Stack.Screen name={Screens.LoginScreen} component={LoginScreen} />
             <Stack.Screen
-              name="CampaignInitialisationScreen"
+              name={Screens.CampaignInitialisationScreen}
               component={CampaignInitialisationScreen}
             />
-            <Stack.Screen name="LogoutScreen" component={LogoutScreen} />
-            <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
+            <Stack.Screen
+              name={Screens.LogoutScreen}
+              component={LogoutScreen}
+            />
+            <Stack.Screen
+              name={Drawers.MainDrawer}
+              component={DrawerNavigator}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </View>
