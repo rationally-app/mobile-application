@@ -119,20 +119,23 @@ describe("CustomerAppealScreen", () => {
 
     fireEvent.press(reasonOne!);
     expect(mockedDispatch).toHaveBeenCalledTimes(1);
-    expect(mockStackedActionsPush).toHaveBeenCalledWith("CustomerQuotaProxy", {
-      id: ["valid-id"],
-      products: [
-        {
-          category: "toilet-paper",
-          categoryType: "APPEAL",
-          name: "Toilet Paper",
-          order: 1,
-          quantity: {
-            period: 7,
-            limit: 2,
+    expect(mockStackedActionsPush).toHaveBeenCalledWith(
+      "Customer Quota Proxy",
+      {
+        id: ["valid-id"],
+        products: [
+          {
+            category: "toilet-paper",
+            categoryType: "APPEAL",
+            name: "Toilet Paper",
+            order: 1,
+            quantity: {
+              period: 7,
+              limit: 2,
+            },
           },
-        },
-      ],
-    });
+        ],
+      }
+    );
   });
 });

@@ -6,7 +6,11 @@ import React, {
   useContext,
 } from "react";
 import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
-import { CustomerQuotaScreenNavigationProps } from "../../types";
+import {
+  CustomerQuotaScreenNavigationProps,
+  Drawers,
+  Screens,
+} from "../../types";
 import { color, size } from "../../common/styles";
 import { AuthContext } from "../../context/auth";
 import { AppHeader } from "../Layout/AppHeader";
@@ -133,7 +137,7 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
   }, [cartState]);
 
   const onCancel = useCallback((): void => {
-    navigation.navigate("CollectCustomerDetailsScreen");
+    navigation.navigate(Screens.CollectCustomerDetailsScreen);
   }, [navigation]);
 
   const onBack = useCallback((): void => {
@@ -145,11 +149,11 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
   }, []);
 
   const onAppeal = useCallback((): void => {
-    navigation.navigate("CustomerAppealScreen", { ids });
+    navigation.navigate(Screens.CustomerAppealScreen, { ids });
   }, [ids, navigation]);
 
   const onNextId = useCallback((): void => {
-    navigation.navigate("CollectCustomerDetailsScreen");
+    navigation.navigate(Screens.CollectCustomerDetailsScreen);
   }, [navigation]);
 
   useEffect(() => {
@@ -157,8 +161,8 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
 
     const onBackPress = (): boolean => {
       navigation.navigate({
-        name: "DrawerNavigator",
-        key: "CollectCustomerDetailsScreen",
+        name: Drawers.MainDrawer,
+        key: Screens.CollectCustomerDetailsScreen,
       });
       return true;
     };
@@ -195,7 +199,7 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
           clearQuotaError();
           expireSession();
           showErrorAlert(quotaError, () => {
-            navigation.navigate("CampaignLocationsScreen", {
+            navigation.navigate(Screens.CampaignLocationsScreen, {
               shouldAutoLoad: true,
             });
           });
@@ -213,7 +217,7 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
           clearGovWalletBalanceError();
           expireSession();
           showErrorAlert(govWalletBalanceError, () => {
-            navigation.navigate("CampaignLocationsScreen", {
+            navigation.navigate(Screens.CampaignLocationsScreen, {
               shouldAutoLoad: true,
             });
           });
@@ -229,7 +233,7 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
           clearCartError();
           expireSession();
           showErrorAlert(cartError, () => {
-            navigation.navigate("CampaignLocationsScreen", {
+            navigation.navigate(Screens.CampaignLocationsScreen, {
               shouldAutoLoad: true,
             });
           });
@@ -244,7 +248,7 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
         case cartError instanceof ErrorWithCodes:
           showErrorAlert(cartError, () => {
             navigation.navigate({
-              key: "CollectCustomerDetailsScreen",
+              key: Screens.CollectCustomerDetailsScreen,
             });
           });
           return;
@@ -292,7 +296,9 @@ export const CustomerQuotaScreen: FunctionComponent<Props> = ({
           case ERROR_MESSAGE.LOCK_ERROR:
             clearCartError();
             showErrorAlert(cartError, () => {
-              navigation.navigate({ key: "CampaignLocationsScreen" });
+              navigation.navigate(Screens.CampaignLocationsScreen, {
+                shouldAutoLoad: true,
+              });
             });
             break;
           case ERROR_MESSAGE.INVALID_QUANTITY:

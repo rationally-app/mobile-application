@@ -13,7 +13,12 @@ import {
   Vibration,
   BackHandler,
 } from "react-native";
-import { AuthCredentials, RootStackParamList } from "../../types";
+import {
+  AuthCredentials,
+  Drawers,
+  InitialisationContainerNavigationProps,
+  Screens,
+} from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { size, borderRadius, color } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
@@ -51,7 +56,6 @@ import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
 import { NetworkError } from "../../services/helpers";
-import { StackScreenProps } from "@react-navigation/stack";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -98,14 +102,9 @@ const CloseButton: FunctionComponent<{
   </View>
 );
 
-type Props = StackScreenProps<
-  RootStackParamList,
-  "CampaignInitialisationScreen"
->;
-
-export const InitialisationContainer: FunctionComponent<Props> = ({
-  navigation,
-}) => {
+export const InitialisationContainer: FunctionComponent<
+  InitialisationContainerNavigationProps
+> = ({ navigation }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -179,8 +178,8 @@ export const InitialisationContainer: FunctionComponent<Props> = ({
   };
 
   const onPressClose = (): void => {
-    navigation.navigate("DrawerNavigator", {
-      screen: "CampaignLocationsScreen",
+    navigation.navigate(Drawers.MainDrawer, {
+      screen: Screens.CampaignLocationsScreen,
       params: {
         shouldAutoLoad: true,
       },
@@ -189,7 +188,9 @@ export const InitialisationContainer: FunctionComponent<Props> = ({
 
   const onSuccess = (authCredentials: AuthCredentials): void => {
     setConfigValue("fullMobileNumber", { countryCode, mobileNumber });
-    navigation.navigate("CampaignInitialisationScreen", { authCredentials });
+    navigation.navigate(Screens.CampaignInitialisationScreen, {
+      authCredentials,
+    });
   };
 
   useEffect(() => {
@@ -257,7 +258,6 @@ export const InitialisationContainer: FunctionComponent<Props> = ({
           operatorToken: key,
         });
         setIsLoading(false);
-        console.log('setLoginStage("MOBILE_NUMBER")');
         setLoginStage("MOBILE_NUMBER");
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);

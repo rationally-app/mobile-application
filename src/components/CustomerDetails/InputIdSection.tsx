@@ -83,7 +83,7 @@ export const InputIdSection: FunctionComponent<InputIdSection> = ({
             value={idInput}
             onChange={({ nativeEvent: { text } }) => setIdInput(text)}
             onSubmitEditing={submitId}
-            autoCompleteType="off"
+            autoComplete="off"
             autoCorrect={false}
             keyboardType={keyboardType}
             accessibilityLabel="identity-details"

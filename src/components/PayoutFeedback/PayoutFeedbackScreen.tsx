@@ -1,8 +1,9 @@
 import React, { FunctionComponent, useContext } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import {
-  MerchantPayoutStackParamList,
+  PayoutFeedbackScreenNavigationProps,
   PostTransactionResult,
+  Screens,
 } from "../../types";
 import { size, color, fontSize, borderRadius } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
@@ -20,7 +21,6 @@ import { Card } from "../Layout/Card";
 import { sharedStyles } from "../CustomerQuota/CheckoutSuccess/sharedStyles";
 import { sharedStyles as sharedCardStyles } from "../CustomerQuota/sharedStyles";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
-import { StackScreenProps } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
   content: {
@@ -75,14 +75,10 @@ const styles = StyleSheet.create({
     marginTop: size(5),
   },
 });
-type Props = StackScreenProps<
-  MerchantPayoutStackParamList,
-  "PayoutFeedbackScreen"
->;
-export const PayoutFeedbackScreen: FunctionComponent<Props> = ({
-  navigation,
-  route,
-}) => {
+
+export const PayoutFeedbackScreen: FunctionComponent<
+  PayoutFeedbackScreenNavigationProps
+> = ({ navigation, route }) => {
   const messageContent = useContext(ImportantMessageContentContext);
   const { config } = useConfigContext();
   const showHelpModal = useContext(HelpModalContext);
@@ -184,7 +180,7 @@ export const PayoutFeedbackScreen: FunctionComponent<Props> = ({
             fullWidth={true}
             text={i18nt("merchantFlowScreen", "nextMerchant")}
             onPress={() => {
-              navigation.navigate("MerchantPayoutScreen", {});
+              navigation.navigate(Screens.MerchantPayoutScreen);
             }}
           />
         </View>

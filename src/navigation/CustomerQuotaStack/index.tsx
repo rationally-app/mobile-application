@@ -2,7 +2,6 @@ import {
   createStackNavigator,
   TransitionPresets,
   StackNavigationOptions,
-  StackScreenProps,
 } from "@react-navigation/stack";
 
 import CollectCustomerDetailsScreen from "./CollectCustomerDetailsScreen";
@@ -15,14 +14,13 @@ import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import DailyStatisticsScreen from "./DailyStatisticsScreen";
 import { useTheme } from "../../context/theme";
-import { CustomerQuotaStackParamList } from "../../types";
+import {
+  CustomerQuotaStackParams,
+  CustomerQuotaStackScreenProps,
+  Screens,
+} from "../../types";
 
-type Props = StackScreenProps<
-  CustomerQuotaStackParamList,
-  "CustomerQuotaProxy"
->;
-
-const Stack = createStackNavigator<CustomerQuotaStackParamList>();
+const Stack = createStackNavigator<CustomerQuotaStackParams>();
 
 const screenOptions: StackNavigationOptions = {
   cardStyle: { backgroundColor: "#F5F5F5" },
@@ -31,12 +29,13 @@ const screenOptions: StackNavigationOptions = {
   headerShown: false,
 };
 
-const CustomerQuotaStack: FunctionComponent<Props> = ({
+const CustomerQuotaStack: FunctionComponent<CustomerQuotaStackScreenProps> = ({
   navigation,
   route,
 }) => {
-  const operatorToken = route.params?.operatorToken;
-  const endpoint = route.params?.endpoint;
+  const operatorToken =
+    route.params?.operatorToken || route.params?.params?.operatorToken;
+  const endpoint = route.params?.endpoint || route.params?.params?.endpoint;
 
   const key = `${operatorToken}${endpoint}`;
 
@@ -47,7 +46,9 @@ const CustomerQuotaStack: FunctionComponent<Props> = ({
   const { setTheme } = useTheme();
   useEffect(() => {
     if (!hasDataFromStore) {
-      navigation.getParent()?.navigate("CampaignLocationsScreen");
+      navigation.navigate(Screens.CampaignLocationsScreen, {
+        shouldAutoLoad: true,
+      });
     }
   }, [hasDataFromStore, navigation]);
 
@@ -61,22 +62,24 @@ const CustomerQuotaStack: FunctionComponent<Props> = ({
   return hasDataFromStore ? (
     <AuthContextProvider authCredentials={authCredentials[key]!}>
       <CampaignConfigContextProvider campaignConfig={allCampaignConfigs[key]!}>
-        {/* <Stack navigation={navigation} /> */}
-        <Stack.Navigator screenOptions={screenOptions}>
+        <Stack.Navigator
+          initialRouteName={Screens.CollectCustomerDetailsScreen}
+          screenOptions={screenOptions}
+        >
           <Stack.Screen
-            name="CollectCustomerDetailsScreen"
+            name={Screens.CollectCustomerDetailsScreen}
             component={CollectCustomerDetailsScreen}
           />
           <Stack.Screen
-            name="CustomerQuotaProxy"
+            name={Screens.CustomerQuotaProxy}
             component={CustomerQuotaProxy}
           />
           <Stack.Screen
-            name="CustomerAppealScreen"
+            name={Screens.CustomerAppealScreen}
             component={CustomerAppealScreen}
           />
           <Stack.Screen
-            name="DailyStatisticsScreen"
+            name={Screens.DailyStatisticsScreen}
             component={DailyStatisticsScreen}
           />
         </Stack.Navigator>

@@ -7,7 +7,7 @@ import { AppMode, ConfigContext } from "../../context/config";
 import { ImportantMessageSetterContext } from "../../context/importantMessage";
 import { callLogout, LogoutError } from "../../services/auth";
 import { NetworkError } from "../../services/helpers";
-import { AuthCredentials } from "../../types";
+import { AuthCredentials, Drawers, Screens } from "../../types";
 import { Sentry } from "../../utils/errorTracking";
 import { ErrorBoundary } from "../ErrorBoundary/ErrorBoundary";
 import { LogoutScreen } from "./LogoutScreen";
@@ -158,7 +158,7 @@ describe("LogoutScreen", () => {
 
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(mockNavigate).toHaveBeenCalledWith("LoginScreen");
+      expect(mockNavigate).toHaveBeenCalledWith(Screens.LoginScreen);
       expect(mockClearAuthCredentials).toHaveBeenCalledTimes(1);
       expect(mockClearCampaignConfigs).toHaveBeenCalledTimes(1);
     });
@@ -239,8 +239,8 @@ describe("LogoutScreen", () => {
 
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-        expect(mockNavigate).toHaveBeenCalledWith("DrawerNavigator", {
-          screen: "CampaignLocationsScreen",
+        expect(mockNavigate).toHaveBeenCalledWith(Drawers.MainDrawer, {
+          screen: Screens.CampaignLocationsScreen,
           params: {
             shouldAutoLoad: false,
           },

@@ -24,7 +24,7 @@ import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime, isSameDay } from "date-fns";
 import { AlertModalContext } from "../../context/alert";
-import { DailyStatisticsScreenProps } from "../../types";
+import { DailyStatisticsScreenProps, Screens } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
 import { useTheme } from "../../context/theme";
 import { NetworkError, SessionError } from "../../services/helpers";
@@ -116,18 +116,17 @@ const DailyStatisticsScreen: FunctionComponent<DailyStatisticsScreenProps> = ({
           clearDailyStatisticsError();
           expireSession();
           showErrorAlert(error, () => {
-            navigation.navigate("CampaignLocationsScreen", {
+            navigation.navigate(Screens.CampaignLocationsScreen, {
               shouldAutoLoad: false,
             });
           });
           return;
       }
       showErrorAlert(error, () => {
-        // navigateHome(navigation)
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: "CollectCustomerDetailsScreen" }],
+            routes: [{ name: Screens.CollectCustomerDetailsScreen }],
           })
         );
       });
