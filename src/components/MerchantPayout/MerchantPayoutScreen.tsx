@@ -13,7 +13,6 @@ import {
   Keyboard,
 } from "react-native";
 import { size, color } from "../../common/styles";
-import { NavigationFocusInjectedProps } from "react-navigation";
 import { useIsFocused } from "@react-navigation/native";
 import { TopBackground } from "../Layout/TopBackground";
 import { useConfigContext } from "../../context/config";
@@ -47,6 +46,7 @@ import {
 import { AuthStoreContext } from "../../context/authStore";
 import { LimitReachedError } from "../../utils/validateVoucherCode";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { MerchantPayoutScreenNavigationProps, Screens } from "../../types";
 
 const styles = StyleSheet.create({
   content: {
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
 });
 
 export const MerchantPayoutScreen: FunctionComponent<
-  NavigationFocusInjectedProps
+  MerchantPayoutScreenNavigationProps
 > = ({ navigation }) => {
   const isFocused = useIsFocused();
   const messageContent = useContext(ImportantMessageContentContext);
@@ -182,7 +182,9 @@ export const MerchantPayoutScreen: FunctionComponent<
     } else if (validityError instanceof SessionError) {
       expireSession();
       showErrorAlert(validityError, () => {
-        navigation.navigate("CampaignLocationsScreen");
+        navigation.navigate(Screens.CampaignLocationsScreen, {
+          shouldAutoLoad: true,
+        });
       });
     }
   }, [expireSession, navigation, showErrorAlert, validityError, onModalExit]);
@@ -200,7 +202,7 @@ export const MerchantPayoutScreen: FunctionComponent<
   // Detect submission of merchant code
   useEffect(() => {
     if (checkoutVouchersState === "RESULT_RETURNED" && checkoutResult) {
-      navigation.navigate("PayoutFeedbackScreen", {
+      navigation.navigate(Screens.PayoutFeedbackScreen, {
         merchantCode,
         checkoutResult,
       });

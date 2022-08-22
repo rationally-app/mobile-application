@@ -1,4 +1,3 @@
-import { StackScreenProps } from "@react-navigation/stack";
 import React, {
   FunctionComponent,
   useContext,
@@ -14,7 +13,7 @@ import { ConfigContext } from "../../context/config";
 import { ImportantMessageSetterContext } from "../../context/importantMessage";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { callLogout, LogoutError } from "../../services/auth";
-import { RootStackParamList } from "../../types";
+import { Drawers, LogoutScreenNavigationProps, Screens } from "../../types";
 import { Sentry } from "../../utils/errorTracking";
 import { allSettled } from "../../utils/promiseAllSettled";
 import { AppText } from "../Layout/AppText";
@@ -33,9 +32,9 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = StackScreenProps<RootStackParamList, "LogoutScreen">;
-
-export const LogoutScreen: FunctionComponent<Props> = ({ navigation }) => {
+export const LogoutScreen: FunctionComponent<LogoutScreenNavigationProps> = ({
+  navigation,
+}) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -75,8 +74,8 @@ export const LogoutScreen: FunctionComponent<Props> = ({ navigation }) => {
         const error: Error = errorResults[0].reason;
         if (error instanceof LogoutError) {
           showErrorAlert(error);
-          navigation.navigate("DrawerNavigator", {
-            screen: "CampaignLocationsScreen",
+          navigation.navigate(Drawers.MainDrawer, {
+            screen: Screens.CampaignLocationsScreen,
             params: {
               shouldAutoLoad: false,
             },
@@ -93,7 +92,7 @@ export const LogoutScreen: FunctionComponent<Props> = ({ navigation }) => {
 
         setConfigValue("fullMobileNumber", undefined);
         setMessageContent(null);
-        navigation.navigate("LoginScreen");
+        navigation.navigate(Screens.LoginScreen);
       }
     };
     if (!isLoggingOut) {

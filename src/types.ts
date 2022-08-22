@@ -8,112 +8,220 @@ import {
   CompositeNavigationProp,
   CompositeScreenProps,
   NavigatorScreenParams,
+  RouteProp,
 } from "@react-navigation/native";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 
-export type RootDrawerParamList = {
-  CampaignLocationsScreen: {
-    shouldAutoLoad: boolean;
-  };
-  CustomerQuotaStack: CustomerQuotaStackParamList;
-  MerchantPayoutStack: MerchantPayoutStackParamList;
+/* == Start of Navigation Types ==
+  - TODO consider splitting this portion to navigation/types.ts
+  - use enum to define Screen and Stack names
+*/
+
+export enum Screens {
+  CampaignInitialisationScreen = "Campaign Initialisation Screen",
+  LoginScreen = "Login Screen",
+  LogoutScreen = "Logout Screen",
+  CampaignLocationsScreen = "Campaign Locations Screen",
+
+  MerchantPayoutScreen = "Merchant Payout Screen",
+  PayoutFeedbackScreen = "Payout Feedback Screen",
+
+  CollectCustomerDetailsScreen = "Collect Customer Details Screen",
+  CustomerQuotaProxy = "Customer Quota Proxy",
+  CustomerQuotaScreen = "Customer Quota Screen",
+  CustomerAppealScreen = "Customer Appeal Screen",
+  DailyStatisticsScreen = "Daily Statistics Screen",
+}
+
+export enum Stacks {
+  DrawerNavigator = "Drawer Navigator",
+  CustomerQuotaStack = "Customer Quota Stack",
+  MerchantPayoutStack = "Merchant Payout Stack",
+}
+
+export enum Drawers {
+  MainDrawer = "Main Drawer",
+}
+
+/*
+  - Usage of Computed Property https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#computed_property_names
+  - NavigatorScreenParams allow us to navigate() through nested navigators
+*/
+export type RootStackParams = {
+  [Screens.CampaignInitialisationScreen]: CampaignInitialisationScreenParams;
+  [Screens.LoginScreen]: undefined;
+  [Drawers.MainDrawer]: NavigatorScreenParams<MainDrawerParams>;
+  [Screens.LogoutScreen]: undefined;
 };
 
-export type RootStackParamList = {
-  CampaignInitialisationScreen: {
-    authCredentials: AuthCredentials;
-  };
-  LoginScreen: undefined;
-  DrawerNavigator: NavigatorScreenParams<RootDrawerParamList>;
-  LogoutScreen: undefined;
+export type MainDrawerParams = {
+  [Screens.CampaignLocationsScreen]: CampaignLocationScreenParams;
+  [Stacks.CustomerQuotaStack]: NavigatorScreenParams<CustomerQuotaStackParams>;
+  [Stacks.MerchantPayoutStack]: NavigatorScreenParams<MerchantPayoutStackParams>;
 };
 
-export type MerchantPayoutStackParamList = {
-  MerchantPayoutScreen: {
-    operatorToken: string;
-    endpoint: string;
-  };
-  PayoutFeedbackScreen: {
+export type MerchantPayoutStackParams = {
+  [Screens.MerchantPayoutScreen]:
+    | {
+        operatorToken: string;
+        endpoint: string;
+      }
+    | undefined;
+  [Screens.PayoutFeedbackScreen]: {
     checkoutResult: PostTransactionResult;
     merchantCode: string;
   };
 };
 
-export type CustomerQuotaStackParamList = {
-  CollectCustomerDetailsScreen: undefined;
-  CustomerQuotaProxy: {
-    operatorToken: string;
-    endpoint: string;
+export type CustomerQuotaStackParams = {
+  [Screens.CollectCustomerDetailsScreen]:
+    | {
+        operatorToken: string;
+        endpoint: string;
+      }
+    | undefined;
+  [Screens.CustomerQuotaProxy]: {
     id: string;
     products: CampaignPolicy[];
   };
-  CustomerQuotaScreen: {
-    navIds: string[];
-  };
-  CustomerAppealScreen: {
-    ids: string[];
-  };
-  DailyStatisticsScreen: undefined;
+  [Screens.CustomerQuotaScreen]: { navIds: string[] };
+  [Screens.CustomerAppealScreen]: { ids: string[] };
+  [Screens.DailyStatisticsScreen]: undefined;
 };
 
-export type DrawerNavigationProps = CompositeScreenProps<
-  DrawerScreenProps<RootDrawerParamList>,
-  StackScreenProps<RootStackParamList>
+export type CampaignInitialisationScreenParams = {
+  authCredentials: AuthCredentials;
+};
+
+export type CampaignLocationScreenParams = {
+  shouldAutoLoad: boolean;
+};
+
+// === RootStack ===
+
+export type CampaignInitialisationScreenNavigationProps = StackScreenProps<
+  RootStackParams,
+  Screens.CampaignInitialisationScreen
 >;
 
-export type CustomerQuotaStackNavigationProp = CompositeNavigationProp<
+export type InitialisationContainerNavigationProps = StackScreenProps<
+  RootStackParams,
+  Screens.LoginScreen
+>;
+
+export type LogoutScreenNavigationProps = StackScreenProps<
+  RootStackParams,
+  Screens.LoginScreen
+>;
+
+// === MainDrawer ===
+// --- CampaignLocationsScreen ---
+
+export type CampaignLocationsScreenNavigationProps = CompositeScreenProps<
+  DrawerScreenProps<MainDrawerParams, Screens.CampaignLocationsScreen>,
+  StackScreenProps<RootStackParams>
+>;
+
+// --- CustomerQuotaStack ---
+export type CustomerQuotaStackNavigationProps = CompositeNavigationProp<
   StackNavigationProp<
-    CustomerQuotaStackParamList,
-    keyof CustomerQuotaStackParamList
+    CustomerQuotaStackParams,
+    Screens.CollectCustomerDetailsScreen
   >,
   CompositeNavigationProp<
-    DrawerNavigationProp<RootDrawerParamList>,
-    StackNavigationProp<RootStackParamList>
+    DrawerNavigationProp<MainDrawerParams>,
+    StackNavigationProp<RootStackParams>
   >
 >;
 
+export type CustomerQuotaStackScreenProps = {
+  navigation: CustomerQuotaStackNavigationProps;
+  route: RouteProp<
+    CustomerQuotaStackParams,
+    Screens.CollectCustomerDetailsScreen
+  > & {
+    params: { params: { operatorToken: string; endpoint: string } };
+  };
+};
+
 export type CollectCustomerDetailsScreenNavigationProps = CompositeScreenProps<
-  StackScreenProps<CustomerQuotaStackParamList, "CollectCustomerDetailsScreen">,
+  StackScreenProps<
+    CustomerQuotaStackParams,
+    Screens.CollectCustomerDetailsScreen
+  >,
   CompositeScreenProps<
-    DrawerScreenProps<RootDrawerParamList>,
-    StackScreenProps<RootStackParamList>
+    DrawerScreenProps<MainDrawerParams>,
+    StackScreenProps<RootStackParams>
   >
 >;
 
 export type CustomerQuotaProxyNavigationProps = CompositeScreenProps<
-  StackScreenProps<CustomerQuotaStackParamList, "CustomerQuotaProxy">,
+  StackScreenProps<CustomerQuotaStackParams, Screens.CustomerQuotaProxy>,
   CompositeScreenProps<
-    DrawerScreenProps<RootDrawerParamList>,
-    StackScreenProps<RootStackParamList>
+    DrawerScreenProps<MainDrawerParams>,
+    StackScreenProps<RootStackParams>
   >
 >;
 
 export type CustomerQuotaScreenNavigationProps = CompositeScreenProps<
-  | StackScreenProps<CustomerQuotaStackParamList, "CustomerQuotaScreen">
-  | StackScreenProps<CustomerQuotaStackParamList, "CustomerQuotaProxy">,
+  | StackScreenProps<CustomerQuotaStackParams, Screens.CustomerQuotaScreen>
+  | StackScreenProps<CustomerQuotaStackParams, Screens.CustomerQuotaProxy>,
   CompositeScreenProps<
-    DrawerScreenProps<RootDrawerParamList>,
-    StackScreenProps<RootStackParamList>
+    DrawerScreenProps<MainDrawerParams>,
+    StackScreenProps<RootStackParams>
   >
 >;
 
 export type CustomerAppealScreenNavigationProps = CompositeScreenProps<
-  StackScreenProps<CustomerQuotaStackParamList, "CustomerAppealScreen">,
+  StackScreenProps<CustomerQuotaStackParams, Screens.CustomerAppealScreen>,
   CompositeScreenProps<
-    DrawerScreenProps<RootDrawerParamList>,
-    StackScreenProps<RootStackParamList>
+    DrawerScreenProps<MainDrawerParams>,
+    StackScreenProps<RootStackParams>
   >
 >;
 
 export type DailyStatisticsScreenProps = CompositeScreenProps<
-  StackScreenProps<CustomerQuotaStackParamList, "DailyStatisticsScreen">,
+  StackScreenProps<CustomerQuotaStackParams, Screens.DailyStatisticsScreen>,
   CompositeScreenProps<
-    DrawerScreenProps<RootDrawerParamList>,
-    StackScreenProps<RootStackParamList>
+    DrawerScreenProps<MainDrawerParams>,
+    StackScreenProps<RootStackParams>
   >
 >;
 
-//
+// --- MerchantPayoutStack ---
+export type MerchantPayoutStackNavigationProps = CompositeNavigationProp<
+  StackNavigationProp<MerchantPayoutStackParams, Screens.MerchantPayoutScreen>,
+  CompositeNavigationProp<
+    DrawerNavigationProp<MainDrawerParams>,
+    StackNavigationProp<RootStackParams>
+  >
+>;
+
+export type MerchantPayoutStackScreenProps = {
+  navigation: MerchantPayoutStackNavigationProps;
+  route: RouteProp<MerchantPayoutStackParams, Screens.MerchantPayoutScreen> & {
+    params: { params: { operatorToken: string; endpoint: string } };
+  };
+};
+
+export type MerchantPayoutScreenNavigationProps = CompositeScreenProps<
+  StackScreenProps<MerchantPayoutStackParams, Screens.MerchantPayoutScreen>,
+  CompositeScreenProps<
+    DrawerScreenProps<MainDrawerParams>,
+    StackScreenProps<RootStackParams>
+  >
+>;
+
+export type PayoutFeedbackScreenNavigationProps = CompositeScreenProps<
+  StackScreenProps<MerchantPayoutStackParams, Screens.PayoutFeedbackScreen>,
+  CompositeScreenProps<
+    DrawerScreenProps<MainDrawerParams>,
+    StackScreenProps<RootStackParams>
+  >
+>;
+
+/* == End of Navigation Types == */
+
 export type AuthCredentials = {
   operatorToken: string;
   endpoint: string;

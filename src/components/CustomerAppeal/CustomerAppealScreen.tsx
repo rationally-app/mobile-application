@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { transform } from "lodash";
 import { StyleSheet, View } from "react-native";
-import { CustomerAppealScreenNavigationProps } from "../../types";
+import { CustomerAppealScreenNavigationProps, Screens } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
@@ -75,7 +75,7 @@ export const CustomerAppealScreen: FunctionComponent<
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: "CollectCustomerDetailsScreen" }],
+        routes: [{ name: Screens.CollectCustomerDetailsScreen }],
       })
     );
   }, [navigation]);
@@ -174,12 +174,8 @@ export const CustomerAppealScreen: FunctionComponent<
       );
       return;
     }
-    // pushRoute(navigation, "CustomerQuotaProxy", {
-    //   id: ids,
-    //   products: [appealProduct],
-    // });
     navigation.dispatch(
-      StackActions.push("CustomerQuotaProxy", {
+      StackActions.push(Screens.CustomerQuotaProxy, {
         id: ids,
         products: [appealProduct],
       })

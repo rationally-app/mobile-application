@@ -120,10 +120,13 @@ describe("CollectCustomerDetailsScreen", () => {
       fireEvent.press(checkButton!);
       expect(mockValidateAndCleanId).toHaveBeenCalledTimes(1);
 
-      expect(mockNavigate.navigate).toHaveBeenCalledWith("CustomerQuotaProxy", {
-        id: "valid-id",
-        products: [defaultProducts[0]],
-      });
+      expect(mockNavigate.navigate).toHaveBeenCalledWith(
+        "Customer Quota Proxy",
+        {
+          id: "valid-id",
+          products: [defaultProducts[0]],
+        }
+      );
     });
 
     it("should throw error when input id is invalid", async () => {
@@ -227,10 +230,13 @@ describe("CollectCustomerDetailsScreen", () => {
       fireEvent.press(checkButton!);
       expect(mockValidateAndCleanId).toHaveBeenCalledTimes(1);
 
-      expect(mockNavigate.navigate).toHaveBeenCalledWith("CustomerQuotaProxy", {
-        id: "valid-alternate-id",
-        products: [defaultProducts[0]],
-      });
+      expect(mockNavigate.navigate).toHaveBeenCalledWith(
+        "Customer Quota Proxy",
+        {
+          id: "valid-alternate-id",
+          products: [defaultProducts[0]],
+        }
+      );
     });
 
     it("should throw error when alternate id is invalid", async () => {

@@ -40,6 +40,7 @@ import { InputPassportSection } from "./InputPassportSection";
 import {
   CollectCustomerDetailsScreenNavigationProps,
   IdentificationFlag,
+  Screens,
 } from "../../types";
 import {
   IdentificationContext,
@@ -190,9 +191,9 @@ export const CollectCustomerDetailsScreen: FunctionComponent<
       );
 
       setShouldShowCamera(false);
-      navigation.navigate("CustomerQuotaProxy", {
+      navigation.navigate(Screens.CustomerQuotaProxy, {
         id,
-        products: defaultProducts,
+        products: defaultProducts, // TODO potentially handling undefined for `products` key
       });
       setIdInput("");
     } catch (e) {
@@ -251,7 +252,7 @@ export const CollectCustomerDetailsScreen: FunctionComponent<
   };
 
   const onPressStatistics = (): void => {
-    navigation.navigate("DailyStatisticsScreen");
+    navigation.navigate(Screens.DailyStatisticsScreen);
   };
 
   const getBarcodeType = (): any[] => {

@@ -2,7 +2,6 @@ import {
   createStackNavigator,
   TransitionPresets,
   StackNavigationOptions,
-  StackScreenProps,
 } from "@react-navigation/stack";
 import MerchantPayoutScreen from "./MerchantPayoutScreen";
 import PayoutFeedbackScreen from "./PayoutFeedbackScreen";
@@ -11,11 +10,13 @@ import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
-import { MerchantPayoutStackParamList, RootDrawerParamList } from "../../types";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { DrawerScreenProps } from "@react-navigation/drawer";
+import {
+  MerchantPayoutStackScreenProps,
+  MerchantPayoutStackParams,
+  Screens,
+} from "../../types";
 
-const Stack = createStackNavigator<MerchantPayoutStackParamList>();
+const Stack = createStackNavigator<MerchantPayoutStackParams>();
 
 const screenOptions: StackNavigationOptions = {
   ...TransitionPresets.SlideFromRightIOS,
@@ -23,16 +24,12 @@ const screenOptions: StackNavigationOptions = {
   headerShown: false,
 };
 
-type Props = CompositeScreenProps<
-  StackScreenProps<MerchantPayoutStackParamList, "MerchantPayoutScreen">,
-  DrawerScreenProps<RootDrawerParamList>
->;
-const MerchantPayoutStack: FunctionComponent<Props> = ({
-  navigation,
-  route,
-}) => {
-  const operatorToken = route.params.operatorToken;
-  const endpoint = route.params.endpoint;
+const MerchantPayoutStack: FunctionComponent<
+  MerchantPayoutStackScreenProps
+> = ({ navigation, route }) => {
+  const operatorToken =
+    route.params?.operatorToken || route.params?.params?.operatorToken;
+  const endpoint = route.params?.endpoint || route.params?.params?.endpoint;
 
   const key = `${operatorToken}${endpoint}`;
 
@@ -42,24 +39,25 @@ const MerchantPayoutStack: FunctionComponent<Props> = ({
 
   useEffect(() => {
     if (!hasDataFromStore) {
-      navigation.getParent()?.navigate("CampaignLocationsScreen");
+      navigation.navigate(Screens.CampaignLocationsScreen, {
+        shouldAutoLoad: true,
+      });
     }
   }, [hasDataFromStore, navigation]);
 
   return hasDataFromStore ? (
     <AuthContextProvider authCredentials={authCredentials[key]!}>
       <CampaignConfigContextProvider campaignConfig={allCampaignConfigs[key]!}>
-        {/* <Stack navigation={navigation} /> */}
         <Stack.Navigator
+          initialRouteName={Screens.MerchantPayoutScreen}
           screenOptions={screenOptions}
-          initialRouteName="MerchantPayoutScreen"
         >
           <Stack.Screen
-            name="MerchantPayoutScreen"
+            name={Screens.MerchantPayoutScreen}
             component={MerchantPayoutScreen}
           />
           <Stack.Screen
-            name="PayoutFeedbackScreen"
+            name={Screens.PayoutFeedbackScreen}
             component={PayoutFeedbackScreen}
           />
         </Stack.Navigator>
