@@ -47,7 +47,8 @@ export async function fetchWithValidator<T, O, I>(
   validator: Type<T, O, I>,
   requestInfo: RequestInfo,
   init?: RequestInit,
-  includeCodes = false
+  includeCodes = false,
+  timeoutInSeconds?: number
 ): Promise<T> {
   let response: Response;
   /*
@@ -65,7 +66,7 @@ export async function fetchWithValidator<T, O, I>(
       : new AbortController();
     response = await Promise.race<Response>([
       fetch(requestInfo, { ...init, signal: controller.signal }),
-      timeoutAfter(10).then((timeoutError) => {
+      timeoutAfter(timeoutInSeconds ?? 10).then((timeoutError) => {
         controller.abort();
         throw timeoutError;
       }),
