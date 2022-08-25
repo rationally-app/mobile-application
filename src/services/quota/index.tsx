@@ -316,7 +316,7 @@ export const livePostTransaction = async ({
         }),
       },
       includeErrorCodes,
-      isPayNowTransaction ? 45 : 10 // timeout in seconds
+      isPayNowTransaction ? 30 : 10 // timeout in seconds
     );
     return response;
   } catch (e) {
