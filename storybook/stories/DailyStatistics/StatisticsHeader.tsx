@@ -5,23 +5,8 @@ import { StatisticsHeader } from "../../../src/components/DailyStatistics/Statis
 import { TitleStatistic } from "../../../src/components/DailyStatistics/TitleStatistic";
 import { TransactionHistoryCard } from "../../../src/components/DailyStatistics/TransactionHistoryCard";
 import { size, color } from "../../../src/common/styles";
-import { createAppContainer } from "react-navigation";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { addDays, subDays, getTime, isSameDay } from "date-fns";
-
-const reactNavigationDecorator = (story: any): JSX.Element => {
-  const Screen = (): any => story();
-  const Navigator = createAppContainer(
-    createDrawerNavigator(
-      { Screen },
-      {
-        drawerPosition: "right",
-        drawerType: "slide",
-      }
-    )
-  );
-  return <Navigator />;
-};
+import { mockReactNavigationDecorator, navigation } from "../mocks/navigation";
 
 const TitleStatisticComponent = (): ReactElement => {
   const [currentTimestamp, setCurrentTimestamp] = useState(Date.now());
@@ -48,10 +33,10 @@ const TitleStatisticComponent = (): ReactElement => {
 };
 
 storiesOf("Statistics", module)
-  .addDecorator(reactNavigationDecorator) // decorator is used to wrapper of the story
+  .addDecorator(mockReactNavigationDecorator) // decorator is used to wrapper of the story
   .add("Header", () => (
     <View style={{ margin: size(3), backgroundColor: color("blue", 30) }}>
-      <StatisticsHeader key="0" />
+      <StatisticsHeader route={{} as any} navigation={navigation} key="0" />
     </View>
   ))
   .add("TitleStatistic", () => (

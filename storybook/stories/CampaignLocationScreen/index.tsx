@@ -45,6 +45,6 @@ storiesOf("Screen", module)
   ))
   .add("CampaignLocation", () => (
     <View>
-      <CampaignLocationsScreen navigation={navigation} />
+      <CampaignLocationsScreen route={{} as any} navigation={navigation} />
     </View>
   ));

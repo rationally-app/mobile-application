@@ -45,6 +45,6 @@ storiesOf("Logout", module)
   ))
   .add("LogoutScreen", () => (
     <View style={{ height: "100%" }}>
-      <LogoutScreen navigation={navigation} />
+      <LogoutScreen route={{} as any} navigation={navigation} />
     </View>
   ));

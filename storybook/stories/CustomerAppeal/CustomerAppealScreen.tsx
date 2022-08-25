@@ -64,6 +64,7 @@ storiesOf("Screen", module)
     return (
       <View>
         <CustomerAppealScreen
+          route={{ params: { ids: ["S0000001I"] } } as any}
           navigation={{ ...navigation, ...{ getParam: () => ["S0000001I"] } }}
         />
       </View>
