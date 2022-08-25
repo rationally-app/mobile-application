@@ -1,23 +1,12 @@
-import React, { FunctionComponent, version } from "react";
+import React from "react";
 import {
   createDrawerNavigator,
-  DrawerContentComponentProps,
   DrawerNavigationOptions,
 } from "@react-navigation/drawer";
 import { TransitionPresets } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  BottomNavigationLink,
-  DrawerButtonComponent,
-  DrawerNavigationComponent,
-} from "../../../src/components/Layout/DrawerNavigation";
+import { DrawerNavigationComponent } from "../../../src/components/Layout/DrawerNavigation";
 import { RootStackParams } from "../../../src/types";
-import { size } from "lodash";
-import { View, TouchableOpacity, ScrollView, Linking } from "react-native";
-import { color } from "react-native-reanimated";
-import { styles } from "../../../src/components/CustomerQuota/TransactionsGroup";
-import { AppText } from "../../../src/components/Layout/AppText";
-import { useTranslate } from "../../../src/hooks/useTranslate/useTranslate";
 
 let params: any = {};
 
