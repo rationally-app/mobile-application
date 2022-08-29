@@ -13,7 +13,7 @@ concurrency:
 jobs:
   markdown_lint:
     name: Markdown Lint
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -29,7 +29,7 @@ jobs:
         run: npm run markdown:lint
   test:
     name: Lint & Test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -52,7 +52,7 @@ jobs:
   deploy_prod:
     name: Deploy To Production
     needs: test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     outputs:
       releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
       latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
@@ -109,7 +109,7 @@ jobs:
   create_release:
     name: Create Release
     needs: deploy_prod
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Fetch Tags
@@ -139,7 +139,7 @@ jobs:
           allowUpdates: true
   build_android:
     needs: [deploy_prod, create_release]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v3.x
@@ -185,7 +185,7 @@ jobs:
           tag: ${{ github.ref }}
   build_ios:
     needs: [deploy_prod, create_release]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v3.x
