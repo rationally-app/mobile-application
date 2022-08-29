@@ -189,7 +189,9 @@ export const CollectCustomerDetailsScreen: FunctionComponent<
         (policy) =>
           policy.categoryType === undefined || policy.categoryType === "DEFAULT"
       );
-
+      if (!defaultProducts) {
+        return;
+      }
       setShouldShowCamera(false);
       navigation.navigate(Screens.CustomerQuotaProxy, {
         id,

@@ -1,6 +1,13 @@
 import React from "react";
-import { createAppContainer } from "react-navigation";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerNavigationOptions,
+} from "@react-navigation/drawer";
+import { TransitionPresets } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { DrawerNavigationComponent } from "../../../src/components/Layout/DrawerNavigation";
+import { RootStackParams } from "../../../src/types";
+
 let params: any = {};
 
 export const navigation: any = {
@@ -29,14 +36,28 @@ export const mockReactNavigationDecorator = (
   story: () => void
 ): JSX.Element => {
   const Screen = (): any => story();
-  const Navigator = createAppContainer(
-    createDrawerNavigator(
-      { Screen },
-      {
-        drawerPosition: "right",
-        drawerType: "slide",
-      }
-    )
+  const Drawer = createDrawerNavigator();
+  const drawerNavigatorScreenOptions: DrawerNavigationOptions = {
+    headerShown: false,
+    ...TransitionPresets.SlideFromRightIOS,
+    drawerPosition: "right",
+    drawerType: "slide",
+  };
+
+  const Navigator = (
+    <NavigationContainer>
+      <Drawer.Navigator
+        id="StorybookDrawer"
+        drawerContent={DrawerNavigationComponent}
+        screenOptions={drawerNavigatorScreenOptions}
+      >
+        <Drawer.Screen
+          name={"Story" as keyof RootStackParams}
+          component={Screen}
+        />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
-  return <Navigator />;
+
+  return Navigator;
 };
