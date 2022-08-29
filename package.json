@@ -5,7 +5,7 @@
     "start:mock": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev MOCK=true expo start",
     "test": "jest",
     "test:coverage": "npm run test -- --coverage",
-    "test:watch": "jest --watch",
+    "test:watch": "npm run test -- --watch",
     "storybook": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev START_STORYBOOK=true MOCK=true expo start",
     "android": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev expo start --android",
     "ios": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev expo start --ios",

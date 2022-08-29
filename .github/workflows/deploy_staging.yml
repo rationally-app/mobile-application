@@ -68,7 +68,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BINARY_VERSION: "dev"
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
   deploy_staging:
     name: Deploy to Staging
