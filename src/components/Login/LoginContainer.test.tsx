@@ -62,7 +62,13 @@ const mockRoute: any = {
   params: {},
 };
 
-describe("LoginContainer", () => {
+describe("LoginContainer component tests", () => {
+  const mockRegexValidate = jest.spyOn(RegExp.prototype, "test");
+
+  beforeEach(() => {
+    mockRegexValidate.mockReturnValueOnce(true);
+  });
+
   afterEach(() => {
     mockCaptureException.mockReset();
     mockDeepLink.mockReset();
@@ -81,6 +87,7 @@ describe("LoginContainer", () => {
 
   it("login endpoint + key in deep link and should render LoginMobileNumberCard", async () => {
     expect.assertions(1);
+    mockRegexValidate.mockReturnValueOnce(true);
     mockDeepLink.mockImplementation(() =>
       Promise.resolve({
         queryParams: { key, endpoint },
@@ -237,63 +244,6 @@ describe("LoginContainer", () => {
         )
       ).not.toBeNull();
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
-    });
-    describe("validate RegEx format for Domain from QR detected", () => {
-      const mockRegexValidate = jest.spyOn(RegExp.prototype, "test");
-
-      afterEach(() => {
-        mockRegexValidate.mockClear();
-      });
-
-      it("should not show Error dialog if valid RegEx format", async () => {
-        expect.assertions(2);
-        const { getByTestId, queryByText } = render(
-          <CreateProvidersWrapper
-            providers={[{ provider: AlertModalContextProvider }]}
-          >
-            <InitialisationContainer
-              navigation={mockNavigation}
-              route={mockRoute}
-            />
-          </CreateProvidersWrapper>
-        );
-
-        mockRegexValidate.mockReturnValueOnce(true);
-        const scanButton = getByTestId(scanButtonId);
-        await act(async () => fireEvent.press(scanButton));
-        fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
-          nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
-        });
-        expect(
-          queryByText("Get new QR code from your in-charge and try again.")
-        ).toBeNull();
-        expect(mockCaptureException).toHaveBeenCalledTimes(0);
-      });
-
-      it("should show Error dialog if invalid RegEx format", async () => {
-        expect.assertions(2);
-        const { getByTestId, queryByText } = render(
-          <CreateProvidersWrapper
-            providers={[{ provider: AlertModalContextProvider }]}
-          >
-            <InitialisationContainer
-              navigation={mockNavigation}
-              route={mockRoute}
-            />
-          </CreateProvidersWrapper>
-        );
-
-        mockRegexValidate.mockReturnValueOnce(false);
-        const scanButton = getByTestId(scanButtonId);
-        await act(async () => fireEvent.press(scanButton));
-        fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
-          nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
-        });
-        expect(
-          queryByText("Get new QR code from your in-charge and try again.")
-        ).not.toBeNull();
-        expect(mockCaptureException).toHaveBeenCalledTimes(1);
-      });
     });
 
     it("country code input is invalid", async () => {
@@ -661,5 +611,63 @@ describe("LoginContainer", () => {
       fireEvent.press(getByTestId(alertModelButtonId));
       expect(getByTestId(loginScanViewId)).not.toBeNull();
     });
+  });
+});
+
+describe("validate RegEx format for Domain from QR detected", () => {
+  const mockRegexValidate = jest.spyOn(RegExp.prototype, "test");
+
+  afterEach(() => {
+    mockRegexValidate.mockClear();
+  });
+
+  it("should not show Error dialog if valid RegEx format", async () => {
+    expect.assertions(2);
+    const { getByTestId, queryByText } = render(
+      <CreateProvidersWrapper
+        providers={[{ provider: AlertModalContextProvider }]}
+      >
+        <InitialisationContainer
+          navigation={mockNavigation}
+          route={mockRoute}
+        />
+      </CreateProvidersWrapper>
+    );
+
+    mockRegexValidate.mockReturnValueOnce(true);
+    const scanButton = getByTestId(scanButtonId);
+    await act(async () => fireEvent.press(scanButton));
+    fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
+      nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
+    });
+    expect(
+      queryByText("Get new QR code from your in-charge and try again.")
+    ).toBeNull();
+    expect(mockCaptureException).toHaveBeenCalledTimes(0);
+  });
+
+  it("should show Error dialog if invalid RegEx format", async () => {
+    expect.assertions(2);
+    const { getByTestId, queryByText } = render(
+      <CreateProvidersWrapper
+        providers={[{ provider: AlertModalContextProvider }]}
+      >
+        <InitialisationContainer
+          navigation={mockNavigation}
+          route={mockRoute}
+        />
+      </CreateProvidersWrapper>
+    );
+
+    mockRegexValidate.mockReturnValueOnce(false);
+    const scanButton = getByTestId(scanButtonId);
+    await act(async () => fireEvent.press(scanButton));
+    fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
+      nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
+    });
+    expect(
+      queryByText("Get new QR code from your in-charge and try again.")
+    ).not.toBeNull();
+    expect(mockCaptureException).toHaveBeenCalledTimes(1);
   });
 });
