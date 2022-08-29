@@ -14,7 +14,7 @@ concurrency:
 jobs:
   markdown_lint:
     name: Markdown Lint
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -30,7 +30,7 @@ jobs:
         run: npm run markdown:lint
   test:
     name: Lint & Test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -65,7 +65,7 @@ jobs:
   deploy_staging:
     name: Deploy to Staging
     needs: test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Fetch Tags

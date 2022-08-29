@@ -11,7 +11,7 @@ concurrency:
 jobs:
   pr_title_lint:
     name: PR Title Lint
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 5
 
@@ -25,7 +25,7 @@ jobs:
           # pipeline for external user PRs
   markdown_lint:
     name: Markdown Lint
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -41,7 +41,7 @@ jobs:
         run: npm run markdown:lint
   test:
     name: Lint & Test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -75,7 +75,7 @@ jobs:
         run: npm run test -- --coverage
   deploy_branch_preview:
     name: Deploy Branch Preview
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
