@@ -3,9 +3,9 @@
   "scripts": {
     "start": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev START_STORYBOOK=false expo start -c",
     "start:mock": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev MOCK=true expo start",
-    "test": "jest",
+    "test": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev jest",
     "test:coverage": "npm run test -- --coverage",
-    "test:watch": "jest --watch",
+    "test:watch": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev jest --watch",
     "storybook": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev START_STORYBOOK=true MOCK=true expo start",
     "android": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev expo start --android",
     "ios": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev expo start --ios",
