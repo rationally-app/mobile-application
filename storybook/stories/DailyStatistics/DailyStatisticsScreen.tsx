@@ -3,12 +3,6 @@ import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
 import { DailyStatisticsScreenContainer } from "../../../src/components/DailyStatistics/DailyStatisticsScreen";
 import { mockReactNavigationDecorator, navigation } from "../mocks/navigation";
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createDrawerNavigator } from "@react-navigation/drawer";
-// import {
-//   createStackNavigator,
-//   TransitionPresets,
-// } from "@react-navigation/stack";
 import { ThemeContext } from "../../../src/context/theme";
 import { govWalletTheme } from "../../../src/common/styles/themes";
 import { CampaignPolicy } from "../../../src/types";
@@ -105,38 +99,6 @@ const products: CampaignPolicy[] = [
     },
   },
 ];
-
-// const reactNavigationDecorator = (story: any): JSX.Element => {
-//   const Screen = (): any => story();
-//   const Stack = createStackNavigator();
-//   const stackScreenOptions = {
-//     headerShown: false,
-//     ...TransitionPresets.SlideFromRightIOS,
-//     gestureEnabled: true,
-//   };
-
-//   function StoryStack() {
-//     return (
-//       <Stack.Navigator screenOptions={stackScreenOptions}>
-//         <Stack.Screen name="Story" component={Screen} />
-//       </Stack.Navigator>
-//     );
-//   }
-//   const Drawer = createDrawerNavigator();
-//   const drawerOptions = {
-//     drawerPosition: "right",
-//     drawerType: "slide",
-//   };
-//   return (
-//     <NavigationContainer>
-//       <Drawer.Navigator screenOptions={{
-//         drawerStyle:
-//       }}>
-//         <Drawer.Screen name="Story" component={StoryStack} />
-//       </Drawer.Navigator>
-//     </NavigationContainer>
-//   );
-// };
 
 storiesOf("Statistics", module)
   .addDecorator((Story: any) => mockReactNavigationDecorator(Story))
