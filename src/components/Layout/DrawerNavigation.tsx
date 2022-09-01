@@ -17,6 +17,7 @@ import Constants from "expo-constants";
 import { AlertModalContext, CONFIRMATION_MESSAGE } from "../../context/alert";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../context/theme";
+import { Screens } from "../../types";
 
 const styles = StyleSheet.create({
   container: {
@@ -103,7 +104,7 @@ export const DrawerNavigationComponent: FunctionComponent<
   const handleLogout = useCallback((): void => {
     navigation.dispatch(
       CommonActions.navigate({
-        name: "LogoutScreen",
+        name: Screens.LogoutScreen,
       })
     );
   }, [navigation]);

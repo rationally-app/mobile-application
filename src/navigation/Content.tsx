@@ -72,6 +72,7 @@ const screenOptions: StackNavigationOptions = {
   ...TransitionPresets.SlideFromRightIOS,
   gestureEnabled: true,
   headerShown: false,
+  animationEnabled: false,
 };
 
 export const Content = (): ReactElement => {
@@ -115,7 +116,7 @@ export const Content = (): ReactElement => {
         <NavigationContainer ref={navigatorRef} linking={linking}>
           <Stack.Navigator
             id="RootStack"
-            initialRouteName={Screens.LoginScreen}
+            initialRouteName={Drawers.MainDrawer}
             screenOptions={screenOptions}
           >
             <Stack.Screen name={Screens.LoginScreen} component={LoginScreen} />

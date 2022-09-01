@@ -53,6 +53,9 @@ const CustomerQuotaStack: FunctionComponent<CustomerQuotaStackScreenProps> = ({
   }, [hasDataFromStore, navigation]);
 
   useEffect(() => {
+    if (!allCampaignConfigs[key]) {
+      return;
+    }
     const { features } = allCampaignConfigs[key]!;
     if (features) {
       setTheme(features.theme);
