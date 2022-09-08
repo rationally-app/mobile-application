@@ -97,11 +97,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v3.x
-      - uses: expo/expo-github-action@v5
+      - uses: expo/expo-github-action@v7
         with:
           expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN_PRD }}
           expo-cache: true
       - name: Install Packages
         run: |
@@ -120,7 +121,7 @@ jobs:
           APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
-          eas build --platform android --release-channel=pr${{ github.event.number }} > buildLogAndroid.txt
+          npx eas-cli build --platform android --release-channel=pr${{ github.event.number }} > buildLogAndroid.txt
           cat buildLogAndroid.txt
       # - name: Parse Asset URL
       #   id: androidUrl
@@ -143,11 +144,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v3.x
-      - uses: expo/expo-github-action@v5
+      - uses: expo/expo-github-action@v7
         with:
           expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN_PRD }}
           expo-cache: true
       - name: Install Packages
         run: |
@@ -166,7 +168,7 @@ jobs:
           APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
-          eas build --platform android --release-channel=pr${{ github.event.number }} > buildLogIOS.txt
+          npx eas-cli build --platform android --release-channel=pr${{ github.event.number }} > buildLogIOS.txt
           cat buildLogIOS.txt
       # - name: Parse Asset URL
       #   id: iosUrl
