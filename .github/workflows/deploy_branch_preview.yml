@@ -9,127 +9,107 @@ concurrency:
   group: ${{ github.ref }}-deploy-branch-preview # The branch or tag ref that triggered the workflow run.
 
 jobs:
-  pr_title_lint:
-    name: PR Title Lint
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    timeout-minutes: 5
-
-    steps:
-      - name: check if PR title follows conventional commits specs
-        uses: amannn/action-semantic-pull-request@v3.4.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
-          # using github token for external/dependabot PR,
-          # personal access tokens in secrets will not be accessible in
-          # pipeline for external user PRs
-  markdown_lint:
-    name: Markdown Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14.x
-      - name: Install Packages
-        run: |
-          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
-        env:
-          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-      - name: Check Markdown Lint
-        run: npm run markdown:lint
-  test:
-    name: Lint & Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: Cache Node Modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: Install Packages
-        run: |
-          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
-        env:
-          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-      - name: Typecheck
-        run: npx --no-install tsc --noEmit
-      - name: Check Lint
-        run: npm run lint
-      - name: Set Timezone to +8 (Ubuntu)
-        run: sudo timedatectl set-timezone Asia/Singapore
-      - name: Test
-        run: npm run test -- --coverage
-        env:
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: "dev"
-          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
   deploy_branch_preview:
-    name: Deploy Branch Preview
+      name: Deploy Branch Preview
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            ref: ${{ github.head_ref }}
+        - name: Fetch Tags
+          run: |
+            git fetch --prune --unshallow --tags -f
+        - uses: actions/setup-node@v1
+          with:
+            node-version: 12.x
+        - uses: expo/expo-github-action@v5
+          with:
+            expo-packager: npm
+            expo-username: ${{ secrets.EXPO_CLI_TEST_USERNAME }}
+            expo-password: ${{ secrets.EXPO_CLI_TEST_PASSWORD }}
+            expo-cache: true
+        - name: Cache Node Modules
+          uses: actions/cache@v2
+          env:
+            cache-name: cache-node-modules
+          with:
+            # npm cache files are stored in `~/.npm` on Linux/macOS
+            path: ~/.npm
+            key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+              ${{ runner.os }}-build-${{ env.cache-name }}-
+              ${{ runner.os }}-build-
+              ${{ runner.os }}-
+        - name: Install Packages
+          run: |
+            npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+            npm ci
+          env:
+            NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+        - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
+          id: latestBinaryVersion
+          run: |
+            # Release tag finds the lastest tag in the tree branch - i.e. prod-x.x.x
+            RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
+            # Using param substitution, we output x.x.x instead
+            echo "::set-output name=version::${RELEASE_TAG#*-}"
+        - name: Echo Version Details
+          run: |
+            echo Build number is $GITHUB_RUN_NUMBER
+            echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
+        - name: Expo Publish Channel
+          env:
+            NODE_OPTIONS: --max_old_space_size=7168
+            SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+            SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            APP_BUILD_VERSION: ${{ github.run_number }}
+            APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+            DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
+          run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
+        - name: Expo Publish Storybook Channel
+          env:
+            SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+            SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            APP_BUILD_VERSION: ${{ github.run_number }}
+            APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+            DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
+          run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
+        - name: Add Comment To PR
+          uses: mshick/add-pr-comment@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+            EXPO_PROJECT: "@supplyallytest/rationally"
+          with:
+            message: |
+              ## Application
+              ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }})
+              Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }}
+              ## Storybook
+              ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }})
+              Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }}
+  build_android:
+    needs: [deploy_branch_preview]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
-      - name: Fetch Tags
-        run: |
-          git fetch --prune --unshallow --tags -f
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
+      - uses: rlespinasse/github-slug-action@v3.x
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_TEST_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_TEST_PASSWORD }}
+          expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
           expo-cache: true
-      - name: Cache Node Modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
           npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-      - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
-        id: latestBinaryVersion
-        run: |
-          # Release tag finds the lastest tag in the tree branch - i.e. prod-x.x.x
-          RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
-          # Using param substitution, we output x.x.x instead
-          echo "::set-output name=version::${RELEASE_TAG#*-}"
-      - name: Echo Version Details
-        run: |
-          echo Build number is $GITHUB_RUN_NUMBER
-          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
-      - name: Expo Publish Channel
+      - name: Build Android Release
         env:
           NODE_OPTIONS: --max_old_space_size=7168
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -137,29 +117,69 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
-          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-        run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
-      - name: Expo Publish Storybook Channel
-        env:
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
-          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-        run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
-      - name: Add Comment To PR
-        uses: mshick/add-pr-comment@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-          EXPO_PROJECT: "@supplyallytest/rationally"
-        with:
-          message: |
-            ## Application
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }})
-            Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }}
-            ## Storybook
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }})
-            Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }}
+          APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
+          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
+        run: |
+          eas build --platform android --release-channel=pr${{ github.event.number }} > buildLogAndroid.txt
+          cat buildLogAndroid.txt
+      # - name: Parse Asset URL
+      #   id: androidUrl
+      #   run: |
+      #     ASSET_URL=$(cat buildLogAndroid.txt | tail | egrep -o 'https?://expo\.dev/artifacts/[^ ]+')
+      #     echo The android url is $ASSET_URL
+      #     echo "::set-output name=assetUrl::$ASSET_URL"
+      # - name: Download APK Asset
+      #   run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.androidUrl.outputs.assetUrl }}
+      # - name: Upload Release Asset
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+      #     file: ./supplyally-${{ env.GITHUB_REF_SLUG }}.apk
+      #     asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.apk
+      #     tag: ${{ github.ref }}
+  build_ios:
+    needs: [deploy_branch_preview]
+    runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: rlespinasse/github-slug-action@v3.x
+        - uses: expo/expo-github-action@v5
+          with:
+            expo-packager: npm
+            expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
+            expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
+            expo-cache: true
+        - name: Install Packages
+          run: |
+            npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+            npm ci
+          env:
+            NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+        - name: Build IOS Release
+          env:
+            NODE_OPTIONS: --max_old_space_size=7168
+            SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+            SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            APP_BUILD_VERSION: ${{ github.run_number }}
+            APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
+            DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
+          run: |
+            eas build --platform android --release-channel=pr${{ github.event.number }} > buildLogIOS.txt
+            cat buildLogIOS.txt
+        # - name: Parse Asset URL
+        #   id: iosUrl
+        #   run: |
+        #     ASSET_URL=$(cat buildLogIOS.txt | tail | egrep -o 'https?://expo\.dev/artifacts/[^ ]+')
+        #     echo The IOS url is $ASSET_URL
+        #     echo "::set-output name=assetUrl::$ASSET_URL"
+        # - name: Download IPA Asset
+        #   run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.iosUrl.outputs.assetUrl }}
+        # - name: Upload Release Asset
+        #   uses: svenstaro/upload-release-action@v2
+        #   with:
+        #     repo_token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+        #     file: ./supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
+        #     asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
+        #     tag: ${{ github.ref }}
