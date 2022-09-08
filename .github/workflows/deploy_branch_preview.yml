@@ -140,46 +140,46 @@ jobs:
   build_ios:
     needs: [deploy_branch_preview]
     runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - uses: rlespinasse/github-slug-action@v3.x
-        - uses: expo/expo-github-action@v5
-          with:
-            expo-packager: npm
-            expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
-            expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
-            expo-cache: true
-        - name: Install Packages
-          run: |
-            npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-            npm ci
-          env:
-            NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-        - name: Build IOS Release
-          env:
-            NODE_OPTIONS: --max_old_space_size=7168
-            SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-            SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-            SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-            SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-            APP_BUILD_VERSION: ${{ github.run_number }}
-            APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
-            DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
-          run: |
-            eas build --platform android --release-channel=pr${{ github.event.number }} > buildLogIOS.txt
-            cat buildLogIOS.txt
-        # - name: Parse Asset URL
-        #   id: iosUrl
-        #   run: |
-        #     ASSET_URL=$(cat buildLogIOS.txt | tail | egrep -o 'https?://expo\.dev/artifacts/[^ ]+')
-        #     echo The IOS url is $ASSET_URL
-        #     echo "::set-output name=assetUrl::$ASSET_URL"
-        # - name: Download IPA Asset
-        #   run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.iosUrl.outputs.assetUrl }}
-        # - name: Upload Release Asset
-        #   uses: svenstaro/upload-release-action@v2
-        #   with:
-        #     repo_token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-        #     file: ./supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
-        #     asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
-        #     tag: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: rlespinasse/github-slug-action@v3.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-packager: npm
+          expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
+          expo-cache: true
+      - name: Install Packages
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
+        env:
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+      - name: Build IOS Release
+        env:
+          NODE_OPTIONS: --max_old_space_size=7168
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          APP_BUILD_VERSION: ${{ github.run_number }}
+          APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
+          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
+        run: |
+          eas build --platform android --release-channel=pr${{ github.event.number }} > buildLogIOS.txt
+          cat buildLogIOS.txt
+      # - name: Parse Asset URL
+      #   id: iosUrl
+      #   run: |
+      #     ASSET_URL=$(cat buildLogIOS.txt | tail | egrep -o 'https?://expo\.dev/artifacts/[^ ]+')
+      #     echo The IOS url is $ASSET_URL
+      #     echo "::set-output name=assetUrl::$ASSET_URL"
+      # - name: Download IPA Asset
+      #   run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.ipa ${{ steps.iosUrl.outputs.assetUrl }}
+      # - name: Upload Release Asset
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+      #     file: ./supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
+      #     asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.ipa
+      #     tag: ${{ github.ref }}
