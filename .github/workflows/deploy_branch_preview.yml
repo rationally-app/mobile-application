@@ -9,8 +9,8 @@ concurrency:
   group: ${{ github.ref }}-deploy-branch-preview # The branch or tag ref that triggered the workflow run.
 
 jobs:
-  deploy_branch_preview:
-      name: Deploy Branch Preview
+  get_version:
+      name: Get version
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
@@ -92,7 +92,7 @@ jobs:
         #       ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }})
         #       Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }}
   build_android:
-    needs: [deploy_branch_preview]
+    needs: [get_version]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -120,7 +120,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
+          APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
           eas build --non-interactive --platform android > buildLogAndroid.txt
@@ -141,16 +141,16 @@ jobs:
       #     asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.apk
       #     tag: ${{ github.ref }}
   build_ios:
-    needs: [deploy_branch_preview]
+    needs: [get_version]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: rlespinasse/github-slug-action@v3.x
       - uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 16.x
           cache: npm
-      - uses: expo/expo-github-action@v5
+      - uses: expo/expo-github-action@v7
         with:
           expo-version: latest
           eas-version: latest
@@ -169,7 +169,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ needs.deploy_prod.outputs.latestBinaryVersion }}
+          APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
           eas build --non-interactive --platform android > buildLogIOS.txt
