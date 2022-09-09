@@ -92,7 +92,7 @@ jobs:
           APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
-          eas build --non-interactive --platform android --release-channel=test > buildLogAndroid.txt
+          eas build --non-interactive --platform android > buildLogAndroid.txt
           cat buildLogAndroid.txt
       # - name: Parse Asset URL
       #   id: androidUrl
