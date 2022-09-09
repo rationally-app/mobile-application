@@ -75,12 +75,6 @@ jobs:
           eas-version: latest
           packager: npm
           token: ${{ secrets.EXPO_TOKEN_PRD }}
-      - name: Install Packages
-        run: |
-          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
-        env:
-          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Build Android Release
         env:
           NODE_OPTIONS: --max_old_space_size=7168
@@ -91,6 +85,7 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
         run: |
           eas build --non-interactive --platform android > buildLogAndroid.txt
           cat buildLogAndroid.txt
