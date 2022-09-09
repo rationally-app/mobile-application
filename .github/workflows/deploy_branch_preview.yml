@@ -90,7 +90,7 @@ jobs:
           APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
-          npx eas-cli --non-interactive --platform android > buildLogAndroid.txt
+          npx eas-cli build --non-interactive --platform android > buildLogAndroid.txt
           cat buildLogAndroid.txt
       # - name: Parse Asset URL
       #   id: androidUrl
