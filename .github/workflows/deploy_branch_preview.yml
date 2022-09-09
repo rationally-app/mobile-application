@@ -75,6 +75,12 @@ jobs:
           eas-version: latest
           packager: npm
           token: ${{ secrets.EXPO_TOKEN_PRD }}
+      - name: Install Packages
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci
+        env:
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Build Android Release
         env:
           NODE_OPTIONS: --max_old_space_size=7168
