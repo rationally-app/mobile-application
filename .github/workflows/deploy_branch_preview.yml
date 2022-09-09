@@ -90,6 +90,8 @@ jobs:
           APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
+          echo APP_BUILD_VERSION: ${{ github.run_number }}
+          echo APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
           npx eas-cli build --non-interactive --platform android > buildLogAndroid.txt
           cat buildLogAndroid.txt
       # - name: Parse Asset URL
