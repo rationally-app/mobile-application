@@ -57,40 +57,6 @@ jobs:
           run: |
             echo Build number is $GITHUB_RUN_NUMBER
             echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
-        # - name: Expo Publish Channel
-        #   env:
-        #     NODE_OPTIONS: --max_old_space_size=7168
-        #     SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-        #     SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        #     SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        #     APP_BUILD_VERSION: ${{ github.run_number }}
-        #     APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
-        #     DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-        #   run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
-        # - name: Expo Publish Storybook Channel
-        #   env:
-        #     SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-        #     SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        #     SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        #     APP_BUILD_VERSION: ${{ github.run_number }}
-        #     APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
-        #     DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-        #   run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
-        # - name: Add Comment To PR
-        #   uses: mshick/add-pr-comment@v1
-        #   env:
-        #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-        #     EXPO_PROJECT: "@supplyallytest/rationally"
-        #   with:
-        #     message: |
-        #       ## Application
-        #       ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }})
-        #       Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }}
-        #       ## Storybook
-        #       ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }})
-        #       Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }}
   build_android:
     needs: [get_version]
     runs-on: ubuntu-latest
@@ -105,6 +71,7 @@ jobs:
         with:
           expo-version: latest
           eas-version: latest
+          packager: npm
           token: ${{ secrets.EXPO_TOKEN_PRD }}
       - name: Install Packages
         run: |
@@ -123,8 +90,7 @@ jobs:
           APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
-          APP_BINARY_VERSION=${{ needs.get_version.outputs.latestBinaryVersion }}
-          eas build --non-interactive --platform android > buildLogAndroid.txt
+          npx eas-cli --non-interactive --platform android > buildLogAndroid.txt
           cat buildLogAndroid.txt
       # - name: Parse Asset URL
       #   id: androidUrl
@@ -141,40 +107,40 @@ jobs:
       #     file: ./supplyally-${{ env.GITHUB_REF_SLUG }}.apk
       #     asset_name: supplyally-${{ env.GITHUB_REF_SLUG }}.apk
       #     tag: ${{ github.ref }}
-  build_ios:
-    needs: [get_version]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: rlespinasse/github-slug-action@v3.x
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: npm
-      - uses: expo/expo-github-action@v7
-        with:
-          expo-version: latest
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN_PRD }}
-      - name: Install Packages
-        run: |
-          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
-        env:
-          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-      - name: Build IOS Release
-        env:
-          NODE_OPTIONS: --max_old_space_size=7168
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
-          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
-        run: |
-          eas build --non-interactive --platform android > buildLogIOS.txt
-          cat buildLogIOS.txt
+  # build_ios:
+  #   needs: [get_version]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: rlespinasse/github-slug-action@v3.x
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 16.x
+  #         cache: npm
+  #     - uses: expo/expo-github-action@v7
+  #       with:
+  #         expo-version: latest
+  #         eas-version: latest
+  #         token: ${{ secrets.EXPO_TOKEN_PRD }}
+  #     - name: Install Packages
+  #       run: |
+  #         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+  #         npm ci
+  #       env:
+  #         NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+  #     - name: Build IOS Release
+  #       env:
+  #         NODE_OPTIONS: --max_old_space_size=7168
+  #         SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  #         SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  #         APP_BUILD_VERSION: ${{ github.run_number }}
+  #         APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
+  #         DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
+  #       run: |
+  #         eas build --non-interactive --platform android > buildLogIOS.txt
+  #         cat buildLogIOS.txt
       # - name: Parse Asset URL
       #   id: iosUrl
       #   run: |
