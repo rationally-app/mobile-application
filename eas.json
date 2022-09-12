@@ -1,5 +1,7 @@
 {
     "build": {
-        "production": {}
+        "production": {
+            "autoIncrement": true
+        }
     }
 }

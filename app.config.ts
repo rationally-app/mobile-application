@@ -10,32 +10,13 @@ const getValue = (value: string | undefined, message: string): string => {
   }
   return value;
 };
-const buildNumber: string = getValue(
-  process.env.APP_BUILD_VERSION,
-  "Please provide a Build Version with APP_BUILD_VERSION env variable"
-);
-// The APP_BUILD_VERSION number is 38 behind the actual deploy, adding 38 synchronises the build number
-const appBuildVersion = parseInt(buildNumber) + 38;
 
 export default ({ config }: any): any => {
   return {
     ...config,
-    version: getValue(
-      process.env.APP_BINARY_VERSION,
-      "Please provide a App Version with APP_BINARY_VERSION env variable"
-    ),
-    android: {
-      ...config.android,
-      versionCode: appBuildVersion,
-    },
-    ios: {
-      ...config.ios,
-      buildNumber: appBuildVersion.toString(),
-    },
     extra: {
       mock: process.env.MOCK === "true",
       storybook: process.env.START_STORYBOOK === "true",
-      appBuildVersion,
       sentryDsn: getValue(
         process.env.SENTRY_DSN,
         "Please specify a SENTRY_DSN env variable"
