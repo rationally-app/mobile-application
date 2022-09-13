@@ -2,7 +2,6 @@
     "build": {
         "testing": {
             "autoIncrement": true,
-            "distribution": "internal",
             "channel": "testing"
         }
     }
