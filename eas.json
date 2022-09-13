@@ -1,9 +1,9 @@
 {
     "build": {
-        "test": {
+        "testing": {
             "autoIncrement": true,
             "distribution": "internal",
-            "channel": "preview"
+            "channel": "testing"
         }
     }
 }
