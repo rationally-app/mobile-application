@@ -14,6 +14,12 @@ const getValue = (value: string | undefined, message: string): string => {
 export default ({ config }: any): any => {
   return {
     ...config,
+    runtimeVersion: {
+      policy: "sdkVersion"
+    },
+    updates: {
+      url: "https://u.expo.dev/1662dd57-66f7-4845-b0c0-25b3f28fff6c"
+    },
     extra: {
       mock: process.env.MOCK === "true",
       storybook: process.env.START_STORYBOOK === "true",
@@ -25,6 +31,9 @@ export default ({ config }: any): any => {
         process.env.DOMAIN_FORMAT,
         "Please specify a DOMAIN_FORMAT env variable"
       ),
+      eas: {
+        projectId: "1662dd57-66f7-4845-b0c0-25b3f28fff6c"
+      }
     },
     hooks: {
       postPublish: [
