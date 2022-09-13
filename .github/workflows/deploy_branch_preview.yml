@@ -59,7 +59,7 @@ jobs:
           run: |
             echo Build number is $GITHUB_RUN_NUMBER
             echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
-  build_android:
+  build_all:
     needs: [get_version]
     runs-on: ubuntu-latest
     steps:
@@ -92,8 +92,8 @@ jobs:
           APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
-          eas build --non-interactive --platform android > buildLogAndroid.txt
-          cat buildLogAndroid.txt
+          eas build --profile testing --non-interactive --platform all > buildLog.txt
+          cat buildLog.txt
       # - name: Parse Asset URL
       #   id: androidUrl
       #   run: |
