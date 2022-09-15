@@ -123,7 +123,7 @@ export const InputPassportSection: FunctionComponent<InputPassportSection> = ({
               value={passportNum ? passportNum : undefined}
               onChange={({ nativeEvent: { text } }) => setPassportNum(text)}
               onSubmitEditing={submitId}
-              autoCompleteType="off"
+              autoComplete="off"
               autoCorrect={false}
               keyboardType={"default"}
             />

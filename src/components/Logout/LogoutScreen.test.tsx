@@ -1,6 +1,5 @@
 import { render, waitFor } from "@testing-library/react-native";
-import React, { ContextType, FunctionComponent } from "react";
-import { NavigationScreenProp, withNavigation } from "react-navigation";
+import React, { ContextType } from "react";
 import { AlertModalContext } from "../../context/alert";
 import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
@@ -8,7 +7,7 @@ import { AppMode, ConfigContext } from "../../context/config";
 import { ImportantMessageSetterContext } from "../../context/importantMessage";
 import { callLogout, LogoutError } from "../../services/auth";
 import { NetworkError } from "../../services/helpers";
-import { AuthCredentials } from "../../types";
+import { AuthCredentials, Drawers, Screens } from "../../types";
 import { Sentry } from "../../utils/errorTracking";
 import { ErrorBoundary } from "../ErrorBoundary/ErrorBoundary";
 import { LogoutScreen } from "./LogoutScreen";
@@ -18,24 +17,19 @@ jest.mock("../../services/auth", () => ({
   ...jest.requireActual("../../services/auth"),
   callLogout: jest.fn(),
 }));
-jest.mock("react-navigation", () => ({
-  // eslint-disable-next-line react/display-name
-  withNavigation: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={{ navigate: mockNavigate }} {...props} />,
-  // eslint-disable-next-line react/display-name
-  withNavigationFocus: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={{ navigate: mockNavigate }} {...props} />,
-}));
 
 const mockCaptureException = Sentry.captureException as jest.MockedFunction<
   typeof Sentry.captureException
 >;
-const mockNavigate = jest.fn() as jest.MockedFunction<
-  NavigationScreenProp<unknown>["navigate"]
->;
-const mockCallLogout = callLogout as jest.MockedFunction<typeof callLogout>;
 
-const LogoutScreenContainer = withNavigation(LogoutScreen);
+const mockNavigate = jest.fn();
+const mockNavigation: any = {
+  navigate: mockNavigate,
+};
+const mockRoute: any = {
+  params: {},
+};
+const mockCallLogout = callLogout as jest.MockedFunction<typeof callLogout>;
 
 describe("LogoutScreen", () => {
   let keyA: string;
@@ -122,7 +116,7 @@ describe("LogoutScreen", () => {
             value={defaultCampaignConfigStoreContextValue}
           >
             <ImportantMessageSetterContext.Provider value={jest.fn()}>
-              <LogoutScreenContainer />
+              <LogoutScreen navigation={mockNavigation} route={mockRoute} />
             </ImportantMessageSetterContext.Provider>
           </CampaignConfigsStoreContext.Provider>
         </AuthStoreContext.Provider>
@@ -157,14 +151,14 @@ describe("LogoutScreen", () => {
               clearCampaignConfigs: mockClearCampaignConfigs,
             }}
           >
-            <LogoutScreenContainer />
+            <LogoutScreen navigation={mockNavigation} route={mockRoute} />
           </CampaignConfigsStoreContext.Provider>
         </AuthStoreContext.Provider>
       );
 
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(mockNavigate).toHaveBeenCalledWith("LoginScreen");
+      expect(mockNavigate).toHaveBeenCalledWith(Screens.LoginScreen);
       expect(mockClearAuthCredentials).toHaveBeenCalledTimes(1);
       expect(mockClearCampaignConfigs).toHaveBeenCalledTimes(1);
     });
@@ -206,7 +200,7 @@ describe("LogoutScreen", () => {
               clearCampaignConfigs: mockClearCampaignConfigs,
             }}
           >
-            <LogoutScreenContainer />
+            <LogoutScreen navigation={mockNavigation} route={mockRoute} />
           </CampaignConfigsStoreContext.Provider>
         </AuthStoreContext.Provider>
       );
@@ -238,15 +232,18 @@ describe("LogoutScreen", () => {
             <CampaignConfigsStoreContext.Provider
               value={defaultCampaignConfigStoreContextValue}
             >
-              <LogoutScreenContainer />
+              <LogoutScreen navigation={mockNavigation} route={mockRoute} />
             </CampaignConfigsStoreContext.Provider>
           </AuthStoreContext.Provider>
         );
 
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-        expect(mockNavigate).toHaveBeenCalledWith("CampaignLocationsScreen", {
-          shouldAutoLoad: false,
+        expect(mockNavigate).toHaveBeenCalledWith(Drawers.MainDrawer, {
+          screen: Screens.CampaignLocationsScreen,
+          params: {
+            shouldAutoLoad: false,
+          },
         });
       });
 
@@ -269,7 +266,7 @@ describe("LogoutScreen", () => {
               <CampaignConfigsStoreContext.Provider
                 value={defaultCampaignConfigStoreContextValue}
               >
-                <LogoutScreenContainer />
+                <LogoutScreen navigation={mockNavigation} route={mockRoute} />
               </CampaignConfigsStoreContext.Provider>
             </AuthStoreContext.Provider>
           </AlertModalContext.Provider>
@@ -303,7 +300,7 @@ describe("LogoutScreen", () => {
                 <CampaignConfigsStoreContext.Provider
                   value={defaultCampaignConfigStoreContextValue}
                 >
-                  <LogoutScreenContainer />
+                  <LogoutScreen navigation={mockNavigation} route={mockRoute} />
                 </CampaignConfigsStoreContext.Provider>
               </AuthStoreContext.Provider>
             </AlertModalContext.Provider>

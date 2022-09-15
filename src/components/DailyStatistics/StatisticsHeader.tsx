@@ -3,13 +3,12 @@ import { size, fontSize } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { withNavigation } from "react-navigation";
-import { NavigationProps } from "../../types";
+import { DrawerActions } from "@react-navigation/native";
+import { DailyStatisticsScreenProps, Screens } from "../../types";
 import { AppText } from "../Layout/AppText";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { useTheme } from "../../context/theme";
-
-interface StatisticsHeader extends NavigationProps {
+interface StatisticsHeader extends DailyStatisticsScreenProps {
   mode?: AppMode;
 }
 
@@ -52,11 +51,11 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
 }) => {
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();
-    navigation.openDrawer();
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   const onPressBack = (): void => {
-    navigation.navigate("CollectCustomerDetailsScreen");
+    navigation.navigate(Screens.CollectCustomerDetailsScreen);
   };
 
   const { theme } = useTheme();
@@ -105,4 +104,4 @@ export const StatisticsHeaderComponent: FunctionComponent<StatisticsHeader> = ({
   );
 };
 
-export const StatisticsHeader = withNavigation(StatisticsHeaderComponent);
+export const StatisticsHeader = StatisticsHeaderComponent;

@@ -5,7 +5,7 @@ import {
   fireEvent,
   waitFor,
 } from "@testing-library/react-native";
-import React, { FunctionComponent } from "react";
+import React from "react";
 import { CustomerQuotaScreen } from "./CustomerQuotaScreen";
 import { CampaignPolicy, Quota } from "../../types";
 import { CampaignConfigsMap } from "../../context/campaignConfigsStore";
@@ -28,12 +28,20 @@ const mockNavigate: any = {
   goBack: () => null,
 };
 
-jest.mock("react-navigation", () => ({
-  withNavigation: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={mockNavigate} {...props} />,
-  withNavigationFocus: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={mockNavigate} {...props} />,
-}));
+const mockRoute: any = {
+  params: {},
+};
+
+const mockedUseNavigation = jest.fn();
+jest.mock("@react-navigation/native", () => {
+  const actualNav = jest.requireActual("@react-navigation/native");
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: mockedUseNavigation,
+    }),
+  };
+});
 
 const mockProduct: CampaignPolicy[] = [
   {
@@ -263,6 +271,7 @@ describe("CustomerQuotaScreen", () => {
           >
             <CustomerQuotaScreen
               navigation={mockNavigate}
+              route={mockRoute}
               navIds={["valid-id"]}
             />
           </CreateProvidersWrapper>
@@ -332,6 +341,7 @@ describe("CustomerQuotaScreen", () => {
           >
             <CustomerQuotaScreen
               navigation={mockNavigate}
+              route={mockRoute}
               navIds={["valid-id"]}
             />
           </CreateProvidersWrapper>
@@ -394,6 +404,7 @@ describe("CustomerQuotaScreen", () => {
           >
             <CustomerQuotaScreen
               navigation={mockNavigate}
+              route={mockRoute}
               navIds={["valid-id"]}
             />
           </CreateProvidersWrapper>
@@ -456,6 +467,7 @@ describe("CustomerQuotaScreen", () => {
           >
             <CustomerQuotaScreen
               navigation={mockNavigate}
+              route={mockRoute}
               navIds={["valid-id"]}
             />
           </CreateProvidersWrapper>
@@ -508,6 +520,7 @@ describe("CustomerQuotaScreen", () => {
           >
             <CustomerQuotaScreen
               navigation={mockNavigate}
+              route={mockRoute}
               navIds={["valid-id"]}
             />
           </CreateProvidersWrapper>
@@ -565,6 +578,7 @@ describe("CustomerQuotaScreen", () => {
           >
             <CustomerQuotaScreen
               navigation={mockNavigate}
+              route={mockRoute}
               navIds={["valid-id"]}
             />
           </CreateProvidersWrapper>

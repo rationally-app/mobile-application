@@ -72,32 +72,30 @@ describe("useTranslate", () => {
 
     it("should return translation from current campaign c13n if no campaignKey is passed", () => {
       expect.assertions(3);
-      expect(result.current.c13nt("Some Campaign Name")).toEqual(
-        "某个活动名称"
-      );
-      expect(result.current.c13nt("Toilet Paper")).toEqual("厕纸");
-      expect(result.current.c13nt("first")).toEqual("第一");
+      expect(result.current.c13nt("Some Campaign Name")).toBe("某个活动名称");
+      expect(result.current.c13nt("Toilet Paper")).toBe("厕纸");
+      expect(result.current.c13nt("first")).toBe("第一");
     });
 
     it("should return translation from target campaign if its campaign key is passed", () => {
       expect.assertions(3);
-      expect(
-        result.current.c13nt("Another Campaign Name", "campaignB")
-      ).toEqual("另一个活动名称");
-      expect(result.current.c13nt("Chocolate", "campaignB")).toEqual("巧克力");
-      expect(result.current.c13nt("bar", "campaignB")).toEqual("块");
+      expect(result.current.c13nt("Another Campaign Name", "campaignB")).toBe(
+        "另一个活动名称"
+      );
+      expect(result.current.c13nt("Chocolate", "campaignB")).toBe("巧克力");
+      expect(result.current.c13nt("bar", "campaignB")).toBe("块");
     });
 
     it("should return key if key does not exist in c13n", () => {
       expect.assertions(4);
-      expect(result.current.c13nt("Key that is not in C13N")).toEqual(
+      expect(result.current.c13nt("Key that is not in C13N")).toBe(
         "Key that is not in C13N"
       );
-      expect(result.current.c13nt("")).toEqual("");
-      expect(result.current.c13nt("Some Campaign Name", "campaignB")).toEqual(
+      expect(result.current.c13nt("")).toBe("");
+      expect(result.current.c13nt("Some Campaign Name", "campaignB")).toBe(
         "Some Campaign Name"
       );
-      expect(result.current.c13nt("", "campaignB")).toEqual("");
+      expect(result.current.c13nt("", "campaignB")).toBe("");
     });
   });
 
@@ -170,7 +168,7 @@ describe("useTranslate", () => {
       ).toEqual(en.errorMessages.alreadyUsedCode.body);
       expect(
         result.current.i18nt("loginOTPCard", "resendIn", undefined, { ss: 8 })
-      ).toEqual("Resend in 8s");
+      ).toBe("Resend in 8s");
     });
   });
 });

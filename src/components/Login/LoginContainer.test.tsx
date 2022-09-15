@@ -46,7 +46,7 @@ jest.spyOn(Linking, "parseInitialURLAsync").mockImplementation(mockDeepLink);
 jest.mock("expo-camera", () => {
   return {
     Camera: {
-      requestPermissionsAsync: () => {
+      requestCameraPermissionsAsync: () => {
         return {
           status: "granted",
         };
@@ -58,7 +58,17 @@ jest.mock("expo-camera", () => {
 const mockRequestOTP = jest.spyOn(auth, "requestOTP");
 const mockValidateOTP = jest.spyOn(auth, "validateOTP");
 
-describe("LoginContainer", () => {
+const mockRoute: any = {
+  params: {},
+};
+
+describe("LoginContainer component tests", () => {
+  const mockRegexValidate = jest.spyOn(RegExp.prototype, "test");
+
+  beforeEach(() => {
+    mockRegexValidate.mockReturnValueOnce(true);
+  });
+
   afterEach(() => {
     mockCaptureException.mockReset();
     mockDeepLink.mockReset();
@@ -70,13 +80,14 @@ describe("LoginContainer", () => {
   it("should render LoginScanCard", () => {
     expect.assertions(1);
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     expect(getByTestId(loginScanViewId)).not.toBeNull();
   });
 
   it("login endpoint + key in deep link and should render LoginMobileNumberCard", async () => {
     expect.assertions(1);
+    mockRegexValidate.mockReturnValueOnce(true);
     mockDeepLink.mockImplementation(() =>
       Promise.resolve({
         queryParams: { key, endpoint },
@@ -84,7 +95,7 @@ describe("LoginContainer", () => {
     );
 
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
 
     await waitFor(() => {
@@ -95,7 +106,7 @@ describe("LoginContainer", () => {
   it("should render Id scanner", async () => {
     expect.assertions(1);
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
@@ -105,7 +116,7 @@ describe("LoginContainer", () => {
   it("valid QR detected and should render LoginMobileNumberCard", async () => {
     expect.assertions(1);
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
 
     const scanButton = getByTestId(scanButtonId);
@@ -121,7 +132,7 @@ describe("LoginContainer", () => {
     mockRequestOTP.mockResolvedValueOnce({ status: "OK" });
 
     const { getByTestId, queryByText } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
@@ -143,7 +154,7 @@ describe("LoginContainer", () => {
     mockRequestOTP.mockResolvedValueOnce({ status: "OK" });
 
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
@@ -169,7 +180,7 @@ describe("LoginContainer", () => {
     });
 
     const { getByTestId } = render(
-      <InitialisationContainer navigation={mockNavigation} />
+      <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
@@ -196,7 +207,7 @@ describe("LoginContainer", () => {
       endpoint
     );
     expect(mockNavigation.navigate).toHaveBeenCalledWith(
-      "CampaignInitialisationScreen",
+      "Campaign Initialisation Screen",
       {
         authCredentials: {
           operatorToken: key,
@@ -215,7 +226,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -231,57 +245,6 @@ describe("LoginContainer", () => {
       ).not.toBeNull();
       expect(mockCaptureException).toHaveBeenCalledTimes(1);
     });
-    describe("validate RegEx format for Domain from QR detected", () => {
-      const mockRegexValidate = jest.spyOn(RegExp.prototype, "test");
-
-      afterEach(() => {
-        mockRegexValidate.mockClear();
-      });
-
-      it("should not show Error dialog if valid RegEx format", async () => {
-        expect.assertions(2);
-        const { getByTestId, queryByText } = render(
-          <CreateProvidersWrapper
-            providers={[{ provider: AlertModalContextProvider }]}
-          >
-            <InitialisationContainer navigation={mockNavigation} />
-          </CreateProvidersWrapper>
-        );
-
-        mockRegexValidate.mockReturnValueOnce(true);
-        const scanButton = getByTestId(scanButtonId);
-        await act(async () => fireEvent.press(scanButton));
-        fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
-          nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
-        });
-        expect(
-          queryByText("Get new QR code from your in-charge and try again.")
-        ).toBeNull();
-        expect(mockCaptureException).toHaveBeenCalledTimes(0);
-      });
-
-      it("should show Error dialog if invalid RegEx format", async () => {
-        expect.assertions(2);
-        const { getByTestId, queryByText } = render(
-          <CreateProvidersWrapper
-            providers={[{ provider: AlertModalContextProvider }]}
-          >
-            <InitialisationContainer navigation={mockNavigation} />
-          </CreateProvidersWrapper>
-        );
-
-        mockRegexValidate.mockReturnValueOnce(false);
-        const scanButton = getByTestId(scanButtonId);
-        await act(async () => fireEvent.press(scanButton));
-        fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
-          nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
-        });
-        expect(
-          queryByText("Get new QR code from your in-charge and try again.")
-        ).not.toBeNull();
-        expect(mockCaptureException).toHaveBeenCalledTimes(1);
-      });
-    });
 
     it("country code input is invalid", async () => {
       expect.assertions(1);
@@ -289,7 +252,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -314,7 +280,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -339,7 +308,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
 
@@ -367,7 +339,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -404,7 +379,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -445,7 +423,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -480,7 +461,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -518,7 +502,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -556,7 +543,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -589,7 +579,10 @@ describe("LoginContainer", () => {
         <CreateProvidersWrapper
           providers={[{ provider: AlertModalContextProvider }]}
         >
-          <InitialisationContainer navigation={mockNavigation} />
+          <InitialisationContainer
+            navigation={mockNavigation}
+            route={mockRoute}
+          />
         </CreateProvidersWrapper>
       );
       const scanButton = getByTestId(scanButtonId);
@@ -618,5 +611,63 @@ describe("LoginContainer", () => {
       fireEvent.press(getByTestId(alertModelButtonId));
       expect(getByTestId(loginScanViewId)).not.toBeNull();
     });
+  });
+});
+
+describe("validate RegEx format for Domain from QR detected", () => {
+  const mockRegexValidate = jest.spyOn(RegExp.prototype, "test");
+
+  afterEach(() => {
+    mockRegexValidate.mockClear();
+  });
+
+  it("should not show Error dialog if valid RegEx format", async () => {
+    expect.assertions(2);
+    const { getByTestId, queryByText } = render(
+      <CreateProvidersWrapper
+        providers={[{ provider: AlertModalContextProvider }]}
+      >
+        <InitialisationContainer
+          navigation={mockNavigation}
+          route={mockRoute}
+        />
+      </CreateProvidersWrapper>
+    );
+
+    mockRegexValidate.mockReturnValueOnce(true);
+    const scanButton = getByTestId(scanButtonId);
+    await act(async () => fireEvent.press(scanButton));
+    fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
+      nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
+    });
+    expect(
+      queryByText("Get new QR code from your in-charge and try again.")
+    ).toBeNull();
+    expect(mockCaptureException).toHaveBeenCalledTimes(0);
+  });
+
+  it("should show Error dialog if invalid RegEx format", async () => {
+    expect.assertions(2);
+    const { getByTestId, queryByText } = render(
+      <CreateProvidersWrapper
+        providers={[{ provider: AlertModalContextProvider }]}
+      >
+        <InitialisationContainer
+          navigation={mockNavigation}
+          route={mockRoute}
+        />
+      </CreateProvidersWrapper>
+    );
+
+    mockRegexValidate.mockReturnValueOnce(false);
+    const scanButton = getByTestId(scanButtonId);
+    await act(async () => fireEvent.press(scanButton));
+    fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
+      nativeEvent: { data: `{"key": "${key}","endpoint": "${endpoint}"}` },
+    });
+    expect(
+      queryByText("Get new QR code from your in-charge and try again.")
+    ).not.toBeNull();
+    expect(mockCaptureException).toHaveBeenCalledTimes(1);
   });
 });

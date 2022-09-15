@@ -24,7 +24,10 @@ describe("InputPassportSection", () => {
         submitId={submitId}
       />
     );
-
+    const viewDropdownModal = queryByTestId("dropdown-filter-view");
+    if (viewDropdownModal) {
+      fireEvent(viewDropdownModal, "onTouchStart");
+    }
     const passportNumberInput = queryByTestId("input-with-label-input");
     const passportCountryInput = queryAllByPlaceholderText("Search country");
     const selectedCountry = queryByText("Afghanistan");
@@ -38,10 +41,10 @@ describe("InputPassportSection", () => {
     expect(identityDetailsCheckButton).not.toBeNull();
 
     fireEvent.press(selectedCountry!);
-    expect(passportCountryInput[1]!.props["children"]).toEqual("Afghanistan");
+    expect(passportCountryInput[1]!.props["children"]).toBe("Afghanistan");
 
     fireEvent(passportNumberInput!, "onChange", {
-      nativeEvent: { text: "                valid-alternate-id    " },
+      nativeEvent: { text: "valid-alternate-id" },
     });
 
     expect(setIdInput).toHaveBeenCalledWith("AFG-valid-alternate-id");

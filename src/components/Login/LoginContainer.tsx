@@ -13,7 +13,12 @@ import {
   Vibration,
   BackHandler,
 } from "react-native";
-import { NavigationProps, AuthCredentials } from "../../types";
+import {
+  AuthCredentials,
+  Drawers,
+  InitialisationContainerNavigationProps,
+  Screens,
+} from "../../types";
 import { DangerButton } from "../Layout/Buttons/DangerButton";
 import { size, borderRadius, color } from "../../common/styles";
 import { TopBackground } from "../Layout/TopBackground";
@@ -97,9 +102,9 @@ const CloseButton: FunctionComponent<{
   </View>
 );
 
-export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
-  navigation,
-}) => {
+export const InitialisationContainer: FunctionComponent<
+  InitialisationContainerNavigationProps
+> = ({ navigation }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -173,12 +178,19 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
   };
 
   const onPressClose = (): void => {
-    navigation.navigate("CampaignLocationsScreen");
+    navigation.navigate(Drawers.MainDrawer, {
+      screen: Screens.CampaignLocationsScreen,
+      params: {
+        shouldAutoLoad: true,
+      },
+    });
   };
 
   const onSuccess = (authCredentials: AuthCredentials): void => {
     setConfigValue("fullMobileNumber", { countryCode, mobileNumber });
-    navigation.navigate("CampaignInitialisationScreen", { authCredentials });
+    navigation.navigate(Screens.CampaignInitialisationScreen, {
+      authCredentials,
+    });
   };
 
   useEffect(() => {
@@ -227,9 +239,7 @@ export const InitialisationContainer: FunctionComponent<NavigationProps> = ({
         return false;
       }
     );
-    return () => {
-      backHandler.remove();
-    };
+    return () => backHandler.remove();
   }, [shouldShowCamera]);
 
   const onBarCodeScanned: BarCodeScannedCallback = (event) => {

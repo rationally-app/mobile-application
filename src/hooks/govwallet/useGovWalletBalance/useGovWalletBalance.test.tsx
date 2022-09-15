@@ -72,11 +72,9 @@ describe("useGovWalletBalance", () => {
           { wrapper }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "FETCHING_BALANCE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
         await waitForNextUpdate();
-        expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
+        expect(result.current.govWalletBalanceState).toBe("ELIGIBLE");
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
       });
 
@@ -88,7 +86,7 @@ describe("useGovWalletBalance", () => {
           { wrapper: wrapperWithToggleOff }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+        expect(result.current.govWalletBalanceState).toBe("DEFAULT");
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(0);
       });
     });
@@ -123,11 +121,9 @@ describe("useGovWalletBalance", () => {
           { wrapper }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "FETCHING_BALANCE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
         await waitForNextUpdate();
-        expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
+        expect(result.current.govWalletBalanceState).toBe("ELIGIBLE");
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
       });
 
@@ -150,13 +146,9 @@ describe("useGovWalletBalance", () => {
           { wrapper }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "FETCHING_BALANCE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
         await waitForNextUpdate();
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "INELIGIBLE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("INELIGIBLE");
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
       });
 
@@ -179,13 +171,9 @@ describe("useGovWalletBalance", () => {
           { wrapper }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "FETCHING_BALANCE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
         await waitForNextUpdate();
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "INELIGIBLE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("INELIGIBLE");
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
       });
 
@@ -207,13 +195,9 @@ describe("useGovWalletBalance", () => {
           { wrapper }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "FETCHING_BALANCE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
         await waitForNextUpdate();
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "INELIGIBLE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("INELIGIBLE");
         expect(result.current.govWalletBalanceError).toStrictEqual(
           new ErrorWithCodes(
             "Eligible identity's account has been deactivated. Inform your in-charge about this issue.",
@@ -235,11 +219,9 @@ describe("useGovWalletBalance", () => {
           { wrapper }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "FETCHING_BALANCE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
         await waitForNextUpdate();
-        expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+        expect(result.current.govWalletBalanceState).toBe("DEFAULT");
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
         expect(result.current.govWalletBalanceError).toStrictEqual(
           new NetworkError("Network error")
@@ -258,11 +240,9 @@ describe("useGovWalletBalance", () => {
           { wrapper }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "FETCHING_BALANCE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
         await waitForNextUpdate();
-        expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+        expect(result.current.govWalletBalanceState).toBe("DEFAULT");
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
         expect(result.current.govWalletBalanceError).toStrictEqual(
           new ErrorWithCodes("Invalid customerId", 400, "F00B4R")
@@ -279,64 +259,14 @@ describe("useGovWalletBalance", () => {
           { wrapper }
         );
 
-        expect(result.current.govWalletBalanceState).toStrictEqual(
-          "FETCHING_BALANCE"
-        );
+        expect(result.current.govWalletBalanceState).toBe("FETCHING_BALANCE");
         await waitForNextUpdate();
-        expect(result.current.govWalletBalanceState).toStrictEqual("DEFAULT");
+        expect(result.current.govWalletBalanceState).toBe("DEFAULT");
         expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
         expect(result.current.govWalletBalanceError).toStrictEqual(
           new ErrorWithCodes("", 500)
         );
       });
-    });
-  });
-
-  describe("when govwalletExactBalanceValue -1 or undefined", () => {
-    const testCampaignConfig: CampaignConfig = {
-      ...defaultCampaignConfig,
-      features: {
-        ...defaultFeatures,
-        isPayNowTransaction: true,
-        govwalletExactBalanceValue: -1,
-      },
-    };
-
-    const wrapper: FunctionComponent = ({ children }) => (
-      <ProductContextProvider products={defaultProducts}>
-        <CampaignConfigContextProvider campaignConfig={testCampaignConfig}>
-          {children}
-        </CampaignConfigContextProvider>
-      </ProductContextProvider>
-    );
-
-    let ids: string[];
-
-    it("should not check balance exact match", async () => {
-      expect.assertions(3);
-      ids = ["S0000000J"];
-
-      mockGetGovWalletBalance.mockResolvedValue({
-        accountDetails: [
-          {
-            activationStatus: "ACTIVATED",
-            balance: 100000,
-            modified: "2022-07-25T11:57:50.000+08:00",
-          },
-        ],
-      });
-
-      const { result, waitForNextUpdate } = renderHook(
-        () => useGovWalletBalance(ids, key, endpoint),
-        { wrapper }
-      );
-
-      expect(result.current.govWalletBalanceState).toStrictEqual(
-        "FETCHING_BALANCE"
-      );
-      await waitForNextUpdate();
-      expect(result.current.govWalletBalanceState).toStrictEqual("ELIGIBLE");
-      expect(mockGetGovWalletBalance).toHaveBeenCalledTimes(1);
     });
   });
 });

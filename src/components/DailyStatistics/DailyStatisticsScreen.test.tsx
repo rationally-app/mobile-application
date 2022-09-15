@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { render, cleanup, fireEvent } from "@testing-library/react-native";
-import React, { FunctionComponent } from "react";
+import React from "react";
 import { Sentry } from "../../utils/errorTracking";
 import { DailyStatisticsScreenContainer } from "./DailyStatisticsScreen";
 import "../../common/i18n/i18nMock";
@@ -11,13 +11,9 @@ const mockCaptureException = jest.fn();
 
 const mockDate = jest.spyOn(global.Date, "now");
 const mockNavigate: any = { navigate: jest.fn() };
-
-jest.mock("react-navigation", () => ({
-  withNavigation: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={mockNavigate} {...props} />,
-  withNavigationFocus: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={mockNavigate} {...props} />,
-}));
+const mockRoute: any = {
+  params: {},
+};
 
 const mockTransactionHistory = [
   {
@@ -57,7 +53,10 @@ describe("DailyStatisticsScreen", () => {
     expect.assertions(6);
 
     const { queryByText } = render(
-      <DailyStatisticsScreenContainer navigation={mockNavigate} />
+      <DailyStatisticsScreenContainer
+        navigation={mockNavigate}
+        route={mockRoute}
+      />
     );
 
     expect(queryByText("999")).not.toBeNull();
@@ -74,7 +73,10 @@ describe("DailyStatisticsScreen", () => {
     expect.assertions(4);
 
     const { queryByText, queryByTestId } = render(
-      <DailyStatisticsScreenContainer navigation={mockNavigate} />
+      <DailyStatisticsScreenContainer
+        navigation={mockNavigate}
+        route={mockRoute}
+      />
     );
 
     const chevronLeft = queryByTestId("title-statistics-chevron-left");

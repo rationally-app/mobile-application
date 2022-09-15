@@ -69,9 +69,7 @@ describe("parsePhoneNumber", () => {
           (phoneNumber) => {
             expect.assertions(2);
             expect(() => parsePhoneNumber(phoneNumber)).not.toThrow();
-            expect(
-              parsePhoneNumber(phoneNumber).getCountryCode()
-            ).toStrictEqual(65);
+            expect(parsePhoneNumber(phoneNumber).getCountryCode()).toBe(65);
           }
         );
 
@@ -85,7 +83,7 @@ describe("parsePhoneNumber", () => {
             ).not.toThrow();
             expect(
               parsePhoneNumber(phoneNumber, countryCode).getCountryCode()
-            ).toStrictEqual(65);
+            ).toBe(65);
           }
         );
       });

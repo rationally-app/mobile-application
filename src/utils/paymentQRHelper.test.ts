@@ -25,21 +25,17 @@ describe("tests for findValueByKey", () => {
 
   it("should find value by key properly", () => {
     expect.assertions(1);
-    expect(findValueByKey("merchantName", records)).toStrictEqual(
-      "Merchant name"
-    );
+    expect(findValueByKey("merchantName", records)).toBe("Merchant name");
   });
 
   it("should find two-layer nested value by key properly", () => {
     expect.assertions(1);
-    expect(findValueByKey("terminalId", records)).toStrictEqual("1234567890");
+    expect(findValueByKey("terminalId", records)).toBe("1234567890");
   });
 
   it("should find three-layer nested value by key properly", () => {
     expect.assertions(1);
-    expect(findValueByKey("nestedProperty", records)).toStrictEqual(
-      "This is nested"
-    );
+    expect(findValueByKey("nestedProperty", records)).toBe("This is nested");
   });
 
   it("should return `undefined` if key does not exist", () => {

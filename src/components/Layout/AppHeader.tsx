@@ -3,12 +3,11 @@ import { size } from "../../common/styles";
 import { View, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import { AppMode } from "../../context/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { withNavigation } from "react-navigation";
-import { NavigationProps } from "../../types";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { AppName } from "./AppName";
 import { useTheme } from "../../context/theme";
 
-interface AppHeader extends NavigationProps {
+interface AppHeader {
   mode?: AppMode;
 }
 
@@ -23,13 +22,13 @@ const styles = StyleSheet.create({
 
 export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   mode = AppMode.production,
-  navigation,
 }) => {
+  const navigation = useNavigation();
   const { theme } = useTheme();
 
   const onPressOpenDrawer = (): void => {
     Keyboard.dismiss();
-    navigation.openDrawer();
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   return (
@@ -49,4 +48,4 @@ export const AppHeaderComponent: FunctionComponent<AppHeader> = ({
   );
 };
 
-export const AppHeader = withNavigation(AppHeaderComponent);
+export const AppHeader = AppHeaderComponent;

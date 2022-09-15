@@ -1,40 +1,35 @@
 import {
   createStackNavigator,
-  StackViewTransitionConfigs,
-} from "react-navigation-stack";
+  TransitionPresets,
+  StackNavigationOptions,
+} from "@react-navigation/stack";
 import MerchantPayoutScreen from "./MerchantPayoutScreen";
 import PayoutFeedbackScreen from "./PayoutFeedbackScreen";
 import React, { FunctionComponent, useContext, useEffect } from "react";
-import { NavigationInjectedProps } from "react-navigation";
 import { AuthStoreContext } from "../../context/authStore";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { AuthContextProvider } from "../../context/auth";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
+import {
+  MerchantPayoutStackScreenProps,
+  MerchantPayoutStackParams,
+  Screens,
+} from "../../types";
 
-const Stack = createStackNavigator(
-  {
-    MerchantPayoutScreen: {
-      screen: MerchantPayoutScreen,
-    },
-    PayoutFeedbackScreen: {
-      screen: PayoutFeedbackScreen,
-    },
-  },
-  {
-    headerMode: "none",
-    transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS,
-    navigationOptions: {
-      gesturesEnabled: true,
-    },
-    initialRouteName: "MerchantPayoutScreen",
-  }
-);
+const Stack = createStackNavigator<MerchantPayoutStackParams>();
 
-const MerchantPayoutStack: FunctionComponent<NavigationInjectedProps> & {
-  router: unknown;
-} = ({ navigation }) => {
-  const operatorToken = navigation.getParam("operatorToken");
-  const endpoint = navigation.getParam("endpoint");
+const screenOptions: StackNavigationOptions = {
+  ...TransitionPresets.SlideFromRightIOS,
+  gestureEnabled: true,
+  headerShown: false,
+};
+
+const MerchantPayoutStack: FunctionComponent<
+  MerchantPayoutStackScreenProps
+> = ({ navigation, route }) => {
+  const operatorToken =
+    route.params?.operatorToken || route.params?.params?.operatorToken;
+  const endpoint = route.params?.endpoint || route.params?.params?.endpoint;
 
   const key = `${operatorToken}${endpoint}`;
 
@@ -44,19 +39,32 @@ const MerchantPayoutStack: FunctionComponent<NavigationInjectedProps> & {
 
   useEffect(() => {
     if (!hasDataFromStore) {
-      navigation.navigate("CampaignLocationsScreen");
+      navigation.navigate(Screens.CampaignLocationsScreen, {
+        shouldAutoLoad: true,
+      });
     }
   }, [hasDataFromStore, navigation]);
 
   return hasDataFromStore ? (
     <AuthContextProvider authCredentials={authCredentials[key]!}>
       <CampaignConfigContextProvider campaignConfig={allCampaignConfigs[key]!}>
-        <Stack navigation={navigation} />
+        <Stack.Navigator
+          initialRouteName={Screens.MerchantPayoutScreen}
+          screenOptions={screenOptions}
+        >
+          <Stack.Screen
+            name={Screens.MerchantPayoutScreen}
+            component={MerchantPayoutScreen}
+          />
+          <Stack.Screen
+            name={Screens.PayoutFeedbackScreen}
+            component={PayoutFeedbackScreen}
+          />
+        </Stack.Navigator>
       </CampaignConfigContextProvider>
     </AuthContextProvider>
   ) : null;
 };
-
-MerchantPayoutStack.router = Stack.router;
+// MerchantPayoutStack.router = Stack.router;
 
 export default MerchantPayoutStack;

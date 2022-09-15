@@ -18,7 +18,11 @@ import { HelpButton } from "../Layout/Buttons/HelpButton";
 import { HelpModalContext } from "../../context/help";
 import { AuthStoreContext } from "../../context/authStore";
 import { CampaignLocationsListItem } from "./CampaignLocationsListItem";
-import { NavigationProps, AuthCredentials } from "../../types";
+import {
+  AuthCredentials,
+  CampaignLocationsScreenNavigationProps,
+  Screens,
+} from "../../types";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigsStoreContext } from "../../context/campaignConfigsStore";
 import { useDrawerContext } from "../../context/drawer";
@@ -27,6 +31,7 @@ import { Card } from "../Layout/Card";
 import { AppText } from "../Layout/AppText";
 import { sortBy } from "lodash";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { useConfigContext } from "../../context/config";
 
 const styles = StyleSheet.create({
   content: {
@@ -57,9 +62,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
-  navigation,
-}) => {
+export const CampaignLocationsScreen: FunctionComponent<
+  CampaignLocationsScreenNavigationProps
+> = ({ navigation, route }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -67,11 +72,12 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
+  const { config } = useConfigContext();
   /**
    * Determines whether the app should automatically load a campaign if there
    * is only one existing campaign
    */
-  const shouldAutoLoad: boolean = navigation.getParam("shouldAutoLoad") ?? true;
+  const shouldAutoLoad: boolean = route?.params?.shouldAutoLoad ?? true; // true by default
 
   const messageContent = useContext(ImportantMessageContentContext);
   const showHelpModal = useContext(HelpModalContext);
@@ -88,19 +94,25 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
   const { i18nt, c13nt } = useTranslate();
 
   useEffect(() => {
+    /**
+     * Determines whether the app should automatically load a campaign if there
+     * is only one existing campaign
+     */
     setDrawerButtons([
       {
         icon: "map-marker-plus",
         label: i18nt("navigationDrawer", "addCampaign"),
         onPress: () => {
-          navigation.navigate("LoginScreen");
+          navigation.navigate(Screens.LoginScreen);
         },
       },
       {
         icon: "map-search",
         label: i18nt("navigationDrawer", "changeChampaign"),
         onPress: () => {
-          navigation.navigate("CampaignLocationsScreen");
+          navigation.navigate(Screens.CampaignLocationsScreen, {
+            shouldAutoLoad,
+          });
         },
       },
     ]);
@@ -110,11 +122,12 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
     navigation,
     setDrawerButtons,
     i18nt,
+    shouldAutoLoad,
   ]);
 
   const navigateToCampaignLocation = useCallback(
     (authCredentials: AuthCredentials): void => {
-      navigation.navigate("CampaignInitialisationScreen", {
+      navigation.navigate(Screens.CampaignInitialisationScreen, {
         authCredentials,
       });
     },
@@ -133,7 +146,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
         navigateToCampaignLocation(Object.values(authCredentials)[0]);
       } else if (numCampaignLocations === 0) {
         // Automatically go to the Login Screen to add a campaign
-        navigation.navigate("LoginScreen");
+        navigation.navigate(Screens.LoginScreen);
       }
     }
   }, [
@@ -165,7 +178,7 @@ export const CampaignLocationsScreen: FunctionComponent<NavigationProps> = ({
         <TopBackground />
         <View style={styles.content}>
           <View style={styles.headerText}>
-            <AppHeader />
+            <AppHeader mode={config.appMode} />
           </View>
           {messageContent && (
             <View style={styles.bannerWrapper}>

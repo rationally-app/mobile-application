@@ -17,7 +17,7 @@ import { AppText } from "../Layout/AppText";
 import { ValidVoucherCount } from "../MerchantPayout/ValidVoucherCount";
 import { Feather } from "@expo/vector-icons";
 import { ManualAddVoucherModal } from "./ManualAddVoucherModal";
-import { SafeAreaView } from "react-navigation";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Voucher } from "../../types";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
@@ -82,7 +82,7 @@ export const VoucherScanner: FunctionComponent<VoucherScanner> = ({
   const [showManualInput, setShowManualInput] = useState(false);
   useEffect(() => {
     const askForCameraPermission = async (): Promise<void> => {
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       if (status === "granted") {
         setHasCameraPermission(true);
       } else {

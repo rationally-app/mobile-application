@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { transform } from "lodash";
 import { StyleSheet, View } from "react-native";
-import { NavigationProps } from "../../types";
+import { CustomerAppealScreenNavigationProps, Screens } from "../../types";
 import { size } from "../../common/styles";
 import { AppHeader } from "../Layout/AppHeader";
 import { TopBackground } from "../Layout/TopBackground";
@@ -22,13 +22,13 @@ import {
   ReasonSelectionCard,
   Reason,
 } from "./ReasonSelection/ReasonSelectionCard";
-import { pushRoute, navigateHome } from "../../common/navigation";
 import { AuthContext } from "../../context/auth";
 import { IdentificationContext } from "../../context/identification";
 import { Sentry } from "../../utils/errorTracking";
 import { CampaignConfigContext } from "../../context/campaignConfig";
 import { useQuota } from "../../hooks/useQuota/useQuota";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { CommonActions, StackActions } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -57,9 +57,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
-  navigation,
-}) => {
+export const CustomerAppealScreen: FunctionComponent<
+  CustomerAppealScreenNavigationProps
+> = ({ navigation, route }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
@@ -67,12 +67,17 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
     });
   }, []);
 
-  const [ids] = useState(navigation.getParam("ids"));
+  const [ids] = useState(route.params?.ids ?? undefined);
   const { policies: allProducts } = useContext(CampaignConfigContext);
   const { selectedIdType } = useContext(IdentificationContext);
 
   const onCancel = useCallback((): void => {
-    navigateHome(navigation);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: Screens.CollectCustomerDetailsScreen }],
+      })
+    );
   }, [navigation]);
 
   const messageContent = useContext(ImportantMessageContentContext);
@@ -169,10 +174,12 @@ export const CustomerAppealScreen: FunctionComponent<NavigationProps> = ({
       );
       return;
     }
-    pushRoute(navigation, "CustomerQuotaProxy", {
-      id: ids,
-      products: [appealProduct],
-    });
+    navigation.dispatch(
+      StackActions.push(Screens.CustomerQuotaProxy, {
+        id: ids,
+        products: [appealProduct],
+      })
+    );
   };
 
   return (

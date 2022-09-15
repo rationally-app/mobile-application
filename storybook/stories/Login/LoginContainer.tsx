@@ -6,6 +6,6 @@ import { navigation } from "../mocks/navigation";
 
 storiesOf("Screen", module).add("LoginScreen", () => (
   <View style={{ height: "100%" }}>
-    <InitialisationContainer navigation={navigation} />
+    <InitialisationContainer route={{} as any} navigation={navigation} />
   </View>
 ));

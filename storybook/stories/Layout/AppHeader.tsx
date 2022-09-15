@@ -5,22 +5,7 @@ import { AppText } from "../../../src/components/Layout/AppText";
 import { View } from "react-native";
 import { size, color } from "../../../src/common/styles";
 import { AppMode } from "../../../src/context/config";
-import { createAppContainer } from "react-navigation";
-import { createDrawerNavigator } from "react-navigation-drawer";
-
-const reactNavigationDecorator = (story: any): JSX.Element => {
-  const Screen = (): any => story();
-  const Navigator = createAppContainer(
-    createDrawerNavigator(
-      { Screen },
-      {
-        drawerPosition: "right",
-        drawerType: "slide",
-      }
-    )
-  );
-  return <Navigator />;
-};
+import { mockReactNavigationDecorator } from "../mocks/navigation";
 
 const appHeaderElements: JSX.Element[] = [
   <>
@@ -34,7 +19,7 @@ const appHeaderElements: JSX.Element[] = [
 ];
 
 storiesOf("Layout", module)
-  .addDecorator(reactNavigationDecorator) // decorator is used to wrapper of the story
+  .addDecorator(mockReactNavigationDecorator) // decorator is used to wrapper of the story
   .add("AppHeader", () => (
     <View style={{ margin: size(2) }}>
       {appHeaderElements.map((appHeaderElement, index) => (

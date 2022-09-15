@@ -19,10 +19,6 @@ import { AppText } from "../Layout/AppText";
 import { TopBackground } from "../Layout/TopBackground";
 import { Credits } from "../Credits";
 import { useConfigContext } from "../../context/config";
-import {
-  withNavigationFocus,
-  NavigationFocusInjectedProps,
-} from "react-navigation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IdScanner } from "../IdScanner/IdScanner";
 import { BarCodeScanner, BarCodeScannedCallback } from "expo-barcode-scanner";
@@ -41,7 +37,11 @@ import { CampaignConfigContext } from "../../context/campaignConfig";
 import { AlertModalContext } from "../../context/alert";
 import { InputSelection } from "./InputSelection";
 import { InputPassportSection } from "./InputPassportSection";
-import { IdentificationFlag } from "../../types";
+import {
+  CollectCustomerDetailsScreenNavigationProps,
+  IdentificationFlag,
+  Screens,
+} from "../../types";
 import {
   IdentificationContext,
   defaultSelectedIdType,
@@ -49,6 +49,7 @@ import {
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { extractPassportIdFromEvent } from "../../utils/passportScanning";
 import { useTheme } from "../../context/theme";
+import { useIsFocused } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   content: {
@@ -89,17 +90,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const CollectCustomerDetailsScreen: FunctionComponent<
-  NavigationFocusInjectedProps
-> = ({ navigation, isFocused }) => {
+export const CollectCustomerDetailsScreen: FunctionComponent<
+  CollectCustomerDetailsScreenNavigationProps
+> = ({ navigation }) => {
   useEffect(() => {
     Sentry.addBreadcrumb({
       category: "navigation",
       message: "CollectCustomerDetailsScreen",
     });
   }, []);
-
   const { theme } = useTheme();
+  const isFocused = useIsFocused();
   const messageContent = useContext(ImportantMessageContentContext);
   const [shouldShowCamera, setShouldShowCamera] = useState(false);
   const [isScanningEnabled, setIsScanningEnabled] = useState(true);
@@ -148,9 +149,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<
         return false;
       }
     );
-    return () => {
-      backHandler.remove();
-    };
+    return () => backHandler.remove();
   }, [shouldShowCamera]);
 
   useEffect(() => {
@@ -190,11 +189,13 @@ const CollectCustomerDetailsScreen: FunctionComponent<
         (policy) =>
           policy.categoryType === undefined || policy.categoryType === "DEFAULT"
       );
-
+      if (!defaultProducts) {
+        return;
+      }
       setShouldShowCamera(false);
-      navigation.navigate("CustomerQuotaProxy", {
+      navigation.navigate(Screens.CustomerQuotaProxy, {
         id,
-        products: defaultProducts,
+        products: defaultProducts, // TODO potentially handling undefined for `products` key
       });
       setIdInput("");
     } catch (e) {
@@ -253,7 +254,7 @@ const CollectCustomerDetailsScreen: FunctionComponent<
   };
 
   const onPressStatistics = (): void => {
-    navigation.navigate("DailyStatisticsScreen");
+    navigation.navigate(Screens.DailyStatisticsScreen);
   };
 
   const getBarcodeType = (): any[] => {
@@ -346,7 +347,3 @@ const CollectCustomerDetailsScreen: FunctionComponent<
     </>
   );
 };
-
-export const CollectCustomerDetailsScreenContainer = withNavigationFocus(
-  CollectCustomerDetailsScreen
-);

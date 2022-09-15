@@ -613,9 +613,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
       expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
       expect(queryByTestId("loaded")).toBeNull();
 
-      expect(await waitFor(() => getByTestId("loaded"))).toHaveTextContent(
-        "true"
-      );
+      await expect(
+        waitFor(() => getByTestId("loaded"))
+      ).resolves.toHaveTextContent("true");
 
       expect(mockGetItem).not.toHaveBeenCalled();
       expect(mockRemoveItem).toHaveBeenCalledTimes(1);
@@ -666,9 +666,9 @@ describe("CampaignConfigsStoreContextProvider", () => {
       expect(mockReadBucket).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");
       expect(queryByTestId("loaded")).toBeNull();
 
-      expect(await waitFor(() => getByTestId("loaded"))).toHaveTextContent(
-        "true"
-      );
+      await expect(
+        waitFor(() => getByTestId("loaded"))
+      ).resolves.toHaveTextContent("true");
 
       expect(mockGetItem).toHaveBeenCalledTimes(1);
       expect(mockGetItem).toHaveBeenCalledWith("CAMPAIGN_CONFIGS_STORE");

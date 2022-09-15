@@ -1,31 +1,42 @@
 /* eslint-disable react/display-name */
 import { render, cleanup, fireEvent } from "@testing-library/react-native";
-import React, { FunctionComponent } from "react";
+import React from "react";
 import { Sentry } from "../../utils/errorTracking";
-import * as navigation from "../../common/navigation";
 import { CampaignConfigsMap } from "../../context/campaignConfigsStore";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import { CreateProvidersWrapper } from "../../test/helpers/providers";
 import { defaultFeatures } from "../../test/helpers/defaults";
 import { CustomerAppealScreen } from "./CustomerAppealScreen";
 import "../../common/i18n/i18nMock";
+import { StackActions } from "@react-navigation/native";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
 (Sentry.captureException as jest.Mock).mockImplementation(mockCaptureException);
 
-const mockPushRoute = jest.spyOn(navigation, "pushRoute");
+const mockStackedActionsPush = jest.spyOn(StackActions, "push");
+const mockedDispatch = jest.fn();
 const mockNavigate: any = {
-  navigate: jest.fn(),
+  dispatch: mockedDispatch,
   getParam: (id: string) => ["valid-id"],
 };
+const mockRoute: any = {
+  params: {
+    ids: ["valid-id"],
+  },
+};
 
-jest.mock("react-navigation", () => ({
-  withNavigation: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={mockNavigate} {...props} />,
-  withNavigationFocus: (Component: FunctionComponent) => (props: any) =>
-    <Component navigation={mockNavigate} {...props} />,
-}));
+const mockedNavigate = jest.fn();
+
+jest.mock("@react-navigation/native", () => {
+  const actualNav = jest.requireActual("@react-navigation/native");
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: mockedNavigate,
+    }),
+  };
+});
 
 describe("CustomerAppealScreen", () => {
   let allCampaignConfigs: CampaignConfigsMap;
@@ -80,7 +91,7 @@ describe("CustomerAppealScreen", () => {
           },
         ]}
       >
-        <CustomerAppealScreen navigation={mockNavigate} />
+        <CustomerAppealScreen navigation={mockNavigate} route={mockRoute} />
       </CreateProvidersWrapper>
     );
 
@@ -89,8 +100,7 @@ describe("CustomerAppealScreen", () => {
   });
 
   it("should navigate to the selected reason", async () => {
-    expect.assertions(2);
-
+    expect.assertions(3);
     const { queryByText } = render(
       <CreateProvidersWrapper
         providers={[
@@ -100,7 +110,7 @@ describe("CustomerAppealScreen", () => {
           },
         ]}
       >
-        <CustomerAppealScreen navigation={mockNavigate} />
+        <CustomerAppealScreen navigation={mockNavigate} route={mockRoute} />
       </CreateProvidersWrapper>
     );
 
@@ -108,9 +118,9 @@ describe("CustomerAppealScreen", () => {
     expect(reasonOne).not.toBeNull();
 
     fireEvent.press(reasonOne!);
-    expect(mockPushRoute).toHaveBeenCalledWith(
-      mockNavigate,
-      "CustomerQuotaProxy",
+    expect(mockedDispatch).toHaveBeenCalledTimes(1);
+    expect(mockStackedActionsPush).toHaveBeenCalledWith(
+      "Customer Quota Proxy",
       {
         id: ["valid-id"],
         products: [

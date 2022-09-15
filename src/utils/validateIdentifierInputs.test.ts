@@ -363,7 +363,7 @@ describe("tests for validateIdentifierInputs for PAYMENT_QR identifier", () => {
           value: sgqrNETSQRPayload,
         },
       ])
-    ).toStrictEqual(true);
+    ).toBe(true);
   });
 
   it("should return false if it contains valid SGQR payload without NETS", () => {

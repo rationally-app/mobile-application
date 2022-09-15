@@ -12,7 +12,6 @@ import { Credits } from "../Credits";
 import { AuthContext } from "../../context/auth";
 import { AuthStoreContext } from "../../context/authStore";
 import { useConfigContext } from "../../context/config";
-import { withNavigationFocus } from "react-navigation";
 import { TitleStatistic } from "./TitleStatistic";
 import { Sentry } from "../../utils/errorTracking";
 import { HelpButton } from "../Layout/Buttons/HelpButton";
@@ -25,11 +24,11 @@ import { TransactionHistoryCard } from "./TransactionHistoryCard";
 import { StatisticsHeader } from "./StatisticsHeader";
 import { addDays, subDays, getTime, isSameDay } from "date-fns";
 import { AlertModalContext } from "../../context/alert";
-import { navigateHome } from "../../common/navigation";
-import { NavigationProps } from "../../types";
+import { DailyStatisticsScreenProps, Screens } from "../../types";
 import { useDailyStatistics } from "../../hooks/useDailyStatistics/useDailyStatistics";
 import { useTheme } from "../../context/theme";
 import { NetworkError, SessionError } from "../../services/helpers";
+import { CommonActions } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   content: {
@@ -52,8 +51,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
+const DailyStatisticsScreen: FunctionComponent<DailyStatisticsScreenProps> = ({
   navigation,
+  route,
 }) => {
   const { theme } = useTheme();
   useEffect(() => {
@@ -116,11 +116,20 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
           clearDailyStatisticsError();
           expireSession();
           showErrorAlert(error, () => {
-            navigation.navigate("CampaignLocationsScreen");
+            navigation.navigate(Screens.CampaignLocationsScreen, {
+              shouldAutoLoad: false,
+            });
           });
           return;
       }
-      showErrorAlert(error, () => navigateHome(navigation));
+      showErrorAlert(error, () => {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: Screens.CollectCustomerDetailsScreen }],
+          })
+        );
+      });
     }
   }, [
     error,
@@ -151,7 +160,11 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
         />
         <View style={styles.content}>
           <View style={styles.headerText}>
-            <StatisticsHeader mode={config.appMode} />
+            <StatisticsHeader
+              mode={config.appMode}
+              navigation={navigation}
+              route={route}
+            />
             <TitleStatistic
               totalCount={totalCount ?? 0}
               currentTimestamp={currentTimestamp}
@@ -178,6 +191,4 @@ const DailyStatisticsScreen: FunctionComponent<NavigationProps> = ({
   );
 };
 
-export const DailyStatisticsScreenContainer = withNavigationFocus(
-  DailyStatisticsScreen
-);
+export const DailyStatisticsScreenContainer = DailyStatisticsScreen;

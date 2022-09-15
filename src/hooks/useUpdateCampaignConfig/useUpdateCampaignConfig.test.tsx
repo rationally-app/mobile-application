@@ -177,7 +177,7 @@ describe("useUpdateCampaignConfig", () => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy)
     );
     expect(result.current.fetchingState).toBe("RETURNED_NEW_UPDATES");
-    expect(result.current.result).not.toBeUndefined();
+    expect(result.current.result).toBeDefined();
 
     await waitFor(() => {
       result.current.updateCampaignConfig(undefined, setCampaignConfigSpy);
