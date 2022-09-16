@@ -203,7 +203,7 @@ jobs:
       - name: Download APK Asset
         run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.androidUrl.outputs.assetUrl }}
   build_ios:
-    needs: [deploy_branch_preview, create_release]
+    needs: [deploy_branch_preview]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
