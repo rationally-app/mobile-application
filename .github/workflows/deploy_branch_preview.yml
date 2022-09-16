@@ -189,7 +189,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ needs.deploy_branch_preview.outputs.latestBinaryVersion }}
+          APP_BINARY_VERSION: "dev"
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
           expo build:android --release-channel=${{ needs.deploy_branch_preview.outputs.releaseChannel }} > buildLogAndroid.txt
@@ -228,7 +228,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ needs.deploy_branch_preview.outputs.latestBinaryVersion }}
+          APP_BINARY_VERSION: "dev"
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
           expo build:ios --release-channel=${{ needs.deploy_branch_preview.outputs.releaseChannel }} > buildLogIOS.txt
