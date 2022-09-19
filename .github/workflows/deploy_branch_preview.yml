@@ -192,8 +192,7 @@ jobs:
           APP_BINARY_VERSION: "dev"
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
-          expo build:android --release-channel=pr${{ github.event.number }} > buildLogAndroid.txt
-          cat buildLogAndroid.txt
+          expo build:android
       - name: Parse Asset URL
         id: androidUrl
         run: |
