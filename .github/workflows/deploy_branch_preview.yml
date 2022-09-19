@@ -193,14 +193,6 @@ jobs:
           DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
         run: |
           expo build:android
-      - name: Parse Asset URL
-        id: androidUrl
-        run: |
-          ASSET_URL=$(cat buildLogAndroid.txt | tail | egrep -o 'https?://expo\.dev/artifacts/[^ ]+')
-          echo The android url is $ASSET_URL
-          echo "::set-output name=assetUrl::$ASSET_URL"
-      - name: Download APK Asset
-        run: wget -O supplyally-${{ env.GITHUB_REF_SLUG }}.apk ${{ steps.androidUrl.outputs.assetUrl }}
   build_ios:
     needs: [deploy_branch_preview]
     runs-on: ubuntu-latest
