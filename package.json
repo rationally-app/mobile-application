@@ -106,8 +106,8 @@
   },
   "private": true,
   "volta": {
-    "node": "12.22.1",
-    "npm": "6.14.12"
+    "node": "16.17.0",
+    "npm": "8.15.0"
   },
   "remarkConfig": {
     "plugins": [
