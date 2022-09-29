@@ -27,7 +27,7 @@ jobs:
         - uses: expo/expo-github-action@v5
           with:
             expo-packager: npm
-            token: ${{ secrets.EXPO_TOKEN_PRD }}
+            expo-token: ${{ secrets.EXPO_TOKEN_PRD }}
             expo-cache: true
         - name: Cache Node Modules
           uses: actions/cache@v2
@@ -58,41 +58,41 @@ jobs:
           run: |
             echo Build number is $GITHUB_RUN_NUMBER
             echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
-  build_all:
-    needs: [get_version]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: rlespinasse/github-slug-action@v3.x
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: npm
-      - uses: expo/expo-github-action@v7
-        with:
-          expo-version: latest
-          eas-version: latest
-          packager: npm
-          token: ${{ secrets.EXPO_TOKEN_PRD }}
-      - name: Install Packages
-        run: |
-          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
-        env:
-          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-      - name: Build Android Release
-        env:
-          NODE_OPTIONS: --max_old_space_size=7168
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
-          DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
-        run: |
-          eas build --profile testing --non-interactive --platform all > buildLog.txt
-          cat buildLog.txt
+  # build_all:
+  #   needs: [get_version]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: rlespinasse/github-slug-action@v3.x
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 16.x
+  #         cache: npm
+  #     - uses: expo/expo-github-action@v7
+  #       with:
+  #         expo-version: latest
+  #         eas-version: latest
+  #         packager: npm
+  #         token: ${{ secrets.EXPO_TOKEN_PRD }}
+  #     - name: Install Packages
+  #       run: |
+  #         npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+  #         npm ci
+  #       env:
+  #         NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+  #     - name: Build Android Release
+  #       env:
+  #         NODE_OPTIONS: --max_old_space_size=7168
+  #         SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  #         SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  #         APP_BUILD_VERSION: ${{ github.run_number }}
+  #         APP_BINARY_VERSION: ${{ needs.get_version.outputs.latestBinaryVersion }}
+  #         DOMAIN_FORMAT: ${{ secrets.DOMAIN_FORMAT }}
+  #       run: |
+  #         eas build --profile testing --non-interactive --platform all > buildLog.txt
+  #         cat buildLog.txt
       # - name: Parse Asset URL
       #   id: androidUrl
       #   run: |
