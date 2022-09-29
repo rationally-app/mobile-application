@@ -160,8 +160,7 @@ jobs:
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
+          expo-token: ${{ secrets.EXPO_TOKEN_PRD }}
           expo-cache: true
       - name: Install Packages
         run: |
@@ -206,8 +205,7 @@ jobs:
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
+          expo-token: ${{ secrets.EXPO_TOKEN_PRD }}
           expo-cache: true
       - name: Install Packages
         run: |

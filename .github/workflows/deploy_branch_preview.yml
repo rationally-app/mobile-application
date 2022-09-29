@@ -97,8 +97,7 @@ jobs:
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_TEST_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_TEST_PASSWORD }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
           expo-cache: true
       - name: Cache Node Modules
         uses: actions/cache@v2
