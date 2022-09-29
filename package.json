@@ -37,7 +37,7 @@
     "expo-linking": "~3.1.0",
     "expo-localization": "~13.0.0",
     "expo-secure-store": "~11.2.0",
-    "expo-updates": "~0.13.3",
+    "expo-updates": "~0.13.4",
     "fp-ts": "^2.12.1",
     "google-libphonenumber": "^3.2.22",
     "i": "^0.3.7",
@@ -58,8 +58,7 @@
     "react-navigation": "^4.4.4",
     "react-navigation-drawer": "^2.7.2",
     "react-navigation-stack": "^1.10.3",
-    "sentry-expo": "^4.2.0",
-    "unimodules-permissions-interface": "^6.1.0"
+    "sentry-expo": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -106,8 +105,8 @@
   },
   "private": true,
   "volta": {
-    "node": "16.17.0",
-    "npm": "8.15.0"
+    "node": "16.0.0",
+    "npm": "6.14.12"
   },
   "remarkConfig": {
     "plugins": [

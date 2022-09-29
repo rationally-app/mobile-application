@@ -1,0 +1,8 @@
+{
+    "build": {
+        "testing": {
+            "autoIncrement": true,
+            "channel": "testing"
+        }
+    }
+}
