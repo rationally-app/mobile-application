@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16.x
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
@@ -81,7 +81,7 @@ jobs:
           git fetch --prune --unshallow --tags -f
       - uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16.x
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: npm
@@ -97,7 +97,7 @@ jobs:
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
         id: latestBinaryVersion
         run: |
-          # Release tag finds the lastest tag in the tree branch - i.e. prod-x.x.x
+          # Release tag finds the latest tag in the tree branch - i.e. prod-x.x.x
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
           # Using param substitution, we output x.x.x instead
           echo "::set-output name=version::${RELEASE_TAG#*-}"
