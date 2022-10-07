@@ -134,6 +134,8 @@ jobs:
         run: |
           MSG=$(git log --format=%B -n 1 ${{github.event.after}})
           echo "::set-output name=commit_message::${MSG}"
+      - name: Prepare update environment
+        run: mkdir dist
       - name: Eas Update Channel
         env:
           NODE_OPTIONS: --max_old_space_size=7168
