@@ -44,6 +44,12 @@ export default ({ config }: any): any => {
         process.env.DOMAIN_FORMAT,
         "Please specify a DOMAIN_FORMAT env variable"
       ),
+      eas: {
+        projectId: getValue(
+          process.env.PROJECT_ID,
+          "Please specify a PROJECT_ID env variable"
+        ),
+      }
     },
     hooks: {
       postPublish: [
