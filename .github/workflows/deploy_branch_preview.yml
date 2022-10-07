@@ -96,9 +96,10 @@ jobs:
           node-version: 16.x
       - uses: expo/expo-github-action@v7
         with:
-          expo-packager: npm
-          expo-token: ${{ secrets.EXPO_TOKEN }}
-          expo-cache: true
+          eas-version: latest
+          packager: npm
+          token: ${{ secrets.EXPO_TOKEN }}
+          eas-cache: true
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
@@ -131,20 +132,11 @@ jobs:
       - name: Eas Update Channel
         env:
           NODE_OPTIONS: --max_old_space_size=7168
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
-          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
         run: eas update --non-interactive --branch pr${{ github.event.number }}
       - name: Eas Update Storybook Channel
         env:
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
