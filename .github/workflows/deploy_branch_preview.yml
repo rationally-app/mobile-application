@@ -28,9 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16.x
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
@@ -44,9 +44,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: 12.x
+          node-version: 16.x
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
@@ -91,14 +91,13 @@ jobs:
       - name: Fetch Tags
         run: |
           git fetch --prune --unshallow --tags -f
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: 12.x
-      - uses: expo/expo-github-action@v5
+          node-version: 16.x
+      - uses: expo/expo-github-action@v7
         with:
           expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_TEST_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_TEST_PASSWORD }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
           expo-cache: true
       - name: Cache Node Modules
         uses: actions/cache@v2
@@ -129,7 +128,7 @@ jobs:
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
           echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
-      - name: Expo Publish Channel
+      - name: Eas Update Channel
         env:
           NODE_OPTIONS: --max_old_space_size=7168
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -139,8 +138,8 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-        run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
-      - name: Expo Publish Storybook Channel
+        run: eas update --non-interactive --branch pr${{ github.event.number }}
+      - name: Eas Update Storybook Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
@@ -149,7 +148,7 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-        run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
+        run: eas update --non-interactive --branch storybook-pr${{ github.event.number }}
       - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
