@@ -34,7 +34,7 @@ jobs:
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
+          npm ci --legacy-peer-deps
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Check Markdown Lint
@@ -62,7 +62,7 @@ jobs:
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
+          npm ci --legacy-peer-deps
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
@@ -115,7 +115,7 @@ jobs:
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
+          npm ci --legacy-peer-deps
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
