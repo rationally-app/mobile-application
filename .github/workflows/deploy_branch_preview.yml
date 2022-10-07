@@ -140,7 +140,7 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
-        run: eas update --non-interactive --branch pr${{ github.event.number }}
+        run: eas update --non-interactive --branch pr${{ github.event.number }} --message ${{ github.event.head_commit.message }}
       - name: Eas Update Storybook Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -151,7 +151,7 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
-        run: eas update --non-interactive --branch storybook-pr${{ github.event.number }}
+        run: eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message ${{ github.event.head_commit.message }}
       - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
