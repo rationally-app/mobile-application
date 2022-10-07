@@ -129,6 +129,11 @@ jobs:
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
           echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
+      - name: Get commit message
+        id: getCommitMessage
+        run: |
+          MSG=$(git log --format=%B -n 1 ${{github.event.after}})
+          echo "::set-output name=commit_message::${MSG}"
       - name: Eas Update Channel
         env:
           NODE_OPTIONS: --max_old_space_size=7168
@@ -140,7 +145,7 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
-        run: eas update --non-interactive --branch pr${{ github.event.number }} --message ${{ github.event.head.message }}
+        run: eas update --non-interactive --branch pr${{ github.event.number }} --message ${{ steps.getCommitMessage.outputs.commit_message }}
       - name: Eas Update Storybook Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -151,7 +156,7 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
-        run: eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message ${{ github.event.head.message }}
+        run: eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message ${{ steps.getCommitMessage.outputs.commit_message }}
       - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
