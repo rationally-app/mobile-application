@@ -96,10 +96,10 @@ jobs:
           node-version: 16.x
       - uses: expo/expo-github-action@v7
         with:
-          eas-version: latest
+          expo-version: latest
           packager: npm
           token: ${{ secrets.EXPO_TOKEN }}
-          eas-cache: true
+          expo-cache: true
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
@@ -154,4 +154,3 @@ jobs:
             <a href="${{ steps.publish.outputs.EXPO_QR_CODE_URL }}"><img src="${{ steps.preview.outputs.EXPO_QR_CODE_URL }}" height="512px" width="512px"></a>
             <br><br>
             ${{ steps.publish.outputs.EXPO_NEW_BUILD_IS_REQUIRED_MESSAGE }}
-            
