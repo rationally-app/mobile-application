@@ -187,7 +187,7 @@ jobs:
             ---
 
             ## Andriod Storybook
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.update.updateStorybook.androidUrl }}&appScheme=exp)
+            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.updateStorybook.outputs.androidUrl }}&appScheme=exp)
 
             ## iOS Storybook
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.update.updateStorybook.iosUrl }}&appScheme=exp)
+            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.updateStorybook.outputs.iosUrl }}&appScheme=exp)
