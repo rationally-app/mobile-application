@@ -1,6 +1,5 @@
 import AppNavigation from "./src/navigation";
 import { Sentry } from "./src/utils/errorTracking";
-import Constants from "expo-constants";
 import Storybook from "./storybook";
 import { IS_STORYBOOK_VIEW, SENTRY_DSN } from "./src/config";
 
