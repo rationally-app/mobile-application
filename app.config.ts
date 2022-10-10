@@ -81,5 +81,8 @@ export default ({ config }: any): any => {
         },
       ],
     },
+    expo: {
+      plugins: ["sentry-expo"],
+    },
   };
 };
