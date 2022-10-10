@@ -34,7 +34,7 @@ jobs:
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci --legacy-peer-deps
+          npm ci
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Check Markdown Lint
