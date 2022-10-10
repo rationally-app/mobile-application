@@ -147,30 +147,31 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
-        run: eas update --non-interactive --branch pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
-      - name: 💬 Comment preview
-        uses: expo/expo-github-action/preview-comment@v7
-        with:
-          github-token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-          channel: pr${{ github.event.number }}
-      - name: Preview Deep Link
-        id: publish-url
-        run: echo "::set-output name=url::exp+rationally://expo-development-client/?url=https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=pr${{ github.event.number }}"
-      - name: Eas Update Storybook Channel
-        env:
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
-          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-          PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
-          START_STORYBOOK: true
-        run: eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
-      - name: Preview Storybook Deep Link
-        id: publish-storybook-url
-        run: echo "::set-output name=url::exp+rationally://expo-development-client/?url=https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}"
+        id: update
+        run: |
+          eas update --non-interactive --branch pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}" --json | jq '.[].id' -r > updates.txt
+          ANDROID_URL="$(sed -n 1p updates.txt)"
+          IOS_URL="$(sed -n 2p updates.txt)"
+          echo "::set-output name=androidUrl::$ANDROID_URL"
+          echo "::set-output name=iosUrl::$IOS_URL"
+      # - name: Preview Deep Link
+      #   id: publish-url
+      #   run: echo "::set-output name=url::exp+rationally://expo-development-client/?url=https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=pr${{ github.event.number }}"
+      # - name: Eas Update Storybook Channel
+      #   env:
+      #     SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      #     SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      #     SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      #     APP_BUILD_VERSION: ${{ github.run_number }}
+      #     APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+      #     DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
+      #     PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
+      #     START_STORYBOOK: true
+      #   run: eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+      # - name: Preview Storybook Deep Link
+      #   id: publish-storybook-url
+      #   run: echo "::set-output name=url::exp+rationally://expo-development-client/?url=https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}"
       - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
@@ -178,8 +179,8 @@ jobs:
         with:
           message: |
             ## Application
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${{ steps.publish-url.outputs.url }})
+            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.update.outputs.androidUrl }}&appScheme=exp)
             Published to https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=pr${{ github.event.number }}
-            ## Storybook
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${{ steps.publish-storybook-url.outputs.url }})
-            Published to https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}
+          ## Storybook
+          # ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${{ steps.publish-storybook-url.outputs.url }})
+          # Published to https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}
