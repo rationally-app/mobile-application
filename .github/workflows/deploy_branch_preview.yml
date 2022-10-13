@@ -165,7 +165,7 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
-          START_STORYBOOK: true
+          START_STORYBOOK: "true"
         run: |
           eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}" --json | jq '.[].id' -r > updates.txt
           ANDROID_URL="$(sed -n 1p updates.txt)"
