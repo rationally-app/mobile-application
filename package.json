@@ -1,11 +1,11 @@
 {
   "scripts": {
-    "start": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev START_STORYBOOK=false expo start -c",
+    "start": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev START_STORYBOOK=false expo start -c --dev-client",
     "start:mock": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev MOCK=true expo start",
     "test": "jest",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
-    "storybook": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev START_STORYBOOK=true MOCK=true expo start",
+    "storybook": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev START_STORYBOOK=true MOCK=true expo start --dev-client",
     "android": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev expo start --android",
     "ios": "APP_BUILD_VERSION=1 APP_BINARY_VERSION=dev expo start --ios",
     "web": "expo start --web",
@@ -33,6 +33,7 @@
     "expo-camera": "~12.2.0",
     "expo-constants": "~13.1.1",
     "expo-crypto": "~10.2.0",
+    "expo-dev-client": "~1.0.1",
     "expo-device": "~4.2.0",
     "expo-linear-gradient": "~11.3.0",
     "expo-linking": "~3.1.0",

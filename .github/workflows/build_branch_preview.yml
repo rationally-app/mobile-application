@@ -1,4 +1,4 @@
-name: Deploy Branch Preview
+name: Build Branch Preview
 
 on: [pull_request]
 
@@ -6,7 +6,7 @@ on: [pull_request]
 # When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress,
 # the queued job or workflow will be pending.
 concurrency:
-  group: ${{ github.ref }}-deploy-branch-preview # The branch or tag ref that triggered the workflow run.
+  group: ${{ github.ref }}-build-branch-preview # The branch or tag ref that triggered the workflow run.
 
 jobs:
   # pr_title_lint:
@@ -82,8 +82,8 @@ jobs:
     #       APP_BINARY_VERSION: "dev"
     #       DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
     #       PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
-  deploy_branch_preview:
-    name: Deploy Branch Preview
+  build_branch_preview:
+    name: Build Branch Preview
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -132,63 +132,14 @@ jobs:
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
           echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
-      - name: Get commit message
-        id: getCommitMessage
-        run: |
-          MSG=$(git log --format=%B -n 1 ${{github.event.after}})
-          echo "::set-output name=commit_message::${MSG}"
-      - name: Eas Update Channel
+      - name: Setup eas json
         env:
-          NODE_OPTIONS: --max_old_space_size=7168
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
-          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-          PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
-        id: update
         run: |
-          eas update --non-interactive --branch pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}" --json | jq '.[].id' -r > updates.txt
-          ANDROID_URL="$(sed -n 1p updates.txt)"
-          IOS_URL="$(sed -n 2p updates.txt)"
-          echo "::set-output name=androidUrl::$ANDROID_URL"
-          echo "::set-output name=iosUrl::$IOS_URL"
-      - name: Eas Update Storybook Channel
-        id: updateStorybook
-        env:
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
-          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-          PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
-          START_STORYBOOK: "true"
+        .github/scripts/set-versions.sh preview ${{APP_BUILD_VERSION}} ${{APP_BINARY_VERSION}}
+        cat eas.json
+      - name: Eas Build
         run: |
-          START_STORYBOOK=true eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}" --json | jq '.[].id' -r > updates.txt
-          ANDROID_URL="$(sed -n 1p updates.txt)"
-          IOS_URL="$(sed -n 2p updates.txt)"
-          echo "::set-output name=androidUrl::$ANDROID_URL"
-          echo "::set-output name=iosUrl::$IOS_URL"
-      - name: Add Comment To PR
-        uses: mshick/add-pr-comment@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-        with:
-          message: |
-            ## Andriod Application
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.update.outputs.androidUrl }}&appScheme=exp)
-
-            ## iOS Application
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.update.outputs.iosUrl }}&appScheme=exp)
-
-            ---
-
-            ## Andriod Storybook
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.updateStorybook.outputs.androidUrl }}&appScheme=exp)
-
-            ## iOS Storybook
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.updateStorybook.outputs.iosUrl }}&appScheme=exp)
+          eas build --profile preview --non-interactive --platform all > buildLog.txt
+          cat buildLog.txt

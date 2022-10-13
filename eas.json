@@ -1,18 +1,25 @@
 {
   "cli": {
-    "version": ">= 2.2.1"
+    "version": ">= 2.3.0"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
     "preview": {
-      "distribution": "internal"
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "NODE_OPTIONS": "--max_old_space_size=7168"
+      }
     },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
+    "staging": {
+      "distribution": "internal",
+      "env": {
+        "NODE_OPTIONS": "--max_old_space_size=7168"
+      }
+    },
+    "prod": {
+      "env": {
+        "NODE_OPTIONS": "--max_old_space_size=7168"
+      }
+    }
   }
 }
