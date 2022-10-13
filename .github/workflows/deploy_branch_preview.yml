@@ -167,7 +167,7 @@ jobs:
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
           START_STORYBOOK: "true"
         run: |
-          eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}" --json | jq '.[].id' -r > updates.txt
+          START_STORYBOOK=true eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}" --json | jq '.[].id' -r > updates.txt
           ANDROID_URL="$(sed -n 1p updates.txt)"
           IOS_URL="$(sed -n 2p updates.txt)"
           echo "::set-output name=androidUrl::$ANDROID_URL"
