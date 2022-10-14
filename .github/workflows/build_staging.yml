@@ -1,6 +1,7 @@
 name: Build Staging
 
-on: [workflow_dispatch]
+on: [pull_request]
+#on: [workflow_dispatch]
 
 # Ensure only a single job or workflow using the same concurrency group will run at a time
 # When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress,
@@ -123,8 +124,8 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
         run: |
-        .github/scripts/set-versions.sh staging $APP_BUILD_VERSION $APP_BINARY_VERSION
-        cat eas.json
+          .github/scripts/set-versions.sh staging $APP_BUILD_VERSION $APP_BINARY_VERSION
+          cat eas.json
       - name: Eas Build
         run: |
           eas build --profile staging --non-interactive --platform all > buildLog.txt

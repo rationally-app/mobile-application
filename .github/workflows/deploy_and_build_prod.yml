@@ -186,11 +186,11 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
         run: |
-        .github/scripts/set-versions.sh prod $APP_BUILD_VERSION $APP_BINARY_VERSION
+        .github/scripts/set-versions.sh ${{ steps.releaseChannel.outputs.releaseChannel }} $APP_BUILD_VERSION $APP_BINARY_VERSION
         cat eas.json
       - name: Eas Build
         run: |
-          eas build --profile prod-6 --non-interactive --platform all > buildLog.txt
+          eas build --profile ${{ steps.releaseChannel.outputs.releaseChannel }} --non-interactive --platform all > buildLog.txt
           cat buildLog.txt
   create_release:
     name: Create Release

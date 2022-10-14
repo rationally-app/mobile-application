@@ -1,9 +1,10 @@
 name: Deploy Staging
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
+on: [pull_request]
 
 # Ensure only a single job or workflow using the same concurrency group will run at a time
 # When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress,

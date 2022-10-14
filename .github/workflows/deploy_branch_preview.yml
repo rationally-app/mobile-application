@@ -174,9 +174,9 @@ jobs:
         with:
           message: |
             ## Application
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${{ steps.publish-url.outputs.url }})
-
-            ---
+            ![Expo QR](${{ steps.publish-url.outputs.url }})
+            Enter this link into your dev client: ${{ steps.publish-url.outputs.url }}
 
             ## Storybook
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${{ steps.publish-storybook-url.outputs.url }})
+            ![Expo QR](${{ steps.publish-storybook-url.outputs.url }})
+            Enter this link into your dev client: ${{ steps.publish-storybook-url.outputs.url }}
