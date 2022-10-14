@@ -82,11 +82,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - uses: expo/expo-github-action@v5
+      - uses: expo/expo-github-action@v7
         with:
-          expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_PROD_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_PROD_PASSWORD }}
+          eas-version: latest
+          expo-version: latest
+          packager: npm
+          token: ${{ secrets.EXPO_TOKEN }}
+          eas-cache: true
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v3.x
       - name: Generate Release Channel # Release Channels are named prod-<Major Release>, i.e. prod-1, prod-3
@@ -127,7 +129,6 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
-        id: update
         run: eas update --non-interactive --branch ${{ steps.releaseChannel.outputs.releaseChannel }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
   # unlike stg and pr, the build step is combined in prod because APP_BUILD_VERSION uses the github run number, which is a number tied to the workflow. separating it will reset the current run number
   eas_build:
@@ -187,6 +188,7 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
         run: |
+          .github/scripts/create-profile.sh ${{ steps.releaseChannel.outputs.releaseChannel }}
           .github/scripts/set-versions.sh ${{ steps.releaseChannel.outputs.releaseChannel }} $APP_BUILD_VERSION $APP_BINARY_VERSION
           cat eas.json
       - name: Eas Build

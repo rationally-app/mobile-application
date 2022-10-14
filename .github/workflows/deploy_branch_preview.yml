@@ -151,7 +151,7 @@ jobs:
         run: eas update --non-interactive --branch pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
       - name: Preview Deep Link
         id: publish-url
-        run: echo "::set-output name=url::exp%2Brationally://expo-development-client/?url=https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=pr${{ github.event.number }}"
+        run: echo "::set-output name=url::https://u.expo.dev/${{ secrets.EXPO_TEST_PROJECT_ID }}?channel-name=pr${{ github.event.number }}"
       - name: Eas Update Storybook Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -166,7 +166,7 @@ jobs:
         run: eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
       - name: Preview Storybook Deep Link
         id: publish-storybook-url
-        run: echo "::set-output name=url::exp%2Brationally://expo-development-client/?url=https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}"
+        run: echo "::set-output name=url::https://u.expo.dev/${{ secrets.EXPO_TEST_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}"
       - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
@@ -174,9 +174,9 @@ jobs:
         with:
           message: |
             ## Application
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${{ steps.publish-url.outputs.url }})
-            OR Enter this link into your dev client: `${{ steps.publish-url.outputs.url }}`
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp%2Brationally://expo-development-client/?url=${{ steps.publish-url.outputs.url }})
+            OR Enter this link into your dev client: `exp+rationally://expo-development-client/?url=${{ steps.publish-url.outputs.url }}`
 
             ## Storybook
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${{ steps.publish-storybook-url.outputs.url }})
-            OR Enter this link into your dev client: `${{ steps.publish-storybook-url.outputs.url }}`
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp%2Brationally://expo-development-client/?url=${{ steps.publish-storybook-url.outputs.url }})
+            OR Enter this link into your dev client: `exp+rationally://expo-development-client/?url=${{ steps.publish-storybook-url.outputs.url }}`
