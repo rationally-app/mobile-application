@@ -128,7 +128,8 @@ jobs:
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
         id: update
-        run: eas update --non-interactive --branch ${{ steps.releaseChannel.outputs.releaseChannel }} --message "${{ steps.getCommitMessage.outputs.commit_message }}" --json | jq '.[].id' -r > updates.txt
+        run: eas update --non-interactive --branch ${{ steps.releaseChannel.outputs.releaseChannel }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+  # unlike stg and pr, the build step is combined in prod because APP_BUILD_VERSION uses the github run number, which is a number tied to the workflow. separating it will reset the current run number
   eas_build:
     name: Build Prod
     runs-on: ubuntu-latest
@@ -189,6 +190,15 @@ jobs:
         .github/scripts/set-versions.sh ${{ steps.releaseChannel.outputs.releaseChannel }} $APP_BUILD_VERSION $APP_BINARY_VERSION
         cat eas.json
       - name: Eas Build
+        env:
+          # these envs are all not really used because EAS stores its own set of secrets. 
+          # It's just, unfortunately, our app.config.js is coded to throw errors when these envs are missing
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
+          PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
         run: |
           eas build --profile ${{ steps.releaseChannel.outputs.releaseChannel }} --non-interactive --platform all > buildLog.txt
           cat buildLog.txt
