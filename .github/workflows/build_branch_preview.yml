@@ -137,8 +137,8 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
         run: |
-        .github/scripts/set-versions.sh preview ${{APP_BUILD_VERSION}} ${{APP_BINARY_VERSION}}
-        cat eas.json
+          .github/scripts/set-versions.sh preview $APP_BUILD_VERSION $APP_BINARY_VERSION
+          cat eas.json
       - name: Eas Build
         run: |
           eas build --profile preview --non-interactive --platform all > buildLog.txt
