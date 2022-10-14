@@ -148,15 +148,11 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
-        id: update
-        run: |
-          eas update --non-interactive --branch pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}" --json | jq '.[].id' -r > updates.txt
-          ANDROID_URL="$(sed -n 1p updates.txt)"
-          IOS_URL="$(sed -n 2p updates.txt)"
-          echo "::set-output name=androidUrl::$ANDROID_URL"
-          echo "::set-output name=iosUrl::$IOS_URL"
+        run: eas update --non-interactive --branch pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+      - name: Preview Deep Link
+        id: publish-url
+        run: echo "::set-output name=url::exp+rationally://expo-development-client/?url=https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=pr${{ github.event.number }}"
       - name: Eas Update Storybook Channel
-        id: updateStorybook
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
@@ -167,28 +163,20 @@ jobs:
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
           START_STORYBOOK: "true"
-        run: |
-          START_STORYBOOK=true eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}" --json | jq '.[].id' -r > updates.txt
-          ANDROID_URL="$(sed -n 1p updates.txt)"
-          IOS_URL="$(sed -n 2p updates.txt)"
-          echo "::set-output name=androidUrl::$ANDROID_URL"
-          echo "::set-output name=iosUrl::$IOS_URL"
+        run: eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+      - name: Preview Storybook Deep Link
+        id: publish-storybook-url
+        run: echo "::set-output name=url::exp+rationally://expo-development-client/?url=https://u.expo.dev/${{ secrets.EXPO_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}"
       - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
         with:
           message: |
-            ## Andriod Application
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.update.outputs.androidUrl }}&appScheme=exp)
-
-            ## iOS Application
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.update.outputs.iosUrl }}&appScheme=exp)
+            ## Application
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${{ steps.publish-url.outputs.url }})
 
             ---
 
-            ## Andriod Storybook
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.updateStorybook.outputs.androidUrl }}&appScheme=exp)
-
-            ## iOS Storybook
-            ![Expo QR](https://qr.expo.dev/eas-update?updateId=${{ steps.updateStorybook.outputs.iosUrl }}&appScheme=exp)
+            ## Storybook
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${{ steps.publish-storybook-url.outputs.url }})
