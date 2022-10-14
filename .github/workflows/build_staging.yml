@@ -1,7 +1,6 @@
 name: Build Staging
 
-on: [pull_request]
-#on: [workflow_dispatch]
+on: [workflow_dispatch]
 
 # Ensure only a single job or workflow using the same concurrency group will run at a time
 # When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress,
@@ -134,9 +133,10 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          APP_BUILD_VERSION: ${{ github.run_number }}
+          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
         run: |
           eas build --profile staging --non-interactive --platform all > buildLog.txt
           cat buildLog.txt
-          
