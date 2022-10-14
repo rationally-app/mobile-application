@@ -187,8 +187,8 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
         run: |
-        .github/scripts/set-versions.sh ${{ steps.releaseChannel.outputs.releaseChannel }} $APP_BUILD_VERSION $APP_BINARY_VERSION
-        cat eas.json
+          .github/scripts/set-versions.sh ${{ steps.releaseChannel.outputs.releaseChannel }} $APP_BUILD_VERSION $APP_BINARY_VERSION
+          cat eas.json
       - name: Eas Build
         env:
           # these envs are all not really used because EAS stores its own set of secrets. 
