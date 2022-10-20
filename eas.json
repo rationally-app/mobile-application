@@ -1,0 +1,20 @@
+{
+  "cli": {
+    "version": ">= 2.4.1"
+  },
+  "build": {
+    "preview": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "NODE_OPTIONS": "--max_old_space_size=7168"
+      }
+    },
+    "staging": {
+      "distribution": "internal",
+      "env": {
+        "NODE_OPTIONS": "--max_old_space_size=7168"
+      }
+    }
+  }
+}

@@ -20,6 +20,15 @@ const appBuildVersion = parseInt(buildNumber) + 38;
 export default ({ config }: any): any => {
   return {
     ...config,
+    runtimeVersion: {
+      policy: "sdkVersion",
+    },
+    updates: {
+      url: `https://u.expo.dev/${getValue(
+        process.env.PROJECT_ID,
+        "Please specify a PROJECT_ID env variable"
+      )}`,
+    },
     version: getValue(
       process.env.APP_BINARY_VERSION,
       "Please provide a App Version with APP_BINARY_VERSION env variable"
@@ -44,6 +53,12 @@ export default ({ config }: any): any => {
         process.env.DOMAIN_FORMAT,
         "Please specify a DOMAIN_FORMAT env variable"
       ),
+      eas: {
+        projectId: getValue(
+          process.env.PROJECT_ID,
+          "Please specify a PROJECT_ID env variable"
+        ),
+      },
     },
     hooks: {
       postPublish: [
@@ -66,5 +81,6 @@ export default ({ config }: any): any => {
         },
       ],
     },
+    plugins: ["sentry-expo"],
   };
 };
