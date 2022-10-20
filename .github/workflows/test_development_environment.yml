@@ -15,10 +15,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        node: [12, 13, 14]
+        node: [16, 18]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
       - name: Cache Node Modules
@@ -33,10 +33,12 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-	
             ${{ runner.os }}-build-	
             ${{ runner.os }}-
-      - name: Setup NPM Token
-        run: npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Install Packages
-        run: npm ci
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
+          npm ci --legacy-peer-deps
+        env:
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
         run: npx --no-install tsc --noEmit
       - name: Check Lint
@@ -60,3 +62,4 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: "dev"
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
+          PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}

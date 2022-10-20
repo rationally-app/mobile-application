@@ -28,9 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16.x
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
@@ -44,9 +44,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: 12.x
+          node-version: 16.x
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
@@ -62,7 +62,7 @@ jobs:
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
+          npm ci --legacy-peer-deps
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
@@ -81,6 +81,7 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: "dev"
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
+          PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
   deploy_branch_preview:
     name: Deploy Branch Preview
     runs-on: ubuntu-latest
@@ -91,14 +92,16 @@ jobs:
       - name: Fetch Tags
         run: |
           git fetch --prune --unshallow --tags -f
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: 12.x
-      - uses: expo/expo-github-action@v5
+          node-version: 16.x
+      - uses: expo/expo-github-action@v7
         with:
-          expo-packager: npm
-          expo-username: ${{ secrets.EXPO_CLI_TEST_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_TEST_PASSWORD }}
+          eas-version: latest
+          expo-version: latest
+          packager: npm
+          token: ${{ secrets.EXPO_TOKEN }}
+          eas-cache: true
           expo-cache: true
       - name: Cache Node Modules
         uses: actions/cache@v2
@@ -115,7 +118,7 @@ jobs:
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci
+          npm ci --legacy-peer-deps
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
@@ -129,7 +132,12 @@ jobs:
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
           echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
-      - name: Expo Publish Channel
+      - name: Get commit message
+        id: getCommitMessage
+        run: |
+          MSG=$(git log --format=%B -n 1 ${{github.event.after}})
+          echo "::set-output name=commit_message::${MSG}"
+      - name: Eas Update Channel
         env:
           NODE_OPTIONS: --max_old_space_size=7168
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -139,8 +147,12 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-        run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
-      - name: Expo Publish Storybook Channel
+          PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
+        run: eas update --non-interactive --branch pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+      - name: Preview Deep Link
+        id: publish-url
+        run: echo "::set-output name=url::https://u.expo.dev/${{ secrets.EXPO_TEST_PROJECT_ID }}?channel-name=pr${{ github.event.number }}"
+      - name: Eas Update Storybook Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
@@ -149,17 +161,22 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
-        run: expo publish --non-interactive --release-channel storybook-pr${{ github.event.number }}
+          PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
+          START_STORYBOOK: "true"
+        run: eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+      - name: Preview Storybook Deep Link
+        id: publish-storybook-url
+        run: echo "::set-output name=url::https://u.expo.dev/${{ secrets.EXPO_TEST_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}"
       - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-          EXPO_PROJECT: "@supplyallytest/rationally"
         with:
           message: |
             ## Application
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }})
-            Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=pr${{ github.event.number }}
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp%2Brationally://expo-development-client/?url=${{ steps.publish-url.outputs.url }})
+            OR Enter this link into your dev client: `exp+rationally://expo-development-client/?url=${{ steps.publish-url.outputs.url }}`
+
             ## Storybook
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }})
-            Published to https://exp.host/${{ env.EXPO_PROJECT }}?release-channel=storybook-pr${{ github.event.number }}
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp%2Brationally://expo-development-client/?url=${{ steps.publish-storybook-url.outputs.url }})
+            OR Enter this link into your dev client: `exp+rationally://expo-development-client/?url=${{ steps.publish-storybook-url.outputs.url }}`
