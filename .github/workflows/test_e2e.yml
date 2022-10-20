@@ -23,7 +23,7 @@ env:
 jobs:
   e2e_test:
     name: SALLY MOBILE - E2E PCloudy Tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted-stg
     steps:
       - uses: actions/checkout@v2
         with:
