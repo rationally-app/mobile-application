@@ -1,4 +1,4 @@
-name: ( SALLY MOBILE - E2E PCloudy Tests )
+name: Sally Mobile - E2E PCloudy Tests
 
 on:
   # Runs E2E every day at 9am and 5pm (0100, 0900 UTC)
@@ -22,7 +22,7 @@ env:
 
 jobs:
   e2e_test:
-    name: SALLY MOBILE - E2E PCloudy Tests
+    name: Sally Mobile - E2E PCloudy Tests
     runs-on: self-hosted-stg
     steps:
       - uses: actions/checkout@v2
