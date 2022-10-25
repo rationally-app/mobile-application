@@ -118,9 +118,10 @@ export const DrawerNavigationComponent: FunctionComponent<
   const onPressCloseDrawer = (): void => {
     navigation.dispatch(DrawerActions.closeDrawer());
   };
-  const releaseChannel: string | undefined = Constants.manifest?.releaseChannel
+  const branchName: string | undefined = (Constants.manifest2?.metadata as any)
+    ?.branchName
     ? Constants.manifest?.releaseChannel
-    : Constants.manifest2?.extra?.expoClient?.releaseChannel;
+    : (Constants.manifest2?.metadata as any)?.branchName;
   const manifestVersion = Constants.manifest?.version
     ? Constants.manifest?.version
     : Constants.manifest2?.extra?.expoClient?.version;
@@ -128,16 +129,19 @@ export const DrawerNavigationComponent: FunctionComponent<
   const appBuildVersion = Constants.manifest?.extra?.appBuildVersion
     ? Constants.manifest?.extra?.appBuildVersion
     : Constants.manifest2?.extra?.expoClient?.extra?.appBuildVersion;
-  if (releaseChannel) {
+  if (__DEV__) {
+    version += "Dev version";
+  } else {
     version += `ver ${manifestVersion}`;
     if (appBuildVersion) {
       version += ` / ${appBuildVersion}`;
     }
-    if (releaseChannel === "staging" || releaseChannel.match(/pr\d+/g)) {
-      version += ` / ${releaseChannel}`;
+    if (
+      branchName &&
+      (branchName === "staging" || branchName.match(/pr\d+/g))
+    ) {
+      version += ` / ${branchName}`;
     }
-  } else if (__DEV__) {
-    version += "Dev version";
   }
 
   return (
