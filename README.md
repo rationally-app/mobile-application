@@ -4,10 +4,6 @@
 
 SupplyAlly helps ensure that everyone can get their fair share of items. By scanning a person's ID, you'll be able to track whether his allocated quota has been used up.
 
-## Deployed Staging Application
-
-![Expo Staging QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://exp.host/@supplyallytest/rationally?release-channel=staging)
-
 ## Development
 
 1.  Setup [Sentry](https://sentry.io/). Copy `.env.example` to `.env` and populate with your values. You can skip this step if you don't want to use Sentry to track app errors.
@@ -46,12 +42,12 @@ SupplyAlly helps ensure that everyone can get their fair share of items. By scan
         }
         ```
 
-8.  Run one of the following to start development:
+8.  Download a build mentioned in https://www.notion.so/sally-wallet/Mobile-development-workflow-49a03003b97444a280a75c53e7386600
+
+9.  Run one of the following to start development:
     -   `npm run start`
     -   `npm run start:mock`: If you'd like to mock the APIs
     -   `npm run storybook`: If you'd like to use Storybook for development
-
-9.  Open Expo and launch the app
 
 ### Tools
 
