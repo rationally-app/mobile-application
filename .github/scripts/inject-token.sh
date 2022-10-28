@@ -1,0 +1,1 @@
+echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' | cat - .npmrc > temp && mv temp .npmrc

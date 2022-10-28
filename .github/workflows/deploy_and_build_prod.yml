@@ -129,7 +129,9 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
-        run: eas update --non-interactive --branch ${{ steps.releaseChannel.outputs.releaseChannel }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+        run: |
+          .github/scripts/inject-token.sh
+          eas update --non-interactive --branch ${{ steps.releaseChannel.outputs.releaseChannel }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
   # unlike stg and pr, the build step is combined in prod because APP_BUILD_VERSION uses the github run number, which is a number tied to the workflow. separating it will reset the current run number
   eas_build:
     name: Build Prod
@@ -183,11 +185,12 @@ jobs:
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
           echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
-      - name: Setup eas json
+      - name: Setup ci files
         env:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
         run: |
+          .github/scripts/inject-token.sh
           .github/scripts/create-profile.sh ${{ steps.releaseChannel.outputs.releaseChannel }}
           .github/scripts/set-versions.sh ${{ steps.releaseChannel.outputs.releaseChannel }} $APP_BUILD_VERSION $APP_BINARY_VERSION
           cat eas.json
