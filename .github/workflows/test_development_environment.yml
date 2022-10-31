@@ -21,6 +21,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
+          registry-url: https://npm.pkg.github.com
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
@@ -34,11 +35,11 @@ jobs:
             ${{ runner.os }}-build-	
             ${{ runner.os }}-
       - name: Install Packages
-        run: |
-          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
-          npm ci --legacy-peer-deps
         env:
-          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+          NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+        run: |
+          npm ci --legacy-peer-deps --ignore-scripts
+          npm rebuild && npm run prepare --if-present
       - name: Typecheck
         run: npx --no-install tsc --noEmit
       - name: Check Lint
