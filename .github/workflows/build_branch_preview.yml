@@ -132,11 +132,12 @@ jobs:
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
           echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
-      - name: Setup eas json
+      - name: Setup ci files json
         env:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
         run: |
+          .github/scripts/inject-token.sh
           .github/scripts/set-versions.sh preview $APP_BUILD_VERSION $APP_BINARY_VERSION
           cat eas.json
       - name: Eas Build

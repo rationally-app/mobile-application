@@ -124,7 +124,9 @@ jobs:
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
-        run: eas update --non-interactive --branch staging --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+        run: |
+          .github/scripts/inject-token.sh
+          eas update --non-interactive --branch staging --message "${{ steps.getCommitMessage.outputs.commit_message }}"
       - name: Eas Update Storybook Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -136,4 +138,6 @@ jobs:
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
           START_STORYBOOK: "true"
-        run: eas update --non-interactive --branch storybook-staging --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+        run: |
+          .github/scripts/inject-token.sh
+          eas update --non-interactive --branch storybook-staging --message "${{ steps.getCommitMessage.outputs.commit_message }}"
