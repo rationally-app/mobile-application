@@ -170,7 +170,6 @@ export const CampaignLocationsScreen: FunctionComponent<
     authCredentialsWithCampaignName,
     "name"
   );
-  
 
   return (
     <>
