@@ -38,6 +38,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
         run: |
+          npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
           npm ci --legacy-peer-deps --ignore-scripts
           npm rebuild && npm run prepare --if-present
       - name: Typecheck
