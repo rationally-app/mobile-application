@@ -38,7 +38,7 @@ jobs:
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
           npm ci --legacy-peer-deps
         env:
-          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT_2 }}
       - name: Typecheck
         run: npx --no-install tsc --noEmit
       - name: Check Lint
