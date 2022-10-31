@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest] # temporarily removed windows-latest as it seems to be unable to set token
         node: [16, 18]
     steps:
       - uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
           npm ci --legacy-peer-deps
         env:
-          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT_2 }}
+          NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Typecheck
         run: npx --no-install tsc --noEmit
       - name: Check Lint
