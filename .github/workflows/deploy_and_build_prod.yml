@@ -87,7 +87,7 @@ jobs:
           eas-version: latest
           expo-version: latest
           packager: npm
-          token: ${{ secrets.EXPO_TOKEN }}
+          token: ${{ secrets.EXPO_TOKEN_PRD }}
           eas-cache: true
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v3.x
@@ -137,6 +137,7 @@ jobs:
     name: Build Prod
     runs-on: ubuntu-latest
     outputs:
+      releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
       latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
     steps:
       - uses: actions/checkout@v2
@@ -153,9 +154,15 @@ jobs:
           eas-version: latest
           expo-version: latest
           packager: npm
-          token: ${{ secrets.EXPO_TOKEN }}
+          token: ${{ secrets.EXPO_TOKEN_PRD }}
           eas-cache: true
           expo-cache: true
+      - uses: rlespinasse/github-slug-action@v3.x
+      - name: Generate Release Channel # Release Channels are named prod-<Major Release>, i.e. prod-1, prod-3
+        id: releaseChannel
+        run: |
+          RELEASE_CHANNEL=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
+          echo "::set-output name=releaseChannel::$RELEASE_CHANNEL"
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
