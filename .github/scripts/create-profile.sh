@@ -8,5 +8,4 @@ cat <<< "$(jq \
 
 cat <<< "$(jq \
 --arg stage "$stage" \
---arg binary_version "$binary_version" \
 '.build[$stage].releaseChannel = $stage' eas.json)" > eas.json

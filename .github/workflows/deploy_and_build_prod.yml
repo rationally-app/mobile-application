@@ -72,6 +72,7 @@ jobs:
     outputs:
       releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
       latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
+      latestBuildVersion: ${{ steps.latestBuildVersion.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -87,7 +88,7 @@ jobs:
           eas-version: latest
           expo-version: latest
           packager: npm
-          token: ${{ secrets.EXPO_TOKEN }}
+          token: ${{ secrets.EXPO_TOKEN_PRD }}
           eas-cache: true
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v3.x
@@ -109,9 +110,15 @@ jobs:
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
           # Using param substitution, we output x.x.x instead
           echo "::set-output name=version::${RELEASE_TAG#*-}"
+      - name: Get Latest Build Version 
+        id: latestBuildVersion
+        run: |
+          # there were 116 builds before the run count got resetted due to migrating to eas
+          sum=$(( $GITHUB_RUN_NUMBER + 116 ))
+          echo "::set-output name=version::${sum}"
       - name: Echo Version Details
         run: |
-          echo Build number is $GITHUB_RUN_NUMBER
+          echo Build number is ${{ steps.latestBuildVersion.outputs.version }}
           echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
       - name: Get commit message
         id: getCommitMessage
@@ -125,7 +132,7 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: ${{ github.run_number }}
+          APP_BUILD_VERSION: ${{ steps.latestBuildVersion.outputs.version }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
@@ -137,7 +144,9 @@ jobs:
     name: Build Prod
     runs-on: ubuntu-latest
     outputs:
+      releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
       latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
+      latestBuildVersion: ${{ steps.latestBuildVersion.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -153,9 +162,15 @@ jobs:
           eas-version: latest
           expo-version: latest
           packager: npm
-          token: ${{ secrets.EXPO_TOKEN }}
+          token: ${{ secrets.EXPO_TOKEN_PRD }}
           eas-cache: true
           expo-cache: true
+      - uses: rlespinasse/github-slug-action@v3.x
+      - name: Generate Release Channel # Release Channels are named prod-<Major Release>, i.e. prod-1, prod-3
+        id: releaseChannel
+        run: |
+          RELEASE_CHANNEL=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
+          echo "::set-output name=releaseChannel::$RELEASE_CHANNEL"
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
@@ -181,13 +196,19 @@ jobs:
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
           # Using param substitution, we output x.x.x instead
           echo "::set-output name=version::${RELEASE_TAG#*-}"
+      - name: Get Latest Build Version 
+        id: latestBuildVersion
+        run: |
+          # there were 116 builds before the run count got resetted due to migrating to eas
+          sum=$(( $github.run_number + 116 ))
+          echo "::set-output name=version::${sum}"
       - name: Echo Version Details
         run: |
-          echo Build number is $GITHUB_RUN_NUMBER
+          echo Build number is ${{ steps.latestBuildVersion.outputs.version }}
           echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
       - name: Setup ci files
         env:
-          APP_BUILD_VERSION: ${{ github.run_number }}
+          APP_BUILD_VERSION: ${{ steps.latestBuildVersion.outputs.version }}
           APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
         run: |
           .github/scripts/inject-token.sh
