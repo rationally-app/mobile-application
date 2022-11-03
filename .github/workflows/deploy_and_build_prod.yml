@@ -114,7 +114,7 @@ jobs:
         id: latestBuildVersion
         run: |
           # there were 116 builds before the run count got resetted due to migrating to eas
-          sum=$(( $github.run_number + 116 ))
+          sum=$(( $GITHUB_RUN_NUMBER + 116 ))
           echo "::set-output name=version::${sum}"
       - name: Echo Version Details
         run: |
