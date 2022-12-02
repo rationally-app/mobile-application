@@ -15,7 +15,7 @@ jobs:
     name: Markdown Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
@@ -31,7 +31,7 @@ jobs:
     name: Lint & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
@@ -74,7 +74,7 @@ jobs:
       latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
       latestBuildVersion: ${{ steps.latestBuildVersion.outputs.version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
       - name: Fetch Tags
@@ -148,7 +148,7 @@ jobs:
       latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
       latestBuildVersion: ${{ steps.latestBuildVersion.outputs.version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
       - name: Fetch Tags
@@ -235,7 +235,7 @@ jobs:
     needs: deploy_prod
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Fetch Tags
         run: git fetch --prune --unshallow --tags -f
       - uses: rlespinasse/github-slug-action@v3.x
