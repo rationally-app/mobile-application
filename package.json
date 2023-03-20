@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.12.9",
-    "@storybook/addon-actions": "5.3.21",
+    "@storybook/addon-actions": "6.5.16",
     "@storybook/addon-links": "5.3.21",
     "@storybook/addons": "6.4.14",
     "@storybook/react-native": "5.3.25",
