@@ -47,7 +47,6 @@
     "packagerOpts": {
       "config": "metro.config.js",
       "sourceExts": ["js", "jsx", "ts", "tsx", "svg"]
-    },
-    "plugins": ["expo-barcode-scanner"]
+    }
   }
 }

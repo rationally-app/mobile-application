@@ -81,6 +81,6 @@ export default ({ config }: any): any => {
         },
       ],
     },
-    plugins: ["sentry-expo", "expo-barcode-scanner"],
+    plugins: ["sentry-expo"],
   };
 };
