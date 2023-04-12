@@ -196,8 +196,8 @@ export const InitialisationContainer: FunctionComponent<
   useEffect(() => {
     const skipScanningIfParamsInDeepLink = async (): Promise<void> => {
       const { queryParams } = await Linking.parseInitialURLAsync();
-      const queryEndpoint = queryParams?.endpoint;
-      const queryKey = queryParams?.key;
+      const queryEndpoint = queryParams?.endpoint as string;
+      const queryKey = queryParams?.key as string;
 
       if (queryEndpoint && queryKey) {
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
