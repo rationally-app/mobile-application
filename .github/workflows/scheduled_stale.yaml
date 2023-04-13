@@ -1,0 +1,18 @@
+name: scheduled stale action
+
+# Controls when the action will run.
+on:
+  schedule:
+    - cron: '30 1 * * *' # Every day at UTC 1:30 (SGT 9:30)
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Ensure only a single job or workflow using the same concurrency group will run at a time
+# When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress,
+# the queued job or workflow will be pending.
+concurrency:
+  group: ${{ github.ref }}-stale-pr-issues # The branch or tag ref that triggered the workflow run.
+
+jobs:
+  stale:
+    uses: rationally-app/ops-aws/.github/workflows/scheduled_stale.yml@master
