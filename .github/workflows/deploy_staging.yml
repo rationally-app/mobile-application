@@ -45,8 +45,8 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-	
-            ${{ runner.os }}-build-	
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Install Packages
         run: |
@@ -103,16 +103,15 @@ jobs:
           # Release tag finds the latest tag in the tree branch - i.e. prod-x.x.x
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
           # Using param substitution, we output x.x.x instead
-          echo "::set-output name=version::${RELEASE_TAG#*-}"
+          echo "LATEST_BINARY_VERSION=${RELEASE_TAG#*-}" >> "$GITHUB_ENV"
       - name: Echo Version Details
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
-          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
+          echo Latest release is ${{ env.LATEST_BINARY_VERSION }}
       - name: Get commit message
-        id: getCommitMessage
         run: |
           MSG=$(git log --format=%B -n 1 ${{github.event.after}})
-          echo "::set-output name=commit_message::${MSG}"
+          echo "COMMIT_MESSAGE=${MSG}" >> "$GITHUB_ENV"
       - name: Eas Update Channel
         env:
           NODE_OPTIONS: --max_old_space_size=7168
@@ -121,12 +120,12 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
         run: |
           .github/scripts/inject-token.sh
-          eas update --non-interactive --branch staging --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+          eas update --non-interactive --branch staging --message "${{ env.COMMIT_MESSAGE }}"
       - name: Eas Update Storybook Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -134,10 +133,10 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
           START_STORYBOOK: "true"
         run: |
           .github/scripts/inject-token.sh
-          eas update --non-interactive --branch storybook-staging --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+          eas update --non-interactive --branch storybook-staging --message "${{ env.COMMIT_MESSAGE }}"

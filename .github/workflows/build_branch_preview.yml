@@ -122,27 +122,26 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
-        id: latestBinaryVersion
         run: |
           # Release tag finds the latest tag in the tree branch - i.e. prod-x.x.x
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
           # Using param substitution, we output x.x.x instead
-          echo "::set-output name=version::${RELEASE_TAG#*-}"
+          echo "LATEST_BUILD_VERSION=${RELEASE_TAG#*-}" >> "$GITHUB_ENV"
       - name: Echo Version Details
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
-          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
+          echo Latest release is ${{ env.LATEST_BINARY_VERSION }}
       - name: Setup ci files json
         env:
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
         run: |
           .github/scripts/inject-token.sh
           .github/scripts/set-versions.sh preview $APP_BUILD_VERSION $APP_BINARY_VERSION
           cat eas.json
       - name: Eas Build
         env:
-          # these envs are all not really used because EAS stores its own set of secrets. 
+          # these envs are all not really used because EAS stores its own set of secrets.
           # It's just, unfortunately, our app.config.js is coded to throw errors when these envs are missing
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
@@ -150,9 +149,8 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
         run: |
           eas build --profile preview --non-interactive --platform all > buildLog.txt
           cat buildLog.txt
-        
