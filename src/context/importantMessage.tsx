@@ -4,6 +4,7 @@ import React, {
   useState,
   Dispatch,
   SetStateAction,
+  ReactNode,
 } from "react";
 import { Feather } from "@expo/vector-icons";
 
@@ -24,9 +25,9 @@ export const ImportantMessageSetterContext = createContext<
   // eslint-disable-next-line @typescript-eslint/no-empty-function
 >(() => {});
 
-export const ImportantMessageContextProvider: FunctionComponent = ({
-  children,
-}) => {
+export const ImportantMessageContextProvider: FunctionComponent<{
+  children?: ReactNode | undefined;
+}> = ({ children }) => {
   const [message, setMessage] = useState<MessageContent | null>(null);
 
   return (

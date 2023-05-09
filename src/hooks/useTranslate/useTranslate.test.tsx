@@ -1,5 +1,5 @@
 import { HookResult, renderHook } from "@testing-library/react-hooks";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { en } from "../../common/i18n/translations/en";
 import { CampaignConfigContextProvider } from "../../context/campaignConfig";
 import {
@@ -18,7 +18,9 @@ const mockReadBucket = readFromStoreInBuckets as jest.MockedFunction<
 
 describe("useTranslate", () => {
   let allCampaignConfigs: CampaignConfigsMap;
-  let wrapper: FunctionComponent;
+  let wrapper: FunctionComponent<{
+    children?: ReactNode | undefined;
+  }>;
   let result: HookResult<TranslationHook>;
 
   beforeAll(() => {

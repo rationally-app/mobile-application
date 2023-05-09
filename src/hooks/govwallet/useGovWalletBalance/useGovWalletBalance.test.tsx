@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react-hooks";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { getGovWalletBalance } from "../../../services/govwallet/balance";
 import {
   defaultCampaignConfig,
@@ -31,7 +31,9 @@ describe("useGovWalletBalance", () => {
       },
     };
 
-    const wrapper: FunctionComponent = ({ children }) => (
+    const wrapper: FunctionComponent<{
+      children?: ReactNode | undefined;
+    }> = ({ children }) => (
       <ProductContextProvider products={defaultProducts}>
         <CampaignConfigContextProvider campaignConfig={testCampaignConfig}>
           {children}
@@ -39,7 +41,9 @@ describe("useGovWalletBalance", () => {
       </ProductContextProvider>
     );
 
-    const wrapperWithToggleOff: FunctionComponent = ({ children }) => (
+    const wrapperWithToggleOff: FunctionComponent<{
+      children?: ReactNode | undefined;
+    }> = ({ children }) => (
       <ProductContextProvider products={defaultProducts}>
         <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
           {children}

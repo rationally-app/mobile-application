@@ -1,6 +1,7 @@
 import React, {
   createContext,
   FunctionComponent,
+  ReactNode,
   useCallback,
   useState,
 } from "react";
@@ -26,9 +27,9 @@ export const IdentificationContext = createContext<IdentificationContext>({
   resetSelectedIdType: () => undefined,
 });
 
-export const IdentificationContextProvider: FunctionComponent = ({
-  children,
-}) => {
+export const IdentificationContextProvider: FunctionComponent<{
+  children?: ReactNode | undefined;
+}> = ({ children }) => {
   const [selectedIdType, setSelectedIdType] = useState<IdentificationFlag>(
     defaultSelectedIdType
   );

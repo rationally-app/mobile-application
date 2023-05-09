@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, PropsWithChildren } from "react";
 import { TouchableOpacity, View, ViewStyle } from "react-native";
 import { size as sizeScale, borderRadius } from "../../../common/styles";
 
@@ -12,7 +12,7 @@ export interface BaseButton {
   accessibilityLabel?: string;
 }
 
-export const BaseButton: FunctionComponent<BaseButton> = ({
+export const BaseButton: FunctionComponent<PropsWithChildren<BaseButton>> = ({
   onPress,
   children,
   backgroundColor,

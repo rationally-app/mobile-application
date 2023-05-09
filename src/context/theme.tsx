@@ -1,6 +1,7 @@
 import React, {
   createContext,
   FunctionComponent,
+  ReactNode,
   useCallback,
   useContext,
   useState,
@@ -22,7 +23,9 @@ export const ThemeContext = createContext<ThemeContext>({
   setTheme: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 });
 
-export const ThemeContextProvider: FunctionComponent = ({ children }) => {
+export const ThemeContextProvider: FunctionComponent<{
+  children?: ReactNode | undefined;
+}> = ({ children }) => {
   const [theme, setThemeValue] = useState(sallyTheme);
 
   const setTheme = useCallback(

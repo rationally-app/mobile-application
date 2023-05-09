@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  PropsWithChildren,
+} from "react";
 import {
   Dimensions,
   LayoutRectangle,
@@ -89,7 +94,9 @@ export type IdScannerCamera = Pick<
   style?: StyleProp<ViewStyle>;
 };
 
-export const IdScannerCamera: FunctionComponent<IdScannerCamera> = ({
+export const IdScannerCamera: FunctionComponent<
+  PropsWithChildren<IdScannerCamera>
+> = ({
   onBarCodeScanned,
   barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39],
   interestArea,

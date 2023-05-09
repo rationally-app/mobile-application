@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  ReactNode,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CampaignConfig } from "../types";
@@ -41,9 +42,9 @@ export const CampaignConfigsStoreContext =
     clearCampaignConfigs: () => undefined,
   });
 
-export const CampaignConfigsStoreContextProvider: FunctionComponent = ({
-  children,
-}) => {
+export const CampaignConfigsStoreContextProvider: FunctionComponent<{
+  children?: ReactNode | undefined;
+}> = ({ children }) => {
   /**
    * This flag marks when {@link allConfigs} is matching with the current state of
    * the primary store. Any changes after this flag is true should trigger updates to the

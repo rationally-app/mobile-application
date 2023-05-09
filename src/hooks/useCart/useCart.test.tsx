@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, PropsWithChildren, ReactNode } from "react";
 import { renderHook, act } from "@testing-library/react-hooks";
 import { findOptionalIdentifierInputLabels, useCart } from "./useCart";
 import { waitFor } from "@testing-library/react-native";
@@ -221,10 +221,9 @@ const mockQuotaResEmptyQuota: Quota = {
   localQuota: [],
 };
 
-const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
-  children,
-  products = defaultProducts,
-}) => (
+const wrapper: FunctionComponent<
+  PropsWithChildren<{ products?: CampaignPolicy[] }>
+> = ({ children, products = defaultProducts }) => (
   <ProductContextProvider products={products}>
     <CampaignConfigContextProvider campaignConfig={defaultCampaignConfig}>
       {children}
@@ -392,7 +391,9 @@ describe("useCart", () => {
 
     it("should throw cartError (missingDisbursements) when quota response has empty quantities", () => {
       expect.assertions(1);
-      const MissingDisbursementsWrapper: FunctionComponent = ({ children }) => (
+      const MissingDisbursementsWrapper: FunctionComponent<{
+        children?: ReactNode | undefined;
+      }> = ({ children }) => (
         <CampaignConfigsStoreContextProvider>
           <CampaignConfigContextProvider
             campaignConfig={{
@@ -1189,9 +1190,9 @@ describe("useCart", () => {
     it("should set cartError when there is an invalid mobile number", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
-      const MobileNumberIdentifierProductWrapper: FunctionComponent = ({
-        children,
-      }) => (
+      const MobileNumberIdentifierProductWrapper: FunctionComponent<{
+        children?: ReactNode | undefined;
+      }> = ({ children }) => (
         <ProductContextProvider
           products={[
             {
@@ -1261,9 +1262,9 @@ describe("useCart", () => {
     it("should set cartError when there is an invalid identifier", async () => {
       expect.assertions(3);
       const ids = ["ID1"];
-      const InvalidIdentifierProductWrapper: FunctionComponent = ({
-        children,
-      }) => (
+      const InvalidIdentifierProductWrapper: FunctionComponent<{
+        children?: ReactNode | undefined;
+      }> = ({ children }) => (
         <ProductContextProvider
           products={[
             {
@@ -1640,6 +1641,8 @@ describe("useCart", () => {
       const { result } = renderHook(
         () => useCart(ids, key, endpoint, mockQuotaResSingleId.remainingQuota),
         {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           wrapper: ({ children }) =>
             wrapper({ children, products: productWithoutIdentifiers }),
         }
@@ -1756,7 +1759,9 @@ describe("useCart", () => {
     it("should set alert description on cart item when threshold reach", () => {
       expect.assertions(2);
       const ids = ["ID1"];
-      const AlertProductWrapper: FunctionComponent = ({ children }) => (
+      const AlertProductWrapper: FunctionComponent<{
+        children?: ReactNode | undefined;
+      }> = ({ children }) => (
         <ProductContextProvider
           products={[
             {
@@ -1825,7 +1830,9 @@ describe("useCart", () => {
     it("should not set alert description on cart item when threshold not reach", () => {
       expect.assertions(2);
       const ids = ["ID1"];
-      const AlertProductWrapper: FunctionComponent = ({ children }) => (
+      const AlertProductWrapper: FunctionComponent<{
+        children?: ReactNode | undefined;
+      }> = ({ children }) => (
         <ProductContextProvider
           products={[
             {

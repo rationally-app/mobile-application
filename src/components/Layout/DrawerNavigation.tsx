@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useCallback, useContext } from "react";
+import React, {
+  FunctionComponent,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+} from "react";
 import {
   Linking,
   StyleSheet,
@@ -56,10 +61,9 @@ interface BottomNavigationLink {
   onPress: () => void;
 }
 
-export const BottomNavigationLink: FunctionComponent<BottomNavigationLink> = ({
-  children,
-  onPress,
-}) => {
+export const BottomNavigationLink: FunctionComponent<
+  PropsWithChildren<BottomNavigationLink>
+> = ({ children, onPress }) => {
   return (
     <View style={styles.bottomNavContainerLink}>
       <TouchableOpacity onPress={onPress}>

@@ -1,4 +1,9 @@
-import React, { createContext, FunctionComponent, useCallback } from "react";
+import React, {
+  createContext,
+  FunctionComponent,
+  PropsWithChildren,
+  useCallback,
+} from "react";
 import { CampaignPolicy } from "../types";
 
 export interface ProductContextValue {
@@ -11,9 +16,11 @@ export const ProductContext = createContext<ProductContextValue>({
   getProduct: () => undefined,
 });
 
-export const ProductContextProvider: FunctionComponent<{
-  products: CampaignPolicy[];
-}> = ({ products, children }) => {
+export const ProductContextProvider: FunctionComponent<
+  PropsWithChildren<{
+    products: CampaignPolicy[];
+  }>
+> = ({ products, children }) => {
   const getProduct = useCallback(
     (category: string): CampaignPolicy | undefined =>
       products.find((product) => product.category === category),

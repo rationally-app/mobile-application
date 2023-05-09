@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { renderHook } from "@testing-library/react-hooks";
 import { useDailyStatistics } from "./useDailyStatistics";
 import { getDailyStatistics } from "../../services/statistics";
@@ -20,7 +20,9 @@ const key = "KEY";
 const endpoint = "https://myendpoint.com";
 const operatorToken = "operator-token";
 
-const wrapper: FunctionComponent = ({ children }) => (
+const wrapper: FunctionComponent<{ children?: ReactNode | undefined }> = ({
+  children,
+}) => (
   <ProductContextProvider products={customProducts}>
     {children}
   </ProductContextProvider>

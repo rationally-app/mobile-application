@@ -4,6 +4,7 @@ import React, {
   FunctionComponent,
   useState,
   useEffect,
+  ReactNode,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoadingView } from "../components/Loading";
@@ -37,7 +38,9 @@ export const ConfigContext = createContext<ConfigContext>({
 export const useConfigContext = (): ConfigContext =>
   useContext<ConfigContext>(ConfigContext);
 
-export const ConfigContextProvider: FunctionComponent = ({ children }) => {
+export const ConfigContextProvider: FunctionComponent<{
+  children?: ReactNode | undefined;
+}> = ({ children }) => {
   const [config, setConfig] = useState(DEFAULT_CONFIG);
 
   const setConfigValue: ConfigContext["setConfigValue"] = (key, value) => {

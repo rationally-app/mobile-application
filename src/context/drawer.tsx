@@ -4,6 +4,7 @@ import React, {
   FunctionComponent,
   useState,
   useCallback,
+  ReactNode,
 } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -31,7 +32,9 @@ const DrawerContext = createContext<DrawerContext>({
 export const useDrawerContext = (): DrawerContext =>
   useContext<DrawerContext>(DrawerContext);
 
-export const DrawerContextProvider: FunctionComponent = ({ children }) => {
+export const DrawerContextProvider: FunctionComponent<{
+  children?: ReactNode | undefined;
+}> = ({ children }) => {
   const [drawerButtons, setDrawerButtons] =
     useState<DrawerButton[]>(DEFAULT_BUTTONS);
 
