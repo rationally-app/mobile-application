@@ -112,7 +112,7 @@ jobs:
           # Release tag finds the latest tag in the tree branch - i.e. prod-x.x.x
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
           # Using param substitution, we output x.x.x instead
-          echo "LATEST_BUILD_VERSION=${RELEASE_TAG#*-}" >> "$GITHUB_ENV"
+          echo "LATEST_BINARY_VERSION=${RELEASE_TAG#*-}" >> "$GITHUB_ENV"
       - name: Echo Version Details
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
