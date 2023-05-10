@@ -76,10 +76,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - uses: expo/expo-github-action@v7
+      - uses: expo/expo-github-action@v8
         with:
-          eas-version: 2.4.1
-          expo-version: 6.0.8
+          eas-version: 3.10.2
+          expo-version: 6.3.7
           packager: npm
           token: ${{ secrets.EXPO_TOKEN_PRD }}
           eas-cache: true
@@ -141,10 +141,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - uses: expo/expo-github-action@v7
+      - uses: expo/expo-github-action@v8
         with:
-          eas-version: 2.4.1
-          expo-version: 6.0.8
+          eas-version: 3.10.2
+          expo-version: 6.3.7
           packager: npm
           token: ${{ secrets.EXPO_TOKEN_PRD }}
           eas-cache: true

@@ -1,4 +1,8 @@
-import React, { FunctionComponent, ReactElement } from "react";
+import React, {
+  FunctionComponent,
+  PropsWithChildren,
+  ReactElement,
+} from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { size } from "../../common/styles";
 
@@ -26,7 +30,7 @@ interface LightBox {
  * @param height The height of the focused component
  * @param label A component that will appear above the focused component
  */
-export const LightBox: FunctionComponent<LightBox> = ({
+export const LightBox: FunctionComponent<PropsWithChildren<LightBox>> = ({
   width,
   height,
   label,

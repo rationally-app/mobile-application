@@ -4,6 +4,7 @@ import React, {
   FunctionComponent,
   useState,
   useCallback,
+  ReactNode,
 } from "react";
 import {
   AlertModal,
@@ -218,7 +219,9 @@ export const AlertModalContext = createContext<AlertModalContext>({
   clearAlert: () => null,
 });
 
-export const AlertModalContextProvider: FunctionComponent = ({ children }) => {
+export const AlertModalContextProvider: FunctionComponent<{
+  children?: ReactNode | undefined;
+}> = ({ children }) => {
   const [alertProps, setAlertProps] =
     useState<AlertModalProps>(defaultAlertProps);
 

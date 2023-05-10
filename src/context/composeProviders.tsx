@@ -1,9 +1,15 @@
-import React, { FunctionComponent, ComponentType, ReactElement } from "react";
+import React, {
+  FunctionComponent,
+  ComponentType,
+  ReactElement,
+  PropsWithChildren,
+  ReactNode,
+} from "react";
 
 interface Providers {
-  providers: ComponentType[];
+  providers: ComponentType<{ children?: ReactNode | undefined }>[];
 }
-export const Providers: FunctionComponent<Providers> = ({
+export const Providers: FunctionComponent<PropsWithChildren<Providers>> = ({
   providers,
   children,
 }): ReactElement => (

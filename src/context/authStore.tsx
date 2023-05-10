@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  PropsWithChildren,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePrevious } from "../hooks/usePrevious";
@@ -54,9 +55,11 @@ export const AuthStoreContext = createContext<AuthStoreContext>({
  *    - Map from a hash of {{@link AuthCredentials.operatorToken}}{{@link AuthCredentials.endpoint}} to corresponding credentials
  *    - Due to size limit of SecureStore, uses a bucketing method explained in {@link saveToStoreInBuckets}
  */
-export const AuthStoreContextProvider: FunctionComponent<{
-  shouldMigrate?: boolean; // Temporary toggle to disable migration when testing
-}> = ({ shouldMigrate = true, children }) => {
+export const AuthStoreContextProvider: FunctionComponent<
+  PropsWithChildren<{
+    shouldMigrate?: boolean; // Temporary toggle to disable migration when testing
+  }>
+> = ({ shouldMigrate = true, children }) => {
   /**
    * Flag to mark when all loading has been done and consumers can read from the data.
    * This includes any migration actions needed.

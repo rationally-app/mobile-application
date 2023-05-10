@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, PropsWithChildren } from "react";
 import {
   StyleSheet,
   View,
@@ -76,11 +76,13 @@ export const AddButton: FunctionComponent<AddButton> = ({ text, onPress }) => {
   );
 };
 
-export const CustomerCard: FunctionComponent<{
-  ids: string[];
-  onAddId?: () => void;
-  headerBackgroundColor?: ViewStyle["backgroundColor"];
-}> = ({ ids, onAddId, headerBackgroundColor, children }) => {
+export const CustomerCard: FunctionComponent<
+  PropsWithChildren<{
+    ids: string[];
+    onAddId?: () => void;
+    headerBackgroundColor?: ViewStyle["backgroundColor"];
+  }>
+> = ({ ids, onAddId, headerBackgroundColor, children }) => {
   const { theme } = useTheme();
   const { i18nt } = useTranslate();
   return (

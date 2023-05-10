@@ -1,4 +1,8 @@
-import React, { createContext, FunctionComponent } from "react";
+import React, {
+  createContext,
+  FunctionComponent,
+  PropsWithChildren,
+} from "react";
 import { AuthCredentials } from "../types";
 
 interface AuthContext {
@@ -14,9 +18,11 @@ export const AuthContext = createContext<AuthContext>({
   expiry: 0,
 });
 
-export const AuthContextProvider: FunctionComponent<{
-  authCredentials: AuthCredentials;
-}> = ({ authCredentials, children }) => {
+export const AuthContextProvider: FunctionComponent<
+  PropsWithChildren<{
+    authCredentials: AuthCredentials;
+  }>
+> = ({ authCredentials, children }) => {
   return (
     <AuthContext.Provider value={authCredentials}>
       {children}

@@ -1,9 +1,11 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, PropsWithChildren } from "react";
 import { Flags } from "../../flags";
 
-export const FeatureToggler: FunctionComponent<{
-  feature: keyof typeof Flags;
-}> = ({ feature, children }) => {
+export const FeatureToggler: FunctionComponent<
+  PropsWithChildren<{
+    feature: keyof typeof Flags;
+  }>
+> = ({ feature, children }) => {
   if (Flags[feature]) {
     return <>{children}</>;
   }

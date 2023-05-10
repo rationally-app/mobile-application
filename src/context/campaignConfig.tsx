@@ -1,4 +1,8 @@
-import React, { createContext, FunctionComponent } from "react";
+import React, {
+  createContext,
+  FunctionComponent,
+  PropsWithChildren,
+} from "react";
 import {
   CampaignFeatures,
   CampaignConfig,
@@ -17,9 +21,11 @@ export const CampaignConfigContext = createContext<CampaignConfigContext>({
   c13n: null,
 });
 
-export const CampaignConfigContextProvider: FunctionComponent<{
-  campaignConfig: CampaignConfig;
-}> = ({ campaignConfig, children }) => {
+export const CampaignConfigContextProvider: FunctionComponent<
+  PropsWithChildren<{
+    campaignConfig: CampaignConfig;
+  }>
+> = ({ campaignConfig, children }) => {
   return (
     <CampaignConfigContext.Provider value={campaignConfig}>
       {children}

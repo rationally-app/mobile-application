@@ -1,5 +1,5 @@
 import { render, cleanup } from "@testing-library/react-native";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { TitleStatistic } from "./TitleStatistic";
 import "../../common/i18n/i18nMock";
 import { ThemeContext } from "../../../src/context/theme";
@@ -9,9 +9,9 @@ import { CampaignConfigContext } from "../../../src/context/campaignConfig";
 const onPressPrevDay = jest.fn();
 const onPressNextDay = jest.fn();
 
-const GovWalletCampaignWrapper: FunctionComponent = ({
-  children,
-}): JSX.Element => {
+const GovWalletCampaignWrapper: FunctionComponent<{
+  children?: ReactNode | undefined;
+}> = ({ children }): JSX.Element => {
   return (
     <ThemeContext.Provider
       value={{ theme: govWalletTheme, setTheme: () => {} }}

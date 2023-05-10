@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useRef, useState } from "react";
+import React, {
+  FunctionComponent,
+  PropsWithChildren,
+  useRef,
+  useState,
+} from "react";
 import { WebView, WebViewProps } from "react-native-webview";
 import { View, StyleSheet, TouchableOpacity, Modal } from "react-native";
 import { Feather } from "@expo/vector-icons";
@@ -53,10 +58,12 @@ const NavigationIcon: FunctionComponent<{
   <Feather name={name} size={size(3)} color={color("blue", 50)} />
 );
 
-const NavigationButton: FunctionComponent<{
-  onPress?: () => void;
-  disabled?: boolean;
-}> = ({ onPress, disabled = false, children }) => (
+const NavigationButton: FunctionComponent<
+  PropsWithChildren<{
+    onPress?: () => void;
+    disabled?: boolean;
+  }>
+> = ({ onPress, disabled = false, children }) => (
   <TouchableOpacity onPress={onPress} disabled={disabled}>
     <View
       style={[

@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, PropsWithChildren } from "react";
 import {
   ScrollView,
   KeyboardAvoidingView,
@@ -13,7 +13,7 @@ interface KeyboardAvoidingScrollView {
 }
 
 export const KeyboardAvoidingScrollView: FunctionComponent<
-  KeyboardAvoidingScrollView
+  PropsWithChildren<KeyboardAvoidingScrollView>
 > = ({
   keyboardAvoidingViewStyle = {},
   scrollViewContentContainerStyle = { alignItems: "center" },

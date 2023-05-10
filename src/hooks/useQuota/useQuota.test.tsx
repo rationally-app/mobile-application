@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, PropsWithChildren } from "react";
 import { act, renderHook } from "@testing-library/react-hooks";
 import { useQuota } from "./useQuota";
 import { CampaignPolicy, Quota } from "../../types";
@@ -310,10 +310,9 @@ const mockIdNotEligible: any = (id: string) => {
   }
 };
 
-const wrapper: FunctionComponent<{ products?: CampaignPolicy[] }> = ({
-  products = defaultProducts,
-  children,
-}) => (
+const wrapper: FunctionComponent<
+  PropsWithChildren<{ products?: CampaignPolicy[] }>
+> = ({ products = defaultProducts, children }) => (
   <ProductContextProvider products={products}>
     {children}
   </ProductContextProvider>

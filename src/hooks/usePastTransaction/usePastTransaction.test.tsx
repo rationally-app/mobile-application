@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { renderHook } from "@testing-library/react-hooks";
 import { usePastTransaction } from "./usePastTransaction";
 import {
@@ -196,7 +196,9 @@ const mockEmptyPastTransactions: PastTransactionsResult = {
   pastTransactions: [],
 };
 
-const wrapper: FunctionComponent = ({ children }) => (
+const wrapper: FunctionComponent<{ children?: ReactNode | undefined }> = ({
+  children,
+}) => (
   <ProductContextProvider products={customProducts}>
     {children}
   </ProductContextProvider>

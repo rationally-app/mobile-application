@@ -1,4 +1,9 @@
-import React, { FunctionComponent, ComponentType, ReactElement } from "react";
+import React, {
+  FunctionComponent,
+  ComponentType,
+  ReactElement,
+  PropsWithChildren,
+} from "react";
 
 interface Providers {
   providers: {
@@ -25,10 +30,9 @@ interface Providers {
  *
  * @param providers Provider component and its props if required
  */
-export const CreateProvidersWrapper: FunctionComponent<Providers> = ({
-  providers,
-  children,
-}): ReactElement => (
+export const CreateProvidersWrapper: FunctionComponent<
+  PropsWithChildren<Providers>
+> = ({ providers, children }): ReactElement => (
   <>
     {providers.reduceRight((composed, newProvider) => {
       const { provider: Provider, props } = newProvider;

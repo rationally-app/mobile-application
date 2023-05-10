@@ -4,7 +4,10 @@ import { ErrorBoundaryContent } from "./ErrorBoundaryContent";
 
 type State = { hasError: boolean; errorName?: string };
 
-export class ErrorBoundary extends Component<unknown, State> {
+export class ErrorBoundary extends Component<
+  { children?: ReactNode | undefined },
+  State
+> {
   state: State = { hasError: false };
 
   static getDerivedStateFromError(error: Error): State {
