@@ -36,12 +36,9 @@ jobs:
         with:
           node-version: 16.x
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
-        id: latestBinaryVersion
         run: |
-          # Release tag finds the latest tag in the tree branch - i.e. prod-x.x.x
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
-          # Using param substitution, we output x.x.x instead
-          echo "::set-output name=version::${RELEASE_TAG#*-}"
+          echo "LATEST_BINARY_VERSION=${RELEASE_TAG#*-}" >> "$GITHUB_ENV"
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
@@ -62,17 +59,13 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
   deploy_prod:
     name: Deploy To Production
     needs: test
     runs-on: ubuntu-latest
-    outputs:
-      releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
-      latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
-      latestBuildVersion: ${{ steps.latestBuildVersion.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -93,10 +86,8 @@ jobs:
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v3.x
       - name: Generate Release Channel # Release Channels are named prod-<Major Release>, i.e. prod-1, prod-3
-        id: releaseChannel
         run: |
-          RELEASE_CHANNEL=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
-          echo "::set-output name=releaseChannel::$RELEASE_CHANNEL"
+          echo "RELEASE_CHANNEL=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')" >> "$GITHUB_ENV"
       - name: Install Packages
         run: |
           npm config set //npm.pkg.github.com/:_authToken $NPM_TOKEN
@@ -104,27 +95,24 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
-        id: latestBinaryVersion
         run: |
           # Release tag finds the lastest tag in the tree branch - i.e. prod-x.x.x
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
           # Using param substitution, we output x.x.x instead
-          echo "::set-output name=version::${RELEASE_TAG#*-}"
-      - name: Get Latest Build Version 
-        id: latestBuildVersion
+          echo "LATEST_BINARY_VERSION=${RELEASE_TAG#*-}" >> "$GITHUB_ENV"
+      - name: Get Latest Build Version
         run: |
           # there were 116 builds before the run count got resetted due to migrating to eas
           sum=$(( $GITHUB_RUN_NUMBER + 116 ))
-          echo "::set-output name=version::${sum}"
+          echo "LATEST_BUILD_VERSION=${sum}" >> "$GITHUB_ENV"
       - name: Echo Version Details
         run: |
-          echo Build number is ${{ steps.latestBuildVersion.outputs.version }}
-          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
+          echo Build number is ${{ env.LATEST_BUILD_VERSION }}
+          echo Latest release is ${{ env.LATEST_BINARY_VERSION }}
       - name: Get commit message
-        id: getCommitMessage
         run: |
           MSG=$(git log --format=%B -n 1 ${{github.event.after}})
-          echo "::set-output name=commit_message::${MSG}"
+          echo "COMMIT_MESSAGE=${MSG}" >> "$GITHUB_ENV"
       - name: Eas Update Channel
         env:
           NODE_OPTIONS: --max_old_space_size=7168
@@ -132,21 +120,17 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          APP_BUILD_VERSION: ${{ steps.latestBuildVersion.outputs.version }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BUILD_VERSION: ${{ env.LATEST_BUILD_VERSION }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
         run: |
           .github/scripts/inject-token.sh
-          eas update --non-interactive --branch ${{ steps.releaseChannel.outputs.releaseChannel }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+          eas update --non-interactive --branch ${{ env.RELEASE_CHANNEL }} --message "${{ env.COMMIT_MESSAGE }}"
   # unlike stg and pr, the build step is combined in prod because APP_BUILD_VERSION uses the github run number, which is a number tied to the workflow. separating it will reset the current run number
   eas_build:
     name: Build Prod
     runs-on: ubuntu-latest
-    outputs:
-      releaseChannel: ${{ steps.releaseChannel.outputs.releaseChannel }}
-      latestBinaryVersion: ${{ steps.latestBinaryVersion.outputs.version }}
-      latestBuildVersion: ${{ steps.latestBuildVersion.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -167,10 +151,8 @@ jobs:
           expo-cache: true
       - uses: rlespinasse/github-slug-action@v3.x
       - name: Generate Release Channel # Release Channels are named prod-<Major Release>, i.e. prod-1, prod-3
-        id: releaseChannel
         run: |
-          RELEASE_CHANNEL=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')
-          echo "::set-output name=releaseChannel::$RELEASE_CHANNEL"
+          echo "RELEASE_CHANNEL=$(echo ${{ env.GITHUB_REF_SLUG }} | sed -r 's/\.[0-9]+\.[0-9]+$//')" >> "$GITHUB_ENV"
       - name: Cache Node Modules
         uses: actions/cache@v2
         env:
@@ -190,34 +172,32 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
-        id: latestBinaryVersion
         run: |
           # Release tag finds the latest tag in the tree branch - i.e. prod-x.x.x
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
           # Using param substitution, we output x.x.x instead
-          echo "::set-output name=version::${RELEASE_TAG#*-}"
-      - name: Get Latest Build Version 
-        id: latestBuildVersion
+          echo "LATEST_BINARY_VERSION=${RELEASE_TAG#*-}" >> "$GITHUB_ENV"
+      - name: Get Latest Build Version
         run: |
           # there were 116 builds before the run count got resetted due to migrating to eas
           sum=$(( $GITHUB_RUN_NUMBER + 116 ))
-          echo "::set-output name=version::${sum}"
+          echo "LATEST_BUILD_VERSION=${sum}" >> "$GITHUB_ENV"
       - name: Echo Version Details
         run: |
-          echo Build number is ${{ steps.latestBuildVersion.outputs.version }}
-          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
+          echo Build number is ${{ env.LATEST_BUILD_VERSION }}
+          echo Latest release is ${{ env.LATEST_BINARY_VERSION }}
       - name: Setup ci files
         env:
-          APP_BUILD_VERSION: ${{ steps.latestBuildVersion.outputs.version }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BUILD_VERSION: ${{ env.LATEST_BUILD_VERSION }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
         run: |
           .github/scripts/inject-token.sh
-          .github/scripts/create-profile.sh ${{ steps.releaseChannel.outputs.releaseChannel }}
-          .github/scripts/set-versions.sh ${{ steps.releaseChannel.outputs.releaseChannel }} $APP_BUILD_VERSION $APP_BINARY_VERSION
+          .github/scripts/create-profile.sh ${{ env.RELEASE_CHANNEL }}
+          .github/scripts/set-versions.sh ${{ env.RELEASE_CHANNEL }} $APP_BUILD_VERSION $APP_BINARY_VERSION
           cat eas.json
       - name: Eas Build
         env:
-          # these envs are all not really used because EAS stores its own set of secrets. 
+          # these envs are all not really used because EAS stores its own set of secrets.
           # It's just, unfortunately, our app.config.js is coded to throw errors when these envs are missing
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
@@ -225,10 +205,10 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
         run: |
-          eas build --profile ${{ steps.releaseChannel.outputs.releaseChannel }} --non-interactive --platform all > buildLog.txt
+          eas build --profile ${{ env.RELEASE_CHANNEL }} --non-interactive --platform all > buildLog.txt
           cat buildLog.txt
   create_release:
     name: Create Release
@@ -240,23 +220,22 @@ jobs:
         run: git fetch --prune --unshallow --tags -f
       - uses: rlespinasse/github-slug-action@v3.x
       - name: Set tag variables
-        id: setTags
         run: |
           MATCHING_TAGS=$(git tag --sort=-version:refname | grep -m2 -E '^prod-[0-9]+\.[0-9]+\.[0-9]+$')
-          echo ::set-output name=latestTag::$(echo "${MATCHING_TAGS}" | head -n1)
-          echo ::set-output name=previousTag::$(echo "${MATCHING_TAGS}" | tail -n1)
+          echo "LATEST_TAG=$(echo ${MATCHING_TAGS} | head -n1)" >> "$GITHUB_ENV"
+          echo "PREVIOUS_TAG=$(echo ${MATCHING_TAGS} | tail -n1)" >> "$GITHUB_ENV"
       - name: Generate Changelog
         id: changelog
         uses: metcalfc/changelog-generator@v1.0.0
         with:
           myToken: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
-          head-ref: ${{ steps.setTags.outputs.latestTag }}
-          base-ref: ${{ steps.setTags.outputs.previousTag }}
+          head-ref: ${{ env.LATEST_TAG }}
+          base-ref: ${{ env.PREVIOUS_TAG }}
       - name: Creating Release
         uses: ncipollo/release-action@v1
         with:
           body: |
-            Changes in this Release: 
+            Changes in this Release:
             ${{ steps.changelog.outputs.changelog }}
           token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
           name: Release ${{ env.GITHUB_REF_SLUG }}

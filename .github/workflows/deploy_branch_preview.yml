@@ -122,21 +122,19 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
       - name: Get Latest Binary Version # Binary Version will be x.x.x based on the latest tag
-        id: latestBinaryVersion
         run: |
           # Release tag finds the latest tag in the tree branch - i.e. prod-x.x.x
           RELEASE_TAG=$(echo $(git describe --tags --abbrev=0))
           # Using param substitution, we output x.x.x instead
-          echo "::set-output name=version::${RELEASE_TAG#*-}"
+          echo "LATEST_BINARY_VERSION=${RELEASE_TAG#*-}" >> "$GITHUB_ENV"
       - name: Echo Version Details
         run: |
           echo Build number is $GITHUB_RUN_NUMBER
-          echo Latest release is ${{ steps.latestBinaryVersion.outputs.version }}
+          echo Latest release is ${{ env.LATEST_BINARY_VERSION }}
       - name: Get commit message
-        id: getCommitMessage
         run: |
           MSG=$(git log --format=%B -n 1 ${{github.event.after}})
-          echo "::set-output name=commit_message::${MSG}"
+          echo "COMMIT_MESSAGE=${MSG}" >> "$GITHUB_ENV"
       - name: Eas Update Channel
         env:
           NODE_OPTIONS: --max_old_space_size=7168
@@ -145,15 +143,14 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION}}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
         run: |
           .github/scripts/inject-token.sh
-          eas update --non-interactive --branch pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+          eas update --non-interactive --branch pr${{ github.event.number }} --message "${{ env.COMMIT_MESSAGE }}"
       - name: Preview Deep Link
-        id: publish-url
-        run: echo "::set-output name=url::https://u.expo.dev/${{ secrets.EXPO_TEST_PROJECT_ID }}?channel-name=pr${{ github.event.number }}"
+        run: echo "APPLICATION_URL=https://u.expo.dev/${{ secrets.EXPO_TEST_PROJECT_ID }}?channel-name=pr${{ github.event.number }}" >> "$GITHUB_ENV"
       - name: Eas Update Storybook Channel
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -161,16 +158,15 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           APP_BUILD_VERSION: ${{ github.run_number }}
-          APP_BINARY_VERSION: ${{ steps.latestBinaryVersion.outputs.version }}
+          APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_TEST_PROJECT_ID }}
           START_STORYBOOK: "true"
         run: |
           .github/scripts/inject-token.sh
-          eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ steps.getCommitMessage.outputs.commit_message }}"
+          eas update --non-interactive --branch storybook-pr${{ github.event.number }} --message "${{ env.COMMIT_MESSAGE }}"
       - name: Preview Storybook Deep Link
-        id: publish-storybook-url
-        run: echo "::set-output name=url::https://u.expo.dev/${{ secrets.EXPO_TEST_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}"
+        run: echo "STORYBOOK_URL=https://u.expo.dev/${{ secrets.EXPO_TEST_PROJECT_ID }}?channel-name=storybook-pr${{ github.event.number }}" >> "$GITHUB_ENV"
       - name: Add Comment To PR
         uses: mshick/add-pr-comment@v1
         env:
@@ -178,9 +174,9 @@ jobs:
         with:
           message: |
             ## Application
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp%2Brationally://expo-development-client/?url=${{ steps.publish-url.outputs.url }})
-            OR Enter this link into your dev client: `exp+rationally://expo-development-client/?url=${{ steps.publish-url.outputs.url }}`
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp%2Brationally://expo-development-client/?url=${{ env.APPLICATION_URL }})
+            OR Enter this link into your dev client: `exp+rationally://expo-development-client/?url=${{ env.APPLICATION_URL }}`
 
             ## Storybook
-            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp%2Brationally://expo-development-client/?url=${{ steps.publish-storybook-url.outputs.url }})
-            OR Enter this link into your dev client: `exp+rationally://expo-development-client/?url=${{ steps.publish-storybook-url.outputs.url }}`
+            ![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp%2Brationally://expo-development-client/?url=${{ env.STORYBOOK_URL }})
+            OR Enter this link into your dev client: `exp+rationally://expo-development-client/?url=${{ env.STORYBOOK_URL }}`
