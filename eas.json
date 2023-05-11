@@ -8,13 +8,15 @@
       "distribution": "internal",
       "env": {
         "NODE_OPTIONS": "--max_old_space_size=7168"
-      }
+      },
+      "channel": "preview"
     },
     "staging": {
       "distribution": "internal",
       "env": {
         "NODE_OPTIONS": "--max_old_space_size=7168"
-      }
+      },
+      "channel": "staging"
     }
   }
 }
