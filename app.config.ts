@@ -14,8 +14,8 @@ const buildNumber: string = getValue(
   process.env.APP_BUILD_VERSION,
   "Please provide a Build Version with APP_BUILD_VERSION env variable"
 );
-// The APP_BUILD_VERSION number is 38 behind the actual deploy, adding 38 synchronises the build number
-const appBuildVersion = parseInt(buildNumber) + 38;
+// The APP_BUILD_VERSION number is 78 behind the actual deploy, adding 78 synchronises the build number
+const appBuildVersion = parseInt(buildNumber) + 78;
 
 export default ({ config }: any): any => {
   return {
