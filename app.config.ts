@@ -20,6 +20,7 @@ const appBuildVersion = parseInt(buildNumber) + 78;
 export default ({ config }: any): any => {
   return {
     ...config,
+    scheme: "supplyally",
     runtimeVersion: {
       policy: "sdkVersion",
     },
