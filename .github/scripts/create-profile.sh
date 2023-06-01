@@ -8,8 +8,4 @@ cat <<< "$(jq \
 
 cat <<< "$(jq \
 --arg stage "$stage" \
-'.build[$stage].releaseChannel = $stage' eas.json)" > eas.json
-
-cat <<< "$(jq \
---arg stage "$stage" \
 '.build[$stage].channel = $stage' eas.json)" > eas.json
