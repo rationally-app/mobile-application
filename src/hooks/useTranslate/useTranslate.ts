@@ -33,8 +33,8 @@ export const i18ntWithValidator = <
   dynamicContent?: Record<string, string | number>
 ): string => {
   return i18n.t(
-    `${component}.${subComponent}${
-      subSubComponent ? `.${subSubComponent}` : ""
+    `${component}.${String(subComponent)}${
+      subSubComponent ? `.${String(subSubComponent)}` : ""
     }`,
     dynamicContent
   );
