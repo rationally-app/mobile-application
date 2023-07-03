@@ -86,8 +86,8 @@ jobs:
           node-version: 16.x
       - uses: expo/expo-github-action@v8
         with:
-          eas-version: 3.14.0
-          expo-version: 6.3.8
+          eas-version: 3.12.0
+          expo-version: 6.3.9
           packager: npm
           token: ${{ secrets.EXPO_TOKEN }}
           eas-cache: true
