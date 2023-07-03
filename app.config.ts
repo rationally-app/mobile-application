@@ -20,6 +20,10 @@ const appBuildVersion = parseInt(buildNumber) + 78;
 export default ({ config }: any): any => {
   return {
     ...config,
+    owner: getValue(
+      process.env.OWNER,
+      "Please provide an OWNER environment variable"
+    ),
     scheme: "supplyally",
     runtimeVersion: {
       policy: "sdkVersion",

@@ -62,6 +62,7 @@ jobs:
           APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
+          OWNER: ${{ secrets.EXPO_OWNER }}
   deploy_prod:
     name: Deploy To Production
     needs: test
@@ -124,6 +125,7 @@ jobs:
           APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           DOMAIN_FORMAT: ${{ secrets.TEST_DOMAIN_FORMAT }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
+          OWNER: ${{ secrets.EXPO_OWNER }}
         run: |
           .github/scripts/inject-token.sh
           eas update --non-interactive --branch ${{ env.RELEASE_CHANNEL }} --message "${{ env.COMMIT_MESSAGE }}"
@@ -207,6 +209,7 @@ jobs:
           APP_BUILD_VERSION: ${{ github.run_number }}
           APP_BINARY_VERSION: ${{ env.LATEST_BINARY_VERSION }}
           PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
+          OWNER: ${{ secrets.EXPO_OWNER }}
         run: |
           eas build --profile ${{ env.RELEASE_CHANNEL }} --non-interactive --platform all > buildLog.txt
           cat buildLog.txt
