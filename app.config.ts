@@ -86,6 +86,16 @@ export default ({ config }: any): any => {
         },
       ],
     },
-    plugins: ["sentry-expo"],
+    plugins: [
+      "sentry-expo",
+      [
+        "expo-build-properties",
+        {
+          android: {
+            minSdkVersion: 27,
+          },
+        },
+      ],
+    ],
   };
 };
