@@ -102,7 +102,7 @@ jobs:
           expo-version: 6.3.8
           packager: npm
           token: ${{ secrets.EXPO_TOKEN }}
-          eas-cache: true
+          eas-cache: false
           expo-cache: true
       - name: Cache Node Modules
         uses: actions/cache@v2
