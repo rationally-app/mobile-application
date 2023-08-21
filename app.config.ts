@@ -93,6 +93,7 @@ export default ({ config }: any): any => {
         {
           android: {
             minSdkVersion: 27,
+            targetSdkVersion: 31
           },
         },
       ],
