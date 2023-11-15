@@ -13,8 +13,7 @@ import { AppText } from "../Layout/AppText";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
-const BASE_URL = "https://supplyallyhelp.zendesk.com/hc/en-us";
-const FEEDBACK_URL = BASE_URL + "/requests/new";
+const SUPPORT_URL = "https://www.supplyally.gov.sg/faqs/supportrelated/";
 
 const styles = StyleSheet.create({
   bar: {
@@ -88,7 +87,7 @@ export const HelpModal: FunctionComponent<{
 
   const onPressAskQuestion = (): void => {
     if (webViewRef.current) {
-      const redirectTo = `window.location = "${FEEDBACK_URL}"`;
+      const redirectTo = `window.location = "${SUPPORT_URL}"`;
       webViewRef.current.injectJavaScript(redirectTo);
     }
   };
@@ -142,7 +141,7 @@ export const HelpModal: FunctionComponent<{
         </View>
         <WebView
           ref={webViewRef}
-          source={{ uri: BASE_URL }}
+          source={{ uri: SUPPORT_URL }}
           onNavigationStateChange={onNavigationStateChange}
         />
         <View style={[styles.bar, styles.bottomBar]}>
