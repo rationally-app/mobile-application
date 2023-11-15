@@ -13,7 +13,7 @@ import { AppText } from "../Layout/AppText";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
-const SUPPORT_URL = "https://www.supplyally.gov.sg/faqs/supportrelated/"
+const SUPPORT_URL = "https://www.supplyally.gov.sg/faqs/supportrelated/";
 
 const styles = StyleSheet.create({
   bar: {
