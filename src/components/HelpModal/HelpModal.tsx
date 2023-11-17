@@ -130,7 +130,7 @@ export const HelpModal: FunctionComponent<{
       onRequestClose={onRequestClose}
       animationType="slide"
     >
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, marginTop: size(4) }}>
         <View style={[styles.bar, styles.topBar]}>
           <AppText style={styles.pageTitle}>
             {i18nt("navigationDrawer", "helpSupport")}
