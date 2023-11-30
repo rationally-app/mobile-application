@@ -203,14 +203,14 @@ export const DrawerNavigationComponent: FunctionComponent<
           </BottomNavigationLink>
           <BottomNavigationLink
             onPress={() => {
-              Linking.openURL("https://www.supplyally.gov.sg/terms-of-use");
+              Linking.openURL("https://www.supply.gov.sg/terms-of-use");
             }}
           >
             {i18nt("navigationDrawer", "termsOfUse")}
           </BottomNavigationLink>
           <BottomNavigationLink
             onPress={() => {
-              Linking.openURL("https://www.supplyally.gov.sg/privacy");
+              Linking.openURL("https://www.supply.gov.sg/privacy");
             }}
           >
             {i18nt("navigationDrawer", "privacyStatement")}
