@@ -5,7 +5,13 @@ import React, {
   useState,
 } from "react";
 import { WebView, WebViewProps } from "react-native-webview";
-import { View, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Linking,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { DarkButton } from "../Layout/Buttons/DarkButton";
 import { size, color, borderRadius, fontSize } from "../../common/styles";
@@ -87,8 +93,7 @@ export const HelpModal: FunctionComponent<{
 
   const onPressAskQuestion = (): void => {
     if (webViewRef.current) {
-      const redirectTo = `${SUPPORT_URL}`;
-      webViewRef.current.injectJavaScript(redirectTo);
+      Linking.openURL(SUPPORT_URL);
     }
   };
 
