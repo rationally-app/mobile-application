@@ -87,7 +87,7 @@ export const HelpModal: FunctionComponent<{
 
   const onPressAskQuestion = (): void => {
     if (webViewRef.current) {
-      const redirectTo = `window.location = "${SUPPORT_URL}"`;
+      const redirectTo = `${SUPPORT_URL}`;
       webViewRef.current.injectJavaScript(redirectTo);
     }
   };
