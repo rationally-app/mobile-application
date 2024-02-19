@@ -19,7 +19,8 @@ import { AppText } from "../Layout/AppText";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 
-const SUPPORT_URL = "mailto:govsupply_support@tech.gov.sg";
+const FAQ_SUPPORT_URL = "https://www.supply.gov.sg/faqs/supportrelated/";
+const SUPPORT_EMAIL_REF = "mailto:govsupply_support@tech.gov.sg";
 
 const styles = StyleSheet.create({
   bar: {
@@ -93,7 +94,7 @@ export const HelpModal: FunctionComponent<{
 
   const onPressAskQuestion = (): void => {
     if (webViewRef.current) {
-      Linking.openURL(SUPPORT_URL);
+      Linking.openURL(SUPPORT_EMAIL_REF);
     }
   };
 
@@ -146,7 +147,7 @@ export const HelpModal: FunctionComponent<{
         </View>
         <WebView
           ref={webViewRef}
-          source={{ uri: SUPPORT_URL }}
+          source={{ uri: FAQ_SUPPORT_URL }}
           onNavigationStateChange={onNavigationStateChange}
         />
         <View style={[styles.bar, styles.bottomBar]}>
