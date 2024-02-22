@@ -1,5 +1,4 @@
 import { AuthInvalidError } from "../../services/auth";
-import queryString from "query-string";
 
 interface QrCode {
   version: string;
@@ -21,10 +20,20 @@ const isJSON = (str: string): boolean => {
   }
 };
 
-const parseURLParams = (url: string): Record<string, string> => {
-  const parsed = queryString.parseUrl(url);
-  return parsed.query as Record<string, string>;
-};
+function parseURLParams(url: string): QrCode {
+  const queryString = url.split("?")[1];
+  const result: QrCode = { version: "", endpoint: "", key: "" };
+  if (queryString) {
+    const queryParams = queryString.split("&");
+    for (const param of queryParams) {
+      const [key, value] = param.split("=");
+      if (key === "endpoint") result.endpoint = value;
+      if (key === "key") result.key = value;
+    }
+  }
+  result["version"] = "";
+  return result;
+}
 
 export const decodeQr = (code: string): DecodedQrResponse => {
   try {
