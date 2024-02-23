@@ -48,8 +48,6 @@ export const decodeQr = (code: string): DecodedQrResponse => {
         key: params.key as string,
       };
     }
-    if (!parsedCode.endpoint && !parsedCode.key)
-      throw new AuthInvalidError("Invalid format");
     if (!parsedCode.endpoint) throw new AuthInvalidError("No endpoint");
     if (!parsedCode.key) throw new AuthInvalidError("No key");
     return { endpoint: parsedCode.endpoint, key: parsedCode.key };
