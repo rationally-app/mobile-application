@@ -4,9 +4,9 @@ describe("decodeQr", () => {
   it("should fail for old, deprecated QR codes", () => {
     expect.assertions(2);
     const code = "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4";
-    expect(() => decodeQr(code)).toThrow("No endpoint");
+    expect(() => decodeQr(code)).toThrow("Invalid format");
     const url = "https://example.com";
-    expect(() => decodeQr(url)).toThrow("No endpoint");
+    expect(() => decodeQr(url)).toThrow("Invalid format");
   });
 
   it("should decode the correct qr code and return endpoint and key", () => {
@@ -31,7 +31,7 @@ describe("decodeQr", () => {
     expect(() => decodeQr(missingEndpointJSON)).toThrow("No endpoint");
 
     const syntaxError = `xxx{"key": "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4","endpoint": "https://somewhere.com"}`;
-    expect(() => decodeQr(syntaxError)).toThrow("No endpoint");
+    expect(() => decodeQr(syntaxError)).toThrow("Invalid format");
 
     const jsonNoEndPoint = `{"key": "1e4457bc-f7d0-4329-a344-f0e3c75d8dd4"}`;
     expect(() => decodeQr(jsonNoEndPoint)).toThrow("No endpoint");

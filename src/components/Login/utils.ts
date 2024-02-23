@@ -36,24 +36,20 @@ function parseURLParams(url: string): QrCode {
 }
 
 export const decodeQr = (code: string): DecodedQrResponse => {
-  try {
-    let parsedCode: QrCode;
-    if (isJSON(code)) {
-      parsedCode = JSON.parse(code);
-    } else {
-      const params = parseURLParams(code);
-      parsedCode = {
-        version: "",
-        endpoint: params.endpoint as string,
-        key: params.key as string,
-      };
-    }
-    if (!parsedCode.endpoint) throw new AuthInvalidError("No endpoint");
-    if (!parsedCode.key) throw new AuthInvalidError("No key");
-    return { endpoint: parsedCode.endpoint, key: parsedCode.key };
-  } catch (e) {
-    if (e.message.includes("token") || e instanceof SyntaxError)
-      throw new AuthInvalidError("Invalid format");
-    throw e;
+  let parsedCode: QrCode;
+  if (isJSON(code)) {
+    parsedCode = JSON.parse(code);
+  } else {
+    const params = parseURLParams(code);
+    parsedCode = {
+      version: "",
+      endpoint: params.endpoint as string,
+      key: params.key as string,
+    };
   }
+  if (!parsedCode.endpoint && !parsedCode.key)
+    throw new AuthInvalidError("Invalid format");
+  if (!parsedCode.endpoint) throw new AuthInvalidError("No endpoint");
+  if (!parsedCode.key) throw new AuthInvalidError("No key");
+  return { endpoint: parsedCode.endpoint, key: parsedCode.key };
 };
