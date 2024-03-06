@@ -79,7 +79,7 @@ jobs:
 
       - name: xUnit Slack Reporter
         if: always()
-        uses: ivanklee86/xunit-slack-reporter@v1.0.1
+        uses: ivanklee86/xunit-slack-reporter@v1.4.0
         env:
           SLACK_CHANNEL: ${{ secrets.E2E_CHATBOT_CHANNELID }}
           SLACK_TOKEN: ${{ secrets.E2E_CHATBOT_TOKEN }}
