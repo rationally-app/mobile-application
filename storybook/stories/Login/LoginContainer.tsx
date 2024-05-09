@@ -1,7 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react-native";
 import { View } from "react-native";
-import { InitialisationContainer } from "../../../src/components/Login/LoginContainer";
+import { InitialisationContainer } from "../../../src/components/Login/BlockUser";
 import { navigation } from "../mocks/navigation";
 
 storiesOf("Screen", module).add("LoginScreen", () => (

@@ -1,6 +1,10 @@
 import { Translations } from "./type";
 
 export const en: Translations = {
+  blockUser: {
+    header: "Now available on web",
+    body: "Switch to use the latest version of GovSupply.",
+  },
   loginScanCard: {
     loginWithQR: "Login with your unique QR code provided by your in-charge.",
     scanToLogin: "Scan to login",

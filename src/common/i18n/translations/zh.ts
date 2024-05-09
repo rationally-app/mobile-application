@@ -1,6 +1,10 @@
 import { Translations } from "./type";
 
 export const zh: Translations = {
+  blockUser: {
+    header: "现已在网络上提供",
+    body: "切换到使用最新版本的 SupplyAlly app。",
+  },
   loginScanCard: {
     loginWithQR: "请使用您专属的QR码登录",
     scanToLogin: "扫描QR码",
