@@ -27,6 +27,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { TransparentButton } from "../Layout/Buttons/TransparentButton";
 import { IdScannerLabel } from "./IdScannerLabel";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { Sentry } from "../../utils/errorTracking";
 
 const styles = StyleSheet.create({
   cameraWrapper: {
@@ -149,6 +150,8 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
   isScanningEnabled = true,
   hasLimitedInterestArea = true,
 }) => {
+  const transaction = Sentry.startTransaction({ name: "IdScanner" });
+
   const [platform] = useState<string>(Platform.OS);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [interestArea] = useState<LayoutRectangle | undefined>(
@@ -185,6 +188,7 @@ export const IdScanner: FunctionComponent<IdScanner> = ({
           boundsY + boundsHeight <= interestAreaY + interestAreaHeight
         ) {
           if (onBarCodeScanned) {
+            transaction.finish();
             onBarCodeScanned(event);
           }
         }
