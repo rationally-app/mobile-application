@@ -17,7 +17,7 @@ jobs:
         os: [ubuntu-latest, macOS-latest] # removed windows due to intermittent failure
         node: [16, 18]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}

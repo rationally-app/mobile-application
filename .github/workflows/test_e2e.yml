@@ -25,7 +25,7 @@ jobs:
     name: Sally Mobile - E2E PCloudy Tests
     runs-on: self-hosted-stg
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           repository: "rationally-app/mobile-e2e"
           token: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
