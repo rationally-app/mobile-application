@@ -229,7 +229,7 @@ jobs:
           echo "PREVIOUS_TAG=$(echo ${MATCHING_TAGS} | tail -n1)" >> "$GITHUB_ENV"
       - name: Generate Changelog
         id: changelog
-        uses: metcalfc/changelog-generator@v1.0.0
+        uses: metcalfc/changelog-generator@v4.3.1
         with:
           myToken: ${{ secrets.GH_TOKEN_SUPPLYALLY_BOT }}
           head-ref: ${{ env.LATEST_TAG }}
