@@ -1,6 +1,10 @@
 import { Translations } from "./type";
 
 export const zh: Translations = {
+  blockUser: {
+    header: "现已在网络上提供",
+    body: "切换到使用最新版本的 GovSupply app。",
+  },
   loginScanCard: {
     loginWithQR: "请使用您专属的QR码登录",
     scanToLogin: "扫描QR码",
@@ -504,7 +508,7 @@ export const zh: Translations = {
     },
     rootedDeviceDetected: {
       title: "安全问题",
-      body: "此设备似乎已越狱。出于安全原因，请使用其他设备安装 SupplyAlly app。",
+      body: "此设备似乎已越狱。出于安全原因，请使用其他设备安装 GovSupply app。",
       primaryActionText: "退出程序",
     },
     // TODO: HTTP error translations below will be done at a later date

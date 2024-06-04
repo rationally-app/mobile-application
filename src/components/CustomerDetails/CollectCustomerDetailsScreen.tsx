@@ -50,6 +50,7 @@ import { useTranslate } from "../../hooks/useTranslate/useTranslate";
 import { extractPassportIdFromEvent } from "../../utils/passportScanning";
 import { useTheme } from "../../context/theme";
 import { useIsFocused } from "@react-navigation/native";
+import { BlockUser } from "../Login/BlockUser";
 
 const styles = StyleSheet.create({
   content: {
@@ -271,78 +272,88 @@ export const CollectCustomerDetailsScreen: FunctionComponent<
 
   const tCampaignName = c13nt(features?.campaignName ?? "");
 
+  const [shouldBlock, setShouldBlock] = useState(true);
+  useEffect(() => {
+    setShouldBlock(true);
+  }, []);
+
   return (
     <>
-      <Credits style={{ bottom: size(3) }} />
-      <KeyboardAvoidingScrollView>
-        <TopBackground mode={config.appMode} />
-        <View style={styles.content}>
-          <View style={styles.headerText}>
-            <AppHeader mode={config.appMode} />
-          </View>
-          {hasMultiInputSelection() && (
-            <InputSelection
-              selectionArray={selectionArray}
-              currentSelection={selectedIdType}
-              onInputSelection={onInputSelection}
-            />
-          )}
-          {messageContent && (
-            <View style={styles.bannerWrapper}>
-              <Banner {...messageContent} />
-            </View>
-          )}
-          <Card>
-            {!!tCampaignName && (
-              <AppText
-                style={styles.campaignName}
-                accessibilityLabel="identity-details-campaign-name"
-                testID="identity-details-campaign-name"
-                accessible={true}
+      {shouldBlock && <BlockUser setShouldBlock={setShouldBlock} />}
+      {!shouldBlock && (
+        <>
+          <Credits style={{ bottom: size(3) }} />
+          <KeyboardAvoidingScrollView>
+            <TopBackground mode={config.appMode} />
+            <View style={styles.content}>
+              <View style={styles.headerText}>
+                <AppHeader mode={config.appMode} />
+              </View>
+              {hasMultiInputSelection() && (
+                <InputSelection
+                  selectionArray={selectionArray}
+                  currentSelection={selectedIdType}
+                  onInputSelection={onInputSelection}
+                />
+              )}
+              {messageContent && (
+                <View style={styles.bannerWrapper}>
+                  <Banner {...messageContent} />
+                </View>
+              )}
+              <Card>
+                {!!tCampaignName && (
+                  <AppText
+                    style={styles.campaignName}
+                    accessibilityLabel="identity-details-campaign-name"
+                    testID="identity-details-campaign-name"
+                    accessible={true}
+                  >
+                    {tCampaignName}
+                  </AppText>
+                )}
+                <AppText>
+                  {`${c13nt(
+                    "checkEligibleItems",
+                    undefined,
+                    i18nt("collectCustomerDetailsScreen", "checkEligibleItems")
+                  )}`}
+                </AppText>
+                {getInputComponent()}
+              </Card>
+              <TouchableOpacity
+                onPress={onPressStatistics}
+                style={styles.statsButton}
               >
-                {tCampaignName}
-              </AppText>
-            )}
-            <AppText>
-              {`${c13nt(
-                "checkEligibleItems",
-                undefined,
-                i18nt("collectCustomerDetailsScreen", "checkEligibleItems")
-              )}`}
-            </AppText>
-            {getInputComponent()}
-          </Card>
-          <TouchableOpacity
-            onPress={onPressStatistics}
-            style={styles.statsButton}
-          >
-            <MaterialCommunityIcons
-              style={styles.statsIcon}
-              name="poll"
-              size={size(2)}
-              color={theme.collectCustomerDetails.statsIconColor}
+                <MaterialCommunityIcons
+                  style={styles.statsIcon}
+                  name="poll"
+                  size={size(2)}
+                  color={theme.collectCustomerDetails.statsIconColor}
+                />
+                <AppText
+                  style={styles.statsText}
+                  accessibilityLabel="go-to-statistics"
+                  testID="go-to-statistics"
+                  accessible={true}
+                >
+                  {i18nt("collectCustomerDetailsScreen", "goToStatistics")}
+                </AppText>
+              </TouchableOpacity>
+              <FeatureToggler feature="HELP_MODAL">
+                <HelpButton onPress={showHelpModal} />
+              </FeatureToggler>
+            </View>
+          </KeyboardAvoidingScrollView>
+          {shouldShowCamera && (
+            <IdScanner
+              isScanningEnabled={isScanningEnabled}
+              onBarCodeScanned={onBarCodeScanned}
+              onCancel={() => setShouldShowCamera(false)}
+              barCodeTypes={getBarcodeType()}
             />
-            <AppText
-              style={styles.statsText}
-              accessibilityLabel="go-to-statistics"
-              testID="go-to-statistics"
-              accessible={true}
-            >
-              {i18nt("collectCustomerDetailsScreen", "goToStatistics")}
-            </AppText>
-          </TouchableOpacity>
-          <FeatureToggler feature="HELP_MODAL">
-            <HelpButton onPress={showHelpModal} />
-          </FeatureToggler>
-        </View>
-      </KeyboardAvoidingScrollView>
-      {shouldShowCamera && (
-        <IdScanner
-          isScanningEnabled={isScanningEnabled}
-          onBarCodeScanned={onBarCodeScanned}
-          onCancel={() => setShouldShowCamera(false)}
-          barCodeTypes={getBarcodeType()}
-        />
+          )}
+        </>
       )}
     </>
   );

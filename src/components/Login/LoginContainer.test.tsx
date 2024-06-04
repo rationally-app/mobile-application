@@ -35,6 +35,7 @@ const phoneInputId = "login-phone-number-input";
 const OTPInputId = "login-otp-input";
 const countryCodeInputId = "login-country-code-input";
 const alertModelButtonId = "alert-modal-primary-button";
+const continueAppButtonId = "continue-app";
 
 jest.mock("../../utils/errorTracking");
 const mockCaptureException = jest.fn();
@@ -77,11 +78,13 @@ describe("LoginContainer component tests", () => {
     cleanup();
   });
 
-  it("should render LoginScanCard", () => {
+  it("should render LoginScanCard", async () => {
     expect.assertions(1);
     const { getByTestId } = render(
       <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
+    const continueAppButton = getByTestId(continueAppButtonId);
+    await act(async () => fireEvent.press(continueAppButton));
     expect(getByTestId(loginScanViewId)).not.toBeNull();
   });
 
@@ -97,7 +100,8 @@ describe("LoginContainer component tests", () => {
     const { getByTestId } = render(
       <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
-
+    const continueAppButton = getByTestId(continueAppButtonId);
+    await act(async () => fireEvent.press(continueAppButton));
     await waitFor(() => {
       expect(getByTestId(loginMobileViewId)).not.toBeNull();
     });
@@ -108,6 +112,8 @@ describe("LoginContainer component tests", () => {
     const { getByTestId } = render(
       <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
+    const continueAppButton = getByTestId(continueAppButtonId);
+    await act(async () => fireEvent.press(continueAppButton));
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
     expect(getByTestId(barcodeScannerId)).not.toBeNull();
@@ -119,6 +125,8 @@ describe("LoginContainer component tests", () => {
       <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
 
+    const continueAppButton = getByTestId(continueAppButtonId);
+    await act(async () => fireEvent.press(continueAppButton));
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
     fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -134,6 +142,8 @@ describe("LoginContainer component tests", () => {
     const { getByTestId, queryByText } = render(
       <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
+    const continueAppButton = getByTestId(continueAppButtonId);
+    await act(async () => fireEvent.press(continueAppButton));
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
     fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -156,6 +166,8 @@ describe("LoginContainer component tests", () => {
     const { getByTestId } = render(
       <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
+    const continueAppButton = getByTestId(continueAppButtonId);
+    await act(async () => fireEvent.press(continueAppButton));
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
     fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -182,6 +194,8 @@ describe("LoginContainer component tests", () => {
     const { getByTestId } = render(
       <InitialisationContainer navigation={mockNavigation} route={mockRoute} />
     );
+    const continueAppButton = getByTestId(continueAppButtonId);
+    await act(async () => fireEvent.press(continueAppButton));
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
     fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -233,6 +247,8 @@ describe("LoginContainer component tests", () => {
         </CreateProvidersWrapper>
       );
 
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -258,7 +274,8 @@ describe("LoginContainer component tests", () => {
           />
         </CreateProvidersWrapper>
       );
-
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -287,6 +304,8 @@ describe("LoginContainer component tests", () => {
         </CreateProvidersWrapper>
       );
 
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -315,6 +334,8 @@ describe("LoginContainer component tests", () => {
         </CreateProvidersWrapper>
       );
 
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -345,6 +366,8 @@ describe("LoginContainer component tests", () => {
           />
         </CreateProvidersWrapper>
       );
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -385,6 +408,8 @@ describe("LoginContainer component tests", () => {
           />
         </CreateProvidersWrapper>
       );
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -429,6 +454,8 @@ describe("LoginContainer component tests", () => {
           />
         </CreateProvidersWrapper>
       );
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -467,6 +494,8 @@ describe("LoginContainer component tests", () => {
           />
         </CreateProvidersWrapper>
       );
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -508,6 +537,8 @@ describe("LoginContainer component tests", () => {
           />
         </CreateProvidersWrapper>
       );
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -549,6 +580,8 @@ describe("LoginContainer component tests", () => {
           />
         </CreateProvidersWrapper>
       );
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -585,6 +618,8 @@ describe("LoginContainer component tests", () => {
           />
         </CreateProvidersWrapper>
       );
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const scanButton = getByTestId(scanButtonId);
       await act(async () => fireEvent.press(scanButton));
       fireEvent(getByTestId(barcodeScannerId), "onBarCodeScanned", {
@@ -633,7 +668,8 @@ describe("validate RegEx format for Domain from QR detected", () => {
         />
       </CreateProvidersWrapper>
     );
-
+    const continueAppButton = getByTestId(continueAppButtonId);
+    await act(async () => fireEvent.press(continueAppButton));
     mockRegexValidate.mockReturnValueOnce(true);
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
@@ -659,6 +695,8 @@ describe("validate RegEx format for Domain from QR detected", () => {
       </CreateProvidersWrapper>
     );
 
+    const continueAppButton = getByTestId(continueAppButtonId);
+    await act(async () => fireEvent.press(continueAppButton));
     mockRegexValidate.mockReturnValueOnce(false);
     const scanButton = getByTestId(scanButtonId);
     await act(async () => fireEvent.press(scanButton));
