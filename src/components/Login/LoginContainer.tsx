@@ -56,6 +56,7 @@ import { AuthStoreContext } from "../../context/authStore";
 import { Feather } from "@expo/vector-icons";
 import { createFullNumber } from "../../utils/validatePhoneNumbers";
 import { NetworkError } from "../../services/helpers";
+import { BlockUser } from "./BlockUser";
 
 const TIME_HELD_TO_CHANGE_APP_MODE = 5 * 1000;
 
@@ -274,85 +275,96 @@ export const InitialisationContainer: FunctionComponent<
     }
   };
 
+  const [shouldBlock, setShouldBlock] = useState(true);
+  useEffect(() => {
+    setShouldBlock(true);
+  }, []);
+
   return (
     <>
-      <Credits style={{ bottom: size(10) }} />
-      <KeyboardAvoidingScrollView
-        keyboardAvoidingViewStyle={{ flex: 1 }}
-        scrollViewContentContainerStyle={{
-          flexGrow: 1,
-          alignItems: "center",
-          paddingBottom: size(8),
-        }}
-      >
-        <TopBackground
-          style={{ height: "50%", maxHeight: "auto" }}
-          mode={config.appMode}
-        />
-
-        <View style={styles.content}>
-          <TouchableWithoutFeedback
-            delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
-            onLongPress={onToggleAppMode}
+      {shouldBlock && <BlockUser setShouldBlock={setShouldBlock} />}
+      {!shouldBlock && (
+        <>
+          <Credits style={{ bottom: size(10) }} />
+          <KeyboardAvoidingScrollView
+            keyboardAvoidingViewStyle={{ flex: 1 }}
+            scrollViewContentContainerStyle={{
+              flexGrow: 1,
+              alignItems: "center",
+              paddingBottom: size(8),
+            }}
           >
-            <View style={styles.headerText}>
-              <AppName mode={config.appMode} />
-            </View>
-          </TouchableWithoutFeedback>
-          {config.appMode !== AppMode.production && (
-            <View style={{ marginVertical: size(2.5) }}>
-              <DangerButton
-                text="Exit Testing Mode"
-                onPress={onToggleAppMode}
-                fullWidth={true}
-                isLoading={isLoading}
-              />
-            </View>
-          )}
+            <TopBackground
+              style={{ height: "50%", maxHeight: "auto" }}
+              mode={config.appMode}
+            />
 
-          {messageContent && (
-            <View style={styles.bannerWrapper}>
-              <Banner {...messageContent} />
-            </View>
-          )}
+            <View style={styles.content}>
+              <TouchableWithoutFeedback
+                delayLongPress={TIME_HELD_TO_CHANGE_APP_MODE}
+                onLongPress={onToggleAppMode}
+              >
+                <View style={styles.headerText}>
+                  <AppName mode={config.appMode} />
+                </View>
+              </TouchableWithoutFeedback>
+              {config.appMode !== AppMode.production && (
+                <View style={{ marginVertical: size(2.5) }}>
+                  <DangerButton
+                    text="Exit Testing Mode"
+                    onPress={onToggleAppMode}
+                    fullWidth={true}
+                    isLoading={isLoading}
+                  />
+                </View>
+              )}
 
-          {loginStage === "SCAN" && (
-            <LoginScanCard
-              onToggleScanner={() => setShouldShowCamera(true)}
-              isLoading={isLoading}
+              {messageContent && (
+                <View style={styles.bannerWrapper}>
+                  <Banner {...messageContent} />
+                </View>
+              )}
+
+              {loginStage === "SCAN" && (
+                <LoginScanCard
+                  onToggleScanner={() => setShouldShowCamera(true)}
+                  isLoading={isLoading}
+                />
+              )}
+              {loginStage === "MOBILE_NUMBER" && (
+                <LoginMobileNumberCard
+                  setLoginStage={setLoginStage}
+                  setMobileNumber={setMobileNumber}
+                  setCountryCode={setCountryCode}
+                  handleRequestOTP={handleRequestOTP}
+                />
+              )}
+              {loginStage === "OTP" && (
+                <LoginOTPCard
+                  resetStage={resetStage}
+                  fullMobileNumber={createFullNumber(countryCode, mobileNumber)}
+                  operatorToken={tempAuthCredentials?.operatorToken ?? ""}
+                  endpoint={tempAuthCredentials?.endpoint ?? ""}
+                  handleRequestOTP={handleRequestOTP}
+                  onSuccess={onSuccess}
+                />
+              )}
+              <FeatureToggler feature="HELP_MODAL">
+                <HelpButton onPress={showHelpModal} />
+              </FeatureToggler>
+              {hasLoadedFromStore &&
+                Object.keys(authCredentials).length >= 1 && (
+                  <CloseButton onPress={onPressClose} />
+                )}
+            </View>
+          </KeyboardAvoidingScrollView>
+          {shouldShowCamera && (
+            <IdScanner
+              onBarCodeScanned={onBarCodeScanned}
+              onCancel={() => setShouldShowCamera(false)}
             />
           )}
-          {loginStage === "MOBILE_NUMBER" && (
-            <LoginMobileNumberCard
-              setLoginStage={setLoginStage}
-              setMobileNumber={setMobileNumber}
-              setCountryCode={setCountryCode}
-              handleRequestOTP={handleRequestOTP}
-            />
-          )}
-          {loginStage === "OTP" && (
-            <LoginOTPCard
-              resetStage={resetStage}
-              fullMobileNumber={createFullNumber(countryCode, mobileNumber)}
-              operatorToken={tempAuthCredentials?.operatorToken ?? ""}
-              endpoint={tempAuthCredentials?.endpoint ?? ""}
-              handleRequestOTP={handleRequestOTP}
-              onSuccess={onSuccess}
-            />
-          )}
-          <FeatureToggler feature="HELP_MODAL">
-            <HelpButton onPress={showHelpModal} />
-          </FeatureToggler>
-          {hasLoadedFromStore && Object.keys(authCredentials).length >= 1 && (
-            <CloseButton onPress={onPressClose} />
-          )}
-        </View>
-      </KeyboardAvoidingScrollView>
-      {shouldShowCamera && (
-        <IdScanner
-          onBarCodeScanned={onBarCodeScanned}
-          onCancel={() => setShouldShowCamera(false)}
-        />
+        </>
       )}
     </>
   );

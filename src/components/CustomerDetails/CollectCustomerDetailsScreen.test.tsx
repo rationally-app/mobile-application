@@ -4,6 +4,7 @@ import {
   cleanup,
   fireEvent,
   waitFor,
+  act,
 } from "@testing-library/react-native";
 import React from "react";
 import { Sentry } from "../../utils/errorTracking";
@@ -49,6 +50,7 @@ const alternateIdInputTestId = "input-with-label-input";
 const checkButtonText = "Check";
 const passportCountryInputPlaceholderText = "Search country";
 const COUNTRY = "Afghanistan";
+const continueAppButtonId = "continue-app";
 
 describe("CollectCustomerDetailsScreen", () => {
   let allCampaignConfigs: CampaignConfigsMap;
@@ -90,7 +92,7 @@ describe("CollectCustomerDetailsScreen", () => {
       expect.assertions(5);
       mockValidateAndCleanId.mockReturnValue("valid-id");
 
-      const { queryByText, queryByTestId } = render(
+      const { queryByText, queryByTestId, getByTestId } = render(
         <CreateProvidersWrapper
           providers={[
             {
@@ -107,6 +109,8 @@ describe("CollectCustomerDetailsScreen", () => {
         </CreateProvidersWrapper>
       );
 
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const identityDetailsInput = queryByTestId(identityDetailsInputTestId);
       const checkButton = queryByText(checkButtonText);
       expect(identityDetailsInput).not.toBeNull();
@@ -135,7 +139,7 @@ describe("CollectCustomerDetailsScreen", () => {
         throw new Error(ERROR_MESSAGE.INVALID_ID);
       });
 
-      const { queryByText, queryByTestId } = render(
+      const { queryByText, queryByTestId, getByTestId } = render(
         <CreateProvidersWrapper
           providers={[
             { provider: AlertModalContextProvider },
@@ -153,6 +157,8 @@ describe("CollectCustomerDetailsScreen", () => {
         </CreateProvidersWrapper>
       );
 
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
       const identityDetailsInput = queryByTestId(identityDetailsInputTestId);
       const checkButton = queryByText(checkButtonText);
       expect(identityDetailsInput).not.toBeNull();
@@ -180,7 +186,12 @@ describe("CollectCustomerDetailsScreen", () => {
       expect.assertions(10);
       mockValidateAndCleanId.mockReturnValue("valid-alternate-id");
 
-      const { queryByText, queryByTestId, queryAllByPlaceholderText } = render(
+      const {
+        queryByText,
+        queryByTestId,
+        queryAllByPlaceholderText,
+        getByTestId,
+      } = render(
         <CreateProvidersWrapper
           providers={[
             { provider: AlertModalContextProvider },
@@ -197,6 +208,9 @@ describe("CollectCustomerDetailsScreen", () => {
           />
         </CreateProvidersWrapper>
       );
+
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
 
       const alternateIdTab = queryByText("Passport");
       expect(alternateIdTab).not.toBeNull();
@@ -245,7 +259,12 @@ describe("CollectCustomerDetailsScreen", () => {
         throw new Error(ERROR_MESSAGE.INVALID_ID);
       });
 
-      const { queryByText, queryByTestId, queryAllByPlaceholderText } = render(
+      const {
+        queryByText,
+        queryByTestId,
+        queryAllByPlaceholderText,
+        getByTestId,
+      } = render(
         <CreateProvidersWrapper
           providers={[
             { provider: AlertModalContextProvider },
@@ -262,6 +281,9 @@ describe("CollectCustomerDetailsScreen", () => {
           />
         </CreateProvidersWrapper>
       );
+
+      const continueAppButton = getByTestId(continueAppButtonId);
+      await act(async () => fireEvent.press(continueAppButton));
 
       const alternateIdTab = queryByText("Passport");
       expect(alternateIdTab).not.toBeNull();

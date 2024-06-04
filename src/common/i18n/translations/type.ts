@@ -1,4 +1,8 @@
 export type Translations = {
+  blockUser: {
+    header: string;
+    body: string;
+  };
   loginScanCard: {
     loginWithQR: string;
     scanToLogin: string;
