@@ -120,6 +120,7 @@ export const liveRequestOTP = async (
       level: "error",
       extra: {
         payload,
+        endpoint,
         error: e,
       },
     });
