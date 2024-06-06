@@ -20,7 +20,7 @@ const isJSON = (str: string): boolean => {
   }
 };
 
-function parseURLParams(url: string): QrCode {
+const parseURLParams = (url: string): QrCode => {
   const queryString = url.split("?")[1];
   const result: QrCode = { version: "", endpoint: "", key: "" };
   if (queryString) {
@@ -33,7 +33,7 @@ function parseURLParams(url: string): QrCode {
   }
   result["version"] = "";
   return result;
-}
+};
 
 export const decodeQr = (code: string): DecodedQrResponse => {
   let parsedCode: QrCode;
@@ -51,5 +51,15 @@ export const decodeQr = (code: string): DecodedQrResponse => {
     throw new AuthInvalidError("Invalid format");
   if (!parsedCode.endpoint) throw new AuthInvalidError("No endpoint");
   if (!parsedCode.key) throw new AuthInvalidError("No key");
-  return { endpoint: parsedCode.endpoint, key: parsedCode.key };
+
+  // We had some issues with deep-linking endpoints on web app,
+  // and had to use ASCII encoding of special characters as a solution
+  // However the mobile app doesn't seem to recognise this well hence we
+  // need to replace them if present
+  const cleanedEndpoint = parsedCode.endpoint.replace(
+    "https%3A%2F%2F",
+    "https://"
+  );
+
+  return { endpoint: cleanedEndpoint, key: parsedCode.key };
 };
