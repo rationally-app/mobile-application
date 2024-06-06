@@ -205,6 +205,13 @@ export const liveGetQuota = async (
   endpoint: string,
   apiVersion?: string
 ): Promise<Quota> => {
+  Sentry.captureMessage("CHECKING_QUOTA", {
+    level: "info",
+    extra: {
+      key,
+      endpoint,
+    },
+  });
   let response;
   if (ids.length === 0) {
     throw new QuotaError("No ID was provided");

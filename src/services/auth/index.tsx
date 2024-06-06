@@ -105,6 +105,14 @@ export const liveRequestOTP = async (
   endpoint: string
 ): Promise<OTPResponse> => {
   const payload = { code, phone: mobileNumber };
+  Sentry.captureMessage("REQUESTING_OTP", {
+    level: "info",
+    extra: {
+      mobileNumber,
+      code,
+      endpoint,
+    },
+  });
   try {
     const response = await fetchWithValidator(
       OTPResponse,
