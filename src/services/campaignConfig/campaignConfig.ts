@@ -39,6 +39,14 @@ const liveGetCampaignConfig = async (
       }
     );
   } catch (e) {
+    Sentry.captureMessage("ERROR_WHEN_GETTING_CAMPAIGN_CONFIG", {
+      level: "error",
+      extra: {
+        token,
+        endpoint,
+        error: e,
+      },
+    });
     if (e instanceof ValidationError) {
       Sentry.captureException(e);
     } else if (e instanceof SessionError) {

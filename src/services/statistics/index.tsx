@@ -149,6 +149,14 @@ export const liveGetStatistics = async (
       }
     );
   } catch (e) {
+    Sentry.captureMessage("ERROR_WHEN_GETTING_STATISTICS", {
+      level: "error",
+      extra: {
+        key,
+        endpoint,
+        error: e,
+      },
+    });
     if (e instanceof NetworkError) {
       throw e;
     } else if (e instanceof ValidationError) {
