@@ -226,6 +226,14 @@ export const liveGetQuota = async (
     });
     return response;
   } catch (e) {
+    Sentry.captureMessage("ERROR_WHEN_GETTING_QUOTA", {
+      level: "error",
+      extra: {
+        key,
+        endpoint,
+        error: e,
+      },
+    });
     if (e instanceof NetworkError) {
       throw e;
     } else if (e instanceof ValidationError) {
@@ -320,6 +328,14 @@ export const livePostTransaction = async ({
     );
     return response;
   } catch (e) {
+    Sentry.captureMessage("ERROR_WHEN_CREATING_TRANSACTIONS", {
+      level: "error",
+      extra: {
+        key,
+        endpoint,
+        error: e,
+      },
+    });
     if (e instanceof NetworkError) {
       throw e;
     } else if (e instanceof ValidationError) {
@@ -424,6 +440,14 @@ export const livePastTransactions = async (
     );
     return response;
   } catch (e) {
+    Sentry.captureMessage("ERROR_WHEN_GETTING_TRANSACTIONS_HISTORY", {
+      level: "error",
+      extra: {
+        key,
+        endpoint,
+        error: e,
+      },
+    });
     if (e instanceof NetworkError) {
       throw e;
     } else if (e instanceof ValidationError) {
