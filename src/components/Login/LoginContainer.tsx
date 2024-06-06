@@ -269,6 +269,12 @@ export const InitialisationContainer: FunctionComponent<
         setLoginStage("MOBILE_NUMBER");
       } catch (e) {
         const error = new Error(`onBarCodeScanned ${e}`);
+        Sentry.captureMessage("ERROR_WITH_DOMAIN_FORMAT", {
+          level: "error",
+          extra: {
+            domainFormat: DOMAIN_FORMAT,
+          },
+        });
         Sentry.captureException(error);
         if (e instanceof AuthError || e instanceof LoginRegexError) {
           showErrorAlert(e);
