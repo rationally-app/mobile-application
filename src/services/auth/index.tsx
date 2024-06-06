@@ -116,6 +116,13 @@ export const liveRequestOTP = async (
     );
     return response;
   } catch (e) {
+    Sentry.captureMessage("ERROR_WHEN_REQUESTING_OTP", {
+      level: "error",
+      extra: {
+        payload,
+        error: e,
+      },
+    });
     if (e instanceof NetworkError) {
       throw e;
     }
