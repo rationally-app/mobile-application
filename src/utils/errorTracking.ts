@@ -6,7 +6,7 @@ const SENTRY_LOG_PREFIX = "[dev-sentry]";
 let Sentry: Pick<typeof SentryExpo, "init"> &
   Pick<
     typeof SentryExpo.Native,
-    "setRelease" | "addBreadcrumb" | "captureException"
+    "setRelease" | "addBreadcrumb" | "captureException" | "captureMessage"
   >;
 if (__DEV__) {
   Sentry = {
@@ -19,6 +19,10 @@ if (__DEV__) {
       ),
     captureException: (e: unknown): string => {
       console.warn(`${SENTRY_LOG_PREFIX} captureException: ${e}`);
+      return "eventId";
+    },
+    captureMessage: (e: unknown): string => {
+      console.warn(`${SENTRY_LOG_PREFIX} captureMessage: ${e}`);
       return "eventId";
     },
   };

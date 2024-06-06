@@ -203,6 +203,13 @@ export const InitialisationContainer: FunctionComponent<
       if (queryEndpoint && queryKey) {
         if (!RegExp(DOMAIN_FORMAT).test(queryEndpoint)) {
           const error = new Error(`Invalid endpoint: ${queryEndpoint}`);
+          Sentry.captureMessage("ERROR_WITH_DOMAIN_FORMAT", {
+            level: "error",
+            extra: {
+              domainFormat: DOMAIN_FORMAT,
+              queryEndpoint,
+            },
+          });
           Sentry.captureException(error);
           showErrorAlert(error);
           setLoginStage("SCAN");
