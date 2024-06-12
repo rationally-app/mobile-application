@@ -106,7 +106,7 @@ export const BlockUser: FunctionComponent<BlockUserProps> = ({
             fullWidth={true}
             text="Launch Web"
             onPress={handleWebNavigation}
-            accessibilityLabel="launch-webapp"
+            accessibilityLabel="launch-web"
           />
         </View>
         <View style={styles.continueOnAppButton}>
