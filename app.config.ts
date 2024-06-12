@@ -87,6 +87,8 @@ export default ({ config }: any): any => {
       ],
     },
     plugins: [
+      "expo-localization",
+      "expo-secure-store",
       "sentry-expo",
       [
         "expo-build-properties",
