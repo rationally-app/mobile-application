@@ -9,9 +9,11 @@ import { size } from "../../common/styles";
 import { Credits } from "../Credits";
 import { Sentry } from "../../utils/errorTracking";
 import * as Linking from "expo-linking";
-import { DarkButton, SecondaryButton } from "../Layout/Buttons";
+import { DarkButton } from "../Layout/Buttons";
 import { AppText } from "../Layout/AppText";
 import { useTranslate } from "../../hooks/useTranslate/useTranslate";
+import { BaseButton } from "../Layout/Buttons/BaseButton";
+import { useTheme } from "../../context/theme";
 
 const styles = StyleSheet.create({
   asset: {
@@ -87,6 +89,7 @@ export const BlockUser: FunctionComponent<BlockUserProps> = ({
   const handleWebNavigation = (): void => {
     Linking.openURL("https://app.supply.gov.sg");
   };
+  const { theme } = useTheme();
 
   return (
     <>
@@ -110,12 +113,21 @@ export const BlockUser: FunctionComponent<BlockUserProps> = ({
           />
         </View>
         <View style={styles.continueOnAppButton}>
-          <SecondaryButton
+          <BaseButton
             fullWidth={true}
-            text="Continue on App"
             onPress={() => setShouldBlock(false)}
             accessibilityLabel="continue-app"
-          />
+          >
+            <AppText
+              style={{
+                color: theme.secondaryButton.enabled.textColor,
+                fontFamily: "brand-bold",
+                textAlign: "center",
+              }}
+            >
+              Continue on App
+            </AppText>
+          </BaseButton>
         </View>
         <Credits style={styles.credits} />
       </View>
