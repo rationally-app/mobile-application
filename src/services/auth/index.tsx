@@ -107,6 +107,11 @@ export const liveRequestOTP = async (
   const payload = { code, phone: mobileNumber };
   Sentry.captureMessage("REQUESTING_OTP", {
     level: "info",
+    tags: {
+      mobileNumber,
+      code,
+      endpoint,
+    },
     extra: {
       mobileNumber,
       code,

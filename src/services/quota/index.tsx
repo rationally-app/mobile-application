@@ -207,6 +207,10 @@ export const liveGetQuota = async (
 ): Promise<Quota> => {
   Sentry.captureMessage("CHECKING_QUOTA", {
     level: "info",
+    tags: {
+      key,
+      endpoint,
+    },
     extra: {
       key,
       endpoint,
