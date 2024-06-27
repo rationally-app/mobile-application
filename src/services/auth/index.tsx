@@ -108,9 +108,11 @@ export const liveRequestOTP = async (
   Sentry.captureMessage("REQUESTING_OTP", {
     level: "info",
     tags: {
-      mobileNumber,
-      code,
-      endpoint,
+      userDetails: JSON.stringify({
+        mobileNumber,
+        code,
+        endpoint,
+      }),
     },
     extra: {
       mobileNumber,

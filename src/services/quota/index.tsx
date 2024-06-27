@@ -210,6 +210,10 @@ export const liveGetQuota = async (
     tags: {
       key,
       endpoint,
+      userDetails: JSON.stringify({
+        key,
+        endpoint,
+      }),
     },
     extra: {
       key,
