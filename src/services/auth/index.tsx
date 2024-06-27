@@ -111,6 +111,11 @@ export const liveRequestOTP = async (
       mobileNumber,
       code,
       endpoint,
+      userDetails: JSON.stringify({
+        mobileNumber,
+        code,
+        endpoint,
+      }),
     },
     extra: {
       mobileNumber,
